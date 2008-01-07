@@ -59,23 +59,18 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
       }
 
       $email = (is_null($arg1) || empty($arg1->primary_email)) ? $user->mail : $arg1->primary_email;
-      $contents['primary_email'] = uc_textfield(t('E-mail Address'), $email, TRUE, NULL, 64);
+      $contents['primary_email'] = uc_textfield(t('E-mail address'), $email, TRUE, NULL, 64);
       $contents['primary_email']['#disabled'] = ($user->uid) ? TRUE : FALSE;
 
       if (variable_get('uc_cart_email_validation', TRUE) && !$user->uid) {
-        $contents['primary_email_confirm'] = uc_textfield(t('Confirm E-mail Address'), '', TRUE, NULL, 64);
+        $contents['primary_email_confirm'] = uc_textfield(t('Confirm e-mail address'), $_SESSION['email_match'] === FALSE ? '' : $email, TRUE, NULL, 64);
+        if ($_SESSION['email_match'] === FALSE) {
+          $contents['primary_email_confirm']['#attributes'] = array('class' => 'error');
+          unset($_SESSION['email_match']);
+        }
       }
 
-      if ((variable_get('uc_cart_new_account_name', TRUE) ||
-          variable_get('uc_cart_new_account_password', TRUE)) &&
-          $user->uid == 0) {
-        $contents['new_account'] = array(
-          '#type' => 'fieldset',
-          '#title' => t('New account details'),
-          '#description' => variable_get('uc_cart_new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
-          '#collapsible' => FALSE,
-        );
-
+      if ($user->uid == 0) {
         if (variable_get('uc_cart_new_account_name', TRUE)) {
           $contents['new_account']['name'] = array(
             '#type' => 'textfield',
@@ -101,6 +96,16 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
             '#size' => 32,
           );
         }
+
+        if (!empty($contents['new_account'])) {
+          $array = array(
+            '#type' => 'fieldset',
+            '#title' => t('New account details'),
+            '#description' => variable_get('uc_cart_new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
+            '#collapsible' => FALSE,
+          );
+          $contents['new_account'] = array_merge($array, $contents['new_account']);
+        }
       }
 
       return array('description' => $description, 'contents' => $contents);
@@ -116,8 +121,10 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
       if (variable_get('uc_cart_email_validation', TRUE) && !$user->uid &&
           $arg2['primary_email'] !== $arg2['primary_email_confirm']) {
         drupal_set_message(t('The e-mail address did not match.'), 'error');
+        $_SESSION['email_match'] = FALSE;
         return FALSE;
       }
+      unset($_SESSION['email_match']);
 
       // If new users can specify names or passwords then...
       if ((variable_get('uc_cart_new_account_name', TRUE) ||
@@ -169,12 +176,12 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
       );
       $form['uc_cart_new_account_name'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Allow anonymous customers to specify a new user acount name.'),
+        '#title' => t('Allow anonymous customers to specify a new user account name.'),
         '#default_value' => variable_get('uc_cart_new_account_name', FALSE),
       );
       $form['uc_cart_new_account_password'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Allow anonymous customers to specify a new user acount password.'),
+        '#title' => t('Allow anonymous customers to specify a new user account password.'),
         '#default_value' => variable_get('uc_cart_new_account_password', FALSE),
       );
       $form['uc_cart_new_account_details'] = array(
@@ -363,7 +370,7 @@ function uc_checkout_pane_comments($op, &$arg1, $arg2) {
       }
       $contents['comments'] = array(
         '#type' => 'textarea',
-        '#title' => t('Order Comments'),
+        '#title' => t('Order comments'),
         '#default_value' => $default,
       );
 

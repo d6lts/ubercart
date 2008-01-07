@@ -19,7 +19,7 @@ function uc_taxes_install(){
       db_query("CREATE TABLE {uc_taxes} (
         id integer NOT NULL default 0,
         name varchar(255) NOT NULL default '',
-        rate float unsigned NOT NULL default 0,
+        rate float NOT NULL default 0,
         taxed_product_types text NOT NULL default '',
         taxed_line_items text NOT NULL default '',
         weight smallint NOT NULL default 0,

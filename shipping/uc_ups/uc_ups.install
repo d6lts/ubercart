@@ -14,8 +14,8 @@ function uc_ups_install(){
     break;
     case 'pgsql':
       db_query("CREATE TABLE {uc_ups_products} (
-        vid integer unsigned NOT NULL default 0,
-        nid integer unsigned NOT NULL default 0,
+        vid integer NOT NULL default 0,
+        nid integer NOT NULL default 0,
         pkg_type varchar(2) NOT NULL default '',
         PRIMARY KEY (vid)
       );");
@@ -106,5 +106,24 @@ function uc_ups_update_4(){
       $ret[] = update_sql("ALTER TABLE {uc_ups_products} ADD PRIMARY KEY (vid)");
     break;
   }
+  return $ret;
+}
+
+function uc_ups_update_5(){
+  $ret = array();
+  $markup = variable_get('uc_ups_markup', '0%');
+  if (strpos($markup, '%') !== false){
+    variable_set('uc_ups_markup_type', 'percentage');
+    variable_set('uc_ups_markup', floatval(rtrim($markup, '%')));
+  }
+  else if (strpos($markup, '$') !== false){
+    variable_set('uc_ups_markup_type', 'currency');
+    variable_set('uc_ups_markup', floatval(ltrim($markup, '$')));
+  }
+  else if (floatval($markup)){
+    variable_set('uc_ups_markup_type', 'multiplier');
+    variable_set('uc_ups_markup', floatval($markup));
+  }
+  $ret[] = array('success' => true, 'query' => 'Added UPS markup type.');
   return $ret;
 }

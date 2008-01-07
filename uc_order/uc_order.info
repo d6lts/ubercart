@@ -1,6 +1,6 @@
 ; $Id$
 name = Order
 description = REQUIRED. Receive and manage orders through your website.
-dependencies = token
+dependencies = token workflow_ng ubrowser
 package = Ubercart - core
 

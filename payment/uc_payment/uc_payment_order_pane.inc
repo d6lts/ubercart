@@ -56,7 +56,7 @@ function uc_order_pane_payment($op, $arg1) {
       
       $form['payment'] = array(
         '#type' => 'fieldset',
-        '#title' => t("Modify 'Payment Info'"),
+        '#title' => t("Modify 'Payment info'"),
         '#collapsible' => TRUE,
         '#collapsed' => FALSE
       );

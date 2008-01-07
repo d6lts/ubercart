@@ -12,6 +12,39 @@
  * Workflow-ng Hooks                                                          *
  ******************************************************************************/
 
+// Tell Workflow about default configurations.
+function uc_payment_configuration() {
+  $configurations['uc_payment_received'] = array(
+    '#type' => 'configuration',
+    '#label' => t('Update order status on full payment'),
+    '#event' => 'payment_entered',
+    '#module' => 'uc_payment',
+    '#active' => FALSE,
+  );
+  $configurations['uc_payment_received'][] = array(
+    '#type' => 'condition',
+    '#name' => 'uc_payment_condition_balance',
+    '#argument map' => array(
+      'order' => 'order',
+    ),
+    '#settings' => array(
+      'balance_comparison' => 'less_equal',
+    ),
+  );
+  $configurations['uc_payment_received'][] = array(
+    '#type' => 'action',
+    '#name' => 'uc_order_action_update_status',
+    '#argument map' => array(
+      'order' => 'order',
+    ),
+    '#settings' => array(
+      'order_status' => 'payment_received',
+    ),
+  );
+
+  return $configurations;
+}
+
 // Tell Workflow about the various payment events.
 function uc_payment_event_info(){
   $events['payment_entered'] = array(
@@ -56,11 +89,11 @@ function uc_payment_condition_balance($order, $settings) {
     case 'less':
       return $balance < 0;
     case 'less_equal':
-      return $balance <= 0;
+      return $balance <= .01;
     case 'equal':
-      return $balance == 0;
+      return $balance < .01 and $balance > -.01;
     case 'greater':
-      return $balance > 0;
+      return $balance >= .01;
   }
 }
 
@@ -68,7 +101,7 @@ function uc_payment_condition_balance_form($settings = array()) {
   $zero = array('!zero' => uc_currency_format(0));
   $options = array(
     'less' => t('Balance is less than !zero.', $zero),
-    'less_equal' => t('Balance is less than !zero.', $zero),
+    'less_equal' => t('Balance is less than or equal to !zero.', $zero),
     'equal' => t('Balance is equal to !zero.', $zero),
     'greater' => t('Balance is greater than !zero.', $zero),
   );
@@ -86,6 +119,7 @@ function uc_payment_condition_balance_form($settings = array()) {
 function uc_payment_condition_balance_submit($form_id, $form_values){
   return array('balance_comparison' => $form_values['balance_comparison']);
 }
+
 // Check the order payment method.
 function uc_payment_condition_method($order, $settings) {
   return $order->payment_method == $settings['payment_method'];

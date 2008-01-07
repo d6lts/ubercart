@@ -4,15 +4,16 @@
  * Collapse the shopping cart block at page load.
  */
 $(document).ready(function(){
-  if (expanded_block == false) {
+  if (collapsed_block == true) {
     $('#block-cart-contents').hide(0);
   }
+  $('.cart-block-toggle').click(function() { cart_block_toggle(); } );
 });
 
 /**
  * Toggle the shopping cart block open and closed.
  */
-function cart_toggle(uc_cart_path) {
+function cart_block_toggle() {
   $('#block-cart-contents').toggle();
 
   isrc = $('#block-cart-title-arrow').attr('src');

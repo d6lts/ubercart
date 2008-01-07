@@ -163,10 +163,10 @@ function uc_importer_admin_settings_submit($form_id, $form_values){
       variable_set('uc_importer_user', 0);
     }
     variable_set('uc_importer_vocabulary_duplicates', $form_values['uc_importer_vocabulary_duplicates']);
-    variable_set('uc_importer_category_duplicates', $form_values['uc_importer_vocabulary_duplicates']);
-    variable_set('uc_importer_class_duplicates', $form_values['uc_importer_vocabulary_duplicates']);
-    variable_set('uc_importer_attribute_duplicates', $form_values['uc_importer_vocabulary_duplicates']);
-    variable_set('uc_importer_product_duplicates', $form_values['uc_importer_vocabulary_duplicates']);
+    variable_set('uc_importer_category_duplicates', $form_values['uc_importer_category_duplicates']);
+    variable_set('uc_importer_class_duplicates', $form_values['uc_importer_class_duplicates']);
+    variable_set('uc_importer_attribute_duplicates', $form_values['uc_importer_attribute_duplicates']);
+    variable_set('uc_importer_product_duplicates', $form_values['uc_importer_product_duplicates']);
     drupal_set_message(t('The configuration options have been saved.'));
   }
 }
@@ -945,7 +945,9 @@ function uc_importer_import($xml){
           $class = new stdClass();
           $class->pcid = (string)$class_data->id[0]->data();
           $class->name = (string)$class_data->name[0]->data();
-          $class->description = (string)$class_data->description[0]->data();
+          if (isset($class_data->description)){
+            $class->description = (string)$class_data->description[0]->data();
+          }
           $result = db_query("SELECT pcid FROM {uc_product_classes} WHERE pcid = '%s'", $class->pcid);
           if ($pcid = db_result($result)){
             switch (variable_get('uc_importer_class_duplicates', UC_IMPORTER_DO_NOTHING)){
@@ -968,7 +970,7 @@ function uc_importer_import($xml){
           $product = new stdClass();
           //watchdog('importer', '<pre>'. print_r($product_data->unique_hash[0]->data(), true) .'</pre>');
           if (!isset($product_data->unique_hash)){
-            $product_data->addChild('unique_hash', md5((string)$product_data->nid[0]->data() . (string)$product_data->model[0]->data() . (string)$product_data->list_price[0]->data() . (string)$product_data->cost[0]->data() . (string)$product_data->sell_price[0]->data() . (string)$product_data->weight[0]->data() . (string)$product_data->weight_units[0]->data() . (string)$product_data->default_qty[0]->data() . time()));
+            $product_data->addChild('unique_hash', md5((string)$product_data->model[0]->data() . (string)$product_data->list_price[0]->data() . (string)$product_data->cost[0]->data() . (string)$product_data->sell_price[0]->data() . (string)$product_data->weight[0]->data() . (string)$product_data->weight_units[0]->data() . (string)$product_data->default_qty[0]->data() . time()));
           }
           // Try by unique_hash...
           if(!$nid = db_result(db_query("SELECT nid FROM {uc_products} WHERE unique_hash LIKE '%s'", (string)$product_data->unique_hash[0]->data()))){
@@ -999,10 +1001,12 @@ function uc_importer_import($xml){
           $product->log = t('Imported product from XML.');
           $product->name = $user->name;
           $product->status = 1;
-          $product->format = 3;
+          $product->format = filter_resolve_format(FILTER_FORMAT_DEFAULT);
           if (module_exists('uc_catalog')){
-            foreach ($product_data->categories[0]->category as $category_data){
-              $product->taxonomy[] = $id_map['categories'][(string)$category_data->id[0]->data()];
+            if (isset($product_data->categories) && (count($product_data->categories) > 0)) {
+              foreach ($product_data->categories[0]->category as $category_data){
+                $product->taxonomy[] = $id_map['categories'][(string)$category_data->id[0]->data()];
+              }
             }
           }
           $product->unique_hash = (string)$product_data->unique_hash[0]->data();
@@ -1041,8 +1045,18 @@ function uc_importer_import($xml){
                   $local_path = file_check_directory($path,  FILE_CREATE_DIRECTORY);
                 }
                 $local_path .= '/'. rawurldecode(basename($image_path));
+                $size = 0;
                 if (!file_exists($local_path)){
-                  $size = file_put_contents($local_path, fopen($image_path, 'rb'));
+                  $input = fopen($image_path, 'rb');
+                  $output = fopen($local_path, 'wb');
+                  while ($data = fread($input, 1024)){
+                    $size += fwrite($output, $data, 1024);
+                  }
+                  fclose($input);
+                  fclose($output);
+                }
+                else{
+                  $size = filesize($local_path);
                 }
                 $product->field_image_cache[$i] = array(
                   'fid' => (file_exists($local_path) ? db_result(db_query("SELECT fid FROM {files} WHERE nid = %d AND filepath = '%s'", $nid, $local_path)) : 'upload'),
@@ -1050,7 +1064,7 @@ function uc_importer_import($xml){
                   'alt' => isset($image->alt) ? html_entity_decode((string)$image->alt[0]->data()) : '',
                   'filename' => basename($image_path),
                   'filepath' => $local_path,
-                  'filesize' => (file_exists($local_path) ? @filesize($local_path) : $size),
+                  'filesize' => $size,
                   'filemime' => 'image/'. $path_info['extension'],
                 );
                 $i++;

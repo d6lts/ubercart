@@ -23,3 +23,8 @@ img.icon {
 .quote-notes {
   margin-left: 25px;
 }
+
+.node-form .product-shipping .form-text {
+  display: inline;
+  width: auto;
+}

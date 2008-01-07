@@ -33,10 +33,11 @@ function set_line_item(key, title, value, weight) {
     line_update = this_update.getTime();
 
     // Set the values passed in, overriding previous values for that key.
-    li_titles[key] = title;
-    li_values[key] = value;
-    li_weight[key] = weight;
-
+    if (key != ""){
+      li_titles[key] = title;
+      li_values[key] = value;
+      li_weight[key] = weight;
+    }
     // Put all the existing line item data into a single array.
     var li_info = {};
     $.each(li_titles,
@@ -55,6 +56,10 @@ function set_line_item(key, title, value, weight) {
       }
     );
   }
+}
+
+function remove_line_item(key) {
+  li_titles[key] = '';
 }
 
 /**
