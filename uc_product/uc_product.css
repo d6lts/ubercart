@@ -51,8 +51,9 @@ h3.title {
   margin-bottom: 0;
 }
 
-.node-form .product-field input {
+.node-form .product-field .form-text {
   width: auto;
+  display: inline;
 }
 
 .product-ubrowser, .product-buffer {

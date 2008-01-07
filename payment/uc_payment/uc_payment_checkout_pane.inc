@@ -10,7 +10,7 @@ function uc_checkout_pane_payment($op, &$arg1, $arg2) {
           drupal_add_js('var tax_weight = '. variable_get('uc_li_tax_weight', 9), 'inline');
           drupal_add_js(drupal_get_path('module', 'uc_taxes') .'/uc_taxes.js');
         }
-        drupal_add_js("var def_payment_msg = '". variable_get('uc_default_payment_msg', t('Continue with checkout to complete payment.')) ."';", 'inline');
+        drupal_add_js("var def_payment_msg = '". addslashes(variable_get('uc_default_payment_msg', t('Continue with checkout to complete payment.'))) ."';", 'inline');
   
         $contents['current_total'] = array(
           '#type' => 'hidden',
@@ -33,7 +33,7 @@ function uc_checkout_pane_payment($op, &$arg1, $arg2) {
       }
       $contents['payment_method'] = array(
         '#type' => 'radios',
-        '#title' => t('Payment Method'),
+        '#title' => t('Payment method'),
         '#options' => $options,
         '#default_value' => count($options) == 1 ? array_pop(array_keys($options)) : $arg1->payment_method,
         '#disabled' => count($options) == 1 ? TRUE : FALSE,

@@ -4,7 +4,7 @@ $(document).ready(
   function() {
     $('select[@id$=-country]').change(
       function() {
-        uc_update_zone_select(this.id, 0);
+        uc_update_zone_select(this.id, '');
       }
     );
   }
@@ -23,7 +23,7 @@ function uc_update_zone_select(country_select, default_zone) {
            else {
              $('#' + zone_select).removeAttr('disabled');
            }
-           $('#' + zone_select).empty().append(contents).val(default_zone);
+           $('#' + zone_select).empty().append(contents).val(default_zone).change();
          }
   );
 }

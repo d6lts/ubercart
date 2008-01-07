@@ -12,6 +12,19 @@
  * Workflow-ng Hooks                                                          *
  ******************************************************************************/
 
+// Tell Workflow about the various cart conditions.
+function uc_cart_condition_info(){
+  $order_arg = array('#entity' => 'order', '#label' => t('Order'));
+
+  $conditions['uc_cart_condition_product_class'] = array(
+    '#label' => t('Order has a product of a particular class'),
+    '#arguments' => array('order' => $order_arg),
+    '#module' => t('Order: Product'),
+  );
+
+  return $conditions;
+}
+
 // Tell Workflow about the various cart events.
 function uc_cart_event_info() {
   $order_arg = array('#entity' => 'order', '#label' => t('Order'));
@@ -19,8 +32,48 @@ function uc_cart_event_info() {
   $events['checkout_complete'] = array(
     '#label' => t('Customer completes checkout'),
     '#module' => t('Cart'),
-    '#arguments' => array('order' => $order_arg),
+    '#arguments' => array(
+      'order' => $order_arg,
+      'account' => array('#entity' => 'user', '#label' => t('customer user account'))
+    ),
   );
 
   return $events;
 }
+
+
+/******************************************************************************
+ * Workflow-ng Condition Callbacks and Forms                                  *
+ ******************************************************************************/
+
+function uc_cart_condition_product_class($order, $settings) {
+  $result = FALSE;
+  foreach ($order->products as $product) {
+    if ($product->type == $settings['class']) {
+      $result = TRUE;
+      break;
+    }
+  }
+
+  return $result;
+}
+
+function uc_cart_condition_product_class_form($settings = array()) {
+  $options = array();
+  $types = uc_product_node_info();
+  foreach ($types as $id => $info){
+    $options[$id] = $info['name'];
+  }
+  $form['class'] = array('#type' => 'select',
+    '#title' => t('Product class'),
+    '#options' => $options,
+    '#default_value' => $settings['class'],
+  );
+
+  return $form;
+}
+
+function uc_cart_condition_product_class_submit($form_id, $form_values) {
+  return array('class' => $form_values['class']);
+}
+

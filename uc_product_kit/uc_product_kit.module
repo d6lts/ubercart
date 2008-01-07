@@ -53,6 +53,7 @@ function uc_product_kit_insert(&$node){
   $obj->weight = 0;
   $obj->weight_units = variable_get('uc_weight_unit', 'lb');
   $obj->ordering = $node->ordering;
+  $obj->shippable = false;
 
   $values = array();
   $placeholders = array();
@@ -70,13 +71,16 @@ function uc_product_kit_insert(&$node){
     $obj->cost += $product->cost * $product->qty;
     $obj->sell_price += $product->sell_price * $product->qty;
     $obj->weight += $product->weight * $product->qty * uc_weight_conversion($product->weight_units, $obj->weight_units);
+    if ($product->shippable){
+      $obj->shippable = true;
+    }
   }
   db_query("INSERT INTO {uc_product_kits} (vid, nid, product_id, mutable, qty) VALUES ". implode(',', $placeholders), $values);
   $obj->model = rtrim($obj->model, ' / ');
-  db_query("INSERT INTO {uc_products} (vid, nid, model, list_price, cost, sell_price, weight, weight_units, unique_hash, ordering) VALUES (%d, %d, '%s', %f, %f, %f, %f, '%s', '%s', %d)",
+  db_query("INSERT INTO {uc_products} (vid, nid, model, list_price, cost, sell_price, weight, weight_units, unique_hash, ordering, shippable) VALUES (%d, %d, '%s', %f, %f, %f, %f, '%s', '%s', %d, %d)",
     $obj->vid, $obj->nid, $obj->model, $obj->list_price, $obj->cost, $obj->sell_price, $obj->weight, $obj->weight_units,
     md5($obj->vid . $obj->nid . $obj->model . $obj->list_price . $obj->cost . $obj->sell_price . $obj->weight . $obj->weight_units . $obj->ordering . time()),
-    $obj->ordering
+    $obj->ordering, $obj->shippable
   );
 }
 
@@ -100,6 +104,7 @@ function uc_product_kit_update(&$node){
   $obj->weight = 0;
   $obj->weight_units = variable_get('uc_weight_unit', 'lb');
   $obj->ordering = $node->ordering;
+  $obj->shippable = false;
   
   $values = array();
   $placeholders = array();
@@ -108,26 +113,34 @@ function uc_product_kit_update(&$node){
     $values[] = $node->nid;
     $values[] = $product;
     $values[] = $node->mutable;
+    if (is_null($node->items[$i]['qty']) || $node->items[$i]['qty'] === ''){
+      $node->items[$i]['qty'] = 1;
+    }
     $values[] = $node->items[$i]['qty'];
+    if (is_null($node->items[$i]['discount']) || $node->items[$i]['discount'] === ''){
+      $item = node_load($i);
+      $node->items[$i]['discount'] = $item->sell_price;
+    }
     $values[] = $node->items[$i]['discount'];
     $values[] = $node->items[$i]['ordering'];
     $placeholders[] = '(%d, %d, %d, %d, %d, %f, %d)';
 
     $product = node_load($product);
     $product->qty = $node->items[$i]['qty'];
-    if ($node->items[$i]['discount'] !== ''){
-      if ($node->items[$i]['discount'] < 0){
-        $product->sell_price += $node->items[$i]['discount'];
-      }
-      else{
-        $product->sell_price = $node->items[$i]['discount'];
-      }
+    if ($node->items[$i]['discount'] < 0){
+      $product->sell_price += $node->items[$i]['discount'];
+    }
+    else{
+      $product->sell_price = $node->items[$i]['discount'];
     }
     $obj->model .= $product->model . ' / ';
     $obj->list_price += $product->list_price * $product->qty;
     $obj->cost += $product->cost * $product->qty;
     $obj->sell_price += $product->sell_price * $product->qty;
     $obj->weight += $product->weight * $product->qty * uc_weight_conversion($product->weight_units, $obj->weight_units);
+    if ($product->shippable){
+      $obj->shippable = true;
+    }
   }
   $obj->model = rtrim($obj->model, ' / ');
   if (!$node->revision){
@@ -135,10 +148,10 @@ function uc_product_kit_update(&$node){
   }
   db_query("INSERT INTO {uc_product_kits} (vid, nid, product_id, mutable, qty, discount, ordering) VALUES ". implode(',', $placeholders), $values);
   if ($node->revision){
-    db_query("INSERT INTO {uc_products} (vid, nid, model, list_price, cost, sell_price, weight, weight_units, unique_hash, ordering) VALUES (%d, %d, '%s', %f, %f, %f, %f, '%s', '%s', %d)",
+    db_query("INSERT INTO {uc_products} (vid, nid, model, list_price, cost, sell_price, weight, weight_units, unique_hash, ordering, shippable) VALUES (%d, %d, '%s', %f, %f, %f, %f, '%s', '%s', %d, %d)",
       $obj->vid, $obj->nid, $obj->model, $obj->list_price, $obj->cost, $obj->sell_price, $obj->weight, $obj->weight_units,
       md5($obj->vid . $obj->nid . $obj->model . $obj->list_price . $obj->cost . $obj->sell_price . $obj->weight . $obj->weight_units . $obj->ordering . time()),
-      $obj->ordering
+      $obj->ordering, $obj->shippable
     );
   }
   else{
@@ -202,7 +215,6 @@ function uc_product_kit_forms(){
 
   while ($prodrow = db_fetch_object($products)){
     $forms['uc_product_kit_add_to_cart_form_'. $prodrow->nid] = array('callback' => 'uc_product_kit_add_to_cart_form');
-    $forms['uc_catalog_buy_it_now_form_'. $prodrow->nid] = array('callback' => 'uc_catalog_buy_it_now_form');
   }
 
   return $forms;
@@ -262,7 +274,7 @@ function uc_product_kit_form(&$node){
   $form['base']['mutable'] = array('#type' => 'radios',
     '#title' => t('How is this product kit handled by the cart?'),
     '#options' => array(t('As a unit. Customers may only change how many kits they are buying.'), t('As individual products. Customers may add or remove kit components at will.')),
-    '#default_value' => $node->mutable,
+    '#default_value' => isset($node->mutable) ? $node->mutable : variable_get('uc_product_kit_mutable', 0),
   );
   $form['base']['products'] = array('#type' => 'select',
     '#multiple' => true,
@@ -430,12 +442,7 @@ function uc_product_kit_add_to_cart_form($node){
  * correct quantities.
  */
 function uc_product_kit_add_to_cart_form_submit($form_id, $form_values){
-  $unique = rand();
-  foreach ($form_values['products'] as $product){
-    $data = array('kit_id' => $form_values['nid'], 'unique_id' => $unique, 'module' => 'uc_product_kit');
-    $return = uc_cart_add_item($product['nid'], $product['qty'], $data + module_invoke_all('add_to_cart_data', $product));
-  }
-  return $return;
+  return uc_cart_add_item($form_values['nid'], 1, module_invoke_all('add_to_cart_data', $form_values));
 }
 
 /******************************************************************************
@@ -457,6 +464,32 @@ function uc_product_kit_product_info(){
       'body_label' => t('Description'),
     ),
   );
+}
+
+function uc_product_kit_add_to_cart($nid, $qty, $kit_data){
+  $node = node_load($nid);
+  if ($node->type == 'product_kit'){
+    $unique = uniqid('', true);
+    foreach ($node->products as $product){
+      $data = array('kit_id' => $node->nid, 'unique_id' => $unique, 'module' => 'uc_product_kit');
+      uc_cart_add_item($product->nid, $product->qty, $data + $kit_data + module_invoke_all('add_to_cart_data', (array)$product), null, true, false);
+    }
+    if ($check_redirect) {
+      if (isset($_GET['destination'])) {
+        drupal_goto();
+      }
+  
+      $redirect = variable_get('uc_add_item_redirect', 'cart');
+      if ($redirect != '<none>') {
+        $_SESSION['last_url'] = referer_uri();
+        return $redirect;
+      }
+      else {
+        return referer_uri();
+      }
+    }
+    return array(array('success' => false, 'silent' => true, $message => ''));
+  }
 }
 
 /**

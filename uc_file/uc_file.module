@@ -5,7 +5,7 @@
  * @file
  * Allows products to be associated with downloadable files.
  *
- * The uc_file allows ubercart products to have associated downloadable files.
+ * uc_file allows ubercart products to have associated downloadable files.
  * Optionally, after a customer purchases such a product they will be sent a 
  * download link via email. Additionally, after logging on a customer can 
  * download files via their account page. Optionally, an admininstrator can set
@@ -17,40 +17,10 @@
 define('UC_FILE_PAGER_SIZE',50);
 define('UC_FILE_REQUEST_LIMIT',50);
 define('UC_FILE_BYTE_SIZE',1024);
-define('UC_FILE_RETRO_ORDER_LIMIT',1000);
-define('UC_FILE_RETRO_INCOMPLETE',-1);
 
  /******************************************************************************
  * Hook Functions (Drupal)
  ******************************************************************************/
- 
-/**
- * Implementation of hook_cron().
- */
-function uc_file_cron() {
-	$queue = variable_get('uc_file_grant_queue',array());
-	
-	//Check queued orders for retroactive download purchases
-	if (!empty($queue)) {
-		$ids = array('fid' => $queue[0]['fid'], 'nid' => $queue[0]['nid'], 'pfid' => $queue[0]['pfid']);
-		$order_ids = _user_table_action('allow_retroactive',$ids,$queue[0]['checked'],$queue[0]['remain']);
-		$last = ($queue[0]['remain'] > UC_FILE_RETRO_ORDER_LIMIT) ? FALSE : TRUE;
-		
-		foreach ($order_ids as $index => $order_id) {
-			if ($order_id != UC_FILE_RETRO_INCOMPLETE) {
-				uc_order_comment_save($order_id, $queue[0]['uid'],$queue[0]['message']);
-			}
-			else {
-				$queue[0]['checked'] += UC_FILE_RETRO_ORDER_LIMIT;
-				$queue[0]['remain'] -= UC_FILE_RETRO_ORDER_LIMIT;
-			}
-		}
-		if ($last) {
-			array_shift($queue);
-		}
-		variable_set('uc_file_grant_queue',$queue);
-	}
-}
  
 /**
  * Implementation of hook_form_alter().
@@ -68,7 +38,7 @@ function uc_file_form_alter($form_id, &$form) {
 function uc_file_menu($may_cache) {
   global $user;
   $items = array();
-  
+
 	if ($may_cache) {
 		$items[] = array(
 	 		'path' => '_autocomplete_file',
@@ -86,7 +56,7 @@ function uc_file_menu($may_cache) {
 		);
 	}
 	else {
-		if (db_result(db_query("SELECT status FROM {system} WHERE name = 'uc_notify'")) == 1) {
+		if (module_exists('uc_notify')) {
 			$items[] = array(
 				'path' => 'admin/store/settings/notify/edit/file',
 				'title' => t('File download'),
@@ -103,7 +73,7 @@ function uc_file_menu($may_cache) {
       'description' => t('View your purchased files.'),
       'callback' => 'uc_file_user_downloads',
       'callback arguments' => array(arg(1)),
-      'access' => (user_access('administer users') || $user->uid == arg(1)) && $user->uid,
+      'access' => (user_access('view all downloads') || $user->uid == arg(1)) && $user->uid,
       'type' => MENU_LOCAL_TASK,
     );
 		$items[] = array(
@@ -123,13 +93,14 @@ function uc_file_menu($may_cache) {
  * Implementation of hook_perm().
  */
 function uc_file_perm() {
-  return array('download file');
+  return array('download file','view all downloads');
 }
 
 /**
  * Implementation of hook_user().
  */
 function uc_file_user($op, &$edit, &$account, $category = NULL) {
+	global $user;
 	switch ($op) {
 		case 'delete':
 			_user_table_action('remove',NULL,$account->uid);
@@ -137,9 +108,16 @@ function uc_file_user($op, &$edit, &$account, $category = NULL) {
 		case 'form': 
 			if (user_access('administer users')) {
 				$file_downloads = db_query("SELECT * FROM {uc_file_users} as u INNER JOIN {uc_files} as f ON u.fid = f.fid WHERE `uid` = %d",$account->uid);
-				$options = array();
+				$files = db_query("SELECT * FROM {uc_files}");
+				$available_downloads = array();
+				$available_files = array();
 				while ($file_download = db_fetch_object($file_downloads)) {
-					$options[$file_download->key] = $file_download->filename;
+					$available_downloads[$file_download->key] = $file_download->filename;
+				}
+				while ($file = db_fetch_object($files)) {
+					if (substr($file->filename,-1) != '/' && substr($file->filename,-1) != '\\') {
+						$available_files[$file->fid] = $file->filename;
+					}
 				}
 				$form['file'] = array(
 					'#type' => 'fieldset',
@@ -153,13 +131,14 @@ function uc_file_user($op, &$edit, &$account, $category = NULL) {
 					'#title' => t('Remove file'),
 					'#multiple' => TRUE,
 					'#description' => t('Select a file to remove as a download. Hold Ctrl to select or unselect multiple files.'),
-					'#options' => $options,
+					'#options' => $available_downloads,
 				);
 				$form['file']['add_file'] = array(
-					'#type' => 'textfield',
+					'#type' => 'select',
 					'#title' => t('Add file'),
-					'#autocomplete_path' => '_autocomplete_file',
-					'#description' => t('Enter the file for the user to download. Entering a directory will allow all files in that directory to be downloadable.'),
+					'#multiple' => TRUE,
+					'#description' => t('Select a file to add as a download. Hold Ctrl to select or unselect multiple files.'),
+					'#options' => $available_files,
 				);
 			}
 			return $form;
@@ -173,17 +152,14 @@ function uc_file_user($op, &$edit, &$account, $category = NULL) {
 				}
 			}
 			if (!empty($edit['add_file'])) {
-				$fid = db_result(db_query("SELECT fid FROM {uc_files} WHERE filename = '%s'",$edit['add_file']));
-				_user_table_action('allow',$fid,$account->uid);
-			}
-			break;
-    case 'validate':
-			if (!empty($edit['add_file']) && !db_result(db_query("SELECT fid FROM {uc_files} WHERE filename = '%s'",$edit['add_file']))) {
-				form_set_error('add_file',t('%file is not a valid file or directory inside file download directory.',array('%file' => $edit['add_file'])));
+				foreach ($edit['add_file'] as $fid) {
+					_user_table_action('allow',$fid,$account->uid);
+				}
 			}
 			break;
     case 'view':
-			if (db_result(db_query("SELECT fid FROM {uc_file_users} WHERE uid = %d",$account->uid))) {
+			$existing_download = db_result(db_query("SELECT fid FROM {uc_file_users} WHERE uid = %d",$account->uid));
+			if ((user_access('view all downloads') || $user->uid == $account->uid) && $user->uid && $existing_download) {
 				$items['uc_file_download'] = array(
 					'value' => l(t("Click here to view your file downloads."),'user/'.$account->uid.'/files'),
 					'class' => 'member',
@@ -278,15 +254,9 @@ function uc_file_token_list($type = 'all') {
 function uc_file_token_values($type, $object = NULL) {
   switch ($type) {
     case 'uc_file':
-			$output_file_downloads = '';
 			if (!empty($object)) {
-				foreach ($object as $file_download) {
-					$filename = basename(db_result(db_query("SELECT filename FROM {uc_files} WHERE `fid` = %d",$file_download->fid)));
-					$download_url = url('download/'.$file_download->fid.'/'.$file_download->key,NULL,NULL,TRUE);
-					$output_file_downloads .= '<a href="'.$download_url.'">'.$download_url.'</a>'."\n";
-				}
+				$values['file-downloads'] = theme('uc_file_downloads_token',$object);
 			}
-			$values['file-downloads'] = $output_file_downloads;
       break;
   }
 	
@@ -308,6 +278,19 @@ function uc_file_uc_message() {
  ******************************************************************************/
  
 /**
+ * Theme file download links token
+ */ 
+function theme_uc_file_downloads_token($file_downloads) {
+	$output = '';
+	foreach ($file_downloads as $file_download) {
+		$filename = basename(db_result(db_query("SELECT filename FROM {uc_files} WHERE `fid` = %d",$file_download->fid)));
+		$download_url = url('download/'.$file_download->fid.'/'.$file_download->key,NULL,NULL,TRUE);
+		$output .= '<a href="'.$download_url.'">'.$download_url.'</a>'."\n";
+	}
+	return $output;
+}
+ 
+/**
  * product_feature delete function
  */ 
 function uc_file_feature_delete($feature) {
@@ -319,10 +302,10 @@ function uc_file_feature_delete($feature) {
  */ 
 function uc_file_feature_form($node, $feature) {
 	_file_table_action('insert');
-	$models = (!_get_adjustment_models($node->nid)) ? array(NULL => 'Any', $node->model => $node->model) : array(NULL => 'Any', $node->model => $node->model) + _get_adjustment_models($node->nid);
+	$models = (!_get_adjustment_models($node->nid)) ? array(NULL => t('Any'), $node->model => $node->model) : array(NULL => t('Any'), $node->model => $node->model) + _get_adjustment_models($node->nid);
 	
 	if (!empty($feature)) {
-		$file_product = db_fetch_object(db_query("SELECT * FROM {uc_file_products} as p INNER JOIN {uc_files} as f ON p.fid = f.fid WHERE pfid = %d",$feature['pfid']));
+		$file_product = db_fetch_object(db_query("SELECT * FROM {uc_file_products} as p LEFT JOIN {uc_files} as f ON p.fid = f.fid WHERE pfid = %d",$feature['pfid']));
 		$default_feature = $feature['pfid'];
 		$default_model = $file_product->model;
 		$default_filename = $file_product->filename;
@@ -368,11 +351,6 @@ function uc_file_feature_form($node, $feature) {
 		'#default_value' => $default_shippable,
 		'#description' => t('Check if this product model/SKU file download is also associated with a shippable product.'),
 	);
-	$form['uc_file_retroactive'] = array (
-		'#type' => 'checkbox', 
-		'#title' => t('Retroactive purchase'),
-		'#description' => t('Enable the download for customers who have previously purchased this product model/SKU.'),
-	);
 	
 	return uc_product_feature_form($form);
 }
@@ -383,23 +361,17 @@ function uc_file_feature_form_validate($form_id, $form_values) {
 }
 function uc_file_feature_form_submit($form_id, $form_values) {
 	global $user;
-	
+	$fid = db_result(db_query("SELECT fid FROM {uc_files} WHERE filename = '%s'",$form_values['uc_file_filename']));
 	//Build product feature descriptions
-	$description = (empty($form_values['uc_file_model'])) ? t('When product ') : t('When product model !sku ',array('!sku' => $form_values['uc_file_model']));
-	$description .= t(' is purchased customer can download ');
+	$description = (empty($form_values['uc_file_model'])) ? t('<strong>SKU:</strong> Any<br/>') : t('<strong>SKU:</strong> !sku<br/>',array('!sku' => $form_values['uc_file_model']));
 	if (is_dir(variable_get('uc_file_base_dir', NULL)."/".$form_values['uc_file_filename'])) {
-		$download = t('the files inside the !dir directory.', array('!dir' => $form_values['uc_file_filename']));
-		$description .= $download;
-		$dir = (substr($form_values['uc_file_filename'],-1) != "/") ? $form_values['uc_file_filename'].'/' : $form_values['uc_file_filename'];
-		$fid = db_result(db_query("SELECT fid FROM {uc_files} WHERE filename = '%s'",$dir));
+		$description .= t('<strong>Directory:</strong> !dir<br/>', array('!dir' => $form_values['uc_file_filename']));
 	}
 	else {
-		$download = t('the file !file.', array('!file' => basename($form_values['uc_file_filename'])));
-		$description .= $download;
-		$fid = db_result(db_query("SELECT fid FROM {uc_files} WHERE filename = '%s'",$form_values['uc_file_filename']));
+		$description .= t('<strong>File:</strong> !file<br/>', array('!file' => basename($form_values['uc_file_filename'])));;
 	}
-	$description .= ($form_values['uc_file_shippable']) ? t(' (Shippable: Yes)') : t(' (Shippable: No)');
 	$shippable = ($form_values['uc_file_shippable']) ? 1 : 0;
+	$description .= ($shippable) ? t('<strong>Shippable:</strong> Yes') : t('<strong>Shippable:</strong> No');
 	
 	//Insert or update uc_file_product table
 	if (empty($form_values['pfid'])) {
@@ -410,25 +382,6 @@ function uc_file_feature_form_submit($form_id, $form_values) {
 		db_query("DELETE FROM {uc_file_products} WHERE pfid = %d",$pfid);
 	}
 	db_query("INSERT INTO {uc_file_products} (pfid, fid, model, description, shippable) VALUES (%d, %d, '%s', '%s', %d)",$pfid,$fid,$form_values['uc_file_model'],$form_values['uc_file_description'],$shippable);
-	
-	//If chosen, check for users that have purchased this product sku and enable the download
-	if ($form_values['uc_file_retroactive']) {
-		$order_ids = _user_table_action('allow_retroactive', array('fid' => $fid, 'nid' => $form_values['nid'], 'pfid' => $pfid));
-		$message = t('User has been retroactively allowed to download ').$download;
-		
-		foreach ($order_ids as $index => $order_id) {
-			if ($order_id != UC_FILE_RETRO_INCOMPLETE) {
-				uc_order_comment_save($order_id, $user->uid,$message);
-			}
-			else {
-				drupal_set_message('Not all orders have been checked for purchases of this product. Ubercart will periodically check orders via cron until it has searched all existing orders.');
-				$queue = variable_get('uc_file_grant_queue',array());
-				$queue[] = array('submitted' => time(), 'fid' => $fid, 'pfid' => $pfid, 'uid' => $user->uid, 'nid' => $form_values['nid'], 'message' => $message, 'checked' => UC_FILE_RETRO_ORDER_LIMIT, 'remain' => $order_ids[$index+1]);
-				variable_set('uc_file_grant_queue',$queue);
-				break;
-			}
-		}
-	}
 	
 	$data = array(
 		'pfid' => $pfid,
@@ -444,7 +397,7 @@ function uc_file_feature_form_submit($form_id, $form_values) {
  * Form builder for file settings
  */ 
 function uc_file_feature_settings() {
-	drupal_add_js('$(document).ready(function() { if (document.getElementById("edit-uc-file-download-limit-duration-granularity").value == "never") {document.getElementById("edit-uc-file-download-limit-duration-qty").disabled = true;} });', 'inline');
+	drupal_add_js('$(document).ready(function() { if ($("#edit-uc-file-download-limit-duration-granularity").val() == "never") {$("#edit-uc-file-download-limit-duration-qty").attr("disabled","disabled").val("");} });', 'inline');
 	$statuses = array();
 	foreach (uc_order_status_list('general') as $status) {
     $statuses[$status['id']] = $status['title'];
@@ -511,13 +464,7 @@ function uc_file_feature_settings() {
 		),
 		'#default_value' => variable_get('uc_file_download_limit_duration_granularity','never'),
 		'#attributes' => array(
-			'onchange' => 
-			'if (this.value == "never") {
-				document.getElementById("edit-uc-file-download-limit-duration-qty").disabled = true; 
-			}
-			else {
-				document.getElementById("edit-uc-file-download-limit-duration-qty").disabled = false; 
-			}'
+			'onchange' => 'if (this.value == "never") {$("#edit-uc-file-download-limit-duration-qty").attr("disabled","disabled").val("");} else {$("#edit-uc-file-download-limit-duration-qty").removeAttr("disabled");}'
 		),
 		'#description' => t('How long after a product has been purchased until its file download expires.'),
 		'#prefix' => '<div class="duration">',
@@ -526,7 +473,7 @@ function uc_file_feature_settings() {
 	return $form;
 }
 function uc_file_feature_settings_validate($form_id, $form_values) {
-	if (!empty($form_values['uc_file_base_dir']) && $form_values['op'] == 'Save configuration' && 
+	if (!empty($form_values['uc_file_base_dir']) && $form_values['op'] == t('Save configuration') && 
 			!is_dir($form_values['uc_file_base_dir'])) {
 		form_set_error('uc_file_base_dir', t('%dir is not a valid file or directory',array('%dir' => $form_values['uc_file_base_dir'])));
 	}
@@ -557,13 +504,14 @@ function theme_uc_file_files_form($form) {
 		$args = array('form' => $form);
 		$header = tablesort_sql(tapir_get_header('uc_file_files_table', array()));
 		$order = (empty($header)) ? "ORDER BY f.filename ASC" : $header.",f.filename ASC";
-		$query = pager_query(db_rewrite_sql("SELECT f.filename, n.title, fp.model, f.fid, pf.pfid, n.nid FROM {uc_files} as f LEFT JOIN {uc_file_products} as fp ON (f.fid = fp.fid) LEFT JOIN {uc_product_features} as pf ON (fp.pfid = pf.pfid) LEFT JOIN {node} as n ON (pf.nid = n.nid) ". $order), UC_FILE_PAGER_SIZE, 0, NULL);
+		$count_query = "SELECT COUNT(*) FROM {uc_files}";
+		$query = pager_query("SELECT n.nid, f.filename, n.title, fp.model, f.fid, pf.pfid FROM {uc_files} as f LEFT JOIN {uc_file_products} as fp ON (f.fid = fp.fid) LEFT JOIN {uc_product_features} as pf ON (fp.pfid = pf.pfid) LEFT JOIN {node} as n ON (pf.nid = n.nid) ".$order, UC_FILE_PAGER_SIZE, 0, $count_query);
 		while ($file = db_fetch_object($query)) {
 			$files[] = $file;
 		}
 		$args['files'] = $files;
 		
-		$output .= '<p>'.t("File downloads can be attached to any &Uuml;bercart product as a product feature. For security reasons the ").l(t("file downloads directory"),"admin/store/settings/products/edit/features").t(" is seperated from ").l(t("Drupal's file system"),"admin/settings/file-system").t(". Here are the list of files (and their associated &Uuml;bercart products) that can be used for file downloads.").'</p>';
+		$output .= '<p>'.t('File downloads can be attached to any &Uuml;bercart product as a product feature. For security reasons the <a href="!download_url">file downloads directory</a> is separated from <a href="!file_url">Drupal\'s file system</a> . Here are the list of files (and their associated &Uuml;bercart products) that can be used for file downloads.',array('!download_url' => url('admin/store/settings/products/edit/features'),'!file_url' => url('admin/settings/file-system'))).'</p>';
 		$output .= drupal_render($form['uc_file_action']);
 		$output .= tapir_get_table('uc_file_files_table', $args);
 		$output .= theme('pager', NULL, UC_FILE_PAGER_SIZE, 0);
@@ -817,9 +765,10 @@ function uc_file_notify_settings() {
     '#type' => 'textarea',
     '#title' => t('Message text'),
 		'#default_value' => variable_get('uc_file_download_notification_message',uc_get_message('uc_file_download_message')),
-    '#description' => t('The message the user receives after purchasing products with file downloads ('.l(t('uses uc_order, uc_file, and global tokens'),'admin/store/help/tokens').')'),
+    '#description' => t('The message the user receives after purchasing products with file downloads (<a href="!token_url">uses order, uc_file, and global tokens</a>)',array('!token_url' => url('admin/store/help/tokens'))),
 		'#rows' => 10,
   );
+	$form['uc_file_download_notification_format'] = filter_form(variable_get('uc_file_download_notification_format', FILTER_FORMAT_DEFAULT), NULL, array('uc_file_download_notification_format'));
 	
   return system_settings_form($form);
 }
@@ -873,14 +822,15 @@ function uc_file_user_downloads($uid) {
 		array('data' => t('Downloads'), 'field' => 'u.accessed'),
   );
 	$sql = "SELECT `granted`, `filename`, `accessed`, `description`, `key`, f.fid FROM {uc_file_users} as u LEFT JOIN {uc_files} as f ON u.fid = f.fid LEFT JOIN {uc_file_products} as p ON p.pfid = u.pfid WHERE uid = %d";
-	$files = pager_query($sql.tablesort_sql($header), UC_FILE_PAGER_SIZE, 0, NULL, $uid);
+	$count_query = "SELECT COUNT(*) FROM {uc_file_users} WHERE uid = $uid";
+	$files = pager_query($sql.tablesort_sql($header), UC_FILE_PAGER_SIZE, 0, $count_query, $uid);
 	
 	while ($file = db_fetch_object($files)) {
 		$expiration = _file_expiration_date($file->granted);
-		$file_link = (!$expiration) ? l(basename($file->filename),'download/'.$file->fid.'/'.$file->key) : ((time() > $expiration) ? basename($file->filename) : l(basename($file->filename),'download/'.$file->fid.'/'.$file->key).' ('.t('expires on ').date('m/d/Y', $expiration).')');
+		$file_link = (!$expiration) ? l(basename($file->filename),'download/'.$file->fid.'/'.$file->key) : ((time() > $expiration) ? basename($file->filename) : l(basename($file->filename),'download/'.$file->fid.'/'.$file->key).' ('.t('expires on ').format_date($expiration,'custom','m/d/Y').')');
 		
     $rows[] = array(
-      array('data' => date('m/d/Y', $file->granted), 'class' => 'date-row'),
+      array('data' => format_date($file->granted,'custom', 'm/d/Y'), 'class' => 'date-row'),
 			array('data' => $file_link, 'class' => 'filename-row'),
 			array('data' => $file->description, 'class' => 'description-row'),
 			array('data' => $file->accessed, 'class' => 'download-row'),
@@ -911,7 +861,7 @@ function _autocomplete_filename() {
 	$files = db_query("SELECT filename FROM {uc_files} WHERE filename LIKE LOWER('%s')","%%".$string."%%");
 	
 	while ($file = db_fetch_object($files)) {
-		$matches[check_plain($file->filename)] = check_plain($file->filename);
+		$matches[$file->filename] = $file->filename;
 	}
   print drupal_to_js($matches);
   exit();
@@ -932,12 +882,13 @@ function _email_file_download($user, $order, $file_users) {
 	if (!variable_get('uc_file_download_notification',FALSE)) {
 		return;
 	}
-	$token_filters = array ('global' => NULL,'user' => $user,'uc_order' => $order,'uc_file' => $file_users);
+	$token_filters = array ('global' => NULL,'user' => $user,'order' => $order,'uc_file' => $file_users);
 	$key = 'uc_file_download_notify';
 	$to = $order->primary_email;
 	$from = variable_get('uc_store_email_from', ini_get('sendmail_from'));
 	$subject = token_replace_multiple(variable_get('uc_file_download_notification_subject',uc_get_message('uc_file_download_subject')), $token_filters);
 	$body = token_replace_multiple(variable_get('uc_file_download_notification_message',uc_get_message('uc_file_download_message')), $token_filters);
+	$body = check_markup($body, variable_get('uc_file_download_notification_format', 3), FALSE);
 	
 	//drupal_set_message("Mail Sent<br/>key: $key,<br/>to: $to,<br/>subject: $subject,<br/>body: $body,<br/>from: $from,<br/>");
 	return drupal_mail($key, $to, $subject, $body, $from, uc_notify_headers());
@@ -1081,21 +1032,10 @@ function _file_download_transfer($file_user, $ip, $fid) {
  */
 function _file_expiration_date($purchase_date = NULL) {
 	$purchase_date = (!is_null($purchase_date)) ? $purchase_date : time();
-	$quantity = variable_get('uc_file_download_limit_duration_qty',NULL);
-	$quantity = (!is_null($quantity)) ? $quantity : 1;
-	
-	switch (variable_get('uc_file_download_limit_duration_granularity','never')) {
-		case 'day':
-			return (86400 * $quantity) + $purchase_date;
-		case 'week':
-			return (604800 * $quantity) + $purchase_date;
-		case 'month':
-			return mktime(date("H",$purchase_date), date("i",$purchase_date), date("s",$purchase_date), date("m",$purchase_date)+$quantity, date("d",$purchase_date), date("Y",$purchase_date));
-		case 'year':
-			return mktime(date("H",$purchase_date), date("i",$purchase_date), date("s",$purchase_date), date("m",$purchase_date), date("d",$purchase_date), date("Y",$purchase_date)+$quantity);
-		default:
-	}
-	return FALSE;
+	$quantity = (!is_null(variable_get('uc_file_download_limit_duration_qty',NULL))) ? variable_get('uc_file_download_limit_duration_qty',NULL) : 1;
+	$operator = ($quantity < 0) ? "" : "+";
+	$duration = variable_get('uc_file_download_limit_duration_granularity','never');
+	return ($duration != 'never') ? strtotime("$operator$quantity $duration",$purchase_date) : FALSE;
 }
 
 /**
@@ -1126,10 +1066,21 @@ function _file_table_action($op, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL) {
 					$filename = str_replace($dir,"",$file->filename);
 					$file_dir = dirname($filename);
 					if (!db_result(db_query("SELECT fid FROM {uc_files} WHERE filename = '%s'",$file_dir."/")) && $file_dir != ".") {
-						db_query("INSERT INTO {uc_files} (`fid`, `filename`) VALUES (%d, '%s')",db_next_id('{uc_files}_fid'),$file_dir."/");
-					}					
+						$fid = db_next_id('{uc_files}_fid');
+						db_query("INSERT INTO {uc_files} (`fid`, `filename`) VALUES (%d, '%s')",$fid,$file_dir."/");
+					}
 					if (!db_result(db_query("SELECT fid FROM {uc_files} WHERE filename = '%s'",$filename))) {
-						db_query("INSERT INTO {uc_files} (`fid`, `filename`) VALUES (%d, '%s')",db_next_id('{uc_files}_fid'),$filename);
+						$fid = db_next_id('{uc_files}_fid');
+						db_query("INSERT INTO {uc_files} (`fid`, `filename`) VALUES (%d, '%s')",$fid,$filename);
+					}
+					if (!is_null($fid)) {
+						$file_object = db_fetch_object(db_query("SELECT * FROM {uc_files} WHERE fid = %d",$fid));
+						//Check any if any hook_file_action('insert',$args) are implemented
+						foreach (module_implements('file_action') as $module) {
+							$name = $module .'_file_action';
+							$result = $name('insert', array('file_object' => $file_object));
+						}
+						unset($fid);
 					}
 				}
 			}
@@ -1165,10 +1116,10 @@ function _file_table_action($op, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL) {
 		case 'refresh':  //Remove non-existing items from table (args not used)
 			$files = db_query("SELECT * FROM {uc_files}");
 			while ($file = db_fetch_object($files)) {
-				if (is_dir(variable_get('uc_file_base_dir', NULL)."/".$form_values['uc_file_filename'])) {
+				if (is_dir(variable_get('uc_file_base_dir', NULL)."/".$file->filename)) {
 					continue;
 				}
-				if (is_file(variable_get('uc_file_base_dir', NULL)."/".$form_values['uc_file_filename'])) {
+				if (is_file(variable_get('uc_file_base_dir', NULL)."/".$file->filename)) {
 					continue;
 				}
 				db_query("DELETE FROM {uc_files} WHERE `fid` = %d",$file->fid);
@@ -1205,7 +1156,7 @@ function _generate_hash($values) {
  */
 function _get_adjustment_models($nid) {
 	$models = array();
-	if (db_result(db_query("SELECT status FROM {system} WHERE name = 'uc_attribute'")) == 1) {
+	if (module_exists('uc_attribute')) {
 		$adjustments = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = %d",$nid);
 		while ($adjustment = db_fetch_object($adjustments)) {
 			if (!in_array($adjustment->model,$models)) {
@@ -1344,32 +1295,6 @@ function _user_table_action($op, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL) {
 				}
 			}
 			return (!is_null($output)) ? $output : FALSE;
-			break;
-		case 'allow_retroactive': //arg1 = ids (associative array of ids arg1['fid'], arg1['nid'], arg1['pfid']), arg2 = orders offset, args3 = orders limit
-		//@return an array of order ids that were found to have product sku that allows downloads
-		//If a limit is exceeded appended UC_FILE_RETRO_INCOMPLETE and total number of orders to check
-			$limit = (!is_null($arg2) && !is_null($arg3)) ? "LIMIT $arg2,$arg3" : "";
-			$orders = db_query("SELECT `order_id`, `uid` FROM {uc_orders} WHERE order_status = '%s' ".$limit,variable_get('uc_file_default_order_status','completed'));
-			$model = db_result(db_query("SELECT model FROM {uc_file_products} WHERE pfid = %d",$arg1['pfid']));
-			$orders_checked = 0;
-			$output = array();
-			
-			while ($order = db_fetch_object($orders)) {
-				if ($orders_checked > UC_FILE_RETRO_ORDER_LIMIT) {
-					$output[] = UC_FILE_RETRO_INCOMPLETE;
-					$output[] = db_num_rows($orders) - UC_FILE_RETRO_ORDER_LIMIT;
-					break;
-				}
-				$products = db_query("SELECT model, nid FROM {uc_order_products} WHERE order_id = %d",$order->order_id);
-				while ($product = db_fetch_object($products)) {
-					if (($model == $product->model || empty($model)) && $product->nid == $arg1['nid']) {
-						_user_table_action('allow',$arg1['fid'],$order->uid,$arg1['pfid']);
-						$output[] = $order->order_id;
-					}
-				}
-				$orders_checked++;
-			}
-			return $output;
 			break;
 		case 'download': //arg1 = existing file_user object, arg2 = ip download was made from, arg3 not used
 			if (!is_null($arg1) && !is_null($arg2)) {

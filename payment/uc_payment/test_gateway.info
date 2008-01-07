@@ -1,6 +1,6 @@
 ; $Id$
 name = Test Gateway
-description = A generic gateway used to test the payment system.
-dependencies = uc_payment
+description = Adds a credit card gateway that simulates a successful payment for testing checkout.
+dependencies = uc_payment uc_credit
 package = Ubercart - payment
 

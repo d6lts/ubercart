@@ -31,8 +31,32 @@ function uc_file_install(){
 				KEY uid (uid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 COLLATE utf8_unicode_ci */ ");
       break;
-      break;
     case 'pgsql':
+			db_query("CREATE TABLE {uc_files} (
+					fid integer NOT NULL,
+					filename varchar(255) NOT NULL
+					);");
+			db_query("CREATE INDEX {uc_files}_fid ON {uc_files} (fid)");
+			db_query("CREATE TABLE {uc_file_products} (
+					pfid integer NOT NULL,
+					fid integer NOT NULL,
+					model varchar(255) default NULL,
+					description varchar(255) default NULL,
+					shippable boolean NOT NULL
+					);");
+			db_query("CREATE INDEX {uc_file_products}_pfid ON {uc_file_products} (pfid)");
+			db_query("CREATE INDEX {uc_file_products}_fid ON {uc_file_products} (fid)");
+			db_query("CREATE TABLE {uc_file_users} (
+					fid integer NOT NULL,
+					uid integer NOT NULL,
+					pfid integer default NULL,
+					key varchar(32) NOT NULL,
+					granted integer NOT NULL,
+					accessed smallint NOT NULL default 0,
+					addresses text
+			);");
+			db_query("CREATE INDEX {uc_file_users}_pfid ON {uc_file_users} (pfid)");
+			db_query("CREATE INDEX {uc_file_users}_uid ON {uc_file_users} (uid)");
       break;
   }
 }

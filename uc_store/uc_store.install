@@ -23,6 +23,11 @@ function uc_store_install(){
         KEY zone_code (zone_code),
         KEY zone_country_id (zone_country_id)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 COLLATE utf8_unicode_ci */");
+      db_query("CREATE TABLE {uc_store_footers} (
+        `path_hash` varchar(32) NOT NULL default '',
+        `message` text NOT NULL,
+        PRIMARY KEY (path_hash)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 COLLATE utf8_unicode_ci */ ");
       break;
     case 'pgsql':
       db_query("CREATE TABLE {uc_countries} (
@@ -31,26 +36,31 @@ function uc_store_install(){
         country_iso_code_2 char(2) NOT NULL default '',
         country_iso_code_3 char(3) NOT NULL default '',
         version integer NOT NULL default '0',
-        PRIMARY KEY (country_id),
-        KEY country_name (country_name)
-      )");
+        PRIMARY KEY (country_id)
+      );");
+			db_query("CREATE INDEX {uc_countries}_country_name ON {uc_countries} (country_name)");
       db_query("CREATE INDEX {uc_countries}_country_id ON {uc_countries} (country_id)");
       db_query("CREATE TABLE {uc_zones} (
         zone_id integer NOT NULL default 0,
         zone_country_id integer NOT NULL default 0,
         zone_code varchar(32) NOT NULL default '',
         zone_name varchar(25) NOT NULL default '',
-        PRIMARY KEY (zone_id),
-        KEY zone_code (zone_code),
-        KEY zone_country_id (zone_country_id)
+        PRIMARY KEY (zone_id)
+      );");
+      db_query("CREATE INDEX {uc_zones}_zone_code ON {uc_zones} (zone_code)");
+      db_query("CREATE INDEX {uc_zones}_zone_country_id ON {uc_zones} (zone_country_id)");
+      db_query("CREATE TABLE {uc_store_footers} (
+        path_hash varchar(32) NOT NULL default '',
+        message text NOT NULL default '',
+        PRIMARY KEY (path_hash)
       )");
-
       break;
   }
 
   // Install United States and Canada by default.
-  require_once(drupal_get_path('module', 'uc_store') .'/countries/united_states_840_1.cif');
-  require_once(drupal_get_path('module', 'uc_store') .'/countries/canada_124_1.cif');
+  $path = drupal_get_path('module', 'uc_store');
+  require_once($path .'/countries/united_states_840_1.cif');
+  require_once($path .'/countries/canada_124_1.cif');
   united_states_install();
   canada_install();
 }
@@ -178,3 +188,24 @@ function uc_store_update_2() {
   return $ret;
 }
 
+function uc_store_update_3(){
+  $ret = array();
+  switch ($GLOBALS['db_type']){
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("CREATE TABLE {uc_store_footers} (
+        `path_hash` varchar(32) NOT NULL default '',
+        `message` text NOT NULL,
+        PRIMARY KEY (path_hash)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 COLLATE utf8_unicode_ci */ ");
+    break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE TABLE {uc_store_footers} (
+        path_hash varchar(32) NOT NULL default '',
+        message text NOT NULL default '',
+        PRIMARY KEY (path_hash)
+      )");
+    break;
+  }
+  return $ret;
+}

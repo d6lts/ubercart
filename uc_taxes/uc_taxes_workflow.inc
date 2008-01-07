@@ -15,7 +15,7 @@
  * Implementation of hook_entity_info().
  */
 function uc_taxes_entity_info(){
-  $entities['line_item'] = array(
+  $entities['tax_line_item'] = array(
     '#save' => 'uc_taxes_save_line_item',
   );
   return $entities;
@@ -36,7 +36,8 @@ function uc_taxes_event_info(){
       '#arguments' => array(
         'order' => array('#entity' => 'order', '#label' => t('Order')),
         'tax' => array('#entity' => 'tax', '#label' => t('Tax')),
-        'line_item' => array('#entity' => 'line_item', '#label' => t('Line Item')),
+        'user' => array('#entity' => 'user', '#label' => t('User account')),
+        'tax_line_item' => array('#entity' => 'tax_line_item', '#label' => t('Line Item')),
       ),
     );
   }
@@ -53,7 +54,7 @@ function uc_taxes_action_info(){
     '#arguments' => array(
       'order' => array('#entity' => 'order', '#label' => t('Order')),
       'tax' => array('#entity' => 'tax', '#label' => t('Tax')),
-      'line_item' => array('#entity' => 'line_item', '#label' => t('Line Item')),
+      'tax_line_item' => array('#entity' => 'tax_line_item', '#label' => t('Line Item')),
     ),
     '#module' => t('Taxes'),
   );
@@ -90,7 +91,7 @@ function uc_taxes_action_apply_tax($order, $tax){
   }
   if ($amount){
     $line_item = (object)array('id' => $tax->id, 'name' => $tax->name, 'amount' => $amount, 'weight' => $tax->weight);
-    return array('line_item' => $line_item);
+    return array('tax_line_item' => $line_item);
   }
 }
 

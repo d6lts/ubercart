@@ -1,4 +1,4 @@
-// -*- js-var: set_line_item, basePath, getTax; -*-
+// -*- js-var: set_line_item, getTax; -*-
 // $Id$
 
 var page;
@@ -21,7 +21,7 @@ function setTaxCallbacks(){
   $("#quote").find("input:radio").change(function(){
     var i = $(this).val();
     try {
-      var label = $(this).parent().text()
+      var label = $(this).parent().text();
       set_line_item("shipping", label.substr(0, label.indexOf(":")), Number($(this).parent().prev().val()).toFixed(2), 1);
       getTax();
     }
@@ -38,6 +38,7 @@ function quoteCallback(products){
 
   page = $("input:hidden[@name*=page]").val();
   details = new Object();
+  details["uid"] = $("input[@name*=uid]").val();
   //details["details[zone]"] = $("select[@name*=delivery_zone] option:selected").val();
   //details["details[country]"] = $("select[@name*=delivery_country] option:selected").val();
   $("select[@name*=delivery_]").each(function(i){
@@ -52,23 +53,23 @@ function quoteCallback(products){
   else{
     products = "";
     var i = 0;
-    var product = $("input[@name^='products[" + i + "]']")
+    var product = $("input[@name^='products[" + i + "]']");
     while (product.length){
       products += "|" + product.filter("[@name$='[nid]']").val();
-      products += "^" + product.filter("[@name$='[title]']").val();
-      products += "^" + product.filter("[@name$='[model]']").val();
-      products += "^" + product.filter("[@name$='[manufacturer]']").val();
-      products += "^" + product.filter("[@name$='[qty]']").val();
-      products += "^" + product.filter("[@name$='[cost]']").val();
-      products += "^" + product.filter("[@name$='[price]']").val();
-      products += "^" + product.filter("[@name$='[weight]']").val();
+      products += "^" + product.end().filter("[@name$='[title]']").val();
+      products += "^" + product.end().filter("[@name$='[model]']").val();
+      products += "^" + product.end().filter("[@name$='[manufacturer]']").val();
+      products += "^" + product.end().filter("[@name$='[qty]']").val();
+      products += "^" + product.end().filter("[@name$='[cost]']").val();
+      products += "^" + product.end().filter("[@name$='[price]']").val();
+      products += "^" + product.end().filter("[@name$='[weight]']").val();
       i++;
-      product = $("input[@name^='products[" + i + "]']")
+      product = $("input[@name^='products[" + i + "]']");
     }
     details["products"] = products.substr(1);
   }
   var progress = new Drupal.progressBar("quoteProgress");
-  progress.setProgress(-1, "Receiving Quotes:");
+  progress.setProgress(-1, Drupal.settings.uc_quote.progress_msg);
   $("#quote").empty().append(progress.element);
   $("#quote").addClass("solid-border").css("margin-top", "1em");
   // progress.startMonitoring(Drupal.settings['base_path'] + "shipping/quote", 0);
@@ -89,49 +90,49 @@ function displayQuote(data){
   var errorFlag = true;
   var i;
   for (i in data){
-    numQuotes++;
+    if (data[i].rate != undefined || data[i].error || data[i].notes){
+      numQuotes++;
+    }
   }
   for (i in data){
+    var item = '';
     var label = data[i].option_label;
-    
-    if (data[i].rate != undefined){
-      if (numQuotes > 1 && page != 'cart'){
-        var item = "<div class=\"form-item\">\n"
-          + "<input type=\"hidden\" name=\"rate[" + i + "]\" value=\"" + Number(data[i].rate).toFixed(2) + "\" />\n"
-          + "<label class=\"option\">"
-          + "<input type=\"radio\" class=\"form-radio\" name=\"quote-option\" value=\"" + i + "\" />\n"
-          + label + ": " + data[i].format + "</label>\n";
-        if (data[i].notes) {
-          item += "<div class=\"quote-notes\">" + data[i].notes + "</div>\n";
+    if (data[i].rate != undefined || data[i].error || data[i].notes){
+      
+      if (data[i].rate != undefined){
+        if (numQuotes > 1 && page != 'cart'){
+          item = "<input type=\"hidden\" name=\"rate[" + i + "]\" value=\"" + Number(data[i].rate).toFixed(2) + "\" />"
+            + "<label class=\"option\">"
+            + "<input type=\"radio\" class=\"form-radio\" name=\"quote-option\" value=\"" + i + "\" />"
+            + label + ": " + data[i].format + "</label>";
         }
-        item += "</div>\n";
-        quoteDiv.append(item);
-        if (page == "checkout"){
-          quoteDiv.find("input:radio[@value=" + i +"]").change(function(){
-            var i = $(this).val();
-            try {
-              set_line_item("shipping", data[i].option_label, Number(data[i].rate).toFixed(2), 1);
-              getTax();
+        else{
+          item = "<input type=\"hidden\" name=\"quote-option\" value=\"" + i + "\" />"
+            + "<input type=\"hidden\" name=\"rate[" + i + "]\" value=\"" + Number(data[i].rate).toFixed(2) + "\" />"
+            + "<label class=\"option\">" + label + ": " + data[i].format + "</label>";
+          if (page == "checkout"){
+            if (label != "" && set_line_item != undefined){
+              set_line_item("shipping", label, Number(data[i].rate).toFixed(2), 1);
             }
-            catch(err) { }
-          }).end();
-        }
-      }
-      else{
-        var item = "<div>\n"
-          + "<input type=\"hidden\" name=\"quote-option\" value=\"" + i + "\" />\n"
-          + "<input type=\"hidden\" name=\"rate[" + i + "]\" value=\"" + Number(data[i].rate).toFixed(2) + "\" />\n"
-          + "<label class=\"option\">" + label + ": " + data[i].format + "</label>\n";
-        if (data[i].notes) {
-          item += "<div class=\"quote-notes\">" + data[i].notes + "</div>\n";
-        }
-        item += "</div>\n";
-        quoteDiv.append(item);
-        if (page == "checkout"){
-          if (label != "" && set_line_item != undefined){
-            set_line_item("shipping", label, Number(data[i].rate).toFixed(2), 1);
           }
         }
+      }
+      if (data[i].error) {
+        item += '<div class="quote-error">' + data[i].error + "</div>";
+      }
+      if (data[i].notes) {
+        item += '<div class="quote-notes">' + data[i].notes + "</div>";
+      }
+      quoteDiv.append('<div class="form-item">' + item + "</div>\n");
+      if (page == "checkout"){
+        quoteDiv.find("input:radio[@value=" + i +"]").change(function(){
+          var i = $(this).val();
+          try {
+            set_line_item("shipping", data[i].option_label, Number(data[i].rate).toFixed(2), 1);
+            getTax();
+          }
+          catch(err) { }
+        }).end();
       }
     }
     if (data[i].debug != undefined){
@@ -139,16 +140,16 @@ function displayQuote(data){
     }
   }
   if (quoteDiv.find("input").length == 0){
-    quoteDiv.append("There were problems getting a shipping quote. Please verify the delivery and product information and try again.<br />If this does not resolve the issue, please call in to complete your order.");
+    quoteDiv.end().append(Drupal.settings.uc_quote.err_msg);
   }
   else{
-    quoteDiv.end().find("input:radio").eq(0).click().end().end();
+    quoteDiv.end().find("input:radio").eq(0).change().attr("checked", "checked").end().end();
     var quoteForm = quoteDiv.html();
     quoteDiv.append("<input type=\"hidden\" name=\"quote-form\" value=\"" + encodeURIComponent(quoteForm) + "\" />");
   }
 
   try {
-    if (page != "cart"){
+    if (page == "checkout"){
       getTax();
     }
   }

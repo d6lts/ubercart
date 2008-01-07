@@ -42,36 +42,35 @@ function uc_payment_install(){
       break;
     case 'pgsql':
       db_query("CREATE TABLE {uc_payment_check} (
-        check_id mediumint(9) NOT NULL,
-        order_id mediumint(9) NOT NULL,
-        clear_date int(11) NOT NULL,
-        PRIMARY KEY (check_id),
-        KEY order_id (order_id)
-      )");
+        check_id integer NOT NULL,
+        order_id integer NOT NULL,
+        clear_date integer NOT NULL,
+        PRIMARY KEY (check_id)
+      );");
+			db_query("CREATE INDEX {uc_payment_check}_order_id ON {uc_payment_check} (order_id)");
       db_query("CREATE TABLE {uc_payment_cod} (
-        order_id mediumint(9) NOT NULL,
-        delivery_month smallint(6) NOT NULL,
-        delivery_day smallint(6) NOT NULL,
-        delivery_year smallint(6) NOT NULL,
-        PRIMARY KEY  (order_id)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+        order_id integer NOT NULL,
+        delivery_month smallint NOT NULL,
+        delivery_day smallint NOT NULL,
+        delivery_year smallint NOT NULL,
+      );");
       db_query("CREATE TABLE {uc_payment_other} (
         order_id mediumint(9) NOT NULL,
         description varchar(64) NOT NULL,
         PRIMARY KEY order_id (order_id)
-      )");
+      );");
       db_query("CREATE TABLE {uc_payment_receipts} (
-        receipt_id mediumint(9) NOT NULL,
-        order_id mediumint(9) NOT NULL,
+        receipt_id integer NOT NULL,
+        order_id integer NOT NULL,
         method varchar(32) NOT NULL,
         amount decimal(10,2) NOT NULL,
-        uid mediumint(9) NOT NULL,
+        uid integer NOT NULL,
         data text NOT NULL,
-        comment tinytext NOT NULL,
-        received int(11) NOT NULL,
-        PRIMARY KEY (receipt_id),
-        KEY order_id (order_id)
-      )");
+        comment text NOT NULL,
+        received integer NOT NULL,
+        PRIMARY KEY (receipt_id)
+      );");
+			db_query("CREATE INDEX {uc_payment_receipts}_order_id ON {uc_payment_receipts} (order_id)");
       db_query("INSERT INTO {uc_order_statuses} (order_status_id, title, state, weight, locked) VALUES ('payment_received', '". $t('Payment received') ."', 'payment_received', 10, 1);");
       break;
   }

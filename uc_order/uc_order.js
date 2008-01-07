@@ -157,7 +157,8 @@ function load_new_customer_form() {
 
 function check_new_customer_address() {
   var options = {
-    'email' : $('#customer-select #edit-email').val()
+    'email' : $('#customer-select #edit-email').val(),
+    'sendmail' : $('#customer-select #edit-sendmail').attr('checked')
   };
   $.post(Drupal.settings['base_path'] + 'admin/store/orders/customer/new/check/' + options['email'], options,
          function (contents) {

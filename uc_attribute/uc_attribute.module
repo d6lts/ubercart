@@ -40,6 +40,7 @@ function uc_attribute_menu($may_cache){
   if ($may_cache){
     $items[] = array('path' => 'admin/store/products/attributes',
       'title' => t('Manage attributes'),
+      'description' => t('Create and edit attributes and options.'),
       'access' => user_access('administer products'),
       'callback' => 'uc_attribute_default',
       'type' => MENU_NORMAL_ITEM,
@@ -47,6 +48,7 @@ function uc_attribute_menu($may_cache){
     );
     $items[] = array('path' => 'admin/store/settings/attributes',
       'title' => t('Attribute settings'),
+      'description' => t('Configure the attribute settings'),
       'access' => user_access('administer products'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('uc_attribute_admin_settings'),
@@ -115,21 +117,21 @@ function uc_attribute_menu($may_cache){
       $types = uc_product_node_info();
       if ($node->nid && in_array($node->type, array_keys($types))){
         $items[] = array('path' => 'node/'. arg(1) .'/edit/attributes',
-          'title' => t('attributes'),
+          'title' => t('Attributes'),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('uc_object_attributes_form', arg(1), 'product'),
           'weight' => 1,
           'type' => MENU_LOCAL_TASK,
         );
         $items[] = array('path' => 'node/'. arg(1) .'/edit/options',
-          'title' => t('options'),
+          'title' => t('Options'),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('uc_object_options_form', arg(1), 'product'),
           'weight' => 2,
           'type' => MENU_LOCAL_TASK,
         );
         $items[] = array('path' => 'node/'. arg(1) .'/edit/adjustments',
-          'title' => t('adjustments'),
+          'title' => t('Adjustments'),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('uc_product_adjustments_form', arg(1)),
           'weight' => 3,
@@ -181,6 +183,21 @@ function uc_attribute_nodeapi(&$node, $op, $arg3 = null, $arg4 = null){
         db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
         db_query("DELETE FROM {uc_product_attributes} WHERE nid = %d", $node->nid);
       break;
+      case 'update index':
+        $output = '';
+        $attributes = uc_product_get_attributes($node->nid);
+        foreach ($attributes as $attribute){
+          $output .= '<h3>'. $attribute->name .'</h3>';
+          foreach ($atrribute->options as $option){
+            $output .= $option->name .' ';
+          }
+          $output .= "\n";
+        }
+        $result = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
+        while ($adjustment = db_fetch_object($result)){
+          $output .= '<h2>'. $adjustment->model ."<h2>\n";
+        }
+      return $output;
     }
   }
 }
@@ -301,7 +318,7 @@ function uc_attribute_default(){
  */
 function uc_attribute_view($attr_id){
   if (!($attribute = uc_attribute_load($attr_id))){
-    drupal_set_message(t('Attribute with aid = @id does not exist.', array('@id' => $attr_id)), 'error');
+    drupal_set_message(t('Attribute with aid @id does not exist.', array('@id' => $attr_id)), 'error');
     drupal_goto('admin/store/products/attributes');
   }
   $breadcrumbs = drupal_get_breadcrumb();
@@ -315,7 +332,7 @@ function uc_attribute_view($attr_id){
   if (count($rows) == 0){
     $rows[] = array(array('data' => t('No options defined for this product attribute.'), 'colspan' => '7'));
   }
-  $header = array(t('Name'), t('Default Cost'), t('Default Price'), t('Default Weight'), t('Order'), array('data' => t('Operations'), 'colspan' => '2'));
+  $header = array(t('Name'), t('Default cost'), t('Default price'), t('Default weight'), t('Order'), array('data' => t('Operations'), 'colspan' => '2'));
   $output .= theme('table', $header, $rows);
   $output .= '<h2>'. t('Add an option') .'</h2>';
   $output .= drupal_get_form('uc_attribute_option_form', $attr_id);
@@ -430,25 +447,25 @@ function uc_attribute_option_form($attr_id, $opt_id = null){
     $option = new stdClass();
   }
   $form['name'] = array('#type' => 'textfield',
-    '#title' => t('Option Name'),
+    '#title' => t('Option name'),
     '#default_value' => $option->name,
     '#required' => true,
     '#weight' => 0,
   );
   $form['cost'] = array('#type' => 'textfield',
-    '#title' => t('Default Cost'),
+    '#title' => t('Default cost'),
     '#default_value' => $option->cost,
     '#description' => t('Adjusts the product cost by the specified dollar amount.'),
     '#weight' => 1,
   );
   $form['price'] = array('#type' => 'textfield',
-    '#title' => t('Default Price'),
+    '#title' => t('Default price'),
     '#default_value' => $option->price,
     '#description' => t('Adjusts the product price by the specified dollar amount.'),
     '#weight' => 2,
   );
   $form['weight'] = array('#type' => 'textfield',
-    '#title' => t('Default Weight'),
+    '#title' => t('Default weight'),
     '#default_value' => $option->weight,
     '#description' => t('Adjusts the product weight by this value in pounds.'),
     '#weight' => 3,
@@ -618,7 +635,7 @@ function uc_object_attributes_form($id, $type){
  */
 function theme_uc_object_attributes_form($form){
   $output = drupal_render($form['admin_link']);
-  $header = array(t('Remove'), t('Name'), t('Default Option'), t('Order'));
+  $header = array(t('Remove'), t('Name'), t('Default option'), t('Order'));
   if (count(element_children($form['chosen_attr']))){
     foreach (element_children($form['chosen_attr']) as $attr){
       $rows[] = array(drupal_render($form['chosen_attr'][$attr]['remove']), drupal_render($form['chosen_attr'][$attr]['name']), drupal_render($form['chosen_attr'][$attr]['option']), drupal_render($form['chosen_attr'][$attr]['ordering']));
@@ -791,7 +808,7 @@ function uc_object_options_form($obj_id, $type){
  */
 function theme_uc_object_options_form($form){
   $output = drupal_render($form['admin_link']);
-  $header = array(t('Attribute'), t('Default Option'), array('colspan' => 5, 'data' => t('Options')));
+  $header = array(t('Attribute'), t('Default option'), array('colspan' => 5, 'data' => t('Options')));
   $rows = array();
   foreach (element_children($form['prod_attr']) as $key){
     $row = array();
@@ -947,7 +964,7 @@ function uc_product_adjustments_form($nid){
       $old_vals[] = $obj;
     }
 
-    $result = db_query($query_select . $query_from . $query_where . $query_order, $values);
+    $result = pager_query($query_select . $query_from . $query_where . $query_order, 20, 0, null, $values);
     
     $form['original'] = array('#value' => $model,
       '#prefix' => '<br /><h2>',
@@ -1004,6 +1021,7 @@ function uc_product_adjustments_form($nid){
   else{
     $form['error'] = array('#value' => t('There are no attributes associated with this product. Click "attributes" above to add some.'));
   }
+  $form['pager'] = array('#value' => theme('pager'));
   return $form;
 }
 
@@ -1011,14 +1029,22 @@ function uc_product_adjustments_form($nid){
  * Submit function for uc_product_adjustments_form().
  */
 function uc_product_adjustments_form_submit($form_id, $form_values){
-  db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d", $form_values['nid']);
   foreach ($form_values['body'] as $value){
     if (!empty($value['model']) && $value['model'] != $form_values['default']){
-      db_query("INSERT INTO {uc_product_adjustments} (nid, combination, model) VALUES (%d, '%s', '%s')",
-        $form_values['nid'], $value['combo_array'], $value['model']);
+      db_query("UPDATE {uc_product_adjustments} SET model = '%s' WHERE nid = %d AND combination = '%s'",
+        $value['model'], $form_values['nid'], $value['combo_array']);
+      if (!db_affected_rows()){
+        db_query("INSERT INTO {uc_product_adjustments} (nid, combination, model) VALUES (%d, '%s', '%s')",
+          $form_values['nid'], $value['combo_array'], $value['model']);
+      }
     }
   }
   drupal_set_message(t('Product adjustments have been saved.'));
+  $goto = array($_GET['q']);
+  if ($_GET['page']){
+    $goto[] = 'page='. $_GET['page'];
+  }
+  return $goto;
 }
 
 /******************************************************************************

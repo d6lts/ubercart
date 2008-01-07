@@ -31,12 +31,12 @@ function uc_catalog_install(){
     break;
     case 'pgsql':
       db_query("CREATE TABLE IF NOT EXISTS {uc_catalog_images} (
-        fid integer unsigned NOT NULL default 0,
-        tid integer unsigned NOT NULL default 0,
+        fid integer NOT NULL default 0,
+        tid integer NOT NULL default 0,
         filename varchar(255) NOT NULL default '',
         filepath varchar(255) NOT NULL default '',
         filemime varchar(255) NOT NULL default '',
-        filesize integer unsigned NOT NULL default 0,
+        filesize integer NOT NULL default 0,
         PRIMARY KEY  (fid)
       );");
     break;
@@ -51,7 +51,6 @@ function uc_catalog_uninstall(){
   variable_del('uc_catalog_vid');
   variable_del('uc_catalog_name');
   variable_del('uc_catalog_description');
-  variable_del('uc_catalog_url');
   variable_del('uc_catalog_breadcrumb');
   variable_del('uc_catalog_block_nodecount');
   variable_del('uc_catalog_breadcrumb_nodecount');
@@ -88,4 +87,9 @@ function uc_catalog_update_1(){
     break;
   }
   return $ret;
+}
+
+function uc_catalog_update_2(){
+  variable_del('uc_catalog_url');
+  return array(array('success' => TRUE, 'query' => "variable_del('uc_catalog_url')"));
 }
