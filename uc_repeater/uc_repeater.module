@@ -55,15 +55,17 @@ function uc_repeater_form_alter($form_id, &$form){
 }
 
 function uc_repeater_nodeapi(&$node, $op, $arg3 = null, $arg4 = null){
-  switch ($op){
-    case 'insert':
-    case 'update':
-      if ($node->uc_repeater_export){
-        // Reset cached nodes to send the new node content.
-        node_load(0, null, true);
-        uc_repeater_export($node->nid);
-      }
-    break;
+  if (in_array($node->type, array_keys(uc_product_node_info()))){
+    switch ($op){
+      case 'insert':
+      case 'update':
+        if ($node->uc_repeater_export){
+          // Reset cached nodes to send the new node content.
+          node_load(0, null, true);
+          uc_repeater_export($node->nid);
+        }
+      break;
+    }
   }
 }
 
