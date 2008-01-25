@@ -206,3 +206,10 @@ function uc_quote_update_3(){
   }
   return $ret;
 }
+
+function uc_quote_update_4(){
+  $ret = array();
+  $ret[] = update_sql("DELETE FROM {uc_quote_product_locations} WHERE street1 = ''");
+  $ret[] = update_sql("DELETE FROM {uc_quote_manufacturer_locations} WHERE street1 = ''");
+  return $ret;
+}

@@ -232,3 +232,15 @@
 .update-controls .form-submit {
   margin: 0em;
 }
+
+.address-select-box #uc-order-address-book-form {
+  margin-bottom: 0em;
+}
+
+.order-pane.abs-left .form-submit {
+  margin: 0.5em 0.5em 0.5em 0em;
+}
+
+.order-pane #customer-select form {
+  margin-bottom: 0em;
+}

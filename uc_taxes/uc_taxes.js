@@ -61,7 +61,13 @@ function getTax(){
         }
         var j;
         for (j in taxes){
-          set_line_item("tax_" + taxes[j].id, taxes[j].name, taxes[j].amount, tax_weight + taxes[j].weight / 10);
+          if (taxes[j].id == 'subtotal'){
+            summed = 0;
+          }
+          else {
+            summed = 1;
+          }
+          set_line_item("tax_" + taxes[j].id, taxes[j].name, taxes[j].amount, tax_weight + taxes[j].weight / 10, summed);
         }
         if (j == undefined){
           set_line_item("", "", 0.00, 0);
