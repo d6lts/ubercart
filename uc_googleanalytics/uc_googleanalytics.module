@@ -95,6 +95,15 @@ function _uc_googleanalytics_ecommerce_form(&$order) {
              .'|' . $product->price
              .'|' . $product->qty . " \n";
   }
+  
+  foreach ($order->line_items as $line_item){
+    if ($line_item['type'] == 'tax'){
+      $tax += $lite_item['amount'];
+    }
+    if ($line_item['type'] == 'shipping'){
+      $shipping_cost += $line_item['amount'];
+    }
+  }
 
   // postal code is more interesting than state/region (at least in Norway)
   $UTM_T = 'UTM:T|' . $order->order_id
