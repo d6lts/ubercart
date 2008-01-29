@@ -2882,7 +2882,10 @@ function uc_order_get_total($order, $products_only = FALSE) {
 }
 
 function uc_order_is_shippable($order){
-  $results = array();
+  if (!is_array($order->products) || empty($order->products)) {
+    return FALSE;
+  }
+
   foreach ($order->products as $product){
     // Return FALSE if the product form specifies this as not shippable.
     if ($product->data['shippable'] == FALSE) {
