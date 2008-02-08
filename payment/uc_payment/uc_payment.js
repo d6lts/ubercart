@@ -13,7 +13,7 @@ var payment_update = 0;
 /**
  * Sets a line item in the order total preview.
  */
-function set_line_item(key, title, value, weight, summed) {
+function set_line_item(key, title, value, weight, summed, render) {
   var do_update = false;
 
   if (summed === undefined){
@@ -37,8 +37,9 @@ function set_line_item(key, title, value, weight, summed) {
       li_weight[key] = weight;
       li_summed[key] = summed;
     }
-
-    render_line_items();
+    if (render == null || render){
+      render_line_items();
+    }
   }
 }
 

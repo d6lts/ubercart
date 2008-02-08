@@ -67,11 +67,9 @@ function getTax(){
           else {
             summed = 1;
           }
-          set_line_item("tax_" + taxes[j].id, taxes[j].name, taxes[j].amount, tax_weight + taxes[j].weight / 10, summed);
+          set_line_item("tax_" + taxes[j].id, taxes[j].name, taxes[j].amount, tax_weight + taxes[j].weight / 10, summed, false);
         }
-        if (j == undefined){
-          set_line_item("", "", 0.00, 0);
-        }
+        render_line_items();
       }
     });
   }

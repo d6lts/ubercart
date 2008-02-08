@@ -66,6 +66,7 @@ function uc_2checkout_payment_method() {
     'callback' => 'uc_payment_method_2checkout',
     'weight' => 3,
     'checkout' => TRUE,
+    'no_gateway' => TRUE,
   );
 
   return $methods;
