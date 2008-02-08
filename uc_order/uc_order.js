@@ -16,6 +16,15 @@ $(document).ready(
         );
       }
     );
+
+    $('#uc-order-edit-form').submit(
+      function() {
+        $('#products-selector').empty().removeClass();
+        $('#delivery_address_select').empty().removeClass();
+        $('#billing_address_select').empty().removeClass();
+        $('#customer-select').empty().removeClass();
+      }
+    );
   }
 );
 
