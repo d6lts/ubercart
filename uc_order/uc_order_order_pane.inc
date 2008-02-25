@@ -285,7 +285,7 @@ function uc_order_pane_products($op, $arg1) {
         'div' => '#products-selector',
         'class' => 'product-select-box',
         'vid' => variable_get('uc_catalog_vid', 0),
-        'filter' => implode(',', array_keys(uc_product_node_info())),
+        'filter' => implode(',', module_invoke_all('product_types')),
         'search' => 'true',
         'nids' => 'true',
         'close' => 'true',

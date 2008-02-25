@@ -140,6 +140,9 @@ function displayQuote(data){
       if (data[i].notes) {
         item += '<div class="quote-notes">' + data[i].notes + "</div>";
       }
+      if (data[i].rate == undefined && item.length){
+        item = label + ': ' + item; 
+      }
       quoteDiv.append('<div class="form-item">' + item + "</div>\n");
       if (page == "checkout"){
         quoteDiv.find("input:radio[@value=" + i +"]").change(function(){
