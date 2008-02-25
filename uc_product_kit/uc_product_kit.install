@@ -35,6 +35,7 @@ function uc_product_kit_install(){
 
 function uc_product_kit_uninstall(){
   db_query("DROP TABLE {uc_product_kits}");
+  variable_del('uc_product_kit_mutable');
 }
 
 function uc_product_kit_update_1(){

@@ -134,3 +134,8 @@ function uc_shipping_update_1(){
   }
   return $ret;
 }
+
+//function uc_shipping_update_2(){
+  // Abortive attempt at rearranging package_ids and order_product_ids.
+  // Leaving this here as a reminder to start the next update at "3". 
+//}

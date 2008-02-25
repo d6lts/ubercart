@@ -58,6 +58,8 @@ function render_line_items() {
     }
   );
 
+  $('#order-total-throbber').attr('style', 'background-image: url(' + Drupal.settings['base_path'] + 'misc/throbber.gif); background-repeat: no-repeat; background-position: 100% -20px;').html('&nbsp;&nbsp;&nbsp;&nbsp;');
+
   // Post the line item data to a URL and get it back formatted for display.
   $.post(Drupal.settings['base_path'] + 'cart/checkout/line_items', li_info,
     function(contents) {
