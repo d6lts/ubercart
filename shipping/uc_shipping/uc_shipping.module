@@ -879,7 +879,9 @@ function uc_shipping_shipment_edit($order_id, $shipment){
       '#title' => t('Units of measurement'),
       '#options' => array(
         'in' => t('Inches'),
+        'ft' => t('Feet'),
         'cm' => t('Centimeters'),
+        'mm' => t('Millimeters'),
       ),
       '#default_value' => $package->length_units ? $package->length_units : variable_get('uc_length_unit', 'in'),
     );
