@@ -3,7 +3,7 @@
 /**
  * Collapse the shopping cart block at page load.
  */
-$(document).ready(function(){
+$(document).ready(function() {
   if (collapsed_block == true) {
     $('#block-cart-contents').hide(0);
   }
