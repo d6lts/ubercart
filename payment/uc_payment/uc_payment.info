@@ -1,6 +1,6 @@
 ; $Id$
 name = Payment
 description = Defines an API to let payment modules interact with the cart.
-dependencies = uc_store workflow_ng
+dependencies = uc_order uc_store workflow_ng
 package = "Ubercart - core (optional)"
 

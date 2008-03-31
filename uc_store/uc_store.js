@@ -3,11 +3,11 @@
 // Add the mouseover and mouseout functions for the store links block.
 sfHover = function() {
     $('#store-links li, #store-links li li, #store-links li li li, #store-links li li li li').mouseover(
-      function(){
+      function() {
         $(this).addClass('sfhover');
       }
     ).mouseout(
-      function(){
+      function() {
         $(this).removeClass('sfhover');
       }
     );
