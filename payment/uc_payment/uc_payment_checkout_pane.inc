@@ -127,7 +127,7 @@ function theme_uc_payment_method_select($form) {
 
   // Perhaps instead this should be a normal JS function and we just print the
   // default payment method to a JS variable or use a selector.  -RS
-  drupal_add_js("\$(document).ready( function () { get_payment_details('cart/checkout/payment_details/". $form['#default_value'] ."'); } );", 'inline');
+  drupal_add_js("\$(document).ready( function () { init_payment_details('". $form['#default_value'] ."'); } );", 'inline');
 
   return drupal_render($form);
 }
