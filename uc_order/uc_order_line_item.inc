@@ -30,7 +30,7 @@ function uc_line_item_subtotal($op, $arg1) {
         $subtotal += $total;
       }
       if (module_exists('uc_payment') && variable_get('uc_pane_payment_enabled', TRUE)) {
-        drupal_add_js("\$(document).ready( function() { set_line_item('subtotal', '". t('Subtotal') ."', ". $subtotal .", -10); } );", 'inline');
+        uc_add_js("\$(document).ready( function() { set_line_item('subtotal', '". t('Subtotal') ."', ". $subtotal .", -10); } );", 'inline');
       }
       break;
   }
