@@ -5,6 +5,7 @@
   margin: 0;
   list-style: none; 
   line-height: 1.75em;
+  text-align: left;
   z-index: 1000;
 }
 
@@ -22,9 +23,9 @@
 }
 
 #store-links li {
-  margin: 0;
+  margin: 0 !important;
   padding: 0;
-  background-color: #ffffff;
+  background-color: #ffffff !important;
   background-image: none;
   border: solid 1px black;
   float: left;
@@ -147,3 +148,19 @@ tr.section {
 tr.section:hover {
   background-color: #ddd;
 }
+
+#uc-country-import-form .form-item, #uc-country-import-form .form-item label {
+  display: inline;
+  float: left;
+  margin-right: 1em;
+}
+
+#uc-country-import-form .form-submit {
+  float: left;
+  margin-top: 1em;
+}
+
+#uc-country-import-form table {
+  clear: left;
+}
+

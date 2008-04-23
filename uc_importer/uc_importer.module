@@ -176,7 +176,7 @@ function uc_importer_admin_settings_submit($form_id, $form_values) {
  * Wrapper function to generate a page to hold the export form.
  */
 function uc_importer_export_page() {
-  drupal_add_js(drupal_get_path('module', 'uc_product') .'/uc_product.js', 'module');
+  uc_add_js(drupal_get_path('module', 'uc_product') .'/uc_product.js', 'module');
   $output = '';
   $nids = array();
   $args = func_get_args();
