@@ -19,7 +19,7 @@ function uc_payment_configuration() {
     '#label' => t('Update order status on full payment'),
     '#event' => 'payment_entered',
     '#module' => 'uc_payment',
-    '#active' => FALSE,
+    '#active' => TRUE,
   );
   $configurations['uc_payment_received'][] = array(
     '#type' => 'condition',

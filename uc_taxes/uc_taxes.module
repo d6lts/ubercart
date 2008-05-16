@@ -68,8 +68,6 @@ function uc_taxes_menu($may_cache) {
       'callback arguments' => array('uc_taxes_delete'),
       'type' => MENU_CALLBACK,
     );
-  }
-  else {
     $items[] = array('path' => 'taxes/calculate',
       'access' => true,
       'callback' => 'uc_taxes_javascript',
