@@ -218,7 +218,8 @@ function uc_checkout_pane_delivery($op, &$arg1, $arg2) {
       $description = t('Enter your delivery address and information here.');
 
       if ((uc_cart_is_shippable() || !variable_get('uc_cart_delivery_not_shippable', TRUE)) &&
-           _checkout_pane_data('billing', 'weight') < _checkout_pane_data('delivery', 'weight')) {
+           _checkout_pane_data('billing', 'weight') < _checkout_pane_data('delivery', 'weight') &&
+           _checkout_pane_data('billing', 'enabled')) {
         $contents['copy_address'] = array(
           '#type' => 'checkbox',
           '#title' => t('My delivery information is the same as my billing information.'),
@@ -308,7 +309,8 @@ function uc_checkout_pane_billing($op, &$arg1, $arg2) {
       $description = t('Enter your billing address and information here.');
 
       if ((uc_cart_is_shippable() || !variable_get('uc_cart_delivery_not_shippable', TRUE)) &&
-           _checkout_pane_data('delivery', 'weight') < _checkout_pane_data('billing', 'weight')) {
+           _checkout_pane_data('delivery', 'weight') < _checkout_pane_data('billing', 'weight') &&
+           _checkout_pane_data('delivery', 'enabled')) {
         $contents['copy_address'] = array(
           '#type' => 'checkbox',
           '#title' => t('My billing information is the same as my delivery information.'),

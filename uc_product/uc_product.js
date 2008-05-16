@@ -37,7 +37,7 @@ function buffer_products(file_path) {
         $.post(Drupal.settings['base_path'] + 'products/field_image_cache/' + this.value, {},
           function(contents) {
             if (contents != 'false') {
-              $('#buffer-images').append('<img src="' + file_path + '/imagecache/thumbnail/' + contents +'" />');
+              $('#buffer-images').append('<img src="' + file_path + '/imagecache/uc_thumbnail/' + contents +'" />');
             }
             else {
               $('#buffer-images').append('<img src="" alt="' + $('#edit-unid option:selected').get(i).text + '" />');
