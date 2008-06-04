@@ -77,18 +77,16 @@ function quoteCallback(products) {
   else {
     products = "";
     var i = 0;
-    var product = $("input[@name^='products[" + i + "]']");
-    while (product.length) {
-      products += "|" + product.filter("[@name$='[nid]']").val();
-      products += "^" + product.end().filter("[@name$='[title]']").val();
-      products += "^" + product.end().filter("[@name$='[model]']").val();
-      products += "^" + product.end().filter("[@name$='[manufacturer]']").val();
-      products += "^" + product.end().filter("[@name$='[qty]']").val();
-      products += "^" + product.end().filter("[@name$='[cost]']").val();
-      products += "^" + product.end().filter("[@name$='[price]']").val();
-      products += "^" + product.end().filter("[@name$='[weight]']").val();
+    while ($("input[@name^='products[" + i + "]']").length) {
+      products += "|" + $("input[@name^='products[" + i + "]']").filter("[@name$='[nid]']").val();
+      products += "^" + $("input[@name^='products[" + i + "]']").filter("[@name$='[title]']").val();
+      products += "^" + $("input[@name^='products[" + i + "]']").filter("[@name$='[model]']").val();
+      products += "^" + $("input[@name^='products[" + i + "]']").filter("[@name$='[manufacturer]']").val();
+      products += "^" + $("input[@name^='products[" + i + "]']").filter("[@name$='[qty]']").val();
+      products += "^" + $("input[@name^='products[" + i + "]']").filter("[@name$='[cost]']").val();
+      products += "^" + $("input[@name^='products[" + i + "]']").filter("[@name$='[price]']").val();
+      products += "^" + $("input[@name^='products[" + i + "]']").filter("[@name$='[weight]']").val();
       i++;
-      product = $("input[@name^='products[" + i + "]']");
     }
     details["products"] = products.substr(1);
   }

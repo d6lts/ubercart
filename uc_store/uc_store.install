@@ -85,7 +85,6 @@ function uc_store_uninstall() {
   variable_del('uc_store_name');
   variable_del('uc_store_owner');
   variable_del('uc_store_email');
-  variable_del('uc_store_email_from');
   variable_del('uc_store_phone');
   variable_del('uc_store_fax');
   variable_del('uc_store_street1');
