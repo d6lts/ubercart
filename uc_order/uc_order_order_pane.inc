@@ -608,6 +608,7 @@ function uc_order_view_update_form($order) {
 
   $form['controls'] = array(
     '#theme' => 'uc_order_view_update_controls',
+    '#weight' => 10,
   );
 
   foreach (uc_order_status_list('general') as $status) {
