@@ -25,7 +25,7 @@ function summarize_form($form) {
   $items = array();
 
   // Loop through each element in $form.
-  foreach(element_children($form) as $key) {
+  foreach (element_children($form) as $key) {
     // Set the callback for the summary to the default if not specified.
     if (!isset($form[$key]['#summary callback'])) {
       $form[$key]['#summary callback'] = 'summarize_element';
@@ -86,10 +86,10 @@ function summarize_element($form, $title = TRUE) {
           'data' => $form['#title'],
           'children' => summarize_form($form),
         );
-  
+
       case 'textfield':
         return $form['#title'] .': '. check_plain($form['#default_value']);
-  
+
       case 'select':
       case 'radios':
         return $form['#title'] .': '. $form['#options'][$form['#default_value']];

@@ -639,7 +639,7 @@ function theme_uc_order_view_update_controls($form) {
   return '<div class="update-controls">'. drupal_render($form) .'</div>';
 }
 
-function uc_order_view_update_form_submit($form_id, &$form_state) {
+function uc_order_view_update_form_submit($form, &$form_state) {
   global $user;
 
   if ($form_state['values']['status'] != $form_state['values']['current_status']) {

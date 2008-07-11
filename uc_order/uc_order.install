@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implementation of hook_install().
+ * Implementation of hook_schema().
  */
 function uc_order_schema() {
   $schema = array();
@@ -539,6 +539,9 @@ function uc_order_schema() {
   return $schema;
 }
 
+/**
+ * Implementation of hook_install().
+ */
 function uc_order_install() {
   drupal_install_schema('uc_order');
 
@@ -550,6 +553,9 @@ function uc_order_install() {
   db_query("INSERT INTO {uc_order_statuses} (order_status_id, title, state, weight, locked) VALUES ('completed', '". $t('Completed') ."', 'completed', 20, 1);");
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
 function uc_order_uninstall() {
   drupal_uninstall_schema('uc_order');
 
