@@ -14,7 +14,7 @@
  * Development sponsored by the Ubercart project.  http://www.ubercart.org
  */
 
-require_once('uc_stock_ca.inc');
+require_once('uc_stock.ca.inc');
 
 /*******************************************************************************
  *
