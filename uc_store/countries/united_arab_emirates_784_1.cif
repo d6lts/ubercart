@@ -7,7 +7,7 @@ function united_arab_emirates_install() {
 
   db_query("INSERT INTO {uc_zones} VALUES "
           ."(%d, 784, 'DXB', 'Dubai'),"
-          ."(%d, 784, 'SHJ', 'Sharjah'),"          
+          ."(%d, 784, 'SHJ', 'Sharjah'),"
           ."(%d, 784, 'ABU', 'Abu dhabi'),"
           ."(%d, 784, 'UAQ', 'UM Al Quwain'),"
           ."(%d, 784, 'FUJ', 'Fujairah'),"

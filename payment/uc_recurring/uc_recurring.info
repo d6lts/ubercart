@@ -1,5 +1,7 @@
 ; $Id$
-name = Recurring Payments
-description = Assign recurring fees to products and manage them.
-dependencies = uc_payment workflow_ng
+name = Recurring Fees
+description = Assign recurring fees to products and manage them. Should be used with a payment service that implements a recurring fee handler.
+dependencies[] = uc_payment
+dependencies[] = ca
 package = Ubercart - payment
+core = 6.x

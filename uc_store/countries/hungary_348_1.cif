@@ -10,7 +10,7 @@ function hungary_install() {
 
   db_query("INSERT INTO {uc_zones} VALUES "
           ."(%d, 348, 'BUD', 'Budapest'),"
-          ."(%d, 348, 'BAR', 'Baranya'),"          
+          ."(%d, 348, 'BAR', 'Baranya'),"
           ."(%d, 348, 'BKK', 'Bács-Kiskun'),"
           ."(%d, 348, 'BÉK', 'Békés'),"
           ."(%d, 348, 'BAZ', 'Borsod-Abaúj-Zemplén'),"
