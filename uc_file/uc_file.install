@@ -24,9 +24,10 @@ function uc_file_schema() {
   $schema['uc_file_products'] = array(
     'fields' => array(
       'pfid' => array(
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
+        'default' => 0,
       ),
       'fid' => array(
         'type' => 'int',

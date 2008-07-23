@@ -1,5 +1,6 @@
 ; $Id$
 name = Roles
 description = Assign permanent or expirable roles based on product purchases.
-dependencies = uc_product
+dependencies[] = uc_product
+core = 6.x
 package = "Ubercart - core (optional)"
