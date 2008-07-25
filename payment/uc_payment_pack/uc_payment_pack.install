@@ -1,0 +1,101 @@
+<?php
+// $Id$
+
+function uc_payment_pack_schema() {
+  $schema = array();
+
+  $schema['uc_payment_check'] = array(
+    'fields' => array(
+      'check_id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'order_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'clear_date' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'uc_payment_check_order_id' => array('order_id'),
+    ),
+    'primary key' => array('check_id'),
+  );
+
+  $schema['uc_payment_cod'] = array(
+    'fields' => array(
+      'order_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'delivery_month' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'delivery_day' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'delivery_year' => array(
+        'type' => 'int',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('order_id'),
+  );
+
+  $schema['uc_payment_other'] = array(
+    'fields' => array(
+      'order_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('order_id'),
+  );
+
+  return $schema;
+}
+
+function uc_payment_pack_install() {
+  drupal_install_schema('uc_payment_pack');
+}
+
+function uc_payment_pack_uninstall() {
+  drupal_uninstall_schema('uc_payment_pack');
+
+  variable_del('uc_check_mailing_company');
+  variable_del('uc_check_mailing_name');
+  variable_del('uc_check_mailing_street1');
+  variable_del('uc_check_mailing_street2');
+  variable_del('uc_check_mailing_city');
+  variable_del('uc_check_mailing_zone');
+  variable_del('uc_check_mailing_postal_code');
+  variable_del('uc_check_mailing_country');
+  variable_del('uc_check_policy');
+}
