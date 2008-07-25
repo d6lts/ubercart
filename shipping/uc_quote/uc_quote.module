@@ -816,9 +816,11 @@ function theme_uc_quote_method_settings($form) {
  */
 function uc_quote_method_settings_validate($form_id, $form_values) {
   $none_enabled = true;
-  foreach ($form_values['methods'] as $method) {
-    if ($method['uc_quote_enabled']) {
-      $none_enabled = false;
+  if (is_array($form_values['methods'])) {
+    foreach ($form_values['methods'] as $method) {
+      if ($method['uc_quote_enabled']) {
+        $none_enabled = false;
+      }
     }
   }
   if ($none_enabled) {
