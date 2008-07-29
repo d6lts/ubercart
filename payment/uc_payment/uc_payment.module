@@ -943,10 +943,9 @@ function uc_payment_enter($order_id, $method, $amount, $uid, $data, $comment) {
     uc_order_log_changes($order_id, array($log_message));
   }
 
-  db_query("INSERT INTO {uc_payment_receipts} (receipt_id, order_id, method, "
-          ."amount, uid, data, comment, received) VALUES (%d, %d, '%s', %f, "
-          ."%d, '%s', '%s', %d)", db_next_id('{uc_payment_receipts}_receipt_id'),
-          $order_id, $method_name, $amount, $uid, $data, $comment, time());
+  db_query("INSERT INTO {uc_payment_receipts} (receipt_id, order_id, method, amount, uid, data, comment, received) VALUES (%d, %d, '%s', %f, %d, '%s', '%s', %d)",
+    db_next_id('{uc_payment_receipts}_receipt_id'), $order_id, $method_name,
+    $amount, $uid, $data, $comment, time());
 
   if (module_exists('workflow_ng')) {
     workflow_ng_invoke_event('payment_entered', uc_order_load($order_id));

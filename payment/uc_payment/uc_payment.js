@@ -85,7 +85,10 @@ function render_line_items() {
 }
 
 function remove_line_item(key) {
-  li_titles[key] = '';
+  delete li_titles[key];
+  delete li_values[key];
+  delete li_weight[key];
+  delete li_summed[key];
   render_line_items();
 }
 
