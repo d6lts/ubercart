@@ -100,6 +100,8 @@ function ca_predicate_meta_form($form_state, $pid) {
       drupal_set_message(t('That predicate does not exist.'), 'error');
       drupal_goto('admin/settings/ca');
     }
+
+    drupal_set_title($predicate['#title']);
   }
 
   $form['predicate_pid'] = array(

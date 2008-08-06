@@ -63,7 +63,7 @@ function uc_catalog_install() {
     db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, 'product')", $vid);
   }
   variable_set('uc_catalog_vid', $vid);
-  variable_set('uc_catalog_name', t('Catalog'));
+  variable_set('uc_catalog_name', $t('Catalog'));
 
   switch ($GLOBALS['db_type']) {
     case 'mysql':

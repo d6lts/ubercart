@@ -829,9 +829,11 @@ function theme_uc_quote_method_settings($form) {
  */
 function uc_quote_method_settings_validate($form, &$form_state) {
   $none_enabled = true;
-  foreach ($form_state['values']['methods'] as $method) {
-    if ($method['uc_quote_enabled']) {
-      $none_enabled = false;
+  if (is_array($form_state['values']['methods'])) {
+    foreach ($form_state['values']['methods'] as $method) {
+      if ($method['uc_quote_enabled']) {
+        $none_enabled = false;
+      }
     }
   }
   if ($none_enabled) {
@@ -1152,7 +1154,7 @@ function uc_checkout_pane_quotes($op, &$arg1, $arg2) {
       $quote_option = explode('---', $_POST['quote-option']);
       $arg1->quote['method'] = $quote_option[0];
       $arg1->quote['accessorials'] = $quote_option[1];
-      $_SESSION['quote_form'] = rawurldecode($_POST['quote-form']);
+      $_SESSION['quote']['quote_form'] = rawurldecode($_POST['quote-form']);
       $methods = array_filter(module_invoke_all('shipping_method'), '_uc_quote_method_enabled');
       $method = $methods[$quote_option[0]];
       $quote_data = array();

@@ -649,7 +649,7 @@ function uc_recurring_admin_charge_form() {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Charge'),
-    '#suffix' => l(t('Cancel'), referer_uri()),
+    '#suffix' => l(t('Cancel'), uc_referer_uri()),
   );
   return $form;
 }
@@ -727,7 +727,7 @@ function uc_recurring_admin_edit_form() {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
-    '#suffix' => l(t('Cancel'), referer_uri()),
+    '#suffix' => l(t('Cancel'), uc_referer_uri()),
   );
 
   return $form;
@@ -755,7 +755,7 @@ function uc_recurring_admin_delete_form() {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Delete'),
-    '#suffix' => l(t('Cancel'), referer_uri()),
+    '#suffix' => l(t('Cancel'), uc_referer_uri()),
   );
   return $form;
 }
