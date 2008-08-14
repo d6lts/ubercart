@@ -188,10 +188,10 @@ function uc_cart_links_process($arg1) {
   $actions = explode('-', drupal_strtolower($arg1));
 
   foreach ($actions as $action) {
-    switch (drupal_drupal_substr($action, 0, 1)) {
+    switch (drupal_substr($action, 0, 1)) {
       // Set the ID of the cart link.
       case 'i':
-        $id = drupal_drupal_substr($action, 1);
+        $id = drupal_substr($action, 1);
         break;
 
       // Add a product to the cart.
