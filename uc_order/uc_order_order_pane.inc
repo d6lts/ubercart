@@ -626,6 +626,12 @@ function uc_order_view_update_form($form_state, $order) {
     '#weight' => -10,
   );
 
+  $form['controls']['notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Send e-mail notification on update.'),
+    '#weight' => 0,
+  );
+
   $form['controls']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),

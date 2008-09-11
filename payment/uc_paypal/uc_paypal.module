@@ -572,7 +572,7 @@ function uc_paypal_ipn($order_id = 0) {
   $req = 'cmd=_notify-validate';
 
   foreach ($_POST as $key => $value) {
-    $value = urlencode(stripslashes($value));
+    $value = drupal_urlencode(stripslashes($value));
     $req .= '&'. $key .'='. $value;
   }
 
@@ -1295,7 +1295,7 @@ function uc_paypal_api_request($request, $server) {
 
   $data = '';
   foreach ($request as $key => $value) {
-    $data .= $key .'='. urlencode(ereg_replace(',', '', $value)) .'&';
+    $data .= $key .'='. drupal_urlencode(ereg_replace(',', '', $value)) .'&';
   }
   $data = substr($data, 0, -1);
 

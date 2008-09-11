@@ -53,6 +53,35 @@ function uc_cart_ca_trigger() {
   return $triggers;
 }
 
+/**
+ * Implementation of hook_ca_predicate().
+ */
+function uc_cart_ca_predicate() {
+  $predicates['uc_checkout_email_customer'] = array(
+    '#title' => t('Email customer on checkout'),
+    '#description' => t('Send the customer an email about their new order.'),
+    '#class' => 'order',
+    '#status' => 1,
+    '#trigger' => 'uc_checkout_complete',
+    '#actions' => array(
+      array(
+        '#name' => 'uc_order_send_customer_email',
+        '#title' => t('Send an email to the customer'),
+        '#argument_map' => array(
+          'order' => 'order',
+        ),
+        '#settings' => array(
+          'from' => uc_store_email_from(),
+          'subject' => t('Your Order at [store-name]'),
+          'message' => uc_order_load_invoice($order, 'checkout-mail', 'customer'),
+          'format' => 2,
+        ),
+      ),
+    ),
+  );
+
+  return $predicates;
+}
 
 /******************************************************************************
  * Condition Callbacks and Forms                                              *

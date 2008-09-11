@@ -1,8 +1,6 @@
 ; $Id$
 name = Authorize.net
-description = A gateway used to process payments using Authorize.net - AIM only.
-dependencies[] = uc_payment
-dependencies[] = uc_credit
+description = Process payments using Authorize.net. Supports AIM and ARB.
+dependencies = uc_payment uc_credit
 package = Ubercart - payment
-core = 6.x
 

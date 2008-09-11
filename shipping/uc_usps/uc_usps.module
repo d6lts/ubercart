@@ -470,7 +470,7 @@ function uc_usps_rate_request($packages, $origin, $destination) {
   }
   $request .= '</RateV3Request>';
 
-  $request = 'API=RateV3&XML='. urlencode($request);
+  $request = 'API=RateV3&XML='. drupal_urlencode($request);
   return $request;
 }
 
@@ -500,7 +500,7 @@ function uc_usps_intl_rate_request($packages, $origin, $destination) {
   }
   $request .= '</IntlRateRequest>';
 
-  $request = 'API=IntlRate&XML='. urlencode($request);
+  $request = 'API=IntlRate&XML='. drupal_urlencode($request);
   return $request;
 }
 
