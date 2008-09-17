@@ -4,9 +4,11 @@
 function uc_checkout_pane_payment($op, &$arg1, $arg2) {
   switch ($op) {
     case 'view':
+      // Add the default payment message as a JS variable.
+      uc_add_js("var def_payment_msg = '". addslashes(variable_get('uc_default_payment_msg', t('Continue with checkout to complete payment.'))) ."';", 'inline');
+
       if (variable_get('uc_payment_show_order_total_preview', TRUE)) {
         uc_add_js('misc/progress.js');
-        uc_add_js("var def_payment_msg = '". addslashes(variable_get('uc_default_payment_msg', t('Continue with checkout to complete payment.'))) ."';", 'inline');
 
         $contents['current_total'] = array(
           '#type' => 'hidden',
