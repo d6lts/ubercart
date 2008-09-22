@@ -203,3 +203,12 @@ function uc_taxes_update_6() {
   }
   return $ret;
 }
+
+function uc_taxes_update_6000() {
+  $ret = array();
+
+  db_drop_primary_key($ret, 'uc_taxes');
+  db_change_field($ret, 'uc_taxes', 'id', 'id', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('id')));
+
+  return $ret;
+}

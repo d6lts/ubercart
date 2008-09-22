@@ -45,6 +45,9 @@ function uc_credit_update_2() {
 }
 
 function uc_credit_update_6000() {
-  db_query("DROP TABLE {uc_payment_credit}");
-}
+  $ret = array();
 
+  db_drop_table($ret, 'uc_payment_credit');
+
+  return $ret;
+}

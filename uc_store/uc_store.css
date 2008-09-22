@@ -88,14 +88,6 @@ table.section-items td {
   left: 1px;
 }
 
-tr.section {
-  cursor: pointer;
-}
-
-tr.section:hover {
-  background-color: #ddd;
-}
-
 #uc-country-import-form .form-item, #uc-country-import-form .form-item label {
   display: inline;
   float: left;
@@ -111,6 +103,10 @@ tr.section:hover {
   clear: left;
 }
 
+/**
+ * CSS enhancements for Ubercart summary overviews.
+ */
+
 .summary-overview {
   padding: .5em;
   border: 1px dashed #bbb;
@@ -120,3 +116,27 @@ tr.section:hover {
 .summary-title {
   font-weight: bold;
 }
+
+.summaryOnclick-processed {
+  cursor: pointer;
+}
+
+.summaryOnclick-processed:hover {
+  background-color: #ddd;
+}
+
+.summary-edit-icon {
+  float: left;
+  margin-right: .5em;
+  position: relative;
+  top: 2px;
+}
+
+.summaryOnclick-processed .item-list {
+  margin-left: 1.75em;
+}
+
+.summaryOnclick-processed .summary-link {
+  display: none;
+}
+

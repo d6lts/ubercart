@@ -149,3 +149,16 @@ function uc_product_kit_update_5() {
   }
   return $ret;
 }
+
+function uc_product_kit_update_6000() {
+  $ret = array();
+
+  db_drop_primary_key($ret, 'uc_product_kits');
+  db_change_field($ret, 'uc_product_kits', 'vid', 'vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_change_field($ret, 'uc_product_kits', 'nid', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_change_field($ret, 'uc_product_kits', 'product_id', 'product_id', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_change_field($ret, 'uc_product_kits', 'qty', 'qty', array('type' => 'int', 'unsigned' => TRUE, 'size' => 'small', 'not null' => TRUE, 'default' => 0));
+  db_add_primary_key($ret, 'uc_product_kits', array('vid', 'product_id'));
+
+  return $ret;
+}

@@ -113,3 +113,13 @@ function uc_paypal_update_1() {
 
   return $ret;
 }
+
+function uc_paypal_update_6000() {
+  $ret = array();
+
+  db_drop_index($ret, 'uc_payment_paypal_ipn', 'order_id');
+  db_change_field($ret, 'uc_payment_paypal_ipn', 'order_id', 'order_id', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0), array('indexes' => array('order_id' => array('order_id'))));
+  db_change_field($ret, 'uc_payment_paypal_ipn', 'received', 'received', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+
+  return $ret;
+}
