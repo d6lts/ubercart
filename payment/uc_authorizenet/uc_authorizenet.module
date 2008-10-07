@@ -377,10 +377,12 @@ function uc_authorizenet_silent_post() {
   // Decrypt the Auth.Net API login data.
   $login_data = _uc_authorizenet_login_data();
 
+  // TODO: Modify the MD5 hash to accommodate differences from AIM ot ARB.
+
   // If we're receiving notification for an ARB payment...
   if (isset($_POST['x_subscription_id']) && isset($_POST['x_subscription_paynum'])) {
     if (variable_get('uc_authnet_report_arb_post', FALSE)) {
-      watchdog('uc_authorizenet', t('ARB payment reported: <pre>'. check_plain(print_r($_POST, TRUE)) .'</pre>'));
+      watchdog('uc_authorizenet', t('ARB payment reported: <pre>@post</pre>', array('@post' => print_r($_POST, TRUE))));
     }
 
     // Compare our expected MD5 Hash against what was received.
