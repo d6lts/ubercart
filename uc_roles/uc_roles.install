@@ -175,6 +175,16 @@ function uc_roles_update_3() {
   return $ret;
 }
 
+function uc_roles_update_4() {
+  $ret = array();
+
+  // Fixes the db_next_id() + 1 error.
+  $pfid = db_result(db_query("SELECT MAX(pfid) FROM {uc_product_features}"));
+  $ret[] = update_sql("UPDATE {sequences} SET id = ". intval($pfid) ." WHERE name = '{uc_product_features}_pfid'");
+
+  return $ret;
+}
+
 function uc_roles_update_6000() {
   $ret = array();
 

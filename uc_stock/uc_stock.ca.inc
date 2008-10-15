@@ -18,7 +18,7 @@
 function uc_stock_ca_predicate() {
   $predicates['uc_stock_decrement_on_order'] = array(
     '#title' => t('Decrement stock upon order submission'),
-    '#trigger' => 'checkout_complete',
+    '#trigger' => 'uc_checkout_complete',
     '#class' => 'uc_stock',
     '#actions' => array(
       array(

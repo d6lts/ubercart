@@ -54,22 +54,6 @@
   clear: both;
 }
 
-table.settings-overview {
-  width: auto;
-}
-
-table.settings-overview td {
-  padding: .5em;
-}
-
-table.settings-overview tbody {
-  border: 0px;
-}
-
-table.settings-overview tr.section {
-  border: 1px dashed #bbb;
-}
-
 .section-title {
   font-weight: bold;
 }

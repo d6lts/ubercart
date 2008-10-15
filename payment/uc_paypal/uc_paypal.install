@@ -94,6 +94,7 @@ function uc_paypal_install() {
  */
 function uc_paypal_uninstall() {
   drupal_uninstall_schema('uc_paypal');
+  db_query("DELETE FROM {variable} WHERE name LIKE 'uc_paypal_%%'");
 }
 
 function uc_paypal_update_1() {

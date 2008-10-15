@@ -4,4 +4,4 @@ description = Create specialized links to purchase products from other nodes.
 dependencies[] = uc_cart
 package = Ubercart - extra
 core = 6.x
-
+php = 5.0

@@ -30,7 +30,7 @@ function summarize_form($form) {
     if (!isset($form[$key]['#summary callback'])) {
 
       // watch out for those filter_form()s...
-      if(in_array('filter_form_validate', (array) $form[$key]['#element_validate'])) {
+      if (in_array('filter_form_validate', (array) $form[$key]['#element_validate'])) {
         $form[$key]['#summary callback'] = 'summarize_null';
       }
       else {

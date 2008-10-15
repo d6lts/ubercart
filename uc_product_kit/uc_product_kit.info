@@ -4,4 +4,4 @@ description = This node module represents two or more products that have been li
 dependencies[] = uc_product
 package = Ubercart - extra
 core = 6.x
-
+php = 5.0

@@ -66,6 +66,7 @@ function uc_stock_install() {
 
 function uc_stock_uninstall() {
   drupal_uninstall_schema('uc_stock');
+  db_query("DELETE FROM {variable} WHERE name LIKE 'uc_stock_%%'");
 }
 
 function uc_stock_update_6000() {

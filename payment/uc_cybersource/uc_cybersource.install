@@ -1,0 +1,12 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Install hooks for uc_cybersource.module.
+ */
+
+function uc_cybersource_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'uc_cybersource_%%'");
+}
+

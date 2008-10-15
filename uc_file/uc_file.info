@@ -4,3 +4,4 @@ description = Allows products to be associated with downloadable files.
 dependencies[] = uc_product
 package = "Ubercart - core (optional)"
 core = 6.x
+php = 5.0

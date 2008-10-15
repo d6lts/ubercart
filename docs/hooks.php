@@ -951,7 +951,7 @@ function hook_shipment($op, &$shipment) {
 function hook_shipping_method() {
   $methods = array();
 
-  $enabled = variable_get('uc_quote_enabled', array('ups' => true));
+  $enabled = variable_get('uc_quote_enabled', array('ups' => TRUE));
   $weight = variable_get('uc_quote_method_weight', array('ups' => 0));
   $methods['ups'] = array(
     'id' => 'ups',

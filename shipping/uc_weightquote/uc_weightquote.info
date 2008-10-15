@@ -4,3 +4,4 @@ description = Assigns a shipping rate to products based on weight.
 dependencies[] = uc_quote
 package = Ubercart - fulfillment
 core = 6.x
+php = 5.0
