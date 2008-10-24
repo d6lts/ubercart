@@ -13,8 +13,8 @@
  */
 function uc_quote_overview() {
   // Add some Ubercart specific JS for modifying summaries.
-  uc_add_js(drupal_get_path('module', 'uc_store') .'/includes/summaries.js');
-  uc_add_js(array('editIconPath' => base_path() . drupal_get_path('module', 'uc_store') .'/images/order_edit.gif'), 'setting');
+  drupal_add_js(drupal_get_path('module', 'uc_store') .'/includes/summaries.js');
+  drupal_add_js(array('editIconPath' => base_path() . drupal_get_path('module', 'uc_store') .'/images/order_edit.gif'), 'setting');
 
   $summaries = array();
 

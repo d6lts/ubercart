@@ -274,7 +274,7 @@ function uc_order_pane_products($op, $arg1) {
       return tapir_get_table('op_products_customer_table', $arg1->products);
 
     case 'edit-theme':
-      uc_add_js('uc_order_load_product_edit_div('. $arg1['order_id']['#value'] .');', 'inline');
+      drupal_add_js('uc_order_load_product_edit_div('. $arg1['order_id']['#value'] .');', 'inline');
 
       $output = '<div id="products-selector"></div>'
                .'<div id="products-container">'. t('Loading product information... (<em>If nothing happens, make sure you have Javascript enabled.</em>)') .'</div>';

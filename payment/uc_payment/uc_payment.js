@@ -158,7 +158,7 @@ function get_payment_details(path) {
       if (this_update.getTime() == payment_update) {
         // If the response was empty, throw up the default message.
         if (details == '') {
-          $('#payment_details').empty().html(Drupal.setting.defPaymentMsg);
+          $('#payment_details').empty().html(Drupal.settings.defPaymentMsg);
         }
         // Otherwise display the returned details.
         else {

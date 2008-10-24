@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Install hooks for ca.module.
+ */
+
 function ca_schema() {
   $schema = array();
 

@@ -41,20 +41,3 @@ function korea_republic_of_install() {
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
 
-/**
- * If necessary, implement hook_update() with $version being the only argument.
- * Add a new case for each version update, and be sure to always include the
- * latest changes in the install function.
- */
-function austria_update($version) {
-}
-
-/**
- * If necessary, implement hook_uninstall().  This requires no argument.  The
- * store module automatically removes rows from the country and zones tables
- * related to the country, and it unsets the address format.  This function is
- * only necessary for other things you may have included in your country's
- * installation process.
- */
-function austria_uninstall() {
-}

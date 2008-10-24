@@ -12,7 +12,7 @@
  */
 function uc_file_user_downloads($account) {
   drupal_set_title(t('File downloads'));
-  uc_add_js(drupal_get_path('module', 'uc_file') .'/uc_file.js');
+  drupal_add_js(drupal_get_path('module', 'uc_file') .'/uc_file.js');
 
   $header = array(
     array('data' => t('Purchased'), 'field' => 'u.granted', 'sort' => 'desc'),
