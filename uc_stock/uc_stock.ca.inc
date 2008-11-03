@@ -26,7 +26,7 @@ function uc_stock_ca_predicate() {
         '#title' => t('Decrement stock of products in order'),
         '#arguments' => array(
           'order' => array(
-            '#entity' => 'order',
+            '#entity' => 'uc_order',
             '#title' => t('Order'),
           ),
         ),
@@ -45,7 +45,7 @@ function uc_stock_ca_action() {
     '#title' => t('Decrement stock of products on the order with tracking activated.'),
     '#callback' => 'uc_stock_action_decrement_stock',
     '#arguments' => array(
-      'order' => array('#entity' => 'order', '#title' => t('Order')),
+      'order' => array('#entity' => 'uc_order', '#title' => t('Order')),
     ),
     '#category' => t('Stock'),
   );

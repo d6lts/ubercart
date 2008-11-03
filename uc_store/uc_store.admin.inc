@@ -584,7 +584,7 @@ function uc_store_store_settings_form() {
     '#title' => t('E-mail address'),
     '#description' => NULL,
     '#size' => 32,
-    '#maxlength' => 32,
+    '#maxlength' => 128,
     '#required' => FALSE,
     '#default_value' => variable_get('uc_store_email', NULL),
     '#summary' => variable_get('uc_store_email', NULL) ? t('Store e-mail address is %email.', array('%email' => variable_get('uc_store_email', ''))) : t('Store e-mail address is not set.'),

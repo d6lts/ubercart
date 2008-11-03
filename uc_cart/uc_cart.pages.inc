@@ -191,7 +191,7 @@ function uc_cart_checkout_form() {
   }
   unset($_SESSION['expanded_panes']);
 
-  $form['cart_contents'] = array('#type' => 'hidden', '#value' => serialize(uc_cart_get_contents()));
+  $form['cart_contents'] = array('#type' => 'value', '#value' => uc_cart_get_contents());
   $form['cancel'] = array('#type' => 'submit', '#submit' => FALSE, '#value' => t('Cancel'));
   $form['continue'] = array('#type' => 'submit', '#value' => variable_get('uc_checkout_review_button', t('Review order')));
 
@@ -245,7 +245,7 @@ function uc_cart_checkout_form_validate($form, &$form_state) {
     $order->order_status = uc_order_state_default('in_checkout');
   }
 
-  $order->products = unserialize($form_state['values']['cart_contents']);
+  $order->products = $form_state['values']['cart_contents'];
 
   $order->order_total = uc_order_get_total($order, TRUE);
 

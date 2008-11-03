@@ -261,8 +261,8 @@ function uc_cart_block($op = 'list', $delta = 0, $edit = array()) {
     $uc_cart_path = base_path() . drupal_get_path('module', 'uc_cart');
 
     if (variable_get('uc_cart_block_collapsible', TRUE)) {
-      $val = variable_get('uc_cart_block_collapsed', TRUE) ? 'true' : 'false';
-      drupal_add_js(array('ucCollapsedBlock' => $val), 'inline');
+      $val = variable_get('uc_cart_block_collapsed', TRUE);
+      drupal_add_js(array('ucCollapsedBlock' => $val), 'setting');
       drupal_add_js(drupal_get_path('module', 'uc_cart') .'/uc_cart_block.js');
     }
 

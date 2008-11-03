@@ -16,7 +16,7 @@ if (Drupal.jsEnabled) {
   jQuery.extend(Drupal.settings, {
     ucShowProgressBar: false,
     ucDefaultPayment: '',
-    ucOrderInitiate: false,
+    ucOrderInitiate: false
   });
 
   $(document).ready(

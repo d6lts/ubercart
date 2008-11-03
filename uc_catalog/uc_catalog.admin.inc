@@ -263,7 +263,7 @@ function uc_catalog_orphaned_products() {
 
   $rows = array();
   while ($node = db_fetch_object($result)) {
-    $rows[] = l($node->title, 'node/'. $node->nid .'/edit');
+    $rows[] = l($node->title, 'node/'. $node->nid .'/edit', array('query' => array('destination' => 'admin/store/products/orphans')));
   }
 
   if (count($rows) > 0) {

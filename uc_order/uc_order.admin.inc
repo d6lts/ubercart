@@ -1335,7 +1335,7 @@ function uc_order_add_line_item_form_submit($form, &$form_state) {
   else {
     uc_order_line_item_add($form_state['values']['order_id'], $form_state['values']['line_item_id'],
              $form_state['values']['title'], $form_state['values']['amount']);
-    d-rupal_set_message(t('Line item added to order.'));
+    drupal_set_message(t('Line item added to order.'));
   }
 
   return 'admin/store/orders/'. $form_state['values']['order_id'] .'/edit';
