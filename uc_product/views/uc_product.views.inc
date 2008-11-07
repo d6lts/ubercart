@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_views_data()
+ * Implementation of hook_views_data().
  */
 function uc_product_views_data() {
   $data['uc_products']['table']['group'] = t('Product');
@@ -159,12 +159,12 @@ function uc_product_views_data() {
 
 
 /**
- * Implementation of hook_views_handlers
+ * Implementation of hook_views_handlers().
  */
 function uc_product_views_handlers() {
   return array(
     'info' => array(
-      'path' => drupal_get_path('module', 'uc_product').'/views',
+      'path' => drupal_get_path('module', 'uc_product') .'/views',
     ),
     'handlers' => array(
       'uc_product_handler_field_price' => array(

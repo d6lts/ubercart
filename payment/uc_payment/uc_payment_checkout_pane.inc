@@ -28,7 +28,7 @@ function uc_checkout_pane_payment($op, &$arg1, $arg2) {
         );
 
         // let the script know we need to show a progressbar
-        drupal_add_js(array('ucShowProgressBar' => true), 'setting');
+        drupal_add_js(array('ucShowProgressBar' => TRUE), 'setting');
       }
 
       $methods = _payment_method_list();

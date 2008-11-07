@@ -18,7 +18,7 @@ function andorra_install() {
           ."(20, 'EN', 'Encamp'),"
           ."(20, 'MA', 'La Massana'),"
           ."(20, 'OR', 'Ordino'),"
-          ."(20, 'JL', 'Sant Juli� de L�ria'),"
+          ."(20, 'JL', 'Sant Julià de Lòria'),"
           ."(20, 'AN', 'Andorra La Vella'),"
           ."(20, 'EE', 'Escaldes Engordany')");
 

@@ -6,7 +6,6 @@ function bulgaria_install() {
   db_query("INSERT INTO {uc_countries} VALUES (100, 'Bulgaria', 'BG', 'BGR', 1)");
 
   // BG has no postal zones in the Ubercart sense
-  //db_query("INSERT INTO {uc_zones} VALUES (100, 'BG', 'България')");
 
   uc_set_address_format(100, "!first_name !last_name\r\n!company\r\n!street1\r\n!street2"
                             ."\r\n!zone_name\r\n!postal_code !city !country_name_if");

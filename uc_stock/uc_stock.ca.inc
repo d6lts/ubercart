@@ -20,15 +20,13 @@ function uc_stock_ca_predicate() {
     '#title' => t('Decrement stock upon order submission'),
     '#trigger' => 'uc_checkout_complete',
     '#class' => 'uc_stock',
+    '#status' => 1,
     '#actions' => array(
       array(
         '#name' => 'uc_stock_action_decrement_stock',
         '#title' => t('Decrement stock of products in order'),
-        '#arguments' => array(
-          'order' => array(
-            '#entity' => 'uc_order',
-            '#title' => t('Order'),
-          ),
+        '#argument_map' => array(
+          'order' => 'order',
         ),
       ),
     ),

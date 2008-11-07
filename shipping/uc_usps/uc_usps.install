@@ -96,11 +96,11 @@ function uc_usps_update_3() {
     variable_set('uc_usps_markup_type', 'percentage');
     variable_set('uc_usps_markup', floatval(rtrim($markup, '%')));
   }
-  else if (strpos($markup, '$') !== FALSE) {
+  elseif (strpos($markup, '$') !== FALSE) {
     variable_set('uc_usps_markup_type', 'currency');
     variable_set('uc_usps_markup', floatval(ltrim($markup, '$')));
   }
-  else if (floatval($markup)) {
+  elseif (floatval($markup)) {
     variable_set('uc_usps_markup_type', 'multiplier');
     variable_set('uc_usps_markup', floatval($markup));
   }

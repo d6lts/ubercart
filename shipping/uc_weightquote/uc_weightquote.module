@@ -35,7 +35,7 @@ function uc_weightquote_menu() {
  *
  * Add a form element for the shipping rate of a product.
  *
- * @see uc_product_form
+ * @see uc_product_form()
  */
 function uc_weightquote_form_alter(&$form, &$form_state, $form_id) {
   $node = $form['#node'];

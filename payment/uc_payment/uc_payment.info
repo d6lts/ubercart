@@ -1,6 +1,7 @@
 ; $Id$
 name = Payment
 description = Defines an API to let payment modules interact with the cart.
+dependencies[] = ca
 dependencies[] = uc_order
 package = "Ubercart - core (optional)"
 core = 6.x

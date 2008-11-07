@@ -169,7 +169,7 @@ function uc_payment_condition_order_balance($order, $settings) {
     case 'less_equal':
       return $balance <= .01;
     case 'equal':
-      return $balance < .01 and $balance > -.01;
+      return $balance < .01 && $balance > -.01;
     case 'greater':
       return $balance >= .01;
   }

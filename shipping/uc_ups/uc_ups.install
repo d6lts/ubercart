@@ -134,11 +134,11 @@ function uc_ups_update_5() {
     variable_set('uc_ups_markup_type', 'percentage');
     variable_set('uc_ups_markup', floatval(rtrim($markup, '%')));
   }
-  else if (strpos($markup, '$') !== FALSE) {
+  elseif (strpos($markup, '$') !== FALSE) {
     variable_set('uc_ups_markup_type', 'currency');
     variable_set('uc_ups_markup', floatval(ltrim($markup, '$')));
   }
-  else if (floatval($markup)) {
+  elseif (floatval($markup)) {
     variable_set('uc_ups_markup_type', 'multiplier');
     variable_set('uc_ups_markup', floatval($markup));
   }

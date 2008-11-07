@@ -352,7 +352,7 @@ function _ca_evaluate_conditions_tree($condition, $arguments, $condition_data) {
       if ($condition['#operator'] == 'OR' && $result) {
         return TRUE;
       }
-      else if ($condition['#operator'] == 'AND' && !$result) {
+      elseif ($condition['#operator'] == 'AND' && !$result) {
         return FALSE;
       }
     }

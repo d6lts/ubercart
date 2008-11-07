@@ -61,17 +61,7 @@ function theme_uc_payment_pack_receive_check_form($form) {
   drupal_add_js(drupal_get_path('module', 'uc_payment') .'/uc_payment.js');
 
   $output = '<p>'. t('Use the form to enter the check into the payments system and set the expected clear date.') .'</p>';
-  $output .= '<p><strong>'. t('Order balance:') .'</strong> '
-           . drupal_render($form['balance']) .'</p>';
-
-/*  $output .= drupal_render($form['check_exists'])
-           . drupal_render($form['amount'])
-           . drupal_render($form['comment']);
-
-  $output .= '<table><tr><td colspan="3"><strong>'. t('Expected clear date:')
-            .'</strong></td></tr><tr><td>'. drupal_render($form['clear_month'])
-            .'</td><td>'. drupal_render($form['clear_day']) . '</td><td>'
-           . drupal_render($form['clear_year']) .'</td></tr></table>';*/
+  $output .= '<p><strong>'. t('Order balance:') .'</strong> '. drupal_render($form['balance']) .'</p>';
 
   $output .= drupal_render($form);
 

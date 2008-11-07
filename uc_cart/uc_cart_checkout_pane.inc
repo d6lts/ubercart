@@ -184,7 +184,7 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
     case 'settings':
       $form['uc_cart_email_validation'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Require e-mail validation for anonymous customers.'),
+        '#title' => t('Require e-mail confirmation in checkout for anonymous customers.'),
         '#default_value' => variable_get('uc_cart_email_validation', FALSE),
       );
       $form['uc_cart_new_account_name'] = array(
