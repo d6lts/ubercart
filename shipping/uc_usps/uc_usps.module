@@ -558,7 +558,7 @@ function _uc_usps_package_products($products, &$addresses) {
         $package->machinable = (
           $package->length >= 6 && $package->length <= 34 &&
           $package->width >= 0.25 && $package->width <= 17 &&
-          $package->height >= 3.5 && $package->height >= 17 &&
+          $package->height >= 3.5 && $package->height <= 17 &&
           ($package->pounds == 0 ? $package->ounces >= 6 : TRUE) &&
           $package->pounds <= 35 &&
           ($package->pounds == 35 ? $package->ounces == 0 : TRUE)

@@ -6,6 +6,8 @@
  * This is a demonstration module for the new conditional actions API.
  */
 
+define('CA_UI_PATH', 'admin/settings/ca');
+
 require_once('ca.ca.inc');
 
 /*******************************************************************************

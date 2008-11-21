@@ -98,8 +98,8 @@ function uc_taxes_action_apply_tax($order, $tax) {
     }
   }
   if (isset($taxed_line_items['tax'])) {
-    foreach ($_SESSION['taxes'] as $other_tax) {
-      $amount += $other_tax['amount'] * $tax->rate;
+    foreach ($order->taxes as $other_tax) {
+      $amount += $other_tax->amount * $tax->rate;
     }
   }
   if ($amount) {

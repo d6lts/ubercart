@@ -8,14 +8,8 @@
  * Coded by Lyle Mantooth
  */
 
-/**
- * Display a summary of the shipping quote settings.
- */
+// Displays an overview of the shipping quote settings.
 function uc_quote_overview() {
-  // Add some Ubercart specific JS for modifying summaries.
-  drupal_add_js(drupal_get_path('module', 'uc_store') .'/includes/summaries.js');
-  drupal_add_js(array('editIconPath' => base_path() . drupal_get_path('module', 'uc_store') .'/images/order_edit.gif'), 'setting');
-
   $summaries = array();
 
   // Load the form summaries for pages beneath this path.

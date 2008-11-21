@@ -127,7 +127,7 @@ function uc_cart_condition_product_class($order, $settings) {
   return $result;
 }
 
-function uc_cart_condition_product_class_form($settings = array()) {
+function uc_cart_condition_product_class_form($form_state, $settings = array()) {
   $options = array();
   $types = module_invoke_all('node_info');
   $product_types = module_invoke_all('product_types');

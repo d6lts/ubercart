@@ -8,7 +8,7 @@
 
 function uc_authorizenet_uninstall() {
   // Delete related variables all at once.
-  db_query("DELETE FROM {variables} WHERE name LIKE 'uc_authnet_%%'");
+  db_query("DELETE FROM {variable} WHERE name LIKE 'uc_authnet_%%'");
 }
 
 function uc_authorizenet_update_1() {
