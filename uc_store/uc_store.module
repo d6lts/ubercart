@@ -333,6 +333,24 @@ function uc_store_init() {
   drupal_add_css($dir .'/uc_store.css');
 }
 
+/**
+ * Implementation of hook_elements().
+ */
+function uc_store_elements() {
+  $types = array();
+
+  $types['tapir_table'] = array(
+    '#columns' => array(),
+    '#rows' => array(),
+    '#tree' => TRUE,
+    '#value' => NULL,
+    '#pre_render' => array('tapir_gather_rows'),
+    '#process' => 'form_expand_ahah',
+  );
+
+  return $types;
+}
+
 function uc_store_theme() {
   return array(
     'uc_admin_dashboard' => array(

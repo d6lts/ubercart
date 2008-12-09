@@ -340,6 +340,11 @@ function fetch_product_data() {
       pdata[$(this).attr('name')] = $(this).val();
     }
   );
+  $('.order-pane-table ~ :input').each(
+    function() {
+      pdata[$(this).attr('name')] = $(this).val();
+    }
+  );
 
   return pdata;
 }

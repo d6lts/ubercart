@@ -27,7 +27,7 @@ function uc_flatrate_admin_methods() {
     $rows[] = $row;
   }
   if (count($rows)) {
-    $header = array(t('Title'), t('Label'), t('Base rate'), t('Default product rate'), t('Actions'));
+    $header = array(t('Title'), t('Label'), t('Base rate'), t('Default product rate'), t('Operations'));
     $output .= theme('table', $header, $rows);
   }
   $output .= l(t('Add a new flat rate shipping method.'), 'admin/store/settings/quotes/methods/flatrate/add');

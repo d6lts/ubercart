@@ -129,7 +129,10 @@ function uc_stock_edit_form($form_state, $node) {
   $form = array();
   $form['stock'] = array('#tree' => TRUE);
 
-  $skus = uc_stock_skus($node->nid);
+  $skus = uc_product_get_models($node);
+
+  // Remove 'Any'.
+  unset($skus[NULL]);
 
   if (!$skus) {
     drupal_set_message(t('No SKU found.'), 'error');

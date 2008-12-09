@@ -116,7 +116,7 @@ function uc_usps_update_4() {
       $ret[] = update_sql("ALTER TABLE {uc_usps_products} CHANGE container container varchar(255) NOT NULL");
     break;
     case 'pgsql':
-      db_change_column($ret, 'uc_usps_products', 'container', 'container', 'varchar(255)', array('not null' => TRUE, 'default' => ''));
+      db_change_column($ret, 'uc_usps_products', 'container', 'container', 'varchar(255)', array('not null' => TRUE, 'default' => "''"));
     break;
   }
   return $ret;

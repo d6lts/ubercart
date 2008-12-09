@@ -21,7 +21,7 @@ function setQuoteCallbacks(products, context) {
   $("select[@name*=delivery_address_select]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').change(function() {
     $("input[@name*=delivery_postal_code]").trigger('change');
   });
-  $("input[@name*=copy_address]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').change(function() {
+  $("input[@name*=copy_address]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').click(function() {
     if (copy_box_checked == true) {
       $("input[@name*=billing_postal_code]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').bind('change', triggerQuoteCallback);
       $("select[@name*=billing_address_select]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').bind('change', triggerQuoteCallback);

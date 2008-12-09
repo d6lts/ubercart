@@ -466,15 +466,8 @@ function uc_recurring_feature_form($form_state, $node, $feature) {
     $fee = uc_recurring_fee_load('product', $feature['pfid']);
   }
 
-  $options = array('' => t('<Any>'), $node->model => $node->model);
-  if (module_exists('uc_attribute')) {
-    $result = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
-    while ($row = db_fetch_object($result)) {
-      if (!in_array($row->model, $options)) {
-        $options[$row->model] = $row->model;
-      }
-    }
-  }
+  $options = uc_product_get_models($node);
+
   $form['model'] = array(
     '#type' => 'select',
     '#title' => t('Applicable Model/SKU'),

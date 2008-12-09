@@ -164,36 +164,6 @@ function uc_stock_level($sku) {
 }
 
 /**
- * Gets the SKUs associated with a particular product.
- *
- * @param $nid
- *   The node id of the ubercart product
- * @return:
- *   An array containing all the SKUs that are associated with the product or
- *     FALSE if the node ID isn't an Ubercart product.
- */
-function uc_stock_skus($nid) {
-  $node = node_load($nid);
-
-  if (is_null($node->model)) {
-    return FALSE;
-  }
-
-  $skus = array($node->model);
-
-  if (module_exists('uc_attribute')) {
-    $models = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
-    while ($model = db_fetch_object($models)) {
-      if (!in_array($model->model, $skus)) {
-        $skus[] = $model->model;
-      }
-    }
-  }
-
-  return $skus;
-}
-
-/**
  * Emails administrator regarding any stock level thresholds hit.
  *
  * @param $order
