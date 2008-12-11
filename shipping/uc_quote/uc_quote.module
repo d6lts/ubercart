@@ -812,7 +812,7 @@ function uc_checkout_pane_quotes($op, &$arg1, $arg2) {
   global $user;
   switch ($op) {
     case 'view':
-      $description = t('Shipping quotes are generated automatically when you enter your address and may be updated manually with the button below.');
+      $description = check_markup(variable_get('uc_quote_pane_description', t('Shipping quotes are generated automatically when you enter your address and may be updated manually with the button below.')), variable_get('uc_quote_desc_format', FILTER_FORMAT_DEFAULT));
 
       // Let Javascript know where we are.
       $contents['page'] = array('#type' => 'hidden',
