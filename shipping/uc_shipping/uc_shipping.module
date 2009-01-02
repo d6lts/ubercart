@@ -6,8 +6,6 @@
  * Organizes ordered products into packages and sets them up for shipment. Shipping
  * method modules may add functionality to generate shipping labels and tracking
  * numbers.
- *
- * Coded by Lyle Mantooth.
  */
 
 /******************************************************************************

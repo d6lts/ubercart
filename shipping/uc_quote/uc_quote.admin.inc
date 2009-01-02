@@ -4,8 +4,6 @@
 /**
  * @file
  * Shipping quotes administration menu items.
- *
- * Coded by Lyle Mantooth
  */
 
 // Displays an overview of the shipping quote settings.

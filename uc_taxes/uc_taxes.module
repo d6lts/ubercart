@@ -3,11 +3,9 @@
 
 /**
  * @file
- * Übercart Taxes module.
+ * Ubercart Taxes module.
  *
  * Allows tax rules to be set up and applied to orders.
- *
- * Coded by Lyle Mantooth
  */
 
 /******************************************************************************

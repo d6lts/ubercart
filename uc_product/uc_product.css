@@ -1,6 +1,6 @@
 /* $Id$ */
 
-.product_image {
+.product-image {
   float: right;
   clear: right;
   text-align: center;
@@ -9,7 +9,7 @@
   margin-left: 4px;
 }
 
-.display_price {
+.display-price {
   float: right;
   clear: right;
   width: 100px;

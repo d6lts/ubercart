@@ -182,8 +182,8 @@ function uc_order_menu() {
   $items['admin/store/orders/create/%user'] = array(
     'title' => 'Create order',
     'description' => 'Create an order for a customer.',
-    'callback' => 'uc_order_create',
-    'callback arguments' => array(4),
+    'page callback' => 'uc_order_create',
+    'page arguments' => array(4),
     'access arguments' => array('edit orders'),
     'type' => MENU_CALLBACK,
     'file' => 'uc_order.admin.inc',
@@ -917,7 +917,7 @@ function op_products_edit_table() {
     'weight' => 2,
   );
   $table['#columns']['model'] = array(
-    'cell' => t('Model'),
+    'cell' => t('SKU'),
     'weight' => 4,
   );
   $table['#columns']['weight'] = array(

@@ -4,8 +4,6 @@
 /**
  * @file
  * Shipping administration menu items.
- *
- * Coded by Lyle Mantooth.
  */
 
 /**
@@ -136,7 +134,7 @@ function uc_shipping_new_package($form_state, $order) {
  */
 function theme_uc_shipping_new_package_fieldset($fieldset) {
   $output = '';
-  $header = array(theme('table_select_header_cell'), t('Model'), t('Title'), t('Qty'), t('Package'));
+  $header = array(theme('table_select_header_cell'), t('SKU'), t('Title'), t('Qty'), t('Package'));
   $rows = array();
   foreach (element_children($fieldset) as $op_id) {
     $row = array();
@@ -294,7 +292,7 @@ function uc_shipping_package_edit($form_state, $order, $package) {
  */
 function theme_uc_shipping_edit_package_fieldset($fieldset) {
   $output = '';
-  $header = array(theme('table_select_header_cell'), t('Model'), t('Title'), t('Qty'));
+  $header = array(theme('table_select_header_cell'), t('SKU'), t('Title'), t('Qty'));
   $rows = array();
   foreach (element_children($fieldset) as $op_id) {
     $row = array();

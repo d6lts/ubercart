@@ -202,7 +202,7 @@
                                 echo t('(!price each)', array('!price' => uc_currency_format($product->price)));
                               } ?>
                               <br />
-                              <?php echo t('Model: ') . $product->model; ?><br />
+                              <?php echo t('SKU: ') . $product->model; ?><br />
                               <?php if (is_array($product->data['attributes']) && count($product->data['attributes']) > 0) {?>
                               <?php foreach ($product->data['attributes'] as $key => $value) {
                                 echo '<li>'. $key .': '. $value .'</li>';

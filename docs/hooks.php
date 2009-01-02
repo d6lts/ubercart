@@ -235,6 +235,32 @@ function hook_cart_item($op, &$item) {
 }
 
 /**
+ * Format data added to an item in the cart for display.
+ *
+ * Modules that add data to cart items when they are selected should display it
+ * with this hook. The return values from each implementation will be
+ * concatenated.
+ *
+ * @param $item
+ *   One of the values of the array returned by uc_cart_get_contents().
+ * @return
+ *   A formatted string to be displayed in the shopping cart block and on the
+ *   cart page.
+ */
+function hook_cart_item_description($item) {
+  $rows = array();
+  foreach (_uc_cart_product_get_options($item) as $option) {
+    $rows[] = t('@attribute: @option', array('@attribute' => $option['attribute'], '@option' => $option['name']));
+  }
+
+  if (count($rows)) {
+    $output = theme('item_list', $rows, NULL, 'ul', array('class' => 'product-description'));
+  }
+
+  return $output;
+}
+
+/**
  * Register callbacks for a cart pane.
  *
  * The default cart view page displays a table of the cart contents and a few

@@ -470,7 +470,7 @@ function uc_recurring_feature_form($form_state, $node, $feature) {
 
   $form['model'] = array(
     '#type' => 'select',
-    '#title' => t('Applicable Model/SKU'),
+    '#title' => t('Applicable SKU'),
     '#description' => t('Select the applicable product model/SKU for this fee.'),
     '#options' => $options,
     '#default_value' => $fee['model'],

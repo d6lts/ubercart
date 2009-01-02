@@ -343,6 +343,9 @@ function ca_evaluate_conditions($predicate, $arguments) {
 // Recursively evaluates conditions to accommodate nested logical groups.
 function _ca_evaluate_conditions_tree($condition, $arguments, $condition_data) {
   if (isset($condition['#operator']) && is_array($condition['#conditions'])) {
+    // Default to TRUE for cases of empty conditions arrays.
+    $result = TRUE;
+
     foreach ($condition['#conditions'] as $sub_condition) {
       $result = _ca_evaluate_conditions_tree($sub_condition, $arguments, $condition_data);
 

@@ -843,7 +843,7 @@ function _ca_conditions_form_condition($condition, $trigger) {
       '#type' => 'select',
       '#title' => check_plain($value['#title']),
       '#options' => $options,
-      '#default_value' => $action['#argument_map'][$key],
+      '#default_value' => $condition['#argument_map'][$key],
     );
   }
 

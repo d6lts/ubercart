@@ -5,10 +5,6 @@
  * @file
  * Adds the required HTML and Javascript to the checkout complete page to allow
  * e-commerce statistics tracking through Google Analytics.
- *
- * Originally by Erlend Stromsvik : erlend@nymedia.no / Quaoar at ubercart.org
- *
- * Updated by Ryan; patch for new GA JS courtesy of AntoineSolutions.
  */
 
 

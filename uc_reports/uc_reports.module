@@ -5,12 +5,10 @@
  * @file
  * Displays reports on sales, customers, and products to store admin
  *
- * The reports module creates a few table-based reports for an ubercart store.
+ * The reports module creates a few table-based reports for an Ubercart store.
  * Store admins can view reports for sales between different dates, customers
  * by the products purchased and money spent, and products by their views,
  * number sold, and revenue produced.
- *
- * Development sponsored by the Ubercart project.  http://www.ubercart.org
  */
 
 define('UC_REPORTS_MAX_RECORDS', PHP_INT_MAX);

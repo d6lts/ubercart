@@ -4,9 +4,6 @@
 /**
  * @file
  * Paypal administration menu items.
- *
- * This is a revision/compilation by Ryan of various work contributed by:
- * cosmo83@drupal.org, izi, olav@drupal.org, and patrickharris
  */
 
 // Process Instant Payment Notifiations from PayPal.

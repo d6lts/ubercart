@@ -6,6 +6,29 @@
  * Installation file for PayPal, primarily for the logging of IPNs.
 
 /**
+ * Implementation of hook_requirements().
+ */
+function uc_paypal_requirements($phase) {
+  $t = get_t();
+
+  $has_curl = function_exists('curl_init');
+
+  // PayPal WPP requires cURL.
+  if (variable_get('uc_pg_paypal_wpp_enabled', TRUE)) {
+    $requirements['uc_paypal_curl'] = array(
+      'title' => $t('cURL'),
+      'value' => $has_curl ? $t('Enabled') : $t('Not found'),
+    );
+    if (!$has_curl) {
+      $requirements['uc_paypal_curl']['severity'] = REQUIREMENT_ERROR;
+      $requirements['uc_paypal_curl']['description'] = $t("PayPal WPP requires the PHP <a href='!curl_url'>cURL</a> library.", array('!curl_url' => 'http://php.net/manual/en/curl.setup.php'));
+    }
+  }
+
+  return $requirements;
+}
+
+/**
  * Implementation of hook_schema().
  */
 function uc_paypal_schema() {
