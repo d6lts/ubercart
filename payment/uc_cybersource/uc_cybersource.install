@@ -3,12 +3,12 @@
 
 /**
  * @file
- * Handles installing, uninstalling, and updating Authorize.net settings.
+ * Handles installing, uninstalling, and updating CyberSource settings.
  */
 
 function uc_cybersource_uninstall() {
   // Delete related variables all at once.
-  db_query("DELETE FROM {variables} WHERE name LIKE 'uc_cybersource_%%' OR name LIKE 'cs_ship_from_%%'");
+  db_query("DELETE FROM {variable} WHERE name LIKE 'uc_cybersource_%%' OR name LIKE 'cs_ship_from_%%'");
 }
 
 function uc_cybersource_update_1() {
@@ -31,3 +31,4 @@ function uc_cybersource_update_1() {
 
   return array();
 }
+

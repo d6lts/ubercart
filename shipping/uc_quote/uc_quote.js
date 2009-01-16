@@ -21,7 +21,7 @@ function setQuoteCallbacks(products) {
   $("select[@name*=delivery_address_select]").change(function() {
     $("input[@name*=delivery_postal_code]").trigger('change');
   });
-  $("input[@name*=copy_address]").change(function() {
+  $("input[@name*=copy_address]").click(function() {
     if (copy_box_checked == true) {
       $("input[@name*=billing_postal_code]").bind('change', triggerQuoteCallback);
       $("select[@name*=billing_address_select]").bind('change', triggerQuoteCallback);

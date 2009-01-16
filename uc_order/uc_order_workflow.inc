@@ -542,7 +542,7 @@ function uc_order_condition_products_weight_form($settings = array()) {
   );
   $form['weight_units'] = array('#type' => 'select',
     '#title' => t('Unit of measurement'),
-    '#default_value' => variable_get('uc_weight_unit', 'lb'),
+    '#default_value' => $settings['weight_units'] ? $settings['weight_units'] : variable_get('uc_weight_unit', 'lb'),
     '#options' => array(
       'lb' => t('Pounds'),
       'kg' => t('Kilograms'),
@@ -578,6 +578,7 @@ function uc_order_condition_products_weight_form($settings = array()) {
 function uc_order_condition_products_weight_submit($form_id, $form_values) {
   return array(
     'products' => $form_values['products'],
+    'weight_units' => $form_values['weight_units'],
     'product_weight_value' => $form_values['product_weight_value'],
     'product_weight_comparison' => $form_values['product_weight_comparison'],
   );

@@ -625,9 +625,6 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
         $id = $reply->paySubscriptionCreateReply->subscriptionID;
 
         // Save the subscription ID to the order's data array.
-        // $fauxdata['uc_cybersource']['soap']['subscription_id'] = $id;
-        // db_query("UPDATE {uc_orders} SET data = '%s' WHERE order_id = %d", serialize($fauxdata), 3);
-
         $order->data = uc_credit_log_reference($order->order_id, $id, $order->payment_details['cc_number']);
 
         uc_order_comment_save($order->order_id, 0, t('<b>CyberSource profile created.</b><br /><b>Subscription ID:</b> @id', array('@id' => $id)), 'admin');

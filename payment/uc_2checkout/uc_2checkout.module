@@ -35,6 +35,17 @@ function uc_2checkout_menu($may_cache) {
 }
 
 /**
+ * Implementation of hook_ucga_display().
+ */
+function uc_2checkout_ucga_display() {
+  // Tell UC Google Analytics to display the e-commerce JS on the custom
+  // order completion page for this module.
+  if (arg(0) == 'cart' && arg(1) == '2checkout' && arg(2) == 'complete') {
+    return TRUE;
+  }
+}
+
+/**
  * Implementation of hook_form_alter().
  */
 function uc_2checkout_form_alter($form_id, &$form) {
@@ -273,7 +284,7 @@ function uc_2checkout_complete($cart_id = 0) {
 
   // Empty that cart...
   uc_cart_empty($cart_id);
-  
+
   // Save changes to order without it's completion (it will be on finalization step)
   uc_order_save($order);
 

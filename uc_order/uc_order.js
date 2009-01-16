@@ -282,7 +282,14 @@ function add_product_to_order(order_id, node_id) {
   $('#uc-order-add-product-form :input').each(
     function() {
       if ($(this).attr('name').substr(0, 10) == 'attributes') {
-        post_vars[$(this).attr('name')] = $(this).val();
+        if ($(this).attr('type') == 'radio') {
+          if (this.checked) {
+            // Only the checked radio button values should be sent
+            post_vars[$(this).attr('name')] = $(this).val();
+          }
+        } else {
+          post_vars[$(this).attr('name')] = $(this).val();
+        }
       }
     }
   );
