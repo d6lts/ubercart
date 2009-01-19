@@ -195,7 +195,7 @@ function summarize_child_form_pages($path, $trim = FALSE, $only_parent = FALSE) 
 
       if (!$trim || $trim && count($summary_items) > 0) {
         $summaries[] = array(
-          'path' => $item['path'],
+          'path' => url($item['path']),
           'href' => $href,
           'title' => $item['title'],
           'items' => $summary_items,

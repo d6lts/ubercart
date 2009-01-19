@@ -878,3 +878,16 @@ function uc_order_update_6004() {
 
   return $ret;
 }
+
+function uc_order_update_6005() {
+  $ret = array();
+
+  $result = db_query("SELECT * FROM {permission}");
+  while($perm = db_fetch_object($result)) {
+    $perm->perm = str_replace("delete any order", "unconditionally delete orders", $perm->perm);
+    drupal_write_record('permission', $perm, 'pid');
+  }
+  $ret[] = array('success' => TRUE, 'query' => "Replaced all instances of 'delete any order' with 'unconditionally delete orders' in the permissions table.");
+
+  return $ret;
+}

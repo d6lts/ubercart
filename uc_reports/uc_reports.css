@@ -24,22 +24,6 @@
   vertical-align:top;
 }
 
-.report-date-table {
-  width:auto;
-}
-
-.report-submit {
-  float:right;
-}
-
-.report-date-table td {
-  vertical-align:bottom;
-}
-
-.report-date-table td div {
-  margin:0px;
-}
-
 form.uc-reports-customize-report-form fieldset.collapsible .fieldset-wrapper {
   overflow:visible;
 }

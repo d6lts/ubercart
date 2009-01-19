@@ -626,7 +626,7 @@ function uc_product_class_form_submit($form, &$form_state) {
   }
 
   node_types_rebuild();
-  if ($is_new && module_exists('filefield')) {
+  if ($is_new && module_exists('imagefield')) {
     uc_product_add_default_image_field($pcid);
   }
   menu_rebuild();

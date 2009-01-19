@@ -673,10 +673,6 @@ function uc_object_options_form($form_state, $object, $type) {
   }
 
   foreach ($attributes as $aid => $attribute) {
-    $form['attributes'][$aid] = array(
-      '#prefix' => '<tr>',
-      '#suffix' => '</tr>',
-    );
     $form['attributes'][$aid]['name'] = array(
       '#value' => $attribute->name,
     );

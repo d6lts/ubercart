@@ -1,9 +1,5 @@
 /* $Id$ */
 
-#block-cart-icon {
-  padding-right: 1em;
-}
-
 #block-cart-title-bar {
   cursor: pointer;
   white-space: nowrap;

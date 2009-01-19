@@ -63,9 +63,6 @@ function uc_file_ca_predicate() {
         '#argument_map' => array(
           'order' => 'order',
         ),
-        '#settings' => array(
-          'order_status' => 'completed',
-        ),
       ),
     ),
   );

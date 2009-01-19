@@ -138,8 +138,3 @@ function uc_cart_condition_product_class_form($form_state, $settings = array()) 
 
   return $form;
 }
-
-function uc_cart_condition_product_class_submit($form, &$form_state) {
-  return array('class' => $form_state['values']['class']);
-}
-

@@ -212,4 +212,6 @@ function uc_usps_update_6001() {
     variable_set('uc_usps_intl_env_services', $new_services);
     variable_set('uc_usps_intl_services', $services);
   }
+
+  return array();
 }

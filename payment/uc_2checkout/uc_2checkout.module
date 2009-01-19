@@ -35,6 +35,17 @@ function uc_2checkout_completion_access() {
 }
 
 /**
+ * Implementation of hook_ucga_display().
+ */
+function uc_2checkout_ucga_display() {
+  // Tell UC Google Analytics to display the e-commerce JS on the custom
+  // order completion page for this module.
+  if (arg(0) == 'cart' && arg(1) == '2checkout' && arg(2) == 'complete') {
+    return TRUE;
+  }
+}
+
+/**
  * Implementation of hook_form_alter().
  */
 function uc_2checkout_form_alter(&$form, &$form_state, $form_id) {

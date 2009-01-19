@@ -113,7 +113,7 @@ function theme_uc_catalog_browse($tid = 0) {
           INNER JOIN {uc_products} AS p ON n.vid = p.vid
         WHERE tn.tid = %d
           AND n.status = 1
-          AND n.type IN (". db_placeholders($types) .")
+          AND n.type IN (". db_placeholders($types, 'varchar') .")
         GROUP BY n.nid";
       break;
   }

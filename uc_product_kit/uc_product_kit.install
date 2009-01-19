@@ -162,3 +162,14 @@ function uc_product_kit_update_6000() {
 
   return $ret;
 }
+
+function uc_product_kit_update_6001() {
+  $ret = array();
+
+  variable_set('uc_image_product_kit', 'field_image_cache');
+
+  $t = get_t();
+  $ret[] = array('success' => TRUE, $t('field_image_cache set as the Ubercart image for product kits.'));
+
+  return $ret;
+}
