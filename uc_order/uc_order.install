@@ -488,7 +488,6 @@ function uc_order_schema() {
       'weight' => array(
         'description' => t('The physical weight.'),
         'type' => 'float',
-        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0.0,
       ),
@@ -888,6 +887,23 @@ function uc_order_update_6005() {
     drupal_write_record('permission', $perm, 'pid');
   }
   $ret[] = array('success' => TRUE, 'query' => "Replaced all instances of 'delete any order' with 'unconditionally delete orders' in the permissions table.");
+
+  return $ret;
+}
+
+// Change to signed floats...
+function uc_order_update_6006() {
+  $ret = array();
+
+  $schema = array(
+    'weight' => array(
+      'description' => t('The physical weight.'),
+      'type' => 'float',
+      'not null' => TRUE,
+      'default' => 0.0,
+    ),
+  );
+  db_change_field($ret, 'uc_order_products', 'weight', 'weight', $schema['weight']);
 
   return $ret;
 }

@@ -81,11 +81,6 @@
   float: left;
 }
 
-#uc-cart-view-form ul {
-  font-style: italic;
-  font-size: 0.75em;
-}
-
 #line-items-div table {
   width: auto;
 }
@@ -193,9 +188,6 @@ td.subtotal {
   font-weight: bold;
 }
 
-.product-description {
-  font-size: .7em;
-}
 
 /**
  * CSS rules for the default checkout panes.

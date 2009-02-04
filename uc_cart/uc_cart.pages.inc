@@ -394,7 +394,6 @@ function uc_cart_checkout_review_form() {
 }
 
 function uc_cart_checkout_review_form_back($form, &$form_state) {
-  cache_clear_all();
   unset($_SESSION['do_review']);
   $form_state['redirect'] = 'cart/checkout';
 }

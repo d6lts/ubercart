@@ -1215,7 +1215,6 @@ function hook_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
   }
   else {
     db_query("UPDATE {uc_cart_products} SET qty = %d, changed = %d WHERE nid = %d AND cart_id = '%s' AND data = '%s'", $qty, time(), $nid, $cid, serialize($data));
-    cache_clear_all();
   }
 
   // Rebuild the items hash

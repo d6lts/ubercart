@@ -89,6 +89,12 @@ function uc_taxes_form($form_state, $tax_id = 0) {
   return $form;
 }
 
+function uc_taxes_form_validate($form, &$form_state) {
+  if (!empty($form_state['values']['rate']) && (!is_numeric($form_state['values']['rate']) || $form_state['values']['rate'] < 0)) {
+    form_set_error('rate', t('Rate must be a positive number. No commas and only one decimal point.'));
+  }
+}
+
 /**
  * Submit handler for uc_taxes_form().
  */

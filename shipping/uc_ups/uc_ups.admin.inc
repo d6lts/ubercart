@@ -125,6 +125,12 @@ function uc_ups_admin_settings() {
     ),
     '#description' => t('Choose the standard system of measurement for your country.'),
   );
+  $form['uc_ups_insurance'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Package insurance'),
+    '#default_value' => variable_get('uc_ups_insurance', TRUE),
+    '#description' => t('When enabled, products are insured for their full value.'),
+  );
 
   $form['#validate'][] = 'uc_ups_admin_settings_validate';
 

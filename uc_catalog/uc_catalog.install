@@ -195,3 +195,19 @@ function uc_catalog_update_7() {
 
   return $ret;
 }
+
+function uc_catalog_update_8() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("UPDATE {url_alias} SET src = SUBSTRING_INDEX(src, '/', 2) WHERE src LIKE 'catalog/%%';");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("UPDATE {url_alias} SET src = substring(src from '^catalog/\d*') WHERE src LIKE 'catalog/%%';");
+      break;
+  }
+
+  return $ret;
+}

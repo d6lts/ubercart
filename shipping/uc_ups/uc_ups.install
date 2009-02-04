@@ -74,6 +74,7 @@ function uc_ups_uninstall() {
   variable_del('uc_ups_markup');
   variable_del('uc_ups_all_in_one');
   variable_del('uc_ups_unit_system');
+  variable_del('uc_ups_insurance');
 }
 
 function uc_ups_update_1() {
