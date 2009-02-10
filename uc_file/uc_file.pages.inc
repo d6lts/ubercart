@@ -338,10 +338,7 @@ function _uc_file_log_download($file_user, $ip) {
   // Calculate hash
   $file_user->file_key = drupal_get_token(serialize($file_user));
 
-  // Delete the old entry for this file.
-  db_query("DELETE FROM {uc_file_users} WHERE fid = %d", $file_user->fid);
-
-  drupal_write_record('uc_file_users', $file_user);
+  drupal_write_record('uc_file_users', $file_user, 'fuid');
 }
 
 // Send 'em packin...

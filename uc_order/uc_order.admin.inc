@@ -362,7 +362,7 @@ function uc_order_status_create_form() {
 
   $form['status_weight'] = array(
     '#type' => 'weight',
-    '#title' => t('Weight'),
+    '#title' => t('List position'),
     '#delta' => 20,
     '#default_value' => 0,
   );

@@ -68,7 +68,7 @@ function uc_order_ca_predicate() {
   $predicates['uc_order_update_email_customer'] = array(
     '#title' => t('E-mail an order update notification'),
     '#description' => t('Notify the customer when the order status is changed.'),
-    '#class' => 'order',
+    '#class' => 'notification',
     '#status' => 1,
     '#trigger' => 'uc_order_status_email_update',
     '#conditions' => array(

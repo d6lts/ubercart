@@ -708,7 +708,7 @@ function theme_uc_order_state_table($form) {
 
 // Theme the order state table in the order workflow settings.
 function theme_uc_order_status_table($form) {
-  $header = array(t('ID'), t('Title'), t('Weight'), t('State'), t('Remove'));
+  $header = array(t('ID'), t('Title'), t('List position'), t('State'), t('Remove'));
 
   foreach (element_children($form) as $state_id) {
     if ($state_id == 'create') {

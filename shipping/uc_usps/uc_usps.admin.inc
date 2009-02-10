@@ -24,7 +24,7 @@ function uc_usps_admin_settings() {
   $form['domestic'] = array(
     '#type' => 'fieldset',
     '#title' => t('USPS Domestic'),
-    '#description' => l(t('Set the conditions that will return a USPS quote.'), 'admin/settings/ca/uc_usps_get_quote/edit/conditions'),
+    '#description' => l(t('Set the conditions that will return a USPS quote.'), CA_UI_PATH .'/uc_usps_get_quote/edit/conditions'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
@@ -48,7 +48,7 @@ function uc_usps_admin_settings() {
   $form['international'] = array(
     '#type' => 'fieldset',
     '#title' => t('USPS International.'),
-    '#description' => l(t('Set the conditions that will return a USPS International quote.'), 'admin/settings/ca/uc_usps_get_intl_quote/edit/conditions'),
+    '#description' => l(t('Set the conditions that will return a USPS International quote.'), CA_UI_PATH .'/uc_usps_get_intl_quote/edit/conditions'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
@@ -93,7 +93,7 @@ function uc_usps_admin_settings() {
       0 => t('Each in its own package'),
       1 => t('All in one'),
     ),
-    '#description' => t('Indicate whether each product is quoted as shipping separately or all in one package.'),
+    '#description' => t('Indicate whether each product is quoted as shipping separately or all in one package. Orders with one kind of product will still use the package quantity to determine the number of packages needed, however.'),
   );
 
   return system_settings_form($form);

@@ -60,7 +60,7 @@ function uc_cart_ca_predicate() {
   $predicates['uc_checkout_email_notification'] = array(
     '#title' => t('E-mail checkout notifications'),
     '#description' => t('Send an e-mail about the new order.'),
-    '#class' => 'order',
+    '#class' => 'notification',
     '#status' => 1,
     '#trigger' => 'uc_checkout_complete',
     '#actions' => array(

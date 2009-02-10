@@ -319,5 +319,7 @@ function uc_file_action_order_renew($order) {
   }
 
   // Notify the user of their download(s).
-  ca_pull_trigger('uc_file_notify_grant', $order, $user_downloads);
+  if ($user_downloads) {
+    ca_pull_trigger('uc_file_notify_grant', $order, $user_downloads);
+  }
 }

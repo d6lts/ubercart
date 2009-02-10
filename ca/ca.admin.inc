@@ -48,7 +48,7 @@ function ca_admin($groupby = 'trigger') {
       array('data' => t('Title'), 'class' => 'col-title'),
       t('Class'),
       t('Status'),
-      t('Weight'),
+      t('List position'),
       t('Operations'),
     );
 
@@ -60,7 +60,7 @@ function ca_admin($groupby = 'trigger') {
       array('data' => t('Title'), 'class' => 'col-title'),
       t('Trigger'),
       t('Status'),
-      t('Weight'),
+      t('List position'),
       t('Operations'),
     );
 
@@ -353,8 +353,8 @@ function ca_predicate_meta_form($form_state, $pid) {
 
   $form['predicate_weight'] = array(
     '#type' => 'weight',
-    '#title' => t('Weight'),
-    '#description' => t('Predicates will be sorted by weight and processed sequentially.'),
+    '#title' => t('List position'),
+    '#description' => t('Predicates will be sorted by list position and processed sequentially.'),
     '#default_value' => ($pid && isset($predicate['#weight'])) ? $predicate['#weight'] : 0,
   );
 
