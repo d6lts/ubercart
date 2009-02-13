@@ -201,6 +201,10 @@ function uc_attribute_menu() {
 }
 
 function uc_attribute_product_attribute_access($node) {
+  if ($node->type == 'product_kit') {
+    return FALSE;
+  }
+
   return uc_product_is_product($node) && node_access('update', $node);
 }
 

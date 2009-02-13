@@ -1084,6 +1084,6 @@ function uc_country_update($country_id, $version) {
     drupal_set_message(t('Attempted to update an invalid country.'));
   }
 
-  drupal_goto('admin/store/settings/countries');
+  drupal_goto('admin/store/settings/countries/edit/import');
 }
 

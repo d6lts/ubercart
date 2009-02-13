@@ -138,7 +138,7 @@ function uc_stock_edit_form($form_state, $node) {
     drupal_set_message(t('No SKU found.'), 'error');
   }
   else {
-    foreach ($skus as $id => $sku) {
+    foreach (array_values($skus) as $id => $sku) {
       $stock = db_fetch_array(db_query("SELECT * FROM {uc_product_stock} WHERE sku = '%s'", $sku));
 
       $form['stock'][$id]['sku'] = array(

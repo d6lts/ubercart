@@ -1000,8 +1000,3 @@ function ca_weight_sort($a, $b) {
   return ($a['#weight'] > $b['#weight']) ? 1 : -1;
 }
 
-// Quickie test function. :)
-function capm($var) {
-  drupal_set_message('<pre>'. print_r($var, TRUE) .'</pre>');
-}
-

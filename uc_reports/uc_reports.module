@@ -160,6 +160,17 @@ function uc_reports_menu() {
 }
 
 /**
+ * Implementation of hook_theme().
+ */
+function uc_reports_theme() {
+  return array(
+    'uc_reports_product_table' => array(
+      'arguments' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_init().
  */
 function uc_reports_init() {

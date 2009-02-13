@@ -22,6 +22,10 @@ function uc_order_ca_entity() {
     '#load' => 'uc_order_load',
     '#save' => 'uc_order_save',
   );
+  $entities['uc_line_item'] = array(
+    '#title' => t('Order line item'),
+    '#type' => 'object',
+  );
 
   return $entities;
 }
