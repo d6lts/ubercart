@@ -164,7 +164,7 @@ function uc_taxes_update_6() {
   $ret = array();
   if (module_exists('workflow_ng_ui')) {
     $configurations = array();
-    $taxes = uc_taxes_get_rates();
+    $taxes = uc_taxes_rate_load();
     foreach ($taxes as $tax) {
       $configurations['uc_taxes_'. $tax->id] = array(
         '#name' => 'uc_taxes_'. $tax->id,

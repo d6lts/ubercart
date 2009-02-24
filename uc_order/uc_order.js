@@ -308,11 +308,9 @@ function add_product_to_order(order_id, node_id) {
   post_vars['nid'] = node_id;
   post_vars['qty'] = $('#edit-add-qty').val();
 
-  $('#uc-order-add-product-form :input').each(
+  $('#uc-order-add-product-form :input').not(':radio:not(:checked)').each(
     function() {
-      if ($(this).attr('name').substr(0, 10) == 'attributes') {
-        post_vars[$(this).attr('name')] = $(this).val();
-      }
+      post_vars[$(this).attr('name')] = $(this).val();
     }
   );
 

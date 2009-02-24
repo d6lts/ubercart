@@ -94,29 +94,14 @@ function theme_uc_catalog_browse($tid = 0) {
       INNER JOIN {uc_products} AS p ON n.vid = p.vid
     WHERE tn.tid = %d AND n.status = 1
       AND n.type IN (". db_placeholders($types, 'varchar') .") ". $order;
-  $sql_count = '';
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $sql_count = "SELECT COUNT(DISTINCT(n.nid))
-        FROM {node} n
-          INNER JOIN {term_node} tn ON n.vid = tn.vid
-          INNER JOIN {uc_products} AS p ON n.vid = p.vid
-        WHERE tn.tid = %d
-          AND n.status = 1
-          AND n.type IN (". db_placeholders($types, 'varchar') .")";
-      break;
-    case 'pgsql':
-      $sql_count = "SELECT DISTINCT n.nid, COUNT(*)
-        FROM {node} n
-          INNER JOIN {term_node} tn ON n.vid = tn.vid
-          INNER JOIN {uc_products} AS p ON n.vid = p.vid
-        WHERE tn.tid = %d
-          AND n.status = 1
-          AND n.type IN (". db_placeholders($types, 'varchar') .")
-        GROUP BY n.nid";
-      break;
-  }
+
+  $sql_count = "SELECT COUNT(DISTINCT(n.nid))
+    FROM {node} n
+      INNER JOIN {term_node} tn ON n.vid = tn.vid
+      INNER JOIN {uc_products} AS p ON n.vid = p.vid
+    WHERE tn.tid = %d
+      AND n.status = 1
+      AND n.type IN (". db_placeholders($types, 'varchar') .")";
 
   $sql = db_rewrite_sql($sql);
   $sql_count = db_rewrite_sql($sql_count);

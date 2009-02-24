@@ -11,7 +11,7 @@ Drupal.behaviors.ucShowOnLoad = function(context) {
 // Adds a throbber to the submit order button on the review order form.
 Drupal.behaviors.ucSubmitOrderThrobber = function(context) {
   $('form#uc-cart-checkout-review-form input#edit-submit:not(.ucSubmitOrderThrobber-processed)', context).addClass('ucSubmitOrderThrobber-processed').click(function() {
-    $(this).clone().insertAfter(this).attr('disabled', true).after('<span id="submit-throbber" style="background: url(' + Drupal.settings.basePath + 'misc/throbber.gif) no-repeat 100% -20px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>').end().hide();
+    $(this).clone().insertAfter(this).attr('disabled', true).after('<span class="ubercart-throbber">&nbsp;&nbsp;&nbsp;&nbsp;</span>').end().hide();
     $('#uc-cart-checkout-review-form #edit-back').attr('disabled', true);
   });
 }

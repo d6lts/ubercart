@@ -73,7 +73,7 @@ function uc_cart_links_process($arg1) {
 
         // Add the item to the cart, suppressing the default redirect.
         if ($p['nid'] > 0 && $p['qty'] > 0) {
-          uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + module_invoke_all('add_to_cart_data', $p), $id, $msg, FALSE);
+          uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + module_invoke_all('add_to_cart_data', $p), NULL, $msg, FALSE);
         }
         break;
 

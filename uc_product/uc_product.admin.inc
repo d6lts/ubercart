@@ -38,27 +38,6 @@ function uc_product_administration() {
 }
 
 /**
- * Display a list of image widgets, and allow the user to select one.
- */
-function uc_product_image_widgets() {
-  $widgets = module_invoke_all('uc_image_widget');
-
-  foreach ($widgets as $key => $widget) {
-    $options[$key] = $widget['name'];
-  }
-  $options[NULL] = 'None';
-
-  $form['uc_product_image_widget'] = array(
-    '#type' => 'radios',
-    '#title' => t('Image widget to use when a customer clicks on a product image'),
-    '#options' => $options,
-    '#default_value' => variable_get('uc_product_image_widget', NULL),
-  );
-
-  return system_settings_form($form);
-}
-
-/**
  * Display a list of product classes.
  */
 function uc_product_class_default() {
@@ -110,6 +89,25 @@ function uc_product_settings_overview() {
  * @see uc_product_settings_overview()
  */
 function uc_product_settings_form() {
+  $form = array();
+
+  // Loop through all the integrated image widgets and build an options array.
+  $options = array();
+
+  foreach (module_invoke_all('uc_image_widget') as $key => $widget) {
+    $options[$key] = check_plain($widget['name']);
+  }
+
+  $options[NULL] = 'None';
+
+  $form['uc_product_image_widget'] = array(
+    '#type' => 'radios',
+    '#title' => t('Product image widget'),
+    '#description' => t('The selected widget will be used to display a zoomed version of product images when they are clicked.'),
+    '#options' => $options,
+    '#default_value' => variable_get('uc_product_image_widget', NULL),
+  );
+
   $form['uc_product_add_to_cart_qty'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display an optional quantity field in the <em>Add to Cart</em> form.'),

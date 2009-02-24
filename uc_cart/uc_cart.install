@@ -89,3 +89,12 @@ function uc_cart_update_6000() {
 
   return $ret;
 }
+
+function uc_cart_update_6001() {
+  // Remove unused variables.
+  variable_del('uc_checkout_review_button');
+  variable_del('uc_checkout_submit_button');
+  variable_del('uc_checkout_next_button');
+
+  return array();
+}

@@ -114,3 +114,8 @@ table.section-items td {
   display: none;
 }
 
+.ubercart-throbber {
+  background-image: url(images/throbber.gif);
+  background-repeat: no-repeat;
+  background-position: 100% -20px;
+}
