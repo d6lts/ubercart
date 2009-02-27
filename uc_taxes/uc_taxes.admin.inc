@@ -102,6 +102,7 @@ function uc_taxes_form($form_state, $rate_id = NULL) {
   // TODO: Remove the need for a special case for product kit module.
   $options = uc_product_type_names();
   unset($options['product_kit']);
+  $options['blank-line'] = t('"Blank line" product');
 
   $form['taxed_product_types'] = array(
     '#type' => 'checkboxes',
