@@ -1064,7 +1064,7 @@ function ca_conditions_form_update_conditions($pid, $data) {
 
   // Override the top level operator if need be.
   if (isset($data['operator'])) {
-    $condtions['#operator'] = $data['operator'];
+    $conditions['#operator'] = $data['operator'];
   }
 
   // Use a variable to track the group array key so we can "reset" the keys.

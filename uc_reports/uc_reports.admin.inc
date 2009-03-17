@@ -688,7 +688,7 @@ function uc_reports_sales_custom() {
     }
 
     // Build the order data for the subreport.
-    $result = db_query("SELECT COUNT(*) as count, title FROM {uc_orders} LEFT JOIN {uc_order_statuses} ON order_status_id = order_status WHERE %d <= created AND created <= %d AND order_status IN $order_statuses GROUP BY order_status, uc_order_statuses.title, uc_order_statuses.weight ORDER BY weight ASC", $subreport['start'], $subreport['end']);
+    $result = db_query("SELECT COUNT(*) as count, title FROM {uc_orders} LEFT JOIN {uc_order_statuses} ON order_status_id = order_status WHERE %d <= created AND created <= %d AND order_status IN $order_statuses GROUP BY order_status, {uc_order_statuses}.title, {uc_order_statuses}.weight ORDER BY weight ASC", $subreport['start'], $subreport['end']);
     $statuses = array();
 
     // Put the order counts into an array by status.

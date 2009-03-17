@@ -1141,7 +1141,7 @@ function uc_order_comments_load($order_id, $admin = FALSE) {
   if (!$admin) {
     $join = " LEFT JOIN {uc_order_statuses} AS os ON oc.order_status = os.order_status_id";
   }
-  $result = db_query("SELECT * FROM {". (($admin) ? 'uc_order_admin_comments' : 'uc_order_comments') ."} AS oc". $join ." WHERE oc.order_id = %d ORDER BY oc.created", $order_id);
+  $result = db_query("SELECT * FROM {". (($admin) ? 'uc_order_admin_comments' : 'uc_order_comments') ."} AS oc". $join ." WHERE oc.order_id = %d ORDER BY oc.created, oc.comment_id", $order_id);
   while ($comment = db_fetch_object($result)) {
     $comments[] = $comment;
   }

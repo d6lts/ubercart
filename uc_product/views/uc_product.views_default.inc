@@ -72,22 +72,6 @@ function uc_product_views_default_views() {
     );
   }
   $handler->override_option('fields', $fields);
-  $handler->override_option('sorts', array(
-    'ordering' => array(
-      'order' => 'ASC',
-      'id' => 'ordering',
-      'table' => 'uc_products',
-      'field' => 'ordering',
-      'relationship' => 'none',
-    ),
-    'title' => array(
-      'order' => 'ASC',
-      'id' => 'title',
-      'table' => 'node',
-      'field' => 'title',
-      'relationship' => 'none',
-    ),
-  ));
   $handler->override_option('filters', array(
     'status' => array(
       'operator' => '=',

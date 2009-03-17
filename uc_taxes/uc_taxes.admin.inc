@@ -28,7 +28,7 @@ function uc_taxes_admin_settings() {
     $rows[] = array(
       check_plain($rate->name),
       $rate->rate * 100 .'%',
-      $rate->shippable ? t('Any product') : t('Shippable products'),
+      $rate->shippable ? t('Shippable products') : t('Any product'),
       implode(', ', $rate->taxed_product_types),
       implode(', ', $rate->taxed_line_items),
       $rate->weight,
@@ -241,4 +241,3 @@ function uc_taxes_delete_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/settings/taxes';
 }
-

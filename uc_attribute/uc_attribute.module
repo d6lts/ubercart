@@ -215,11 +215,15 @@ function uc_attribute_product_access($node) {
 }
 
 function uc_attribute_product_option_access($node) {
+  if ($node->type == 'product_kit') {
+    return FALSE;
+  }
+
   return uc_product_is_product($node) && node_access('update', $node) && (user_access('administer attributes') || user_access('administer product attributes') || user_access('administer product options'));
 }
 
 function uc_attribute_perm() {
-  return array('adminster attributes', 'administer product attributes', 'administer product options');
+  return array('administer attributes', 'administer product attributes', 'administer product options');
 }
 
 function uc_attribute_init() {

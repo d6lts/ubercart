@@ -455,7 +455,12 @@ function uc_country_import_form_submit($form, &$form_state) {
   $files = $form_state['values']['import_file'];
 
   foreach ($files as $file) {
-    uc_country_import($file);
+    if (uc_country_import($file)) {
+      drupal_set_message(t('Country file @file imported.', array('@file' => $file)));
+    }
+    else {
+      drupal_set_message(t('Country file @file could not import or had no install function.', array('@file' => $file)), 'error');
+    }
   }
 }
 

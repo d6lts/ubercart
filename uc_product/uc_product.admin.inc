@@ -98,7 +98,11 @@ function uc_product_settings_form() {
     $options[$key] = check_plain($widget['name']);
   }
 
-  $options[NULL] = 'None';
+  if (empty($options)) {
+    $options[NULL] = 'No image widgets installed.';
+  }
+
+  $options['none'] = "Don't use any image widgets.";
 
   $form['uc_product_image_widget'] = array(
     '#type' => 'radios',
