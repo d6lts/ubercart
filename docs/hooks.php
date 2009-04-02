@@ -1140,6 +1140,30 @@ function hook_ucga_display() {
 }
 
 /**
+ * Notify core of any SKUs your module adds to a given node.
+ *
+ * NOTE: DO NOT map the array keys, as the possibility for numeric SKUs exists, and
+ * this will conflict with the behavior of module_invoke_all(), specifically
+ * array_merge_recursive().
+ *
+ * Code lifted from uc_attribute.module.
+ */
+function hook_uc_product_models($node) {
+  $models = array();
+
+  // Get all the SKUs for all the attributes on this node.
+  $adjustments = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
+  while ($adjustment = db_fetch_object($adjustments)) {
+    if (!in_array($adjustment->model, $models)) {
+      $models[] = $adjustment->model;
+    }
+  }
+
+  return $models;
+}
+
+
+/**
  * Allows modules to alter items before they're added to the UC Google Analytics
  *   e-commerce tracking code.
  *

@@ -801,6 +801,10 @@ function uc_store_get_icon($path, $small = FALSE, $class = 'uc-store-icon', $alt
  * Format an amount for display with the store's currency settings.
  */
 function uc_currency_format($value, $sign = TRUE, $thou = TRUE, $dec = NULL) {
+  if ($value === NULL) {
+    return NULL;
+  }
+
   if (variable_get('uc_currency_prec', 2) > 0) {
     if (abs($value) < '.'. str_repeat('0', variable_get('uc_currency_prec', 2) - 1) .'1') {
       $value = 0;

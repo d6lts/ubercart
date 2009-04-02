@@ -116,7 +116,7 @@ function theme_uc_catalog_browse($tid = 0) {
   }
   if (count($catalog->products)) {
     if (count($links)) {
-      $output .= theme('links', $links, array('class' => 'links inline')) ."<br />\n";
+      $output .= theme('links', $links, array('class' => 'links inline uc-categories')) ."<br />\n";
     }
     $output .= $catalog->description;
     $output .= theme('uc_catalog_products', $catalog->products);

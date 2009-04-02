@@ -46,7 +46,7 @@ function uc_quote_request_quotes() {
   $fake_order = new stdClass();
   $fake_order->uid = $_POST['uid'];
   $fake_order->products = $products;
-  foreach ($_POST['details'] as $type => $address) {
+  foreach ((array) $_POST['details'] as $type => $address) {
     foreach ($address as $key => $value) {
       if ($key == 'country' AND $value == '') {
         $value = variable_get('uc_store_country', 840);

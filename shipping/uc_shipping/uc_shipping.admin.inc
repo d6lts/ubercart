@@ -29,7 +29,7 @@ function uc_shipping_order_packages($order) {
     if ($package->sid && $package->label_image) {
       $method = db_result(db_query("SELECT shipping_method FROM {uc_shipments} WHERE sid = %d", $package->sid));
     }
-    $row[] = isset($package->label_image) ? l(theme('imagecache', 'uc_thumbnail', $package->label_image, t('Shipping Label'), t('Shipping Label')), 'admin/store/orders/'. $order->order_id .'/shipments/labels/'. $method .'/'. $package->label_image, array(), NULL, NULL, FALSE, TRUE) : '';
+    $row[] = isset($package->label_image) ? l(theme('imagecache', 'uc_thumbnail', $package->label_image, t('Shipping Label'), t('Shipping Label')), 'admin/store/orders/'. $order->order_id .'/shipments/labels/'. $method .'/'. $package->label_image, array('html' => TRUE)) : '';
     $row[] = l(t('edit'), 'admin/store/orders/'. $order->order_id .'/packages/'. $package->package_id .'/edit');
     $row[] = l(t('delete'), 'admin/store/orders/'. $order->order_id .'/packages/'. $package->package_id .'/delete');
     if ($package->sid) {

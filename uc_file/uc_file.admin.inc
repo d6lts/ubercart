@@ -88,8 +88,8 @@ function uc_file_admin_files_form_show_files($form_state) {
 
   // Set our default actions.
   $file_actions = array(
+    'uc_file_upload' => t('Upload file'),
     'uc_file_delete' => t('Delete file(s)'),
-    'uc_file_upload' => t('Upload file')
   );
 
   // Check if any hook_file_action('info', $args) are implemented
@@ -209,6 +209,7 @@ function uc_file_admin_files_form_action($form_state) {
   // Perform File Action (Upload, Delete, hooked in actions)
   $file_ids = array();
   foreach ((array)$form_state['values']['file_select'] as $fid => $value) {
+    $value = $value['check'];
     if ($value) {
       $file_ids[] = $fid;
     }
