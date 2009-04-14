@@ -1412,8 +1412,6 @@ function _get_order_screen_titles() {
 function uc_order_load_invoice($order, $op = 'view', $template = 'customer') {
   static $invoice;
 
-  drupal_set_message($template);
-
   if (isset($invoice[$order->order_id][$template])) {
     return $invoice[$order->order_id][$template];
   }

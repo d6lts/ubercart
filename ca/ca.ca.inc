@@ -79,7 +79,7 @@ function ca_ca_condition() {
     '#description' => t('Returns TRUE if the user roles match your settings.'),
     '#callback' => 'ca_condition_user_roles',
     '#arguments' => array(
-      'user' => array('#entity' => 'user', '#title' => t('User')),
+      'account' => array('#entity' => 'user', '#title' => t('User')),
     ),
   );
 

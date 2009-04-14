@@ -231,7 +231,9 @@ function uc_file_build_email_form($form_state, $settings, $token_filters) {
     '#title' => t('Message'),
     '#default_value' => $settings['message'],
   );
-  $form['format'] = filter_form($settings['format']);
+
+  // We add the #is_format element to allow us to locate and configure the filters.
+  $form['format'] = filter_form($settings['format']) + array('#is_format' => TRUE);
 
   $form['token_help'] = array(
     '#type' => 'fieldset',

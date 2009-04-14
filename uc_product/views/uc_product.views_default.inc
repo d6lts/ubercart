@@ -56,7 +56,7 @@ function uc_product_views_default_views() {
       'label_type' => 'widget',
       'format' => 'product_list_linked',
       'multiple' => array(
-        'group' => 0,
+        'group' => 1,
         'multiple_number' => '1',
         'multiple_from' => '0',
         'multiple_reversed' => 0,

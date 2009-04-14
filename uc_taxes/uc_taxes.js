@@ -34,6 +34,7 @@ $(document).ready(function() {
     + "select[@name*=billing_zone], "
     + "input[@name*=billing_city], "
     + "input[@name*=billing_postal_code]").change(getTax);
+  $("input[@name*=copy_address]").click(getTax);
   $('#edit-panes-payment-current-total').click(getTax);
 });
 
@@ -134,11 +135,12 @@ function getTax() {
         for (key in li_titles) {
           // The tax id is the second part of the line item id if the first
           // part is "tax".
-          i = key.split('_', 2);
-          if (i[0] == 'tax') {
+          keytype = key.substring(0, key.indexOf('_'));
+          if (keytype == 'tax') {
             found = false;
+            li_id = key.substring(key.indexOf('_') + 1);
             for (j in taxes) {
-              if (taxes[j].id == i[1]) {
+              if (taxes[j].id == li_id) {
                 found = true;
                 break;
               }

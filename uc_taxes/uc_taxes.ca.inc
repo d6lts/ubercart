@@ -36,7 +36,7 @@ function uc_taxes_ca_trigger() {
     '#arguments' => array(
       'order' => array('#entity' => 'uc_order', '#title' => t('Order')),
       'tax' => array('#entity' => 'tax', '#title' => t('Tax rule')),
-      'user' => array('#entity' => 'user', '#title' => t('User account')),
+      'account' => array('#entity' => 'user', '#title' => t('User account')),
     ),
   );
 
@@ -99,7 +99,7 @@ function uc_taxes_ca_predicate() {
           '#name' => 'uc_taxes_action_apply_tax_'. $rate->id,
           '#title' => t('Apply !name', array('!name' => $rate->name)),
           '#argument_map' => array(
-            'order' => 'uc_order',
+            'order' => 'order',
             'tax' => 'tax',
           ),
         ),
