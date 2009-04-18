@@ -154,7 +154,14 @@
                       </td>
                     </tr>
 
-                    <?php foreach ($line_items as $item) {
+                    <?php
+                    $context = array(
+                      'location' => 'order-invoice-line-item',
+                      'subject' => array(
+                        'order' => $order,
+                      ),
+                    );
+                    foreach ($line_items as $item) {
                     if ($item['line_item_id'] == 'subtotal' || $item['line_item_id'] == 'total') {
                       continue;
                     }?>
@@ -164,7 +171,10 @@
                         <?php echo $item['title']; ?>:
                       </td>
                       <td>
-                        <?php echo uc_currency_format($item['amount']); ?>
+                        <?php
+                          $context['subject']['line_item'] = $item;
+                          echo uc_price($item['amount'], $context);
+                        ?>
                       </td>
                     </tr>
 
@@ -191,13 +201,25 @@
                         <table width="100%" style="font-family: verdana, arial, helvetica; font-size: small;">
 
                           <?php if (is_array($order->products)) {
-                            foreach ($order->products as $product) { ?>
+                            $context = array(
+                              'location' => 'order-invoice-product',
+                              'subject' => array(
+                                'order' => $order,
+                              ),
+                            );
+                            foreach ($order->products as $product) {
+                              $price_info = array(
+                                'price' => $product->price,
+                                'qty' => $product->qty,
+                              );
+                              $context['subject']['order_product'] = $product;
+                              ?>
                           <tr>
                             <td valign="top" nowrap="nowrap">
                               <b><?php echo $product->qty; ?> x </b>
                             </td>
                             <td width="98%">
-                              <b><?php echo $product->title .' - '. uc_currency_format($product->price * $product->qty); ?></b>
+                              <b><?php echo $product->title .' - '. uc_price($price_info, $context, array(), 'formatted'); ?></b>
                               <?php if ($product->qty > 1) {
                                 echo t('(!price each)', array('!price' => uc_currency_format($product->price)));
                               } ?>

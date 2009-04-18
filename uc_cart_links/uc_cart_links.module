@@ -67,7 +67,7 @@ function uc_cart_links_perm() {
  */
 function uc_cart_links_add_to_cart($nid, $qty, $data) {
   if (user_access('administer cart links') &&
-      variable_get('uc_cart_links_add_show', TRUE)) {
+      variable_get('uc_cart_links_add_show', FALSE)) {
     $cart_link = 'p'. $nid .'_q'. $qty;
     if (!empty($data['attributes'])) {
       foreach ($data['attributes'] as $attribute => $option) {

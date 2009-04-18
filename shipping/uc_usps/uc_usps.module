@@ -399,9 +399,16 @@ function uc_usps_quote($products, $details, $method) {
       unset($services[$service]);
     }
   }
+  $context = array(
+    'location' => 'shipping-usps-quote',
+  );
   foreach ($services as $key => $quote) {
     if (isset($quote['rate'])) {
-      $services[$key]['format'] = uc_currency_format($quote['rate']);
+      $context['subject']['quote'] = $quote;
+      $context['revision'] = 'altered';
+      $services[$key]['rate'] = uc_price($quote['rate'], $context);
+      $context['revision'] = 'formatted';
+      $services[$key]['format'] = uc_price($quote['rate'], $context);
       $services[$key]['option_label'] = $quote['label'];
     }
   }

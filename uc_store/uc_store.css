@@ -1,5 +1,9 @@
 /* $Id$ */
 
+.uc-price {
+  white-space: nowrap;
+}
+
 .uc-store-admin-table {
   margin: 1em auto;
   border: 1px dashed #bbb;

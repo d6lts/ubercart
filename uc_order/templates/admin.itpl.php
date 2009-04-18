@@ -15,8 +15,20 @@
 
 <p>
 <?php echo t('Products:'); ?><br />
-<?php foreach ($products as $product) { ?>
-- <?php echo $product->qty; ?> x <?php echo $product->title .' - '. uc_currency_format($product->price * $product->qty); ?><br />
+<?php
+$context = array(
+  'location' => 'order-invoice-admin',
+);
+foreach ($products as $product) {
+  $price_info = array(
+    'price' => $product->price,
+    'qty' => $product->qty,
+  );
+  $context['subject'] = array(
+    'order_product' => $product,
+  );
+?>
+- <?php echo $product->qty; ?> x <?php echo $product->title .' - '. uc_price($price_info, $context); ?><br />
 &nbsp;&nbsp;<?php echo t('SKU: ') . $product->model; ?><br />
     <?php if (is_array($product->data['attributes']) && count($product->data['attributes']) > 0) {?>
     <?php foreach ($product->data['attributes'] as $key => $value) {

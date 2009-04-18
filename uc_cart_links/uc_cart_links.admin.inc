@@ -21,7 +21,7 @@ function uc_cart_links_settings_form() {
   $form['uc_cart_links_add_show'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display the cart link product action when you add a product to your cart.'),
-    '#default_value' => variable_get('uc_cart_links_add_show', TRUE),
+    '#default_value' => variable_get('uc_cart_links_add_show', FALSE),
   );
   $form['uc_cart_links_track'] = array(
     '#type' => 'checkbox',

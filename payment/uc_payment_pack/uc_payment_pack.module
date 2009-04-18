@@ -135,7 +135,11 @@ function uc_payment_method_cod($op, &$arg1) {
     case 'cart-details':
       $details = variable_get('uc_cod_policy', t('Full payment is expected upon delivery or prior to pick-up.'));
       if (($max = variable_get('uc_cod_max_order', 0)) > 0 && is_numeric($max)) {
-        $details .= '<p>'. t('Orders totalling more than !number are <b>not eligible</b> for COD.', array('!number' => uc_currency_format($max))) .'</p>';
+        $context = array(
+          'revision' => 'formatted-original',
+          'location' => 'cod-cart-details',
+        );
+        $details .= '<p>'. t('Orders totalling more than !number are <b>not eligible</b> for COD.', array('!number' => uc_price($max, $context))) .'</p>';
       }
       if (variable_get('uc_cod_delivery_date', FALSE)) {
         $details .= uc_strip_form(drupal_get_form('uc_payment_method_cod_form', $arg1));

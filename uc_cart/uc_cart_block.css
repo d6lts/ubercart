@@ -115,6 +115,10 @@
   font-weight: bold;
 }
 
+.cart-block-summary-total .uc-price {
+  display: inline;
+}
+
 .cart-block-summary-links {
   text-align: right;
 }
