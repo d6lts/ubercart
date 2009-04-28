@@ -826,7 +826,7 @@ function uc_google_checkout_accept_risk($risk) {
     }
     $assessment .= '<br />';
 
-    $cvs_response = $risk_info->{'cvs-response'};
+    $cvn_response = $risk_info->{'cvn-response'};
     switch ($cvn_response) {
       case 'M':
         $assessment .= t('- CVN match');

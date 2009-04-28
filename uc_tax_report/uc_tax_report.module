@@ -121,7 +121,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
   $star_legend = '';
 
   $context = array(
-    'revision' => 'formatted-original',
+    'revision' => 'themed-original',
     'location' => 'tax-report',
   );
   foreach($totals as $line) {

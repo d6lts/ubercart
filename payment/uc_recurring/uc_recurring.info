@@ -1,8 +1,0 @@
-; $Id$
-name = Recurring Fees
-description = Assign recurring fees to products and manage them. Should be used with a payment service that implements a recurring fee handler.
-dependencies[] = uc_payment
-dependencies[] = ca
-package = Ubercart - payment
-core = 6.x
-php = 5.0

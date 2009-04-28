@@ -607,7 +607,7 @@ function theme_cart_review_table($show_subtotal = TRUE) {
   // Add the subtotal as the final row.
   if ($show_subtotal) {
     $context = array(
-      'revision' => 'formatted-original',
+      'revision' => 'themed-original',
       'location' => 'cart-checkout-subtotal',
     );
     $rows[] = array(

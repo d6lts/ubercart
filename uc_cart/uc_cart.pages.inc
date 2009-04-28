@@ -145,7 +145,7 @@ function uc_cart_checkout_form() {
   }
 
   foreach ($panes as $pane) {
-    if (variable_get('uc_pane_'. $pane['id'] .'_enabled', TRUE)) {
+    if (variable_get('uc_pane_'. $pane['id'] .'_enabled', $pane['enabled'])) {
       $pane['prev'] = _uc_cart_checkout_prev_pane($panes, $pane['id']);
       $pane['next'] = _uc_cart_checkout_next_pane($panes, $pane['id']);
 

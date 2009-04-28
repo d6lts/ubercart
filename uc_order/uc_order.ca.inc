@@ -1136,9 +1136,6 @@ function uc_order_action_email_invoice_form($form_state, $settings = array()) {
     '#required' => TRUE,
   );
 
-  // We add the #is_format element to allow us to locate and configure the filters.
-  $form['format'] = filter_form($settings['format']) + array('#is_format' => TRUE);
-
   $form['token_help'] = array(
     '#type' => 'fieldset',
     '#title' => t('Replacement patterns'),

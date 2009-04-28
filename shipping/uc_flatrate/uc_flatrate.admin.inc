@@ -14,7 +14,6 @@ function uc_flatrate_admin_methods() {
   $output = '';
 
   $context = array(
-    'revision' => 'formatted',
     'location' => 'shipping-flatrate-method-admin',
   );
 

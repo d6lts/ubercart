@@ -588,14 +588,16 @@ function uc_shipping_shipment_view($order, $shipment) {
     $rows[] = array(t('Services:'), $shipment->accessorials);
   }
   $context = array(
-    'revision' => 'formatted',
     'location' => 'shipping-order-view',
+    'class' => array(
+      'cost',
+    ),
     'subject' => array(
       'shipment' => $shipment,
       'field' => 'cost',
     ),
   );
-  $rows[] = array(t('Cost:'), uc_price($shipment->cost, $context));
+  $rows[] = array(t('Cost:'), uc_price($shipment->cost, $context, array('label' => FALSE)));
   $output .= theme('table', array(), $rows, array('style' => 'width:auto'));
   $output .= '</div>';
   foreach ($shipment->packages as $package) {

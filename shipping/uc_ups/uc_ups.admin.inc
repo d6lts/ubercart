@@ -207,7 +207,6 @@ function theme_uc_ups_confirm_shipment($form) {
   $method = uc_ups_shipping_method();
   $output .= '<b>'. $method['ups']['quote']['accessorials'][$_SESSION['ups']['service']] .'</b><br />';
   $context = array(
-    'revision' => 'formatted',
     'location' => 'shipping-ups-confirm',
     'subject' => array(
       'ups_info' => $_SESSION['ups'],

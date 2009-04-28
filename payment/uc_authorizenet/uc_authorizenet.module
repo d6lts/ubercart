@@ -864,7 +864,7 @@ function uc_authorizenet_arb_create($order, $fee) {
 function uc_authorizenet_arb_update($subscription_id, $updates, $order_id = NULL) {
   $server = variable_get('uc_authnet_arb_mode', 'disabled');
 
-  unset($update['paymentSchedule']);
+  unset($updates['paymentSchedule']);
 
   // Build the data array for the request.
   $data = array(

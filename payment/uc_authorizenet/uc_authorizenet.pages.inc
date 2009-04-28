@@ -149,6 +149,6 @@ function uc_authorizenet_arb_user_cancel_form_submit($form, &$form_state) {
     drupal_set_message(t('An error has occurred. Please try again and contact us if the problem persists.'), 'error');
   }
 
-  $form_state['redirect'] = 'user/'. $uid;
+  $form_state['redirect'] = 'user/'. $form_state['values']['uid'];
 }
 

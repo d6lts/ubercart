@@ -9,7 +9,7 @@
 
 // Displays the credit card terminal page.
 function uc_credit_terminal($order) {
-  $output = l(t('Return to order view screen.'), 'admin/store/orders/'. $order_id);
+  $output = l(t('Return to order view screen.'), 'admin/store/orders/'. $order->order_id);
 
   $output .= '<p>'. t('Use this terminal to process credit card payments through your default gateway.') .'</p>';
 

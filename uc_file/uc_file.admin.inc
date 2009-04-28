@@ -334,7 +334,7 @@ function uc_file_admin_files_form_action($form_state) {
   return $form;
 }
 
-function uc_file_admin_files_form_action_validate($form, &$form_state) {
+function uc_file_admin_files_form_action_validate($form, &$form_state, $form_id) {
 
   switch ($form_state['values']['action']) {
 

@@ -313,7 +313,7 @@ function uc_google_checkout_terminal($order) {
   }
   $balance = uc_payment_balance($order);
   $context = array(
-    'revision' => 'formatted-original',
+    'revision' => 'themed-original',
     'location' => 'google-checkout-terminal',
   );
   $output .= '<p>'. t('Use this terminal to process credit card payments:') .'</p>'
