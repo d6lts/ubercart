@@ -21,7 +21,7 @@ function uc_cart_cart_settings_overview() {
     $help_text = t('Help text is not shown in block.');
   }
   $summaries[] = array(
-    'path' => 'admin/store/settings/cart/edit/block',
+    'path' => url('admin/store/settings/cart/edit/block'),
     'href' => 'admin/store/settings/cart/edit/block',
     'title' => t('Cart block'),
     'items' => array(
