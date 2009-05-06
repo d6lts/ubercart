@@ -25,7 +25,7 @@ function uc_cart_cart_settings_overview() {
     'href' => 'admin/store/settings/cart/edit/block',
     'title' => t('Cart block'),
     'items' => array(
-      t('Cart block is !option when empty.', array('!option' => variable_get('uc_cart_empty_hide', FALSE) ? t('hidden') : t('shown'))),
+      t('Cart block is !option when empty.', array('!option' => variable_get('uc_cart_block_empty_hide', FALSE) ? t('hidden') : t('shown'))),
       t('Cart block is !option by default.', array('!option' => variable_get('uc_cart_expanded', FALSE) ? t('expanded') : t('collapsed'))),
       $help_text,
     ),

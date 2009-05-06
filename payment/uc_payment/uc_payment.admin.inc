@@ -300,9 +300,9 @@ function uc_payment_by_order_form($form_state, $order) {
   $context = array(
     'revision' => 'themed-original',
     'location' => 'order-payments-admin',
-    'subject' => array(
+    'subject' => array(),
+    'extras' => array(
       'order' => $order,
-      'total' => $total,
     ),
   );
   $form['order_total'] = array('#value' => uc_price($total, $context));

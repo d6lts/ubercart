@@ -333,7 +333,8 @@ function uc_order_pane_line_items($op, $arg1) {
 
       $context = array(
         'location' => 'order-line-items',
-        'subject' => array(
+        'subject' => array(),
+        'extras' => array(
           'order' => $arg1,
         ),
       );
@@ -404,7 +405,8 @@ function uc_order_pane_line_items($op, $arg1) {
 
       $context = array(
         'location' => 'order-edit-line-items',
-        'subject' => array(
+        'subject' => array(),
+        'extras' => array(
           'order' => $arg1,
         ),
       );

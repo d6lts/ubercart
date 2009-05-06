@@ -178,7 +178,8 @@ function uc_weightquote_quote($products, $details) {
   $context = array(
     'revision' => 'altered',
     'location' => 'shipping-weightquote-quote',
-    'subject' => array(
+    'subject' => array(),
+    'extras' => array(
       'method' => $method,
     ),
   );

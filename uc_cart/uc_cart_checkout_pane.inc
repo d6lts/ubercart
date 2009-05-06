@@ -30,6 +30,7 @@ function uc_checkout_pane_cart($op) {
       $context = array(
         'location' => 'cart-review-item',
         'subject' => array(),
+        'extras' => array(),
       );
       foreach ($items as $item) {
         $desc = check_plain($item->title);
@@ -43,6 +44,8 @@ function uc_checkout_pane_cart($op) {
         );
         $context['subject'] = array(
           'cart_item' => $item,
+        );
+        $context['extras'] = array(
           'node' => node_load($item->nid),
         );
         $output .= '<tr valign="top"><td>'. $item->qty .'x</td><td width="100%">'. $desc
@@ -582,6 +585,8 @@ function theme_cart_review_table($show_subtotal = TRUE) {
     );
     $context['subject'] = array(
       'cart_item' => $item,
+    );
+    $context['extras'] = array(
       'node' => node_load($item->nid),
     );
     $context['revision'] = 'altered';

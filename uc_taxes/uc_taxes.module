@@ -148,7 +148,8 @@ function uc_taxes_order($op, $arg1, $arg2) {
       $context = array(
         'revision' => 'formatted',
         'location' => 'tax-changes-log',
-        'subject' => array(
+        'subject' => array(),
+        'extras' => array(
           'order' => $arg1,
         ),
       );

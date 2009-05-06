@@ -36,6 +36,8 @@ function uc_line_item_subtotal($op, $arg1) {
         );
         $context['subject'] = array(
           'cart_item' => $item,
+        );
+        $context['extras'] = array(
           'node' => node_load($item->nid),
         );
         $total = uc_price($price_info, $context);
