@@ -347,7 +347,7 @@ function _uc_file_download_redirect($uid = NULL) {
   }
   // Redirect users back to their file page.
   else {
-    drupal_goto('user/'. $uid .'/uc-files');
+    drupal_goto('user/'. $uid .'/purchased-files');
   }
 }
 

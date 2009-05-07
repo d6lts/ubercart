@@ -986,7 +986,7 @@ function uc_order_history($user) {
 function uc_order_view($order, $view = 'view') {
   if ($view == 'customer') {
     $breadcrumb = drupal_get_breadcrumb();
-    $breadcrumb[2] = l(t('Order history'), 'user/'. arg(1) .'/uc-orders');
+    $breadcrumb[2] = l(t('Order history'), 'user/'. arg(1) .'/orders');
     drupal_set_breadcrumb($breadcrumb);
   }
 

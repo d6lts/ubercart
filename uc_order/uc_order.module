@@ -157,7 +157,7 @@ function uc_order_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'uc_order.admin.inc',
   );
-  $items['user/%user/uc-orders'] = array(
+  $items['user/%user/orders'] = array(
     'title' => 'Orders',
     'description' => 'View your order history.',
     'page callback' => 'uc_order_history',
@@ -496,7 +496,7 @@ function uc_order_user($op, &$edit, &$account, $category = NULL) {
           '#title' => t('Orders'),
           'link' => array(
             '#type' => 'user_profile_item',
-            '#value' => l(t('Click here to view your order history.'), 'user/'. $account->uid .'/uc-orders'),
+            '#value' => l(t('Click here to view your order history.'), 'user/'. $account->uid .'/orders'),
           ),
         );
       }

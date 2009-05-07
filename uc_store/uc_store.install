@@ -261,3 +261,16 @@ function uc_store_update_6002() {
   return $ret;
 }
 
+function uc_store_update_6003() {
+  $ret = array();
+
+  // Copy value of uc_notify_store_help_page into uc_store_help_page
+  variable_set('uc_store_help_page', variable_get('uc_notify_store_help_page', ''));
+
+  // Remove old variable uc_notify_store_help_page
+  variable_del('uc_notify_store_help_page');
+
+  $ret[] = array('success' => TRUE, 'query' => t("'uc_notify_store_help_page' renamed to 'uc_store_help_page' in variable table"));
+  return $ret;
+}
+

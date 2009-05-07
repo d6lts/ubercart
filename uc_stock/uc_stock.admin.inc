@@ -67,7 +67,7 @@ function uc_stock_report() {
   while ($stock = db_fetch_object($result)) {
     $op = array();
     if (user_access('administer products')) {
-      $op[] = l(t('edit'), 'node/'. $stock->nid .'/edit/uc-stock', $options = array('query' => 'destination=admin/store/reports/stock'));
+      $op[] = l(t('edit'), 'node/'. $stock->nid .'/edit/stock', $options = array('query' => 'destination=admin/store/reports/stock'));
     }
 
     // Add the data to a table row for display.
