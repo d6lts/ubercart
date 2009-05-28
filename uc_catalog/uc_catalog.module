@@ -719,7 +719,7 @@ function theme_uc_catalog_product_grid($products) {
     if (variable_get('uc_catalog_grid_display_sell_price', TRUE)) {
       $product_table .= '<span class="catalog-grid-sell-price">'. uc_price($product->sell_price, $context) .'</span>';
     }
-    if (variable_get('uc_catalog_grid_display_add_to_cart', TRUE)) {
+    if (module_exists('uc_cart') && variable_get('uc_catalog_grid_display_add_to_cart', TRUE)) {
       if (variable_get('uc_catalog_grid_display_attributes', TRUE)) {
         $product_table .= theme('uc_product_add_to_cart', $product);
       }

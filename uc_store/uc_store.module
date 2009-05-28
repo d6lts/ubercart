@@ -600,7 +600,7 @@ function theme_uc_admin_dashboard($type, $menus) {
 
   $output = '<table class="uc-store-admin-table" align="center"><tr valign="top">';
 
-  $panels = 0;
+  $panel = 0;
   if (is_array($menus)) {
     foreach ($menus as $menu) {
       $panel++;

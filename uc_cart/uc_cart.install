@@ -16,7 +16,7 @@ function uc_cart_schema() {
     'fields' => array(
       'cart_id' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '0',
       ),
@@ -97,4 +97,15 @@ function uc_cart_update_6001() {
   variable_del('uc_checkout_next_button');
 
   return array();
+}
+
+/**
+ * Increase width of cart id to 255.
+ */
+function uc_cart_update_6002() {
+  $ret = array();
+
+  db_change_field($ret, 'uc_cart_products', 'cart_id', 'cart_id', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 0));
+
+  return $ret;
 }

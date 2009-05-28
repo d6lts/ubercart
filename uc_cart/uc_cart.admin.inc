@@ -99,7 +99,7 @@ function uc_cart_cart_settings_form() {
     '#type' => 'fieldset',
     '#title' => t('Authenticated cart duration'),
     '#description' => t('Set the length of time products remain in the cart for customers who <strong>have</strong> logged in.'),
-    '#summary' => t('Authenticated cart duration is @duration', array('@duration' => variable_get('uc_cart_auth_duration', '1') .' '. variable_get('uc_cart_anon_unit', 'years'))),
+    '#summary' => t('Authenticated cart duration is @duration', array('@duration' => variable_get('uc_cart_auth_duration', '1') .' '. variable_get('uc_cart_auth_unit', 'years'))),
   );
   $form['authenticated']['uc_cart_auth_duration'] = array(
     '#type' => 'select',

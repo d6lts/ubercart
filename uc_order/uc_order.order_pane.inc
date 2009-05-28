@@ -756,7 +756,7 @@ function op_products_view_table($products) {
       $option_rows = array();
       if (module_exists('uc_attribute') && is_array($options)) {
         foreach ($options as $attribute => $option) {
-          $option_rows[] = t('@attribute: @option', array('@attribute' => $attribute, '@option' => $option));
+          $option_rows[] = t('@attribute: @options', array('@attribute' => $attribute, '@options' => implode(', ', (array)$option)));
         }
       }
       $data['product'] = array(
@@ -872,7 +872,7 @@ function op_products_customer_table($products) {
       $option_rows = array();
       if (module_exists('uc_attribute') && is_array($options)) {
         foreach ($options as $attribute => $option) {
-          $option_rows[] = t('@attribute: @option', array('@attribute' => $attribute, '@option' => $option));
+          $option_rows[] = t('@attribute: @options', array('@attribute' => $attribute, '@options' => implode(', ', (array)$option)));
         }
       }
       $data['product'] = array(

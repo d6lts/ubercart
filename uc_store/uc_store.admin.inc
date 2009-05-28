@@ -1130,7 +1130,7 @@ function uc_price_settings_form() {
       $description = $data['format']['title'];
 
       if (!empty($data['format']['description'])) {
-        $description .= '<div class="description">'. $data['alter']['description'] .'</div>';
+        $description .= '<div class="description">'. $data['format']['description'] .'</div>';
       }
 
       $options[$data['format']['callback']] = $description;
