@@ -895,7 +895,7 @@ function uc_shipping_make_shipment() {
   }
   else {
     drupal_set_message(t('There is no sense in making a shipment with no packages on it, right?'));
-    drupal_goto('admin/store/orders/'. $args[0]);
+    drupal_goto('admin/store/orders/'. $args[0]->order_id .'/shipments/new');
   }
 }
 

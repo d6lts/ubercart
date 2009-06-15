@@ -582,7 +582,7 @@ function uc_order_condition_count_products($order, $settings) {
   $total = 0;
   foreach ($order->products as $product) {
     $totals['all'] += $product->qty;
-    $totals[$product->nid] = $product->qty;
+    $totals[$product->nid] += $product->qty;
   }
   if (in_array('all', $settings['products'])) {
     $total = $totals['all'];

@@ -308,7 +308,7 @@ function add_product_to_order(order_id, node_id) {
   post_vars['nid'] = node_id;
   post_vars['qty'] = $('#edit-add-qty').val();
 
-  $('#uc-order-add-product-form :input').not(':radio:not(:checked)').each(
+  $('#uc-order-add-product-form :input').not(':radio:not(:checked), :checkbox:not(:checked)').each(
     function() {
       post_vars[$(this).attr('name')] = $(this).val();
     }

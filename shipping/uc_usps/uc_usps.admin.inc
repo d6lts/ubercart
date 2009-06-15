@@ -75,7 +75,7 @@ function uc_usps_admin_settings() {
     '#default_value' => variable_get('uc_usps_markup_type', 'percentage'),
     '#options' => array(
       'percentage' => t('Percentage (%)'),
-      'multiplier' => t('Multiplier (�)'),
+      'multiplier' => t('Multiplier (×)'),
       'currency' => t('Addition (!currency)', array('!currency' => variable_get('uc_currency_sign', '$'))),
     ),
   );

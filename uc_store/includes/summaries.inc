@@ -171,6 +171,10 @@ function summarize_child_form_pages($path, $trim = FALSE, $only_parent = FALSE) 
 
   while ($row = db_fetch_array($result)) {
     $item = menu_get_item($row['path']);
+    // Only allow items the user can access.
+    if ($item['access'] === FALSE) {
+      continue;
+    }
 
     if ($item['page_callback'] == 'drupal_get_form') {
       if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
