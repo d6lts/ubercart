@@ -204,6 +204,7 @@ function uc_order_schema() {
       'data' => array(
         'description' => t('Serialized array of extra data.'),
         'type' => 'text',
+        'serialize' => TRUE,
       ),
       'created' => array(
         'description' => t('Timestamp of when the order was created.'),
@@ -373,6 +374,7 @@ function uc_order_schema() {
       'data' => array(
         'description' => t('Serialized array of extra data.'),
         'type' => 'text',
+        'serialize' => TRUE,
       ),
     ),
     'indexes' => array(
@@ -498,6 +500,7 @@ function uc_order_schema() {
       'data' => array(
         'description' => t('Serialized array of extra data.'),
         'type' => 'text',
+        'serialize' => TRUE,
       ),
     ),
     'indexes' => array(

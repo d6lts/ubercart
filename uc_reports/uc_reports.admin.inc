@@ -257,8 +257,8 @@ function uc_reports_products() {
         $csv_rows[] = $csv_row;
 
       }
-      $row_cell++;
     }
+    $row_cell++;
   }
   if (empty($rows)) {
     $rows[] = array(array('data' => t('No products found'), 'colspan' => count($header)));

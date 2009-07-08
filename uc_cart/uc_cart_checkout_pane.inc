@@ -48,7 +48,7 @@ function uc_checkout_pane_cart($op) {
         $context['extras'] = array(
           'node' => node_load($item->nid),
         );
-        $output .= '<tr valign="top"><td>'. $item->qty .'x</td><td width="100%">'. $desc
+        $output .= '<tr valign="top"><td>'. $item->qty .'&times;</td><td width="100%">'. $desc
                   .'</td><td nowrap="nowrap">'. uc_price($price_info, $context) .'</td></tr>';
       }
       $output .= '</table>';
@@ -178,7 +178,7 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
           }
           // Validate the password.
           if (variable_get('uc_cart_new_account_password', FALSE)) {
-            if ($arg2['new_account']['pass'] != $arg2['new_account']['pass_confirm']) {
+            if (strcmp($arg2['new_account']['pass'], $arg2['new_account']['pass_confirm'])) {
               drupal_set_message(t('The passwords you entered did not match. Please try again.'), 'error');
               return FALSE;
             }

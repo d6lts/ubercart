@@ -85,7 +85,9 @@ function uc_cart_checkout() {
   // Send anonymous users to login page when anonymous checkout is disabled.
   if (!$user->uid && !variable_get('uc_checkout_anonymous', TRUE)) {
     drupal_set_message(t('You must login before you can proceed to checkout.'));
-    drupal_set_message(t('If you do not have an account, you can <a href="!url">click here</a> to create one.', array('!url' => url('user/register', array('absolute' =>  TRUE)))));
+    if (variable_get('user_register', 1) != 0) {
+      drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => url('user/register'))));
+    }
     $_SESSION['checkout-redirect'] = TRUE;
     drupal_goto('user');
   }

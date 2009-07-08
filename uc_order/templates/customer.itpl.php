@@ -202,7 +202,7 @@
 
                           <?php if (is_array($order->products)) {
                             $context = array(
-                              'location' => 'order-invoice-product',
+                              'revision' => 'formatted',
                               'subject' => array(
                                 'order' => $order,
                               ),
@@ -213,21 +213,24 @@
                                 'qty' => $product->qty,
                               );
                               $context['subject']['order_product'] = $product;
+                              $context['location'] = 'order-invoice-product';
                               ?>
                           <tr>
                             <td valign="top" nowrap="nowrap">
                               <b><?php echo $product->qty; ?> x </b>
                             </td>
                             <td width="98%">
-                              <b><?php echo $product->title .' - '. uc_price($price_info, $context, array(), 'formatted'); ?></b>
+                              <b><?php echo $product->title .' - '. uc_price($price_info, $context); ?></b>
                               <?php if ($product->qty > 1) {
-                                echo t('(!price each)', array('!price' => uc_currency_format($product->price)));
+                                $context['location'] = 'order-invoice-product-each';
+                                $price_info['qty'] = 1;
+                                echo t('(!price each)', array('!price' => uc_price($price_info, $context)));
                               } ?>
                               <br />
                               <?php echo t('SKU: ') . $product->model; ?><br />
                               <?php if (is_array($product->data['attributes']) && count($product->data['attributes']) > 0) {?>
-                              <?php foreach ($product->data['attributes'] as $key => $value) {
-                                echo '<li>'. $key .': '. $value .'</li>';
+                              <?php foreach ($product->data['attributes'] as $attribute => $option) {
+                                echo '<li>'. t('@attribute: @options', array('@attribute' => $attribute, '@options' => implode(', ', (array)$option))) .'</li>';
                               } ?>
                               <?php } ?>
                               <br />

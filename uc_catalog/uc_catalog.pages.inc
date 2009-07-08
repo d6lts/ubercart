@@ -77,7 +77,12 @@ function theme_uc_catalog_browse($tid = 0) {
     }
   }
   if (!empty($catalog->image)) {
-    $output .= theme('imagecache', 'uc_thumbnail', $catalog->image['filepath'], $catalog->name, $catalog->name, array('class' => 'category'));
+    if (module_exists('imagecache')) {
+      $output .= theme('imagecache', 'uc_thumbnail', $catalog->image['filepath'], $catalog->name, $catalog->name, array('class' => 'category'));
+    }
+    else {
+      $output .= theme('image', $catalog->image['filepath'], $catalog->name, $catalog->name, array('class' => 'category'));
+    }
   }
 
   // Build an ORDER BY clause for the SELECT query based on table sort info.

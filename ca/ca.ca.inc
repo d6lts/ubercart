@@ -257,7 +257,7 @@ function ca_condition_node_field_comparison_form($form_state, $settings = array(
     '#type' => 'select',
     '#title' => t('Node field'),
     '#options' => $options,
-    '#default_values' => $settings['field'],
+    '#default_value' => $settings['field'],
   );
 
   // Define the operators for the fields.

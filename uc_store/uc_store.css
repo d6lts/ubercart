@@ -123,3 +123,29 @@ table.section-items td {
   background-repeat: no-repeat;
   background-position: 100% -20px;
 }
+
+/* Add icon support for admin (http://drupal.org/project/admin). */
+.path-admin-store-orders span.icon {
+  background: transparent url('images/menu_orders.gif') no-repeat !important;
+}
+.path-admin-store-customers span.icon {
+  background: transparent url('images/menu_customers.gif') no-repeat !important;
+}
+.path-admin-store-products span.icon {
+  background: transparent url('images/menu_products.gif') no-repeat !important;
+}
+.path-admin-store-settings span.icon {
+  background: transparent url('images/menu_store_settings.gif') no-repeat !important;
+}
+.path-admin-store-attributes span.icon {
+  background: transparent url('images/menu_store_settings.gif') no-repeat !important;
+}
+.path-admin-store-reports span.icon {
+  background: transparent url('images/menu_reports.gif') no-repeat !important;
+}
+.path-admin-store-ca span.icon {
+  background: transparent url('images/menu_store_settings.gif') no-repeat !important;
+}
+.path-admin-store-help span.icon {
+  background: transparent url('images/menu_help.gif') no-repeat !important;
+}

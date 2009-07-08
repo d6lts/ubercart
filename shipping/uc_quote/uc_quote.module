@@ -402,7 +402,7 @@ function uc_quote_action_get_quote($order, $method) {
   //drupal_set_message('<pre>'. print_r($quote_data, TRUE) .'</pre>');
   if ($messages && variable_get('uc_quote_log_errors', FALSE)) {
     watchdog('quote', $messages, NULL, WATCHDOG_WARNING);
-    watchdog('quote', '<pre>'. print_r($quote_data, TRUE) .'</pre>', NULL, WATCHDOG_WARNING);
+    watchdog('quote', '<pre>@data</pre>', array('@data' => print_r($quote_data, TRUE)), WATCHDOG_WARNING);
   }
   return $quote_data;
 }
@@ -1026,7 +1026,7 @@ function uc_quote_save_choice($form, &$form_state) {
 
 function uc_quote_cache_quotes($form) {
   if ($form['#id'] == 'uc-cart-checkout-form') {
-    if (isset($_SESSION['quote']) && $_SESSION['quote']['rate']) {
+    if (isset($_SESSION['quote']) && isset($_SESSION['quote']['rate'])) {
       $quote = $_SESSION['quote'];
         $form['panes']['quotes']['quote'] = array('#type' => 'markup',
           '#value' => '<div id="quote" class="solid-border">'. rawurldecode($_SESSION['quote']['quote_form']) .'</div>',

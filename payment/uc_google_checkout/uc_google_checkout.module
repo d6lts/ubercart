@@ -1026,7 +1026,7 @@ function uc_google_checkout_notification_acknowledgement($serial_number) {
   exit();
 }
 
-function uc_google_checkout_notificiation_error($message = NULL) {
+function uc_google_checkout_notification_error($message = NULL) {
   if (is_null($message)) {
     $message = t('Unknown order id or malformed XML.');
   }

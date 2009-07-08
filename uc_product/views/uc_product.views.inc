@@ -90,6 +90,9 @@ function uc_product_views_data() {
     'title' => t('Weight'),
     'help' => t('The physical weight.'),
     'field' => array(
+      'additional fields' => array(
+        'field' => 'weight_units',
+      ),
       'handler' => 'uc_product_handler_field_weight',
       'click sortable' => TRUE,
     ),

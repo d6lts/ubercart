@@ -43,6 +43,7 @@ function uc_payment_schema() {
       ),
       'data' => array(
         'type' => 'text',
+        'serialize' => TRUE,
       ),
       'comment' => array(
         'type' => 'text',

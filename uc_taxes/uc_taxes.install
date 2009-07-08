@@ -37,10 +37,12 @@ function uc_taxes_schema() {
       'taxed_product_types' => array(
         'description' => t('Serialized array of node types to be taxed.'),
         'type' => 'text',
+        'serialize' => TRUE,
       ),
       'taxed_line_items' => array(
         'description' => t('Serialized array of line item types to be taxed.'),
         'type' => 'text',
+        'serialize' => TRUE,
       ),
       'weight' => array(
         'type' => 'int',

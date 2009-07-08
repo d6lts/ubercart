@@ -6,7 +6,7 @@
 
 img.category {
   float: right;
-  padding-left: 1em;
+  margin-left: 1em;
 }
 table.category-products {
   clear: right;
