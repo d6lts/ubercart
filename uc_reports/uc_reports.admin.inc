@@ -668,7 +668,7 @@ function uc_reports_sales_year_form($form_state, $year) {
  * @see uc_reports_sales_year_form()
  */
 function uc_reports_sales_year_form_submit($form, &$form_state) {
-  drupal_goto('admin/store/reports/sales/year/'. $form_state['values']['year']);
+  $form_state['redirect'] = 'admin/store/reports/sales/year/'. $form_state['values']['year'];
 }
 
 /**
@@ -926,6 +926,6 @@ function uc_reports_sales_custom_form_submit($form, &$form_state) {
     $form_state['values']['detail'],
   );
 
-  drupal_goto('admin/store/reports/sales/custom/'. implode('/', $args));
+  $form_state['redirect'] = 'admin/store/reports/sales/custom/'. implode('/', $args);
 }
 

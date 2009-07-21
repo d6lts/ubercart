@@ -109,6 +109,14 @@
   margin-top: .5em;
 }
 
+#cart-form-products td.desc {
+  width: 100%;
+}
+
+#cart-form-products td.total, #cart-form-products td.subtotal {
+  white-space: nowrap;
+}
+
 #cart-form-buttons {
   width: 100%;
   border: solid 1px #bbb;
