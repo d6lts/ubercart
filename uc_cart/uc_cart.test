@@ -1,4 +1,10 @@
 <?php
+// $Id$
+
+/**
+ * @file
+ * Shopping cart and checkout tests.
+ */
 
 class UbercartTestCase extends DrupalWebTestCase {
   //Perform the initial setup

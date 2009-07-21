@@ -110,6 +110,9 @@ function uc_order_delete_line_item($id, $order = FALSE) {
   return TRUE;
 }
 
+/**
+ * Add a line item to an order.
+ */
 function uc_order_line_item_add($order_id, $type, $title, $amount, $weight = NULL, $data = NULL) {
   if (is_null($weight)) {
     $weight = _line_item_data($type, 'weight');

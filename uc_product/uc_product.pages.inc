@@ -6,7 +6,6 @@
  * Defines page callbacks for the product module.
  */
 
-
 /**
  * Return an autocomplete list for product nodes.
  *
@@ -26,5 +25,4 @@ function uc_product_title_sku_autocomplete($string = '') {
   print drupal_to_js($matches);
   exit();
 }
-
 

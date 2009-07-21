@@ -66,7 +66,7 @@ function uc_taxes_ca_action() {
 }
 
 /**
- * Workflow-ng action callback to calculate a tax.
+ * Action callback to calculate a tax.
  *
  * @param $order
  *   The order object being considered.

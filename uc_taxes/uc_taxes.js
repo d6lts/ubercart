@@ -1,6 +1,11 @@
 // $Id$
 
 /**
+ * @file
+ * Handle asynchronous requests to calculate taxes.
+ */
+
+/**
  * Calculate the number of bytes of a Unicode string.
  *
  * Gratefully stolen from http://dt.in.th/2008-09-16.string-length-in-bytes.html.
@@ -38,6 +43,9 @@ $(document).ready(function() {
   $('#edit-panes-payment-current-total').click(getTax);
 });
 
+/**
+ * Get tax calculations for the current cart and line items.
+ */
 function getTax() {
   var products = $("[@name=cart_contents]").val();
 

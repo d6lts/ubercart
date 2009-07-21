@@ -191,6 +191,8 @@ function uc_product_views_handlers() {
 
 
 /**
+ * Implementation of hook_views_tables_alter().
+ *
  * Conditionally add editablefields support.
  */
 function uc_product_views_tables_alter(&$tables) {

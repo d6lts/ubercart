@@ -1,6 +1,11 @@
 // $Id$
 
 /**
+ * @file
+ * Adds effects and behaviors to the cart block.
+ */
+
+/**
  * Set the behavior to (un)collapse the cart block on a click
  */
 Drupal.behaviors.ucCollapseBlock = function(context) {

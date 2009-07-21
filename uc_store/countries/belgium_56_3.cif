@@ -2,7 +2,7 @@
 // $Id$
 
 function belgium_install() {
-  db_query("INSERT INTO {uc_countries} VALUES (56, 'Belgium', 'BE', 'BEL', 2)");
+  db_query("INSERT INTO {uc_countries} VALUES (56, 'Belgium', 'BE', 'BEL', 3)");
 
   // Make the entries in the zones table.
   db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES "
@@ -18,7 +18,7 @@ function belgium_install() {
           ."(56, 'WNA', 'Namur'),"
           ."(56, 'WLX', 'Luxembourg')" );
 
-  uc_set_address_format(56, "!company\n!first_name !last_name\n!street\n!postal_code !city\n!country_name_if");
+  uc_set_address_format(56, "!company\n!first_name !last_name\n!street1\n!street2\n!postal_code !city\n!country_name_if");
 }
 
 function belgium_update($version) {

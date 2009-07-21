@@ -6,6 +6,9 @@
  * Install hooks for uc_shipping.module.
  */
 
+/**
+ * Implementation of hook_schema().
+ */
 function uc_shipping_schema() {
   $schema = array();
 
@@ -280,10 +283,16 @@ function uc_shipping_schema() {
   return $schema;
 }
 
+/**
+ * Implementation of hook_install().
+ */
 function uc_shipping_install() {
   drupal_install_schema('uc_shipping');
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
 function uc_shipping_uninstall() {
   drupal_uninstall_schema('uc_shipping');
 }
@@ -361,7 +370,9 @@ function uc_shipping_update_6003() {
   return $ret;
 }
 
-// Change to signed floats...
+/**
+ * Change to signed floats for package dimensions.
+ */
 function uc_shipping_update_6004() {
   $ret = array();
 

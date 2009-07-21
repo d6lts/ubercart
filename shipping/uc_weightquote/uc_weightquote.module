@@ -133,7 +133,7 @@ function uc_weightquote_ca_predicate() {
  ******************************************************************************/
 
 /**
- * Implementation of Ubercart's hook_shipping_method().
+ * Implementation of hook_shipping_method().
  */
 function uc_weightquote_shipping_method() {
   $methods = array();

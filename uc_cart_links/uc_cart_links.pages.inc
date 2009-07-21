@@ -4,7 +4,6 @@
 /**
  * @file
  * Cart links menu items.
- *
  */
 
 /**

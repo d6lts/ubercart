@@ -8,6 +8,8 @@
 
 /**
  * Configure the store default shipping rate.
+ *
+ * @ingroup forms
  */
 function uc_weightquote_admin_settings() {
   $form['uc_weightquote_conditions'] = array(

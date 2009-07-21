@@ -201,8 +201,10 @@ function uc_flatrate_shipping_method() {
  *   The order's products.
  * @param $details
  *   Other order details including a shipping address.
+ * @param $method
+ *   The shipping method to create the quote.
  * @return
- *   A JSON object containing the shipping quote for the order.
+ *   An array containing the shipping quote for the order.
  */
 function uc_flatrate_quote($products, $details, $method) {
   $method = explode('_', $method['id']);

@@ -1,3 +1,18 @@
+// $Id$
+
+/**
+ * @file
+ * Add autofill address functionality to shipment forms.
+ */
+
+/**
+ * Autofill shipment address form from user selection.
+ *
+ * @param type
+ *   Field prefix used to identify the address.
+ * @param json_address
+ *   JSON object of address data.
+ */
 function apply_address(type, json_address) {
   //if (json_address != "0") {
     eval("var address = " + json_address +";");

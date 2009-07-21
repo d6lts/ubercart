@@ -6,6 +6,9 @@
  * Install hooks for uc_taxes.module.
  */
 
+/**
+ * Implementation of hook_schema().
+ */
 function uc_taxes_schema() {
   $schema = array();
 
@@ -57,10 +60,16 @@ function uc_taxes_schema() {
   return $schema;
 }
 
+/**
+ * Implementation of hook_install().
+ */
 function uc_taxes_install() {
   drupal_install_schema('uc_taxes');
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
 function uc_taxes_uninstall() {
   drupal_uninstall_schema('uc_taxes');
 }
@@ -242,7 +251,9 @@ function uc_taxes_update_6000() {
   return $ret;
 }
 
-// Change to signed floats...
+/**
+ * Change to signed floats.
+ */
 function uc_taxes_update_6001() {
   $ret = array();
 

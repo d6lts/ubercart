@@ -4,16 +4,16 @@
 /**
  * @file
  * Cart links administration menu items.
- *
  */
 
 /**
  * Define a form to configure the cart links settings.
  *
- * @return
- *   The form.
+ * @ingroup forms
  */
 function uc_cart_links_settings_form() {
+  $form = array();
+
   $form['instructions'] = array(
     '#value' => '<div>'. t('<a href="!url">View the help page</a> to learn how to create cart links.', array('!url' => url('admin/store/help/cart_links'))) .'</div>',
   );

@@ -6,6 +6,9 @@
  * Install hooks for uc_quote.module.
  */
 
+/**
+ * Implementation of hook_schema().
+ */
 function uc_quote_schema() {
   $schema = array();
 
@@ -144,10 +147,16 @@ function uc_quote_schema() {
   return $schema;
 }
 
+/**
+ * Implementation of hook_install().
+ */
 function uc_quote_install() {
   drupal_install_schema('uc_quote');
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
 function uc_quote_uninstall() {
   drupal_uninstall_schema('uc_quote');
 

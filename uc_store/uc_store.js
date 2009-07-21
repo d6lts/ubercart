@@ -1,6 +1,11 @@
 // $Id$
 
 /**
+ * @file
+ * Add click events to the orders table and administration dashboard.
+ */
+
+/**
  * Add the "show links" click behavior on the store admin display.
  */
 Drupal.behaviors.ucStoreMoreLinks = function(context) {

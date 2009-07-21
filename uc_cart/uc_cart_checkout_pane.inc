@@ -438,7 +438,14 @@ function uc_checkout_pane_comments($op, &$arg1, $arg2) {
   }
 }
 
-// Theme the delivery/billing address forms in tables.
+/**
+ * Theme the delivery/billing address forms in tables.
+ *
+ * @ingroup themeable
+ * @see
+ *   uc_checkout_pane_delivery()
+ *   uc_checkout_pane_billing()
+ */
 function theme_address_pane($form) {
   $req = '<span class="form-required">*</span>';
 

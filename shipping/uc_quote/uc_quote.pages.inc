@@ -73,6 +73,9 @@ function uc_quote_request_quotes() {
   exit();
 }
 
+/**
+ * Pull the get_quote_from_* triggers and assemble their returned data.
+ */
 function _uc_quote_assemble_quotes($order) {
   global $user;
   $account = user_load($order->uid);

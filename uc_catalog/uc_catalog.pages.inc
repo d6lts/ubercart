@@ -4,7 +4,6 @@
 /**
  * @file
  * Catalog menu items.
- *
  */
 
 /**
@@ -18,6 +17,7 @@
  *   Catalog term id from URL.
  * @return
  *   Formatted HTML of the catalog page.
+ * @ingroup themeable
  */
 function theme_uc_catalog_browse($tid = 0) {
   drupal_add_css(drupal_get_path('module', 'uc_catalog') .'/uc_catalog.css');

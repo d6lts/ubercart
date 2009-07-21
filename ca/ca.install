@@ -6,6 +6,9 @@
  * Install hooks for ca.module.
  */
 
+/**
+ * Implementation of hook_schema().
+ */
 function ca_schema() {
   $schema = array();
 
@@ -89,14 +92,23 @@ function ca_schema() {
   return $schema;
 }
 
+/**
+ * Implementation of hook_install().
+ */
 function ca_install() {
   drupal_install_schema('ca');
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
 function ca_uninstall() {
   drupal_uninstall_schema('ca');
 }
 
+/**
+ * Update argument IDs in saved predicates.
+ */
 function ca_update_6001() {
   $ret = array();
 

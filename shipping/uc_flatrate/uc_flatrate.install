@@ -6,6 +6,9 @@
  * Install hooks for uc_flatrate.module.
  */
 
+/**
+ * Implmentation of hook_schema().
+ */
 function uc_flatrate_schema() {
   $schema = array();
 
@@ -79,10 +82,16 @@ function uc_flatrate_schema() {
   return $schema;
 }
 
+/**
+ * Implementation of hook_install().
+ */
 function uc_flatrate_install() {
   drupal_install_schema('uc_flatrate');
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
 function uc_flatrate_uninstall() {
   drupal_uninstall_schema('uc_flatrate');
 }

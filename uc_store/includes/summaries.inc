@@ -7,7 +7,6 @@
  * information.
  */
 
-
 /**
  * Summarizes the elements in a form array, recursively building summaries of
  * items nested in fieldsets if applicable.
@@ -116,13 +115,15 @@ function summarize_element($form, $title = FALSE) {
   }
 }
 
-// Returns an empty summary string.
+/**
+ * Return an empty summary string.
+ */
 function summarize_null($form) {
   return array();
 }
 
 /**
- * Returns the correct summary string for a checkbox element based on its
+ * Return the correct summary string for a checkbox element based on its
  *   current value.
  *
  * @param $true
@@ -142,7 +143,7 @@ function summarize_checkbox($form, $true, $false) {
 }
 
 /**
- * Summarizes the form pages that are children of the specified path.
+ * Summarize the form pages that are children of the specified path.
  *
  * @param $path
  *   The menu path to start from when checking for children forms.
@@ -212,7 +213,7 @@ function summarize_child_form_pages($path, $trim = FALSE, $only_parent = FALSE) 
 }
 
 /**
- * Themes a summaries array into a handy div for use with some JS enhancement.
+ * Theme a summaries array into a handy div for use with some JS enhancement.
  *
  * @param $summaries
  *   An array of summary arrays each containing the following keys:

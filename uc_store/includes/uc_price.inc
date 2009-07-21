@@ -1,4 +1,10 @@
 <?php
+// $Id$
+
+/**
+ * @file
+ * Price handling functions and hooks.
+ */
 
 /**
  * The heart of the price modification/displaying system,

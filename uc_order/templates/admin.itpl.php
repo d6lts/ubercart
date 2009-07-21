@@ -2,6 +2,7 @@
 // $Id$
 
 /**
+ * @file
  * This file is the default admin notification template for Ubercart.
  */
 ?>

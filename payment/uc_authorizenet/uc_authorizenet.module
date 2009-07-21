@@ -542,7 +542,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   $response = explode('|', $result);
 
   if (variable_get('uc_authnet_response_debug', FALSE)) {
-    watchdog('uc_authorizenet', t('Debug response: !data', array('!data' => '<pre>'. check_plain(print_r($response, TRUE)) .'</pre>')));
+    watchdog('uc_authorizenet', 'Debug response: !data', array('!data' => '<pre>'. check_plain(print_r($response, TRUE)) .'</pre>'));
   }
 
   // Trim off the encapsulating character from the results.

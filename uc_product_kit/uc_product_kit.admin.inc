@@ -6,8 +6,11 @@
  * Defines administrative pages and form for the product kit module.
  */
 
-
-// Defines the product kit settings form.
+/**
+ * Build the product kit settings form.
+ *
+ * @ingroup forms
+ */
 function uc_product_kit_settings_form() {
   $form = array();
 
