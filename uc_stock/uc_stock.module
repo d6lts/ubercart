@@ -169,6 +169,18 @@ function uc_stock_adjust($sku, $qty) {
 }
 
 /**
+ * Set the product stock level.
+ *
+ * @param $sku
+ *   The product SKU of the stock level to set.
+ * @param $qty
+ *   The number of items in stock.
+ */
+function uc_stock_set($sku, $qty) {
+  db_query("UPDATE {uc_product_stock} SET stock = %d WHERE sku = '%s'", $qty, $sku);
+}
+
+/**
  * Get the stock level of a particular product SKU.
  *
  * @param $sku

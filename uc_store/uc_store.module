@@ -2088,3 +2088,16 @@ function uc_store_image_widget_lightbox2($rel_count) {
   return ' rel="'. $img_index .'"';
 }
 
+/**
+ * Executes hook_uc_form_alter() implementations.
+ *
+ * API function to invoke hook_uc_form_alter() implementations allowing those
+ * modules to alter the form before the Drupal layer hook_form_alter() is
+ * invoked.
+ *
+ * @see hook_uc_form_alter().
+ */
+function uc_form_alter(&$form, &$form_state, $form_id) {
+  $form['__drupal_alter_by_ref'] = array(&$form_state);
+  drupal_alter('uc_form', $form, $form_id);
+}
