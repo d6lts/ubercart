@@ -545,4 +545,3 @@ function uc_cart_checkout_complete() {
 
   return $output;
 }
-

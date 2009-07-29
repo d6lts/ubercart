@@ -62,11 +62,13 @@ function uc_flatrate_admin_method_edit_form($form_state, $mid = 0) {
     '#title' => t('Shipping method title'),
     '#description' => t('The name shown to distinguish it from other flatrate methods.'),
     '#default_value' => $method->title,
+    '#required' => TRUE,
   );
   $form['label'] = array('#type' => 'textfield',
     '#title' => t('Line item label'),
     '#description' => t('The name shown to the customer when they choose a shipping method at checkout.'),
     '#default_value' => $method->label,
+    '#required' => TRUE,
   );
   $form['base_rate'] = array('#type' => 'textfield',
     '#title' => t('Base price'),

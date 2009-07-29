@@ -2028,7 +2028,7 @@ function uc_referer_uri() {
  * Returns the current version of Ubercart.
  */
 function uc_version() {
-  return '2.0-beta1';
+  return '2.0-rc3';
 }
 
 /**
