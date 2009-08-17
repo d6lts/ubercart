@@ -366,7 +366,7 @@ function uc_google_checkout_cart_form() {
     $checkout_url = 'https://sandbox.google.com/checkout';
   }
   if (!$merchant_id) {
-    watchdog('uc_google_checkout', 'Google Checkout is enabled, but no Merchant ID found.', array(), WATCHDOG_ERROR, 'admin/store/settings/google_checkout');
+    watchdog('google', 'Google Checkout is enabled, but no Merchant ID found.', array(), WATCHDOG_ERROR, 'admin/store/settings/google_checkout');
     return;
   }
 
