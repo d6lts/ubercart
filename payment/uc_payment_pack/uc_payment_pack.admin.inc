@@ -14,7 +14,7 @@ function uc_payment_pack_receive_check_form($form_state, $order) {
   $balance = uc_payment_balance($order);
   $context = array(
     'revision' => 'formatted-original',
-    'location' => 'receive-check-form',
+    'type' => 'amount',
   );
   $options = array(
     'sign' => FALSE,

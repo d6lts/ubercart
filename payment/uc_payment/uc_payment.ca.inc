@@ -130,6 +130,10 @@ function uc_payment_ca_trigger() {
         '#entity' => 'uc_order',
         '#title' => t('Order'),
       ),
+      'account' => array(
+        '#entity' => 'user',
+        '#title' => t('User'),
+      ),
     ),
   );
 
@@ -180,7 +184,7 @@ function uc_payment_condition_order_balance($order, $settings) {
 function uc_payment_condition_order_balance_form($form_state, $settings = array()) {
   $context = array(
     'revision' => 'formatted',
-    'location' => 'zero-balance',
+    'type' => 'amount',
   );
   $zero = array('!zero' => uc_price(0, $context));
   $options = array(

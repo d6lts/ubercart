@@ -123,7 +123,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
 
   $context = array(
     'revision' => 'themed-original',
-    'location' => 'tax-report',
+    'type' => 'amount',
   );
   foreach($totals as $line) {
     $row = array(

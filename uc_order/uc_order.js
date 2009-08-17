@@ -173,7 +173,7 @@ function load_customer_search_results() {
     email = '0';
   }
 
-  $.post(Drupal.settings.basePath + '?q=admin/store/orders/customer/search/' + first_name + '/' + last_name + '/' + email,
+  $.post(Drupal.settings.basePath + '?q=admin/store/orders/customer/search/' + encodeURIComponent(first_name) + '/' + encodeURIComponent(last_name) + '/' + encodeURIComponent(email),
          { },
          function (contents) {
            $('#customer-select').empty().append(contents);
@@ -224,7 +224,7 @@ function check_new_customer_address() {
     'email' : $('#customer-select #edit-email').val(),
     'sendmail' : $('#customer-select #edit-sendmail').attr('checked')
   };
-  $.post(Drupal.settings.basePath + '?q=admin/store/orders/customer/new/check/' + options['email'], options,
+  $.post(Drupal.settings.basePath + '?q=admin/store/orders/customer/new/check/' + encodeURIComponent(options['email']), options,
          function (contents) {
            $('#customer-select').empty().append(contents);
          }

@@ -18,7 +18,8 @@
 <?php echo t('Products:'); ?><br />
 <?php
 $context = array(
-  'location' => 'order-invoice-admin',
+  'revision' => 'themed',
+  'type' => 'order_product',
 );
 foreach ($products as $product) {
   $price_info = array(

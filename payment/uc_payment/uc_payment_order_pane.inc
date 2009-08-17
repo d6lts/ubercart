@@ -20,10 +20,7 @@ function uc_order_pane_payment($op, $arg1) {
       if (variable_get('uc_payment_tracking', TRUE)) {
         $context = array(
           'revision' => 'formatted-original',
-          'location' => 'payment-balance',
-          'subject' => array(
-            'order' => $arg1,
-          ),
+          'type' => 'amount',
         );
         $output = t('Balance: @balance', array('@balance' => uc_price(uc_payment_balance($arg1), $context)));
         $output .= ' ('. l(t('View'), 'admin/store/orders/'. $arg1->order_id .'/payments') .')<br />';

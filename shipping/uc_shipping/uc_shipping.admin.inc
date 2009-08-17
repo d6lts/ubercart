@@ -597,14 +597,8 @@ function uc_shipping_shipment_view($order, $shipment) {
     $rows[] = array(t('Services:'), $shipment->accessorials);
   }
   $context = array(
-    'location' => 'shipping-order-view',
-    'class' => array(
-      'cost',
-    ),
-    'subject' => array(
-      'shipment' => $shipment,
-      'field' => 'cost',
-    ),
+    'revision' => 'themed',
+    'type' => 'amount',
   );
   $rows[] = array(t('Cost:'), uc_price($shipment->cost, $context, array('label' => FALSE)));
   $output .= theme('table', array(), $rows, array('style' => 'width:auto'));

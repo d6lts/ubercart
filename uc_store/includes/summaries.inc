@@ -94,6 +94,20 @@ function summarize_element($form, $title = FALSE) {
         return $form['#title'] .': '. check_plain($form['#default_value']);
 
       case 'select':
+        if (!empty($form['#multiple']) and is_array($form['#default_value'])) {
+          $options = array();
+          foreach ($form['#default_value'] as $value) {
+            if (isset($form['#options'][$value])) {
+              $options[] = $form['#options'][$value];
+            }
+          }
+          // Return an item list of the selected options.
+          return array(array(
+            'data' => $form['#title'].':',
+            'children' => $options,
+          ));
+        }
+        // Else, fall through.
       case 'radios':
         return $form['#title'] .': '. $form['#options'][$form['#default_value']];
 

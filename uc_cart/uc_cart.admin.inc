@@ -60,7 +60,7 @@ function uc_cart_cart_settings_form() {
 
   $context = array(
     'revision' => 'formatted',
-    'location' => 'minimum-subtotal-summary'
+    'type' => 'amount',
   );
   $form['general']['uc_minimum_subtotal'] = array(
     '#type' => 'textfield',

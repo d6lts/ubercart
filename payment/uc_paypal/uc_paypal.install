@@ -109,7 +109,7 @@ function uc_paypal_install() {
   drupal_install_schema('uc_paypal');
 
   $t = get_t();
-  db_query("INSERT INTO {uc_order_statuses} (order_status_id, title, state, weight, locked) VALUES ('paypal_pending', '". $t('PayPal pending') ."', 'payment_received', 7, 1);");
+  db_query("INSERT INTO {uc_order_statuses} (order_status_id, title, state, weight, locked) VALUES ('paypal_pending', '%s', 'payment_received', 7, 1);", $t('PayPal pending'));
 }
 
 /**

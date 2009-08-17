@@ -80,7 +80,7 @@ function uc_paypal_ipn($order_id = 0) {
 
     $context = array(
       'revision' => 'formatted-original',
-      'location' => 'paypal-ipn',
+      'type' => 'amount',
     );
     $options = array(
       'sign' => FALSE,

@@ -216,8 +216,9 @@ function uc_attribute_options_form($form_state, $attribute) {
   );
 
   $context = array(
-    'location' => 'attribute-options-form',
-    'extras' => array(
+    'revision' => 'themed',
+    'type' => 'attribute_option',
+    'subject' => array(
       'attribute' => $attribute,
     ),
   );
@@ -249,13 +250,11 @@ function uc_attribute_options_form($form_state, $attribute) {
       ),
     );
 
-    $context['subject'] = array(
-      'option' => $option,
-      'field' => 'cost',
-    );
+    $context['subject']['option'] = $data;
+    $context['field'] = 'cost';
     $form['options'][$key]['cost']['#value'] = uc_price($data->cost, $context);
 
-    $context['subject']['field'] = 'price';
+    $context['field'] = 'price';
     $form['options'][$key]['price']['#value'] = uc_price($data->price, $context);
   }
 
@@ -516,16 +515,15 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
     $form['#tree'] = TRUE;
 
     $context = array(
-      'location' => 'attribute-form-default-option',
+      'revision' => 'themed',
+      'type' => 'attribute_option',
     );
     if (count($attributes) > 0) {
       foreach ($attributes as $attribute) {
         $option = $attribute->options[$attribute->default_option];
         $context['subject'] = array(
-          'option' => $option,
-        );
-        $context['extras'] = array(
           'attribute' => $attribute,
+          'option' => $option,
         );
 
         $form['attributes'][$attribute->aid] = array(

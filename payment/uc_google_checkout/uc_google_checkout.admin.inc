@@ -314,7 +314,10 @@ function uc_google_checkout_terminal($order) {
   $balance = uc_payment_balance($order);
   $context = array(
     'revision' => 'themed-original',
-    'location' => 'google-checkout-terminal',
+    'type' => 'order_total',
+    'subject' => array(
+      'order' => $order,
+    ),
   );
   $output .= '<p>'. t('Use this terminal to process credit card payments:') .'</p>'
             .'<table style="width: auto;"><tbody style="border-top: 0px;"><tr>'
@@ -367,7 +370,7 @@ function uc_google_checkout_terminal_form($form_state, $order, $amount = 0) {
 
   $context = array(
     'revision' => 'formatted-original',
-    'location' => 'google-checkout-terminal-form',
+    'type' => 'amount',
   );
   $options = array(
     'sign' => FALSE,

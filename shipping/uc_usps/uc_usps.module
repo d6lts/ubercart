@@ -402,8 +402,8 @@ function uc_usps_quote($products, $details, $method) {
     }
   }
   $context = array(
-    'location' => 'shipping-usps-quote',
-    'subject' => array(),
+    'revision' => 'themed',
+    'type' => 'amount',
   );
   foreach ($services as $key => $quote) {
     if (isset($quote['rate'])) {

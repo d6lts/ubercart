@@ -13,8 +13,8 @@ function uc_flatrate_admin_methods() {
   $output = '';
 
   $context = array(
-    'location' => 'shipping-flatrate-method-admin',
-    'subject' => array(),
+    'revision' => 'themed',
+    'type' => 'amount',
   );
 
   $rows = array();
@@ -22,8 +22,6 @@ function uc_flatrate_admin_methods() {
   $weight = variable_get('uc_quote_method_weight', array());
   $result = db_query("SELECT mid, title, label, base_rate, product_rate FROM {uc_flatrate_methods}");
   while ($method = db_fetch_object($result)) {
-    $context['subject']['flatrate_method'] = $method;
-
     $row = array();
     $row[] = check_plain($method->title);
     $row[] = check_plain($method->label);

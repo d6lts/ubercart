@@ -102,7 +102,8 @@ function uc_checkout_pane_payment($op, &$arg1, $arg2) {
       usort($line_items, 'uc_weight_sort');
 
       $context = array(
-        'location' => 'checkout-review-line-item',
+        'revision' => 'themed',
+        'type' => 'line_item',
       );
       foreach ($line_items as $line_item) {
         $context['subject'] = array('line_item' => $line_item);

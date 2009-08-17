@@ -212,11 +212,8 @@ function theme_uc_ups_confirm_shipment($form) {
   $method = uc_ups_shipping_method();
   $output .= '<b>'. $method['ups']['quote']['accessorials'][$_SESSION['ups']['service']] .'</b><br />';
   $context = array(
-    'location' => 'shipping-ups-confirm',
-    'subject' => array(
-      'ups_info' => $_SESSION['ups'],
-      'field' => 'amount',
-    ),
+    'revision' => 'themed',
+    'type' => 'amount',
   );
   $output .= '<i>'. check_plain($_SESSION['ups']['rate']['type']) .'</i>: '. uc_price($_SESSION['ups']['rate']['amount'], $context) .' ('. check_plain($_SESSION['ups']['rate']['currency']) .')<br />';
   $ship_date = $_SESSION['ups']['ship_date'];
