@@ -930,7 +930,7 @@ function theme_uc_product_attributes(&$element) {
   foreach (element_children($element) as $key) {
     $optionstr = '';
 
-    foreach ($element[$key]['#options'] as $option) {
+    foreach ((array)$element[$key]['#options'] as $option) {
       // We only need to allow translation from the second option onward
       if (empty($optionstr)) {
         $optionstr .= $option;
@@ -943,7 +943,7 @@ function theme_uc_product_attributes(&$element) {
   }
 
   if (!empty($option_rows)) {
-    return theme('item_list', $option_rows, NULL, 'ul', array('class' => 'product-description'));
+    return theme('item_list', array_values($option_rows), NULL, 'ul', array('class' => 'product-description'));
   }
 
   return '';

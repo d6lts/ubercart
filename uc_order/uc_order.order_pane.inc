@@ -820,7 +820,7 @@ function op_products_view_table($order) {
 /**
  * Build the order customer's view products table.
  */
-function op_products_customer_table($products) {
+function op_products_customer_table($order) {
   $table = array(
     '#type' => 'tapir_table',
     '#attributes' => array('class' => 'order-pane-table'),
