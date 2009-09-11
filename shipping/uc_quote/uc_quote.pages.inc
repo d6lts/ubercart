@@ -68,9 +68,7 @@ function uc_quote_request_quotes() {
       $return_quotes[$method_id .'---'. $accsrl] = $data;
     }
   }
-  drupal_set_header("Content-Type: text/javascript; charset=utf-8");
-  print drupal_to_js($return_quotes);
-  exit();
+  drupal_json($return_quotes);
 }
 
 /**

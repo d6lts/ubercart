@@ -52,7 +52,7 @@ function uc_product_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'views_handler_filter_float',
     ),
   );
 
@@ -67,7 +67,7 @@ function uc_product_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'views_handler_filter_float',
     ),
   );
 
@@ -82,7 +82,7 @@ function uc_product_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'views_handler_filter_float',
     ),
   );
 
@@ -100,7 +100,7 @@ function uc_product_views_data() {
       'handler' => 'views_handler_sort',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'handler' => 'views_handler_filter_float',
     ),
   );
 

@@ -961,7 +961,7 @@ function uc_paypal_wps_form($form_state, $order) {
         $o = 0;
         foreach ($item->data['attributes'] as $name => $setting) {
           $data['on'. $o .'_'. $i] = $name;
-          $data['os'. $o .'_'. $i] = $setting;
+          $data['os'. $o .'_'. $i] = implode(', ', (array)$setting);
           $o++;
         }
       }

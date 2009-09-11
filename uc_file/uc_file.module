@@ -1199,8 +1199,7 @@ function _uc_file_autocomplete_filename() {
   }
   asort($matches);
 
-  print drupal_to_js($matches);
-  exit();
+  drupal_json($matches);
 }
 
 /**

@@ -8,7 +8,7 @@
 function turkey_install() {
   // Make the entry in the country table.
   // VALUES = Country ID, Country Name, 2-digit Code, 3-digit Code, File Version
-  db_query("INSERT INTO {uc_countries} VALUES (792, 'Türkiye', 'TK', 'TUR', 1)");
+  db_query("INSERT INTO {uc_countries} VALUES (792, 'Türkiye', 'TR', 'TUR', 2)");
 
   // Use uc_set_address_format() with the country ID as the first argument and
   // an address format string as the second.  Documentation on address formats
@@ -25,6 +25,11 @@ function turkey_install() {
 * latest changes in the install function.
 */
 function turkey_update($version) {
+  switch ($version) {
+    case 2:
+      db_query("UPDATE {uc_countries} SET country_iso_code_2 = 'TR' WHERE country_id = 792");
+      break;
+  }
 }
 
 /**

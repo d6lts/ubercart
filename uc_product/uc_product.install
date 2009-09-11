@@ -214,6 +214,8 @@ function uc_product_install() {
 function uc_product_uninstall() {
   drupal_uninstall_schema('uc_product');
 
+  db_query("DELETE FROM {variable} WHERE name LIKE 'uc_product_shippable_%%'");
+
   variable_del('uc_product_nodes_per_page');
   variable_del('uc_product_add_to_cart_qty');
   variable_del('uc_product_add_to_cart_teaser');
