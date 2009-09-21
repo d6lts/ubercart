@@ -32,6 +32,15 @@ function uc_2checkout_menu() {
 }
 
 /**
+ * Implementation of hook_init().
+ */
+function uc_2checkout_init() {
+  global $conf;
+  $conf['i18n_variables'][] = 'uc_2checkout_method_title';
+  $conf['i18n_variables'][] = 'uc_2checkout_checkout_button';
+}
+
+/**
  * Make sure anyone can complete their 2Checkout orders.
  */
 function uc_2checkout_completion_access() {

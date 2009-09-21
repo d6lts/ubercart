@@ -22,14 +22,15 @@ Drupal.behaviors.ucCollapseBlock = function(context) {
 $(document).ready(
   function() {
     if (Drupal.settings.ucCollapsedBlock == true) {
-      // Hide the contents.
-      $('#cart-block-contents').hide();
-
       // Add the appropriate title bar class.
       $('.cart-block-title-bar').addClass('cart-block-toggle');
 
       // Add the appropriate arrow class.
       $('.cart-block-arrow').removeClass('arrow-down').addClass('arrow-up');
+    }
+    else {
+      // Add the appropriate arrow class.
+      $('.cart-block-arrow').removeClass('arrow-up').addClass('arrow-down');
     }
   }
 );

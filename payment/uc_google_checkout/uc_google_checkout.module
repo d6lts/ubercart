@@ -98,6 +98,9 @@ function uc_google_checkout_init() {
     unset($_SESSION['cart_order'], $_SESSION['do_complete'], $_SESSION['new_user'], $users[$user->uid]);
     variable_set('uc_google_checkout_order_users', $users);
   }
+
+  global $conf;
+  $conf['i18n_variables'][] = 'uc_google_checkout_order_cancel_reason';
 }
 
 function uc_google_checkout_theme() {

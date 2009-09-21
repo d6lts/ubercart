@@ -81,6 +81,15 @@ function uc_credit_theme() {
 }
 
 /**
+ * Implementation of hook_init().
+ */
+function uc_credit_init() {
+  global $conf;
+  $conf['i18n_variables'][] = 'uc_credit_fail_message';
+  $conf['i18n_variables'][] = 'uc_credit_policy';
+}
+
+/**
  * Implementation of hook_form_alter().
  */
 function uc_credit_form_alter(&$form, &$form_state, $form_id) {

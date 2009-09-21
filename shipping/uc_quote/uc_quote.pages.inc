@@ -108,6 +108,14 @@ function _uc_quote_assemble_quotes($order) {
     }
   }
 
+  $context = array(
+    'revision' => 'formatted',
+    'type' => 'line_item',
+    'subject' => array(
+      'order' => $order,
+    ),
+  );
+
   //drupal_set_message('<pre>'. print_r($products, TRUE) .'</pre>');
   $quote_data = array();
   $arguments = array(
@@ -133,6 +141,19 @@ function _uc_quote_assemble_quotes($order) {
     $predicate = array_shift($predicates);
     if ($predicate && ca_evaluate_conditions($predicate, $arguments)) {
       $data = uc_quote_action_get_quote($order, $method, $user);
+
+      foreach ($data as &$quote) {
+        if (isset($quote['rate'])) {
+          $context['subject']['line_item'] = array(
+            'type' => 'shipping',
+            'name' => $quote['option_label'],
+            'amount' => $quote['rate'],
+            'weight' => 1,
+          );
+
+          $quote['format'] = uc_price($quote['rate'], $context);
+        }
+      }
       $quote_data[$method['id']] = $data;
     }
   }

@@ -35,6 +35,15 @@ function uc_payment_pack_theme() {
 }
 
 /**
+ * Implementation of hook_init().
+ */
+function uc_payment_pack_init() {
+  global $conf;
+  $conf['i18n_variables'][] = 'uc_cod_policy';
+  $conf['i18n_variables'][] = 'uc_check_policy';
+}
+
+/**
  * Implementation of hook_payment_method().
  */
 function uc_payment_pack_payment_method() {

@@ -89,6 +89,14 @@ function uc_paypal_perm() {
 }
 
 /**
+ * Implementation of hook_init().
+ */
+function uc_paypal_init() {
+  global $conf;
+  $conf['i18n_variables'][] = 'uc_paypal_wps_checkout_button';
+}
+
+/**
  * Implementation of hook_form_alter().
  * Notice how we alter the checkout review form to post the order to PayPal.
  */

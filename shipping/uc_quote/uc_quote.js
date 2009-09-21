@@ -117,7 +117,7 @@ function quoteCallback(products) {
   // progress.startMonitoring(Drupal.settings.basePath + "?q=shipping/quote", 0);
   $.ajax({
     type: "POST",
-    url: Drupal.settings.basePath + "?q=cart/checkout/shipping/quote",
+    url: Drupal.settings.ucURL.shippingQuotes,
     data: details,
     dataType: "json",
     success: displayQuote
