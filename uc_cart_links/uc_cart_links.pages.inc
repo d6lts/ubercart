@@ -31,6 +31,7 @@ function uc_cart_links_process($arg1) {
 
   // Split apart the cart link on the -.
   $actions = explode('-', drupal_strtolower($arg1));
+  $rebuild_cart = FALSE;
 
   foreach ($actions as $action) {
     switch (drupal_substr($action, 0, 1)) {
@@ -83,7 +84,8 @@ function uc_cart_links_process($arg1) {
               );
             }
           }
-          uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + module_invoke_all('add_to_cart_data', $p), NULL, $msg, FALSE);
+          uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + module_invoke_all('add_to_cart_data', $p), NULL, $msg, FALSE, FALSE);
+          $rebuild_cart = TRUE;
         }
         break;
 
@@ -112,6 +114,11 @@ function uc_cart_links_process($arg1) {
         }
         break;
     }
+
+    // Rebuild the cart cache if necessary.
+    if ($rebuild_cart) {
+      uc_cart_get_contents(NULL, 'rebuild');
+    }
   }
 
   if (variable_get('uc_cart_links_track', TRUE)) {
@@ -128,4 +135,3 @@ function uc_cart_links_process($arg1) {
 
   drupal_goto();
 }
-

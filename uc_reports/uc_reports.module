@@ -119,6 +119,22 @@ function uc_reports_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'uc_reports.admin.inc',
   );
+  $items['admin/store/reports/products/summary'] = array(
+    'title' => 'Product report',
+    'access arguments' => array('view reports'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+    'file' => 'uc_reports.admin.inc',
+  );
+  $items['admin/store/reports/products/custom'] = array(
+    'title' => 'Custom product report',
+    'description' => 'View a customized product report',
+    'page callback' => 'uc_reports_products_custom',
+    'access arguments' => array('view reports'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -5,
+    'file' => 'uc_reports.admin.inc',
+  );
   $items['admin/store/reports/sales'] = array(
     'title' => 'Sales reports',
     'description' => 'View reports for store sales',

@@ -48,6 +48,11 @@ function uc_cart_cart_settings_form() {
     '#title' => t('General cart settings'),
     '#summary callback' => 'summarize_form',
   );
+  $form['general']['uc_cart_add_item_msg'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display an update message when an item is added to the cart through an add to cart form.'),
+    '#default_value' => variable_get('uc_cart_add_item_msg', TRUE),
+  );
   $form['general']['uc_add_item_redirect'] = array(
     '#type' => 'textfield',
     '#title' => t('Add to cart redirect'),

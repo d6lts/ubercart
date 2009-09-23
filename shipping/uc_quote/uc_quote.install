@@ -130,8 +130,8 @@ function uc_quote_schema() {
       ),
       'rate' => array(
         'type' => 'numeric',
-        'precision' => 15,
-        'scale' => 3,
+        'precision' => 16,
+        'scale' => 5,
         'not null' => TRUE,
         'default' => 0,
       ),
@@ -362,6 +362,17 @@ function uc_quote_update_6003() {
   $ret = array();
 
   $ret[] = update_sql("DELETE FROM {uc_quote_shipping_types} WHERE id = 0");
+
+  return $ret;
+}
+
+/**
+ * Change currency fields to numeric(16,5).
+ */
+function uc_quote_update_6004() {
+  $ret = array();
+
+  db_change_field($ret, 'uc_order_quotes', 'rate', 'rate', array('type' => 'numeric', 'precision' => 16, 'scale' => 5, 'not null' => TRUE, 'default' => 0));
 
   return $ret;
 }
