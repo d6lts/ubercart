@@ -27,6 +27,11 @@ function uc_stock_install() {
       db_query("CREATE INDEX {uc_product_stock}_nid ON {uc_product_stock} (nid)");
       break;
   }
+  variable_del('uc_stock_threshold_notification');
+  variable_del('uc_stock_threshold_notification_recipients');
+  variable_del('uc_stock_threshold_notification_subject');
+  variable_del('uc_stock_threshold_notification_message');
+  variable_del('uc_stock_threshold_notification_format');
 }
 
 function uc_stock_uninstall() {

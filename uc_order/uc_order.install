@@ -72,6 +72,7 @@ function uc_order_install() {
         title varchar(128) NOT NULL,
         amount decimal(10,2) NOT NULL,
         weight smallint(6) NOT NULL,
+        data text,
         PRIMARY KEY (line_item_id),
         KEY order_id (order_id)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
@@ -396,6 +397,22 @@ function uc_order_update_8() {
     break;
     case 'pgsql':
       db_add_column($ret, 'uc_orders', 'host', 'VARCHAR(16)', array('not null' => TRUE, 'default' => "''"));
+    break;
+  }
+
+  return $ret;
+}
+
+function uc_order_update_9() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {uc_order_line_items} ADD data text");
+    break;
+    case 'pgsql':
+      db_add_column($ret, 'uc_order_line_items', 'data', 'text');
     break;
   }
 

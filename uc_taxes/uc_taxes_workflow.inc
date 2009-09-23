@@ -82,11 +82,14 @@ function uc_taxes_action_info() {
  */
 function uc_taxes_action_apply_tax($order, $tax) {
   $amount = 0;
+  $taxable_amount = 0;
   if (is_array($order->products)) {
     foreach ($order->products as $item) {
       $node = node_load($item->nid);
-      if (in_array($node->type, $tax->taxed_product_types)) {
-        $amount += $item->price * $item->qty * $tax->rate;
+      // Tax products if they are of a taxed type and if it is shippable if
+      // the tax only applies to shippable products.
+      if (in_array($node->type, $tax->taxed_product_types) && ($tax->shippable == 0 || $node->shippable == 1)) {
+        $taxable_amount += $item->price * $item->qty;
       }
     }
   }
@@ -98,17 +101,28 @@ function uc_taxes_action_apply_tax($order, $tax) {
         continue;
       }
       if (in_array($line_item['type'], $taxed_line_items)) {
-        $amount += $line_item['amount'] * $tax->rate;
+        $taxable_amount += $line_item['amount'];
       }
     }
   }
   if (isset($taxed_line_items['tax'])) {
     foreach ($_SESSION['taxes'] as $other_tax) {
-      $amount += $other_tax['amount'] * $tax->rate;
+      $taxable_amount += $other_tax['amount'];
     }
   }
+  $amount = $taxable_amount * $tax->rate;
   if ($amount) {
-    $line_item = (object)array('id' => $tax->id, 'name' => $tax->name, 'amount' => $amount, 'weight' => $tax->weight);
+    $line_item = array(
+      'id' => $tax->id,
+      'name' => $tax->name,
+      'amount' => $amount,
+      'weight' => $tax->weight,
+      'data' => array(
+        'tax_rate' => $tax->rate,
+        'taxable_amount' => $taxable_amount,
+        'tax_jurisdiction' => $tax->name,
+      ),
+    );
     return array('tax_line_item' => $line_item);
   }
 }
@@ -158,5 +172,5 @@ function uc_taxes_configuration() {
  * Preserve each tax line item for future use.
  */
 function uc_taxes_save_line_item($line_item) {
-  $_SESSION['taxes'][$line_item->id] = array('id' => 'uc_tax_'. $line_item->id, 'name' => $line_item->name, 'amount' => $line_item->amount, 'weight' => $line_item->weight);
+  $_SESSION['taxes'][$line_item->id] = (array)$line_item;
 }

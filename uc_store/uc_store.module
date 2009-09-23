@@ -1856,12 +1856,17 @@ function uc_store_get_icon($path, $small = FALSE, $class = 'uc-store-icon', $alt
  * Format an amount for display with the store's currency settings.
  */
 function uc_currency_format($value, $sign = TRUE, $thou = TRUE, $dec = NULL) {
+  if ($value === NULL) {
+    return NULL;
+  }
+
   if (variable_get('uc_currency_prec', 2) > 0) {
     if (abs($value) < '.'. str_repeat('0', variable_get('uc_currency_prec', 2) - 1) .'1') {
       $value = 0;
     }
   }
 
+  $format = '';
   if ($value < 0) {
     $value = abs($value);
     $format = '-';
@@ -2276,15 +2281,17 @@ function uc_select_day($title = NULL, $default = NULL) {
 /**
  * Create a month select box for a form.
  */
-function uc_select_month($title = NULL, $default = NULL) {
+function uc_select_month($title = NULL, $default = NULL, $allow_empty = FALSE) {
+  $options = $allow_empty ? array('' => '') : array();
+
   $select = array(
     '#type' => 'select',
     '#title' => (is_null($title) ? t('Month') : $title),
-    '#options' => array(1 => t('01 - January'), 2 => t('02 - February'), 3 => t('03 - March'),
+    '#options' => $options + array(1 => t('01 - January'), 2 => t('02 - February'), 3 => t('03 - March'),
                         4 => t('04 - April'), 5 => t('05 - May'), 6 => t('06 - June'),
                         7 => t('07 - July'), 8 => t('08 - August'), 9 => t('09 - September'),
                         10 => t('10 - October'), 11 => t('11 - November'), 12 => t('12 - December')),
-    '#default_value' => (is_null($default) ? 1 : $default),
+    '#default_value' => (is_null($default) ? 0 : $default),
   );
 
   return $select;
@@ -2293,14 +2300,15 @@ function uc_select_month($title = NULL, $default = NULL) {
 /**
  * Create a year select box for a form.
  */
-function uc_select_year($title = NULL, $default = NULL, $min = NULL, $max = NULL) {
+function uc_select_year($title = NULL, $default = NULL, $min = NULL, $max = NULL, $allow_empty = FALSE) {
   $min = is_null($min) ? intval(date('Y')) : $min;
   $max = is_null($max) ? intval(date('Y')) + 20 : $max;
+  $options = $allow_empty ? array('' => '') : array();
 
   $select = array(
     '#type' => 'select',
     '#title' => (is_null($title) ? t('Year') : $title),
-    '#options' => drupal_map_assoc(range($min, $max)),
+    '#options' => $options + drupal_map_assoc(range($min, $max)),
     '#default_value' => (is_null($default) ? 0 : $default),
   );
 

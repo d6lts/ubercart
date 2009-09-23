@@ -14,6 +14,8 @@
  * Coded by: Lyle Mantooth
  */
 
+require_once('uc_attribute_workflow.inc');
+
 /******************************************************************************
  * Drupal Hooks                                                               *
  ******************************************************************************/
@@ -54,7 +56,7 @@ function uc_attribute_menu($may_cache) {
       'path' => 'admin/store/products/attributes',
       'title' => t('Manage attributes'),
       'description' => t('Create and edit attributes and options.'),
-      'access' => user_access('administer products'),
+      'access' => user_access('administer attributes'),
       'callback' => 'uc_attribute_admin',
       'type' => MENU_NORMAL_ITEM,
       'weight' => -1,
@@ -68,7 +70,7 @@ function uc_attribute_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/store/products/attributes/add',
       'title' => t('Add an attribute'),
-      'access' => user_access('administer products'),
+      'access' => user_access('administer attributes'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('uc_attribute_form'),
       'type' => MENU_LOCAL_TASK,
@@ -78,7 +80,7 @@ function uc_attribute_menu($may_cache) {
       'path' => 'admin/store/settings/attributes',
       'title' => t('Attribute settings'),
       'description' => t('Configure the attribute settings'),
-      'access' => user_access('administer products'),
+      'access' => user_access('administer attributes'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('uc_attribute_admin_settings'),
       'type' => MENU_NORMAL_ITEM,
@@ -89,14 +91,14 @@ function uc_attribute_menu($may_cache) {
       $items[] = array(
         'path' => 'admin/store/products/attributes/'. arg(4) .'/edit',
         'title' => t('Edit attribute'),
-        'access' => user_access('administer products'),
+        'access' => user_access('administer attributes'),
         'callback' => 'drupal_get_form',
         'callback arguments' => array('uc_attribute_form', arg(4)),
         'type' => MENU_CALLBACK,
       );
       $items[] = array(
         'path' => 'admin/store/products/attributes/'. arg(4) .'/delete',
-        'access' => user_access('administer products'),
+        'access' => user_access('administer attributes'),
         'callback' => 'drupal_get_form',
         'callback arguments' => array('uc_attribute_delete_confirm', arg(4)),
         'type' => MENU_CALLBACK,
@@ -104,7 +106,7 @@ function uc_attribute_menu($may_cache) {
       $items[] = array(
         'path' => 'admin/store/products/attributes/'. arg(4) .'/options',
         'title' => t('Options'),
-        'access' => user_access('administer products'),
+        'access' => user_access('administer attributes'),
         'callback' => 'uc_attribute_options',
         'callback arguments' => array(arg(4)),
         'type' => MENU_CALLBACK,
@@ -118,7 +120,7 @@ function uc_attribute_menu($may_cache) {
       $items[] = array(
         'path' => 'admin/store/products/attributes/'. arg(4) .'/options/add',
         'title' => t('Add an option'),
-        'access' => user_access('administer products'),
+        'access' => user_access('administer attributes'),
         'callback' => 'drupal_get_form',
         'callback arguments' => array('uc_attribute_option_form', arg(4), NULL),
         'type' => MENU_LOCAL_TASK,
@@ -127,6 +129,7 @@ function uc_attribute_menu($may_cache) {
       $items[] = array(
         'path' => 'admin/store/products/attributes/'. arg(4) .'/options/'. arg(6) .'/edit',
         'title' => t('Edit option'),
+        'access' => user_access('administer attributes'),
         'callback' => 'drupal_get_form',
         'callback arguments' => array('uc_attribute_option_form', arg(4), arg(6)),
         'type' => MENU_CALLBACK,
@@ -134,6 +137,7 @@ function uc_attribute_menu($may_cache) {
       $items[] = array(
         'path' => 'admin/store/products/attributes/'. arg(4) .'/options/'. arg(6) .'/delete',
         'title' => t('Delete option'),
+        'access' => user_access('administer attributes'),
         'callback' => 'drupal_get_form',
         'callback arguments' => array('uc_attribute_option_delete_confirm', arg(4), arg(6)),
         'type' => MENU_CALLBACK,
@@ -144,6 +148,7 @@ function uc_attribute_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/store/products/classes/'. arg(4) .'/attributes',
       'title' => t('Attributes'),
+      'access' => uc_attribute_product_class_access(),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('uc_object_attributes_form', arg(4), 'class'),
       'weight' => 1,
@@ -152,6 +157,7 @@ function uc_attribute_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/store/products/classes/'. arg(4) .'/options',
       'title' => t('Options'),
+      'access' => uc_attribute_product_class_access(),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('uc_object_options_form', arg(4), 'class'),
       'weight' => 2,
@@ -164,6 +170,7 @@ function uc_attribute_menu($may_cache) {
       if ($node->nid && in_array($node->type, module_invoke_all('product_types'))) {
         $items[] = array('path' => 'node/'. arg(1) .'/edit/attributes',
           'title' => t('Attributes'),
+          'access' => uc_attribute_product_access(arg(1)),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('uc_object_attributes_form', arg(1), 'product', 'overview'),
           'weight' => 1,
@@ -171,6 +178,7 @@ function uc_attribute_menu($may_cache) {
         );
         $items[] = array('path' => 'node/'. arg(1) .'/edit/attributes/add',
           'title' => t('Attributes'),
+          'access' => uc_attribute_product_access(arg(1)),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('uc_object_attributes_form', arg(1), 'product', 'add'),
           'weight' => 1,
@@ -178,6 +186,7 @@ function uc_attribute_menu($may_cache) {
         );
         $items[] = array('path' => 'node/'. arg(1) .'/edit/options',
           'title' => t('Options'),
+          'access' => uc_attribute_product_option_access(arg(1)),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('uc_object_options_form', arg(1), 'product'),
           'weight' => 2,
@@ -185,6 +194,7 @@ function uc_attribute_menu($may_cache) {
         );
         $items[] = array('path' => 'node/'. arg(1) .'/edit/adjustments',
           'title' => t('Adjustments'),
+          'access' => uc_attribute_product_option_access(arg(1)),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('uc_product_adjustments_form', arg(1)),
           'weight' => 3,
@@ -195,6 +205,36 @@ function uc_attribute_menu($may_cache) {
     drupal_add_css(drupal_get_path('module', 'uc_attribute') .'/uc_attribute.css');
   }
   return $items;
+}
+
+/**
+ * Helper function for handling menu access.
+ */
+function uc_attribute_product_class_access() {
+  return user_access('administer product classes') && user_access('administer attributes');
+}
+
+function uc_attribute_product_access($nid) {
+  $node = node_load($nid);
+  if ($node->type == 'product_kit') {
+    return FALSE;
+  }
+  return uc_product_is_product($node) && node_access('update', $node) && (user_access('administer attributes') || user_access('administer product attributes'));
+}
+
+function uc_attribute_product_option_access($nid) {
+  $node = node_load($nid);
+  if ($node->type == 'product_kit') {
+    return FALSE;
+  }
+  return uc_product_is_product($node) && node_access('update', $node) && (user_access('administer attributes') || user_access('administer product attributes') || user_access('administer product options'));
+}
+
+function uc_attribute_perm() {
+  if ($node->type == 'product_kit') {
+    return FALSE;
+  }
+  return array('administer attributes', 'administer product attributes', 'administer product options');
 }
 
 /**
@@ -274,18 +314,24 @@ function uc_attribute_nodeapi(&$node, $op, $arg3 = null, $arg4 = null) {
  * Stores the customer's choices in the cart.
  */
 function uc_attribute_add_to_cart_data($form_values) {
-  $combination = array();
   if (!isset($form_values['attributes'])) {
     return array('attributes' => array(), 'model' => null);
   }
+
+  $combination = array();
   foreach ($form_values['attributes'] as $aid => $value) {
     if (is_numeric($value)) {
-      $combination[$aid] = $value;
+      $attribute = uc_attribute_load($aid, $form_values['nid'], 'product');
+      if ($attribute && ($attribute->display == 1 || $attribute->display == 2)) {
+        $combination[$aid] = $value;
+      }
     }
   }
+  ksort($combination);
+
   $result = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = %d AND combination LIKE '%s'", $form_values['nid'], serialize($combination));
   $model = db_result($result);
-  // drupal_set_message('Attributes to add to order Array(aid => oid):<pre>'. print_r($form_values['attributes'], true) . $model .'</pre>');
+
   // Preserve the 'attributes' key to allow other modules to add to the data field.
   return array('attributes' => $form_values['attributes'], 'model' => $model);
 }
@@ -491,10 +537,10 @@ function uc_attribute_delete_confirm($aid) {
 
 function uc_attribute_delete_confirm_submit($form_id, $form_values) {
   if ($form_values['confirm']) {
-    db_query("DELETE FROM co USING {uc_class_attribute_options} AS co, {uc_attribute_options} AS ao WHERE co.oid = ao.oid AND ao.aid = %d", $form_values['aid']);
+    db_query("DELETE FROM {uc_class_attribute_options} WHERE EXISTS (SELECT * FROM {uc_attribute_options} AS ao WHERE {uc_class_attribute_options}.oid = ao.oid AND ao.aid = %d)", $form_values['aid']);
     db_query("DELETE FROM {uc_class_attributes} WHERE aid = %d", $form_values['aid']);
-    db_query("DELETE FROM po USING {uc_product_options} AS po, {uc_attribute_options} AS ao WHERE po.oid = ao.oid AND ao.aid = %d", $form_values['aid']);
-    db_query("DELETE FROM pd USING {uc_product_adjustments} AS pd, {uc_product_attributes} AS pa WHERE pd.nid = pa.nid AND pa.aid = %d", $form_values['aid']);
+    db_query("DELETE FROM {uc_product_options} WHERE EXISTS (SELECT * FROM {uc_attribute_options} AS ao WHERE {uc_product_options}.oid = ao.oid AND ao.aid = %d)", $form_values['aid']);
+    db_query("DELETE FROM {uc_product_adjustments} WHERE EXISTS (SELECT * FROM {uc_product_attributes} AS pa WHERE {uc_product_adjustments}.nid = pa.nid AND pa.aid = %d)", $form_values['aid']);
     db_query("DELETE FROM {uc_product_attributes} WHERE aid = %d", $form_values['aid']);
     db_query("DELETE FROM {uc_attribute_options} WHERE aid = %d", $form_values['aid']);
     db_query("DELETE FROM {uc_attributes} WHERE aid = %d", $form_values['aid']);
@@ -853,7 +899,7 @@ function uc_object_attributes_form_submit($form_id, $form_values) {
     if (count($remove_aids) > 0) {
       $values = array($form_values['id'], implode(', ', $remove_aids));
 
-      db_query("DELETE po FROM $opt_table AS po LEFT JOIN {uc_attribute_options} AS ao ON po.oid = ao.oid WHERE po.$id = $sql_type AND ao.aid IN (%s)", $values);
+      db_query("DELETE FROM $opt_table WHERE EXISTS (SELECT * FROM {uc_attribute_options} AS ao WHERE $opt_table.oid = ao.oid AND ao.aid IN (%s)) AND $opt_table.$id = $sql_type", $values);
       db_query("DELETE FROM $attr_table WHERE $id = $sql_type AND aid IN (%s)", $values);
       if ($form_values['type'] == 'product') {
         db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d", $form_values['id']);
@@ -1508,7 +1554,7 @@ function _uc_attribute_alter_form($product) {
         $product['attributes'][$attribute->aid] = array(
           '#type' => $attribute->display == 1 ? 'select' : 'radios',
           '#title' => $attribute->name,
-          '#description' => check_plain($attribute->description),
+          '#description' => check_markup($attribute->description),
           '#default_value' => $relation->default_option,
           '#options' => $options,
           '#required' => $attribute->required,
@@ -1518,7 +1564,7 @@ function _uc_attribute_alter_form($product) {
         $product['attributes'][$attribute->aid] = array(
           '#type' => 'textfield',
           '#title' => $attribute->name,
-          '#description' => check_plain($attribute->description),
+          '#description' => check_markup($attribute->description),
           '#default_value' => $attribute->required == FALSE ? $attribute->options[$relation->default_option]->name : '',
           '#required' => $attribute->required,
         );

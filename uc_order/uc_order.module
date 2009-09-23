@@ -2678,6 +2678,7 @@ function uc_order_load_line_items($order, $stored) {
         'title' => $row->title,
         'amount' => $row->amount,
         'weight' => $row->weight,
+        'data' => unserialize($row->data),
       );
     }
   }
@@ -2696,6 +2697,7 @@ function uc_order_load_line_items($order, $stored) {
               'title' => $line['title'],
               'amount' => $line['amount'],
               'weight' => isset($line['weight']) ? $line['weight'] : $type['weight'],
+              'data' => $line['data'],
             );
           }
         }
@@ -2933,6 +2935,7 @@ function uc_order_load_invoice($order, $op = 'view', $template = 'customer') {
               'title' => $line['title'],
               'amount' => $line['amount'],
               'weight' => $item['weight'],
+              'data' => $line['data'],
             );
           }
         }

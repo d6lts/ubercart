@@ -8,25 +8,43 @@ function uc_weightquote_install() {
       db_query("CREATE TABLE {uc_weightquote_products} (
         `vid` mediumint(9) unsigned NOT NULL default 0,
         `nid` mediumint(9) unsigned NOT NULL default 0,
-        `rate` float NOT NULL default '0',
-        PRIMARY KEY (`vid`)
+        `mid` mediumint(9) unsigned NOT NULL default 0,
+        `rate` decimal(10,2) NOT NULL default 0.00,
+        PRIMARY KEY (`vid`, `mid`)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ;");
+      db_query("CREATE TABLE {uc_weightquote_methods} (
+        `mid` mediumint(9) unsigned NOT NULL default 0,
+        `title` varchar(255) NOT NULL default '',
+        `label` varchar(255) NOT NULL default '',
+        `base_rate` decimal(10,2) NOT NULL default 0.00,
+        `unit_rate` decimal(10,2) NOT NULL default 0.00,
+        PRIMARY KEY (`mid`)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ;");
     break;
     case 'pgsql':
       db_query("CREATE TABLE {uc_weightquote_products} (
         vid int_unsigned NOT NULL default 0,
         nid int_unsigned NOT NULL default 0,
-        rate float NOT NULL default 0,
-        PRIMARY KEY (vid)
+        mid int_unsigned NOT NULL default 0,
+        rate decimal(10,2) NOT NULL default 0.00,
+        PRIMARY KEY (vid, mid)
       );");
+      db_query("CREATE TABLE {uc_weightquote_methods} (
+        mid serial NOT NULL,
+        title varchar(255) NOT NULL default '',
+        label varchar(255) NOT NULL default '',
+        base_rate decimal(10,2) NOT NULL default 0.00,
+        unit_rate decimal(10,2) NOT NULL default 0.00,
+        PRIMARY KEY (mid)
+      );");
+      db_query("CREATE INDEX {uc_weightquote_methods}_mid_idx ON {uc_weightquote_methods}(mid)");
     break;
   }
 }
 
 function uc_weightquote_uninstall() {
   db_query("DROP TABLE {uc_weightquote_products}");
-  variable_del('uc_weightquote_base_rate');
-  variable_del('uc_weightquote_product_default');
+  db_query("DROP TABLE {uc_weightquote_methods}");
 }
 
 function uc_weightquote_update_1() {
@@ -63,5 +81,75 @@ function uc_weightquote_update_2() {
       db_change_column($ret, 'uc_weightquote_products', 'nid', 'nid', 'int_unsigned', array('not null' => true, 'default' => 0));
     break;
   }
+  return $ret;
+}
+
+function uc_weightquote_update_3() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {uc_weightquote_products} CHANGE rate rate decimal(10,2) NOT NULL default 0.00");
+      $ret[] = update_sql("ALTER TABLE {uc_weightquote_products} ADD COLUMN mid mediumint(9) unsigned NOT NULL default 0 AFTER nid");
+      $ret[] = update_sql("ALTER TABLE {uc_weightquote_products} DROP PRIMARY KEY, ADD PRIMARY KEY (`vid`, `mid`)");
+      $ret[] = update_sql("CREATE TABLE {uc_weightquote_methods} (
+        `mid` mediumint(9) unsigned NOT NULL default 0,
+        `title` varchar(255) NOT NULL default '',
+        `label` varchar(255) NOT NULL default '',
+        `base_rate` decimal(10,2) NOT NULL default 0.00,
+        `unit_rate` decimal(10,2) NOT NULL default 0.00,
+        PRIMARY KEY (`mid`)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ;");
+    break;
+    case 'pgsql':
+      db_change_column($ret, 'uc_weightquote_products', 'rate', 'rate', 'decimal(10,2)', array('not null' => true, 'default' => 0));
+      db_add_column($ret, 'uc_weightquote_products', 'mid', 'int_unsigned', array('not null' => true, 'default' => 0));
+      $ret[] = update_sql("ALTER TABLE {uc_weightquote_products} DROP CONSTRAINT {uc_weightquote_products}_pkey, ADD PRIMARY KEY (vid, mid)");
+      $ret[] = update_sql("CREATE TABLE {uc_weightquote_methods} (
+        mid serial NOT NULL,
+        title varchar(255) NOT NULL default '',
+        label varchar(255) NOT NULL default '',
+        base_rate decimal(10,2) NOT NULL default 0.00,
+        unit_rate decimal(10,2) NOT NULL default 0.00,
+        PRIMARY KEY (mid)
+      );");
+      $ret[] = update_sql("CREATE INDEX {uc_weightquote_methods}_mid_idx ON {uc_weightquote_methods}(mid)");
+    break;
+  }
+
+  $enabled = variable_get('uc_quote_enabled', array());
+  $weight = variable_get('uc_quote_method_weight', array('weightquote' => 0));
+  $base_rate = variable_get('uc_weightquote_base_rate', 0);
+  $unit_rate = variable_get('uc_weightquote_product_default', 0);
+  $mid = db_next_id('{uc_weightquote_methods}_mid');
+
+  db_query("INSERT INTO {uc_weightquote_methods} (mid, title, label, base_rate, unit_rate) VALUES (%d, '%s', '%s', %f, %f)", $mid, t('Weight rate per product'), t('Shipping rate'), $base_rate, $unit_rate);
+  $ret[] = array('success' => TRUE, 'query' => check_plain("INSERT INTO {uc_weightquote_methods} (mid, title, label, base_rate, unit_rate) VALUES (". $mid .", '". t('Weight rate per product') ."', '". t('Shipping rate') ."', ". $base_rate .", ". $unit_rate .")"));
+  db_query("UPDATE {uc_weightquote_products} SET mid = %d", $mid);
+  $ret[] = array('success' => TRUE, 'query' => check_plain("UPDATE {uc_weightquote_products} SET mid = ". $mid));
+  $enabled['weightquote_'. $mid] = $enabled['weightquote'];
+  $weight['weightquote_'. $mid] = $weight['weightquote'];
+  unset($enabled['weightquote'], $weight['weightquote']);
+
+  if (db_table_exists('workflow_ng_cfgs') && $configuration = db_fetch_object(db_query("SELECT data FROM {workflow_ng_cfgs} WHERE name = '%s'", 'uc_weightquote_get_quote'))) {
+    $configuration->name = 'uc_weightquote_get_quote_'. $mid;
+    $configuration->data = unserialize($configuration->data);
+    $configuration->data['#event'] = 'get_quote_from_weightquote_'. $mid;
+    $result = db_query("UPDATE {workflow_ng_cfgs} SET name = '%s', data = '%s' WHERE name = 'uc_weightquote_get_quote'", $configuration->name, serialize($configuration->data));
+    $ret[] = array('success' => $result !== FALSE, 'query' => check_plain("UPDATE {workflow_ng_cfgs} SET name = '". $configuration->name ."', data = '". serialize($configuration->data) ."' WHERE name = 'uc_weightquote_get_quote'"));
+  }
+  else {
+    $ret[] = array('success' => FALSE, 'query' => check_plain("UPDATE {workflow_ng_cfgs} SET name = '". $configuration->name ."', data = '". serialize($configuration->data) ."' WHERE name = 'uc_weightquote_get_quote'"));
+  }
+
+  variable_set('uc_quote_enabled', $enabled);
+  variable_set('uc_quote_method_weight', $weight);
+  if (module_exists('workflow_ng')) {
+    workflow_ng_clear_cache();
+  }
+
+  variable_del('uc_weightquote_base_rate');
+  variable_del('uc_weightquote_product_default');
+
   return $ret;
 }

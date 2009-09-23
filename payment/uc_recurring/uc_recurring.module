@@ -92,6 +92,18 @@ function uc_recurring_perm() {
 }
 
 /**
+ * Implementation of hook_enable().
+ */
+function uc_recurring_enable() {
+  // Get the weight of the Credit Card module.
+  $weight = db_result(db_query("SELECT weight FROM {system} WHERE name = '%s'", 'uc_credit'));
+
+  // Update the weight of the recurring module so its hooks get called after the
+  // credit module.
+  db_query("UPDATE {system} SET weight = %d WHERE name = '%s'", max(1000, $weight + 1), 'uc_recurring');
+}
+
+/**
  * Implementation of hook_form_alter().
  */
 function uc_recurring_form_alter($form_id, &$form) {
@@ -102,6 +114,11 @@ function uc_recurring_form_alter($form_id, &$form) {
     // Make no changes if no recurring fees are found.
     if (uc_recurring_find_fees($order) == array()) {
       return;
+    }
+
+    // If configured, display a message about the recurring fees.
+    if ($message = variable_get('uc_recurring_checkout_message', '')) {
+      drupal_set_message(check_markup($message));
     }
 
     // Remove invalid payment methods from the payment pane.
@@ -186,45 +203,37 @@ function uc_recurring_order_view_update_form_submit($form_id, $form_values) {
  * Implementation of hook_cron().
  */
 function uc_recurring_cron() {
-  if (variable_get('uc_recurring_handler', 'uc_recurring') == 'uc_recurring') {
-    $successes = 0;
-    $fails = 0;
+  $successes = 0;
+  $fails = 0;
 
-    $result = db_query("SELECT * FROM {uc_recurring_users} WHERE fee_handler = 'uc_recurring' AND remaining_intervals > 0 AND next_charge <= %d", time());
-    while ($fee = db_fetch_array($result)) {
-      $fee['data'] = unserialize($fee['data']);
+  // Look for any fees ready for a charge that are reference transactions
+  // routed through the core recurring system.
+  $result = db_query("SELECT * FROM {uc_recurring_users} WHERE fee_handler LIKE 'uc_recurring_byref:%%' AND remaining_intervals > 0 AND next_charge <= %d", time());
 
-      if ($key = uc_credit_encryption_key()) {
-        $crypt = new uc_encryption_class;
-        $fee['data']['payment_details']['cc_number'] = $crypt->decrypt($key, $fee['data']['payment_details']['cc_number']);
-        if (variable_get('uc_credit_debug', FALSE)) {
-          $fee['data']['payment_details']['cc_cvv'] = $crypt->decrypt($key, $fee['data']['payment_details']['cc_cvv']);
-        }
-        $fee['data']['payment_details']['cc_exp_month'] = $crypt->decrypt($key, $fee['data']['payment_details']['cc_exp_month']);
-        $fee['data']['payment_details']['cc_exp_year'] = $crypt->decrypt($key, $fee['data']['payment_details']['cc_exp_year']);
-        uc_store_encryption_errors($crypt, 'uc_recurring');
-      }
+  while ($fee = db_fetch_array($result)) {
+    $handler = explode(':', $fee['fee_handler']);
 
-      // Attempt to process the charge.
-      if (uc_recurring_charge($fee)) {
-        // Update the fee in the database.
-        if ($fee['remaining_intervals'] == 1) {
-          $next_charge = time();
-        }
-        else {
-          $next_charge = strtotime('+'. $fee['regular_interval']);
-        }
-        db_query("UPDATE {uc_recurring_users} SET next_charge = %d, remaining_intervals = remaining_intervals - 1, charged_intervals = charged_intervals + 1 WHERE rfid = %d", $next_charge, $fee['rfid']);
-        $successes++;
+    $fee['data'] = unserialize($fee['data']);
+
+    // Attempt to process the reference transaction.
+    if (uc_recurring_charge($fee)) {
+      // Update the fee in the database.
+      if ($fee['remaining_intervals'] == 1) {
+        $next_charge = time();
       }
       else {
-        $fails++;
+        $next_charge = strtotime('+'. $fee['regular_interval'], $fee['next_charge']);
       }
+      db_query("UPDATE {uc_recurring_users} SET next_charge = %d, remaining_intervals = remaining_intervals - 1, charged_intervals = charged_intervals + 1 WHERE rfid = %d", $next_charge, $fee['rfid']);
+      $successes++;
     }
+    else {
+      $fails++;
+    }
+  }
 
-    if ($successes > 0 || $fails > 0) {
-      watchdog('uc_recurring', t('!successes recurring fees processed successfully; !fails failed.', array('!successes' => $successes, '!fails' => $fails)));
-    }
+  if ($successes > 0 || $fails > 0) {
+    watchdog('uc_recurring', t('!successes recurring fees processed successfully; !fails failed.', array('!successes' => $successes, '!fails' => $fails)));
   }
 }
 
@@ -268,15 +277,17 @@ function uc_recurring_order($op, &$arg1, $arg2) {
         $fees = uc_recurring_find_fees($arg1);
         if (count($fees)) {
           $pass = TRUE;
+          $order = uc_order_load($arg1->order_id);
+
           foreach ($fees as $fee) {
-            if (!uc_recurring_process($arg1, $fee)) {
-              uc_order_comment_save($arg1->order_id, 0, t('The recurring fee for product @model failed.', array('@model' => $fee->model)), 'admin', $arg1->order_status);
+            if (!uc_recurring_process($order, $fee)) {
+              uc_order_comment_save($order->order_id, 0, t('The recurring fee for product @model failed.', array('@model' => $fee->model)), 'admin', $order->order_status);
               $pass = FALSE;
             }
           }
           if ($pass == FALSE) {
             $process = variable_get('uc_recurring_checkout_fail', 'fail');
-            if ($process == 'fail' && uc_payment_balance($arg1) < $arg1->order_total) {
+            if ($process == 'fail' && uc_payment_balance($order) < $order->order_total) {
               $process = 'proceed';
             }
             switch ($process) {
@@ -310,61 +321,6 @@ function uc_recurring_product_feature() {
   );
 
   return $features;
-}
-
-/**
- * Implementation of hook_recurring_fee(); default recurring fee handler.
- */
-function uc_recurring_recurring_fee($order, $fee) {
-  if ($order->payment_method !== 'credit') {
-    watchdog('uc_recurring', t('You can only use the credit card payment method with the uc_recurring handler.'), WATCHDOG_ERROR);
-    return FALSE;
-  }
-
-  $data = array(
-    'billing_first_name' => $order->billing_first_name,
-    'billing_last_name' => $order->billing_last_name,
-    'billing_phone' => $order->billing_phone,
-    'billing_company' => $order->billing_company,
-    'billing_street1' => $order->billing_street1,
-    'billing_street2' => $order->billing_street2,
-    'billing_city' => $order->billing_city,
-    'billing_zone' => $order->billing_zone,
-    'billing_postal_code' => $order->billing_postal_code,
-    'billing_country' => $order->billing_country,
-    'payment_details' => $order->payment_details,
-    'model' => $fee->model,
-  );
-
-  if ($key = uc_credit_encryption_key()) {
-    $crypt = new uc_encryption_class;
-    $data['payment_details']['cc_number'] = $crypt->encrypt($key, $data['payment_details']['cc_number'], 32);
-    if (variable_get('uc_credit_debug', FALSE)) {
-      $data['payment_details']['cc_cvv'] = $crypt->encrypt($key, $data['payment_details']['cc_cvv'], 32);
-    }
-    $data['payment_details']['cc_exp_month'] = $crypt->encrypt($key, $data['payment_details']['cc_exp_month'], 32);
-    $data['payment_details']['cc_exp_year'] = $crypt->encrypt($key, $data['payment_details']['cc_exp_year'], 32);
-    uc_store_encryption_errors($crypt, 'uc_recurring');
-  }
-
-  $fee = array(
-    'rfid' => db_next_id('{uc_product_users}_rfid'),
-    'uid' => $order->uid,
-    'fee_handler' => 'uc_recurring',
-    'next_charge' => strtotime('+'. $fee->initial_charge),
-    'fee_amount' => $fee->fee_amount,
-    'regular_interval' => $fee->regular_interval,
-    'remaining_intervals' => $fee->number_intervals,
-    'charged_intervals' => 0,
-    'order_id' => $order->order_id,
-    'data' => serialize($data),
-  );
-
-  uc_recurring_fee_save('user', $fee);
-
-  uc_order_comment_save($order->order_id, 0, t('Recurring fee <a href="!url">!fee</a> added to order.', array('!url' => url('admin/store/orders/recurring/view/fee/'. $fee['rfid']), '!fee' => $fee['rfid'])));
-
-  return TRUE;
 }
 
 /**
@@ -579,6 +535,12 @@ function uc_recurring_settings_form() {
     '#description' => t('Only selected payment methods will be available for customers purchasing products with recurring fees.<br/>It is up to you to make sure your chosen handler is compatible with the payment methods you select.<br />For example, the uc_recurring handler is only compatible with the Credit Card payment method.'),
     '#options' => $options,
     '#default_value' => variable_get('uc_recurring_payment_methods', array()),
+  );
+  $form['uc_recurring_checkout_message'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Recurring free checkout form message'),
+    '#description' => t('Enter a message to be displayed on the checkout form page when a customer has products in the cart with recurring fees.<br />Leave blank to not display any message.'),
+    '#default_value' => variable_get('uc_recurring_checkout_message', ''),
   );
   $form['uc_recurring_checkout_process'] = array(
     '#type' => 'checkbox',
@@ -883,6 +845,56 @@ function uc_recurring_admin_delete_form_submit($form_id, $form_values) {
 }
 
 /**
+ * Saves a reference transaction fee to the database.
+ *
+ * Recurring handlers for payment gateways processing recurring fees through a
+ * reference transaction should use the uc_recurring_byref system.  By calling
+ * this function from a recurring fee handler and passing on the order and fee
+ * objects as received, the system will add the fee to the single table that
+ * will be processed on cron.
+ *
+ * @param $order
+ *   The order object for the recurring fee.
+ * @param $fee
+ *   The fee data object.
+ * @param $handler
+ *   The name of the recurring fee handler using the uc_recurring_byref system.
+ * @param $callback
+ *   The name of the charge function for the gateway that will be used to charge
+ *     the reference transactions.
+ * @param $ref_id
+ *   The reference ID that will be used to process the reference transaction at
+ *     the payment gateway.
+ */
+function uc_recurring_byref_save($order, $fee, $handler, $callback, $ref_id) {
+  // Build the data array stored for the fee.
+  $data = array(
+    'charge_callback' => $callback,
+    'ref_id' => $ref_id,
+    'model' => $fee->model,
+  );
+
+  $fee = array(
+    'rfid' => db_next_id('{uc_product_users}_rfid'),
+    'uid' => $order->uid,
+    'fee_handler' => 'uc_recurring_byref:'. $handler,
+    'next_charge' => strtotime('+'. $fee->initial_charge),
+    'fee_amount' => $fee->fee_amount,
+    'regular_interval' => $fee->regular_interval,
+    'remaining_intervals' => $fee->number_intervals,
+    'charged_intervals' => 0,
+    'order_id' => $order->order_id,
+    'data' => serialize($data),
+  );
+
+  uc_recurring_fee_save('user', $fee);
+
+  uc_order_comment_save($order->order_id, 0, t('Recurring fee <a href="!url">!fee</a> added to order.', array('!url' => url('admin/store/orders/recurring/view/fee/'. $fee['rfid']), '!fee' => $fee['rfid'])));
+
+  return TRUE;
+}
+
+/**
  * Saves a recurring fee either for a product or for a user.
  */
 function uc_recurring_fee_save($type, $data) {
@@ -1045,19 +1057,8 @@ function uc_recurring_process($order, $fee) {
 function uc_recurring_charge($fee) {
   static $show = TRUE;
 
-  // Get the charge function for the default credit card gateway.
-  $gateways = _payment_gateway_list('credit', TRUE);
-  if (count($gateways) == 1) {
-    $keys = array_keys($gateways);
-    $func = $gateways[$keys[0]]['credit'];
-  }
-  elseif (count($gateways) > 1) {
-    foreach ($gateways as $gateway) {
-      if ($gateway['id'] == variable_get('uc_payment_credit_gateway', '')) {
-        $func = $gateway['credit'];
-      }
-    }
-  }
+  // Get the charge function for the handler's credit card gateway.
+  $func = $fee['data']['charge_callback'];
 
   // Whoa... bad function? ABORT! ABORT!
   if (!function_exists($func)) {
@@ -1068,11 +1069,14 @@ function uc_recurring_charge($fee) {
     return FALSE;
   }
 
-  // Cache the CC details stored by the handler.
-  uc_credit_cache('save', $fee['data']['payment_details'], FALSE);
+  // Build the data array for the request.
+  $data = array(
+    'txn_type' => UC_CREDIT_REFERENCE_TXN,
+    'ref_id' => $fee['data']['ref_id'],
+  );
 
   // Run the charge.
-  $result = $func($fee['order_id'], $fee['fee_amount'], NULL);
+  $result = $func($fee['order_id'], $fee['fee_amount'], $data);
 
   // Handle the result.
   if ($result['success'] === TRUE) {

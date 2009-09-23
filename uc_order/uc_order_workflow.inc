@@ -139,11 +139,7 @@ function uc_order_action_info() {
 // Check the current order status.
 function uc_order_condition_order_status($order, $settings) {
   // Return TRUE if the order status matches.
-  $status = db_result(db_query("SELECT order_status FROM {uc_orders} WHERE order_id = %d", $order->order_id));
-  if ($status == $settings['order_status']) {
-    return TRUE;
-  }
-  return FALSE;
+  return $order->order_status == $settings['order_status'];
 }
 
 function uc_order_condition_order_status_form($settings = array()) {

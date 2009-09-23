@@ -401,13 +401,10 @@ function uc_product_node_info($reset = false) {
 function uc_product_forms($saved_args) {
   $forms = array();
   if (substr($saved_args[0], 0, 27) == 'uc_product_add_to_cart_form' || substr($saved_args[0], 0, 26) == 'uc_catalog_buy_it_now_form') {
-    $products = db_query("SELECT DISTINCT nid, type FROM {node} WHERE nid = %d", $saved_args[1]->nid);
-
-    while ($product = db_fetch_object($products)) {
-      if (in_array($product->type, array_keys(uc_product_node_info()))) {
-        $forms['uc_product_add_to_cart_form_'. $product->nid] = array('callback' => 'uc_product_add_to_cart_form');
-        $forms['uc_catalog_buy_it_now_form_'. $product->nid] = array('callback' => 'uc_catalog_buy_it_now_form');
-      }
+    $product = $saved_args[1];
+    if (in_array($product->type, array_keys(uc_product_node_info()))) {
+      $forms['uc_product_add_to_cart_form_'. $product->nid] = array('callback' => 'uc_product_add_to_cart_form');
+      $forms['uc_catalog_buy_it_now_form_'. $product->nid] = array('callback' => 'uc_catalog_buy_it_now_form');
     }
   }
   return $forms;

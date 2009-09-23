@@ -54,11 +54,11 @@
               <tr>
                 <td colspan="2" bgcolor="#006699">
                   <b><?php echo t('Purchasing Information:'); ?></b>
-	              </td>
+                </td>
               </tr>
               <tr>
-	              <td nowrap="nowrap">
-             	    <b><?php echo t('E-mail Address:'); ?></b>
+                <td nowrap="nowrap">
+                  <b><?php echo t('E-mail Address:'); ?></b>
                 </td>
                 <td width="98%">
                   [order-email]
@@ -161,13 +161,13 @@
 
                     <tr>
                       <td nowrap="nowrap">
-                        <?php echo $item['title']; ?>: 
+                        <?php echo $item['title']; ?>:
                       </td>
                       <td>
                         <?php echo uc_currency_format($item['amount']); ?>
                       </td>
                     </tr>
-                    
+
                     <?php } ?>
 
                     <tr>
@@ -178,7 +178,7 @@
                     <tr>
                       <td nowrap="nowrap">
                         <b><?php echo t('Total for this Order:'); ?>&nbsp;</b>
-                      </td>            
+                      </td>
                       <td>
                         <b>[order-total]</b>
                       </td>
@@ -192,28 +192,28 @@
 
                           <?php if (is_array($order->products)) {
                             foreach ($order->products as $product) { ?>
-                          <tr>
-                            <td valign="top" nowrap="nowrap">
-                              <b><?php echo $product->qty; ?> x </b>
-                            </td>
-                            <td width="98%">
-                              <b><?php echo $product->title .' - '. uc_currency_format($product->price * $product->qty); ?></b> 
-                              <?php if ($product->qty > 1) {
-                                echo t('(!price each)', array('!price' => uc_currency_format($product->price)));
-                              } ?>
-                              <br />
-                              <?php echo t('Model: ') . $product->model; ?><br />
-                              <?php if (is_array($product->data['attributes']) && count($product->data['attributes']) > 0) {?>
-                              <?php foreach ($product->data['attributes'] as $key => $value) {
-                                echo '<li>'. $key .': '. $value .'</li>';
-                              } ?>
-                              <?php } ?>
-                              <br />
-                            </td>
-                          </tr>
-                          <?php }
-                              }?>
-
+                            <tr>
+                              <td valign="top" nowrap="nowrap">
+                                <b><?php echo $product->qty; ?> x </b>
+                              </td>
+                              <td width="98%">
+                                <b><?php echo $product->title .' - '. uc_currency_format($product->price * $product->qty); ?></b>
+                                <?php if ($product->qty > 1) {
+                                  echo t('(!price each)', array('!price' => uc_currency_format($product->price)));
+                                } ?>
+                                <br />
+                                <?php echo t('Model: ') . $product->model; ?><br />
+                                <?php if (is_array($product->data['attributes']) && count($product->data['attributes']) > 0) {?>
+                                <?php foreach ($product->data['attributes'] as $key => $value) {
+                                  echo '<li>'. $key .': '. $value .'</li>';
+                                } ?>
+                                <?php } ?>
+                                <br />
+                              </td>
+                            </tr>
+                            <?php }
+                          } ?>
+                        </table>
                       </td>
                     </tr>
                   </table>
@@ -251,7 +251,4 @@
       </table>
     </td>
   </tr>
-</table>
-</td>
-</tr>
 </table>

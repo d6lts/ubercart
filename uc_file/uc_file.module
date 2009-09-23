@@ -112,7 +112,7 @@ function uc_file_user($op, &$edit, &$account, $category = NULL) {
         $available_downloads = array();
         $available_files = array();
         while ($file_download = db_fetch_object($file_downloads)) {
-          $available_downloads[$file_download->key] = $file_download->filename;
+          $available_downloads[$file_download->file_key] = $file_download->filename;
         }
         while ($file = db_fetch_object($files)) {
           if (substr($file->filename, -1) != '/' && substr($file->filename, -1) != '\\') {
@@ -206,7 +206,7 @@ function uc_file_order($op, $order, $status) {
       // correct status, the status is actually being changed, and a valid user
       // has been assigned to the order.
       if ($status == variable_get('uc_file_default_order_status', 'completed') &&
-          $order->status != $status &&
+          $order->order_status != $status &&
           $order->uid > 0 &&
           ($order_user = user_load(array('uid' => $order->uid))) !== FALSE) {
         foreach ($order->products as $product) {
@@ -319,7 +319,7 @@ function theme_uc_file_downloads_token($file_downloads) {
   $output = '';
   foreach ($file_downloads as $file_download) {
     $filename = basename(db_result(db_query("SELECT filename FROM {uc_files} WHERE fid = %d", $file_download->fid)));
-    $download_url = url('download/'. $file_download->fid .'/'. $file_download->key, NULL, NULL, TRUE);
+    $download_url = url('download/'. $file_download->fid .'/'. $file_download->file_key, NULL, NULL, TRUE);
     $output .= '<a href="'. $download_url .'">'. $download_url ."</a>\n";
   }
   return $output;
@@ -894,7 +894,7 @@ function uc_file_user_downloads($uid) {
     array('data' => t('Downloads'), 'field' => 'u.accessed'),
   );
 
-  $sql = "SELECT granted, filename, accessed, description, `key`, f.fid FROM {uc_file_users} as u LEFT JOIN {uc_files} as f ON u.fid = f.fid LEFT JOIN {uc_file_products} as p ON p.pfid = u.pfid WHERE uid = %d";
+  $sql = "SELECT granted, filename, accessed, description, `file_key`, f.fid FROM {uc_file_users} as u LEFT JOIN {uc_files} as f ON u.fid = f.fid LEFT JOIN {uc_file_products} as p ON p.pfid = u.pfid WHERE uid = %d";
   $count_query = "SELECT COUNT(*) FROM {uc_file_users} WHERE uid = %d";
   $download_limit = variable_get('uc_file_download_limit_number', NULL);
   $file_ids = array();
@@ -909,14 +909,14 @@ function uc_file_user_downloads($uid) {
     $onclick = array('onclick' => 'uc_file_update_download('. $row .', '. $file->accessed .', '. ((empty($download_limit)) ? -1 : $download_limit) .');', 'id' => 'link-'. $row);
 
     if (!$expiration) {
-      $file_link = l(basename($file->filename), 'download/'. $file->fid .'/'. $file->key, $onclick);
+      $file_link = l(basename($file->filename), 'download/'. $file->fid .'/'. $file->file_key, $onclick);
     }
     else {
       if (time() > $expiration) {
         $file_link = basename($file->filename);
       }
       else {
-        $file_link = l(basename($file->filename), 'download/'. $file->fid .'/'. $file->key, $onclick) .' ('. t('expires on @date', array('@date' => format_date($expiration, 'custom', variable_get('uc_date_format_default', 'm/d/Y')))) .')';
+        $file_link = l(basename($file->filename), 'download/'. $file->fid .'/'. $file->file_key, $onclick) .' ('. t('expires on @date', array('@date' => format_date($expiration, 'custom', variable_get('uc_date_format_default', 'm/d/Y')))) .')';
       }
     }
 
@@ -1026,7 +1026,7 @@ function _file_download($fid, $key) {
 
   // In case the $user doesn't exist (downloading with a Download Manager, or Anonymous) find the $user based on the URL given
   if (!$user->uid) {
-    $user_id = db_result(db_query("SELECT uid FROM {uc_file_users} WHERE fid = %d and key = '%s'", $fid, $key));
+    $user_id = db_result(db_query("SELECT uid FROM {uc_file_users} WHERE fid = %d and file_key = '%s'", $fid, $key));
     $user = user_load(array('uid' => $user_id));
   }
 
@@ -1034,7 +1034,7 @@ function _file_download($fid, $key) {
   $message_admin = t('Please contact the site administrator if this message has been received in error.');
 
   $message_user = ($user->uid) ? t('The user %username ', array('%username' => $user->name)) : t('The IP address %ip ', array('%ip' => $ip));
-  $file_download = db_fetch_object(db_query("SELECT * FROM {uc_file_users} WHERE fid = %d AND `key` = '%s'", $fid, $key));
+  $file_download = db_fetch_object(db_query("SELECT * FROM {uc_file_users} WHERE fid = %d AND `file_key` = '%s'", $fid, $key));
   $request_cache = cache_get('uc_file_'. $ip);
   $requests = ($request_cache) ? $request_cache->data + 1 : 1;
 
@@ -1528,8 +1528,8 @@ function _user_table_action($op, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL) {
         foreach ($fids as $fid) {
           $values = array($arg1, $arg2, $arg3, '', $granted, 0, serialize(array()));
           $hash = _generate_hash($values);
-          db_query("INSERT INTO {uc_file_users} (fid, uid, pfid, `key`, granted, accessed, addresses) VALUES (%d, %d, %d, '%s', %d, %d, '%s')", $fid, $arg2, $arg3, $hash, $granted, 0, serialize(array()));
-          $output[] = db_fetch_object(db_query("SELECT * FROM {uc_file_users} WHERE uid = %d AND `key` = '%s'", $arg2, $hash));
+          db_query("INSERT INTO {uc_file_users} (fid, uid, pfid, `file_key`, granted, accessed, addresses) VALUES (%d, %d, %d, '%s', %d, %d, '%s')", $fid, $arg2, $arg3, $hash, $granted, 0, serialize(array()));
+          $output[] = db_fetch_object(db_query("SELECT * FROM {uc_file_users} WHERE uid = %d AND `file_key` = '%s'", $arg2, $hash));
         }
       }
       return (!is_null($output)) ? $output : FALSE;
@@ -1541,9 +1541,9 @@ function _user_table_action($op, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL) {
           $addresses[] = $arg2;
         }
         $accessed = $arg1->accessed+1;
-        $values = array($arg1->fid, $arg1->uid, $arg1->pfid, $arg1->key, $arg1->granted, $accessed, serialize($addresses));
+        $values = array($arg1->fid, $arg1->uid, $arg1->pfid, $arg1->file_key, $arg1->granted, $accessed, serialize($addresses));
         $hash = _generate_hash($values);
-        db_query("UPDATE {uc_file_users} SET accessed = %d, addresses = '%s', `key` = '%s' WHERE fid = %d AND uid = %d AND `key` = '%s'", $accessed, serialize($addresses), $hash, $arg1->fid, $arg1->uid, $arg1->key);
+        db_query("UPDATE {uc_file_users} SET accessed = %d, addresses = '%s', `file_key` = '%s' WHERE fid = %d AND uid = %d AND `file_key` = '%s'", $accessed, serialize($addresses), $hash, $arg1->fid, $arg1->uid, $arg1->file_key);
       }
       break;
     case 'remove': //arg1 = file id, arg2 = user id, $arg3 = key
@@ -1558,7 +1558,7 @@ function _user_table_action($op, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL) {
           db_query("DELETE FROM {uc_file_users} WHERE fid = %d AND uid = %d", $arg1, $arg2);
         }
         if (is_null($arg1) && !is_null($arg2) && !is_null($arg3)) { //Remove a certain file from a user
-          db_query("DELETE FROM {uc_file_users} WHERE uid = %d AND `key` = '%s'", $arg2, $arg3);
+          db_query("DELETE FROM {uc_file_users} WHERE uid = %d AND `file_key` = '%s'", $arg2, $arg3);
         }
       }
       break;

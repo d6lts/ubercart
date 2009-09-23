@@ -1480,26 +1480,19 @@ function theme_uc_cart_checkout_form($form) {
 
   $output = '<div>'. check_markup(variable_get('uc_checkout_instructions', ''), variable_get('uc_checkout_instructions_format', 3), FALSE) .'</div>';
 
-  if (arg(1) == 'checkout2') {
-    foreach (element_children($form['panes']) as $pane_id) {
-      $output .= drupal_render($form['panes'][$pane_id]);
-    }
-  }
-  else {
-    foreach (element_children($form['panes']) as $pane_id) {
-      if (function_exists(($func = _checkout_pane_data($pane_id, 'callback')))) {
-        $result = $func('theme', $form['panes'][$pane_id], NULL);
-        if (!empty($result)) {
-          $output .= $result;
-          $form['panes'][$pane_id] = array();
-        }
-        else {
-          $output .= drupal_render($form['panes'][$pane_id]);
-        }
+  foreach (element_children($form['panes']) as $pane_id) {
+    if (function_exists(($func = _checkout_pane_data($pane_id, 'callback')))) {
+      $result = $func('theme', $form['panes'][$pane_id], NULL);
+      if (!empty($result)) {
+        $output .= $result;
+        $form['panes'][$pane_id] = array();
       }
       else {
         $output .= drupal_render($form['panes'][$pane_id]);
       }
+    }
+    else {
+      $output .= drupal_render($form['panes'][$pane_id]);
     }
   }
 
@@ -1779,6 +1772,9 @@ function uc_cart_complete_sale($order, $login = FALSE) {
       if (empty($order->data['new_user']['name'])) {
         // Default to the first part of the e-mail address.
         $name = substr($order->primary_email, 0, strpos($order->primary_email, '@'));
+
+        // Remove possible illegal characters.
+        $name = preg_replace('/[^A-Za-z0-9_.-]/', '', $name);
 
         // Trim that value for spaces and length.
         $name = trim(substr($name, 0, USERNAME_MAX_LENGTH));

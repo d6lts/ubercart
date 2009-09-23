@@ -138,7 +138,7 @@ function uc_taxes_order($op, $arg1, $arg2) {
             foreach ($line_items as $id => $new_line) {
               if ($new_line['title'] == $line['title']) {
                 if ($new_line['amount'] != $line['amount']) {
-                  uc_order_update_line_item($line['line_item_id'], $new_line['title'], $new_line['amount']);
+                  uc_order_update_line_item($line['line_item_id'], $new_line['title'], $new_line['amount'], $new_line['data']);
                   $changes[] = t('Changed %title to %amount.', array('%amount' => uc_currency_format($new_line['amount']), '%title' => $new_line['title']));
                 }
                 unset($line_items[$id]);
@@ -155,7 +155,7 @@ function uc_taxes_order($op, $arg1, $arg2) {
       }
       if (is_array($line_items)) {
         foreach ($line_items as $line) {
-          uc_order_line_item_add($arg1->order_id, $line['id'], $line['title'], $line['amount'], $line['weight']);
+          uc_order_line_item_add($arg1->order_id, $line['id'], $line['title'], $line['amount'], $line['weight'], $line['data']);
           $changes[] = t('Added %amount for %title.', array('%amount' => uc_currency_format($line['amount']), '%title' => $line['title']));
         }
       }
@@ -174,13 +174,12 @@ function uc_taxes_order($op, $arg1, $arg2) {
  * Display a list of tax rates.
  */
 function uc_taxes_admin_settings() {
-  $header = array(t('Name'), t('Rate'), t('Taxed product types'), t('Taxed line items'), t('Weight'), array('data' => t('Operations'), 'colspan' => 4));
-  $rows = array();
+  $header = array(t('Name'), t('Rate'), t('Taxed product types'), t('Tax only shippable?'), t('Taxed line items'), t('Weight'), array('data' => t('Actions'), 'colspan' => 3));
   $result = db_query("SELECT * FROM {uc_taxes} ORDER BY weight");
   while ($rule = db_fetch_object($result)) {
     $rule->taxed_product_types = (array)unserialize($rule->taxed_product_types);
     $rule->taxed_line_items = (array)unserialize($rule->taxed_line_items);
-    $rows[] = array($rule->name, $rule->rate * 100 .'%', implode(', ', $rule->taxed_product_types), implode(', ', $rule->taxed_line_items), $rule->weight, l(t('edit'), 'admin/store/settings/taxes/edit/'. $rule->id), l(t('conditions'), _workflow_ng_ui_path() . '/uc_taxes_'. $rule->id), l(t('copy'), 'admin/store/settings/taxes/copy/'. $rule->id), l(t('delete'), 'admin/store/settings/taxes/delete/'. $rule->id));
+    $rows[] = array($rule->name, $rule->rate * 100 .'%', implode(', ', $rule->taxed_product_types), $rule->shippable ? t('Yes') : '', implode(', ', $rule->taxed_line_items), $rule->weight, l(t('edit'), 'admin/store/settings/taxes/edit/'. $rule->id), l(t('copy'), 'admin/store/settings/taxes/copy/'. $rule->id), l(t('delete'), 'admin/store/settings/taxes/delete/'. $rule->id));
   }
   $output = theme('table', $header, $rows);
   $output .= l('Make a new tax rule.', 'admin/store/settings/taxes/edit');
@@ -213,6 +212,12 @@ function uc_taxes_form($tax_id = 0) {
     '#default_value' => isset($form_values['rate']) ? $form_values['rate'] : '',
     '#size' => 15,
     '#required' => true,
+  );
+  $shippable_options = array('0' => t('Tax all products regardless of shipping status'), 1 => t('Tax only shippable products'));
+  $form['shippable'] = array('#type' => 'radios',
+    '#title' => t('Tax products based on shipping status?'),
+    '#options' => $shippable_options,
+    '#default_value' => $form_values['shippable'],
   );
   $types = array();
   $node_types = module_invoke_all('node_info');
@@ -262,13 +267,13 @@ function uc_taxes_form_submit($form_id, $form_values) {
       $rate = floatval($form_values['rate']);
     }
     if (($form_values['id']) != '') {
-      db_query("UPDATE {uc_taxes} SET name = '%s', rate = %f, taxed_product_types = '%s', taxed_line_items = '%s', weight = %d WHERE id = %d",
-        $form_values['name'], $rate, serialize(array_filter($form_values['taxed_product_types'])), serialize(array_filter($form_values['taxed_line_items'])), $form_values['weight'], $form_values['id']
+      db_query("UPDATE {uc_taxes} SET name = '%s', rate = %f, taxed_product_types = '%s', taxed_line_items = '%s', weight = %d, shippable = %d WHERE id = %d",
+        $form_values['name'], $rate, serialize(array_filter($form_values['taxed_product_types'])), serialize(array_filter($form_values['taxed_line_items'])), $form_values['weight'], $form_values['shippable'], $form_values['id']
       );
     }
     else {
-      db_query("INSERT INTO {uc_taxes} (id, name, rate, taxed_product_types, taxed_line_items, weight) VALUES (%d, '%s', %f, '%s', '%s', %d)",
-        db_next_id('{uc_taxes}_id'), $form_values['name'], $rate, serialize(array_filter($form_values['taxed_product_types'])), serialize(array_filter($form_values['taxed_line_items'])), $form_values['weight']
+      db_query("INSERT INTO {uc_taxes} (id, name, rate, taxed_product_types, taxed_line_items, weight, shippable) VALUES (%d, '%s', %f, '%s', '%s', %d, %d)",
+        db_next_id('{uc_taxes}_id'), $form_values['name'], $rate, serialize(array_filter($form_values['taxed_product_types'])), serialize(array_filter($form_values['taxed_line_items'])), $form_values['weight'], $form_values['shippable']
       );
     }
 
@@ -283,8 +288,8 @@ function uc_taxes_form_submit($form_id, $form_values) {
 function uc_taxes_copy($tax_id) {
   $rule = db_fetch_array(db_query("SELECT * FROM {uc_taxes} WHERE id = %d", $tax_id));
 
-  db_query("INSERT INTO {uc_taxes} (id, name, rate, taxed_product_types, taxed_line_items, weight) VALUES (%d, '%s', %f, '%s', '%s', %d)",
-    db_next_id('{uc_taxes}_id'), t('Copy of @rule', array('%rule' => $rule['name'])), $rule['rate'], $rule['taxed_product_types'], $rule['taxed_line_items'], $rule['weight']
+  db_query("INSERT INTO {uc_taxes} (id, name, rate, taxed_product_types, taxed_line_items, weight, shippable) VALUES (%d, '%s', %f, '%s', '%s', %d, %d)",
+    db_next_id('{uc_taxes}_id'), t('Copy of @rule', array('%rule' => $rule['name'])), $rule['rate'], $rule['taxed_product_types'], $rule['taxed_line_items'], $rule['weight'], $rule['shippable']
   );
 
   drupal_goto('admin/store/settings/taxes');
@@ -358,6 +363,7 @@ function uc_line_item_tax($op, $order) {
           'title' => $tax['name'],
           'amount' => $tax['amount'],
           'weight' => variable_get('uc_li_tax_weight', 9) + $tax['weight'] / 10,
+          'data' => $tax['data'],
         );
       }
       return $lines;

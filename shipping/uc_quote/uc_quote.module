@@ -112,13 +112,11 @@ function uc_quote_taxonomy($op, $type, $object = null) {
 function uc_quote_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
   if (in_array($node->type, module_invoke_all('product_types'))) {
     switch ($op) {
-      case 'submit':
+      case 'insert':
+      case 'update':
         if (isset($node->shipping_type)) {
           uc_quote_set_shipping_type('product', $node->nid, $node->shipping_type);
         }
-      break;
-      case 'insert':
-      case 'update':
         db_query("DELETE FROM {uc_quote_product_locations} WHERE nid = %d", $node->nid);
         if ($node->street1) {
           db_query("INSERT INTO {uc_quote_product_locations} (nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', %d, '%s', %d, '%s')",
@@ -301,7 +299,7 @@ function uc_quote_condition_info() {
 function uc_quote_condition_product_shipping_type($order, $settings) {
   $result = false;
   foreach ($order->products as $product) {
-    if ($product->nid && uc_quote_get_shipping_type('product', $product->nid) == $settings['type']) {
+    if ($product->nid && uc_product_get_shipping_type($product) == $settings['type']) {
       $result = true;
       break;
     }
@@ -452,11 +450,14 @@ function uc_quote_action_get_quote($order, $method) {
  * Implementation of Übercart's hook_cart_pane.
  */
 function uc_quote_cart_pane($items) {
+  if (!variable_get('uc_cap_quotes_enabled', FALSE) || (variable_get('uc_cart_delivery_not_shippable', TRUE) && !uc_cart_is_shippable())) {
+    return array();
+  }
   $panes[] = array('id' => 'quotes',
     'title' => t('Shipping quotes'),
     'enabled' => FALSE,
     'weight' => 5,
-    'body' => is_null($items) ? '' : drupal_get_form('uc_cart_pane_quotes', $items),
+    'body' => drupal_get_form('uc_cart_pane_quotes', $items),
   );
 
   return $panes;
@@ -728,10 +729,10 @@ function uc_quote_admin_settings_submit($form_id, $form_values) {
   variable_set('uc_quote_log_errors', $form_values['uc_quote_log_errors']);
   variable_set('uc_quote_display_debug', $form_values['uc_quote_display_debug']);
   variable_set('uc_quote_require_quote', $form_values['uc_quote_require_quote']);
-  variable_set('uc_quote_pane_description', $form_state['values']['uc_quote_pane_description']['text']);
-  variable_set('uc_quote_desc_format', $form_state['values']['uc_quote_pane_description']['format']);
-  variable_set('uc_quote_err_msg', $form_state['values']['uc_quote_err_msg']['text']);
-  variable_set('uc_quote_msg_format', $form_state['values']['uc_quote_err_msg']['format']);
+  variable_set('uc_quote_pane_description', $form_values['uc_quote_pane_description']['text']);
+  variable_set('uc_quote_desc_format', $form_values['uc_quote_pane_description']['format']);
+  variable_set('uc_quote_err_msg', $form_values['uc_quote_err_msg']['text']);
+  variable_set('uc_quote_msg_format', $form_values['uc_quote_err_msg']['format']);
 
   drupal_set_message(t('The configuration options have been saved.'));
 }
@@ -964,9 +965,6 @@ function uc_quote_get_default_shipping_address($nid) {
  * @see theme_uc_cart_pane_quotes
  */
 function uc_cart_pane_quotes($items) {
-  if (!variable_get('uc_cap_quotes_enabled', false)) {
-    return null;
-  }
   global $user;
   // Get all quote types neccessary to fulfill order.
   $shipping_types = array();
@@ -1410,7 +1408,7 @@ function uc_quote_request_quotes() {
   $fake_order = new stdClass();
   $fake_order->uid = $_POST['uid'];
   $fake_order->products = $products;
-  foreach ($_POST['details'] as $type => $address) {
+  foreach ((array) $_POST['details'] as $type => $address) {
     foreach ($address as $key => $value) {
       if ($key == 'country' AND $value == '') {
         $value = variable_get('uc_store_country', 840);

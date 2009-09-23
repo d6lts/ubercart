@@ -258,3 +258,11 @@ function uc_quote_update_7() {
   }
   return $ret;
 }
+
+function uc_quote_update_8() {
+  $ret = array();
+
+  $ret[] = update_sql("DELETE FROM {uc_quote_shipping_types} WHERE id = 0");
+
+  return $ret;
+}

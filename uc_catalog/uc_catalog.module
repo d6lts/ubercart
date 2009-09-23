@@ -437,7 +437,7 @@ function uc_catalog_pathauto($op) {
  */
 function uc_catalog_pathauto_bulkupdate() {
   $catalog_vid = variable_get('uc_catalog_vid', 0);
-  $query = "SELECT tid, vid, name, src, dst FROM {term_data} LEFT JOIN {url_alias} ON src LIKE CONCAT('catalog/', tid, '/%%') WHERE src IS NULL AND vid = %d";
+  $query = "SELECT tid, vid, name, src, dst FROM {term_data} LEFT JOIN {url_alias} ON src LIKE CONCAT('catalog/', CAST(tid AS CHAR)) WHERE src IS NULL AND vid = %d";
   $result = db_query_range($query, $catalog_vid, 0, variable_get('pathauto_max_bulk_update', 50));
 
   $count = 0;
@@ -880,29 +880,14 @@ function theme_uc_catalog_browse($tid = 0) {
     WHERE tn.tid = %d AND n.status = 1
       AND n.type IN ('". implode("','", $product_types) ."')
     ORDER BY ". $order;
-  $sql_count = '';
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $sql_count = 'SELECT COUNT(DISTINCT(n.nid))
-        FROM {node} n
-          INNER JOIN {term_node} tn ON n.nid = tn.nid
-          INNER JOIN {uc_products} AS p ON n.nid = p.nid
-        WHERE tn.tid = %d
-          AND n.status = 1
-          AND n.type IN ("'. implode('","', $product_types) .'")';
-      break;
-    case 'pgsql':
-      $sql_count = "SELECT DISTINCT n.nid, COUNT(*)
-        FROM {node} n
-          INNER JOIN {term_node} tn ON n.nid = tn.nid
-          INNER JOIN {uc_products} AS p ON n.nid = p.nid
-        WHERE tn.tid = %d
-          AND n.status = 1
-          AND n.type IN ('". implode("','", $product_types) ."')
-        GROUP BY n.nid";
-      break;
-  }
+
+  $sql_count = 'SELECT COUNT(DISTINCT(n.nid))
+    FROM {node} n
+      INNER JOIN {term_node} tn ON n.nid = tn.nid
+      INNER JOIN {uc_products} AS p ON n.nid = p.nid
+    WHERE tn.tid = %d
+      AND n.status = 1
+      AND n.type IN ("'. implode('","', $product_types) .'")';
 
   $sql = db_rewrite_sql($sql);
   $sql_count = db_rewrite_sql($sql_count);
@@ -1376,14 +1361,7 @@ function theme_uc_catalog_item($here, $active_link = '', $lis, $expand, $inpath,
  * Create paths to the catalog from taxonomy term.
  */
 function uc_catalog_path($term) {
-  $separator = variable_get('pathauto_separator', '-');
-  $path = preg_replace(array('/\W[_ ]?/', '/[_ ]/'), array('', $separator), strtolower($term->name));
-
-  if (function_exists('iconv')) {
-    $path = iconv('UTF-8', 'ASCII//TRANSLIT', $path);
-  }
-
-  return 'catalog/'. $term->tid .'/'. $path;
+  return 'catalog/'. $term->tid;
 }
 
 /**

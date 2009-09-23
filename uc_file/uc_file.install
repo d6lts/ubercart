@@ -23,7 +23,7 @@ function uc_file_install() {
         `fid` mediumint(9) NOT NULL,
         `uid` mediumint(9) NOT NULL,
         `pfid` mediumint(9) default NULL,
-        `key` varchar(32) NOT NULL,
+        `file_key` varchar(32) NOT NULL,
         `granted` int(11) NOT NULL,
         `accessed` smallint(5) unsigned NOT NULL default 0,
         `addresses` text,
@@ -112,6 +112,22 @@ function uc_file_update_3() {
   // Fixes the db_next_id() + 1 error.
   $pfid = db_result(db_query("SELECT MAX(pfid) FROM {uc_product_features}"));
   $ret[] = update_sql("UPDATE {sequences} SET id = ". intval($pfid) ." WHERE name = '{uc_product_features}_pfid'");
+
+  return $ret;
+}
+
+function uc_file_update_4() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      $ret[] = update_sql("ALTER TABLE {uc_file_users} CHANGE `key` `file_key` VARCHAR(32) NOT NULL");
+      break;
+    case 'pgsql':
+      db_change_column($ret, 'uc_file_users', 'key', 'file_key', 'varchar(32)', array('not null' => TRUE));
+      break;
+  }
 
   return $ret;
 }

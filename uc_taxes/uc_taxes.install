@@ -9,6 +9,7 @@ function uc_taxes_install() {
         `id` mediumint(9) NOT NULL,
         `name` varchar(255) NOT NULL,
         `rate` float unsigned NOT NULL default '0',
+        `shippable` tinyint UNSIGNED NOT NULL default 0,
         `taxed_product_types` text NOT NULL,
         `taxed_line_items` text NOT NULL,
         `weight` tinyint(2) NOT NULL default '0',
@@ -20,6 +21,7 @@ function uc_taxes_install() {
         id serial NOT NULL,
         name varchar(255) NOT NULL default '',
         rate float NOT NULL default 0,
+        shippable smallint_unsigned NOT NULL default 0,
         taxed_product_types text NOT NULL default '',
         taxed_line_items text NOT NULL default '',
         weight smallint NOT NULL default 0,
@@ -183,5 +185,21 @@ function uc_taxes_update_6() {
     $ret[] = update_sql("ALTER TABLE {uc_taxes} DROP type");
     $ret[] = update_sql("ALTER TABLE {uc_taxes} DROP conditions");
   }
+  return $ret;
+}
+
+function uc_taxes_update_7() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {uc_taxes} ADD COLUMN shippable tinyint UNSIGNED NOT NULL default 0");
+      break;
+    case 'pgsql':
+      db_add_column($ret, 'uc_taxes', 'shippable', 'smallint_unsigned', array('not null' => TRUE, 'default' => 0));
+      break;
+  }
+
   return $ret;
 }

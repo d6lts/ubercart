@@ -323,7 +323,7 @@ function uc_roles_order($op, $order, $status) {
       // correct status, the status is actually being changed, and a valid user
       // has been assigned to the order.
       if ($status == variable_get('uc_file_default_order_status', 'completed') &&
-          $order->status != $status &&
+          $order->order_status != $status &&
           $order->uid > 0 &&
           ($order_user = user_load(array('uid' => $order->uid))) !== FALSE) {
         foreach ($order->products as $product) {

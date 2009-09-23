@@ -245,7 +245,7 @@ function uc_credit_exit() {
   $args = explode('/', $_GET['q']);
 
   // Make sure sensitive checkout session data doesn't persist on other pages.
-  if ($args[1] != 'checkout' && isset($_SESSION['sescrd'])) {
+  if (isset($_SESSION['sescrd']) && (!isset($args[1]) || $args[0] != 'cart' || $args[1] != 'checkout')) {
     unset($_SESSION['sescrd']);
   }
 }
@@ -346,6 +346,7 @@ function uc_credit_order($op, &$arg1, $arg2) {
             // Otherwise, save only some limited, PCI compliant data.
             $cc_data = array(
               'cc_number' => substr($arg1->payment_details['cc_number'], -4),
+              'cc_type' => $arg1->payment_details['cc_type'],
             );
           }
 
@@ -539,14 +540,15 @@ function uc_payment_method_credit($op, &$arg1, $silent = FALSE) {
 
     case 'cart-review':
       if (variable_get('uc_credit_type_enabled', FALSE)) {
-        $review[] = array('title' => t('Card Type'), 'data' => $arg1->payment_details['cc_type']);
+        $review[] = array('title' => t('Card Type'), 'data' => check_plain($arg1->payment_details['cc_type']));
       }
       if (variable_get('uc_credit_owner_enabled', FALSE)) {
         $review[] = array('title' => t('Card Owner'), 'data' => check_plain($arg1->payment_details['cc_owner']));
       }
       $review[] = array('title' => t('Card Number'), 'data' => uc_credit_display_number($arg1->payment_details['cc_number']));
       if (variable_get('uc_credit_start_enabled', FALSE)) {
-        $review[] = array('title' => t('Start Date'), 'data' => $arg1->payment_details['cc_start_month'] .'/'. $arg1->payment_details['cc_start_year']);
+        $start = $arg1->payment_details['cc_start_month'] .'/'. $arg1->payment_details['cc_start_year'];
+        $review[] = array('title' => t('Start Date'), 'data' => strlen($start) > 1 ? $start : '');
       }
       $review[] = array('title' => t('Expiration'), 'data' => $arg1->payment_details['cc_exp_month'] .'/'. $arg1->payment_details['cc_exp_year']);
       if (variable_get('uc_credit_issue_enabled', FALSE)) {
@@ -991,8 +993,8 @@ function uc_payment_method_credit_form($order) {
   );
 
   if (variable_get('uc_credit_start_enabled', FALSE)) {
-    $form['cc_start_month'] = uc_select_month(t('Start Month'), $order->payment_details['cc_start_month']);
-    $form['cc_start_year'] = uc_select_year(t('Start Year'), $order->payment_details['cc_start_year'], date('Y') - 10, date('Y'));
+    $form['cc_start_month'] = uc_select_month(t('Start Month'), $order->payment_details['cc_start_month'], TRUE);
+    $form['cc_start_year'] = uc_select_year(t('Start Year'), $order->payment_details['cc_start_year'], date('Y') - 10, date('Y'), TRUE);
   }
 
   $form['cc_exp_month'] = uc_select_month(t('Expiration Month'), $order->payment_details['cc_exp_month']);
@@ -1687,9 +1689,14 @@ function _valid_card_number($number) {
  * @param $year
  *   The 4-digit numeric representation of the year, i.e. 2008.
  * @return
- *   TRUE for cards whose start date is in the past, FALSE otherwise.
+ *   TRUE for cards whose start date is blank (both month and year) or in the
+ *   past, FALSE otherwise.
  */
 function _valid_card_start($month, $year) {
+  if (empty($month) && empty($year)) {
+    return TRUE;
+  }
+
   if (empty($month) || empty($year)) {
     return FALSE;
   }
@@ -1945,6 +1952,48 @@ function uc_credit_log_reference($order_id, $ref_id, $cc_number) {
   db_query("UPDATE {uc_orders} SET data = '%s' WHERE order_id = %d", serialize($data), $order_id);
 
   return $data;
+}
+
+/**
+ * Return any transaction references on a given user's orders.
+ *
+ * @param $account (optional)
+ *   The user account whose orders are to be searched for CC references.
+ *     Default: The current user account context.
+ * @return
+ *   A structured array. Each element's key is the transaction reference, and
+ *     the value is an array containing the billing information and the
+ *     truncated credit card number.
+ */
+function uc_credit_references($account = NULL) {
+  static $references = array();
+
+  // If account is NULL, we'll use the current user context.
+  if (is_null($account)) {
+    global $user;
+    $account = drupal_clone($user);
+  }
+
+  if (!isset($references[$account->uid])) {
+    $result = db_query("SELECT billing_first_name, billing_last_name, billing_phone, billing_company, billing_street1, billing_street2, billing_city, billing_zone, billing_postal_code, billing_country, data FROM {uc_orders} WHERE uid = %d", $account->uid);
+
+    while ($order = db_fetch_array($result)) {
+      // Extract data and remove it from the result; we won't need it later and
+      // that'll help keep our code clean.
+      $data = unserialize($order['data']);
+      unset($order['data']);
+
+      // For each reference, store the reference ID as the key and the billing info
+      // and truncated CC data as the value.
+      if (is_array($data['cc_txns']) && is_array($data['cc_txns']['references'])) {
+        foreach ($data['cc_txns']['references'] as $id => $reference) {
+          $references[$account->uid][$id] = $order + array('cc_number' => $reference['card']);
+        }
+      }
+    }
+  }
+
+  return $references[$account->uid];
 }
 
 /**

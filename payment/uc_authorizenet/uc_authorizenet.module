@@ -141,6 +141,12 @@ function uc_authorizenet_settings_form() {
     '#title' => t('Tell Authorize.net to e-mail the customer a receipt based on your account settings.'),
     '#default_value' => variable_get('uc_authnet_aim_email_customer', FALSE),
   );
+  $form['aim_settings']['uc_authnet_response_debug'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Log full API response messages from Authorize.net for debugging.'),
+    '#default_value' => variable_get('uc_authnet_response_debug', FALSE),
+  );
+
 
   $form['arb_settings'] = array(
     '#type' => 'fieldset',
@@ -180,18 +186,18 @@ function uc_authorizenet_settings_form() {
   $form['cim_settings']['uc_authnet_cim_profile'] = array(
     '#type' => 'checkbox',
     '#title' => t('Always create a CIM profile for securely storing CC info for later use.'),
-    '#default_value' => variable_get('uc_authnet_cim_profile', FALSE),
+    '#default_value' => variable_get('uc_authnet_cim_profile', TRUE),
   );
-  $form['cim_settings']['uc_authnet_cim_server'] = array(
+  $form['cim_settings']['uc_authnet_cim_mode'] = array(
     '#type' => 'radios',
-    '#title' => t('Which server to use for CIM.'),
-    '#description' => t('Once you are ready to go live, change this to "Live".'),
+    '#title' => t('Transaction mode'),
+    '#description' => t('Only specify developer mode if you login to your account through https://test.authorize.net.<br />Adjust to production mode when you are ready to start processing real recurring fees.'),
     '#options' => array(
       'production' => t('Production'),
       'developer' => t('Developer test'),
       'disabled' => t('Disabled'),
     ),
-    '#default_value' => variable_get('uc_authnet_cim_server', 'disabled'),
+    '#default_value' => variable_get('uc_authnet_cim_mode', 'disabled'),
   );
 
 
@@ -259,7 +265,7 @@ function uc_authorizenet_charge($order_id, $amount, $data) {
  * Create a CIM profile using an order's data.
  */
 function _uc_authorizenet_cim_profile_create($order) {
-  $server = variable_get('uc_authnet_cim_server', 'disabled');
+  $server = variable_get('uc_authnet_cim_mode', 'disabled');
 
   // Help build the request.
   $request = _uc_authorizenet_cim_profile_create_request($order);
@@ -312,7 +318,7 @@ function _uc_authorizenet_cim_profile_create_request($order) {
  */
 function _uc_authorizenet_cim_profile_charge($order, $amount, $data) {
   global $user;
-  $server = variable_get('uc_authnet_cim_server', 'disabled');
+  $server = variable_get('uc_authnet_cim_mode', 'disabled');
 
   // Help build the request.
   $request = _uc_authorizenet_cim_profile_charge_request($order, $amount, $data);
@@ -394,7 +400,7 @@ function _uc_authorizenet_cim_profile_charge_request($order, $amount, $data) {
  * Get a CIM profile stored at Authorize.Net.
  */
 function _uc_authorizenet_cim_profile_get($order, $profile_id) {
-  $server = variable_get('uc_authnet_cim_server', 'disabled');
+  $server = variable_get('uc_authnet_cim_mode', 'disabled');
   $request = array(
     'customerProfileId' => $profile_id,
   );
@@ -412,7 +418,7 @@ function _uc_authorizenet_cim_profile_get($order, $profile_id) {
  * Get a CIM payment profile stored at auth.net.
  */
 function _uc_authorizenet_cim_payment_profile_get($order, $profile_id, $payment_profile_id) {
-  $server = variable_get('uc_authnet_cim_server', 'disabled');
+  $server = variable_get('uc_authnet_cim_mode', 'disabled');
   $request = array(
     'customerProfileId' => $profile_id,
   );
@@ -535,6 +541,10 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   curl_close($ch);
 
   $response = explode('|', $result);
+
+  if (variable_get('uc_authnet_response_debug', FALSE)) {
+    watchdog('uc_authorizenet', t('Debug response: !data', array('!data' => '<pre>'. check_plain(print_r($response, TRUE)) .'</pre>')));
+  }
 
   // Trim off the encapsulating character from the results.
   for ($i = 0; $i < count($response); $i++) {

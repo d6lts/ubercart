@@ -230,7 +230,7 @@ function uc_importer_export_form() {
   $form = array();
 
   $products = array();
-  $result = db_query(db_rewrite_sql("SELECT nid, model FROM {uc_products}"));
+  $result = db_query(db_rewrite_sql("SELECT n.nid, p.model FROM {uc_products} AS p JOIN {node} AS n"));
   while ($product = db_fetch_object($result)) {
     $products[$product->nid] = $product->model;
   }

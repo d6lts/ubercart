@@ -265,12 +265,11 @@ function uc_product_kit_nodeapi(&$node, $op, $arg3 = null, $arg4 = null) {
 function uc_product_kit_forms($saved_args) {
   $forms = array();
   if (substr($saved_args[0], 0, 31) == 'uc_product_kit_add_to_cart_form' || substr($saved_args[0], 0, 27) == 'uc_product_add_to_cart_form' || substr($saved_args[0], 0, 26) == 'uc_catalog_buy_it_now_form') {
-    $products = db_query("SELECT DISTINCT nid FROM {uc_product_kits} WHERE nid = %d", $saved_args[1]->nid);
-
-    while ($prodrow = db_fetch_object($products)) {
-      $forms['uc_product_kit_add_to_cart_form_'. $prodrow->nid] = array('callback' => 'uc_product_kit_add_to_cart_form');
-      $forms['uc_product_add_to_cart_form_'. $prodrow->nid] = array('callback' => 'uc_product_kit_add_to_cart_form');
-      $forms['uc_catalog_buy_it_now_form_'. $prodrow->nid] = array('callback' => 'uc_product_kit_buy_it_now_form');
+    $product = $saved_args[1];
+    if ($product->type == 'product_kit') {
+      $forms['uc_product_kit_add_to_cart_form_'. $product->nid] = array('callback' => 'uc_product_kit_add_to_cart_form');
+      $forms['uc_product_add_to_cart_form_'. $product->nid] = array('callback' => 'uc_product_kit_add_to_cart_form');
+      $forms['uc_catalog_buy_it_now_form_'. $product->nid] = array('callback' => 'uc_product_kit_buy_it_now_form');
     }
   }
   return $forms;
@@ -473,7 +472,7 @@ function uc_product_kit_view($node, $teaser = 0, $page = 0) {
 
       foreach ($node->products as $product) {
         if (node_access('view', $product)) {
-          $title = l(check_plain($product->title), 'node/'. $product->nid);
+          $title = l($product->title, 'node/'. $product->nid);
         }
         else {
           $title = check_plain($product->title);
@@ -483,12 +482,13 @@ function uc_product_kit_view($node, $teaser = 0, $page = 0) {
         $node->content['products'][$product->nid]['#weight'] = $product->ordering;
       }
     }
-
-    $node->content['add_to_cart'] = array('#value' => theme('uc_product_kit_add_to_cart', $node),
-      '#weight' => 10,
-    );
+    if (module_exists('uc_cart')) {
+      $node->content['add_to_cart'] = array('#value' => theme('uc_product_kit_add_to_cart', $node),
+        '#weight' => 10,
+      );
+    }
   }
-  else if (variable_get('uc_product_add_to_cart_teaser', true)) {
+  else if (module_exists('uc_cart') && variable_get('uc_product_add_to_cart_teaser', true)) {
     $node->content['add_to_cart'] = array('#value' => theme('uc_product_kit_add_to_cart', $node),
       '#weight' => 10,
     );
