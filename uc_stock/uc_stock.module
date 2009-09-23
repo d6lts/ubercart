@@ -282,7 +282,7 @@ function uc_stock_views_api() {
  * @param $product
  *   The product whose stock is decrementing.
  */
-function uc_stock_decrement_product_stock($product) {
+function uc_stock_decrement_product_stock($product, $key, $order) {
   // Product has an active stock?
   if (!uc_stock_is_active($product->model)) {
     return;
