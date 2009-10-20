@@ -47,6 +47,13 @@ function uc_product_views_data() {
     'field' => array(
       'handler' => 'uc_product_handler_field_price',
       'click sortable' => TRUE,
+      'float' => TRUE,
+      'additional fields' => array(
+        'nid' => array(
+          'table' => 'node',
+          'field' => 'nid',
+        ),
+      ),
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -62,6 +69,13 @@ function uc_product_views_data() {
     'field' => array(
       'handler' => 'uc_product_handler_field_price',
       'click sortable' => TRUE,
+      'float' => TRUE,
+      'additional fields' => array(
+        'nid' => array(
+          'table' => 'node',
+          'field' => 'nid',
+        ),
+      ),
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -77,6 +91,13 @@ function uc_product_views_data() {
     'field' => array(
       'handler' => 'uc_product_handler_field_price',
       'click sortable' => TRUE,
+      'float' => TRUE,
+      'additional fields' => array(
+        'nid' => array(
+          'table' => 'node',
+          'field' => 'nid',
+        ),
+      ),
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -95,6 +116,7 @@ function uc_product_views_data() {
       ),
       'handler' => 'uc_product_handler_field_weight',
       'click sortable' => TRUE,
+      'float' => TRUE,
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
@@ -171,10 +193,10 @@ function uc_product_views_handlers() {
     ),
     'handlers' => array(
       'uc_product_handler_field_price' => array(
-        'parent' => 'views_handler_field',
+        'parent' => 'views_handler_field_numeric',
       ),
       'uc_product_handler_field_weight' => array(
-        'parent' => 'views_handler_field',
+        'parent' => 'views_handler_field_numeric',
       ),
       'uc_product_handler_filter_product' => array(
         'parent' => 'views_handler_filter_boolean_operator',

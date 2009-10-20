@@ -39,7 +39,7 @@ function uc_weightquote_schema() {
         'not null' => FALSE,
       ),
     ),
-    'primary key' => array('vid, mid'),
+    'primary key' => array('vid', 'mid'),
   );
 
   $schema['uc_weightquote_methods'] = array(

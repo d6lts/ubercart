@@ -1314,7 +1314,13 @@ function uc_order_edit_products($order) {
       $product->price = $product->sell_price;
       $product->data = module_invoke_all('add_to_cart_data', $form_state['values']);
 
-      module_invoke_all('cart_item', 'load', $product);
+      foreach (module_list() as $module) {
+        $function = $module .'_cart_item';
+        if (function_exists($function)) {
+          // $product must be passed by reference.
+          $function('load', $product);
+        }
+      }
 
       $price_info = array(
         'price' => $product->price,

@@ -530,7 +530,6 @@ function uc_product_feature_add_form_submit($form, &$form_state) {
  */
 function uc_product_image_defaults() {
   uc_product_add_default_image_field();
-  uc_product_add_imagecache_presets();
 
   drupal_set_message(t('Default image support configured for Ubercart products using CCK and ImageCache.'));
 

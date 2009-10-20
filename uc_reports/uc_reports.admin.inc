@@ -683,7 +683,7 @@ function uc_reports_sales_summary() {
 
   // Get the sales report for the month.
   $month = _uc_reports_get_sales($month_start, 'month');
-  $month_title = format_date($today_start, 'custom', 'M Y', 0);
+  $month_title = format_date($month_start, 'custom', 'M Y', 0);
 
   // Add the month-to-date details to the report table.
   $rows[] = array(

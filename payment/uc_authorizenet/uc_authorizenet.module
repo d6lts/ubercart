@@ -985,7 +985,7 @@ function _uc_authorizenet_array_to_xml($data) {
     }
     else {
       // Render the element with its contents.
-      $xml .= '<'. $element .'>'. $contents .'</'. $element .'>';
+      $xml .= '<'. $element .'>'. htmlspecialchars($contents) .'</'. $element .'>';
     }
   }
 

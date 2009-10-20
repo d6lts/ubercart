@@ -933,7 +933,7 @@ function theme_uc_object_options_form($form) {
  *     #options - Array of option names
  * @return Themed set of attribute options.
  */
-function theme_uc_product_attributes(&$element) {
+function theme_uc_product_attributes($element) {
   $option_rows = array();
 
   foreach (element_children($element) as $key) {

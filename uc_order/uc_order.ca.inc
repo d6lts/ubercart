@@ -23,7 +23,7 @@ function uc_order_ca_entity() {
   );
   $entities['uc_line_item'] = array(
     '#title' => t('Order line item'),
-    '#type' => 'object',
+    '#type' => 'array',
   );
 
   return $entities;
