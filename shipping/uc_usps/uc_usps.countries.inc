@@ -31,7 +31,12 @@ function uc_usps_country_map($code = NULL) {
   );
 
   if ($code) {
-    return $countries[$code];
+    if (isset($countries[$code])) {
+      return $countries[$code];
+    }
+    else {
+      return uc_country_get_by_id($code);
+    }
   }
 
   return $countries;
