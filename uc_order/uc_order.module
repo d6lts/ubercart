@@ -1456,7 +1456,9 @@ function uc_order_get_total($order, $products_only = FALSE) {
     $function = $module .'_order';
     // $order must be passed by reference.
     if (function_exists($function) && ($value = $function('total', $order, NULL))) {
-      $total += $value;
+      if (is_numeric($value)) {
+        $total += $value;
+      }
     }
   }
 
