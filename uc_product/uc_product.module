@@ -411,12 +411,13 @@ function uc_product_form(&$node) {
   $sign_flag = variable_get('uc_sign_after_amount', FALSE);
   $currency_sign = variable_get('uc_currency_sign', '$');
 
-  $form['title'] = array('#type' => 'textfield',
-    '#title' => $type->title_label,
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
     '#required' => TRUE,
-    '#weight' => -5,
     '#default_value' => $node->title,
-    '#description' => t('Name of the product.')
+    '#maxlength' => 255,
+    '#weight' => -5,
   );
 
   if ($type->has_body) {
