@@ -1449,8 +1449,7 @@ function uc_order_get_total($order, $products_only = FALSE) {
     // unknowingly implemented (see date_order() in date_api.module), we verify
     // the results are numeric before continuing.
     if (function_exists($function) && ($value = $function('total', $order, NULL)) && is_numeric($value)) {
-        $total += $value;
-      }
+      $total += $value;
     }
   }
 
