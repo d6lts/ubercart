@@ -756,8 +756,8 @@ function uc_reports_sales_summary() {
   );
 
   // Get the sales report for the month.
-  $month = _uc_reports_get_sales($today_start, 'month');
-  $month_title = format_date($today_start, 'custom', 'M Y');
+  $month = _uc_reports_get_sales($month_start, 'month');
+  $month_title = format_date($month_start, 'custom', 'M Y');
 
   // Add the month-to-date details to the report table.
   $rows[] = array(
@@ -1424,4 +1424,3 @@ function _uc_reports_end_interval($time, $interval = 'month') {
 
   return $temp;
 }
-

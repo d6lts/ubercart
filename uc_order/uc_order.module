@@ -1227,14 +1227,6 @@ function uc_order_admin_sort_form_submit($form_id, $form_values) {
  * Create a new order and redirect to its edit screen.
  */
 function uc_order_create($uid = NULL) {
-  global $user;
-
-  if ($uid !== NULL) {
-    $order = uc_order_new($uid, 'post_checkout');
-    uc_order_comment_save($order->order_id, $user->uid, t('Order created by the administration.'), 'admin');
-    drupal_goto('admin/store/orders/'. $order->order_id .'/edit');
-  }
-
   uc_add_js(drupal_get_path('module', 'uc_order') .'/uc_order.js');
 
   $output = '<div style="position: relative; top: 2px; cursor: pointer;" '
@@ -1292,7 +1284,12 @@ function uc_order_create_form() {
 }
 
 function uc_order_create_form_submit($form_id, $form_values) {
-  uc_order_create($form_values['uid']);
+  global $user;
+
+  $order = uc_order_new($form_values['uid'], 'post_checkout');
+  uc_order_comment_save($order->order_id, $user->uid, t('Order created by the administration.'), 'admin');
+
+  return 'admin/store/orders/'. $order->order_id .'/edit';
 }
 
 /**
