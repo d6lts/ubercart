@@ -19,7 +19,7 @@ function uc_ups_menu() {
 
   $items['admin/store/settings/quotes/methods/ups'] = array(
     'title' => 'UPS',
-    'page' => 'drupal_get_form',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('uc_ups_admin_settings'),
     'access arguments' => array('configure quotes'),
     'type' => MENU_LOCAL_TASK,
