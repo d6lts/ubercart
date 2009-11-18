@@ -235,7 +235,7 @@ function uc_weightquote_quote($products, $details, $method) {
         // Add the product-specific rate.
         $product_rate = uc_price($price_info, $context);
       }
-      $rate += $product_rate  * $product->weight * uc_weight_conversion($node->weight_units, variable_get('uc_weight_unit', 'lb'));
+      $rate += $product_rate  * $product->weight * uc_weight_conversion($product->weight_units, variable_get('uc_weight_unit', 'lb'));
     }
 
     unset($context['subject']['order_product']);
