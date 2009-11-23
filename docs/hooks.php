@@ -967,8 +967,9 @@ function hook_product_description($product) {
 
   $desc =& $description['attributes'];
 
-  // Cart version of the product has numeric attribute ID => option ID values
-  // so we need to retrieve the right ones
+  // Cart version of the product has numeric attribute => option values so we
+  // need to retrieve the right ones
+  $weight = 0;
   if (empty($product->order_id)) {
     foreach (_uc_cart_product_get_options($product) as $option) {
       if (!isset($desc[$option['aid']])) {
@@ -978,6 +979,7 @@ function hook_product_description($product) {
       else {
         $desc[$option['aid']]['#options'][] = $option['name'];
       }
+      $desc[$option['aid']]['#weight'] = $weight++;
     }
   }
   else {
@@ -985,6 +987,7 @@ function hook_product_description($product) {
       $desc[] = array(
         '#attribute_name' => $attribute,
         '#options' => $option,
+        '#weight' => $weight++,
       );
     }
   }
