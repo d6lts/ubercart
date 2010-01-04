@@ -155,7 +155,7 @@ function uc_reports_products() {
   $csv_rows[] = array(t('#'), t('Product'), t('Sold'), t('Revenue'), t('Gross'));
 
   if ($views_column) {
-    $header[] = array('data' => t('Views'), 'field' => 'c.totalcount');
+    $header[] = array('data' => t('Views'), 'field' => 'nc.totalcount');
     $csv_rows[0][] = t('Views');
   }
 
@@ -1167,4 +1167,3 @@ function uc_reports_sales_custom_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/reports/sales/custom/'. implode('/', $args);
 }
-
