@@ -90,6 +90,10 @@
   text-align: center;
 }
 
+.header-wide {
+  width: 80%;
+}
+
 .full-width {
   width: 100%;
 }

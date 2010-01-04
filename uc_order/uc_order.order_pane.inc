@@ -720,7 +720,7 @@ function op_products_view_table($order) {
   $table['#columns']['product'] = array(
     'cell' => array(
       'data' => t('Product'),
-      'width' => '80%',
+      'class' => 'header-wide',
     ),
     'weight' => 1,
   );
@@ -836,7 +836,7 @@ function op_products_customer_table($order) {
   $table['#columns']['product'] = array(
     'cell' => array(
       'data' => t('Product'),
-      'width' => '80%',
+      'class' => 'header-wide',
     ),
     'weight' => 1,
   );
