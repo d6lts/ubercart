@@ -351,7 +351,7 @@ FOLD HERE</td>
 
 <table border="0" cellpadding="0" cellspacing="0" width="650" ><tr>
 <td align="left" valign="top">
-<img src="'. base_path() . $image_path .'" height="392" width="672">
+<img src="'. base_path() . $image_path .'" height="392" width="672" />
 </td>
 </tr></table>
 </body>
