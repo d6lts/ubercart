@@ -1215,7 +1215,9 @@ function uc_quote_shipping_method_options() {
   uasort($methods, '_uc_quote_type_sort');
   $types = array();
   foreach ($methods as $method) {
-    $types[$method['id']] = $method['title'];
+    if (isset($method['quote'])) {
+      $types[$method['id']] = $method['title'];
+    }
   }
   return $types;
 }
