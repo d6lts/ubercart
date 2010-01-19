@@ -986,8 +986,10 @@ function uc_store_customer_orders($uid) {
     'revision' => 'formatted-original',
     'type' => 'amount',
   );
-  $output = '<p>'. l(t('Create an order for this customer.'),
-                     'admin/store/orders/create/'. $uid) .'</p>';
+  if (user_access('create orders')) {
+    $output = '<p>'. l(t('Create an order for this customer.'),
+                       'admin/store/orders/create/'. $uid) .'</p>';
+  }
   $output .= '<p>'. t('!totals_orders orders shown match that account with !totals_items items purchased and !totals_total spent:',
                      array('!totals_orders' => $totals['orders'],
                            '!totals_items' => $totals['items'],
