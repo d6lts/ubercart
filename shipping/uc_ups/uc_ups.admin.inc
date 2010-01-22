@@ -302,6 +302,45 @@ function uc_ups_confirm_shipment_submit($form, &$form_state) {
 }
 
 /**
+ * Construct an XML label and pickup request.
+ *
+ * @param $digest
+ *   Base-64 encoded shipment request.
+ * @param $order_id
+ *   The order id of the shipment.
+ * @param $packages
+ *   An array of package ids to be shipped.
+ * @return
+ *   ShipmentAcceptRequest XML document to send to UPS.
+ */
+function uc_ups_request_pickup($digest, $order_id = 0, $packages = array()) {
+  $packages = (array)$packages;
+
+  $schema = uc_ups_access_request();
+  $schema .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<ShipmentAcceptRequest>
+  <Request>
+    <RequestAction>ShipAccept</RequestAction>";
+    if ($order_id || count($packages)) {
+      $schema .= "\n<TransactionReference>
+      <CustomerContext>";
+      if ($order_id) {
+        $schema .= "<OrderId>". $order_id ."</OrderId>\n";
+      }
+      foreach ($packages as $pkg_id) {
+        $schema .= "<PackageId>". $pkg_id ."</PackageId>\n";
+      }
+      $schema .= "</CustomerContext>\n</TransactionReference>\n";
+    }
+  $schema .= "  </Request>
+  <ShipmentDigest>". $digest ."</ShipmentDigest>
+</ShipmentAcceptRequest>";
+
+  //drupal_set_message('<pre>'. htmlentities($schema) .'</pre>');
+  return $schema;
+}
+
+/**
  * Display the shipping label for printing.
  *
  * Each argument is a component of the file path to the image.
