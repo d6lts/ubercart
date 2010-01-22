@@ -172,5 +172,5 @@ function uc_taxes_configuration() {
  * Preserve each tax line item for future use.
  */
 function uc_taxes_save_line_item($line_item) {
-  $_SESSION['taxes'][$line_item->id] = (array)$line_item;
+  $_SESSION['taxes'][$line_item['id']] = (array)$line_item;
 }
