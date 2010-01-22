@@ -568,7 +568,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
         $package_schema .= "<PackageServiceOptions>";
           $package_schema .= "<InsuredValue>";
             $package_schema .= "<CurrencyCode>". variable_get('uc_currency_code', 'USD') ."</CurrencyCode>";
-            $package_schema .= "<MonetaryValue>". number_format($package->price, 2, '.', '') ."</MonetaryValue>";
+            $package_schema .= "<MonetaryValue>". number_format($package->value, 2, '.', '') ."</MonetaryValue>";
           $package_schema .= "</InsuredValue>";
         $package_schema .= "</PackageServiceOptions>";
       $package_schema .= "</Package>";
