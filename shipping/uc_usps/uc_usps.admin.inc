@@ -99,3 +99,12 @@ function uc_usps_admin_settings() {
   return system_settings_form($form);
 }
 
+/**
+ * Validation handler for uc_usps_admin_settings form.
+ */
+function uc_usps_admin_settings_validate($form, &$form_state) {
+  if (!is_numeric($form_state['values']['uc_usps_markup'])) {
+    form_set_error('uc_usps_markup', t('Rate markup must be a numeric value.'));
+  }
+}
+
