@@ -1005,10 +1005,14 @@ function uc_paypal_wps_form($form_state, $order) {
 
 // Sends a request to PayPal and returns a response array.
 function uc_paypal_api_request($request, $server) {
-  $request['USER'] = variable_get('uc_paypal_api_username', '');
-  $request['PWD'] = variable_get('uc_paypal_api_password', '');
-  $request['VERSION'] = '3.0';
-  $request['SIGNATURE'] = variable_get('uc_paypal_api_signature', '');
+  // We use $request += to add API credentials so that
+  // if a key already exists, it will not be overridden
+  $request += array(
+    'USER' => variable_get('uc_paypal_api_username', ''),
+    'PWD' => variable_get('uc_paypal_api_password', ''),
+    'VERSION' => '3.0',
+    'SIGNATURE' => variable_get('uc_paypal_api_signature', ''),
+  );
 
   $data = '';
   foreach ($request as $key => $value) {
