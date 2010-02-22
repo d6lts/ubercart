@@ -695,7 +695,7 @@ function uc_attribute_update_6004() {
   while($row = db_fetch_object($result)) {
     $combination = unserialize($row->combination);
     ksort($combination);
-    db_query('UPDATE {uc_product_adjustments} SET combination = "%s" WHERE nid = %d AND model = "%s"', serialize($combination), $row->nid, $row->model);
+    db_query("UPDATE {uc_product_adjustments} SET combination = '%s' WHERE nid = %d AND model = '%s'", serialize($combination), $row->nid, $row->model);
     $changes++;
   }
 
