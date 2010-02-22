@@ -2960,24 +2960,19 @@ function uc_order_load_invoice($order, $op = 'view', $template = 'customer') {
  * Return array of invoice template files found in ubercart/uc_order/templates.
  */
 function uc_invoice_template_list() {
-  $dir = drupal_get_path('module', 'uc_order') .'/templates/';
+  static $templates = array();
 
-  $templates = array();
-  if (is_dir($dir)) {
-    if ($dh = opendir($dir)) {
-      while (($file = readdir($dh)) !== FALSE) {
-        switch (filetype($dir . $file)) {
-          case 'file':
-            if (substr($file, -9, 9) == '.itpl.php') {
-              $templates[] = substr($file, 0, strlen($file) - 9);
-            }
-            break;
-        }
-      }
-      closedir($dh);
+  // If the template list hasn't already been loaded...
+  if (empty($templates)) {
+    $dir = drupal_get_path('module', 'uc_order') .'/templates/';
+
+    // Loop through all the files found in the directory.
+    foreach (file_scan_directory($dir, '.*\.itpl\.php', array('.', '..', 'CVS'), 0, FALSE) as $file) {
+      // Add them by name to the templates array, trimming off the extension.
+      $templates[] = substr($file->name, 0, strlen($file->name) - 5);
     }
+    sort($templates);
   }
-  sort($templates);
 
   return $templates;
 }
