@@ -35,7 +35,7 @@ define('UC_FILE_ERROR_HOOK_ERROR'             , 7);
 function theme_uc_file_user_downloads($files) {
   // Create a header and the pager it belongs to.
   $header = array(
-    array('data' => t('Purchased'  ), 'field' => 'u.granted', 'sort' => 'asc'),
+    array('data' => t('Purchased'  ), 'field' => 'u.granted', 'sort' => 'desc'),
     array('data' => t('Filename'   ), 'field' => 'f.filename'),
     array('data' => t('Description'), 'field' => 'p.description'),
     array('data' => t('Downloads'  ), 'field' => 'u.accessed'),
