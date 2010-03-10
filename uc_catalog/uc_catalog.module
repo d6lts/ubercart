@@ -402,6 +402,7 @@ function uc_catalog_block($op = 'list', $delta = 0, $edit = array()) {
   switch ($op) {
     case 'list':
       $blocks[0]['info'] = variable_get('uc_catalog_name', t('Catalog'));
+      $blocks[0]['cache'] = BLOCK_CACHE_PER_PAGE;
       return $blocks;
 
     case 'view':
