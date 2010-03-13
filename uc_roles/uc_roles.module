@@ -319,10 +319,10 @@ function uc_roles_order($op, $order, $status) {
 
   switch ($op) {
     case 'update':
-      // Only process file downloads when the order is being updated to the
+      // Only process role grants when the order is being updated to the
       // correct status, the status is actually being changed, and a valid user
       // has been assigned to the order.
-      if ($status == variable_get('uc_file_default_order_status', 'completed') &&
+      if ($status == variable_get('uc_roles_default_order_status', 'completed') &&
           $order->order_status != $status &&
           $order->uid > 0 &&
           ($order_user = user_load(array('uid' => $order->uid))) !== FALSE) {
