@@ -144,16 +144,16 @@ function united_kingdom_update($version) {
   switch ($version) {
     case 2:
       db_query("INSERT INTO {uc_zones} (zone_id, zone_country_id, zone_code, zone_name) VALUES "
-              ."(826, 'AVON', 'Avon'),"
-              ."(826, 'COAN', 'County Antrim'),"
-              ."(826, 'COAR', 'County Armagh'),"
-              ."(826, 'CODN', 'County Down'),"
-              ."(826, 'COFE', 'County Fermanagh'),"
-              ."(826, 'COLO', 'County Londonderry'),"
-              ."(826, 'COTY', 'County Tyrone'),"
-              ."(826, 'CLVD', 'Cleveland'),"
-              ."(826, 'IOS', 'Isles of Scilly'),"
-              ."(826, 'MIDDX', 'Middlesex')", uc_get_zone_ids(10));
+              ."(%d, 826, 'AVON', 'Avon'),"
+              ."(%d, 826, 'COAN', 'County Antrim'),"
+              ."(%d, 826, 'COAR', 'County Armagh'),"
+              ."(%d, 826, 'CODN', 'County Down'),"
+              ."(%d, 826, 'COFE', 'County Fermanagh'),"
+              ."(%d, 826, 'COLO', 'County Londonderry'),"
+              ."(%d, 826, 'COTY', 'County Tyrone'),"
+              ."(%d, 826, 'CLVD', 'Cleveland'),"
+              ."(%d, 826, 'IOS', 'Isles of Scilly'),"
+              ."(%d, 826, 'MIDDX', 'Middlesex')", uc_get_zone_ids(10));
 
       db_query("UPDATE {uc_zones} SET zone_name = 'Greater Manchester' WHERE zone_country_id = 826 AND zone_name = 'Manchester'");
 
