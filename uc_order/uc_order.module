@@ -2265,8 +2265,8 @@ function uc_order_select_customer($email = NULL) {
       if ($_POST['sendmail'] == 'true') {
         $variables = array('!username' => $data['name'], '!site' => variable_get('site_name', 'Drupal'), '!password' => $data['pass'], '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $data['mail'], '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $user->uid .'/edit', NULL, NULL, TRUE), '!login_url' => user_pass_reset_url($user));
         $from = uc_store_email_from();
-        $subject = _user_mail_text('welcome_subject', $variables);
-        $body = _user_mail_text('welcome_body', $variables);
+        $subject = _user_mail_text('admin_subject', $variables);
+        $body = _user_mail_text('admin_body', $variables);
         drupal_mail('user-register-welcome', $user->mail, $subject, $body, $from);
         $output .= t('Account details sent to e-mail provided.<br><br><strong>Username:</strong> !username<br><strong>Password:</strong> !password', array('!username' => $user->name, '!password' => $data['pass'])) .'<br/><br/>';
       }
