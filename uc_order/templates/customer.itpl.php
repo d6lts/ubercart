@@ -20,7 +20,7 @@
                 </td>
                 <td width="98%">
                   <div style="padding-left: 1em;">
-                  <span style="font-size: large;">[store-name]</span><br/>
+                  <span style="font-size: large;">[store-name]</span><br />
                   [site-slogan]
                   </div>
                 </td>
@@ -41,7 +41,7 @@
 
             <?php if (isset($_SESSION['new_user'])) { ?>
             <p><b><?php echo t('An account has been created for you with the following details:'); ?></b></p>
-            <p><b><?php echo t('Username:'); ?></b> [new-username]<br/>
+            <p><b><?php echo t('Username:'); ?></b> [new-username]<br />
             <b><?php echo t('Password:'); ?></b> [new-password]</p>
             <?php } ?>
 

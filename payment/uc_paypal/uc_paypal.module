@@ -154,7 +154,7 @@ function uc_paypal_payment_method() {
   $path = base_path() . drupal_get_path('module', 'uc_credit');
   $title1 = '<img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" style="position: relative; top: 5px; margin-right: 4px;">'
          . t('PayPal - pay without sharing your financial information.');
-  $title2 = '<br><span id="paypal-includes" style="padding-left: 5.5em;">'
+  $title2 = '<br /><span id="paypal-includes" style="padding-left: 5.5em;">'
           . t('<b>Includes:</b> ');
   $cc_types = array('visa', 'mastercard', 'discover', 'amex', 'echeck');
   foreach ($cc_types as $type) {
@@ -217,7 +217,7 @@ function uc_paypal_wpp_settings_form() {
   $form['paypal_wpp']['ec'] = array(
     '#type' => 'fieldset',
     '#title' => t('Express Checkout'),
-    '#description' => t('These settings are specifically for the alternate checkout system offered by Express Checkout.<br>To enable this on your site, you must enable the corresponding cart pane in the <em>Cart settings</em> menu.'),
+    '#description' => t('These settings are specifically for the alternate checkout system offered by Express Checkout.<br />To enable this on your site, you must enable the corresponding cart pane in the <em>Cart settings</em> menu.'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
@@ -391,9 +391,9 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
   if ($nvp_response['ACK'] != 'Success') {
     $message = t('<b>@type failed.</b><br /><b>@severity:</b> @error', array('@type' => $types[$data['txn_type']], '@severity' => $nvp_response['L_SEVERITYCODE0'], '@error' => $nvp_response['L_ERRORCODE0'] .'. '. $nvp_response['L_LONGMESSAGE0']));
     if ($data['txn_type'] != UC_CREDIT_PRIOR_AUTH_CAPTURE) {
-      $message .= '<br>'. t('<b>Address:</b> @avscode', array('@avscode' => _uc_paypal_avscode_message($nvp_response['AVSCODE'])));
+      $message .= '<br />'. t('<b>Address:</b> @avscode', array('@avscode' => _uc_paypal_avscode_message($nvp_response['AVSCODE'])));
       if (variable_get('uc_credit_cvv_enabled', TRUE)) {
-        $message .= '<br>'. t('<b>CVV2:</b> @cvvmatch', array('@cvvmatch' => _uc_paypal_cvvmatch_message($nvp_response['CVV2MATCH'])));
+        $message .= '<br />'. t('<b>CVV2:</b> @cvvmatch', array('@cvvmatch' => _uc_paypal_cvvmatch_message($nvp_response['CVV2MATCH'])));
       }
     }
     $result = array(
@@ -405,9 +405,9 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
   else {
     $message = t('<b>@type</b><br /><b>Success: </b>@amount @currency', array('@type' => $types[$data['txn_type']], '@amount' => uc_currency_format($nvp_response['AMT'], FALSE), '@currency' => $nvp_response['CURRENCYCODE']));
     if ($data['txn_type'] != UC_CREDIT_PRIOR_AUTH_CAPTURE) {
-      $message .= '<br>'. t('<b>Address:</b> @avscode', array('@avscode' => _uc_paypal_avscode_message($nvp_response['AVSCODE'])));
+      $message .= '<br />'. t('<b>Address:</b> @avscode', array('@avscode' => _uc_paypal_avscode_message($nvp_response['AVSCODE'])));
       if (variable_get('uc_credit_cvv_enabled', TRUE)) {
-        $message .= '<br>'. t('<b>CVV2:</b> @cvvmatch', array('@cvvmatch' => _uc_paypal_cvvmatch_message($nvp_response['CVV2MATCH'])));
+        $message .= '<br />'. t('<b>CVV2:</b> @cvvmatch', array('@cvvmatch' => _uc_paypal_cvvmatch_message($nvp_response['CVV2MATCH'])));
       }
     }
     $result = array(
@@ -450,7 +450,7 @@ function uc_payment_method_paypal_wps($op, &$arg1) {
       if (empty($txn_id)) {
         $txn_id = t('Unknown');
       }
-      return t('Transaction ID:<br>@txn_id', array('@txn_id' => $txn_id));
+      return t('Transaction ID:<br />@txn_id', array('@txn_id' => $txn_id));
 
     case 'settings':
       $form['uc_paypal_wps_email'] = array(
@@ -485,7 +485,7 @@ function uc_payment_method_paypal_wps($op, &$arg1) {
       $form['uc_paypal_wps_payment_action'] = array(
         '#type' => 'select',
         '#title' => t('Payment action'),
-        '#description' => t('"Complete sale" will authorize and capture the funds at the time the payment is processed.<br>"Authorization" will only reserve funds on the card to be captured later through your PayPal account.'),
+        '#description' => t('"Complete sale" will authorize and capture the funds at the time the payment is processed.<br />"Authorization" will only reserve funds on the card to be captured later through your PayPal account.'),
         '#options' => array(
           'Sale' => t('Complete sale'),
           'Authorization' => t('Authorization'),
@@ -551,7 +551,7 @@ function uc_payment_method_paypal_ec($op, &$arg1) {
       if (empty($txn_id)) {
         $txn_id = t('Unknown');
       }
-      return t('Transaction ID:<br>@txn_id', array('@txn_id' => $txn_id));
+      return t('Transaction ID:<br />@txn_id', array('@txn_id' => $txn_id));
 
     case 'settings':
       $form['redirect'] = array(
@@ -904,7 +904,7 @@ function uc_paypal_ec_checkout($form_id, $form_values) {
   $nvp_response = uc_paypal_api_request($nvp_request, variable_get('uc_paypal_wpp_server', 'https://api-3t.sandbox.paypal.com/nvp'));
 
   if ($nvp_response['ACK'] != 'Success') {
-    drupal_set_message(t('Error message from PayPal:<br>@message', array('@message' => $nvp_response['L_LONGMESSAGE0'])), 'error');
+    drupal_set_message(t('Error message from PayPal:<br />@message', array('@message' => $nvp_response['L_LONGMESSAGE0'])), 'error');
     drupal_goto('cart/checkout');
   }
 

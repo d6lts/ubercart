@@ -532,7 +532,7 @@ function uc_recurring_settings_form() {
   $form['uc_recurring_payment_methods'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Valid payment methods for orders with recurring fees'),
-    '#description' => t('Only selected payment methods will be available for customers purchasing products with recurring fees.<br/>It is up to you to make sure your chosen handler is compatible with the payment methods you select.<br />For example, the uc_recurring handler is only compatible with the Credit Card payment method.'),
+    '#description' => t('Only selected payment methods will be available for customers purchasing products with recurring fees.<br />It is up to you to make sure your chosen handler is compatible with the payment methods you select.<br />For example, the uc_recurring handler is only compatible with the Credit Card payment method.'),
     '#options' => $options,
     '#default_value' => variable_get('uc_recurring_payment_methods', array()),
   );
@@ -551,7 +551,7 @@ function uc_recurring_settings_form() {
   $form['uc_recurring_checkout_fail'] = array(
     '#type' => 'radios',
     '#title' => t('Action to take if a recurring fee fails to process during checkout'),
-    '#description' => t('Regardless of your selection, an admin comment will report the failure.<br/><strong>Note:</strong> Even if you select the first option, checkout will complete if another payment has already been captured.'),
+    '#description' => t('Regardless of your selection, an admin comment will report the failure.<br /><strong>Note:</strong> Even if you select the first option, checkout will complete if another payment has already been captured.'),
     '#options' => array(
       'fail' => t('Return a failed message and do not complete checkout.'),
       'proceed' => t('Return a failed message but complete checkout.'),

@@ -150,7 +150,7 @@ function uc_repeater_export($nids = array()) {
       $responses = array();
       foreach (variable_get('uc_repeater_slaves', array()) as $site) {
         $responses[$site] = drupal_http_request('http://'. $site .'/repeater/import/'. md5($_SERVER['SERVER_NAME'] . substr(base_path(), 0, -1)) .'/'. md5($xml), array('Content-Type' => 'text/xml'), 'POST', $xml);
-        //watchdog('uc_repeater', htmlentities($xml) ."<br/>$site:<pre>". print_r($responses[$site], true) ."</pre>", WATCHDOG_NOTICE);
+        //watchdog('uc_repeater', htmlentities($xml) ."<br />$site:<pre>". print_r($responses[$site], true) ."</pre>", WATCHDOG_NOTICE);
       }
     }
   }

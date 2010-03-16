@@ -326,7 +326,7 @@ function uc_payment_settings_overview() {
       t('Payment tracking is !status.', array('!status' => variable_get('uc_payment_tracking', TRUE) ? t('enabled') : t('disabled'))),
       t('Payments !status be deleted by approved users.', array('!status' => variable_get('uc_payment_deleting', TRUE) ? t('may') : t('may not'))),
       t('Payments are !status in the order logs.', array('!status' => variable_get('uc_payment_logging', TRUE) ? t('tracked') : t('not tracked'))),
-      t('Default payment details message:<br/>%message', array('%message' => variable_get('uc_default_payment_msg', t('Continue with checkout to complete payment.')))),
+      t('Default payment details message:<br />%message', array('%message' => variable_get('uc_default_payment_msg', t('Continue with checkout to complete payment.')))),
     ),
   );
 

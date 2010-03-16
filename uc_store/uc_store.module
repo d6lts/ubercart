@@ -859,7 +859,7 @@ function uc_store_customer_search_form() {
   $form['search']['table1'] = array('#value' => '<table><tbody style="border: 0px;"><tr><td colspan="4">');
 
   $form['search']['desc'] = array(
-    '#value' => '<div>'. t("Search for customers based on any of the following fields.  Use * as a wildcard to match any character.<br/>For example, searching by last name for 's*' will return all customers whose last name starts with an s.<br/>(<em>Leave a field empty to ignore it in the search.</em>)"). '</div>',
+    '#value' => '<div>'. t("Search for customers based on any of the following fields.  Use * as a wildcard to match any character.<br />For example, searching by last name for 's*' will return all customers whose last name starts with an s.<br />(<em>Leave a field empty to ignore it in the search.</em>)"). '</div>',
   );
 
   $form['search']['table2'] = array('#value' => '</td></tr><tr><td>');
@@ -1245,7 +1245,7 @@ function uc_country_formats_form() {
   );
   $form['instructions']['text'] = array(
     '#value' => '<div>'. t('The following variables should be used in configuring addresses for the countries you ship to:') .'<p>'
-              . theme('table', $header, $rows) .'</p><p>'. t('*Adding _if to any country variable will make it only display for addresses<br>whose country is different than the default store country.') .'</div>',
+              . theme('table', $header, $rows) .'</p><p>'. t('*Adding _if to any country variable will make it only display for addresses<br />whose country is different than the default store country.') .'</div>',
   );
 
   $result = db_query("SELECT * FROM {uc_countries} ORDER BY country_name ASC");
@@ -1329,7 +1329,7 @@ function uc_store_store_settings_overview() {
     'edit' => 'admin/store/settings/store/edit/display',
     'title' => t('Display settings'),
     'items' => array(
-      t('Store admin page display type:<br>!type', array('!type' => $type)),
+      t('Store admin page display type:<br />!type', array('!type' => $type)),
       t('Customer !type address used in lists.', array('!type' => variable_get('uc_customer_list_address', 'billing') == 'billing' ? t('billing') : t('shipping'))),
       t('Footer using !type message.', array('!type' => variable_get('uc_footer_message', 0) == 0 ? t('random') : t('specified'))),
     ),
@@ -2004,7 +2004,7 @@ function uc_address_format($first_name, $last_name, $company, $street1, $street2
   }
 
   $variables = array(
-    "\r\n" => '<br>',
+    "\r\n" => '<br />',
     '!company' => check_plain($company),
     '!first_name' => check_plain($first_name),
     '!last_name' => check_plain($last_name),
@@ -2035,10 +2035,10 @@ function uc_address_format($first_name, $last_name, $company, $street1, $street2
     $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
   }
   $address = strtr($format, $variables);
-  $address = strtr($address, array("\n" => '<br>'));
+  $address = strtr($address, array("\n" => '<br />'));
 
-  $match = array('/^<br>/', '/<br>$/', '/<br>(\s*|[\s*<br>\s*]+)<br>/', '/<br><br>/', '`<br>, N/A`');
-  $replace = array('', '', '<br>', '<br>', '', '');
+  $match = array('/^<br />/', '/<br />$/', '/<br />(\s*|[\s*<br />\s*]+)<br />/', '/<br /><br />/', '`<br />, N/A`');
+  $replace = array('', '', '<br />', '<br />', '', '');
   $address = preg_replace($match, $replace, $address);
 
   return $address;

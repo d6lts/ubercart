@@ -404,12 +404,12 @@ function uc_file_feature_form_submit($form_id, $form_values) {
   global $user;
   $fid = db_result(db_query("SELECT fid FROM {uc_files} WHERE filename = '%s'", $form_values['uc_file_filename']));
   //Build product feature descriptions
-  $description = (empty($form_values['uc_file_model'])) ? t('<strong>SKU:</strong> Any<br/>') : t('<strong>SKU:</strong> !sku<br/>', array('!sku' => $form_values['uc_file_model']));
+  $description = (empty($form_values['uc_file_model'])) ? t('<strong>SKU:</strong> Any<br />') : t('<strong>SKU:</strong> !sku<br />', array('!sku' => $form_values['uc_file_model']));
   if (is_dir(variable_get('uc_file_base_dir', NULL) ."/". $form_values['uc_file_filename'])) {
-    $description .= t('<strong>Directory:</strong> !dir<br/>', array('!dir' => $form_values['uc_file_filename']));
+    $description .= t('<strong>Directory:</strong> !dir<br />', array('!dir' => $form_values['uc_file_filename']));
   }
   else {
-    $description .= t('<strong>File:</strong> !file<br/>', array('!file' => basename($form_values['uc_file_filename'])));;
+    $description .= t('<strong>File:</strong> !file<br />', array('!file' => basename($form_values['uc_file_filename'])));;
   }
   $shippable = ($form_values['uc_file_shippable']) ? 1 : 0;
   $description .= ($shippable) ? t('<strong>Shippable:</strong> Yes') : t('<strong>Shippable:</strong> No');
@@ -984,7 +984,7 @@ function _email_file_download($user, $order, $file_users) {
   $body = token_replace_multiple(variable_get('uc_file_download_notification_message', uc_get_message('uc_file_download_message')), $token_filters);
   $body = check_markup($body, variable_get('uc_file_download_notification_format', 3), FALSE);
 
-  //drupal_set_message("Mail Sent<br/>key: $key, <br/>to: $to, <br/>subject: $subject, <br/>body: $body, <br/>from: $from, <br/>");
+  //drupal_set_message("Mail Sent<br />key: $key, <br />to: $to, <br />subject: $subject, <br />body: $body, <br />from: $from, <br />");
   return drupal_mail($key, $to, $subject, $body, $from, array('Content-Type' => 'text/html; charset=UTF-8; format=flowed'));
 }
 

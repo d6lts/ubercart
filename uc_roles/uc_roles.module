@@ -193,12 +193,12 @@ function uc_roles_user($op, &$edit, &$account, $category = NULL) {
             $form['account']['expirations']['role_'. $expiration->rid .'_granularity']['#suffix'] .= '</tr>';
             $form['account']['expirations']['role_'. $expiration->rid .'_expiration'] = array('#type' => 'value', '#value' => $expiration->expiration);
           }
-          $form['account']['expirations']['table_end'] = array('#type' => 'markup', '#value' => '</tbody></table><br/>');
+          $form['account']['expirations']['table_end'] = array('#type' => 'markup', '#value' => '</tbody></table><br />');
         }
         else { //There are no expirations to administer
           $form['account']['expirations']['no_expirations'] = array(
             '#type' => 'markup',
-            '#value' => '<table><thead><th>'. t('Role') .'</th><th>'. t('Expiration') .'</th><th>'. t('Operation') .'</th></thead><tbody><tr><td colspan="3">'. t('There are no pending expirations for roles this user.') .'</td></tr></tbody></table><br/>',
+            '#value' => '<table><thead><th>'. t('Role') .'</th><th>'. t('Expiration') .'</th><th>'. t('Operation') .'</th></thead><tbody><tr><td colspan="3">'. t('There are no pending expirations for roles this user.') .'</td></tr></tbody></table><br />',
           );
         }
 
@@ -655,28 +655,28 @@ function uc_roles_feature_form_validate($form_id, $form_values) {
   }
 }
 function uc_roles_feature_form_submit($form_id, $form_values) {
-  $description = (empty($form_values['uc_roles_model'])) ? t('<strong>SKU:</strong> Any<br/>') : t('<strong>SKU:</strong> !sku<br/>', array('!sku' => $form_values['uc_roles_model']));
-  $description .=  t('<strong>Role:</strong> !role_name<br/>', array('!role_name' => _get_role_name($form_values['uc_roles_role'])));
+  $description = (empty($form_values['uc_roles_model'])) ? t('<strong>SKU:</strong> Any<br />') : t('<strong>SKU:</strong> !sku<br />', array('!sku' => $form_values['uc_roles_model']));
+  $description .=  t('<strong>Role:</strong> !role_name<br />', array('!role_name' => _get_role_name($form_values['uc_roles_role'])));
   switch ($form_values['uc_roles_granularity']) {
     case 'never':
-      $description .= t('<strong>Expiration:</strong> never<br/>');
+      $description .= t('<strong>Expiration:</strong> never<br />');
       break;
     case 'day':
-      $description .= t('<strong>Expiration:</strong> !qty day(s)<br/>', array('!qty' => $form_values['uc_roles_qty']));
+      $description .= t('<strong>Expiration:</strong> !qty day(s)<br />', array('!qty' => $form_values['uc_roles_qty']));
       break;
     case 'week':
-      $description .= t('<strong>Expiration:</strong> !qty week(s)<br/>', array('!qty' => $form_values['uc_roles_qty']));
+      $description .= t('<strong>Expiration:</strong> !qty week(s)<br />', array('!qty' => $form_values['uc_roles_qty']));
       break;
     case 'month':
-      $description .= t('<strong>Expiration:</strong> !qty month(s)<br/>', array('!qty' => $form_values['uc_roles_qty']));
+      $description .= t('<strong>Expiration:</strong> !qty month(s)<br />', array('!qty' => $form_values['uc_roles_qty']));
       break;
     case 'year':
-      $description .= t('<strong>Expiration:</strong> !qty year(s)<br/>', array('!qty' => $form_values['uc_roles_qty']));
+      $description .= t('<strong>Expiration:</strong> !qty year(s)<br />', array('!qty' => $form_values['uc_roles_qty']));
       break;
     default:
       break;
   }
-  $description .= ($form_values['uc_roles_shippable']) ? t('<strong>Shippable:</strong> Yes<br/>') : t('<strong>Shippable:</strong> No<br/>');
+  $description .= ($form_values['uc_roles_shippable']) ? t('<strong>Shippable:</strong> Yes<br />') : t('<strong>Shippable:</strong> No<br />');
   $shippable = ($form_values['uc_roles_shippable']) ? 1 : 0;
   $description .= ($form_values['uc_roles_by_quantity']) ? t('<strong>Multiply by Quantity:</strong> Yes') : t('<strong>Multiply by Quantity:</strong> No');
   $by_quantity = ($form_values['uc_roles_by_quantity']) ? 1 : 0;
@@ -1010,7 +1010,7 @@ function _role_email_user($status, $user, $role, $order = NULL) {
   $subject = token_replace_multiple($subject, $token_filters);
   $body = token_replace_multiple($body, $token_filters);
 
-  //drupal_set_message("Mail Sent<br/>key: $key, <br/>to: $to, <br/>subject: $subject, <br/>body: $body, <br/>from: $from, <br/>");
+  //drupal_set_message("Mail Sent<br />key: $key, <br />to: $to, <br />subject: $subject, <br />body: $body, <br />from: $from, <br />");
   return drupal_mail($key, $to, $subject, $body, $from, uc_notify_headers());
 }
 
