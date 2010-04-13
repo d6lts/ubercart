@@ -277,8 +277,8 @@ function uc_stock_views_api() {
 }
 
 /**
- * Wrapper function to the new uc_stock_adjust_product_stock().
- * To keep backwards compatibility with contrib modules.
+ * Deprecated.  Wrapper function for uc_stock_adjust_product_stock(),
+ * to keep backwards compatibility with contributed modules.
  */
 function uc_stock_decrement_product_stock($product, $key, $order) {
   return uc_stock_adjust_product_stock($product, $key, $order);
@@ -287,13 +287,12 @@ function uc_stock_decrement_product_stock($product, $key, $order) {
 /**
  * Adjust a product's stock.
  *
- * @param object $product
- *   The product whose stock is adjusting.
- * @param integer $key
+ * @param $product
+ *   The product whose stock is being adjusted.
+ * @param $key
  *   Internal, so this function can be used as a callback of array_walk().
- *   @see uc_stock_action_decrement_stock()
- * @param object $order
- *   Order object
+ * @param $order
+ *   Order object.
  */
 function uc_stock_adjust_product_stock($product, $key, $order) {
   // Product has an active stock?
