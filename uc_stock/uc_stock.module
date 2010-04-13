@@ -277,8 +277,9 @@ function uc_stock_views_api() {
 }
 
 /**
- * Deprecated.  Wrapper function for uc_stock_adjust_product_stock(),
- * to keep backwards compatibility with contributed modules.
+ * Deprecated. Wrapper function for uc_stock_adjust_product_stock().
+ *
+ * Keeps backwards compatibility with contributed modules.
  */
 function uc_stock_decrement_product_stock($product, $key, $order) {
   return uc_stock_adjust_product_stock($product, $key, $order);
