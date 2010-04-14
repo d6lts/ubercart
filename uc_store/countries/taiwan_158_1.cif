@@ -74,11 +74,3 @@ function taiwan_install() {
     "!company\r\n!last_name !first_name\r\n!street1\r\n!street2\r\n"
     ."!city, !zone_name !postal_code\r\n!country_name_if");
 }
-
-function taiwan_update($version) {
-}
-
-
-function taiwan_uninstall() {
-}
-?>

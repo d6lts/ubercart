@@ -116,11 +116,3 @@ function france_install() {
 
   uc_set_address_format(250, "!company\n!first_name !last_name\n!street1\n!street2\n!postal_code !city\n!country_name_if");
 }
-
-function france_update($version) {
-}
-
-function france_uninstall() {
-}
-
-

@@ -38,4 +38,3 @@ function ukraine_install() {
 
   uc_set_address_format(804, "!country_name\n!zone_name\n!city\n!postal_code\n!street1\n!street2\n!company\n!first_name !last_name");
 }
-

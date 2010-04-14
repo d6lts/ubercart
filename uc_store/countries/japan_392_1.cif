@@ -69,11 +69,3 @@ function japan_install() {
     "!postal_code\r\n!zone_name!city\r\n!street1\r\n!street2\r\n"
     ."!company\r\n!last_name !first_name\r\n!country_name_if");
 }
-
-function japan_update($version) {
-}
-
-
-function japan_uninstall() {
-}
-?>

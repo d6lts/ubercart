@@ -26,9 +26,3 @@ function netherlands_install() {
 
   uc_set_address_format(528, "!company\n!first_name !last_name\n!street1\n!street2\n!postal_code !city\n!country_name_if");
 }
-
-function netherlands_update($version) {
-}
-
-function netherlands_uninstall() {
-}

@@ -31,14 +31,3 @@ function turkey_update($version) {
       break;
   }
 }
-
-/**
-* If necessary, implement hook_uninstall().  This requires no argument.  The
-* store module automatically removes rows from the country and zones tables
-* related to the country, and it unsets the address format.  This function is
-* only necessary for other things you may have included in your country's
-* installation process.
-*/
-function turkey_uninstall() {
-}
-

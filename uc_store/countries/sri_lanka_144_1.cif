@@ -51,7 +51,7 @@ function sri_lanka_install() {
     array(144, '82', 'Monaragala'),
     array(144, '92', 'Kegalla'),
     array(144, '91', 'Ratnapura'),
-            );
+  );
 
 
   foreach ($zones as $zone) {
@@ -62,4 +62,3 @@ function sri_lanka_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
-

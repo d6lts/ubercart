@@ -58,6 +58,3 @@ function ireland_update($version) {
       break;
   }
 }
-
-function ireland_uninstall() {
-}

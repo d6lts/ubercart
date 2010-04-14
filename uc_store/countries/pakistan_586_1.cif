@@ -22,9 +22,3 @@ function pakistan_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city, !zone_code\r\n!country_name_if");
 }
-
-function pakistan_update($version) {
-}
-
-function pakistan_uninstall() {
-}

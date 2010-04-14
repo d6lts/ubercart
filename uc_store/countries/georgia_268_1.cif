@@ -22,7 +22,7 @@ function georgia_install() {
     array(268, 'SJ', "Samts'khe-Javakhet'i"),
     array(268, 'SK', "Shida K'art'li"),
     array(268, 'TB', "T'bilisi"),
-    );
+  );
 
   foreach ($zones as $zone) {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
@@ -32,4 +32,3 @@ function georgia_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
-

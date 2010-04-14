@@ -11,12 +11,3 @@ function singapore_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!country_name, !postal_code");
 }
-
-/**
- * Implementation of hook_update().
- */
-function singapore_update($version) {
-  switch ($version) {
-  }
-}
-

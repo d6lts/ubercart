@@ -47,6 +47,3 @@ function belgium_update($version) {
       break;
   }
 }
-
-function belgium_uninstall() {
-}

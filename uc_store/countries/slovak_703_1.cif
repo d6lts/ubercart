@@ -42,9 +42,3 @@ function slovak_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!postal_code !city\r\n!country_name_if");
 }
-
-function slovak_update($version) {
-}
-
-function slovak_uninstall() {
-}

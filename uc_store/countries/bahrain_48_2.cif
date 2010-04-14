@@ -37,21 +37,3 @@ function bahrain_install() {
   // http://www.ubercart.org/ubercart_users_guide/country_settings#address_format_docs
   uc_set_address_format(48, "!company\r\n!first_name !last_name\r\n!street1 !street2\r\n!zone_name !postal_code\r\n\r\n!country_name_if");
 }
-
-/**
- * If necessary, implement hook_update() with $version being the only argument.
- * Add a new case for each version update, and be sure to always include the
- * latest changes in the install function.
- */
-function bahrain_update($version) {
-}
-
-/**
- * If necessary, implement hook_uninstall().  This requires no argument.  The
- * store module automatically removes rows from the country and zones tables
- * related to the country, and it unsets the address format.  This function is
- * only necessary for other things you may have included in your country's
- * installation process.
- */
-function bahrain_uninstall() {
-}

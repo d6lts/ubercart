@@ -22,8 +22,7 @@ function belize_install() {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
   }
 
-  uc_set_address_format(348,
+  uc_set_address_format(84,
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
-

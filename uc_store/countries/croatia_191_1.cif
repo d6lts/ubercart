@@ -36,7 +36,4 @@ function croatia_install() {
 
   uc_set_address_format(191, "!company\r\n!first_name !last_name\r\n!street1 !street2"
               ."\r\n!postal_code !zone_name\r\n!country_name");
-
-
 }
-

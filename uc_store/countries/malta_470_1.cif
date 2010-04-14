@@ -85,7 +85,7 @@ function malta_install() {
     array(470, '66', 'Zebbug Malta'),
     array(470, '67', 'Zejtun'),
     array(470, '68', 'Zurrieg'),
-     );
+  );
 
   foreach ($zones as $zone) {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
@@ -95,4 +95,3 @@ function malta_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
-

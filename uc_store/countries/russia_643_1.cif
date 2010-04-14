@@ -100,9 +100,3 @@ function russia_install() {
 
   uc_set_address_format(643, "!company\n!first_name !last_name\n!street1\n!street2\n!postal_code !city\n!country_name_if");
 }
-
-function russia_update($version) {
-}
-
-function russia_uninstall() {
-}

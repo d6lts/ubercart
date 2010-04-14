@@ -33,7 +33,7 @@ function seychelles_install() {
     array(690, '21', 'Port Glaud'),
     array(690, '22', 'Saint Louis'),
     array(690, '23', 'Takamaka'),
-        );
+  );
 
   foreach ($zones as $zone) {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
@@ -43,4 +43,3 @@ function seychelles_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
-

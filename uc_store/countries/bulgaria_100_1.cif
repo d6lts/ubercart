@@ -10,8 +10,3 @@ function bulgaria_install() {
   uc_set_address_format(100, "!first_name !last_name\r\n!company\r\n!street1\r\n!street2"
                             ."\r\n!zone_name\r\n!postal_code !city !country_name_if");
 }
-function bulgaria_update($version) {
-}
-
-function bulgaria_uninstall() {
-}

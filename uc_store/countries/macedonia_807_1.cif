@@ -93,7 +93,7 @@ function macedonia_install() {
     array(807, '32', 'Zelenikovo'),
     array(807, '30', 'Zelino'),
     array(807, '33', 'Zrnovci'),
-    );
+  );
 
   foreach ($zones as $zone) {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
@@ -103,4 +103,3 @@ function macedonia_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
-

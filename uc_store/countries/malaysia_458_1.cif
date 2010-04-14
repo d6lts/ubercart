@@ -33,4 +33,3 @@ function malaysia_install() {
                "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
               ."\r\n!city, !zone_code !postal_code\r\n!country_name_if");
 }
-
