@@ -1259,20 +1259,21 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     }
   }
 
-  $output = '<p>'. check_markup(variable_get('uc_msg_order_submit', uc_get_message('completion_message')),
-                         variable_get('uc_msg_order_submit_format', FILTER_FORMAT_DEFAULT), FALSE) .'</p>';
-  $show_message = check_markup(variable_get('uc_msg_order_'. $message_type, uc_get_message('completion_'. $message_type)), variable_get('uc_msg_order_'. $message_type .'_format', FILTER_FORMAT_DEFAULT), FALSE);
-
-  if ($show_message != '') {
+  $messages['uc_msg_order_submit_format'] = variable_get('uc_msg_order_submit', uc_get_message('completion_message'));
+  $message = variable_get('uc_msg_order_'.$message_type, uc_get_message('completion_'.$message_type));
+  if ($message != '') {
     $variables['!new_username'] = check_plain($_SESSION['new_user']['name']);
     $variables['!new_password'] = check_plain($_SESSION['new_user']['pass']);
-    $output .= '<p>'. strtr($show_message, $variables) .'</p>';
+    $messages['uc_msg_order_'.$message_type.'_format'] = strtr($message, $variables);
   }
-  $output .= '<p>'. check_markup(variable_get('uc_msg_continue_shopping', uc_get_message('continue_shopping')),
-                      variable_get('uc_msg_continue_shopping_format', FILTER_FORMAT_DEFAULT),
-                      FALSE) .'</p>';
+  $messages['uc_msg_continue_shopping_format'] = variable_get('uc_msg_continue_shopping', uc_get_message('continue_shopping'));
 
-  $output_message = token_replace_multiple($output, array('global' => NULL, 'order' => $order));
+  $output_message = '';
+  foreach ($messages as $format => $message) {
+    $message = token_replace_multiple($message, array('global' => NULL, 'order' => $order));
+    $message = check_markup($message, variable_get($format, FILTER_FORMAT_DEFAULT), FALSE);
+    $output_message .= $message;
+  }
   $themed_output = theme('uc_cart_complete_sale', $output_message);
 
   // Move an order's status from "In Checkout" to "Pending"
