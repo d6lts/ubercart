@@ -91,6 +91,43 @@ function uc_product_kit_uninstall() {
   variable_del('uc_product_kit_mutable');
 }
 
+/**
+ * Implementation of hook_enable().
+ */
+function uc_product_kit_enable() {
+  // For some time in Drupal 5, CCK would delete its field data if a node
+  // type was unavailable because its module was disabled. This function
+  // worked around that by giving the product classes to node.module when
+  // uc_product_kit was disabled. This is no longer necessary as of CCK
+  // 5.x-1.9, but the workaround was left in to prevent accidents. This block
+  // of code is here to reclaim the product kit nodes after an upgrade to
+  // Drupal 6, and then should not be used again as the corresponding code in
+  // uc_product_kit_disable() was removed.
+  if (variable_get('uc_product_kit_enable_nodes', TRUE)) {
+    $node_type = node_get_types('type', 'product_kit');
+    if (is_object($node_type) && $node_type->module == 'node') {
+      $node_type->module = 'uc_product_kit';
+      $node_type->custom = 0;
+      node_type_save($node_type);
+    }
+    variable_set('uc_product_kit_enable_nodes', FALSE);
+  }
+
+  // Hack the product kit node type into the catalog if this module is enabled
+  // some time after uc_catalog.
+  if (module_exists('uc_catalog') && $vid = variable_get('uc_catalog_vid', 0)) {
+    $vocab = taxonomy_vocabulary_load($vid);
+    if (!isset($vocab->nodes['product_kit'])) {
+      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vid, 'product_kit');
+    }
+  }
+
+  // Add field_image_cache to product kits.
+  if (module_exists('imagefield')) {
+    uc_product_add_default_image_field('product_kit');
+  }
+}
+
 function uc_product_kit_update_1() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
@@ -228,4 +265,3 @@ function uc_product_kit_update_6003() {
 
   return $ret;
 }
-
