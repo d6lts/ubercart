@@ -40,7 +40,7 @@ function uc_product_kit_menu() {
  * Implementation of hook_perm().
  */
 function uc_product_kit_perm() {
-  return array('administer product kits');
+  return array('administer product kits', 'create product kits', 'edit own product kits', 'edit all product kits');
 }
 
 /**
