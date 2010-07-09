@@ -265,3 +265,4 @@ function uc_product_kit_update_6003() {
 
   return $ret;
 }
+
