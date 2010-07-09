@@ -32,16 +32,7 @@ define('UC_FILE_ERROR_HOOK_ERROR'             , 7);
  * @param $files
  *   Array of the files.
  */
-function theme_uc_file_user_downloads($files) {
-  // Create a header and the pager it belongs to.
-  $header = array(
-    array('data' => t('Purchased'  ), 'field' => 'u.granted', 'sort' => 'desc'),
-    array('data' => t('Filename'   ), 'field' => 'f.filename'),
-    array('data' => t('Description'), 'field' => 'p.description'),
-    array('data' => t('Downloads'  ), 'field' => 'u.accessed'),
-    array('data' => t('Addresses'  )),
-  );
-
+function theme_uc_file_user_downloads($header, $files) {
   $rows = array();
   $row = 0;
   foreach ($files as $file) {
@@ -72,6 +63,15 @@ function theme_uc_file_user_downloads($files) {
  * Table builder for user downloads
  */
 function uc_file_user_downloads($account) {
+  // Create a header and the pager it belongs to.
+  $header = array(
+    array('data' => t('Purchased'  ), 'field' => 'u.granted', 'sort' => 'desc'),
+    array('data' => t('Filename'   ), 'field' => 'f.filename'),
+    array('data' => t('Description'), 'field' => 'p.description'),
+    array('data' => t('Downloads'  ), 'field' => 'u.accessed'),
+    array('data' => t('Addresses'  )),
+  );
+
   drupal_set_title(t('File downloads'));
 
   $files = array();
@@ -126,7 +126,7 @@ function uc_file_user_downloads($account) {
     $row++;
   }
 
-  return theme('uc_file_user_downloads', $files);
+  return theme('uc_file_user_downloads', $header, $files);
 }
 
 /**

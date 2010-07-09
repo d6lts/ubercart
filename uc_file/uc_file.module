@@ -128,7 +128,7 @@ function uc_file_theme() {
       'arguments' => array('form' => NULL),
     ),
     'uc_file_user_downloads' => array(
-      'arguments' => array('files' => NULL),
+      'arguments' => array('header' => NULL, 'files' => NULL),
       'file' => 'uc_file.pages.inc',
     ),
   );
