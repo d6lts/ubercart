@@ -15,4 +15,3 @@ Drupal.behaviors.summaryOnclick = function(context) {
     window.location = this.id;
   });
 }
-

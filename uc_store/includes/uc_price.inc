@@ -335,4 +335,3 @@ function uc_store_price_handler_format($price, $options) {
 
   return $output;
 }
-

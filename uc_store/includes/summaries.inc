@@ -273,4 +273,3 @@ function theme_summary_overview($summaries, $link = TRUE) {
 
   return $output;
 }
-
