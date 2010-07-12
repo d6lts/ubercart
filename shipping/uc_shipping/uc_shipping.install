@@ -447,4 +447,3 @@ function uc_shipping_update_6005() {
 
   return $ret;
 }
-

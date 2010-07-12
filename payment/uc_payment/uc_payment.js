@@ -227,6 +227,7 @@ function get_payment_details(path) {
   // Set the global timestamp for the update.
   payment_update = this_update.getTime();
 
+  var data;
   if ($('#edit-payment-details-data').length) {
     data = { 'payment-details-data' : $('#edit-payment-details-data').val() };
   }

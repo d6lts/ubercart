@@ -179,4 +179,3 @@ function uc_authorizenet_arb_user_cancel_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'user/'. $form_state['values']['uid'];
 }
-

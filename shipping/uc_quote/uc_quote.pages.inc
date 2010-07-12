@@ -159,4 +159,3 @@ function _uc_quote_assemble_quotes($order) {
   }
   return $quote_data;
 }
-

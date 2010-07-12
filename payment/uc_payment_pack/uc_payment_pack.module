@@ -384,4 +384,3 @@ function uc_payment_method_check($op, &$arg1) {
       return $form;
   }
 }
-

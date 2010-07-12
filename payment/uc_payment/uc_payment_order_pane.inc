@@ -111,4 +111,3 @@ function uc_order_pane_payment($op, $arg1) {
       return $changes;
   }
 }
-

@@ -90,4 +90,3 @@ function uc_authorizenet_update_3() {
 
   return array();
 }
-
