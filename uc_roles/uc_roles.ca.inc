@@ -521,4 +521,3 @@ function uc_roles_action_order_renew_form($form_state, $settings = array()) {
 
   return $form;
 }
-

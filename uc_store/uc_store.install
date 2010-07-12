@@ -330,4 +330,3 @@ function uc_store_update_6005() {
 
   return $ret;
 }
-

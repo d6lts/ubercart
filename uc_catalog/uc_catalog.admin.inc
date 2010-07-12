@@ -243,4 +243,3 @@ function uc_catalog_orphaned_products() {
 
   return $output;
 }
-

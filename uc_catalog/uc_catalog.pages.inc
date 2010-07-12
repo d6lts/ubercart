@@ -153,4 +153,3 @@ function theme_uc_catalog_browse($tid = 0) {
 
   return $output;
 }
-

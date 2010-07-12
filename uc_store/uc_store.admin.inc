@@ -1270,4 +1270,3 @@ function uc_price_settings_form_submit($form, &$form_state) {
 
   drupal_set_message(t('Price handler configuration saved.'));
 }
-

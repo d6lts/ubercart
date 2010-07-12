@@ -624,4 +624,3 @@ function theme_cart_review_table($show_subtotal = TRUE) {
 
   return theme('table', $header, $rows, array('class' => 'cart-review'));
 }
-

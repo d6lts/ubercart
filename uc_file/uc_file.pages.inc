@@ -379,4 +379,3 @@ function _uc_file_download_redirect($uid = NULL) {
     }
   }
 }
-

@@ -113,4 +113,3 @@ function uc_roles_deletion_form_submit($form, &$form_state) {
 
   drupal_goto('admin/user/user/expiration');
 }
-
