@@ -1349,12 +1349,14 @@ function uc_country_select($title, $default = NULL, $description = NULL, $displa
 /**
  * Create a day select box for a form.
  */
-function uc_select_day($title = NULL, $default = NULL) {
+function uc_select_day($title = NULL, $default = NULL, $allow_empty = FALSE) {
+  $options = $allow_empty ? array('' => '') : array();
+
   $select = array(
     '#type' => 'select',
     '#title' => (is_null($title) ? t('Day') : $title),
-    '#options' => drupal_map_assoc(range(1, 31)),
-    '#default_value' => (is_null($default) ? 1 : $default),
+    '#options' => $options + drupal_map_assoc(range(1, 31)),
+    '#default_value' => (is_null($default) ? 0 : $default),
   );
 
   return $select;
@@ -1369,10 +1371,14 @@ function uc_select_month($title = NULL, $default = NULL, $allow_empty = FALSE) {
   $select = array(
     '#type' => 'select',
     '#title' => (is_null($title) ? t('Month') : $title),
-    '#options' => $options + array(1 => t('01 - January'), 2 => t('02 - February'), 3 => t('03 - March'),
-                        4 => t('04 - April'), 5 => t('05 - May'), 6 => t('06 - June'),
-                        7 => t('07 - July'), 8 => t('08 - August'), 9 => t('09 - September'),
-                        10 => t('10 - October'), 11 => t('11 - November'), 12 => t('12 - December')),
+    '#options' => $options +
+                  array(1 => t('01 - January'), 2 => t('02 - February'),
+                        3 => t('03 - March'), 4 => t('04 - April'),
+                        5 => t('05 - May'), 6 => t('06 - June'),
+                        7 => t('07 - July'), 8 => t('08 - August'),
+                        9 => t('09 - September'), 10 => t('10 - October'),
+                        11 => t('11 - November'), 12 => t('12 - December')
+                  ),
     '#default_value' => (is_null($default) ? 0 : $default),
   );
 
