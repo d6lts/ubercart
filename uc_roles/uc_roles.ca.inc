@@ -71,7 +71,7 @@ function uc_roles_ca_predicate() {
         '#name' => 'uc_roles_order_renew',
         '#title' => t('Update all role expirations for this order.'),
         '#argument_map' => array(
-          'order' => 'order',
+          'order' => 'updated_order',
         ),
         '#settings' => array(
           'message' => FALSE,

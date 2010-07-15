@@ -60,7 +60,7 @@ function uc_file_ca_predicate() {
         '#name' => 'uc_file_order_renew',
         '#title' => t('Update all file expirations for this order.'),
         '#argument_map' => array(
-          'order' => 'order',
+          'order' => 'updated_order',
         ),
       ),
     ),
