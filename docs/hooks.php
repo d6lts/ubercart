@@ -324,6 +324,24 @@ function hook_cart_pane($items) {
 }
 
 /**
+ * Alter cart pane definitions.
+ *
+ * @param $panes
+ *   The array of pane information in the format defined in hook_cart_pane(), passed
+ *   by reference.
+ *
+ * @param $items
+ *   The array of item information.
+ */
+function hook_cart_pane_alter(&$panes, $items) {
+  foreach ($panes as &$pane) {
+    if ($pane['id'] == 'cart') {
+      $pane['body'] = drupal_get_form('my_custom_pane_form_builder', $items);
+    }
+  }
+}
+
+/**
  * Register callbacks for a checkout pane.
  *
  * The checkout screen for Ubercart is a compilation of enabled checkout panes.
@@ -382,6 +400,21 @@ function hook_checkout_pane() {
     'collapsible' => FALSE,
   );
   return $panes;
+}
+
+/**
+ * Alter checkout pane definitions.
+ *
+ * @param $panes
+ *   Array with the panes information as defined in hook_checkout_pane(), passed
+ *   by reference.
+ */
+function hook_checkout_pane_alter(&$panes) {
+  foreach ($panes as &$pane) {
+    if ($pane['id'] == 'cart') {
+      $pane['callback'] = 'my_custom_module_callback';
+    }
+  }
 }
 
 /**
