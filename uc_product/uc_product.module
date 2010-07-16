@@ -1932,17 +1932,16 @@ function uc_product_feature_save($data) {
     }
   }
 
-  // First attempt to update an existing row.
-  db_query("UPDATE {uc_product_features} SET description = '%s' WHERE pfid = %d", $data['description'], intval($data['pfid']));
-
-  // Otherwise insert this feature as a new row.
-  if (db_affected_rows() == 0) {
+  if(!empty($data['pfid']) && db_result(db_query("SELECT COUNT(*) FROM {uc_product_features} WHERE pfid = %d", intval($data['pfid'])))) {
+    // First attempt to update an existing row.
+    db_query("UPDATE {uc_product_features} SET description = '%s' WHERE pfid = %d", $data['description'], intval($data['pfid']));
+    drupal_set_message(t('The product feature has been updated.'));
+  }
+  else {
+    // Otherwise insert this feature as a new row.
     db_query("INSERT INTO {uc_product_features} (nid, fid, description) VALUES (%d, '%s', '%s')",
              $data['nid'], $data['fid'], $data['description']);
     drupal_set_message(t('The product feature has been added.'));
-  }
-  else {
-    drupal_set_message(t('The product feature has been updated.'));
   }
 
   return 'node/'. $data['nid'] .'/edit/features';
