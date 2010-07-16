@@ -1139,3 +1139,19 @@ function uc_order_update_6014() {
 
   return $ret;
 }
+
+/**
+ * Check for old .itpl.php invoice template files.
+ */
+function uc_order_update_6015() {
+  $ret = array();
+
+  $dir = drupal_get_path('module', 'uc_order') .'/templates';
+  $templates = file_scan_directory($dir, '.*\.itpl\.php', array('.', '..', 'CVS'), 0, FALSE);
+
+  if (!empty($templates)) {
+    $ret[] = array('success' => FALSE, 'query' => 'Old Ubercart .itpl.php invoice templates were found! These must be manually upgraded to use the Drupal theme layer. See the <a href="http://www.ubercart.org/docs/developer/17385/changing_invoice_templates_ubercart_23_and_later">template upgrade guide on Ubercart.org</a> for details.');
+  }
+
+  return $ret;
+}

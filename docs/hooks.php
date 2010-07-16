@@ -1422,6 +1422,20 @@ function hook_uc_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
+ * Add invoice templates to the list of suggested template files.
+ *
+ * Allows modules to declare new "types" of invoice templates (other than the
+ * default 'admin' and 'customer').
+ *
+ * @return
+ *   Array of template names that are available choices when mailing an
+ *   invoice.
+ */
+function hook_uc_invoice_templates() {
+  return array('admin', 'customer');
+}
+
+/**
  * Convenience function to display large blocks of text in several places.
  *
  * There are many instances where Ubercart modules have configurable blocks of
