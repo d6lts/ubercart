@@ -109,11 +109,6 @@ function uc_cart_links_settings_form() {
     '#description' => t('Enter in messages available to the cart links API for display through a link. Separate messages with a line break.<br />Messages should have a numeric key and text value. Example: 1337|Message text.'),
     '#default_value' => variable_get('uc_cart_links_messages', ''),
   );
-  $form['uc_cart_links_empty'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Allow cart links to empty customer carts.'),
-    '#default_value' => variable_get('uc_cart_links_empty', TRUE),
-  );
   $form['uc_cart_links_restrictions'] = array(
     '#type' => 'textarea',
     '#title' => t('Cart links restrictions'),
@@ -220,14 +215,13 @@ function uc_cart_links_process($arg1) {
 
         // Add the item to the cart, suppressing the default redirect.
         if ($p['nid'] > 0 && $p['qty'] > 0) {
-          uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + module_invoke_all('add_to_cart_data', $p), NULL, $msg, FALSE);
-        }
-        break;
-
-      // Empty the shopping cart.
-      case 'e':
-        if (variable_get('uc_cart_links_empty', TRUE)) {
-          uc_cart_empty(uc_cart_get_id());
+          $node = node_load(array('nid' => $p['nid']));
+          if ($node->status) {
+            uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + module_invoke_all('add_to_cart_data', $p), NULL, $msg, FALSE);
+          }
+          else {
+            watchdog('uc_cart_link', t('Cart link on %url tried to add an unpublished product to the cart.', array('%url' => uc_referer_uri())), WATCHDOG_ERROR);
+          }
         }
         break;
 
