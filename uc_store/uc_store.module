@@ -2037,7 +2037,7 @@ function uc_address_format($first_name, $last_name, $company, $street1, $street2
   $address = strtr($format, $variables);
   $address = strtr($address, array("\n" => '<br />'));
 
-  $match = array('/^<br />/', '/<br />$/', '/<br />(\s*|[\s*<br />\s*]+)<br />/', '/<br /><br />/', '`<br />, N/A`');
+  $match = array('`^<br( /)?>`', '`<br( /)?>$`', '`<br( /)?>(\s*|[\s*<br( /)?>\s*]+)<br( /)?>`', '`<br( /)?><br( /)?>`', '`<br( /)?>, N/A`');
   $replace = array('', '', '<br />', '<br />', '', '');
   $address = preg_replace($match, $replace, $address);
 
