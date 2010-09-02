@@ -317,10 +317,12 @@ function uc_cart_checkout_form_validate($form, &$form_state) {
   $_SESSION['checkout_valid'] = TRUE;
   foreach (element_children($form_state['values']['panes']) as $pane_id) {
     $func = _checkout_pane_data($pane_id, 'callback');
-    $isvalid = $func('process', $order, $form_state['values']['panes'][$pane_id]);
-    if ($isvalid === FALSE) {
-      $_SESSION['expanded_panes'][] = $pane_id;
-      $_SESSION['checkout_valid'] = FALSE;
+    if (is_string($func) && function_exists($func)) {
+      $isvalid = $func('process', $order, $form_state['values']['panes'][$pane_id]);
+      if ($isvalid === FALSE) {
+        $_SESSION['expanded_panes'][] = $pane_id;
+        $_SESSION['checkout_valid'] = FALSE;
+      }
     }
   }
 
