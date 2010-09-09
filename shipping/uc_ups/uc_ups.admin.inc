@@ -69,6 +69,13 @@ function uc_ups_admin_settings() {
     ),
     '#default_value' => variable_get('uc_ups_pickup_type', '01'),
   );
+  $form['uc_ups_pkg_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Default Package Type'),
+    '#default_value' => variable_get('uc_ups_pkg_type', _uc_ups_pkg_types()),
+    '#options' => _uc_ups_pkg_types(),
+    '#description' => t('Type of packaging to be used.  May be overridden on a per-product basis via the product node edit form.'),
+  );
   $form['uc_ups_classification'] = array('#type' => 'select',
     '#title' => t('UPS Customer classification'),
     '#options' => array(
@@ -129,7 +136,7 @@ function uc_ups_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Package insurance'),
     '#default_value' => variable_get('uc_ups_insurance', TRUE),
-    '#description' => t('When enabled, products are insured for their full value.'),
+    '#description' => t('When enabled, the quotes presented to the customer will include the cost of insurance for the full sales price of all products in the order.'),
   );
 
   $form['#validate'][] = 'uc_ups_admin_settings_validate';
