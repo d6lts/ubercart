@@ -1089,7 +1089,7 @@ function uc_product_adjustments_form($form_state, $node) {
     $form['table']['head'] = array(
       '#prefix' => '<thead><tr>',
       '#suffix' => '</tr></thead>',
-      '#value' => $attribute_names .'<th>Alternate SKU</th>',
+      '#value' => $attribute_names .'<th>'. t(Alternate SKU) .'</th>',
       '#weight' => 0,
     );
     $form['table']['body'] = array(
