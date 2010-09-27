@@ -213,6 +213,7 @@ function uc_paypal_ec_review() {
     }
 
     $order->delivery_street1 = check_plain($nvp_response['SHIPTOSTREET']);
+    $order->delivery_street2 = check_plain($nvp_response['SHIPTOSTREET2']);
     $order->delivery_city = check_plain($nvp_response['SHIPTOCITY']);
     $order->delivery_zone = !empty($zone_id) ? $zone_id : 0;
     $order->delivery_postal_code = check_plain($nvp_response['SHIPTOZIP']);
