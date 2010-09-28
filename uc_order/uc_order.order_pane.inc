@@ -984,7 +984,7 @@ function op_order_comments_view_table($comments) {
         '#cell_attributes' => array('align' => 'center'),
       );
       $data['comment'] = array(
-        '#value' => filter_xss_admin($comment->message),
+        '#value' => check_plain($comment->message),
       );
       $table['#rows'][] = $data;
     }
