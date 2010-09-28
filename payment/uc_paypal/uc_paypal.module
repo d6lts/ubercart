@@ -922,7 +922,7 @@ function uc_paypal_wps_form($form_state, $order) {
     // Transaction information
     'currency_code' => variable_get('uc_paypal_wps_currency', 'USD'),
     'handling_cart' => uc_price($shipping, $context, $options),
-    'invoice' => $order->order_id .'-'. time(),
+    'invoice' => $order->order_id .'-'. uc_cart_get_id(),
     'tax_cart' => uc_price($tax, $context, $options),
 
     // Shopping cart specific variables

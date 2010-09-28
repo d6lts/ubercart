@@ -16,8 +16,17 @@ function uc_paypal_ipn($order_id = 0) {
     return;
   }
 
-  if (($len = strpos($_POST['invoice'], '-')) > 0) {
-    $order_id = intval(substr($_POST['invoice'], 0, $len));
+  if (strpos($_POST['invoice'], '-') > 0) {
+    list($order_id, $cart_id) = explode('-', $_POST['invoice']);
+
+    // Sanitize order ID and cart ID
+    $order_id = intval($order_id);
+    $cart_id  = check_plain($cart_id);
+
+    if (!empty($cart_id)) {
+      // Needed later by uc_complete_sale to empty the correct cart
+      $_SESSION['uc_cart_id'] = $cart_id;
+    }
   }
   else {
     $order_id = intval($_POST['invoice']);
