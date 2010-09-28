@@ -982,6 +982,20 @@ function uc_paypal_wps_form($form_state, $order) {
         }
       }
     }
+
+    // Apply discounts (negative amount line items). For example, this handles line items created by uc_coupon.
+    $discount = 0;
+
+    foreach ($order->line_items as $item) {
+      if ($item['amount'] < 0) {
+        // The minus sign is not an error! The discount amount must be positive.
+        $discount -= $item['amount'];
+      }
+    }
+
+    if ($discount != 0) {
+      $data['discount_amount_cart'] = $discount;
+    }
   }
   else {
     // List the whole cart as a single item to account for fees/discounts
