@@ -712,7 +712,7 @@ function uc_cart_pane_quotes($items) {
   drupal_add_js('misc/progress.js');
   drupal_add_js(drupal_get_path('module', 'uc_quote') .'/uc_quote.js');
   $prod_string = '';
-  foreach (uc_cart_get_contents() as $item) {
+  foreach ($items as $item) {
     $prod_string .= '|'. $item->nid;
     $prod_string .= '^'. $item->title;
     $prod_string .= '^'. $item->model;
