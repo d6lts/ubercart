@@ -229,3 +229,11 @@ function uc_catalog_update_8() {
 
   return $ret;
 }
+
+function uc_catalog_update_9() {
+  // This variable was supposed to be deleted in update 5,
+  // but it was misspelled there.
+  variable_del('uc_catalog_bestsellers_block_title');
+
+  return array(array('success' => TRUE, 'query' => "DELETE unused variables"));
+}
