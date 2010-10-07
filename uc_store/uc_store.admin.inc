@@ -413,7 +413,7 @@ function uc_country_import_form() {
   }
 
   $form['country_import'] = array(
-    '#title' => 'Country importer',
+    '#title' => t('Country importer'),
     '#type' => 'fieldset',
     '#collapsed' => FALSE,
     '#collapsible' => FALSE,
