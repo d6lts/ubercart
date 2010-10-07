@@ -496,7 +496,7 @@ function uc_country_formats_form() {
     '#title' => t('Address variables instructions'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#summary' => 'Tweak the address formatting for a specific country.',
+    '#summary' => t('Tweak the address formatting for a specific country.'),
     '#summary arguments' => array(FALSE),
   );
   $header = array(t('Variable'), t('Description'));

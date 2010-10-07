@@ -11,7 +11,7 @@
  */
 
 // Ubercart price API may be required before hook_init() is invoked.
-require_once dirname(__FILE__) .'/includes/uc_price.inc';
+require_once(dirname(__FILE__) .'/includes/uc_price.inc');
 
 /**
  * Unit conversion ratios.
