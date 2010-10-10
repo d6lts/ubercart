@@ -157,17 +157,17 @@ function uc_store_customer_search() {
   $output = drupal_get_form('uc_store_customer_search_form');
 
   if (arg(4) == 'results') {
-    $first_name = strtolower(str_replace('*', '%', check_plain(arg(5))));
-    $last_name = strtolower(str_replace('*', '%', check_plain(arg(6))));
-    $email = strtolower(str_replace('*', '%', check_plain(arg(7))));
+    $first_name = strtolower(str_replace('*', '%%', check_plain(arg(5))));
+    $last_name = strtolower(str_replace('*', '%%', check_plain(arg(6))));
+    $email = strtolower(str_replace('*', '%%', check_plain(arg(7))));
 
-    if ($first_name !== '0' && $first_name !== '%') {
+    if ($first_name !== '' && $first_name !== '0' && $first_name !== '%%') {
       $where .= " AND LOWER(o.billing_first_name) LIKE '". $first_name ."'";
     }
-    if ($last_name !== '0' && $last_name !== '%') {
+    if ($last_name !== '' && $last_name !== '0' && $last_name !== '%%') {
       $where .= " AND LOWER(o.billing_last_name) LIKE '". $last_name ."'";
     }
-    if ($email !== '0' && $email !== '%') {
+    if ($email !== '' && $email !== '0' && $email !== '%%') {
       $where .= " AND LOWER(o.primary_email) LIKE '". $email ."'";
     }
 
