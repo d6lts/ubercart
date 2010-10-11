@@ -1068,8 +1068,9 @@ function uc_product_token_values($type, $object = NULL, $options = array()) {
  * Implementation of hook_token_list().
  */
 function uc_product_token_list($type = 'all') {
+  $tokens = array();
+
   if ($type == 'node' || $type == 'product' || $type == 'ubercart' || $type == 'all') {
-    $tokens = array();
     $tokens['product']['model'] = t("The product's model number.");
     $tokens['product']['list_price'] = t("The product's list price.");
     $tokens['product']['cost'] = t("The product's cost.");
@@ -1084,8 +1085,9 @@ function uc_product_token_list($type = 'all') {
     $tokens['product']['width'] = t("The product's formatted width.");
     $tokens['product']['height-raw'] = t("The numerical value of the product's height.");
     $tokens['product']['height'] = t("The product's formatted height.");
-    return $tokens;
   }
+
+  return $tokens;
 }
 
 /******************************************************************************

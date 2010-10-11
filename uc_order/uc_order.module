@@ -11,9 +11,9 @@
  * displayed to customers.
  */
 
-require_once('uc_order.order_pane.inc');
-require_once('uc_order.line_item.inc');
-require_once('uc_order.ca.inc');
+require_once(dirname(__FILE__) .'/uc_order.order_pane.inc');
+require_once(dirname(__FILE__) .'/uc_order.line_item.inc');
+require_once(dirname(__FILE__) .'/uc_order.ca.inc');
 
 /*******************************************************************************
  * Hook Functions (Drupal)
@@ -351,6 +351,7 @@ function uc_order_theme() {
  */
 function uc_order_token_values($type, $object = NULL) {
   $values = array();
+
   switch ($type) {
     case 'order':
       $order = $object;
@@ -430,6 +431,7 @@ function uc_order_token_values($type, $object = NULL) {
  */
 function uc_order_token_list($type = 'all') {
   $tokens = array();
+
   if ($type == 'order' || $type == 'ubercart' || $type == 'all') {
     $tokens['order']['new-username'] = t('New username associated with an order if applicable.');
     $tokens['order']['new-password'] = t('New password associated with an order if applicable.');
@@ -456,7 +458,6 @@ function uc_order_token_list($type = 'all') {
     $tokens['order']['order-date-created'] = t('The date and time when the order was created.');
     $tokens['order']['order-date-modified'] = t('The date and time when the order was last modified.');
   }
-
   return $tokens;
 }
 

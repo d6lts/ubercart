@@ -13,7 +13,7 @@
  * Development sponsored by the Ubercart project.  http://www.ubercart.org
  */
 
-require_once 'uc_roles.ca.inc';
+require_once('uc_roles.ca.inc');
 
 /******************************************************************************
  * Hook Functions (Drupal)                                                    *
@@ -566,6 +566,8 @@ function uc_roles_store_status() {
  * Implementation of hook_token_list().
  */
 function uc_roles_token_list($type = 'all') {
+  $tokens = array();
+
   if ($type == 'uc_roles' || $type == 'ubercart' || $type == 'all') {
     $tokens['uc_roles']['role-expiration-long'] = t('The role expiration date in long format');
     $tokens['uc_roles']['role-expiration-medium'] = t('The role expiration date in medium format');
@@ -580,6 +582,8 @@ function uc_roles_token_list($type = 'all') {
  * Implementation of hook_token_values().
  */
 function uc_roles_token_values($type, $object = NULL) {
+  $values = array();
+
   switch ($type) {
     case 'uc_roles':
       $values['role-expiration-long'] = format_date($object->expiration, 'large');

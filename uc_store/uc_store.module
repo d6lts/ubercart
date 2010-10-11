@@ -412,6 +412,7 @@ function uc_store_theme() {
  */
 function uc_store_token_values($type, $object = NULL) {
   global $base_url;
+  $values = array();
 
   switch ($type) {
     case 'global':
@@ -458,17 +459,21 @@ function uc_store_token_values($type, $object = NULL) {
  * Implementation of hook_token_list(). (token.module)
  */
 function uc_store_token_list($type = 'all') {
-  $tokens['global']['site-login'] = t('A link to the site login page.');
-  $tokens['global']['site-logo'] = t('The URL for the site logo.');
-  $tokens['global']['store-name'] = t('The Ubercart store name.');
-  $tokens['global']['store-url'] = t('The Ubercart store URL.');
-  $tokens['global']['store-link'] = t('A link to the Ubercart store using the store name.');
-  $tokens['global']['store-owner'] = t('The Ubercart store owner.');
-  $tokens['global']['store-email'] = t('The Ubercart store e-mail address.');
-  $tokens['global']['store-phone'] = t('The Ubercart store phone number.');
-  $tokens['global']['store-fax'] = t('The Ubercart store fax number.');
-  $tokens['global']['store-address'] = t('The Ubercart store mailing address.');
-  $tokens['global']['store-help-url'] = t('The URL to the store help page.');
+  $tokens = array();
+
+  if ($type == 'global' || $type == 'ubercart' || $type == 'all') {
+    $tokens['global']['site-login'] = t('A link to the site login page.');
+    $tokens['global']['site-logo'] = t('The URL for the site logo.');
+    $tokens['global']['store-name'] = t('The Ubercart store name.');
+    $tokens['global']['store-url'] = t('The Ubercart store URL.');
+    $tokens['global']['store-link'] = t('A link to the Ubercart store using the store name.');
+    $tokens['global']['store-owner'] = t('The Ubercart store owner.');
+    $tokens['global']['store-email'] = t('The Ubercart store e-mail address.');
+    $tokens['global']['store-phone'] = t('The Ubercart store phone number.');
+    $tokens['global']['store-fax'] = t('The Ubercart store fax number.');
+    $tokens['global']['store-address'] = t('The Ubercart store mailing address.');
+    $tokens['global']['store-help-url'] = t('The URL to the store help page.');
+  }
 
   return $tokens;
 }

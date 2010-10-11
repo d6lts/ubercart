@@ -128,6 +128,8 @@ function uc_stock_mail($key, &$message, $params) {
  * Implementation of hook_token_list().
  */
 function uc_stock_token_list($type = 'all') {
+  $tokens = array();
+
   if ($type == 'stock' || $type == 'ubercart' || $type == 'all') {
     $tokens['stock']['stock-level'] = t('The current stock level');
     $tokens['stock']['stock-model'] = t('The model or SKU of the stock level');
@@ -141,6 +143,8 @@ function uc_stock_token_list($type = 'all') {
  * Implementation of hook_token_values().
  */
 function uc_stock_token_values($type, $object = NULL) {
+  $values = array();
+
   switch ($type) {
     case 'stock':
       $values['stock-level'] = $object->stock;

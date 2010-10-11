@@ -134,6 +134,8 @@ function uc_payment_menu() {
  * Implementation of hook_token_values().
  */
 function uc_payment_token_values($type, $object = NULL) {
+  $values = array();
+
   switch ($type) {
     case 'order':
       $order = $object;
@@ -157,6 +159,8 @@ function uc_payment_token_values($type, $object = NULL) {
  * Implementation of hook_token_list(). (token.module)
  */
 function uc_payment_token_list($type = 'all') {
+  $tokens = array();
+
   if ($type == 'order' || $type == 'ubercart' || $type == 'all') {
     $tokens['order']['order-payment-method'] = t('The payment method of the order.');
     $tokens['order']['order-payment-balance'] = t('The payment balance of the order');

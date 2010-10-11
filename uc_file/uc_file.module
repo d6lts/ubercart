@@ -666,6 +666,8 @@ function uc_file_store_status() {
  * Implementation of hook_token_list().
  */
 function uc_file_token_list($type = 'all') {
+  $tokens = array();
+
   if ($type == 'uc_file' || $type == 'ubercart' || $type == 'all') {
     $tokens['uc_file']['file-downloads'] = t('The list of file download links (if any) associated with an order');
   }
@@ -677,6 +679,8 @@ function uc_file_token_list($type = 'all') {
  * Implementation of hook_token_values().
  */
 function uc_file_token_values($type, $object = NULL) {
+  $values = array();
+
   switch ($type) {
     case 'uc_file':
       if (!empty($object)) {
