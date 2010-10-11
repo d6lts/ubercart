@@ -227,7 +227,7 @@ function uc_file_action_order_renew($order) {
     $files = db_query("SELECT * FROM {uc_file_products} AS fp ".
       "INNER JOIN {uc_product_features} AS pf ON pf.pfid = fp.pfid ".
       "INNER JOIN {uc_files} as f ON f.fid = fp.fid ".
-      "WHERE nid = %d", $product->nid, $order_user->uid);
+      "WHERE nid = %d", $product->nid);
 
     while ($file = db_fetch_object($files)) {
 
