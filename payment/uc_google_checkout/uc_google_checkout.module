@@ -443,7 +443,7 @@ function uc_google_checkout_cart_form_submit($form, &$form_state) {
 
   $request = uc_google_checkout_cart_request($order);
   if ($response = uc_google_checkout_send_request('merchantCheckout', $request)) {
-    $redirect = (string)$response->{'redirect-url'};
+    $redirect = (string) $response->{'redirect-url'};
     drupal_goto($redirect);
   }
 }
@@ -629,7 +629,7 @@ function uc_google_checkout_send_request($api, $request) {
   }
   $response = new SimpleXMLElement($response_obj->data);
   if ($response->getName() == 'error') {
-    $error = (string)$response->{'error-message'};
+    $error = (string) $response->{'error-message'};
     drupal_set_message($error, 'error');
     watchdog('google', '@error', array('@error' => $error), WATCHDOG_ERROR);
     return NULL;
@@ -695,7 +695,7 @@ function uc_payment_method_google_checkout($op, &$arg1) {
 
 function uc_google_checkout_new_order($new_order) {
   $order_id = $new_order->{'shopping-cart'}->{'merchant-private-data'}->{'order-id'};
-  $cart_id = $new_order->{'shopping-cart'}->{'merchant-private-data'}->{'cart-id'};
+  $cart_id = (string) $new_order->{'shopping-cart'}->{'merchant-private-data'}->{'cart-id'};
 
   $order = uc_order_load($order_id);
   if ($order) {
@@ -863,10 +863,10 @@ function uc_google_checkout_accept_risk($risk) {
 function uc_google_checkout_order_state_change($change) {
   $order_id = uc_google_checkout_get_order($change->{'google-order-number'});
   if ($order_id) {
-    $new_financial = (string)$change->{'new-financial-order-state'};
-    $new_fulfillment = (string)$change->{'new-fulfillment-order-state'};
-    $prev_financial = (string)$change->{'previous-financial-order-state'};
-    $prev_fulfillment = (string)$change->{'previous-fulfillment-order-state'};
+    $new_financial = (string) $change->{'new-financial-order-state'};
+    $new_fulfillment = (string) $change->{'new-fulfillment-order-state'};
+    $prev_financial = (string) $change->{'previous-financial-order-state'};
+    $prev_fulfillment = (string) $change->{'previous-fulfillment-order-state'};
     db_query("UPDATE {uc_gc_orders} SET financial_state = '%s', fulfillment_state = '%s' WHERE order_id = %d AND financial_state = '%s' AND fulfillment_state = '%s'", array($new_financial, $new_fulfillment, $order_id, $prev_financial, $prev_fulfillment));
     if ($new_financial != $prev_financial) {
       $_SESSION['google_updates'] = TRUE;
@@ -938,13 +938,14 @@ function uc_google_checkout_charge($order_id, $amount) {
 function uc_google_checkout_charge_order($charge) {
   $order_id = uc_google_checkout_get_order($charge->{'google-order-number'});
   if ($order_id) {
-    uc_payment_enter($order_id, 'google_checkout', $charge->{'latest-charge-amount'}, 0,
+    $amount = (string) $charge->{'latest-charge-amount'};
+    uc_payment_enter($order_id, 'google_checkout', $amount, 0,
                      '', t('Payment received by Google Checkout'));
     $context = array(
       'revision' => 'formatted-original',
       'type' => 'amount',
     );
-    uc_order_comment_save($order_id, 0, t('Payment of %amount received by Google Checkout.', array('%amount' => uc_price($charge->{'latest-charge-amount'}, $context))), 'admin', 'chargeable');
+    uc_order_comment_save($order_id, 0, t('Payment of %amount received by Google Checkout.', array('%amount' => uc_price($amount, $context))), 'admin', 'chargeable');
     uc_google_checkout_notification_acknowledgement($charge['serial-number']);
   }
   else {
