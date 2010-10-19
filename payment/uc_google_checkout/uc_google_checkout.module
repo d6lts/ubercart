@@ -991,14 +991,13 @@ function uc_google_checkout_refund_order($refund) {
 
 function uc_google_checkout_notify_update($form, &$form_state) {
   $order = uc_order_load($form_state['values']['order_id']);
-  if ($order !== FALSE && isset($form_state['values']['order_comment']) && drupal_strlen($form_state['values']['order_comment'])) {
-    $request = uc_google_checkout_buyer_message_request($form_state['values']['order_id'], $form_state['values']['order_comment']);
+  if ($order !== FALSE && $order->google_order_number && isset($form_state['values']['order_comment']) && drupal_strlen($form_state['values']['order_comment'])) {
+    $request = uc_google_checkout_buyer_message_request($order->google_order_number, $form_state['values']['order_comment']);
     $response = uc_google_checkout_send_request('request', $request);
   }
 }
 
-function uc_google_checkout_buyer_message_request($order_id, $message) {
-  $google_order_number = uc_google_checkout_get_google_number($order_id);
+function uc_google_checkout_buyer_message_request($google_order_number, $message) {
   $output = '<?xml version="1.0" encoding="UTF-8"?>';
   $output .= "\n";
   $output .= '<send-buyer-message xmlns="http://checkout.google.com/schema/2" google-order-number="'. $google_order_number .'">';
