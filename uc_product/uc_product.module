@@ -1612,7 +1612,7 @@ function theme_uc_product_image($images, $teaser = 0, $page = 0) {
     $output .= $image_widget_func($rel_count);
   }
   $output .= '>';
-  $output .= theme('imagecache', 'product', $first['filepath'], $first['alt'], $first['title']);
+  $output .= theme('imagecache', 'product', $first['filepath'], $first['data']['alt'], $first['data']['title']);
   $output .= '</a></div><div class="more-product-images">';
   foreach ($images as $thumbnail) {
     // Node preview adds extra values to $images that aren't files.
@@ -1624,7 +1624,7 @@ function theme_uc_product_image($images, $teaser = 0, $page = 0) {
       $output .= $image_widget_func($rel_count);
     }
     $output .= '>';
-    $output .= theme('imagecache', 'uc_thumbnail', $thumbnail['filepath'], $thumbnail['alt'], $thumbnail['title']);
+    $output .= theme('imagecache', 'uc_thumbnail', $thumbnail['filepath'], $thumbnail['data']['alt'], $thumbnail['data']['title']);
     $output .= '</a>';
   }
   $output .= '</div></div>';
