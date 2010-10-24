@@ -232,12 +232,18 @@ function uc_credit_cron() {
  * Implementation of hook_exit().
  */
 function uc_credit_exit() {
-  // Separate the args ourself since the arg() function may not be loaded.
-  $args = explode('/', $_GET['q']);
-
   // Make sure sensitive checkout session data doesn't persist on other pages.
-  if (isset($_SESSION['sescrd']) && (!isset($args[1]) || $args[1] != 'checkout')) {
-    unset($_SESSION['sescrd']);
+  if (isset($_SESSION['sescrd'])) {
+    if (isset($_GET['q'])) {
+      // Separate the args ourself since the arg() function may not be loaded.
+      $args = explode('/', $_GET['q']);
+      if (!isset($args[1]) || $args[1] != 'checkout') {
+        unset($_SESSION['sescrd']);
+      }
+    }
+    else {
+      unset($_SESSION['sescrd']);
+    }
   }
 }
 
