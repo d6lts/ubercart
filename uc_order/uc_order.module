@@ -1297,12 +1297,8 @@ function uc_order_update_status($order_id, $status) {
     foreach (module_list() as $module) {
       $function = $module .'_order';
       // $order must be passed by reference.
-      if (function_exists($function) && ($return = $function('can_update', $order, $status))){
-        for ($i = 0; $i < count($return); $i++) {
-          if ($return[$i] === FALSE) {
-            return FALSE;
-          }
-        }
+      if (function_exists($function) && $function('can_update', $order, $status) === FALSE) {
+        return FALSE;
       }
     }
 
