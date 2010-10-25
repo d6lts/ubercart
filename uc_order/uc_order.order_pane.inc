@@ -74,6 +74,12 @@ function uc_order_pane_ship_to($op, $arg1) {
                 .'/images/address_book.gif" alt="'. t('Select from address book.') .'" '
                 .'title="'. t('Select from address book.') .'" onclick="load_address_select('. $arg1['order_uid']['#value'] .', \'#delivery_address_select\', \'delivery\');" '
                 .'style="position: relative; top: 2px; cursor: pointer;" />';
+
+      $output .= ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
+                 .'/images/copy.gif" alt="'. t('Copy billing information.') .'" title="'
+                 . t('Copy billing information.') .'" onclick="uc_order_copy_billing_to_shipping();" '
+                 .'style="position: relative; top: 2px; cursor: pointer;" />';
+
       return $output;
 
     case 'edit-theme':
