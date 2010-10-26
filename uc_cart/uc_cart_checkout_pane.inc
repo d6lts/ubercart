@@ -136,17 +136,15 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
 
     case 'process':
       if (!empty($arg2['primary_email']) && !valid_email_address($arg2['primary_email'])) {
-        drupal_set_message(t('You must enter a valid e-mail address.'), 'error');
-        return FALSE;
+        form_set_error('panes][customer][primary_email', t('You must enter a valid e-mail address.'));
       }
 
       $arg1->primary_email = $arg2['primary_email'];
 
       if (variable_get('uc_cart_email_validation', FALSE) && !$user->uid &&
           $arg2['primary_email'] !== $arg2['primary_email_confirm']) {
-        drupal_set_message(t('The e-mail address did not match.'), 'error');
+        form_set_error('panes][customer][primary_email_confirm', t('The e-mail address did not match.'));
         $_SESSION['email_match'] = FALSE;
-        return FALSE;
       }
       unset($_SESSION['email_match']);
 
@@ -163,20 +161,17 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
           if (variable_get('uc_cart_new_account_name', FALSE) && !empty($arg2['new_account']['name'])) {
             $message = user_validate_name($arg2['new_account']['name']);
             if (!empty($message)) {
-              drupal_set_message($message, 'error');
-              return FALSE;
+              form_set_error('panes][customer][new_account][name', $message);
             }
             if (db_fetch_object(db_query("SELECT uid FROM {users} WHERE LOWER(name) = LOWER('%s')", $arg2['new_account']['name'])) > 0) {
-              drupal_set_message(t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $arg2['new_account']['name'])), 'error');
-              return FALSE;
+              form_set_error('panes][customer][new_account][name', t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $arg2['new_account']['name'])));
             }
             $arg1->data['new_user']['name'] = $arg2['new_account']['name'];
           }
           // Validate the password.
           if (variable_get('uc_cart_new_account_password', FALSE)) {
             if (strcmp($arg2['new_account']['pass'], $arg2['new_account']['pass_confirm'])) {
-              drupal_set_message(t('The passwords you entered did not match. Please try again.'), 'error');
-              return FALSE;
+              form_set_error('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
             }
             $arg1->data['new_user']['pass'] = $arg2['new_account']['pass'];
           }
