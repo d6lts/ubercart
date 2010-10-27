@@ -157,25 +157,25 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
 
       // If new users can specify names or passwords then...
       if ((variable_get('uc_cart_new_account_name', FALSE) ||
-          variable_get('uc_cart_new_account_password', FALSE)) &&
-          $user->uid == 0) {
-          // Validate the username.
-          if (variable_get('uc_cart_new_account_name', FALSE) && !empty($arg2['new_account']['name'])) {
-            $message = user_validate_name($arg2['new_account']['name']);
-            if (!empty($message)) {
-              form_set_error('panes][customer][new_account][name', $message);
-            }
-            if (db_fetch_object(db_query("SELECT uid FROM {users} WHERE LOWER(name) = LOWER('%s')", $arg2['new_account']['name'])) > 0) {
-              form_set_error('panes][customer][new_account][name', t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $arg2['new_account']['name'])));
-            }
-            $arg1->data['new_user']['name'] = $arg2['new_account']['name'];
+        variable_get('uc_cart_new_account_password', FALSE)) &&
+        $user->uid == 0) {
+        // Validate the username.
+        if (variable_get('uc_cart_new_account_name', FALSE) && !empty($arg2['new_account']['name'])) {
+          $message = user_validate_name($arg2['new_account']['name']);
+          if (!empty($message)) {
+            form_set_error('panes][customer][new_account][name', $message);
           }
-          // Validate the password.
-          if (variable_get('uc_cart_new_account_password', FALSE)) {
-            if (strcmp($arg2['new_account']['pass'], $arg2['new_account']['pass_confirm'])) {
-              form_set_error('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
-            }
-            $arg1->data['new_user']['pass'] = $arg2['new_account']['pass'];
+          if (db_fetch_object(db_query("SELECT uid FROM {users} WHERE LOWER(name) = LOWER('%s')", $arg2['new_account']['name'])) > 0) {
+            form_set_error('panes][customer][new_account][name', t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $arg2['new_account']['name'])));
+          }
+          $arg1->data['new_user']['name'] = $arg2['new_account']['name'];
+        }
+        // Validate the password.
+        if (variable_get('uc_cart_new_account_password', FALSE)) {
+          if (strcmp($arg2['new_account']['pass'], $arg2['new_account']['pass_confirm'])) {
+            form_set_error('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
+          }
+          $arg1->data['new_user']['pass'] = $arg2['new_account']['pass'];
         }
       }
 
