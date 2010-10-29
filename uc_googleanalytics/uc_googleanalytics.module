@@ -183,13 +183,25 @@ function uc_googleanalytics_ecommerce_js($order) {
     // Allow modules to alter the item arguments.
     drupal_alter('ucga_item', $item, $product, $trans, $order);
 
+      // Create a context for uc_price
+      $context = array(
+      'revision' => 'altered',
+      'type' => 'order_product',
+      'caller' => 'uc_googleanalytics',
+      'subject' => array(
+         'order_product' => $product,
+         'order' => $order,
+         'node' => node_load($product->nid),
+      ),
+    );
+
     // Put the arguments into an array that is safe to implode directly.
     $args = array(
       '"'. $item['order_id'] .'"',
       drupal_to_js($item['sku']),
       drupal_to_js($item['name']),
       drupal_to_js((string) $item['category']),
-      '"'. $item['price'] .'"',
+      '"'. uc_price($item['price'], $context) .'"',
       '"'. $item['qty'] .'"',
     );
 
