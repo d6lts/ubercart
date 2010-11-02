@@ -1,0 +1,50 @@
+<?php
+// $Id$
+
+/**
+ * First implement hook_install() using the name of the country as the base of
+ * the function name.
+ */
+function colombia_install() {
+  db_query("INSERT INTO {uc_countries} VALUES ('170', 'Colombia', 'CO', 'COL', 1)");
+
+  // Make the entries in the zones table.
+  db_query("INSERT INTO {uc_zones} VALUES "
+          ."(%d, 170, 'AMA', 'Amazonas'),"
+          ."(%d, 170, 'ANT', 'Antioquia'),"
+          ."(%d, 170, 'ARA', 'Arauca'),"
+          ."(%d, 170, 'ATL', 'Atlantico'),"
+          ."(%d, 170, 'BOL', 'Bolivar'),"
+          ."(%d, 170, 'CAL', 'Caldas'),"
+          ."(%d, 170, 'CAQ', 'Caqueta'),"
+          ."(%d, 170, 'CAS', 'Casanare'),"
+          ."(%d, 170, 'CAU', 'Cauca'),"
+          ."(%d, 170, 'CES', 'Cesar'),"
+          ."(%d, 170, 'CHO', 'Choco'),"
+          ."(%d, 170, 'COR', 'Cordoba'),"
+          ."(%d, 170, 'CUN', 'Cundinamarca'),"
+          ."(%d, 170, 'DC', 'Distrito Capital de Bogota'),"
+          ."(%d, 170, 'GUA', 'Guainia'),"
+          ."(%d, 170, 'GUV', 'Guaviare'),"
+          ."(%d, 170, 'HUI', 'Huila'),"
+          ."(%d, 170, 'LAG', 'La Guajira'),"
+          ."(%d, 170, 'MAG', 'Magdalena'),"
+          ."(%d, 170, 'MET', 'Meta'),"
+          ."(%d, 170, 'NAR', 'Narino'),"
+          ."(%d, 170, 'NSA', 'Norte de Santander'),"
+          ."(%d, 170, 'PUT', 'Putumayo'),"
+          ."(%d, 170, 'QUI', 'Quindio'),"
+          ."(%d, 170, 'RIS', 'Risaralda'),"
+          ."(%d, 170, 'SAP', 'San Andres, Providencia y Santa Catalina'),"
+          ."(%d, 170, 'SAN', 'Santander'),"
+          ."(%d, 170, 'SUC', 'Sucre'),"
+          ."(%d, 170, 'TOL', 'Tolima'),"
+          ."(%d, 170, 'VAC', 'Valle del Cauca'),"
+          ."(%d, 170, 'VAU', 'Vaupes'),"
+          ."(%d, 170, 'VID', 'Vichada')",
+          uc_get_zone_ids(32));
+
+  uc_set_address_format(170,
+    "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
+   ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
+}
