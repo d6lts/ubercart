@@ -335,6 +335,9 @@ function theme_uc_cart_block_content() {
   //  return t('<a href="!url">View</a> your shopping cart.', array('!url' => url('cart')));
   //}
 
+  $output = '';
+  $total = 0;
+
   if (variable_get('uc_cart_show_help_text', FALSE)) {
     $output = '<span class="cart-help-text">'
             . variable_get('uc_cart_help_text', t('Click title to display cart contents.'))
