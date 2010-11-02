@@ -19,20 +19,14 @@ function czech_install() {
           ."(%d, 203, 'LBK', 'Liberecký kraj'),"
           ."(%d, 203, 'HKK', 'Královéhradecký kraj'),"
           ."(%d, 203, 'PAK', 'Pardubický kraj'),"
-	  ."(%d, 203, 'VYS', 'Vysočina'),"
-	  ."(%d, 203, 'JHM', 'Jihomoravský kraj'),"
-	  ."(%d, 203, 'OLK', 'Olomoucký kraj'),"
-	  ."(%d, 203, 'ZLK', 'Zlínský kraj'),"
-	  ."(%d, 203, 'MSK', 'Moravskoslezský kraj')",
+          ."(%d, 203, 'VYS', 'Vysočina'),"
+          ."(%d, 203, 'JHM', 'Jihomoravský kraj'),"
+          ."(%d, 203, 'OLK', 'Olomoucký kraj'),"
+          ."(%d, 203, 'ZLK', 'Zlínský kraj'),"
+          ."(%d, 203, 'MSK', 'Moravskoslezský kraj')",
            uc_get_zone_ids(14));
 
   uc_set_address_format(203,
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!postal_code !city\r\n!country_name_if");
-}
-
-function czech_update($version) {
-}
-
-function czech_uninstall() {
 }

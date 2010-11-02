@@ -16,4 +16,3 @@ function denmark_install() {
   uc_set_address_format(208,
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!postal_code !city\r\n!country_name_if");
 }
-

@@ -41,7 +41,7 @@ function switzerland_install() {
           ."(%d, 756, 'VD', 'Vaud'),"
           ."(%d, 756, 'ZG', 'Zug'),"
           ."(%d, 756, 'ZH', 'Zürich')",
-					 uc_get_zone_ids(26));
+          uc_get_zone_ids(26));
 
   // Use uc_set_address_format() with the country ID as the first argument and
   // an address format string as the second.  Documentation on address formats
@@ -49,22 +49,4 @@ function switzerland_install() {
   // http://www.ubercart.org/ubercart_users_guide/country_settings#address_format_docs
   uc_set_address_format(756,
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!postal_code !city\r\n!country_name_if");
-}
-
-/**
- * If necessary, implement hook_update() with $version being the only argument.
- * Add a new case for each version update, and be sure to always include the
- * latest changes in the install function.
- */
-function switzerland_update($version) {
-}
-
-/**
- * If necessary, implement hook_uninstall().  This requires no argument.  The
- * store module automatically removes rows from the country and zones tables
- * related to the country, and it unsets the address format.  This function is
- * only necessary for other things you may have included in your country's
- * installation process.
- */
-function switzerland_uninstall() {
 }

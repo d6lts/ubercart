@@ -42,9 +42,3 @@ function indonesia_install() {
   variable_set('uc_address_format_360',
                "!company\n!first_name !last_name\n!street1\n!street2\n!city !postal_code \n!country_name_if");
 }
-
-function indonesia_update($version) {
-}
-
-function indonesia_uninstall() {
-}

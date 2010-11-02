@@ -18,9 +18,3 @@ function belgium_install() {
 
   uc_set_address_format(056, "!company\n!first_name !last_name\n!street\n!postal_code !city\n!country_name_if");
 }
-
-function belgium_update($version) {
-}
-
-function belgium_uninstall() {
-}

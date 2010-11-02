@@ -36,4 +36,3 @@ function argentina_install() {
               ."\r\n!postal_code !zone_name\r\n!country_name");
 
 }
-

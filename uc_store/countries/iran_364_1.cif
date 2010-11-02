@@ -45,4 +45,3 @@ function iran_install() {
    ."!street1\r\n!street2\r\n"
    ."!postal_code");
 }
-

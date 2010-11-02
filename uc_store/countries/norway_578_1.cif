@@ -15,26 +15,26 @@ function norway_install() {
   // $num is the number of zones in the INSERT query.
   // VALUES = %d for ID, Parent Country ID, Zone Abbreviation, Zone Name
   db_query("INSERT INTO {uc_zones} VALUES "
-				."(%d, 578, 'AK', 'Akershus'),"
-				."(%d, 578, 'AA', 'Aust-Agder'),"
-				."(%d, 578, 'BU', 'Buskerud'),"
-				."(%d, 578, 'FM', 'Finnmark'),"
-				."(%d, 578, 'HM', 'Hedmark'),"
-				."(%d, 578, 'HL', 'Hordaland'),"
-				."(%d, 578, 'MR', 'More og Romdal'),"
-				."(%d, 578, 'NT', 'Nord-Trondelag'),"
-				."(%d, 578, 'NL', 'Nordland'),"
-				."(%d, 578, 'OF', 'Ostfold'),"
-				."(%d, 578, 'OP', 'Oppland'),"
-				."(%d, 578, 'OL', 'Oslo'),"
-				."(%d, 578, 'RL', 'Rogaland'),"
-				."(%d, 578, 'ST', 'Sor-Trondelag'),"
-				."(%d, 578, 'SJ', 'Sogn og Fjordane'),"
-				."(%d, 578, 'SV', 'Svalbard'),"
-				."(%d, 578, 'TM', 'Telemark'),"
-				."(%d, 578, 'TR', 'Troms'),"
-				."(%d, 578, 'VA', 'Vest-Agder'),"
-				."(%d, 578, 'VF', 'Vestfold')",
+          ."(%d, 578, 'AK', 'Akershus'),"
+          ."(%d, 578, 'AA', 'Aust-Agder'),"
+          ."(%d, 578, 'BU', 'Buskerud'),"
+          ."(%d, 578, 'FM', 'Finnmark'),"
+          ."(%d, 578, 'HM', 'Hedmark'),"
+          ."(%d, 578, 'HL', 'Hordaland'),"
+          ."(%d, 578, 'MR', 'More og Romdal'),"
+          ."(%d, 578, 'NT', 'Nord-Trondelag'),"
+          ."(%d, 578, 'NL', 'Nordland'),"
+          ."(%d, 578, 'OF', 'Ostfold'),"
+          ."(%d, 578, 'OP', 'Oppland'),"
+          ."(%d, 578, 'OL', 'Oslo'),"
+          ."(%d, 578, 'RL', 'Rogaland'),"
+          ."(%d, 578, 'ST', 'Sor-Trondelag'),"
+          ."(%d, 578, 'SJ', 'Sogn og Fjordane'),"
+          ."(%d, 578, 'SV', 'Svalbard'),"
+          ."(%d, 578, 'TM', 'Telemark'),"
+          ."(%d, 578, 'TR', 'Troms'),"
+          ."(%d, 578, 'VA', 'Vest-Agder'),"
+          ."(%d, 578, 'VF', 'Vestfold')",
         uc_get_zone_ids(20));
 
   // Use uc_set_address_format() with the country ID as the first argument and
@@ -45,4 +45,3 @@ function norway_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!postal_code !city\r\n!country_name_if");
 }
-?>

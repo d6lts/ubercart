@@ -60,4 +60,3 @@ function new_zealand_update($version) {
       break;
   }
 }
-
