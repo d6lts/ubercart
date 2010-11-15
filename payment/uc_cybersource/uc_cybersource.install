@@ -58,20 +58,23 @@ function uc_cybersource_requirements($phase) {
   return $requirements;
 }
 
-/*
- * Implementation of hook_install.
+/**
+ * Implementation of hook_install().
  */
 function uc_cybersource_install() {
   drupal_install_schema('uc_cybersource');
 }
 
+/**
+ * Implementation of hook_uninstall().
+ */
 function uc_cybersource_uninstall() {
   // Delete related variables all at once.
   db_query("DELETE FROM {variable} WHERE name LIKE 'uc_cybersource_%%' OR name LIKE 'cs_ship_from_%%'");
 }
 
-/*
- * Implementation of hook_schema.
+/**
+ * Implementation of hook_schema().
  */
 function uc_cybersource_schema() {
   $schema['uc_payment_cybersource_hop_post'] = array(
@@ -134,7 +137,7 @@ function uc_cybersource_schema() {
       ),
      'received' => array(
         'description' => t('The IPN receipt timestamp.'),
-        'type' => 'int', 
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
@@ -164,9 +167,7 @@ function uc_cybersource_update_1() {
 
   return array();
 }
-/*
- * Install the 
- */
+
 function uc_cybersource_update_2() {
   $schema['uc_payment_cybersource_hop_post'] = array(
     'fields' => array(
@@ -228,7 +229,7 @@ function uc_cybersource_update_2() {
       ),
      'received' => array(
         'description' => t('The IPN receipt timestamp.'),
-        'type' => 'int', 
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,

@@ -8,7 +8,7 @@
  *
  * Development sponsored by:
  * Acquia - http://acquia.com
- * 
+ *
  * Harvard Magazine Classifieds through Growing Venture Solutions
  * https://classifieds.harvardmagazine.com/
  * http://growingventuresolutions.com
@@ -47,6 +47,7 @@ function uc_cybersource_menu() {
 function uc_cybersource_hop_post_access() {
   return TRUE;
 }
+
 /**
  * Implementation of hook_form_alter().
  */
@@ -154,7 +155,7 @@ function uc_cybersource_hop_post() {
         return;
       }
       $sql = "INSERT INTO {uc_payment_cybersource_hop_post} (order_id, request_id, request_token, reconciliation_id, gross, decision, reason_code, payer_email, received) VALUES (%d, '%s', '%s', '%s', %f, '%s', '%s', '%s', %d)";
-        
+
       db_query($sql, $order_id, $request_id, $request_token, $reconciliation_id, $payment_amount, $decision, $reason_code, $payer_email, time());
       $context = array(
         'revision' => 'formatted-original',
@@ -197,6 +198,7 @@ function uc_cybersource_hop_include() {
   // We didn't find HOP.php in any of the possible paths.
   return FALSE;
 }
+
 // Adds the CyberSource fields to the payment gateway settings form.
 function uc_cybersource_settings_form() {
   // Check for the HOP.php for Silent Order POST.
@@ -204,6 +206,7 @@ function uc_cybersource_settings_form() {
       !uc_cybersource_hop_include()) {
     drupal_set_message(t('You must download the security script from your CyberSource account (found in Tools & Settings > Hosted Order Page > Security) and place it in the ubercart/payment/uc_cybersource directory to use the Silent Order POST. Remember to open it and replace instances of L( with csL(.'), 'error');
   }
+
   $form['uc_cybersource_server'] = array(
     '#type' => 'select',
     '#title' => t('Payment server'),
@@ -320,7 +323,6 @@ function uc_cybersource_settings_form() {
 
   return $form;
 }
-
 
 /**
  * Defines payment method properties.
@@ -473,7 +475,7 @@ function uc_cybersource_hop_form($form_state, $order) {
   $data['orderPage_transactionType'] = variable_get('uc_cybersource_hop_transaction_type', 'sale');
   $data['orderPage_sendMerchantReceiptEmail'] = variable_get('uc_cybersource_hop_merchant_receipt_email', 'true');
   $data['orderPage_sendMerchantURLPost'] = 'true';
-  // CyberSource posts payment confirmation to this URL. 
+  // CyberSource posts payment confirmation to this URL.
   $data['orderPage_merchantURLPostAddress']= url('cybersource/hop-post', array('absolute' => TRUE));
   $data['orderPage_buyButtonText'] = t('Checkout');
   $receipt_url = url('cybersource/hop-complete/'. $order->order_id, array('absolute' => TRUE));
@@ -506,6 +508,7 @@ function uc_cybersource_hop_form($form_state, $order) {
 
   return $form;
 }
+
 function uc_cybersource_charge($order_id, $amount, $data) {
   global $user;
 
