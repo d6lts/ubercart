@@ -424,6 +424,7 @@ function uc_attribute_option_form_submit($form, &$form_state) {
   if (!isset($form_state['values']['oid'])) {
     db_query("INSERT INTO {uc_attribute_options} (aid, name, cost, price, weight, ordering) VALUES (%d, '%s', %f, %f, %f, %d)",
       $form_state['values']['aid'], $form_state['values']['name'], $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering']);
+    $form_state['values']['oid'] = db_last_insert_id('uc_attribute_options','');
     drupal_set_message(t('Created new option %option.', array('%option' => $form_state['values']['name'])));
     watchdog('uc_attribute', 'Created new option %option.', array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/attributes/'. $form_state['values']['aid'] .'/options/add');
     $form_state['redirect'] = 'admin/store/attributes/'. $form_state['values']['aid'] .'/options/add';
