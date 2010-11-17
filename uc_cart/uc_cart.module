@@ -1282,7 +1282,10 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   // Move an order's status from "In Checkout" to "Pending"
   $status = db_result(db_query("SELECT order_status FROM {uc_orders} WHERE order_id = %d", $order->order_id));
   if (uc_order_status_data($status, 'state') == 'in_checkout') {
-    uc_order_update_status($order->order_id, uc_order_state_default('post_checkout'));
+    $status = uc_order_state_default('post_checkout');
+    if (uc_order_update_status($order->order_id, $status)) {
+      $order->order_status = $status;
+    }
   }
 
   // Empty that cart...
