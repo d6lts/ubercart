@@ -2076,13 +2076,6 @@ function uc_referer_uri() {
 }
 
 /**
- * Returns the current version of Ubercart.
- */
-function uc_version() {
-  return '6.x-2.1';
-}
-
-/**
  * Get image widgets defined by various modules.
  */
 function uc_store_get_image_widgets() {
