@@ -815,19 +815,19 @@ function uc_order_select_customer($email = NULL) {
 
   // Return the search results and let them pick one!
   if (arg(4) == 'search') {
-    $first_name = strtolower(str_replace('*', '%', check_plain(arg(5))));
-    $last_name = strtolower(str_replace('*', '%', check_plain(arg(6))));
-    $email = strtolower(str_replace('*', '%', check_plain(arg(7))));
+    $first_name = strtolower(str_replace('*', '%', $_POST['first_name']));
+    $last_name = strtolower(str_replace('*', '%', $_POST['last_name']));
+    $email = strtolower(str_replace('*', '%', $_POST['email']));
 
-    if ($first_name !== '0' && $first_name !== '%') {
-      $where .= " AND LOWER(o.billing_first_name) LIKE '". $first_name ."'";
+    if ($first_name && $first_name !== '%') {
+      $where .= " AND LOWER(o.billing_first_name) LIKE '". db_escape_string($first_name) ."'";
     }
-    if ($last_name !== '0' && $last_name !== '%') {
-      $where .= " AND LOWER(o.billing_last_name) LIKE '". $last_name ."'";
+    if ($last_name && $last_name !== '%') {
+      $where .= " AND LOWER(o.billing_last_name) LIKE '". db_escape_string($last_name) ."'";
     }
-    if ($email !== '0' && $email !== '%') {
-      $where .= " AND (LOWER(o.primary_email) LIKE '". $email ."' OR LOWER(u.mail) LIKE '"
-              . $email ."')";
+    if ($email && $email !== '%') {
+      $where .= " AND (LOWER(o.primary_email) LIKE '". db_escape_string($email) ."' OR LOWER(u.mail) LIKE '"
+              . db_escape_string($email) ."')";
     }
 
     $query = "SELECT DISTINCT u.uid, u.mail, o.billing_first_name, "
@@ -859,7 +859,7 @@ function uc_order_select_customer($email = NULL) {
 
   // Check to see if the e-mail address for a new user is unique.
   if (arg(5) == 'check') {
-    $email = check_plain(arg(6));
+    $email = $_POST['email'];
     if (!valid_email_address($email)) {
       $output .= t('Invalid e-mail address.') .'<br />';
     }
@@ -867,7 +867,7 @@ function uc_order_select_customer($email = NULL) {
     if ($user = db_fetch_object($result)) {
       $output .= t('An account already exists for that e-mail.') .'<br /><br />';
       $output .= '<b>'. t('Use this account now?') .'</b><br />'
-               . t('User !uid - !mail', array('!uid' => $user->uid, '!mail' => $user->mail)) .' <input type="button" '
+               . t('User @uid - @mail', array('@uid' => $user->uid, '@mail' => $user->mail)) .' <input type="button" '
                 .'onclick="select_existing_customer('. $user->uid .', \''
                . $user->mail .'\');" value="'. t('Apply') .'" /><br /><br /><hr /><br />';
     }

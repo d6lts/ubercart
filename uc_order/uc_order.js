@@ -177,25 +177,15 @@ function load_customer_search() {
  * Display the results of the customer search.
  */
 function load_customer_search_results() {
-  var first_name = $('#customer-select #edit-first-name').val();
-  var last_name = $('#customer-select #edit-last-name').val();
-  var email = $('#customer-select #edit-email').val();
-
-  if (first_name == '') {
-    first_name = '0';
-  }
-  if (last_name == '') {
-    last_name = '0';
-  }
-  if (email == '') {
-    email = '0';
-  }
-
-  $.post(Drupal.settings.ucURL.adminOrders + 'customer/search/' + encodeURIComponent(first_name) + '/' + encodeURIComponent(last_name) + '/' + encodeURIComponent(email),
-         { },
-         function (contents) {
-           $('#customer-select').empty().append(contents);
-         }
+  $.post(Drupal.settings.ucURL.adminOrders + 'customer/search',
+    {
+      first_name: $('#customer-select #edit-first-name').val(),
+      last_name: $('#customer-select #edit-last-name').val(),
+      email: $('#customer-select #edit-email').val()
+    },
+    function (contents) {
+      $('#customer-select').empty().append(contents);
+    }
   );
   return false;
 }
@@ -242,7 +232,7 @@ function check_new_customer_address() {
     'email' : $('#customer-select #edit-email').val(),
     'sendmail' : $('#customer-select #edit-sendmail').attr('checked')
   };
-  $.post(Drupal.settings.ucURL.adminOrders + 'customer/new/check/' + encodeURIComponent(options['email']), options,
+  $.post(Drupal.settings.ucURL.adminOrders + 'customer/new/check', options,
          function (contents) {
            $('#customer-select').empty().append(contents);
          }
