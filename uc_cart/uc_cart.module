@@ -946,6 +946,17 @@ function uc_cart_view_form($form_state, $items = NULL) {
       $description = $display_item['title']['#value'] . $display_item['description']['#value'];
       $form['items'][$i]['desc']['#value'] = $description;
 
+      $form['items'][$i]['cart_item_id'] = array(
+        '#type' => 'hidden',
+        '#value' => $item->cart_item_id,
+      );
+
+      $form['items'][$i]['remove'] = array(
+        '#type' => 'submit',
+        '#value' => t('Remove'),
+        '#name' => 'remove-' . $i,
+      );
+
       $form['items'][$i]['title']['#type'] = 'value';
       $form['items'][$i]['description']['#type'] = 'value';
 
@@ -980,7 +991,6 @@ function uc_cart_view_form($form_state, $items = NULL) {
       $form['continue_shopping'] = array(
         '#type' => 'submit',
         '#value' => $cs_text,
-        '#submit' => array('uc_cart_view_form_submit'),
       );
       $form['continue_shopping_text'] = array(
         '#type' => 'hidden',
@@ -993,13 +1003,11 @@ function uc_cart_view_form($form_state, $items = NULL) {
   $form['update'] = array(
     '#type' => 'submit',
     '#value' => t('Update cart'),
-    '#submit' => array('uc_cart_view_form_submit'),
   );
   if (variable_get('uc_checkout_enabled', TRUE)) {
     $form['checkout'] = array(
       '#type' => 'submit',
       '#value' => t('Checkout'),
-      '#submit' => array('uc_cart_view_form_submit'),
     );
   }
 
@@ -1015,11 +1023,18 @@ function uc_cart_view_form_submit($form, &$form_state) {
     unset($_SESSION['cart_order']);
   }
 
+  // If a remove button was clicked, set the quantity for that item to 0.
+  if (substr($form_state['clicked_button']['#name'], 0, 7) == 'remove-') {
+    $item = substr($form_state['clicked_button']['#name'], 7);
+    $form_state['values']['items'][$item]['qty'] = 0;
+    drupal_set_message(t('<strong>!product-title</strong> removed from your shopping cart.', array('!product-title' => $form_state['values']['items'][$item]['title'])));
+  }
+
   // Update the items in the shopping cart based on the form values.
   uc_cart_update_item_object((object)$form_state['values']);
 
   // Specify the appropriate redirect based on the button used to submit.
-  switch ($form_state['values']['op']) {
+  switch ($form_state['clicked_button']['#value']) {
     // Continue shopping button.
     case $form_state['values']['continue_shopping_text']:
       $form_state['redirect'] = uc_cart_continue_shopping_url();
@@ -1600,12 +1615,7 @@ function uc_cart_remove_item($nid, $cid = NULL, $data = array()) {
 function uc_cart_update_item_object($cart) {
   if (is_object($cart)) {
     foreach ($cart->items as $item) {
-      if ($item['remove']) {
-        module_invoke($item['module'], 'update_cart_item', $item['nid'], unserialize($item['data']), 0);
-      }
-      else {
-        module_invoke($item['module'], 'update_cart_item', $item['nid'], unserialize($item['data']), $item['qty']);
-      }
+      module_invoke($item['module'], 'update_cart_item', $item['nid'], unserialize($item['data']), $item['qty']);
     }
 
     // Rebuild the cached cart items.
