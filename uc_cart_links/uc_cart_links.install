@@ -62,7 +62,7 @@ function uc_cart_links_uninstall() {
  * Remove obsolete variable.
  */
 function uc_cart_links_update_6001() {
-  variable_del('uc_cart_links_empty');
-
+  // Update removed, "empty cart" functionality restored.
+  // See http://drupal.org/node/881752.
   return array();
 }
