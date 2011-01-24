@@ -1045,6 +1045,8 @@ function uc_order_save($order) {
     return FALSE;
   }
 
+  uc_order_module_invoke('presave', $order, NULL);
+
   db_query("UPDATE {uc_orders} SET uid = %d, order_status = '%s', order_total = %f, product_count = %d, primary_email = '%s', "
           ."delivery_first_name = '%s', delivery_last_name = '%s', delivery_phone = '%s', "
           ."delivery_company = '%s', delivery_street1 = '%s', delivery_street2 = '%s', "
