@@ -951,11 +951,14 @@ function uc_cart_view_form($form_state, $items = NULL) {
         '#value' => $item->cart_item_id,
       );
 
-      $form['items'][$i]['remove'] = array(
-        '#type' => 'submit',
-        '#value' => t('Remove'),
-        '#name' => 'remove-' . $i,
-      );
+      if (isset($form['items'][$i]['remove'])) {
+        // Backward compatibility with old checkbox method.
+        if ($form['items'][$i]['remove']['#type'] == 'checkbox') {
+          $form['items'][$i]['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
+        }
+
+        $form['items'][$i]['remove']['#name'] = 'remove-' . $i;
+      }
 
       $form['items'][$i]['title']['#type'] = 'value';
       $form['items'][$i]['description']['#type'] = 'value';
