@@ -67,11 +67,11 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
         $description = t('Order information will be sent to your account e-mail listed below.');// .'<br />'
         $contents['primary_email'] = array('#type' => 'hidden', '#value' => check_plain($email));
         $contents['email_text'] = array(
-          '#value' => '<div>'. t('<b>E-mail address:</b> @email (<a href="!url">edit</a>)', array('@email' => $email, '!url' => url('user/'. $user->uid .'/edit', array('query' => 'destination=cart/checkout')))) .'</div>',
+          '#value' => '<div>'. t('<b>E-mail address:</b> @email (<a href="!url">edit</a>)', array('@email' => $email, '!url' => url('user/'. $user->uid .'/edit', array('query' => drupal_get_destination())))) .'</div>',
         );
       }
       else {
-        $description = t('Enter a valid email address for this order or <a href="!url">click here</a> to login with an existing account and return to checkout.', array('!url' => url('user/login')));
+        $description = t('Enter a valid email address for this order or <a href="!url">click here</a> to login with an existing account and return to checkout.', array('!url' => url('user/login', array('query' => drupal_get_destination()))));
         $contents['primary_email'] = uc_textfield(t('E-mail address'), $email, TRUE, NULL, 64);
       }
 
