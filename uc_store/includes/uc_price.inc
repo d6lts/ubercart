@@ -113,20 +113,22 @@ function uc_price($price_info, $context, $options = array()) {
   // Merge any incoming options, giving them precedence.
   $options += $handlers['options'];
 
-  // Build the cache key with the original state, trimming down the account to
-  // an array with a limited set of keys that don't change every pageload; the
-  // uid, name, mail, and roles of the user account.
-  $context_clone = $context;
-  // TODO: array_intersect_key() isn't available until PHP 5.1.0. (Drupal 7)
-  //$context_clone['account'] = array_intersect_key((array) $context['account'], drupal_map_assoc(array()));
-  $context_clone['account'] = array(
-    'uid' => $context['account']->uid,
-    'name' => $context['account']->name,
-    'mail' => $context['account']->mail,
-    'roles' => $context['account']->roles,
-  );
+  if ($options['cache']) {
+    // Build the cache key with the original state, trimming down the account to
+    // an array with a limited set of keys that don't change every pageload; the
+    // uid, name, mail, and roles of the user account.
+    $context_clone = $context;
+    // TODO: array_intersect_key() isn't available until PHP 5.1.0. (Drupal 7)
+    //$context_clone['account'] = array_intersect_key((array) $context['account'], drupal_map_assoc(array()));
+    $context_clone['account'] = array(
+      'uid' => $context['account']->uid,
+      'name' => $context['account']->name,
+      'mail' => $context['account']->mail,
+      'roles' => $context['account']->roles,
+    );
 
-  $key = md5(serialize($price_info + $context_clone + $options));
+    $key = md5(serialize($price_info + $context_clone + $options));
+  }
 
   // If this price has already been calculated and cached...
   if ($options['cache'] && $cache = cache_get($key, 'cache_uc_price')) {
