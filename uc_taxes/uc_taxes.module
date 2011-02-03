@@ -161,8 +161,8 @@ function uc_taxes_order($op, $arg1, $arg2) {
   switch ($op) {
     case 'save':
       $changes = array();
-      $line_items = uc_line_item_tax('load', $arg1);
-      //$arg1->line_items = uc_order_load_line_items($arg1, TRUE);
+      $callback = _line_item_data('tax', 'callback');
+      $line_items = $callback('load', $arg1);
       $context = array(
         'revision' => 'formatted',
         'type' => 'line_item',
