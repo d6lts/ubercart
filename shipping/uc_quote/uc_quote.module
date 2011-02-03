@@ -985,12 +985,11 @@ function uc_order_pane_quotes($op, $arg1) {
     case 'edit-theme':
       return drupal_render($arg1['quotes']);
     case 'edit-process':
-      //drupal_set_message('<pre>'. print_r($_POST, TRUE) .'</pre>');
       if (isset($_POST['quote-option'])) {
         list($changes['quote']['method'], $changes['quote']['accessorials']) = explode('---', $_POST['quote-option']);
+        $changes['quote']['rate'] = $_POST['rate'][$_POST['quote-option']];
+        $changes['quote']['quote_form'] = rawurldecode($_POST['quote-form']);
       }
-      $changes['quote']['rate'] = $_POST['rate'][$_POST['quote-option']];
-      $changes['quote']['quote_form'] = rawurldecode($_POST['quote-form']);
       return $changes;
     case 'edit-ops':
       return array(t('Apply to order'));
