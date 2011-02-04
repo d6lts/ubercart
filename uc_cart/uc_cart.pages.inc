@@ -90,13 +90,9 @@ function uc_cart_checkout() {
   if (!$user->uid && !variable_get('uc_checkout_anonymous', TRUE)) {
     drupal_set_message(t('You must login before you can proceed to checkout.'));
     if (variable_get('user_register', 1) != 0) {
-      drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => url('user/register'))));
+      drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => url('user/register', array('query' => drupal_get_destination())))));
     }
-    $_SESSION['checkout-redirect'] = TRUE;
-    drupal_goto('user');
-  }
-  else {
-    unset($_SESSION['checkout-redirect']);
+    drupal_goto('user', drupal_get_destination());
   }
 
   $list = _line_item_list();
