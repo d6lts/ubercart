@@ -1586,7 +1586,7 @@ function uc_cart_remove_item($nid, $cid = NULL, $data = array(), $op = 'remove')
   $cart_id = !(is_null($cid) || empty($cid)) ? $cid : uc_cart_get_id();
 
   // Invoke hook_cart_item() with $op = 'remove' in enabled modules.
-  $result = db_query("SELECT c.*, n.title, n.vid FROM {node} n INNER JOIN {uc_cart_products} c ON n.nid = c.nid WHERE c.cart_id = '%s' AND c.nid = %d", $cart_id, $nid);
+  $result = db_query("SELECT c.*, n.title, n.vid FROM {node} n INNER JOIN {uc_cart_products} c ON n.nid = c.nid WHERE c.cart_id = '%s' AND c.nid = %d AND c.data = '%s'", $cart_id, $nid, serialize($data));
   if ($item = db_fetch_object($result)) {
     foreach (module_list() as $module) {
       $func = $module .'_cart_item';
