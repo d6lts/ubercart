@@ -498,7 +498,20 @@ function uc_taxes_apply_item_tax($item, $tax) {
   // Tax products if they are of a taxed type and if it is shippable if
   // the tax only applies to shippable products.
   if (in_array($node->type, $tax->taxed_product_types) && ($tax->shippable == 0 || $node->shippable == 1)) {
-    return $item->price * $item->qty;
+    $context = array(
+      'revision' => 'altered',
+      'type' => 'cart_item',
+      'subject' => array(
+        'cart_item' => $item,
+        'node' => $item->nid ? $node : FALSE,
+      ),
+    );
+    $price_info = array(
+      'price' => $item->price,
+      'qty' => $item->qty,
+    );
+
+    return uc_price($price_info, $context);
   }
 }
 
