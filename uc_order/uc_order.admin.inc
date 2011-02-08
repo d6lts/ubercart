@@ -1664,7 +1664,7 @@ function uc_order_add_product_form($form_state, $order, $node) {
 }
 
 /**
- * Display an invoice in the browser, convert it to PDF, or e-mail it as HTML.
+ * Display an invoice in the browser.
  */
 function uc_order_invoice($order, $op = 'view') {
   $output = theme('uc_order', $order, $op, variable_get('uc_cust_order_invoice_template', 'customer'));
