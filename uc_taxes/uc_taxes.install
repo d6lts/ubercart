@@ -71,6 +71,9 @@ function uc_taxes_schema() {
  */
 function uc_taxes_install() {
   drupal_install_schema('uc_taxes');
+
+  // Increase the module weight so taxes are calculated after other line items.
+  db_query("UPDATE {system} SET weight = 10 WHERE name = 'uc_taxes'");
 }
 
 /**
@@ -282,6 +285,17 @@ function uc_taxes_update_6002() {
   if (!db_column_exists('uc_taxes', 'shippable')) {
     db_add_field($ret, 'uc_taxes', 'shippable', array('type' => 'int', 'size' => 'tiny', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   }
+
+  return $ret;
+}
+
+/**
+ * Increase the module weight so taxes are calculated after other line items.
+ */
+function uc_taxes_update_6003() {
+  $ret = array();
+
+  $ret[] = update_sql("UPDATE {system} SET weight = 10 WHERE name = 'uc_taxes'");
 
   return $ret;
 }
