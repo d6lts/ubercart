@@ -469,7 +469,6 @@ function uc_google_checkout_cart_request($order) {
       $output .= '<item-description>'. check_plain($product->title) .'</item-description>';
       $output .= '<unit-price currency="'. variable_get('uc_currency_code', 'USD') .'">'. $product->price .'</unit-price>';
       $output .= '<item-weight unit="LB" value="'. $product->weight * uc_weight_conversion($product->weight_units, 'lb') .'" />';
-      echo $output;exit;
       if (!uc_cart_product_is_shippable($product)) {
         $output .= '<digital-content>';
           $output .= '<display-disposition>PESSIMISTIC</display-disposition>';
