@@ -427,20 +427,23 @@ function uc_cart_block($op = 'list', $delta = 0, $edit = array()) {
         }
 
         // Set the text of the block title.
-        $title = check_plain(trim(variable_get('uc_cart_block_title', '')));
+        $title = trim(db_result(db_query("SELECT title FROM {blocks} WHERE module = 'uc_cart' AND delta = 0")));
 
         if (empty($title)) {
           $title = t('Shopping cart');
         }
 
-        // Build the block array for display based on cache settings.
+        // Ensure we always override Drupal's default block title formatting.
+        $block = array(
+          'subject' => $title == '<none>' ? '' : theme('uc_cart_block_title', check_plain($title), $icon_class, $collapsible),
+          'title' => FALSE,
+        );
+
+        // Build the block content for display based on cache settings.
         if ($cachable) {
           // Caching is turned on and the user is not logged in, so we should
           // deliver a block that is safe for caching.
-          $block = array(
-            'subject' => theme('uc_cart_block_title', $title, $icon_class, $collapsible),
-            'content' => theme('uc_cart_block_content_cachable'),
-          );
+          $block['content'] = theme('uc_cart_block_content_cachable');
         }
         else {
           // Otherwise build the whole shebang.
@@ -495,10 +498,7 @@ function uc_cart_block($op = 'list', $delta = 0, $edit = array()) {
             );
           }
 
-          $block = array(
-            'subject' => theme('uc_cart_block_title', $title, $icon_class, $collapsible),
-            'content' => theme('uc_cart_block_content', $help_text, $items, $item_count, $item_text, $total, $summary_links),
-          );
+          $block['content'] = theme('uc_cart_block_content', $help_text, $items, $item_count, $item_text, $total, $summary_links);
         }
 
         return $block;
@@ -525,12 +525,6 @@ function uc_cart_block_settings_form() {
     '#type' => 'checkbox',
     '#title' => t('Display the shopping cart icon in the block title.'),
     '#default_value' => variable_get('uc_cart_block_image', TRUE),
-  );
-  $form['uc_cart_block_title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Cart name'),
-    '#description' => t('This name will be displayed when using the default block title.<br />Leaving this blank defaults to the translatable name "Shopping Cart."'),
-    '#default_value' => variable_get('uc_cart_block_title', ''),
   );
   $form['uc_cart_block_collapsible'] = array(
     '#type' => 'checkbox',
@@ -566,7 +560,6 @@ function uc_cart_block_settings_form() {
 function uc_cart_block_settings_form_submit($edit = array()) {
   variable_set('uc_cart_block_empty_hide', $edit['uc_cart_block_empty_hide']);
   variable_set('uc_cart_block_image', $edit['uc_cart_block_image']);
-  variable_set('uc_cart_block_title', $edit['uc_cart_block_title']);
   variable_set('uc_cart_block_collapsible', $edit['uc_cart_block_collapsible']);
   variable_set('uc_cart_block_collapsed', $edit['uc_cart_block_collapsed']);
   variable_set('uc_cart_show_help_text', $edit['uc_cart_show_help_text']);
