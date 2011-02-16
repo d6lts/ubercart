@@ -383,7 +383,6 @@ function uc_cart_block($op = 'list', $delta = 0, $edit = array()) {
       // 0 = Default shopping cart block.
       if ($delta == 0) {
         $cachable = !$user->uid && variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED;
-        $uc_cart_path = drupal_get_path('module', 'uc_cart');
         $product_count = count(uc_cart_get_contents());
 
         // Display nothing if the block is set to hide on empty and there are no
@@ -399,10 +398,6 @@ function uc_cart_block($op = 'list', $delta = 0, $edit = array()) {
         if (!$cachable && variable_get('uc_cart_block_collapsible', TRUE)) {
           drupal_add_js(array('ucCollapsedBlock' => variable_get('uc_cart_block_collapsed', TRUE)), 'setting');
           drupal_add_js(drupal_get_path('module', 'uc_cart') .'/uc_cart_block.js');
-          $collapsible = TRUE;
-        }
-        else {
-          $collapsible = FALSE;
         }
 
         // Hack in some CSS to hide the block if necessary. drupal_add_css() is in Drupal 7 for this...
@@ -410,36 +405,8 @@ function uc_cart_block($op = 'list', $delta = 0, $edit = array()) {
           drupal_set_html_head("<style type='text/css'>#cart-block-contents { display: none; }</style>");
         }
 
-        // Build the cart image if enabled.
-        if (variable_get('uc_cart_block_image', TRUE)) {
-          // If the cart is empty or we need a cachable cart block...
-          if ($cachable || !$product_count) {
-            // Use the "empty" cart icon.
-            $icon_class = 'cart-block-icon-empty';
-          }
-          else {
-            // Otherwise use the "full" cart icon.
-            $icon_class = 'cart-block-icon-full';
-          }
-        }
-        else {
-          $icon_class = FALSE;
-        }
-
-        // Set the text of the block title.
-        $title = trim(db_result(db_query("SELECT title FROM {blocks} WHERE module = 'uc_cart' AND delta = 0")));
-
-        if (empty($title)) {
-          $title = t('Shopping cart');
-        }
-
-        // Ensure we always override Drupal's default block title formatting.
-        $block = array(
-          'subject' => $title == '<none>' ? '' : theme('uc_cart_block_title', check_plain($title), $icon_class, $collapsible),
-          'title' => FALSE,
-        );
-
         // Build the block content for display based on cache settings.
+        $block['subject'] = t('Shopping cart');
         if ($cachable) {
           // Caching is turned on and the user is not logged in, so we should
           // deliver a block that is safe for caching.
@@ -564,6 +531,37 @@ function uc_cart_block_settings_form_submit($edit = array()) {
   variable_set('uc_cart_block_collapsed', $edit['uc_cart_block_collapsed']);
   variable_set('uc_cart_show_help_text', $edit['uc_cart_show_help_text']);
   variable_set('uc_cart_help_text', $edit['uc_cart_help_text']);
+}
+
+/**
+ * Preprocess the cart block output.
+ */
+function uc_cart_preprocess_block(&$variables) {
+  global $user;
+
+  if ($variables['block']->module == 'uc_cart' && $variables['block']->delta == 0 && $variables['block']->subject) {
+    $cachable = !$user->uid && variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED;
+    $collapsible = !$cachable && variable_get('uc_cart_block_collapsible', TRUE);
+
+    // Build the cart image if enabled.
+    if (variable_get('uc_cart_block_image', TRUE)) {
+      // If the cart is empty or we need a cachable cart block...
+      $product_count = count(uc_cart_get_contents());
+      if ($cachable || !$product_count) {
+        // Use the "empty" cart icon.
+        $icon_class = 'cart-block-icon-empty';
+      }
+      else {
+        // Otherwise use the "full" cart icon.
+        $icon_class = 'cart-block-icon-full';
+      }
+    }
+    else {
+      $icon_class = FALSE;
+    }
+
+    $variables['block']->subject = theme('uc_cart_block_title', $variables['block']->subject, $icon_class, $collapsible);
+  }
 }
 
 /**
