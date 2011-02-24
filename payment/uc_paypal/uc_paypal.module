@@ -83,13 +83,6 @@ function uc_paypal_ipn_access() {
 }
 
 /**
- * Implementation of hook_perm().
- */
-function uc_paypal_perm() {
-  return array('administer paypal');
-}
-
-/**
  * Implementation of hook_init().
  */
 function uc_paypal_init() {
