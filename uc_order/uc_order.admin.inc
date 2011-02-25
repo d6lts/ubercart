@@ -1284,7 +1284,7 @@ function uc_order_edit_products($order) {
     case 'add_blank':
       db_query("INSERT INTO {uc_order_products} (order_id, qty) VALUES (%d, 1)", $order->order_id);
       if (variable_get('uc_order_logging', TRUE)) {
-        uc_order_log_changes($order->order_id, array('add' => 'Added new product line to order.'));
+        uc_order_log_changes($order->order_id, array('add' => t('Added new product line to order.')));
       }
       break;
     case 'add':
@@ -1321,7 +1321,7 @@ function uc_order_edit_products($order) {
       uc_order_product_save($order->order_id, $product);
 
       if (variable_get('uc_order_logging', TRUE)) {
-        uc_order_log_changes($order->order_id, array('add' => 'Added ('. $product->qty .') '. $product->title .' to order.'));
+        uc_order_log_changes($order->order_id, array('add' => t('Added (@qty) @product-title to order.', array('@qty' => $product->qty, '@product-title' => $product->title))));
       }
 
       // Decrement stock?
