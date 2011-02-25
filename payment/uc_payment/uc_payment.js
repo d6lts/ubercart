@@ -1,4 +1,3 @@
-// $Id$
 
 /**
  * Calculate the number of bytes of a Unicode string.
