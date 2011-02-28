@@ -1,5 +1,4 @@
 <?php
-// $Id$ 1.0.0
 
 /**
  * First implement hook_install() using the name of the country as the base of

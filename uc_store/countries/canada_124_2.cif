@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 function canada_install() {
   // VALUES = Country ID, Country Name, 2-digit Code, 3-digit Code, File Version
