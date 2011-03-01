@@ -226,3 +226,14 @@ function uc_google_checkout_update_6003() {
 
   return $ret;
 }
+
+/**
+ * Delete old shipping settings.
+ */
+function uc_google_checkout_update_6004() {
+  $ret = array();
+
+  $ret[] = update_sql("DELETE FROM {variable} WHERE name LIKE 'uc_google_checkout_shipping_%%'");
+
+  return $ret;
+}
