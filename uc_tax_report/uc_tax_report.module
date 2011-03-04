@@ -133,7 +133,13 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
       uc_price($line['amount'], $context),
     );
     $rows[] = $row;
-    $csv_rows[] = $row;
+    $csv_rows[] = array(
+      $line['name'],
+      $line['jurisdiction'],
+      number_format($line['rate'] * 100, 3) . '%',
+      $line['taxable_amount'],
+      $line['amount'],
+    );
     $taxable_amount += $line['taxable_amount'];
     $amount += $line['amount'];
   }
@@ -147,7 +153,13 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
       uc_price($line['amount'], $context),
     );
     $rows[] = $row;
-    $csv_rows[] = $row;
+    $csv_rows[] = $row = array(
+      $line['name'],
+      '*',
+      '*',
+      '*',
+      $line['amount'],
+    );
     $amount += $line['amount'];
     // We have at least one no-meta-data line. Explain why.
     $star_legend = t('* No information on jurisdiction, tax rate, or taxable amount is available for this line.');
@@ -162,7 +174,13 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
     uc_price($amount, $context),
   );
   $rows[] = $row;
-  $csv_rows[] = $row;
+  $csv_rows[] = array(
+    t('Total'),
+    '',
+    '',
+    $taxable_amount,
+    $amount,
+  );
 
   // Cache the CSV export.
   $csv_data = uc_reports_store_csv('uc_tax_report', $csv_rows);

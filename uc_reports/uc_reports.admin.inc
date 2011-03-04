@@ -98,7 +98,7 @@ function uc_reports_customers() {
       array('data' => $total_revenue, 'nowrap' => 'nowrap'),
       array('data' => $average_revenue, 'nowrap' => 'nowrap'),
     );
-    $csv_rows[] = array($customer_number, $customer_order_name, $customer_name, $orders, $products, $total_revenue, $average_revenue);
+    $csv_rows[] = array($customer_number, $customer_order_name, $customer_name, $orders, $products, $customer['total'], $customer['average']);
   }
   if (empty($rows)) {
     $rows[] = array(array('data' => t('No customers found'), 'colspan' => count($header)));
@@ -192,9 +192,9 @@ function uc_reports_products() {
     $sold_cell = (empty($product['sold'])) ? 0 : $product['sold'];
     $sold_csv = $sold_cell;
     $revenue_cell = uc_price((empty($product['revenue'])) ? 0 : $product['revenue'], $context);
-    $revenue_csv = $revenue_cell;
+    $revenue_csv = (empty($product['revenue'])) ? 0 : $product['revenue'];
     $gross_cell = uc_price((empty($product['gross'])) ? 0 : $product['gross'], $context);
-    $gross_csv = $gross_cell;
+    $gross_csv = (empty($product['gross'])) ? 0 : $product['gross'];
 
     $row = array(
       'data' => array(
@@ -235,8 +235,8 @@ function uc_reports_products() {
         $breakdown_gross = uc_price((!empty($gross)) ? $gross : 0, $context);
 
         $context['revision'] = 'formatted';
-        $revenue_csv = uc_price((!empty($revenue)) ? $revenue : 0, $context);
-        $gross_csv = uc_price((!empty($gross)) ? $gross : 0, $context);
+        $revenue_csv = (!empty($revenue)) ? $revenue : 0;
+        $gross_csv = (!empty($gross)) ? $gross : 0;
 
         $row = array(
           'data' => array(
@@ -398,9 +398,9 @@ function uc_reports_products_custom() {
     $sold_cell = (empty($product['sold'])) ? 0 : $product['sold'];
     $sold_csv = $sold_cell;
     $revenue_cell = uc_currency_format((empty($product['revenue'])) ? 0 : $product['revenue']);
-    $revenue_csv = $revenue_cell;
+    $revenue_csv = (empty($product['revenue'])) ? 0 : $product['revenue'];
     $gross_cell = uc_currency_format((empty($product['gross'])) ? 0 : $product['gross']);
-    $gross_csv = $gross_cell;
+    $gross_csv = (empty($product['gross'])) ? 0 : $product['gross'];
 
     if (module_exists('uc_attribute')) {
       $breakdown_product = $breakdown_sold = $breakdown_revenue = $breakdown_gross = '';
@@ -414,9 +414,9 @@ function uc_reports_products_custom() {
         $breakdown_sold .= "<br />". ((!empty($sold)) ? $sold : 0);
         $sold_csv .= "\n     ". ((!empty($sold)) ? $sold : 0);
         $breakdown_revenue .= "<br />". (uc_currency_format((!empty($revenue)) ? $revenue : 0));
-        $revenue_csv .= "\n     ". (uc_currency_format((!empty($revenue)) ? $revenue : 0));
+        $revenue_csv .= "\n     ". ((!empty($revenue)) ? $revenue : 0);
         $breakdown_gross .= "<br />". (uc_currency_format((!empty($gross)) ? $gross : 0));
-        $gross_csv .= "\n     ". (uc_currency_format((!empty($gross)) ? $gross : 0));
+        $gross_csv .= "\n     ". ((!empty($gross)) ? $gross : 0);
       }
       $product_cell = $product_cell . $breakdown_product;
       $sold_cell = '<strong>'. $sold_cell .'</strong>'. $breakdown_sold;
@@ -828,8 +828,8 @@ function uc_reports_sales_year() {
     $csv_rows[] = array(
       gmdate('M Y', $month_start),
       $month_sales['total'],
-      uc_price($month_sales['income'], $context),
-      uc_price($month_average, $context),
+      $month_sales['income'],
+      $month_average,
     );
   }
 
@@ -860,8 +860,8 @@ function uc_reports_sales_year() {
   $csv_rows[] = array(
     t('Total @year', array('@year' => $year)),
     $year_sales['total'],
-    uc_price($year_sales['income'], $context),
-    uc_price($year_average, $context),
+    $year_sales['income'],
+    $year_average,
   );
 
   // Cache the CSV export.
@@ -1017,7 +1017,7 @@ function uc_reports_sales_custom() {
       $date,
       empty($order_csv) ? '0' : $order_csv,
       empty($product_csv) ? '0' : $product_csv,
-      uc_price($revenue_count, $context),
+      $revenue_count,
     );
   }
 
@@ -1039,7 +1039,7 @@ function uc_reports_sales_custom() {
     t('Total'),
     $order_total,
     $product_total,
-    uc_price($revenue_total, $context),
+    $revenue_total,
   );
 
   // Cache the CSV export.
