@@ -171,6 +171,13 @@ function uc_roles_uninstall() {
   db_query("DELETE FROM {variable} WHERE name LIKE 'uc_roles_%%'");
 }
 
+/**
+ * Implementation of hook_update_last_removed().
+ */
+function uc_roles_update_last_update_removed() {
+  return 4;
+}
+
 function uc_roles_update_6000() {
   $ret = array();
 

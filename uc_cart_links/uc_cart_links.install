@@ -58,6 +58,13 @@ function uc_cart_links_uninstall() {
 }
 
 /**
+ * Implementation of hook_update_last_removed().
+ */
+function uc_cart_links_update_last_removed() {
+  return 1;
+}
+
+/**
  * Remove obsolete variable.
  */
 function uc_cart_links_update_6001() {
