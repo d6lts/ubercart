@@ -84,11 +84,7 @@ function uc_price($price_info, $context, $options = array()) {
     );
   }
 
-  // Initialize the options and context.
-  $options += array(
-    'cache' => variable_get('uc_price_caching', TRUE),
-  );
-
+  // Initialize the context.
   $context += array(
     'revision' => 'themed',
     'type' => 'amount',
@@ -245,6 +241,7 @@ function _uc_price_get_handlers($options = array()) {
       'dec' => variable_get('uc_currency_dec', '.'),
       'thou' => variable_get('uc_currency_thou', ','),
       'label' => TRUE,
+      'cache' => variable_get('uc_price_caching', TRUE),
     );
 
     foreach ($hooks as $hook) {
@@ -256,7 +253,7 @@ function _uc_price_get_handlers($options = array()) {
       }
 
       if (isset($hook['options']) && is_array($hook['options'])) {
-        $handlers['options'] += $hook['options'];
+        $handlers['options'] = $hook['options'] + $handlers['options'];
       }
     }
   }
