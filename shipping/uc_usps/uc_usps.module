@@ -474,17 +474,19 @@ function theme_uc_usps_option_label($service) {
  * @param $destination
  *   Delivery destination address information.
  * @return
- *   RateV3Request XML document to send to USPS
+ *   RateV4Request XML document to send to USPS
  */
 function uc_usps_rate_request($packages, $origin, $destination) {
-  $request  = '<RateV3Request USERID="'. variable_get('uc_usps_user_id', '') .'">';
-  $services_count = 0;
+  $request  = '<RateV4Request USERID="'. variable_get('uc_usps_user_id', '') .'">';
+  $request .= '<Revision>2</Revision>';
+
   $rate_type = variable_get('uc_usps_online_rates', FALSE);
 
+  $package_id = 0;
   foreach ($packages as $package) {
     $qty = $package->qty;
     for ($i = 0; $i < $qty; $i++) {
-      $request .= '<Package ID="'. $services_count .'">'.
+      $request .= '<Package ID="'. $package_id .'">'.
         '<Service>'. ($rate_type ? 'ONLINE' : 'ALL') .'</Service>'.
         '<ZipOrigination>'. substr($origin->postal_code, 0, 5) .'</ZipOrigination>'.
         '<ZipDestination>'. substr($destination->postal_code, 0, 5) .'</ZipDestination>'.
@@ -495,12 +497,12 @@ function uc_usps_rate_request($packages, $origin, $destination) {
         '<Machinable>'. ($package->machinable ? 'True' : 'False') .'</Machinable>'.
         '</Package>';
 
-      $services_count++;
+      $package_id++;
     }
   }
-  $request .= '</RateV3Request>';
+  $request .= '</RateV4Request>';
 
-  return 'API=RateV3&XML='. drupal_urlencode($request);
+  return 'API=RateV4&XML='. drupal_urlencode($request);
 }
 
 /**
@@ -517,28 +519,30 @@ function uc_usps_rate_request($packages, $origin, $destination) {
  */
 function uc_usps_intl_rate_request($packages, $origin, $destination) {
   module_load_include('inc', 'uc_usps', 'uc_usps.countries');
-  $request  = '<IntlRateRequest USERID="'. variable_get('uc_usps_user_id', '') .'">';
-  $services_count = 0;
+  $request  = '<IntlRateV2Request USERID="'. variable_get('uc_usps_user_id', '') .'">';
+  $request .= '<Revision>2</Revision>';
 
-  // This needs to be international name per USPS website. See http://pe.usps.com/text/Imm/immctry.htm
+  // USPS does not use ISO 3166 country name in some cases so we
+  // need to transform ISO country name into one USPS understands.
   $shipto_country = uc_usps_country_map($destination->country);
 
+  $package_id = 0;
   foreach ($packages as $package) {
     $qty = $package->qty;
     for ($i = 0; $i < $qty; $i++) {
-      $request .= '<Package ID="'. $services_count .'">'.
+      $request .= '<Package ID="'. $package_id .'">'.
         '<Pounds>'. intval($package->pounds) .'</Pounds>'.
         '<Ounces>'. ceil($package->ounces) .'</Ounces>'.
         '<MailType>Package</MailType>'.
         '<Country>'. $shipto_country .'</Country>'.
         '</Package>';
 
-      $services_count++;
+      $package_id++;
     }
   }
-  $request .= '</IntlRateRequest>';
+  $request .= '</IntlRateV2Request>';
 
-  $request = 'API=IntlRate&XML='. drupal_urlencode($request);
+  $request = 'API=IntlRateV2&XML='. drupal_urlencode($request);
   return $request;
 }
 

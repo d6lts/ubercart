@@ -6,7 +6,18 @@
  */
 
 /**
- * Return the country name formatted according to the USPS requirements.
+ * Returns the country name formatted according to the USPS requirements.
+ *
+ * USPS uses the ISO 3166 English short names in most cases.  This
+ * function handles the exceptions.
+ *
+ * @param $code
+ *   ISO 3166-1 3-digit numerical country code.
+ *
+ * @return
+ *   Country name string for use by the USPS International Rate API.
+ *
+ * @see http://pe.usps.gov/text/imm/immctry.htm
  */
 function uc_usps_country_map($code = NULL) {
   $countries = array(
