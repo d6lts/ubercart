@@ -5,7 +5,13 @@
  * Ubercart Attribute Tests
  */
 
-class UbercartAttributeTestCase extends DrupalWebTestCase {
+// Ensure UbercartTestHelper is available.
+module_load_include('test', 'uc_store', 'uc_store');
+
+/**
+ * Test the attribute API.
+ */
+class UbercartAttributeTestCase extends UbercartTestHelper {
 
   function getInfo() {
     return array(
@@ -16,10 +22,8 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('token', 'uc_store', 'uc_product', 'uc_attribute', 'ca', 'uc_order', 'uc_cart');
-
-    $admin_user = $this->drupalCreateUser(array('administer store', 'administer attributes', 'administer products', 'administer product classes'));
-    $this->drupalLogin($admin_user);
+    parent::setUp(array('uc_attribute'), array('administer attributes'));
+    $this->drupalLogin($this->adminUser);
   }
 
   public function testAttributeAPI() {
@@ -39,7 +43,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
     }
 
     // Add a product.
-    $product = UbercartProductTestCase::createProduct();
+    $product = $this->createProduct();
 
     // Attach the attribute to a product.
     uc_attribute_subject_save($attribute, 'product', $product->nid);
@@ -76,7 +80,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
     $this->assertFalse(uc_attribute_subject_exists($attribute->aid, 'product', $product->nid));
 
     // Add a product class.
-    $product_class = UbercartProductTestCase::createProductClass();
+    $product_class = $this->createProductClass();
 
     // Attach the attribute to a product class.
     uc_attribute_subject_save($attribute, 'class', $product_class->pcid);
@@ -330,10 +334,12 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
     $this->assertRaw('<td>'. ($edit['required'] ? t('Yes') : t('No')) .'</td>', t('Verify required field.'), t('Ubercart'));
     $this->assertRaw('<td align="center">'. $edit['ordering'] .'</td>', t('Verify ordering field.'), t('Ubercart'));
     $types = _uc_attribute_display_types();
-    $this->assertRaw('<td>'. $types[$edit['display']] .'</td>', t('Verify ordering field.'), t('Ubercart'));
+    $this->assertRaw('<td>'. $types[$edit['display']] .'</td>', t('Verify display field.'), t('Ubercart'));
 
-    $attribute = uc_attribute_load($edit['aid']);
+    $aid = db_query("SELECT aid FROM {uc_attributes} WHERE name = '%s'", $edit['name']);
+    $this->assertTrue($aid, t('Attribute was created.'));
 
+    $attribute = uc_attribute_load($aid);
     $fields_ok = TRUE;
     foreach ($edit as $field => $value) {
       if ($attribute->$field != $value) {
@@ -343,15 +349,18 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
         break;
       }
     }
+
+    $this->AssertTrue($fields_ok, t('Attribute created properly.'), t('Ubercart'));
   }
 
   public function testAttributeUISettings() {
-    $product = UbercartProductTestCase::createProduct();
+    $product = $this->createProduct();
     $attribute = self::createAttribute(array(
       'display' => 1,
     ));
 
     $option = self::createAttributeOption(array(
+      'aid' => $attribute->aid,
       'price' => 30,
     ));
 
@@ -436,7 +445,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
 
   public function testAttributeUIAttributeOptions() {
     $attribute = self::createAttribute();
-    $option = self::createAttributeOption();
+    $option = self::createAttributeOption(array('aid' => $attribute->aid));
 
     uc_attribute_option_save($option);
 
@@ -452,7 +461,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
 
     $this->AssertText(t('Options for @name', array('@name' => $attribute->name)), t('Attribute options add form working.'), t('Ubercart'));
 
-    $edit = (array) self::createAttributeOption(array(), FALSE);
+    $edit = (array) self::createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($edit['aid']);
 
     $this->drupalPost('admin/store/attributes/'. $attribute->aid .'/options/add', $edit, t('Submit'));
@@ -474,7 +483,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
 
   public function testAttributeUIAttributeOptionsEdit() {
     $attribute = self::createAttribute();
-    $option = self::createAttributeOption();
+    $option = self::createAttributeOption(array('aid' => $attribute->aid));
 
     uc_attribute_option_save($option);
 
@@ -482,7 +491,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
 
     $this->AssertText(t('Edit option: @name', array('@name' => $option->name)), t('Attribute options edit form working.'), t('Ubercart'));
 
-    $edit = (array) self::createAttributeOption(array(), FALSE);
+    $edit = (array) self::createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($edit['aid']);
     $this->drupalPost('admin/store/attributes/'. $attribute->aid .'/options/'. $option->oid .'/edit', $edit, t('Submit'));
 
@@ -503,7 +512,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
 
   public function testAttributeUIAttributeOptionsDelete() {
     $attribute = self::createAttribute();
-    $option = self::createAttributeOption();
+    $option = self::createAttributeOption(array('aid' => $attribute->aid));
 
     uc_attribute_option_save($option);
 
@@ -519,7 +528,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
   }
 
   public function testAttributeUIClassAttributeOverview() {
-    $class = UbercartProductTestCase::createProductClass();
+    $class = $this->createProductClass();
     $attribute = self::createAttribute();
 
     $this->drupalGet('admin/store/products/classes/'. $class->pcid .'/attributes');
@@ -562,7 +571,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
   }
 
   public function testAttributeUIClassAttributeAdd() {
-    $class = UbercartProductTestCase::createProductClass();
+    $class = $this->createProductClass();
     $attribute = self::createAttribute();
 
     $this->drupalGet('admin/store/products/classes/'. $class->pcid .'/attributes/add');
@@ -577,9 +586,9 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
   }
 
   public function testAttributeUIClassAttributeOptionOverview() {
-    $class = UbercartProductTestCase::createProductClass();
+    $class = $this->createProductClass();
     $attribute = self::createAttribute();
-    $option = self::createAttributeOption();
+    $option = self::createAttributeOption(array('aid' => $attribute->aid));
 
     uc_attribute_subject_save($attribute, 'class', $class->pcid);
 
@@ -587,7 +596,7 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
 
     $this->assertRaw(t(' @option</label>', array('@option' => $option->name)), t('Class attribute option form working.'), t('Ubercart'));
 
-    $o = (array) self::createAttributeOption(array(), FALSE);
+    $o = (array) self::createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($o['name'], $o['aid']);
     $o['select'] = TRUE;
     foreach ($o as $field => $value) {
@@ -616,7 +625,6 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
 
   public static function createProductAdjustment($data) {
     $adjustment = $data + array(
-      'nid' => rand(1, db_last_insert_id('node', 'nid')),
       'model' => self::randomName(8),
     );
     db_query("INSERT INTO {uc_product_adjustments} (nid, combination, model) VALUES (%d, '%s', '%s')", $data['nid'], $data['combination'], $data['model']);
@@ -673,7 +681,6 @@ class UbercartAttributeTestCase extends DrupalWebTestCase {
 
   public static function createAttributeOption($data = array(), $save = TRUE) {
     $option = $data + array(
-      'aid' => rand(1, db_last_insert_id('uc_attributes', 'aid')),
       'name' => DrupalWebTestCase::randomName(8),
       'cost' => rand(-500, 500),
       'price' => rand(-500, 500),
