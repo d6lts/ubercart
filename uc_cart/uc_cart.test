@@ -210,12 +210,13 @@ class ucCartAdminSettings extends UbercartTestCase {
     $shopping_link = $this->xpath("a[@href='$shopping_url'][@text()='Continue shopping']");
     $this->assertTrue(isset($shopping_link), t('Continue shopping link directs you back to the node page'));
 
-    $this->drupalPost('cart', array('items[0][remove]' => 1), t('Update cart'));
-    $this->assertText('Your cart has been updated.', t('Update cart button redirects to the view cart page'));
-    $this->assertText('There are no products in your shopping cart.', t('The product was successfully removed from the shopping cart'));
+    // Test the remove item button in the cart.
+    $this->drupalPost('cart', array(), t('Remove'));
+    $this->assertText($product->title . ' removed from your shopping cart.', t('The product was successfully removed from the shopping cart'));
+    $this->assertText('There are no products in your shopping cart.', t('Update cart button redirects to the view cart page'));
 
     //Modify the default settings
-        $settings = array(
+    $settings = array(
       'uc_minimum_subtotal' => rand(2, 9999), //greater than 2 dollars to test the above/below limit
       'uc_continue_shopping_type' => 'button',
       'uc_continue_shopping_use_last_url' => FALSE,
