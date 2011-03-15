@@ -269,7 +269,7 @@ function uc_file_admin_files_form_action($form_state) {
       // Base files/dirs the user selected.
       $form['selected_files'] = array(
         '#type' => 'markup',
-        '#value' => theme_item_list($file_list, NULL, 'ul', array('class' => 'selected-file-name')),
+        '#value' => theme('item_list', $file_list, NULL, 'ul', array('class' => 'selected-file-name')),
       );
 
       $form = confirm_form(
@@ -291,7 +291,7 @@ function uc_file_admin_files_form_action($form_state) {
         // don't have JS enabled over not defaulting to any info.
         $form['affected_files'] = array(
           '#type' => 'markup',
-          '#value' => theme_item_list($affected_list[FALSE], 'Affected file(s)', 'ul', array('class' => 'affected-file-name')),
+          '#value' => theme('item_list', $affected_list[FALSE], 'Affected file(s)', 'ul', array('class' => 'affected-file-name')),
         );
       }
 

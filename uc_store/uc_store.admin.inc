@@ -330,7 +330,7 @@ function uc_store_ubercart_help() {
   $items[] = l(t("Ubercart User's Guide"), 'http://www.ubercart.org/docs/user');
   $items[] = l(t('Support Forums'), 'http://www.ubercart.org/forum');
   $items[] = l(t('Drupal Handbook'), 'http://drupal.org/node/258');
-  $output .= theme_item_list($items);
+  $output .= theme('item_list', $items);
 
   return $output;
 }
@@ -1010,7 +1010,7 @@ function uc_store_customer_orders($uid) {
                            '!totals_items' => $totals['items'],
                            '!totals_total' => uc_price($totals['total'], $context))) .'</p>'
            . theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-cust-orders-table'))
-            .'<br />'. theme_pager(NULL, 50);
+            .'<br />'. theme('pager', NULL, 50);
 
   return $output;
 }

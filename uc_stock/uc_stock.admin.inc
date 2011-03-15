@@ -95,7 +95,7 @@ function uc_stock_report() {
 
   $output = drupal_get_form('uc_stock_report_form')
           . theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-stock-table'))
-          . theme_pager(NULL, $page_size);
+          . theme('pager', NULL, $page_size);
   $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. ((!is_null($_GET['nopage'])) ? l(t('Show paged records'), 'admin/store/reports/stock') : l(t('Show all records'), 'admin/store/reports/stock', $options = array('query' => 'nopage=1'))) .'</div>';
   return $output;
 }
