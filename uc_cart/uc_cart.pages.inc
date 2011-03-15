@@ -155,7 +155,7 @@ function uc_cart_checkout_form() {
   }
 
   foreach ($panes as $pane) {
-    if (variable_get('uc_pane_'. $pane['id'] .'_enabled', $pane['enabled'])) {
+    if ($pane['enabled']) {
       $pane['prev'] = _uc_cart_checkout_prev_pane($panes, $pane['id']);
       $pane['next'] = _uc_cart_checkout_next_pane($panes, $pane['id']);
 
@@ -372,7 +372,7 @@ function uc_cart_checkout_review() {
   }
 
   foreach ($panes as $pane) {
-    if (variable_get('uc_pane_'. $pane['id'] .'_enabled', TRUE)) {
+    if ($pane['enabled']) {
       $func = $pane['callback'];
       if (function_exists($func)) {
         $return = $func('review', $order, NULL);
