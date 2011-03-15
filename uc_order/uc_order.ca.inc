@@ -1131,37 +1131,51 @@ function uc_order_action_add_comment_form($form_state, $settings = array()) {
 }
 
 /**
- * Send an email concerning an order.
+ * Sends an email concerning an order.
  *
- * The recipients, subject, and message fields take order token replacements.
+ * The 'Sender', 'Recipients', 'Subject', and 'Message' fields accept
+ * order, global, and user token replacements.
  *
  * @see uc_order_action_email_form()
  */
 function uc_order_action_email($order, $settings) {
   $account = uc_order_user_load($order);
 
-  // Token replacements for the subject and body
+  // Token replacements for the from and recipient addresses
   $settings['replacements'] = array(
     'global' => NULL,
     'order' => $order,
     'user' => $account,
   );
 
-  // Apply token replacements to from and recipient e-mail addressses.
+  // Apply token replacements to from e-mail address.
   $from = token_replace_multiple($settings['from'], $settings['replacements']);
-  $addresses = token_replace_multiple($settings['addresses'], $settings['replacements']);
+  if (empty($from)) {
+    $from = uc_store_email_from();
+  }
 
+  // Apply token replacements to recipient e-mail addresses.
+  $addresses = token_replace_multiple($settings['addresses'], $settings['replacements']);
   // Split up our recipient e-mail addresses.
   $recipients = array();
   foreach (explode("\n", $addresses) as $address) {
-    $recipients[] = trim($address);
+    $address = trim($address);
+    // Remove blank lines
+    if (!empty($address)) {
+      $recipients[] = $address;
+    }
+  }
+
+  if (empty($recipients)) {
+    watchdog('uc_order', 'Attempted to send an order e-mail with no recipient.', array(), WATCHDOG_ERROR);
+    return;
   }
 
   foreach ($recipients as $email) {
-    $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_language($email), $settings, empty($settings['from']) ? uc_store_email_from() : $settings['from']);
+    $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_language($email), $settings, $from);
 
     if (!$sent['result']) {
-      watchdog('ca', 'Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->order_id), WATCHDOG_ERROR);
+      watchdog('uc_order', 'Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->order_id), WATCHDOG_ERROR);
     }
   }
 }
@@ -1174,7 +1188,7 @@ function uc_order_action_email_form($form_state, $settings = array()) {
     '#type' => 'textfield',
     '#title' => t('Sender'),
     '#default_value' => isset($settings['from']) ? $settings['from'] : uc_store_email_from(),
-    '#description' => t('The "From" address.'),
+    '#description' => t("Enter the 'From' email addresses, or leave blank to use your store email address. You may use order tokens for dynamic email addresses."),
     '#required' => TRUE,
   );
   $form['addresses'] = array(
@@ -1266,7 +1280,7 @@ function uc_order_action_email_invoice_form($form_state, $settings = array()) {
     '#type' => 'textfield',
     '#title' => t('Sender'),
     '#default_value' => isset($settings['from']) ? $settings['from'] : uc_store_email_from(),
-    '#description' => t('The "From" address.'),
+    '#description' => t("Enter the 'From' email addresses, or leave blank to use your store email address. You may use order tokens for dynamic email addresses."),
     '#required' => TRUE,
   );
   $form['addresses'] = array(
