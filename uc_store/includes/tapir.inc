@@ -46,8 +46,10 @@ function tapir_get_table($table_id) {
 function tapir_gather_rows($element) {
   foreach (element_children($element) as $row) {
     foreach (array_keys($element['#columns']) as $col_id) {
-      $element['#rows'][$row][$col_id] = $element[$row][$col_id];
-      unset($element[$row][$col_id]);
+      if (isset($element[$row][$col_id])) {
+        $element['#rows'][$row][$col_id] = $element[$row][$col_id];
+        unset($element[$row][$col_id]);
+      }
     }
     $element['#rows'][$row]['#attributes'] = isset($element[$row]['#attributes']) ? $element[$row]['#attributes'] : array();
   }

@@ -32,6 +32,7 @@ function uc_cart_view() {
   }
 
   // Load through the cart panes...
+  $output = '';
   foreach (uc_cart_cart_pane_list($items) as $pane) {
     // If the pane is enabled...
     if ($pane['enabled']) {
