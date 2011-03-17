@@ -9,7 +9,7 @@
 module_load_include('test', 'uc_store', 'uc_store');
 
 /**
- * Test the attribute API.
+ * SimpleTests for the Ubercart Attributes API.
  */
 class UbercartAttributeTestCase extends UbercartTestHelper {
 
@@ -21,11 +21,17 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     );
   }
 
+  /**
+   * Sets up the test framework for attribute testing.
+   */
   function setUp() {
     parent::setUp(array('uc_attribute'), array('administer attributes'));
     $this->drupalLogin($this->adminUser);
   }
 
+  /**
+   * Tests the basic attribute API.
+   */
   public function testAttributeAPI() {
 
     // Create an attribute.
@@ -320,6 +326,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->assertEqual(2, db_result(db_query("SELECT COUNT(*) FROM {uc_product_adjustments}")), t('Ubercart'));
   }
 
+  /**
+   * Tests the "add attribute" user interface.
+   */
   public function testAttributeUIAddAttribute() {
     $this->drupalGet('admin/store/attributes/add');
 
@@ -353,6 +362,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->AssertTrue($fields_ok, t('Attribute created properly.'), t('Ubercart'));
   }
 
+  /**
+   * Tests the attribute settings page.
+   */
   public function testAttributeUISettings() {
     $product = $this->createProduct();
     $attribute = self::createAttribute(array(
@@ -403,6 +415,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     }
   }
 
+  /**
+   * Tests the "edit attribute" user interface.
+   */
   public function testAttributeUIEditAttribute() {
     $attribute = self::createAttribute();
 
@@ -428,6 +443,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->AssertTrue($fields_ok, t('Attribute edited properly.'), t('Ubercart'));
   }
 
+  /**
+   * Tests the "delete attribute" user interface.
+   */
   public function testAttributeUIDeleteAttribute() {
     $attribute = self::createAttribute();
 
@@ -443,6 +461,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->AssertText(t('Product attribute deleted.'), t('Attribute deleted properly.'), t('Ubercart'));
   }
 
+  /**
+   * Tests the attribute options user interface.
+   */
   public function testAttributeUIAttributeOptions() {
     $attribute = self::createAttribute();
     $option = self::createAttributeOption(array('aid' => $attribute->aid));
@@ -454,6 +475,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->AssertText(t('Options for @name', array('@name' => $attribute->name)), t('Attribute options form working.'), t('Ubercart'));
   }
 
+  /**
+   * Tests the "add attribute option" user interface.
+   */
   public function testAttributeUIAttributeOptionsAdd() {
     $attribute = self::createAttribute();
 
@@ -481,6 +505,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->assertTrue($fields_ok, t('Attribute option added successfully by form.'), t('Ubercart'));
   }
 
+  /**
+   * Tests the "edit attribute options" user interface.
+   */
   public function testAttributeUIAttributeOptionsEdit() {
     $attribute = self::createAttribute();
     $option = self::createAttributeOption(array('aid' => $attribute->aid));
@@ -510,6 +537,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->assertTrue($fields_ok, t('Attribute option edited successfully by form.'), t('Ubercart'));
   }
 
+  /**
+   * Tests the "delete attribute option" user interface.
+   */
   public function testAttributeUIAttributeOptionsDelete() {
     $attribute = self::createAttribute();
     $option = self::createAttributeOption(array('aid' => $attribute->aid));
@@ -527,6 +557,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->assertFalse($option, t('Attribute option deleted successfully by form'), t('Ubercart'));
   }
 
+  /**
+   * Tests the product class attribute user interface.
+   */
   public function testAttributeUIClassAttributeOverview() {
     $class = $this->createProductClass();
     $attribute = self::createAttribute();
@@ -570,6 +603,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->assertText(t('You must first add attributes to this class.'), t('Class attribute form working.'), t('Ubercart'));
   }
 
+  /**
+   * Tests the "add product class attribute option" user interface.
+   */
   public function testAttributeUIClassAttributeAdd() {
     $class = $this->createProductClass();
     $attribute = self::createAttribute();
@@ -585,6 +621,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'), t('Ubercart'));
   }
 
+  /**
+   * Tests the product class attribute option user interface.
+   */
   public function testAttributeUIClassAttributeOptionOverview() {
     $class = $this->createProductClass();
     $attribute = self::createAttribute();
@@ -623,13 +662,23 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->assertTrue($fields_ok, t('Class attribute option edited successfully by form.'), t('Ubercart'));
   }
 
+  /**
+   * Creates a product adjustment SKU.
+   *
+   * @param $data
+   */
   public static function createProductAdjustment($data) {
     $adjustment = $data + array(
-      'model' => self::randomName(8),
+      'model' => DrupalWebTestCase::randomName(8),
     );
     db_query("INSERT INTO {uc_product_adjustments} (nid, combination, model) VALUES (%d, '%s', '%s')", $data['nid'], $data['combination'], $data['model']);
   }
 
+  /**
+   * Returns an array of available fields for product or class attributes.
+   *
+   * @param $type
+   */
   protected static function _attributeFieldsToTest($type = '') {
     $fields = array(
       'aid', 'name', 'ordering', 'required', 'display', 'description', 'label',
@@ -646,6 +695,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     return $fields;
   }
 
+  /**
+   * Tests the product class attribute option user interface.
+   */
   protected static function _attributeOptionFieldsToTest($type = '') {
     $fields = array(
       'aid', 'oid', 'name', 'cost', 'price', 'weight', 'ordering',
@@ -662,6 +714,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     return $fields;
   }
 
+  /**
+   * Tests the product class attribute option user interface.
+   */
   public static function createAttribute($data = array(), $save = TRUE) {
     $attribute = $data + array(
       'name' => DrupalWebTestCase::randomName(8),
@@ -679,6 +734,12 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     return $attribute;
   }
 
+  /**
+   * Creates an attribute option.
+   *
+   * @param $data
+   * @param $save
+   */
   public static function createAttributeOption($data = array(), $save = TRUE) {
     $option = $data + array(
       'name' => DrupalWebTestCase::randomName(8),
@@ -695,6 +756,12 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     return $option;
   }
 
+  /**
+   * Creates an attribute option.
+   *
+   * @param $data
+   * @param $save
+   */
   function showVar($var) {
     $this->pass('<pre>'. print_r($var, TRUE) .'</pre>');
   }

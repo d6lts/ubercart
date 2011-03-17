@@ -1067,7 +1067,7 @@ function uc_country_remove_form($form_state, $country_id) {
   $country = db_result(db_query("SELECT country_name FROM {uc_countries} WHERE country_id = %d", $country_id));
 
   // If orders exist for this country, show a warning message prior to removal.
-  if ($_POST['op'] != t('Remove') && module_exists('uc_order')) {
+  if (isset($_POST['op']) && ($_POST['op'] != t('Remove')) && module_exists('uc_order')) {
     $count = db_result(db_query("SELECT COUNT(order_id) FROM {uc_orders} WHERE delivery_country = %d OR billing_country = %d", $country_id, $country_id));
     if ($count > 0) {
       drupal_set_message(t('Warning: @count orders were found with addresses in this country. Removing this country now will cause errors to show on those order pages. You might consider simply disabling this country instead.', array('@count' => $count)), 'error');
