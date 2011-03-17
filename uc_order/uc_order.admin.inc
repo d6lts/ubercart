@@ -434,14 +434,17 @@ function uc_order_admin($sql = NULL, $args = NULL, $search = FALSE) {
   if (is_null($sql)) {
     $args = array();
     $show_status = 1;
+    $sql = 'SELECT o.order_id, o.uid, o.billing_first_name, o.billing_last_name, o.order_total, '
+          .'o.order_status, o.created, os.title FROM {uc_orders} o LEFT JOIN {uc_order_statuses} os '
+          .'ON o.order_status = os.order_status_id ';
+
 
     if (arg(3) == 'sort' && !is_null(arg(4))) {
       $_SESSION['sort_status'] = arg(4);
-      $where = "WHERE o.order_status = '%s'";
       $args[] = arg(4);
     }
-    else {
-      if (isset($_SESSION['sort_status']) && !is_null($_SESSION['sort_status'])) {
+    if (!isset($_SESSION['sort_status']) || $_SESSION['sort_status'] == 'all') {
+      if (!empty($_SESSION['sort_status']) && is_string($_SESSION['sort_status'])) {
         $where = "WHERE o.order_status = '%s'";
         $args[] = $_SESSION['sort_status'];
       }
@@ -449,12 +452,7 @@ function uc_order_admin($sql = NULL, $args = NULL, $search = FALSE) {
         $where = 'WHERE o.order_status IN '. uc_order_status_list('general', TRUE);
       }
     }
-    if ($_SESSION['sort_status'] == 'all') {
-      $where = '';
-    }
-    $sql = 'SELECT o.order_id, o.uid, o.billing_first_name, o.billing_last_name, o.order_total, '
-          .'o.order_status, o.created, os.title FROM {uc_orders} o LEFT JOIN {uc_order_statuses} os '
-          .'ON o.order_status = os.order_status_id '. $where . tablesort_sql($header);
+    $sql .= $where . tablesort_sql($header);
   }
 
   $address = variable_get('uc_customer_list_address', 'billing');
@@ -469,6 +467,8 @@ function uc_order_admin($sql = NULL, $args = NULL, $search = FALSE) {
     'revision' => 'themed-original',
     'type' => 'amount',
   );
+
+  $rows = array();
 
   $result = pager_query($sql, variable_get('uc_order_number_displayed', 30), 0, NULL, $args);
   while ($order = db_fetch_object($result)) {
@@ -1071,7 +1071,7 @@ function uc_order_view($order, $view = 'view') {
         variable_get('uc_order_pane_'. $pane['id'] .'_show_'. $view, $pane['enabled'])) {
       $func = $pane['callback'];
       if (function_exists($func) && ($contents = $func($view, $order)) != NULL) {
-        $output .= '<div class="order-pane '. $pane['class'] .'" id="order-pane-' . $pane['id'] . '">';
+        $output = '<div class="order-pane '. $pane['class'] .'" id="order-pane-' . $pane['id'] . '">';
         if ($func('show-title', NULL) !== FALSE) {
           $output .= '<div class="order-pane-title">'. $pane['title'] .': '
                    . $func('view-title', $order) .'</div>';
@@ -1142,13 +1142,15 @@ function uc_order_edit_form($form_state, $order) {
  * @see uc_order_edit_form()
  */
 function theme_uc_order_edit_form($form) {
+  $output = '';
+
   $panes = _order_pane_list();
   foreach ($panes as $pane) {
     if (in_array('edit', $pane['show']) &&
         variable_get('uc_order_pane_'. $pane['id'] .'_show_edit', TRUE)) {
       $func = $pane['callback'];
       if (function_exists($func) && ($contents = _call_order_pane_byref($func, 'edit-theme', $form)) != NULL) {
-        if (is_array($pane['theme_all']) && in_array('edit', $pane['theme_all'])) {
+        if (isset($pane['theme_all']) && is_array($pane['theme_all']) && in_array('edit', $pane['theme_all'])) {
           $output .= $contents;
         }
         else {

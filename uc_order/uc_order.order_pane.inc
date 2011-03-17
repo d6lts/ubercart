@@ -69,7 +69,7 @@ function uc_order_pane_ship_to($op, $arg1) {
       return $form;
 
     case 'edit-title':
-      $output .= ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
+      $output = ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
                 .'/images/address_book.gif" alt="'. t('Select from address book.') .'" '
                 .'title="'. t('Select from address book.') .'" onclick="load_address_select('. $arg1['order_uid']['#value'] .', \'#delivery_address_select\', \'delivery\');" '
                 .'style="position: relative; top: 2px; cursor: pointer;" />';
@@ -160,7 +160,7 @@ function uc_order_pane_bill_to($op, $arg1) {
       return $form;
 
     case 'edit-title':
-      $output .= ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
+      $output = ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
                 .'/images/address_book.gif" alt="'. t('Select from address book.') .'" '
                 .'title="'. t('Select from address book.') .'" onclick="load_address_select('. $arg1['order_uid']['#value'] .', \'#billing_address_select\', \'billing\');" '
                 .'style="position: relative; top: 2px; cursor: pointer;" />';
@@ -238,7 +238,7 @@ function uc_order_pane_customer($op, $arg1) {
       return $form;
 
     case 'edit-title':
-      $output .= ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
+      $output = ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
                 .'/images/order_view.gif" alt="'. t('Search for an existing customer.') .'" '
                 .'title="'. t('Search for an existing customer.') .'" onclick="load_customer_search();" '
                 .'style="position: relative; top: 2px; cursor: pointer;" />';
@@ -361,7 +361,7 @@ function uc_order_pane_line_items($op, $arg1) {
       $items = _line_item_list();
       $line_items = $arg1->line_items;
       foreach ($items as $item) {
-        if ($item['add_list'] === TRUE) {
+        if (isset($item['add_list']) && $item['add_list'] === TRUE) {
           $options[$item['id']] = check_plain($item['title']);
         }
         if (isset($item['display_only']) && $item['display_only'] == TRUE) {
@@ -420,7 +420,7 @@ function uc_order_pane_line_items($op, $arg1) {
           '#type' => 'hidden',
           '#value' => $item['line_item_id'],
         );
-        if (_line_item_data($item['type'], 'stored') == TRUE) {
+        if (isset($item['type']) && _line_item_data($item['type'], 'stored') == TRUE) {
           $form['line_items'][$item['line_item_id']]['title'] = array(
             '#type' => 'textfield',
             '#title' => t('Title'),

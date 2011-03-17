@@ -232,6 +232,8 @@ function uc_attribute_options_form($form_state, $attribute) {
     ),
   );
 
+  $form['options'] = array();
+
   // Loop through all the options on an attribute.
   foreach ($attribute->options as $key => $data) {
     $form['options'][$key] = array(
@@ -353,6 +355,13 @@ function uc_attribute_option_form($form_state, $attribute, $option = NULL) {
     drupal_set_title(t('Edit option: %name', array('%name' => $option->name)));
   }
   else {
+    $option = new stdClass();
+    $option->name = '';
+    $option->ordering = 0;
+    $option->cost = 0;
+    $option->price = 0;
+    $option->weight = 0;
+
     drupal_set_title(t('Options for %name', array('%name' => $attribute->name)));
   }
 
@@ -532,7 +541,7 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
     );
     if (count($attributes) > 0) {
       foreach ($attributes as $attribute) {
-        $option = $attribute->options[$attribute->default_option];
+        $option = isset($attribute->options[$attribute->default_option]) ? $attribute->options[$attribute->default_option] : NULL;
         $context['subject'] = array(
           'attribute' => $attribute,
           'option' => $option,
@@ -688,6 +697,8 @@ function uc_object_attributes_form_submit($form, &$form_state) {
     $sql_type = "'%s'";
   }
 
+  $changed = FALSE;
+
   if ($form_state['values']['view'] == 'overview' && is_array($form_state['values']['attributes'])) {
     foreach ($form_state['values']['attributes'] as $aid => $attribute) {
       if ($attribute['remove']) {
@@ -699,7 +710,7 @@ function uc_object_attributes_form_submit($form, &$form_state) {
       }
     }
 
-    if (count($remove_aids) > 0) {
+    if (isset($remove_aids)) {
       $id_value = $form_state['values']['id'];
       $remove_aids_value = implode(', ', $remove_aids);
 
@@ -874,6 +885,8 @@ function uc_object_options_form($form_state, $object, $type) {
  * @see uc_object_options_form()
  */
 function theme_uc_object_options_form($form) {
+  $output = '';
+
   $header = array(array('data' => '&nbsp;&nbsp;'. t('Options')) + theme('table_select_header_cell'), t('Default'), t('Cost'), t('Price'), t('Weight'), t('List position'));
   $table_id_num = $tables = 0;
 
@@ -974,6 +987,8 @@ function theme_uc_product_attributes($element) {
  * @see uc_object_options_form()
  */
 function uc_object_options_form_validate($form, &$form_state) {
+  $error = FALSE;
+
   if (isset($form_state['values']['attributes'])) {
     foreach ($form_state['values']['attributes'] as $aid => $attribute) {
       $selected_opts = array();
@@ -984,7 +999,7 @@ function uc_object_options_form_validate($form, &$form_state) {
           }
         }
       }
-      if (!empty($selected_opts) && !$form['attributes'][$aid]['default']['#disabled'] && !in_array($attribute['default'], $selected_opts)) {
+      if (!empty($selected_opts) && !isset($form['attributes'][$aid]['default']['#disabled']) && !in_array($attribute['default'], $selected_opts)) {
         form_set_error($attribute['default']);
         $error = TRUE;
       }

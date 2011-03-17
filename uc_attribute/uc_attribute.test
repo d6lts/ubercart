@@ -345,7 +345,7 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $types = _uc_attribute_display_types();
     $this->assertRaw('<td>'. $types[$edit['display']] .'</td>', t('Verify display field.'), t('Ubercart'));
 
-    $aid = db_query("SELECT aid FROM {uc_attributes} WHERE name = '%s'", $edit['name']);
+    $aid = db_result(db_query("SELECT aid FROM {uc_attributes} WHERE name = '%s'", $edit['name']));
     $this->assertTrue($aid, t('Attribute was created.'));
 
     $attribute = uc_attribute_load($aid);
@@ -669,9 +669,9 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
    */
   public static function createProductAdjustment($data) {
     $adjustment = $data + array(
-      'model' => DrupalWebTestCase::randomName(8),
+      'model' => self::randomName(8),
     );
-    db_query("INSERT INTO {uc_product_adjustments} (nid, combination, model) VALUES (%d, '%s', '%s')", $data['nid'], $data['combination'], $data['model']);
+    db_query("INSERT INTO {uc_product_adjustments} (nid, combination, model) VALUES (%d, '%s', '%s')", $adjustment['nid'], $adjustment['combination'], $adjustment['model']);
   }
 
   /**
