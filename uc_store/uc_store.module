@@ -1353,6 +1353,13 @@ function uc_country_select($title, $default = NULL, $description = NULL, $displa
 
   drupal_add_js(drupal_get_path('module', 'uc_store') .'/uc_country_select.js');
 
+  // Ensure the path setting only gets added once.
+  static $added = FALSE;
+  if (!$added) {
+    drupal_add_js(array('ucURL' => array('zoneSelect' => url('uc_js_util/zone_select'))), 'setting');
+    $added = TRUE;
+  }
+
   return $select;
 }
 
