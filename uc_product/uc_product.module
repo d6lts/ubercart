@@ -973,6 +973,32 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   }
 }
 
+/**
+ * Implementation of hook_i18nsync_fields_alter().
+ *
+ * Allow fields to be synchronised when translations are in use.
+ */
+function uc_product_i18nsync_fields_alter($fields, $type) {
+  if (uc_product_is_product($type)) {
+    $fields['uc_products']['#title'] = t('Product fields');
+    $fields['uc_products']['#options'] = array (
+      'model' => t('SKU'),
+      'list_price' => t('List price'),
+      'cost' => t('Cost'),
+      'sell_price' => t('Sell price'),
+      'weight' => t('Weight'),
+      'weight_units' => t('Weight units'),
+      'dim_length' => t('Length'),
+      'dim_width' => t('Width'),
+      'dim_height' => t('Height'),
+      'length_units' => t('Dimension units'),
+      'pkg_qty' => t('Package quantity'),
+      'default_qty' => t('Default quantity to add to cart'),
+      'ordering' => t('List position'),
+    );
+  }
+}
+
 /******************************************************************************
  * CCK Hooks                                                                  *
  ******************************************************************************/
@@ -1998,7 +2024,7 @@ function uc_product_feature_load_multiple($nid) {
  */
 function uc_product_feature_load($pfid, $fid = NULL) {
   if (isset($fid)) {
-    $feature = db_fetch_array(db_query("SELECT * FROM {uc_product_features} WHERE pfid = %d AND fid = '%s'", $pfid, $fid)); 
+    $feature = db_fetch_array(db_query("SELECT * FROM {uc_product_features} WHERE pfid = %d AND fid = '%s'", $pfid, $fid));
   }
   else {
     $feature = db_fetch_array(db_query("SELECT * FROM {uc_product_features} WHERE pfid = %d", $pfid));
