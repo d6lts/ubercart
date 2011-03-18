@@ -1065,13 +1065,14 @@ function uc_order_view($order, $view = 'view') {
     exit();
   }
 
+  $output = '';
   $panes = _order_pane_list($view);
   foreach ($panes as $pane) {
     if (in_array($view, $pane['show']) &&
         variable_get('uc_order_pane_'. $pane['id'] .'_show_'. $view, $pane['enabled'])) {
       $func = $pane['callback'];
       if (function_exists($func) && ($contents = $func($view, $order)) != NULL) {
-        $output = '<div class="order-pane '. $pane['class'] .'" id="order-pane-' . $pane['id'] . '">';
+        $output .= '<div class="order-pane '. $pane['class'] .'" id="order-pane-' . $pane['id'] . '">';
         if ($func('show-title', NULL) !== FALSE) {
           $output .= '<div class="order-pane-title">'. $pane['title'] .': '
                    . $func('view-title', $order) .'</div>';
