@@ -21,14 +21,6 @@ class UbercartCartCheckoutTest extends UbercartTestHelper {
     );
   }
 
-  /**
-   * Sets up the test framework for attribute testing.
-   */
-  function setUp() {
-    // Add token dependency to the default list of enabled modules
-    parent::setUp(array('token'));
-  }
-
   function testCart() {
     // Test the empty cart text.
     $this->drupalGet('cart');

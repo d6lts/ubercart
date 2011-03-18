@@ -20,7 +20,7 @@ class UbercartTestHelper extends DrupalWebTestCase {
    */
   function setUp($modules = array(), $permissions = array()) {
     // Enable the core Ubercart modules and dependencies, along with any other modules passed as arguments.
-    $modules = array_merge(array('uc_store', 'ca', 'uc_order', 'uc_product', 'uc_cart'), $modules);
+    $modules = array_merge(array('uc_store', 'ca', 'token', 'uc_order', 'uc_product', 'uc_cart'), $modules);
     call_user_func_array(array('parent', 'setUp'), $modules);
 
     // Create a store administrator user account.
