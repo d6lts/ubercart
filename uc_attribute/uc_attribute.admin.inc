@@ -535,6 +535,8 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
   if ($view == 'overview') {
     $form['#tree'] = TRUE;
 
+    $form['attributes'] = array();
+
     $context = array(
       'revision' => 'themed',
       'type' => 'attribute_option',
