@@ -133,6 +133,8 @@ class UbercartTestHelper extends DrupalWebTestCase {
     else {
       $this->fail(t('No order was created.'));
     }
+
+    return $order_id;
   }
 }
 
