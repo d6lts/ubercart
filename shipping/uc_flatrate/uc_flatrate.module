@@ -92,7 +92,7 @@ function uc_flatrate_nodeapi(&$node, $op) {
     switch ($op) {
       case 'insert':
       case 'update':
-        if (is_array($node->flatrate)) {
+        if (isset($node->flatrate) && is_array($node->flatrate)) {
           if (!$node->revision) {
             db_query("DELETE FROM {uc_flatrate_products} WHERE vid = %d", $node->vid);
           }

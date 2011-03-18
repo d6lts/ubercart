@@ -117,8 +117,8 @@ function uc_price($price_info, $context, $options = array()) {
     //$context_clone['account'] = array_intersect_key((array) $context['account'], drupal_map_assoc(array()));
     $context_clone['account'] = array(
       'uid' => $context['account']->uid,
-      'name' => $context['account']->name,
-      'mail' => $context['account']->mail,
+      'name' => isset($context['account']->name) ? $context['account']->name : '',
+      'mail' => isset($context['account']->mail) ? $context['account']->mail : '',
       'roles' => $context['account']->roles,
     );
 
@@ -285,7 +285,7 @@ function uc_store_uc_price_handler() {
  */
 function uc_store_price_handler_alter(&$price, &$context, &$options) {
   // If a class was specified in the price's context array...
-  if (is_array($context['class'])) {
+  if (isset($context['class']) && is_array($context['class'])) {
     // Look for a product price type in the class array and adjust the price
     // prefix accordingly.
     if (in_array('list', $context['class'])) {

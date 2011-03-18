@@ -674,7 +674,6 @@ function uc_product_update($node) {
     );
   }
   else {
-    //drupal_set_message('<pre>'. print_r($node, TRUE) .'</pre>');drupal_set_message('<pre>'. print_r($node, TRUE) .'</pre>');
     db_query("UPDATE {uc_products} SET model = '%s', list_price = %f, cost = %f, sell_price = %f, weight = %f, weight_units = '%s', length = %f, width = %f, height = %f, length_units = '%s', pkg_qty = %d, default_qty = %d, ordering = %d, shippable = %d WHERE vid = %d",
       $node->model, $node->list_price, $node->cost, $node->sell_price, $node->weight, $node->weight_units, $node->length, $node->width, $node->height, $node->length_units, $node->pkg_qty, $node->default_qty, $node->ordering, $node->shippable, $node->vid);
   }
@@ -1204,6 +1203,7 @@ function uc_product_store_status() {
  */
 function uc_product_cart_display($item) {
   $node = node_load($item->nid);
+
   $element = array();
   $element['nid'] = array('#type' => 'value', '#value' => $node->nid);
   $element['module'] = array('#type' => 'value', '#value' => 'uc_product');
@@ -1235,6 +1235,7 @@ function uc_product_cart_display($item) {
     '#maxlength' => 6
   );
 
+  $element['description'] = array('#value' => '');
   if ($description = uc_product_get_description($item)) {
     $element['description'] = array('#value' => $description);
   }
@@ -1627,13 +1628,13 @@ function theme_uc_product_image($images, $teaser = 0, $page = 0) {
 
   // Get the current product image widget.
   $image_widget = uc_product_get_image_widget();
-  $image_widget_func = $image_widget['callback'];
 
   $first = array_shift($images);
 
   $output = '<div class="product-image"><div class="main-product-image">';
   $output .= '<a href="'. imagecache_create_url('product_full', $first['filepath']) .'" title="'. $first['data']['title'] .'"';
   if ($image_widget) {
+    $image_widget_func = $image_widget['callback'];
     $output .= $image_widget_func($rel_count);
   }
   $output .= '>';
@@ -1802,7 +1803,6 @@ function uc_product_get_picture($node_id, $format = 'product') {
 
   // Get the current product image widget.
   $image_widget = uc_product_get_image_widget();
-  $image_widget_func = $image_widget['callback'];
 
   if (isset($product->$field)) {
     $image = $product->{$field}[0];
@@ -1811,6 +1811,7 @@ function uc_product_get_picture($node_id, $format = 'product') {
       $img = theme('imagecache', $format, $path, $image['alt'], $image['title']);
       if ($format == 'product') {
         if ($image_widget) {
+          $image_widget_func = $image_widget['callback'];
           $output .= '<a title="'. $image['title'] .'" href="'. imagecache_create_url('product_full', $path) .'" '. $image_widget_func(NULL) .'>';
         }
         $output .= $img;
@@ -1849,8 +1850,10 @@ function uc_product_get_image_widget() {
       // Widget to use has not been chosen, so default to
       // first element of array, if any
       $keys = array_keys($image_widgets);
-      $image_widget = $image_widgets[$keys[0]];
-      variable_set('uc_product_image_widget', $keys[0]);
+      if ($keys) {
+        $image_widget = $image_widgets[$keys[0]];
+        variable_set('uc_product_image_widget', $keys[0]);
+      }
     }
 
     $got_widget = TRUE;

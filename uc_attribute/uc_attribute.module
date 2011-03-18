@@ -1211,7 +1211,7 @@ function _uc_attribute_alter_form($product) {
         if ($attribute->display == 1) {
           $options = array('' => t('Please select')) + $options;
         }
-        unset($attribute->default_option);
+        $attribute->default_option = '';
       }
       switch ($attribute->display) {
         case 1:

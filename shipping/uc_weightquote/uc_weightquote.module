@@ -94,7 +94,7 @@ function uc_weightquote_nodeapi(&$node, $op) {
     switch ($op) {
       case 'insert':
       case 'update':
-        if (is_array($node->weightquote)) {
+        if (isset($node->weightquote) && is_array($node->weightquote)) {
           if (!$node->revision) {
             db_query("DELETE FROM {uc_weightquote_products} WHERE vid = %d", $node->vid);
           }

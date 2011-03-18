@@ -598,7 +598,7 @@ function uc_store_form_alter(&$form, $form_state, $form_id) {
  */
 function theme_uc_price($value, $context, $options) {
   // Fixup class names.
-  if (!is_array($context['class'])) {
+  if (!isset($context['class']) || !is_array($context['class'])) {
     $context['class'] = array();
   }
   foreach ($context['class'] as $key => $class) {

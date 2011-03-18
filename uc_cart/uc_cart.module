@@ -766,12 +766,17 @@ function uc_cart_uc_message() {
  * Implementation of hook_cart_pane().
  */
 function uc_cart_cart_pane($items) {
+  $body = '';
+  if (!is_null($items)) {
+    $body = '<div id="cart-form-pane">' . drupal_get_form('uc_cart_view_form', $items) . '</div>';
+  }
+
   $panes[] = array(
     'id' => 'cart_form',
     'title' => t('Default cart form'),
     'enabled' => TRUE,
     'weight' => 0,
-    'body' => !is_null($items) ? '<div id="cart-form-pane">'. drupal_get_form('uc_cart_view_form', $items) .'</div>': '',
+    'body' => $body,
   );
 
   return $panes;
@@ -840,6 +845,10 @@ function uc_cart_user_login_form_submit($form, &$form_state) {
  * Update a user's cart to include items from their anonymous session.
  */
 function uc_cart_login_update($uid) {
+  if (!isset($_SESSION['uc_cart_id'])) {
+    return;
+  }
+
   // Get the current contents of the cart.
   $items = uc_cart_get_contents($uid);
 
@@ -1104,6 +1113,7 @@ function uc_cart_view_table($table) {
     ),
   );
 
+  $subtotal = 0;
   foreach (element_children($table) as $i) {
     $subtotal += $table[$i]['#total'];
 
@@ -1150,7 +1160,7 @@ function uc_cart_continue_shopping_url($unset = TRUE) {
   $url = '';
 
   // Use the last URL if enabled and available.
-  if (variable_get('uc_continue_shopping_use_last_url', TRUE)) {
+  if (variable_get('uc_continue_shopping_use_last_url', TRUE) && isset($_SESSION['uc_cart_last_url'])) {
     $url = $_SESSION['uc_cart_last_url'];
   }
 
@@ -1249,12 +1259,17 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     }
   }
 
+  $messages = array();
   $messages['uc_msg_order_submit_format'] = variable_get('uc_msg_order_submit', uc_get_message('completion_message'));
-  $message = variable_get('uc_msg_order_'.$message_type, uc_get_message('completion_'.$message_type));
-  if ($message != '') {
-    $variables['!new_username'] = check_plain($_SESSION['new_user']['name']);
-    $variables['!new_password'] = check_plain($_SESSION['new_user']['pass']);
-    $messages['uc_msg_order_'.$message_type.'_format'] = strtr($message, $variables);
+  if ($message = variable_get('uc_msg_order_'. $message_type, uc_get_message('completion_'.$message_type))) {
+    if (isset($_SESSION['new_user'])) {
+      $variables['!new_username'] = check_plain($_SESSION['new_user']['name']);
+      $variables['!new_password'] = check_plain($_SESSION['new_user']['pass']);
+      $messages['uc_msg_order_'. $message_type .'_format'] = strtr($message, $variables);
+    }
+    else {
+      $messages['uc_msg_order_'. $message_type .'_format'] = $message;
+    }
   }
   $messages['uc_msg_continue_shopping_format'] = variable_get('uc_msg_continue_shopping', uc_get_message('continue_shopping'));
 
