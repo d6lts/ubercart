@@ -2194,10 +2194,16 @@ function uc_store_mail_recipient_language($address) {
  *
  * @param $price
  *   The price to display as the #default_value in a form field.
+ * @param $prec
+ *   (optional) The maximum number of decimal places to display.
  */
-function uc_store_format_price_field_value($price) {
+function uc_store_format_price_field_value($price, $prec = NULL) {
+  if (is_null($prec)) {
+    $prec = variable_get('uc_currency_prec', 2);
+  }
+
   $exact = rtrim(number_format($price, 6, '.', ''), '0');
-  $round = number_format($price, variable_get('uc_currency_prec', 2), '.', '');
+  $round = number_format($price, $prec, '.', '');
 
   if ($exact == rtrim($round, '0')) {
     return $round;
