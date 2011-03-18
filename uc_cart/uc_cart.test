@@ -39,25 +39,25 @@ class UbercartCartCheckoutTest extends UbercartTestHelper {
     // Build the panes.
     $zone_id = db_result(db_query('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = %s ORDER BY rand() LIMIT 1', variable_get('uc_store_country', 840)));
     $edit += array(
-      'panes[delivery][delivery_first_name]' => $this->randomName(10, 'Firstname_'),
-      'panes[delivery][delivery_last_name]' => $this->randomName(10, 'Lastname_'),
-      'panes[delivery][delivery_street1]' => $this->randomName(10, 'Street_'),
-      'panes[delivery][delivery_city]' => $this->randomName(10, 'City_'),
+      'panes[delivery][delivery_first_name]' => $this->randomName(10),
+      'panes[delivery][delivery_last_name]' => $this->randomName(10),
+      'panes[delivery][delivery_street1]' => $this->randomName(10),
+      'panes[delivery][delivery_city]' => $this->randomName(10),
       'panes[delivery][delivery_zone]' => $zone_id,
-      'panes[delivery][delivery_postal_code]' => rand(10000, 99999),
+      'panes[delivery][delivery_postal_code]' => mt_rand(10000, 99999),
 
-      'panes[billing][billing_first_name]' => $this->randomName(10, 'Firstname_'),
-      'panes[billing][billing_last_name]' => $this->randomName(10, 'Lastname_'),
-      'panes[billing][billing_street1]' => $this->randomName(10, 'Street_'),
-      'panes[billing][billing_city]' => $this->randomName(10, 'City_'),
+      'panes[billing][billing_first_name]' => $this->randomName(10),
+      'panes[billing][billing_last_name]' => $this->randomName(10),
+      'panes[billing][billing_street1]' => $this->randomName(10),
+      'panes[billing][billing_city]' => $this->randomName(10),
       'panes[billing][billing_zone]' => $zone_id,
-      'panes[billing][billing_postal_code]' => rand(10000, 99999),
+      'panes[billing][billing_postal_code]' => mt_rand(10000, 99999),
     );
 
     // If the email address has not been set, and the user has not logged in,
     // add a primary email address.
     if (!isset($edit['panes[customer][primary_email]']) && !$this->loggedInUser) {
-      $edit['panes[customer][primary_email]'] = $this->randomName(8, 'Email_') . '@example.com';
+      $edit['panes[customer][primary_email]'] = $this->randomName(8) . '@example.com';
     }
 
     // Submit the checkout page.
@@ -90,7 +90,7 @@ class UbercartCartCheckoutTest extends UbercartTestHelper {
     $this->assertFieldByName('items[0][qty]', 1, t('The product quantity is 1.'));
 
     // Update the quantity.
-    $qty = rand(2, 100);
+    $qty = mt_rand(2, 100);
     $this->drupalPost('cart', array('items[0][qty]' => $qty), t('Update cart'));
     $this->assertText('Your cart has been updated.');
     $this->assertFieldByName('items[0][qty]', $qty, t('The product quantity was updated.'));
@@ -148,7 +148,7 @@ class UbercartCartSettingsTest extends UbercartTestHelper {
     $this->drupalGet('admin/store/settings/cart/edit');
     $this->assertField('uc_minimum_subtotal', t('Minimum order subtotal field exists'));
 
-    $minimum_subtotal = rand(2, 9999);
+    $minimum_subtotal = mt_rand(2, 9999);
     $this->drupalPost(NULL, array('uc_minimum_subtotal' => $minimum_subtotal), t('Save configuration'));
 
     // Create two products, one below the minimum price, and one above the minimum price.
