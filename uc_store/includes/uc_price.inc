@@ -66,7 +66,7 @@
  *     If set to TRUE, the
  *
  */
-function uc_price($price_info, $context, $options = array()) {
+function uc_price($price_info, $context = array(), $options = array()) {
   global $user;
   $values = array();
 
