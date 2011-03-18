@@ -400,7 +400,7 @@ function uc_order_token_values($type, $object = NULL) {
       $values['order-email'] = check_plain($order->primary_email);
       $values['order-shipping-address'] = uc_order_address($order, 'delivery');
       $values['order-shipping-phone'] = check_plain($order->delivery_phone);
-      $values['order-shipping-method'] = is_null($ship_method) ? t('Standard delivery') : $ship_method;
+      $values['order-shipping-method'] = !isset($ship_method) ? t('Standard delivery') : $ship_method;
       $values['order-billing-address'] = uc_order_address($order, 'billing');
       $values['order-billing-phone'] = check_plain($order->billing_phone);
       if (variable_get('uc_customer_list_address', 'billing') == 'shipping') {
@@ -1012,11 +1012,11 @@ function uc_order_new($uid = 0, $state = 'in_checkout') {
   if ($uid > 0) {
     $user = user_load(array('uid' => $uid));
     $email = $user->mail;
+    $order->primary_email = $email;
   }
 
   $order->uid = $uid;
   $order->order_status = uc_order_state_default($state);
-  $order->primary_email = $email;
   $order->products = array();
 
   db_query("INSERT INTO {uc_orders} (uid, order_status, order_total, "
@@ -1065,7 +1065,7 @@ function uc_order_save($order) {
            ((is_null($order->billing_country) || $order->billing_country == 0) ? variable_get('uc_store_country', 840) : $order->billing_country),
            $order->payment_method, serialize($order->data), ip_address(), time(), $order->order_id);
 
-  if (is_array($order->products)) {
+  if (isset($order->products) && is_array($order->products)) {
     foreach ($order->products as $product) {
       drupal_alter('order_product', $product, $order);
       uc_order_product_save($order->order_id, $product);
@@ -1431,7 +1431,7 @@ function uc_order_get_total($order, $products_only = FALSE) {
     return $total;
   }
 
-  if (is_array($order->products)) {
+  if (isset($order->products) && is_array($order->products)) {
     $context = array(
       'revision' => 'altered',
       'type' => 'order_product',
@@ -1476,7 +1476,7 @@ function uc_order_get_total($order, $products_only = FALSE) {
 function uc_order_get_product_count($order) {
   $count = 0;
 
-  if (is_array($order->products)) {
+  if (isset($order->products) && is_array($order->products)) {
     foreach ($order->products as $product) {
       $count += $product->qty;
     }
@@ -1574,7 +1574,7 @@ function template_preprocess_uc_order(&$variables) {
             'title' => $line['title'],
             'amount' => $line['amount'],
             'weight' => $item['weight'],
-            'data' => $item['data'],
+            'data' => isset($item['data']) ? $item['data'] : array(),
           );
         }
       }
@@ -1585,6 +1585,7 @@ function template_preprocess_uc_order(&$variables) {
   }
   usort($variables['line_items'], 'uc_weight_sort');
 
+  // Generate tokens to use as template variables.
   $types = array(
     'order' => $variables['order'],
   );
@@ -1592,7 +1593,7 @@ function template_preprocess_uc_order(&$variables) {
   $full = new stdClass();
   $full->tokens = $full->values = array();
   foreach ($types as $type => $object) {
-    $temp = token_get_values($type, $object, FALSE, $options);
+    $temp = token_get_values($type, $object, FALSE);
     $full->tokens = array_merge($full->tokens, $temp->tokens);
     $full->values = array_merge($full->values, $temp->values);
   }

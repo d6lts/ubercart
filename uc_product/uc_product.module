@@ -674,7 +674,6 @@ function uc_product_update($node) {
     );
   }
   else {
-    //drupal_set_message('<pre>'. print_r($node, TRUE) .'</pre>');drupal_set_message('<pre>'. print_r($node, TRUE) .'</pre>');
     db_query("UPDATE {uc_products} SET model = '%s', list_price = %f, cost = %f, sell_price = %f, weight = %f, weight_units = '%s', length = %f, width = %f, height = %f, length_units = '%s', pkg_qty = %d, default_qty = %d, ordering = %d, shippable = %d WHERE vid = %d",
       $node->model, $node->list_price, $node->cost, $node->sell_price, $node->weight, $node->weight_units, $node->length, $node->width, $node->height, $node->length_units, $node->pkg_qty, $node->default_qty, $node->ordering, $node->shippable, $node->vid);
   }

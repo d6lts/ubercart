@@ -60,7 +60,15 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
 
   switch ($op) {
     case 'view':
-      $email = (is_null($arg1) || empty($arg1->primary_email)) ? $user->mail : $arg1->primary_email;
+      if (!empty($arg1->primary_email)) {
+        $email = $arg1->primary_email;
+      }
+      elseif (isset($user->mail)) {
+        $email = $user->mail;
+      }
+      else {
+        $email = '';
+      }
 
       if ($user->uid) {
         $description = t('Order information will be sent to your account e-mail listed below.');// .'<br />'
@@ -273,7 +281,7 @@ function uc_checkout_pane_delivery($op, &$arg1, $arg2) {
           $country_id = intval($_POST['panes']['delivery']['delivery_country']);
         }
         else {
-          $country_id = $arg1->delivery_country;
+          $country_id = $delivery_country;
         }
         $delivery_zone = $arg1 ? $arg1->delivery_zone : NULL;
         $contents['delivery_zone'] = uc_zone_select(uc_get_field_name('zone'), $delivery_zone, NULL, $country_id, 'name', uc_address_field_required('zone'));
@@ -373,7 +381,7 @@ function uc_checkout_pane_billing($op, &$arg1, $arg2) {
           $country_id = intval($_POST['panes']['billing']['billing_country']);
         }
         else {
-          $country_id = $arg1->billing_country;
+          $country_id = $billing_country;
         }
         $billing_zone = $arg1 ? $arg1->billing_zone : NULL;
         $contents['billing_zone'] = uc_zone_select(uc_get_field_name('zone'), $billing_zone, NULL, $country_id, 'name', uc_address_field_required('zone'));
@@ -406,6 +414,7 @@ function uc_checkout_pane_billing($op, &$arg1, $arg2) {
       return TRUE;
 
     case 'review':
+      $review = NULL;
       $review[] = array('title' => t('Address'), 'data' => uc_order_address($arg1, 'billing', FALSE));
       if (uc_address_field_enabled('phone') && !empty($arg1->billing_phone)) {
         $review[] = array('title' => t('Phone'), 'data' => check_plain($arg1->billing_phone));
@@ -424,6 +433,9 @@ function uc_checkout_pane_comments($op, &$arg1, $arg2) {
 
       if (!empty($arg1->order_id)) {
         $default = db_result(db_query("SELECT message FROM {uc_order_comments} WHERE order_id = %d", $arg1->order_id));
+      }
+      else {
+        $default = NULL;
       }
       $contents['comments'] = array(
         '#type' => 'textarea',
@@ -458,10 +470,11 @@ function uc_checkout_pane_comments($op, &$arg1, $arg2) {
  *   uc_checkout_pane_billing()
  */
 function theme_address_pane($form) {
+  $output = '';
   $req = '<span class="form-required">*</span>';
 
   if (isset($form['copy_address'])) {
-    $output = drupal_render($form['copy_address']);
+    $output .= drupal_render($form['copy_address']);
   }
 
   $output .= '<div class="address-pane-table"><table>';

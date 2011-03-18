@@ -344,7 +344,7 @@ function ca_prepare_db_predicate($data) {
  */
 function ca_evaluate_conditions($predicate, $arguments) {
   // Automatically pass if there are no conditions.
-  if (count($predicate['#conditions']) == 0) {
+  if (!isset($predicate['#conditions']) || count($predicate['#conditions']) == 0) {
     return TRUE;
   }
 
