@@ -117,8 +117,8 @@ function uc_price($price_info, $context, $options = array()) {
     //$context_clone['account'] = array_intersect_key((array) $context['account'], drupal_map_assoc(array()));
     $context_clone['account'] = array(
       'uid' => $context['account']->uid,
-      'name' => $context['account']->name,
-      'mail' => $context['account']->mail,
+      'name' => isset($context['account']->name) ? $context['account']->name : '',
+      'mail' => isset($context['account']->mail) ? $context['account']->mail : '',
       'roles' => $context['account']->roles,
     );
 
