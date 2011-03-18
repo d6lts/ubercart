@@ -20,6 +20,9 @@ function uc_order_pane_payment($op, $arg1) {
         $context = array(
           'revision' => 'formatted-original',
           'type' => 'amount',
+          'subject' => array(
+            'order' => $arg1,
+          ),
         );
         $output = t('Balance: @balance', array('@balance' => uc_price(uc_payment_balance($arg1), $context)));
         $output .= ' ('. l(t('View'), 'admin/store/orders/'. $arg1->order_id .'/payments') .')<br />';

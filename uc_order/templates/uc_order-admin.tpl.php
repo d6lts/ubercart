@@ -19,15 +19,16 @@
 $context = array(
   'revision' => 'themed',
   'type' => 'order_product',
+  'subject' => array(
+    'order' => $order,
+  ),
 );
 foreach ($products as $product) {
   $price_info = array(
     'price' => $product->price,
     'qty' => $product->qty,
   );
-  $context['subject'] = array(
-    'order_product' => $product,
-  );
+  $context['subject']['order_product'] = $product;
 ?>
 - <?php echo $product->qty; ?> x <?php echo $product->title .' - '. uc_price($price_info, $context); ?><br />
 &nbsp;&nbsp;<?php echo t('SKU: ') . $product->model; ?><br />
