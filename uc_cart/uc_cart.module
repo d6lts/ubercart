@@ -973,10 +973,6 @@ function uc_cart_view_form($form_state, $items = NULL) {
         '#type' => 'submit',
         '#value' => $cs_text,
       );
-      $form['continue_shopping_text'] = array(
-        '#type' => 'hidden',
-        '#value' => $cs_text,
-      );
     }
   }
 
@@ -1015,9 +1011,10 @@ function uc_cart_view_form_submit($form, &$form_state) {
   uc_cart_update_item_object((object)$form_state['values']);
 
   // Specify the appropriate redirect based on the button used to submit.
+  $cs_text = variable_get('uc_continue_shopping_text', '') ? variable_get('uc_continue_shopping_text', '') : t('Continue shopping');
   switch ($form_state['clicked_button']['#value']) {
     // Continue shopping button.
-    case $form_state['values']['continue_shopping_text']:
+    case $cs_text:
       $form_state['redirect'] = uc_cart_continue_shopping_url();
       break;
 
