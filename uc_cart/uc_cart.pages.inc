@@ -122,7 +122,7 @@ function uc_cart_checkout_form() {
   global $user;
 
   // Cancel an order when a customer clicks the 'Cancel' button.
-  if ($_POST['op'] == t('Cancel')) {
+  if (isset($_POST['op']) && $_POST['op'] == t('Cancel')) {
     if (intval($_SESSION['cart_order']) > 0) {
       uc_order_comment_save($_SESSION['cart_order'], 0, t('Customer cancelled this order from the checkout form.'));
       unset($_SESSION['cart_order']);
@@ -494,7 +494,7 @@ function theme_uc_cart_checkout_review($panes, $form) {
  */
 function uc_cart_checkout_review_form() {
   // Set the session variable to pass the redirect check on the pageload.
-  if ($_POST['op'] == t('Back')) {
+  if (isset($_POST['op']) && $_POST['op'] == t('Back')) {
     $_SESSION['do_review'] = TRUE;
   }
 
