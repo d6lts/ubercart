@@ -1123,16 +1123,16 @@ function _ca_convert_configurations(&$context) {
         switch ($configuration['#event']) {
           case 'order_status_update':
             $trigger = 'uc_order_status_update';
-          break;
+            break;
           case 'payment_entered':
             $trigger = 'uc_payment_entered';
-          break;
+            break;
           case 'checkout_complete':
             $trigger = 'uc_checkout_complete';
-          break;
+            break;
           default:
             $trigger = $configuration['#event'];
-          break;
+            break;
         }
 
         // In UC 1.x, taxes had an event for each tax rate, using the same
@@ -1218,7 +1218,7 @@ function _ca_convert_conditions($condition_tree) {
       }
     }
   }
-  else if ($condition_tree['#type'] == 'condition') {
+  elseif ($condition_tree['#type'] == 'condition') {
     // Some conditions were renamed but check the same things.
     switch ($condition_tree['#name']) {
       case 'uc_order_condition_order_total':

@@ -388,7 +388,7 @@ function ca_condition_custom_php_form($form_state, $settings = array(), $argumen
   $form['php'] = array(
     '#type' => 'textarea',
     '#title' => t('Custom PHP'),
-    '#description' => t('Enter the custom PHP to be evaluated when this condition is executed.  Should not include &lt;?php ?> delimiters.'),
+    '#description' => t('Enter the custom PHP to be evaluated when this condition is executed. Should not include &lt;?php ?> delimiters.'),
     '#default_value' => isset($settings['php']) ? $settings['php'] : '',
   );
 
