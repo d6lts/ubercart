@@ -434,16 +434,16 @@ function uc_order_admin($sql = NULL, $args = NULL, $search = FALSE) {
   if (is_null($sql)) {
     $args = array();
     $show_status = 1;
-    $sql = 'SELECT o.order_id, o.uid, o.billing_first_name, o.billing_last_name, o.order_total, '
-          .'o.order_status, o.created, os.title FROM {uc_orders} o LEFT JOIN {uc_order_statuses} os '
-          .'ON o.order_status = os.order_status_id ';
+    $sql = 'SELECT o.order_id, o.uid, o.billing_first_name, o.billing_last_name, o.order_total, o.order_status, o.created, os.title '
+          .'FROM {uc_orders} o LEFT JOIN {uc_order_statuses} os ON o.order_status = os.order_status_id ';
 
 
     if (arg(3) == 'sort' && !is_null(arg(4))) {
       $_SESSION['sort_status'] = arg(4);
       $args[] = arg(4);
     }
-    if (!isset($_SESSION['sort_status']) || $_SESSION['sort_status'] == 'all') {
+    $where = '';
+    if (!isset($_SESSION['sort_status']) || $_SESSION['sort_status'] != 'all') {
       if (!empty($_SESSION['sort_status']) && is_string($_SESSION['sort_status'])) {
         $where = "WHERE o.order_status = '%s'";
         $args[] = $_SESSION['sort_status'];
@@ -582,7 +582,7 @@ function uc_order_admin_sort_form_submit($form, &$form_state) {
 function uc_order_select_form() {
   $form['order_id'] = array(
     '#type' => 'textfield',
-    '#title' => t('View order'),
+    '#title' => t('View order number'),
     '#size' => 10,
     '#maxlength' => 10
   );
@@ -1554,7 +1554,7 @@ function uc_order_load_product_select($order) {
   $types = uc_product_types();
 
   if (!empty($_POST['search'])) {
-    $search = strtolower(str_replace('*', '%', check_plain($_POST['search'])));
+    $search = strtolower(str_replace('*', '%%', check_plain($_POST['search'])));
     $search_args = array_merge($types, array($search, $search));
 
     $result = db_query("SELECT n.nid, n.title FROM {node} AS n LEFT JOIN "
