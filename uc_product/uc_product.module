@@ -2166,8 +2166,8 @@ function uc_product_imagecache_default_presets() {
         'module' => 'uc_product',
         'action' => 'imagecache_scale',
         'data' => array(
-          'width' => '100',
-          'height' => '100',
+          'width' => '250',
+          'height' => '250',
           'upscale' => 0,
         ),
       ),
