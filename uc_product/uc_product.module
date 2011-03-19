@@ -545,7 +545,7 @@ function uc_product_form(&$node) {
   $form['base']['pkg_qty'] = array('#type' => 'textfield',
     '#title' => t('Package quantity'),
     '#default_value' => isset($node->pkg_qty) ? $node->pkg_qty : 1,
-    '#description' => t('For a package containing only this product, how many are in it?'),
+    '#description' => t('At most, how many of these items can fit in your largest box? Orders that exceed this value will be split into multiple packages when retrieving shipping quotes.'),
     '#weight' => 25,
   );
   $form['base']['default_qty'] = array('#type' => 'textfield',
