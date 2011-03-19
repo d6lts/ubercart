@@ -373,6 +373,26 @@ function uc_usps_quote($products, $details, $method) {
     $rate_type = variable_get('uc_usps_online_rates', FALSE);
     $response = new SimpleXMLElement($result->data);
 
+    // Map double-encoded HTML markup in service names to Unicode characters
+    $service_markup = array(
+      '&lt;sup&gt;&amp;reg;&lt;/sup&gt;'   => '®',
+      '&lt;sup&gt;&amp;trade;&lt;/sup&gt;' => '™',
+      '**'                                 => '',
+    );
+    // Use this map to fix USPS service names
+    if (strpos($method['id'], 'intl')) {
+      // Find and replace markup in International service names
+      foreach ($response->xpath('//Service') as $service) {
+        $service->SvcDescription = str_replace(array_keys($service_markup), $service_markup, $service->SvcDescription);
+      }
+    }
+    else {
+      // Find and replace markup in Domestic service names
+      foreach ($response->xpath('//Postage') as $postage) {
+        $postage->MailService = str_replace(array_keys($service_markup), $service_markup, $postage->MailService);
+      }
+    }
+
     if (isset($response->Package)) {
       foreach ($response->Package as $package) {
         if (isset($package->Error)) {
@@ -390,10 +410,10 @@ function uc_usps_quote($products, $details, $method) {
             foreach ($package->Postage as $postage) {
               $classid = (string)$postage['CLASSID'];
               if ($classid === '0') {
-                if ((string)$postage->MailService == "First-Class Mail Parcel") {
+                if ((string)$postage->MailService == "First-Class Mail® Package") {
                   $classid = 'zeroParcel';
                 }
-                elseif ((string)$postage->MailService == "First-Class Mail Flat") {
+                elseif ((string)$postage->MailService == "First-Class Mail® Letter") {
                   $classid = 'zeroFlat';
                 }
                 else {
@@ -750,8 +770,8 @@ function _uc_usps_pkg_types() {
  */
 function _uc_usps_env_services() {
   return array(
-    'zero' => t('U.S.P.S. First-Class Mail'),
-    'zeroFlat' => t('U.S.P.S. First-Class Flat'),
+    'zero' => t('U.S.P.S. First-Class Mail Postcard'),
+    'zeroFlat' => t('U.S.P.S. First-Class Mail Letter'),
     12 => t('U.S.P.S. First-Class Postcard Stamped'),
     1 => t('U.S.P.S. Priority Mail'),
     16 => t('U.S.P.S. Priority Mail Flat-Rate Envelope'),
@@ -767,8 +787,8 @@ function _uc_usps_env_services() {
  */
 function _uc_usps_services() {
   return array(
-    'zero' => t('U.S.P.S. First-Class Mail'),
-    'zeroParcel' => t('U.S.P.S. First-Class Parcel'),
+    'zeroFlat' => t('U.S.P.S. First-Class Mail Letter'),
+    'zeroParcel' => t('U.S.P.S. First-Class Mail Parcel'),
     1 => t('U.S.P.S. Priority Mail'),
     28 => t('U.S.P.S. Priority Mail Small Flat-Rate Box'),
     17 => t('U.S.P.S. Priority Mail Regular/Medium Flat-Rate Box'),
