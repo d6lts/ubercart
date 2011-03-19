@@ -91,7 +91,7 @@ function uc_payment_methods_form() {
         '#default_value' => variable_get('uc_payment_method_'. $method['id'] .'_weight', $method['weight']),
       );
 
-      if ($method['no_gateway'] === TRUE) {
+      if (isset($method['no_gateway']) && $method['no_gateway'] === TRUE) {
         $form['pmtable'][$method['id']]['uc_payment_'. $method['id'] .'_gateway'] = array(
           '#value' => '-',
         );
@@ -201,7 +201,7 @@ function uc_payment_gateways_form() {
       );
 
       // Find any additional settings defined in the payment gateway callback.
-      if (function_exists($gateway['settings'])) {
+      if (isset($gateway['settings']) && function_exists($gateway['settings'])) {
         $gateway_settings = $gateway['settings']();
         if (is_array($gateway_settings)) {
           $form['gateways'][$gateway['id']] = array_merge($form['gateways'][$gateway['id']], $gateway_settings);
@@ -209,11 +209,20 @@ function uc_payment_gateways_form() {
       }
     }
   }
+  else {
+    $form['gateways_info'] = array(
+      '#markup' => '<div><strong>' . t('Payment gateways') . '</strong><br />'
+                . t('Payment gateways are web services that allow you to process various types of payments remotely. No payment gateways are currently enabled.') . '</div>',
+      '#weight' => -10,
+    );
+  }
 
   return system_settings_form($form);
 }
 
-// Returns an array of enabled payment gateways for the form summary.
+/**
+ * Returns an array of enabled payment gateways for the form summary.
+ */
 function _uc_payment_gateways_summarize($form, $gateways) {
   $items = array();
 
