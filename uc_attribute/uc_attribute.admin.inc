@@ -22,6 +22,8 @@ function uc_attribute_admin() {
 
   $display_types = _uc_attribute_display_types();
 
+  $rows = array();
+
   $result = pager_query("SELECT a.aid, a.name, a.label, a.required, a.ordering, a.display, COUNT(ao.oid) AS options FROM {uc_attributes} AS a LEFT JOIN {uc_attribute_options} AS ao ON a.aid = ao.aid GROUP BY a.aid, a.name, a.label, a.ordering, a.required, a.display". tablesort_sql($header), 30, 0, "SELECT COUNT(aid) FROM {uc_attributes}");
   while ($attr = db_fetch_object($result)) {
     if (empty($attr->label)) {

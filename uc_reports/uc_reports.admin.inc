@@ -42,9 +42,10 @@ function uc_reports_customers() {
   $address_preference = variable_get('uc_customer_list_address', 'billing');
   $first_name = ($address_preference == 'billing') ? 'billing_first_name' : 'delivery_first_name';
   $last_name = ($address_preference == 'billing') ? 'billing_last_name' : 'delivery_last_name';
-  $page = (!is_null($_GET['page'])) ? intval($_GET['page']) : 0;
-  $page_size = (!is_null($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+  $page = (isset($_GET['page'])) ? intval($_GET['page']) : 0;
+  $page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
   $order_statuses = _uc_reports_order_statuses();
+  $rows = array();
   $csv_rows = array();
 
   $header = array(
@@ -107,7 +108,7 @@ function uc_reports_customers() {
 
   $output = theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'));
   $output .= theme('pager', NULL, $page_size);
-  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. ((!is_null($_GET['nopage'])) ? l(t('Show paged records'), 'admin/store/reports/customers') : l(t('Show all records'), 'admin/store/reports/customers', array('query' => 'nopage=1'))) .'</div>';
+  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. ((isset($_GET['nopage'])) ? l(t('Show paged records'), 'admin/store/reports/customers') : l(t('Show all records'), 'admin/store/reports/customers', array('query' => 'nopage=1'))) .'</div>';
 
   return $output;
 }

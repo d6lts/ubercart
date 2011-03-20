@@ -49,7 +49,7 @@ function uc_stock_settings_form() {
 function uc_stock_report() {
   drupal_add_css(drupal_get_path('module', 'uc_stock') .'/uc_stock.css');
 
-  $page_size = (!is_null($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+  $page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
   $csv_rows = array();
   $rows = array();
 
@@ -96,7 +96,7 @@ function uc_stock_report() {
   $output = drupal_get_form('uc_stock_report_form')
           . theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-stock-table'))
           . theme('pager', NULL, $page_size);
-  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. ((!is_null($_GET['nopage'])) ? l(t('Show paged records'), 'admin/store/reports/stock') : l(t('Show all records'), 'admin/store/reports/stock', $options = array('query' => 'nopage=1'))) .'</div>';
+  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. ((isset($_GET['nopage'])) ? l(t('Show paged records'), 'admin/store/reports/stock') : l(t('Show all records'), 'admin/store/reports/stock', $options = array('query' => 'nopage=1'))) .'</div>';
   return $output;
 }
 

@@ -678,7 +678,7 @@ function theme_uc_cart_block_items($items) {
     foreach ($items as $item) {
       $context['subject'] = array(
         'cart_item' => $item,
-        'node' => node_load($item->nid),
+        'node' => node_load($item['nid']),
       );
       // Add the basic row with quantity, title, and price.
       $output .= '<tr class="'. $row_class .'"><td class="cart-block-item-qty">'. $item['qty'] .'</td>'
