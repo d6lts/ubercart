@@ -787,7 +787,7 @@ function _payment_gateway_data($gateway_id, $key) {
   foreach ($gateways as $gateway) {
     // If this is it, return the requested data.
     if ($gateway['id'] == $gateway_id) {
-      return $gateway[$key];
+      return isset($gateway[$key]) ? $gateway[$key] : NULL;
     }
   }
 }

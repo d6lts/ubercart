@@ -114,6 +114,7 @@ function ca_admin($groupby = 'trigger') {
   ksort($tables);
 
   // Add the tables for each trigger to the output.
+  $output = '';
   foreach ($tables as $key => $value) {
     // Accommodate empty class names.
     if (empty($key)) {
