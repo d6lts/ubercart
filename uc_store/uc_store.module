@@ -2075,11 +2075,11 @@ function uc_referer_check($urls) {
 }
 
 /**
- * Provide a more reliable referrer for Ubercart.
+ * Provide a more reliable referer for Ubercart.
  */
 function uc_referer_uri() {
   if (referer_uri() == '') {
-    return $_SESSION['uc_referer_uri'];
+    return isset($_SESSION['uc_referer_uri']) ? $_SESSION['uc_referer_uri'] : '';
   }
   else {
     return referer_uri();

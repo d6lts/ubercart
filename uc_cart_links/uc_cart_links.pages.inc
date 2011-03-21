@@ -54,6 +54,7 @@ function uc_cart_links_process($arg1) {
   $actions = explode('-', urldecode($arg1));
   $rebuild_cart = FALSE;
   $messages = array();
+  $id = '';
 
   foreach ($actions as $action) {
     switch (drupal_substr($action, 0, 1)) {
@@ -123,7 +124,7 @@ function uc_cart_links_process($arg1) {
           // right. In other words, we have to simulate FAPI's form values.
           $node = node_load(array('nid' => $p['nid']));
           if ($node->status) {
-            if (is_array($node->products)) {
+            if (isset($node->products) && is_array($node->products)) {
               foreach ($node->products as $nid => $product) {
                 $p['data']['products'][$nid] = array(
                   'nid' => $nid,
