@@ -414,7 +414,6 @@ function uc_checkout_pane_billing($op, &$arg1, $arg2) {
       return TRUE;
 
     case 'review':
-      $review = NULL;
       $review[] = array('title' => t('Address'), 'data' => uc_order_address($arg1, 'billing', FALSE));
       if (uc_address_field_enabled('phone') && !empty($arg1->billing_phone)) {
         $review[] = array('title' => t('Phone'), 'data' => check_plain($arg1->billing_phone));
@@ -453,6 +452,7 @@ function uc_checkout_pane_comments($op, &$arg1, $arg2) {
       return TRUE;
 
     case 'review':
+      $review = NULL;
       $result = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = %d", $arg1->order_id);
       if ($comment = db_fetch_object($result)) {
         $review[] = array('title' => t('Comment'), 'data' => check_plain($comment->message));

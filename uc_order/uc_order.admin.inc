@@ -1228,7 +1228,7 @@ function uc_order_edit_form_submit($form, &$form_state) {
   }
 
   unset($order->products);
-  if (is_array($_POST['products'])) {
+  if (isset($_POST['products']) && is_array($_POST['products'])) {
     foreach ($_POST['products'] as $product) {
       if (!isset($product['remove']) && intval($product['qty']) > 0) {
         $product['data'] = unserialize($product['data']);
