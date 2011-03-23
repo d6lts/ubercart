@@ -605,7 +605,7 @@ function theme_uc_cart_block_title_icon($icon_class) {
   return l('<span class="'. $icon_class .'" title="'. t('View your shopping cart.') .'"></span>', 'cart', array('html' => TRUE));
 }
 
- /**
+/**
  * Theme the cachable shopping cart block content.
  *
  * @ingroup themeable
