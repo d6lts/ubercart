@@ -245,11 +245,13 @@ function uc_store_update_6005() {
  * Remove price cache.
  */
 function uc_store_update_6006() {
+  $ret = array();
+
   if (db_table_exists('cache_uc_price')) {
-    db_drop_table('cache_uc_price');
+    db_drop_table($ret, 'cache_uc_price');
   }
 
   variable_del('uc_price_caching');
 
-  return array(array('success' => TRUE, 'query' => 'Removed price cache.'));
+  return $ret;
 }
