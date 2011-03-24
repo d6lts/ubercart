@@ -111,9 +111,6 @@ function uc_store_schema() {
     'primary key' => array('path_hash'),
   );
 
-  $schema['cache_uc_price'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_uc_price']['description'] = 'Cache table for Ubercart store prices.';
-
   return $schema;
 }
 
@@ -173,14 +170,12 @@ function uc_store_update_6000() {
   return $ret;
 }
 
+/**
+ * Obsolete due to removal of price caching.
+ * @see uc_store_update_6006()
+ */
 function uc_store_update_6001() {
-  $ret = array();
-
-  $schema['cache_uc_price'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_uc_price']['description'] = t('Cache table for Ubercart store prices.');
-
-  db_create_table($ret, 'cache_uc_price', $schema['cache_uc_price']);
-  return $ret;
+  return array();
 }
 
 /**
@@ -244,4 +239,17 @@ function uc_store_update_6005() {
   }
 
   return $ret;
+}
+
+/**
+ * Remove price cache.
+ */
+function uc_store_update_6006() {
+  if (db_table_exists('cache_uc_price')) {
+    db_drop_table('cache_uc_price');
+  }
+
+  variable_del('uc_price_caching');
+
+  return array(array('success' => TRUE, 'query' => 'Removed price cache.'));
 }

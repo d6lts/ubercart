@@ -368,13 +368,6 @@ function uc_store_elements() {
 }
 
 /**
- * Implementation of hook_flush_caches().
- */
-function uc_store_flush_caches() {
-  return array('cache_uc_price');
-}
-
-/**
  * Implementation of hook_theme().
  */
 function uc_store_theme() {

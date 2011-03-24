@@ -1209,13 +1209,6 @@ function uc_price_settings_form() {
     '#default_value' => variable_get('uc_price_format_callback', 'uc_store_price_handler_format'),
   );
 
-  $form['uc_price_caching'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Cache generated price values until the next cron run.'),
-    '#description' => t('It may be helpful to disable caching while configuring modules that alter prices or price displays.') .'<br />'. t("For high traffic sites or sites with multiple price alterers, leaving this disabled may hurt the site's performance."),
-    '#default_value' => variable_get('uc_price_caching', TRUE),
-  );
-
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
@@ -1265,9 +1258,8 @@ function theme_uc_price_settings_form($form) {
  * @see uc_price_settings_form()
  */
 function uc_price_settings_form_submit($form, &$form_state) {
-  // Save the selected price formatter and price caching setting.
+  // Save the selected price formatter.
   variable_set('uc_price_format_callback', $form_state['values']['uc_price_format_callback']);
-  variable_set('uc_price_caching', $form_state['values']['uc_price_caching']);
 
   // Save the alterer configuration based on the table form.
   $config = array();
@@ -1277,9 +1269,6 @@ function uc_price_settings_form_submit($form, &$form_state) {
   }
 
   variable_set('uc_price_handler_config', $config);
-
-  // Empty out any cached price data.
-  cache_clear_all('*', 'cache_uc_price', TRUE);
 
   drupal_set_message(t('Price handler configuration saved.'));
 }
