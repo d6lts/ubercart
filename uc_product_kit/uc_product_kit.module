@@ -985,6 +985,7 @@ function uc_product_kit_order_product_alter(&$product, $order) {
     // cart.
     $kit_product->data = module_invoke_all('add_to_cart_data', $_POST['sub_products'][$kit_product->nid]);
     $kit_product->data['kit_id'] = $product->nid;
+    $kit_product->data['shippable'] = $product->shippable;    
 
     // Run the product through the alter mill.
     foreach (module_list() as $module) {
