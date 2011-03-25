@@ -72,7 +72,7 @@ function uc_store_menu() {
     'title' => 'Store administration',
     'description' => 'Administer store settings, products, orders, and more.',
     'page callback' => 'uc_store_admin',
-    'access arguments' => array('access administration pages'),
+    'access callback' => 'uc_store_admin_access',
     'type' => MENU_NORMAL_ITEM,
     'file' => 'uc_store.admin.inc',
   );
@@ -321,6 +321,17 @@ function uc_store_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Access callback for top-level store administration menu item.
+ */
+function uc_store_admin_access() {
+  return user_access('administer_store')
+    || user_access('view all orders')
+    || user_access('view customers')
+    || user_access('administer products')
+    || user_access('view store reports');
 }
 
 /**
