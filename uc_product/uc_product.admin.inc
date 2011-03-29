@@ -621,6 +621,7 @@ function uc_product_class_form_submit($form, &$form_state) {
   }
   else {
     db_query("UPDATE {uc_product_classes} SET name = '%s', description = '%s' WHERE pcid = '%s'", $form_state['values']['name'], $form_state['values']['description'], $pcid);
+    db_query("UPDATE {node_type} SET name = '%s', description = '%s' WHERE type = '%s'", $form_state['values']['name'], $form_state['values']['description'], $pcid);
     uc_product_node_info(TRUE);
 
     module_invoke_all('product_class', $pcid, 'update');
