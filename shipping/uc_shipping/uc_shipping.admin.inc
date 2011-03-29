@@ -593,9 +593,9 @@ function uc_shipping_shipment_view($order, $shipment) {
     $rows[] = array(t('Tracking Number:'), check_plain($shipment->tracking_number));
   }
   $methods = module_invoke_all('shipping_method');
-  $method = $methods[$shipment->shipping_method];
-  if (isset($method['quote']['accessorials'][$shipment->accessorials])) {
-    $rows[] = array(t('Services:'), $method['quote']['accessorials'][$shipment->accessorials]);
+
+  if (isset($methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials])) {
+    $rows[] = array(t('Services:'), $methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials]);
   }
   else {
     $rows[] = array(t('Services:'), $shipment->accessorials);

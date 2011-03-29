@@ -300,10 +300,11 @@ function uc_shipping_package_view($package) {
   $rows[] = array(t('Contents:'), filter_xss_admin($package->description));
   if ($shipment) {
     $methods = module_invoke_all('shipping_method');
-    $method = $methods[$shipment->shipping_method];
-    $pkg_type = $method['ship']['pkg_types'][$package->pkg_type];
+    if (isset($methods[$shipment->shipping_method])) {
+      $pkg_type = $methods[$shipment->shipping_method]['ship']['pkg_types'][$package->pkg_type];
+    }
   }
-  $rows[] = array(t('Package type:'), strlen($pkg_type) ? $pkg_type : check_plain($package->pkg_type));
+  $rows[] = array(t('Package type:'), isset($pkg_type) ? $pkg_type : check_plain($package->pkg_type));
   if ($package->length && $package->width && $package->height) {
     $rows[] = array(t('Dimensions:'), t('!l x !w x !h', array('!l' => uc_length_format($package->length), '!w' => uc_length_format($package->width), '!h' => uc_length_format($package->height))));
   }
@@ -397,7 +398,7 @@ function uc_shipping_package_load($package_id) {
     $result = db_query("SELECT * FROM {uc_packages} WHERE package_id = %d", $package_id);
     if ($package = db_fetch_object($result)) {
       $products = array();
-      $descripion = '';
+      $description = '';
       $weight = 0;
       $units = variable_get('uc_weight_unit', 'lb');
       $addresses = array();
