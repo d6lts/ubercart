@@ -319,7 +319,17 @@ function uc_order_theme() {
     'uc_order' => array(
       'template' => 'uc_order',
       'path' => drupal_get_path('module', 'uc_order') .'/templates',
-      'arguments' => array('order' => NULL, 'op' => 'view', 'template' => 'customer'),
+      'arguments' => array(
+        'order' => NULL,
+        'op' => 'view',
+        'template' => 'customer',
+        'thank_you_message' => FALSE,
+        'help_text' => FALSE,
+        'email_text' => FALSE,
+        'store_footer' => FALSE,
+        'business_header' => FALSE,
+        'shipping_method' => FALSE,
+      ),
     ),
     'uc_order_state_table' => array(
       'arguments' => array('form' => NULL),
@@ -383,7 +393,7 @@ function uc_order_token_values($type, $object = NULL) {
             );
             $subtotal = uc_price($order->line_items[$key]['amount'], $context);
           }
-          if ($value['type'] == 'shipping' && is_null($ship_method)) {
+          if ($value['type'] == 'shipping' && !isset($ship_method)) {
             $ship_method = $value['title'];
           }
         }
