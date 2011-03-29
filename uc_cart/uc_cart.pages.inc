@@ -97,7 +97,7 @@ function uc_cart_checkout() {
 
   $list = _line_item_list();
   foreach ($list as $line_item) {
-    if (function_exists($line_item['callback'])) {
+    if (isset($line_item['callback']) && function_exists($line_item['callback'])) {
       $line_item['callback']('cart-preview', $items);
     }
   }

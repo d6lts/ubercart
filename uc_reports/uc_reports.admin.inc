@@ -126,8 +126,8 @@ function uc_reports_products() {
     $views_column = FALSE;
   }
 
-  $page = (!is_null($_GET['page'])) ? intval($_GET['page']) : 0;
-  $page_size = (!is_null($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+  $page = (isset($_GET['page'])) ? intval($_GET['page']) : 0;
+  $page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
   $order_statuses = _uc_reports_order_statuses();
   $row_cell = $page * variable_get('uc_reports_table_size', 30) + 1;
   $csv_rows = array();
@@ -269,7 +269,7 @@ function uc_reports_products() {
 
   $output = theme('uc_reports_product_table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'));
   $output .= theme('pager', NULL, $page_size);
-  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. (!is_null($_GET['nopage']) ? l(t('Show paged records'), 'admin/store/reports/products') : l(t('Show all records'), 'admin/store/reports/products', array('query' => 'nopage=1'))) .'</div>';
+  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. (isset($_GET['nopage']) ? l(t('Show paged records'), 'admin/store/reports/products') : l(t('Show all records'), 'admin/store/reports/products', array('query' => 'nopage=1'))) .'</div>';
   $output .= '<small>*'. t('Make sure %setting_name is set to %state in the <a href="!url">access log settings page</a> to enable views column.', array('%setting_name' => 'count content views', '%state' => 'enabled', '!url' => url('admin/reports/settings', array('query' => 'destination=admin/store/reports/products')))) .'</small>';
 
   return $output;
@@ -311,8 +311,8 @@ function uc_reports_products_custom() {
   $timezone_offset = time() + $timezone;
   $statistics = db_result(db_query("SELECT status FROM {system} WHERE name = 'statistics'"));
   $count_views = variable_get('statistics_count_content_views', FALSE);
-  $page = (!is_null($_GET['page'])) ? intval($_GET['page']) : 0;
-  $page_size = (!is_null($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+  $page = (isset($_GET['page'])) ? intval($_GET['page']) : 0;
+  $page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
   $product_types = array("'product'");
   $types = db_query("SELECT DISTINCT(pcid) FROM {uc_product_classes}");
   $csv_rows = array();
@@ -392,6 +392,7 @@ function uc_reports_products_custom() {
   $sql_count = "SELECT COUNT(nid) FROM {node} WHERE type IN (". implode(", ", $product_types) .")";
   $products = pager_query($sql . tablesort_sql($header), $page_size, 0, $sql_count);
 
+  $rows = array();
   while ($product = db_fetch_array($products)) {
     $row_cell = ($page * variable_get('uc_reports_table_size', 30)) + count($rows) + 1;
     $product_cell = l($product['title'], 'node/'. ($product['nid']));
