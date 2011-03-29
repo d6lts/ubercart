@@ -359,6 +359,20 @@ function uc_product_node_info($reset = FALSE) {
 }
 
 /**
+ * Implementation of hook_node_type().
+ *
+ * Ensure product class names and descriptions are synchronised if the
+ * content type is updated.
+ */
+function uc_product_node_type($op, $type) {
+  switch ($op) {
+    case 'update':
+      db_query("UPDATE {uc_product_classes} SET name = '%s', description = '%s' WHERE pcid = '%s'", $type->name, $type->description, $type->type);
+      break;
+  }
+}
+
+/**
  * Implementation of hook_forms().
  *
  * Register an "add to cart" form for each product to prevent id collisions.
