@@ -179,12 +179,15 @@ function uc_product_kit_insert(&$node) {
 }
 
 /**
- * Implementation of hook_update().
+ * Implements hook_update().
  *
  * Updates information in {uc_products} as well as {uc_product_kits}. Because
- *   component products are known when the form is loaded, discount information
- *   can be input and saved.
- * @param &$node The node to be updated.
+ * component products are known when the form is loaded, discount information
+ * can be input and saved.
+ *
+ * @param &$node
+ *   The node to be updated.
+ *
  * @see uc_product_update()
  */
 function uc_product_kit_update(&$node) {
