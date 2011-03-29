@@ -310,6 +310,7 @@ function theme_uc_roles_user_expiration($form) {
     array('data' => t('Add/remove time')),
   );
 
+  $rows = array();
   // The expiration table.
   foreach ((array)$form['table'] as $rid => $expiration) {
     // We only want numeric rid's
@@ -372,25 +373,27 @@ function uc_roles_user_submit(&$edit, &$account, $category) {
   }
 
   // Check if any temporary role actions were taken.
-  foreach ((array)$edit['table'] as $rid => $value) {
-    // Remove this expiration.
-    if ($value['remove']) {
-      uc_roles_delete($account, $rid);
-    }
+  if (isset($edit['table'])) {
+    foreach ((array)$edit['table'] as $rid => $value) {
+      // Remove this expiration.
+      if ($value['remove']) {
+        uc_roles_delete($account, $rid);
+      }
 
-    // Adjust it.
-    else {
-      if ($value['qty'] && $edit['roles'][$rid]) {
-        $qty = $value['qty'];
-        $qty *= $value['polarity'] == 'add' ? 1 : -1;
+      // Adjust it.
+      else {
+        if ($value['qty'] && $edit['roles'][$rid]) {
+          $qty = $value['qty'];
+          $qty *= $value['polarity'] == 'add' ? 1 : -1;
 
-        uc_roles_renew($account, $rid, _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']));
+          uc_roles_renew($account, $rid, _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']));
+        }
       }
     }
   }
 
   // If a user's role is removed using Drupal, then so is any expiration data.
-  if (is_array($edit['roles'])) {
+  if (isset($edit['roles']) && is_array($edit['roles'])) {
     foreach ($account->roles as $rid => $role) {
       if (!in_array($rid, array_keys($edit['roles'])) && $rid != DRUPAL_AUTHENTICATED_RID) {
         uc_roles_delete($account, $rid);
@@ -411,19 +414,21 @@ function uc_roles_user_validate(&$edit, &$account, $category) {
   }
 
   // Validate adjusted expirations.
-  foreach ((array)$edit['table'] as $rid => $value) {
-    // We don't validate if nothing was actually selected, the role, or the
-    // expiration is removed.
-    if ($value['qty'] == 0 || $value['remove'] == 1 || !$edit['roles'][$rid]) {
-      continue;
-    }
+  if (isset($edit['table'])) {
+    foreach ((array)$edit['table'] as $rid => $value) {
+      // We don't validate if nothing was actually selected, the role, or the
+      // expiration is removed.
+      if ($value['qty'] == 0 || $value['remove'] == 1 || !$edit['roles'][$rid]) {
+        continue;
+      }
 
-    $qty = $value['qty'];
-    $qty *= $value['polarity'] == 'add' ? 1 : -1;
+      $qty = $value['qty'];
+      $qty *= $value['polarity'] == 'add' ? 1 : -1;
 
-    $new_expiration = _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']);
-    if (time() > $new_expiration) {
-      form_set_error('qty', t("The new expiration date, %date, has already occurred.", array('%date' => format_date($new_expiration, 'small'))));
+      $new_expiration = _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']);
+      if (time() > $new_expiration) {
+        form_set_error('qty', t("The new expiration date, %date, has already occurred.", array('%date' => format_date($new_expiration, 'small'))));
+      }
     }
   }
 }

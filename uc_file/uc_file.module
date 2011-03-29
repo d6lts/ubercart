@@ -293,35 +293,39 @@ function uc_file_user_form(&$account, $category = NULL) {
  */
 function uc_file_user_validate(&$edit) {
 
-  foreach ((array)$edit['file_download'] as $key => $download_modification) {
+  // Determine if any downloads were modified.
+  if (isset($edit['file_download'])) {
 
-    // We don't care... it's about to be deleted.
-    if ($download_modification['remove']) {
-      continue;
-    }
+    foreach ((array)$edit['file_download'] as $key => $download_modification) {
 
-    if ($download_modification['download_limit'] < 0) {
-      form_set_error('file_download]['. $key .'][download_limit', t('A negative download limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
-    }
+      // We don't care... it's about to be deleted.
+      if ($download_modification['remove']) {
+        continue;
+      }
 
-    if ($download_modification['address_limit'] < 0) {
-      form_set_error('file_download]['. $key .'][address_limit', t('A negative address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
-    }
+      if ($download_modification['download_limit'] < 0) {
+        form_set_error('file_download]['. $key .'][download_limit', t('A negative download limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
+      }
 
-    // Some expirations don't need any validation...
-    if ($download_modification['time_granularity'] == 'never' || !$download_modification['time_quantity']) {
-      continue;
-    }
+      if ($download_modification['address_limit'] < 0) {
+        form_set_error('file_download]['. $key .'][address_limit', t('A negative address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
+      }
 
-    // Either use the current expiration, or if there's none, start from right now.
-    $new_expiration = _uc_file_expiration_date($download_modification, $download_modification['expiration']);
+      // Some expirations don't need any validation...
+      if ($download_modification['time_granularity'] == 'never' || !$download_modification['time_quantity']) {
+        continue;
+      }
 
-    if ($new_expiration <= time()) {
-      form_set_error('file_download]['. $key .'][time_quantity', t('The date %date has already occurred.', array('%date' => format_date($new_expiration, 'small'))));
-    }
+      // Either use the current expiration, or if there's none, start from right now.
+      $new_expiration = _uc_file_expiration_date($download_modification, $download_modification['expiration']);
 
-    if ($download_modification['time_quantity'] < 0) {
-      form_set_error('file_download]['. $key .'][time_quantity', t('A negative expiration quantity does not make sense. Use the polarity control to determine if the time should be added or subtracted.'));
+      if ($new_expiration <= time()) {
+        form_set_error('file_download]['. $key .'][time_quantity', t('The date %date has already occurred.', array('%date' => format_date($new_expiration, 'small'))));
+      }
+
+      if ($download_modification['time_quantity'] < 0) {
+        form_set_error('file_download]['. $key .'][time_quantity', t('A negative expiration quantity does not make sense. Use the polarity control to determine if the time should be added or subtracted.'));
+      }
     }
   }
 }
@@ -330,48 +334,51 @@ function uc_file_user_validate(&$edit) {
  * Implementation of hook_user_submit().
  */
 function uc_file_user_submit(&$edit, &$account) {
-
   // Check out if any downloads were modified.
-  foreach ((array)$edit['file_download'] as $fid => $download_modification) {
+  if (isset($edit['file_download'])) {
+    foreach ((array)$edit['file_download'] as $fid => $download_modification) {
 
-    // Remove this user download?
-    if ($download_modification['remove']) {
-      uc_file_remove_user_file_by_id($account, $fid);
-    }
-
-    // Update the modified downloads.
-    else {
-
-      // Calculate the new expiration.
-      $download_modification['expiration'] = _uc_file_expiration_date($download_modification, $download_modification['expiration']);
-
-      // Don't touch anything if everything's the same.
-      if ($download_modification['download_limit'] == $download_modification['download_limit_old'] &&
-          $download_modification['address_limit' ] == $download_modification['address_limit_old' ] &&
-          $download_modification['expiration'    ] == $download_modification['expiration_old'    ]) {
-        continue;
+      // Remove this user download?
+      if ($download_modification['remove']) {
+        uc_file_remove_user_file_by_id($account, $fid);
       }
 
-      // Renew. (Explicit overwrite)
-      uc_file_user_renew($fid, $account, NULL, $download_modification, TRUE);
+      // Update the modified downloads.
+      else {
+
+        // Calculate the new expiration.
+        $download_modification['expiration'] = _uc_file_expiration_date($download_modification, $download_modification['expiration']);
+
+        // Don't touch anything if everything's the same.
+        if ($download_modification['download_limit'] == $download_modification['download_limit_old'] &&
+            $download_modification['address_limit' ] == $download_modification['address_limit_old' ] &&
+            $download_modification['expiration'    ] == $download_modification['expiration_old'    ]) {
+          continue;
+        }
+
+        // Renew. (Explicit overwrite)
+        uc_file_user_renew($fid, $account, NULL, $download_modification, TRUE);
+      }
     }
   }
 
   // Check out if any downloads were added. We pass NULL to file_user_renew,
   // because this shouldn't be associated with a random product.
-  foreach ((array)$edit['file_add'] as $fid => $data) {
+  if (isset($edit['file_add'])) {
+    foreach ((array)$edit['file_add'] as $fid => $data) {
 
-    $download_modification['download_limit'] = variable_get('uc_file_download_limit_number', NULL);
-    $download_modification['address_limit'] = variable_get('uc_file_download_limit_addresses', NULL);
+      $download_modification['download_limit'] = variable_get('uc_file_download_limit_number', NULL);
+      $download_modification['address_limit'] = variable_get('uc_file_download_limit_addresses', NULL);
 
-    $download_modification['expiration'] = _uc_file_expiration_date(array(
-      'time_polarity' => '+',
-      'time_quantity' => variable_get('uc_file_download_limit_duration_qty', NULL),
-      'time_granularity' => variable_get('uc_file_download_limit_duration_granularity', 'never'),
-    ), time());
+      $download_modification['expiration'] = _uc_file_expiration_date(array(
+        'time_polarity' => '+',
+        'time_quantity' => variable_get('uc_file_download_limit_duration_qty', NULL),
+        'time_granularity' => variable_get('uc_file_download_limit_duration_granularity', 'never'),
+      ), time());
 
-    // Renew. (Explicit overwrite)
-    uc_file_user_renew($fid, $account, NULL, $download_modification, TRUE);
+      // Renew. (Explicit overwrite)
+      uc_file_user_renew($fid, $account, NULL, $download_modification, TRUE);
+    }
   }
 }
 
@@ -524,8 +531,9 @@ function theme_uc_file_hook_user_file_downloads($form) {
  */
 function theme_uc_file_hook_user_file($form) {
 
-  // Enclose this in <p> so it won't fall out of the fieldset if there are no downloads.
-  $output .= '<p>'. drupal_render($form['file_message']) .'</p>';
+  // Enclose this in <p> so it won't fall out of the fieldset
+  // if there are no downloads.
+  $output = '<p>'. drupal_render($form['file_message']) .'</p>';
 
   // Ensure the current files are above the new file dialog.
   $output .= drupal_render($form['download']);
