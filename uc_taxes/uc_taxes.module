@@ -241,6 +241,9 @@ function uc_line_item_tax($op, $order) {
  */
 function uc_line_item_tax_subtotal($op, $order) {
   $amount = 0;
+  $has_taxes = FALSE;
+  $different = FALSE;
+
   if (is_array($order->products)) {
     foreach ($order->products as $item) {
       $amount += $item->price * $item->qty;
@@ -260,7 +263,7 @@ function uc_line_item_tax_subtotal($op, $order) {
       }
     }
   }
-  if (is_array($order->taxes)) {
+  if (isset($order->taxes) && is_array($order->taxes)) {
     $has_taxes = TRUE;
   }
   if ($different && $has_taxes) {
