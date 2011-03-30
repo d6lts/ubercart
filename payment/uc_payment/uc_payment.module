@@ -234,7 +234,7 @@ function uc_payment_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implementation of hook_order().
  */
-function uc_payment_order($op, &$arg1) {
+function uc_payment_order($op, $arg1) {
   switch ($op) {
     case 'submit':
       $func = _payment_method_data($arg1->payment_method, 'callback');

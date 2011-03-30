@@ -516,7 +516,7 @@ function uc_quote_update_cart_item() {
 /**
  * Implementation of hook_order().
  */
-function uc_quote_order($op, &$arg1, $arg2) {
+function uc_quote_order($op, $arg1, $arg2) {
   switch ($op) {
     case 'submit':
       unset($_SESSION['quote']);

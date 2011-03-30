@@ -719,7 +719,7 @@ function hook_line_item_data_alter(&$items) {
  * @param $op
  *   The action being performed.
  * @param &$arg1
- *   This is the order object or a reference to it as noted below.
+ *   This is the order object.
  * @param $arg2
  *   This is variable and is based on the value of $op:
  *   - new: Called when an order is created. $arg1 is a reference to the new
@@ -765,7 +765,7 @@ function hook_line_item_data_alter(&$items) {
  *       Expects in return a value (positive or negative) by which to modify the
  *       order total.
  */
-function hook_order($op, &$arg1, $arg2) {
+function hook_order($op, $arg1, $arg2) {
   switch ($op) {
     case 'save':
       // Do something to save payment info!

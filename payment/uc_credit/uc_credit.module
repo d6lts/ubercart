@@ -286,7 +286,7 @@ function uc_credit_store_status() {
 /**
  * Implementation of hook_order().
  */
-function uc_credit_order($op, &$arg1, $arg2) {
+function uc_credit_order($op, $arg1, $arg2) {
   // Set up the encryption key and object for saving and loading.
   if ($arg1->payment_method == 'credit' && ($op == 'save' || $op == 'load')) {
     // Log an error if encryption isn't configured properly.
