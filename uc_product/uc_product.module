@@ -175,7 +175,7 @@ function uc_product_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function uc_product_perm() {
-  $perms = array('administer products', 'administer product classes', 'administer product features');
+  $perms = array('administer products', 'administer product classes', 'administer product features', 'administer own product features');
   foreach (node_get_types() as $type) {
     if ($type->module == 'uc_product') {
       $name = check_plain($type->type);
@@ -227,7 +227,9 @@ function uc_product_access($op, $node, $account) {
  * Menu access callback for 'node/%node/edit/features'.
  */
 function uc_product_feature_access($node) {
-  return uc_product_is_product($node) && user_access('administer product features');
+  global $user;
+  return uc_product_is_product($node) &&
+    ((user_access('administer product features') || (user_access('administer own product features') && ($user->uid == $node->uid))));
 }
 
 /**
