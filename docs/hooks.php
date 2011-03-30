@@ -1529,6 +1529,23 @@ function hook_uc_price_handler() {
 }
 
 /**
+ * Define default product classes.
+ *
+ * The results of this hook are eventually passed through hook_node_info(),
+ * so you may include any keys that hook_node_info() uses. Defaults will
+ * be provided where keys are not set. This hook can also be used to
+ * override the default "product" product class name and description.
+ */
+function hook_uc_product_default_classes() {
+  return array(
+    'my_class' => array(
+      'name' => t('My product class'),
+      'description' => t('Content type description for my product class.'),
+    ),
+  );
+}
+
+/**
  * Notify core of any SKUs your module adds to a given node.
  *
  * NOTE: DO NOT map the array keys, as the possibility for numeric SKUs exists, and
