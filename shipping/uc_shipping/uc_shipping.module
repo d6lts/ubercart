@@ -595,21 +595,19 @@ function uc_shipping_order_pane_packages($op, $arg1) {
       while ($shipment = db_fetch_object($result)) {
         $shipment = uc_shipping_shipment_load($shipment->sid);
         if ($shipment->tracking_number) {
+          $tracking[$shipment->carrier]['data'] = $shipment->carrier;
           $tracking[$shipment->carrier]['children'][] = check_plain($shipment->tracking_number);
         }
         else {
           foreach ($shipment->packages as $package) {
             if ($package->tracking_number) {
+              $tracking[$shipment->carrier]['data'] = $shipment->carrier;
               $tracking[$shipment->carrier]['children'][] = check_plain($package->tracking_number);
             }
           }
         }
       }
-      $output = '';
-      foreach ($tracking as $carrier => $item) {
-        $output .= '<strong>'. $carrier .':</strong>'. theme('item_list', $item);
-      }
-      return $output;
+      return theme('item_list', $tracking);
     break;
   }
 }
