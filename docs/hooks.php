@@ -719,7 +719,7 @@ function hook_line_item_data_alter(&$items) {
  * @param $op
  *   The action being performed.
  * @param &$arg1
- *   This is the order object or a reference to it as noted below.
+ *   This is the order object.
  * @param $arg2
  *   This is variable and is based on the value of $op:
  *   - new: Called when an order is created. $arg1 is a reference to the new
@@ -765,7 +765,7 @@ function hook_line_item_data_alter(&$items) {
  *       Expects in return a value (positive or negative) by which to modify the
  *       order total.
  */
-function hook_order($op, &$arg1, $arg2) {
+function hook_order($op, $arg1, $arg2) {
   switch ($op) {
     case 'save':
       // Do something to save payment info!
@@ -1525,6 +1525,23 @@ function hook_uc_price_handler() {
       'label' => FALSE,
       'my_option_that_my_formatter_recognizes' => 1337,
     )
+  );
+}
+
+/**
+ * Define default product classes.
+ *
+ * The results of this hook are eventually passed through hook_node_info(),
+ * so you may include any keys that hook_node_info() uses. Defaults will
+ * be provided where keys are not set. This hook can also be used to
+ * override the default "product" product class name and description.
+ */
+function hook_uc_product_default_classes() {
+  return array(
+    'my_class' => array(
+      'name' => t('My product class'),
+      'description' => t('Content type description for my product class.'),
+    ),
   );
 }
 

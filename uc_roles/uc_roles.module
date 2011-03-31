@@ -353,6 +353,12 @@ function uc_roles_user_submit(&$edit, &$account, $category) {
   if (!user_access('administer users') || $category != 'account') {
     return;
   }
+  
+  // If user doesn't have "administer permissions" permission, we need to populate the roles,
+  // otherwise user_save() will delete them.
+  if (!isset($edit['roles'])) {
+    $edit['roles'] = $account->roles;
+  }
 
   // If a new temporary role is added.
   // Grant a new role.
