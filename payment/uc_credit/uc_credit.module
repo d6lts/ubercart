@@ -139,13 +139,18 @@ function uc_credit_form_alter(&$form, $form_state, $form_id) {
       }
 
       // Cache the CC details for use in other functions.
-      uc_credit_cache('save', $_SESSION['sescrd']);
+      if (isset($_SESSION['sescrd'])) {
+        uc_credit_cache('save', $_SESSION['sescrd']);
 
-      // Store the encrypted details to the form for processing on submit.
-      $form['sescrd'] = array(
-        '#type' => 'hidden',
-        '#value' => base64_encode($_SESSION['sescrd']),
-      );
+        // Store the encrypted details to the form for processing on submit.
+        $form['sescrd'] = array(
+          '#type' => 'hidden',
+          '#value' => base64_encode($_SESSION['sescrd']),
+        );
+
+        // Clear the session of the details.
+        unset($_SESSION['sescrd']);
+      }
 
       // Add submit handler to preserve CC details for the back button and
       // failed order submissions.
@@ -157,8 +162,6 @@ function uc_credit_form_alter(&$form, $form_state, $form_id) {
 
       $form['#submit'] = $submit;
 
-      // Clear the session of the details.
-      unset($_SESSION['sescrd']);
       break;
 
     case 'uc_payment_gateways_form':
@@ -414,16 +417,16 @@ function uc_payment_method_credit($op, &$arg1, $silent = FALSE) {
     case 'cart-process':
       // Fetch the CC details from the $_POST directly.
       $cc_data = array(
-        'cc_type' => check_plain($_POST['cc_type']),
-        'cc_owner' => check_plain($_POST['cc_owner']),
+        'cc_type' => check_plain(isset($_POST['cc_type']) ? $_POST['cc_type'] : ''),
+        'cc_owner' => check_plain(isset($_POST['cc_owner']) ? $_POST['cc_owner'] : ''),
         'cc_number' => check_plain(str_replace(' ', '',  $_POST['cc_number'])),
-        'cc_start_month' => check_plain($_POST['cc_start_month']),
-        'cc_start_year' => check_plain($_POST['cc_start_year']),
+        'cc_start_month' => check_plain(isset($_POST['cc_start_month']) ? $_POST['cc_start_month'] : ''),
+        'cc_start_year' => check_plain(isset($_POST['cc_start_year']) ? $_POST['cc_start_year'] : ''),
         'cc_exp_month' => check_plain($_POST['cc_exp_month']),
         'cc_exp_year' => check_plain($_POST['cc_exp_year']),
-        'cc_issue' => check_plain($_POST['cc_issue']),
+        'cc_issue' => check_plain(isset($_POST['cc_issue']) ? $_POST['cc_issue'] : ''),
         'cc_cvv' => check_plain($_POST['cc_cvv']),
-        'cc_bank' => check_plain($_POST['cc_bank']),
+        'cc_bank' => check_plain(isset($_POST['cc_bank']) ? $_POST['cc_bank'] : ''),
       );
 
       // Recover cached CC data in $_POST if it exists.
@@ -1316,6 +1319,7 @@ function _valid_card_number($number) {
     return FALSE;
   }
 
+  $total = 0;
   for ($i = 0; $i < strlen($number); $i++) {
     $digit = substr($number, $i, 1);
     if ((strlen($number) - $i - 1) % 2) {
