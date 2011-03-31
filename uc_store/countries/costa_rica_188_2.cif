@@ -32,3 +32,12 @@ function costa_rica_install() {
     "!company\r\n!first_name !last_name\r\n!street1\r\n!street2"
    ."\r\n!city !zone_code !postal_code\r\n!country_name_if");
 }
+
+function costa_rica_update($version) {
+  switch ($version) {
+    case 2:
+      // Correct ISO-3166-1 country name
+      db_query("UPDATE {uc_countries} SET country_iso_code_3 = 'CRI' WHERE country_id = 188");
+      break;
+  }
+}
