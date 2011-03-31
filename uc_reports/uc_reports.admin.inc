@@ -1162,7 +1162,7 @@ function uc_reports_sales_custom_form_submit($form, &$form_state) {
     $start_date,
     $end_date,
     $form_state['values']['length'],
-    drupal_urlencode(implode(',', array_keys($form_state['values']['status']))),
+    implode(',', array_keys($form_state['values']['status'])),
     $form_state['values']['detail'],
   );
 
