@@ -175,7 +175,7 @@ function italy_update($version) {
       );
 
       foreach ($zones as $zone) {
-        db_query("UPDATE {uc_zones} SET zone_name = '%s' WHERE zone_code = '%s'", $zone[2], $zone[1]);
+        db_query("UPDATE {uc_zones} SET zone_name = '%s' WHERE zone_code = '%s' AND zone_country_id = 380", $zone[2], $zone[1]);
       }
 
       break;
