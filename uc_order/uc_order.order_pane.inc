@@ -93,6 +93,7 @@ function uc_order_pane_ship_to($op, $arg1) {
       return $output;
 
     case 'edit-process':
+      $changes = array();
       foreach ($arg1 as $key => $value) {
         if (substr($key, 0, 9) == 'delivery_') {
           if (uc_address_field_enabled(substr($key, 9))) {
@@ -182,6 +183,7 @@ function uc_order_pane_bill_to($op, $arg1) {
       return $output;
 
     case 'edit-process':
+      $changes = array();
       foreach ($arg1 as $key => $value) {
         if (substr($key, 0, 8) == 'billing_') {
           if (uc_address_field_enabled(substr($key, 8))) {
@@ -261,6 +263,7 @@ function uc_order_pane_customer($op, $arg1) {
       return $output;
 
     case 'edit-process':
+      $changes = array();
       $changes['uid'] = $arg1['uid'];
       $changes['primary_email'] = $arg1['primary_email'];
       return $changes;
@@ -637,6 +640,7 @@ function uc_order_view_update_form($form_state, $order) {
     '#weight' => 10,
   );
 
+  $options = array();
   foreach (uc_order_status_list('general') as $status) {
     $options[$status['id']] = $status['title'];
   }

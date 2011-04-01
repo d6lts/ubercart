@@ -799,6 +799,8 @@ function uc_order_address_book_form($form_state, $uid = 0, $type = 'billing', $f
  */
 function uc_order_select_customer($email = NULL) {
   $options = NULL;
+  $where = '';
+  $output = '';
 
   // Return the search results and let them pick one!
   if (arg(4) == 'search') {

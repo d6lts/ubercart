@@ -743,6 +743,7 @@ function uc_order_uc_invoice_templates() {
  */
 function theme_uc_order_state_table($form) {
   $header = array(t('State'), t('Default order status'));
+  $rows = array();
 
   foreach (element_children($form) as $state_id) {
     $rows[] = array(
@@ -759,6 +760,8 @@ function theme_uc_order_state_table($form) {
  */
 function theme_uc_order_status_table($form) {
   $header = array(t('ID'), t('Title'), t('List position'), t('State'), t('Remove'));
+  $rows = array();
+  $create = '';
 
   foreach (element_children($form) as $state_id) {
     if ($state_id == 'create') {
@@ -789,12 +792,14 @@ function theme_uc_order_status_table($form) {
  *   The parent's displayed name
  * @param $parent_id
  *   The parent's machine-readable ID
+ *
  * @return
  *   An array of summary information
  *
- * This function summarizes the order panes that have been defined for each screen.
- * Everything is then organized under a series of parent nodes correlating with the
- * different screens, and specifying which panes are enabled on which screen.
+ * This function summarizes the order panes that have been defined for each
+ * screen.  Everything is then organized under a series of parent nodes
+ * correlating with the different screens, and specifying which panes are
+ * enabled on which screen.
  */
 function _uc_order_panes_summarize($form, $panes, $parent_name, $parent_id) {
   $items = array();
@@ -934,6 +939,7 @@ function uc_order_search_form() {
  * @see uc_order_search_form()
  */
 function uc_order_search_form_submit($form, &$form_state) {
+  $args = array();
   $keys = array(
     'billing_first_name',
     'billing_last_name',

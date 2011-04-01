@@ -461,6 +461,7 @@ function uc_order_condition_delivery_zone($order, $settings) {
  * @see uc_order_condition_delivery_zone_form()
  */
 function uc_order_condition_delivery_zone_form($form_state, $settings = array()) {
+  $options = array();
   $result = db_query("SELECT z.*, c.country_name FROM {uc_zones} AS z LEFT JOIN {uc_countries} AS c ON z.zone_country_id = c.country_id ORDER BY c.country_name, z.zone_name");
   while ($zone = db_fetch_object($result)) {
     $options[$zone->country_name][$zone->zone_id] = $zone->zone_name;
@@ -470,7 +471,7 @@ function uc_order_condition_delivery_zone_form($form_state, $settings = array())
     '#type' => 'select',
     '#title' => uc_get_field_name('zone'),
     '#options' => $options,
-    '#default_value' => $settings['zones'],
+    '#default_value' => isset($settings['zones']) ? $settings['zones'] : NULL,
     '#multiple' => TRUE,
     // '#required' => TRUE,
   );
@@ -519,7 +520,7 @@ function uc_order_condition_billing_postal_code_form($form_state, $settings = ar
   $form['pattern'] = array(
     '#type' => 'textfield',
     '#title' => uc_get_field_name('postal_code'),
-    '#default_value' => $settings['pattern'],
+    '#default_value' => isset($settings['pattern']) ? $settings['pattern'] : NULL,
     '#description' => t('Specify a postal code or postal code pattern. Use "*" as a wild card to specify a range of postal codes.<br /><b>Example:</b> In the US, 402* represents all areas from 40200 to 40299.'),
     '#size' => 15,
     // '#required' => TRUE,
@@ -550,7 +551,7 @@ function uc_order_condition_billing_zone_form($form_state, $settings = array()) 
     '#type' => 'select',
     '#title' => uc_get_field_name('zone'),
     '#options' => $options,
-    '#default_value' => $settings['zones'],
+    '#default_value' => isset($settings['zones']) ? $settings['zones'] : NULL,
     '#multiple' => TRUE,
     // '#required' => TRUE,
   );
@@ -572,7 +573,7 @@ function uc_order_condition_billing_country($order, $settings) {
  */
 function uc_order_condition_billing_country_form($form_state, $settings = array()) {
   $form['countries'] = uc_country_select(uc_get_field_name('country'));
-  $form['countries']['#default_value'] = $settings['countries'];
+  $form['countries']['#default_value'] = isset($settings['countries']) ? $settings['countries'] : NULL;
   $form['countries']['#multiple'] = TRUE;
   // $form['countries']['#required'] = TRUE;
 
@@ -590,13 +591,13 @@ function uc_order_condition_has_products($order, $settings) {
     $products[] = $product->model;
   }
   $required = array_intersect($settings['products'], $products);
-  if ($settings['required']) {
+  if (isset($settings['required']) && $settings['required']) {
     $required_check = $required == $settings['products'];
   }
   else {
     $required_check = (bool)count($required);
   }
-  if ($settings['forbidden']) {
+  if (isset($settings['forbidden']) && $settings['forbidden']) {
     $forbidden = array_diff($products, $settings['products']);
     $forbidden_check = (bool)count($forbidden);
   }
@@ -636,7 +637,7 @@ function uc_order_condition_has_products_form($form_state, $settings) {
   $form['products'] = array('#type' => 'select',
     '#title' => t('Product models'),
     '#options' => $options,
-    '#default_value' => $settings['products'],
+    '#default_value' => isset($settings['products']) ? $settings['products'] : NULL,
     '#multiple' => TRUE,
   );
   return $form;
