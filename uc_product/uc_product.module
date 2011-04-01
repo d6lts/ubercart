@@ -1554,7 +1554,7 @@ function uc_product_add_to_cart_form($form_state, $node) {
     );
   }
   else {
-    $form['qty'] = array('#type' => 'hidden', '#value' => $node->default_qty);
+    $form['qty'] = array('#type' => 'hidden', '#value' => $node->default_qty ? $node->default_qty : 1);
   }
 
   $form['submit'] = array(
