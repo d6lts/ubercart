@@ -334,8 +334,19 @@ function uc_usps_shipping_method() {
  *   JSON object containing rate, error, and debugging information.
  */
 function uc_usps_quote($products, $details, $method) {
-  //drupal_set_message('<pre>'. print_r($products, TRUE) .'</pre>');
-  //drupal_set_message('<pre>'. print_r($details, TRUE) .'</pre>');
+  // The uc_quote AJAX query can fire before the customer has completely
+  // filled out the destination address, so check to see whether the address
+  // has all needed fields. If not, abort.
+  $destination = (object) $details;
+  if (empty($destination->zone)        ||
+      empty($destination->postal_code) ||
+      empty($destination->country)       ) {
+    // Skip this shipping method.
+    return array();
+  }
+
+  $connection_url = 'http://production.shippingapis.com/ShippingAPI.dll';
+
   $services = array();
   $addresses = array((array)variable_get('uc_quote_store_default_address', new stdClass()));
   $packages = _uc_usps_package_products($products, $addresses);
@@ -343,21 +354,17 @@ function uc_usps_quote($products, $details, $method) {
     return array();
   }
 
-  $dest = (object)$details;
-
-  $usps_server = 'production.shippingapis.com';
-  $api_dll = 'ShippingAPI.dll';
-  $connection_url = 'http://'. $usps_server .'/'. $api_dll;
+  $destination = (object) $details;
 
   foreach ($packages as $key => $ship_packages) {
     $orig = (object)$addresses[$key];
     $orig->email = variable_get('uc_store_email', '');
 
     if (strpos($method['id'], 'intl')) {
-      $request = uc_usps_intl_rate_request($ship_packages, $orig, $dest);
+      $request = uc_usps_intl_rate_request($ship_packages, $orig, $destination);
     }
-    else {
-      $request = uc_usps_rate_request($ship_packages, $orig, $dest);
+    elseif ($destination->country == 840) {
+      $request = uc_usps_rate_request($ship_packages, $orig, $destination);
     }
 
     if (user_access('configure quotes') && variable_get('uc_quote_display_debug', FALSE)) {
