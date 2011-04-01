@@ -44,13 +44,15 @@ function getTax() {
         var i;
         var j;
         for (j in taxes) {
-          key = 'tax_' + taxes[j].id;
-          // Check that this tax is a new line item, or updates its amount.
-          if (li_values[key] == undefined || li_values[key] != taxes[j].amount) {
-            set_line_item(key, taxes[j].name, taxes[j].amount, Drupal.settings.ucTaxWeight + taxes[j].weight / 10, taxes[j].summed, false);
+          if (taxes.hasOwnProperty(j)) {
+            key = 'tax_' + taxes[j].id;
+            // Check that this tax is a new line item, or updates its amount.
+            if (li_values[key] == undefined || li_values[key] != taxes[j].amount) {
+              set_line_item(key, taxes[j].name, taxes[j].amount, Drupal.settings.ucTaxWeight + taxes[j].weight / 10, taxes[j].summed, false);
 
-            // Set flag to render all line items at once.
-            render = true;
+              // Set flag to render all line items at once.
+              render = true;
+            }
           }
         }
         var found;
