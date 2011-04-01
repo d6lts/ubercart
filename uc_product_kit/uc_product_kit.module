@@ -747,7 +747,7 @@ function uc_product_kit_add_to_cart_form($form_state, $node) {
     );
   }
   else {
-    $form['qty'] = array('#type' => 'hidden', '#value' => 1);
+    $form['qty'] = array('#type' => 'hidden', '#value' => $node->default_qty);
   }
   $form['submit'] = array(
     '#type' => 'submit',
