@@ -293,8 +293,10 @@ function uc_product_kit_update(&$node) {
     drupal_set_message(t('Product kit discounts are not applied because the customer can remove components from their cart.'));
   }
 
+  // If we're not making a new revision, delete information for the current
+  // revision so we can overwrite it.
   if (!$node->revision) {
-    db_query("DELETE FROM {uc_product_kits} WHERE nid = %d", $node->nid);
+    db_query("DELETE FROM {uc_product_kits} WHERE vid = %d", $node->vid);
   }
   db_query("INSERT INTO {uc_product_kits} (vid, nid, product_id, mutable, qty, discount, ordering, synchronized) VALUES ". implode(',', $placeholders), $values);
   if ($node->revision) {
