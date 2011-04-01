@@ -63,7 +63,7 @@ function uc_usps_form_alter(&$form, $form_state, $form_id) {
       '#type' => 'select',
       '#title' => t('Package type'),
       '#options' => _uc_usps_pkg_types(),
-      '#default_value' => $node->usps['container'] ? $node->usps['container'] : 'RECTANGULAR',
+      '#default_value' => $node->usps['container'] ? $node->usps['container'] : 'VARIABLE',
     );
   }
 }
@@ -620,7 +620,7 @@ function _uc_usps_package_products($products, &$addresses) {
     foreach ($packages as $key => $package) {
       $packages[$key][0]->pounds = floor($package[0]->weight);
       $packages[$key][0]->ounces = 16 * ($package[0]->weight - $packages[$key][0]->pounds);
-      $packages[$key][0]->container = 'RECTANGULAR';
+      $packages[$key][0]->container = 'VARIABLE';
       $packages[$key][0]->size = 'REGULAR';
       // Packages are "machinable" if heavier than 6oz. and less than 35lbs.
       $packages[$key][0]->machinable = (
