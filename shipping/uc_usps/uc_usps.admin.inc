@@ -101,6 +101,15 @@ function uc_usps_admin_settings() {
     ),
     '#description' => t('Indicate whether each product is quoted as shipping separately or all in one package. Orders with one kind of product will still use the package quantity to determine the number of packages needed, however.'),
   );
+ 
+  // Insurance
+  $form['uc_usps_insurance'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Package insurance'),
+    '#default_value' => variable_get('uc_usps_insurance', FALSE),
+    '#description' => t('When enabled, the quotes presented to the customer will include the cost of insurance for the full sales price of all products in the order.'),
+    '#disabled' => TRUE,
+  );
 
   return system_settings_form($form);
 }

@@ -354,16 +354,16 @@ function uc_usps_quote($products, $details, $method) {
     return array();
   }
 
-  $destination = (object) $details;
-
   foreach ($packages as $key => $ship_packages) {
     $orig = (object)$addresses[$key];
     $orig->email = variable_get('uc_store_email', '');
 
-    if (strpos($method['id'], 'intl')) {
+    if (strpos($method['id'], 'intl') && ($destination->country != 840)) {
+      // Build XML for international rate request
       $request = uc_usps_intl_rate_request($ship_packages, $orig, $destination);
     }
     elseif ($destination->country == 840) {
+      // Build XML for domestic rate request
       $request = uc_usps_rate_request($ship_packages, $orig, $destination);
     }
 
@@ -560,9 +560,24 @@ function uc_usps_intl_rate_request($packages, $origin, $destination) {
       $request .= '<Package ID="'. $package_id .'">'.
         '<Pounds>'. intval($package->pounds) .'</Pounds>'.
         '<Ounces>'. ceil($package->ounces) .'</Ounces>'.
-        '<MailType>Package</MailType>'.
+        '<MailType>All</MailType>'.
+        '<ValueOfContents>'. $package->price .'</ValueOfContents>'.
         '<Country>'. $shipto_country .'</Country>'.
-        '</Package>';
+        '<Container>'. 'RECTANGULAR' .'</Container>'.
+        '<Size>'. 'REGULAR' .'</Size>'.
+        '<Width>'. '</Width>'.
+        '<Length>'. '</Length>'.
+        '<Height>'. '</Height>'.
+        '<Girth>'. '</Girth>'.
+        '<OriginZip>'. $origin->postal_code .'</OriginZip>';
+
+        // Check if we need to add any special services to this package
+        if (variable_get('uc_usps_insurance', FALSE)) {
+          $request .= '<ExtraServices><ExtraService>1</ExtraService></ExtraServices>';
+        }
+
+        // Close off Package tag
+        $request .= '</Package>';
 
       $package_id++;
     }
