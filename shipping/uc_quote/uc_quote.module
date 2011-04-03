@@ -184,7 +184,7 @@ function uc_quote_form_alter(&$form, $form_state, $form_id) {
     $form['shipping']['shipping_type'] = array(
       '#type' => 'select',
       '#title' => t('Default product shipping type'),
-      '#default_value' => uc_quote_get_shipping_type('product', $form['#node']->nid),
+      '#default_value' => isset($form['#node']->nid) ? uc_quote_get_shipping_type('product', $form['#node']->nid) : '',
       '#options' => $options,
       '#weight' => -7,
     );
