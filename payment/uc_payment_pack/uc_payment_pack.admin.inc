@@ -7,7 +7,12 @@
  */
 
 /**
- * Receive a check for an order and put in a clear date.
+ * Receives a check for an order and put in a clear date.
+ *
+ * @see uc_payment_pack_receive_check_form_validate()
+ * @see uc_payment_pack_receive_check_form_submit()
+ * @see theme_uc_payment_pack_receive_check_form()
+ * @ingroup forms
  */
 function uc_payment_pack_receive_check_form($form_state, $order) {
   $balance = uc_payment_balance($order);
@@ -65,6 +70,13 @@ function uc_payment_pack_receive_check_form($form_state, $order) {
   return $form;
 }
 
+/**
+ * Themes the receive check form.
+ *
+ * @see uc_payment_pack_receive_check_form()
+ * @see uc_payment_pack_receive_check_form_submit()
+ * @ingroup themeable
+ */
 function theme_uc_payment_pack_receive_check_form($form) {
   drupal_add_js(drupal_get_path('module', 'uc_payment') .'/uc_payment.js');
 
@@ -76,12 +88,24 @@ function theme_uc_payment_pack_receive_check_form($form) {
   return $output;
 }
 
+/**
+ * Form validation for uc_payment_pack_receive_check_form().
+ *
+ * @see uc_payment_pack_receive_check_form()
+ * @see uc_payment_pack_receive_check_form_submit()
+ */
 function uc_payment_pack_receive_check_form_validate($form, &$form_state) {
   if (!$form_state['values']['check_exists'] && !is_numeric($form_state['values']['amount'])) {
     form_set_error('amount', t('The amount must be a number.'));
   }
 }
 
+/**
+ * Submit handler for uc_payment_pack_receive_check_form().
+ *
+ * @see uc_payment_pack_receive_check_form()
+ * @see uc_payment_pack_receive_check_form_validate()
+ */
 function uc_payment_pack_receive_check_form_submit($form, &$form_state) {
   global $user;
 
