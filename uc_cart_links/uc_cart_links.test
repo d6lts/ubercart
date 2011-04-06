@@ -346,13 +346,13 @@ class UbercartCartLinksTestCase extends UbercartTestHelper {
       t('@title added to your shopping cart.', array('@title' => $link_data[$test_link]['title'])),
       t('Product @title added to cart.', array('@title' => $link_data[$test_link]['title']))
     );
-    //$this->assertText(
-    //  t('Welcome to Drupal')
-    //);
-    //$this->assertText(
-    //  t('No front page content has been created yet.'),
-    //  t('Redirected to front page for link not in restrictions.')
-    //);
+    $this->assertText(
+      t('Welcome to your new Drupal website!')
+    );
+    $this->assertText(
+      t('This message will disappear once you have promoted a post to the front page.'),
+      t('Redirected to front page for link not in restrictions.')
+    );
 
     // Remove restrictions, try to add again - it should pass
     $this->setCartLinksUIRestrictions('');
