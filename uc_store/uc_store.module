@@ -1091,13 +1091,13 @@ function uc_address_format($first_name, $last_name, $company, $street1, $street2
     '!zone_code' => $zone_data['zone_code'],
     '!zone_name' => $zone_data['zone_name'],
     '!postal_code' => check_plain($postal_code),
-    '!country_name' => $country_data['country_name'],
+    '!country_name' => t($country_data['country_name']),
     '!country_code2' => $country_data['country_iso_code_2'],
     '!country_code3' => $country_data['country_iso_code_3'],
   );
 
   if (uc_store_default_country() != $country) {
-    $variables['!country_name_if'] = $country_data['country_name'];
+    $variables['!country_name_if'] = t($country_data['country_name']);
     $variables['!country_code2_if'] = $country_data['country_iso_code_2'];
     $variables['!country_code3_if'] = $country_data['country_iso_code_3'];
   }
@@ -1338,11 +1338,12 @@ function uc_country_select($title, $default = NULL, $description = NULL, $displa
 
   $options = array();
   while ($country = db_fetch_array($result)) {
-    $options[$country['country_id']] = $country[$order_by];
+    $options[$country['country_id']] = ($order_by == 'country_name') ? t($country[$order_by]) : $country[$order_by];
   }
   if (count($options) == 0) {
     $options[] = t('No countries found.');
   }
+  natcasesort($options);
 
   $default = db_result(db_query("SELECT country_id FROM {uc_countries} WHERE country_id = %d AND version > 0", empty($default) ? 0 : intval($default)));
 

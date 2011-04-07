@@ -464,8 +464,9 @@ function uc_order_condition_delivery_zone_form($form_state, $settings = array())
   $options = array();
   $result = db_query("SELECT z.*, c.country_name FROM {uc_zones} AS z LEFT JOIN {uc_countries} AS c ON z.zone_country_id = c.country_id ORDER BY c.country_name, z.zone_name");
   while ($zone = db_fetch_object($result)) {
-    $options[$zone->country_name][$zone->zone_id] = $zone->zone_name;
+    $options[t($zone->country_name)][$zone->zone_id] = $zone->zone_name;
   }
+  uksort($options, 'strnatcasecmp');
 
   $form['zones'] = array(
     '#type' => 'select',
@@ -544,8 +545,9 @@ function uc_order_condition_billing_zone($order, $settings) {
 function uc_order_condition_billing_zone_form($form_state, $settings = array()) {
   $result = db_query("SELECT z.*, c.country_name FROM {uc_zones} AS z LEFT JOIN {uc_countries} AS c ON z.zone_country_id = c.country_id ORDER BY c.country_name, z.zone_name");
   while ($zone = db_fetch_object($result)) {
-    $options[$zone->country_name][$zone->zone_id] = $zone->zone_name;
+    $options[t($zone->country_name)][$zone->zone_id] = $zone->zone_name;
   }
+  uksort($options, 'strnatcasecmp');
 
   $form['zones'] = array(
     '#type' => 'select',
