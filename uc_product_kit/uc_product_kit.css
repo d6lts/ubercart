@@ -1,11 +1,3 @@
-
-/* .kit-component-cart-desc ul {
-  display: inline;
-} */
-/* .kit-component-cart-desc ul:before {
-  content: "--";
-} */
-
 #block-cart-contents .kit-component-cart-desc ul.product-description {
   padding-left: 0;
 }

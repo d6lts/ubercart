@@ -16,7 +16,7 @@ define('UC_PRODUCT_KIT_MUTABLE', 1);
  ******************************************************************************/
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function uc_product_kit_menu() {
   $items = array();
@@ -36,14 +36,14 @@ function uc_product_kit_menu() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implements hook_perm().
  */
 function uc_product_kit_perm() {
   return array('administer product kits', 'create product kits', 'edit own product kits', 'edit all product kits');
 }
 
 /**
- * Implementation of hook_access().
+ * Implements hook_access().
  */
 function uc_product_kit_access($op, $node, $account) {
   switch ($op) {
@@ -61,7 +61,7 @@ function uc_product_kit_access($op, $node, $account) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function uc_product_kit_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'node_delete_confirm' && uc_product_is_product((integer)$form['nid']['#value'])) {
@@ -79,9 +79,9 @@ function uc_product_kit_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_uc_form_alter().
+ * Implements hook_uc_form_alter().
  *
- * Put a product list on the form, so product kit attributes will work on the
+ * Puts a product list on the form, so product kit attributes will work on the
  * order admin edit form. See uc_attribute_form_alter().
  */
 function uc_product_kit_uc_form_alter(&$form, &$form_state, $form_id) {
@@ -105,7 +105,7 @@ function uc_product_kit_uc_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_node_info().
+ * Implements hook_node_info().
  *
  * @return Node type information for product kits.
  */
@@ -122,11 +122,14 @@ function uc_product_kit_node_info() {
 }
 
 /**
- * Implementation of hook_insert().
+ * Implements hook_insert().
  *
- * Add a row to {uc_products} to make a product. Extra information about the
- *   component products are stored in {uc_product_kits}.
- * @param &$node The node object being saved.
+ * Adds a row to {uc_products} to make a product. Extra information about the
+ * component products are stored in {uc_product_kits}.
+ *
+ * @param &$node
+ *   The node object being saved.
+ *
  * @see uc_product_insert()
  */
 function uc_product_kit_insert(&$node) {
@@ -320,7 +323,7 @@ function uc_product_kit_update(&$node) {
 }
 
 /**
- * Implementation of hook_delete().
+ * Implements hook_delete().
  */
 function uc_product_kit_delete(&$node) {
   if (module_exists('uc_cart')) {
@@ -331,7 +334,7 @@ function uc_product_kit_delete(&$node) {
 }
 
 /**
- * Implementation of hook_load().
+ * Implements hook_load().
  */
 function uc_product_kit_load(&$node) {
   $obj = new stdClass();
@@ -361,7 +364,7 @@ function uc_product_kit_load(&$node) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function uc_product_kit_theme() {
   return array(
@@ -372,7 +375,7 @@ function uc_product_kit_theme() {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implements hook_nodeapi().
  */
 function uc_product_kit_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
   switch ($op) {
@@ -409,13 +412,12 @@ function uc_product_kit_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
 }
 
 /**
- * Implmentation of hook_forms().
+ * Implements hook_forms().
  *
- * Register an "Add to Cart" form for each product kit.
+ * Registers an "Add to Cart" form for each product kit.
  *
- * @see
- *   uc_product_kit_add_to_cart_form()
- *   uc_catalog_buy_it_now_form()
+ * @see uc_product_kit_add_to_cart_form()
+ * @see uc_catalog_buy_it_now_form()
  */
 function uc_product_kit_forms($form_id, $args) {
   $forms = array();
@@ -431,7 +433,7 @@ function uc_product_kit_forms($form_id, $args) {
 }
 
 /**
- * Implementation of hook_form().
+ * Implements hook_form().
  *
  * @ingroup forms
  */
@@ -583,7 +585,7 @@ function uc_product_kit_form(&$node) {
 }
 
 /**
- * Implementation of hook_view().
+ * Implements hook_view().
  */
 function uc_product_kit_view($node, $teaser = 0, $page = 0) {
   $node = node_prepare($node, $teaser);
@@ -703,7 +705,7 @@ function uc_product_kit_view($node, $teaser = 0, $page = 0) {
 }
 
 /**
- * Wrap the "Add to Cart" form in a <div>.
+ * Wraps the "Add to Cart" form in a <div>.
  *
  * @ingroup themeable
  */
@@ -720,13 +722,13 @@ function theme_uc_product_kit_add_to_cart($node) {
 }
 
 /**
- * Let the cart know how many of which products are included in a kit.
+ * Lets the cart know how many of which products are included in a kit.
  *
  * uc_attribute_form_alter() hooks into this form to add attributes to each
  * element in $form['products'].
  *
- * @ingroup forms
  * @see uc_product_kit_add_to_cart_form_submit()
+ * @ingroup forms
  */
 function uc_product_kit_add_to_cart_form($form_state, $node) {
   $form = array();
@@ -769,7 +771,7 @@ function uc_product_kit_add_to_cart_form($form_state, $node) {
 }
 
 /**
- * Add each product kit's component to the cart in the correct quantities.
+ * Adds each product kit's component to the cart in the correct quantities.
  *
  * @see uc_product_kit_add_to_cart_form()
  */
@@ -780,12 +782,11 @@ function uc_product_kit_add_to_cart_form_submit($form, &$form_state) {
 }
 
 /**
- * Add to cart button with any extra fields.
+ * Adds to cart button with any extra fields.
  *
+ * @see uc_product_kit_buy_it_now_form_validate()
+ * @see uc_product_kit_buy_it_now_form_submit()
  * @ingroup forms
- * @see
- *   uc_product_kit_buy_it_now_form_validate()
- *   uc_product_kit_buy_it_now_form_submit()
  */
 function uc_product_kit_buy_it_now_form($form_state, $node) {
   $form = array();
@@ -818,7 +819,7 @@ function uc_product_kit_buy_it_now_form($form_state, $node) {
 }
 
 /**
- * Redirect to the product kit page so attributes may be selected.
+ * Redirects to the product kit page so attributes may be selected.
  *
  * @see uc_product_kit_buy_it_now_form()
  */
@@ -838,6 +839,8 @@ function uc_product_kit_buy_it_now_form_validate($form, &$form_state) {
 }
 
 /**
+ * Form submission handler for uc_product_kit_buy_it_now_form().
+ *
  * @see uc_product_kit_buy_it_now_form()
  */
 function uc_product_kit_buy_it_now_form_submit($form, &$form_state) {
@@ -868,14 +871,14 @@ function uc_product_kit_buy_it_now_form_submit($form, &$form_state) {
  ******************************************************************************/
 
 /**
- * Implementation of hook_product_types().
+ * Implements hook_product_types().
  */
 function uc_product_kit_product_types() {
   return array('product_kit');
 }
 
 /**
- * Implementation of hook_store_status().
+ * Implements hook_store_status().
  */
 function uc_product_kit_store_status() {
   if (module_exists('filefield')) {
@@ -896,7 +899,7 @@ function uc_product_kit_store_status() {
 }
 
 /**
- * Implementation of hook_add_to_cart().
+ * Implements hook_add_to_cart().
  */
 function uc_product_kit_add_to_cart($nid, $qty, $kit_data) {
   $node = node_load($nid);
@@ -951,7 +954,7 @@ function uc_product_kit_add_to_cart($nid, $qty, $kit_data) {
 }
 
 /**
- * Implementation of hook_cart_item().
+ * Implements hook_cart_item().
  */
 function uc_product_kit_cart_item($op, &$item) {
   switch ($op) {
@@ -967,7 +970,7 @@ function uc_product_kit_cart_item($op, &$item) {
 }
 
 /**
- * Implementation of hook_order_product_alter().
+ * Implements hook_order_product_alter().
  *
  * The hookups for making product kits work on the order edit admin screen.
  *
@@ -1027,16 +1030,18 @@ function uc_product_kit_order_product_alter(&$product, $order) {
 }
 
 /**
- * Implementation of hook_cart_display().
+ * Implements hook_cart_display().
  *
  * Displays either the kit as a whole, or each individual product based on the
- * store configuration. Each product in the cart that was added by uc_product_kit
- * was also given a unique kit id in order to help prevent collisions. The side
- * effect is that identical product kits are listed separately if added separately.
- * The customer may still change the quantity of kits like other products.
+ * store configuration. Each product in the cart that was added by
+ * uc_product_kit was also given a unique kit id in order to help prevent
+ * collisions. The side effect is that identical product kits are listed
+ * separately if added separately. The customer may still change the quantity
+ * of kits like other products.
  *
  * @param $item
  *   An item in the shopping cart.
+ *
  * @return
  *   A form element array to be processed by uc_cart_view_form().
  */
@@ -1126,7 +1131,7 @@ function uc_product_kit_cart_display($item) {
 }
 
 /**
- * Implementation of hook_update_cart_item().
+ * Implements hook_update_cart_item().
  *
  * Handles individual products or entire kits.
  */
