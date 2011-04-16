@@ -21,7 +21,7 @@
  ******************************************************************************/
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function uc_paypal_menu() {
   // Always accessible, helps for testing while site is offline.
@@ -82,7 +82,7 @@ function uc_paypal_ipn_access() {
 }
 
 /**
- * Implementation of hook_init().
+ * Implements hook_init().
  */
 function uc_paypal_init() {
   global $conf;
@@ -90,7 +90,8 @@ function uc_paypal_init() {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
+ *
  * Notice how we alter the checkout review form to post the order to PayPal.
  */
 function uc_paypal_form_alter(&$form, $form_state, $form_id) {
@@ -119,7 +120,7 @@ function uc_paypal_form_alter(&$form, $form_state, $form_id) {
  ******************************************************************************/
 
 /**
- * Implementation of hook_cart_pane().
+ * Implements hook_cart_pane().
  */
 function uc_paypal_cart_pane() {
   $panes[] = array(
@@ -134,9 +135,14 @@ function uc_paypal_cart_pane() {
 }
 
 /**
- * Implementation of hook_payment_gateway().
+ * Implements hook_payment_gateway().
  */
 function uc_paypal_payment_gateway() {
+  if (!module_exists('uc_credit')) {
+    drupal_set_message(t('You must <a href="@modules">enable the Credit Card module</a> to use PayPal Website Payments Pro.', array('@modules' => url('admin/modules', array('fragment' => 'edit-modules-ubercart-payment')))), 'warning');
+    return;
+  }
+
   $gateways[] = array(
     'id' => 'paypal_wpp',
     'title' => t('PayPal Website Payments Pro'),
@@ -150,7 +156,7 @@ function uc_paypal_payment_gateway() {
 }
 
 /**
- * Implementation of hook_payment_method().
+ * Implements hook_payment_method().
  */
 function uc_paypal_payment_method() {
   $path = base_path() . drupal_get_path('module', 'uc_credit');
@@ -196,7 +202,9 @@ function uc_paypal_payment_method() {
  * Callback Functions, Forms, and Tables
  ******************************************************************************/
 
-// Settings for Website Payments Pro on the Payment gateways form.
+/**
+ * Settings for Website Payments Pro on the Payment gateways form.
+ */
 function uc_paypal_wpp_settings_form() {
   // The DoDirectPayment API call allows fewer currencies than PayPal in general.
   $form['paypal_wpp']['uc_paypal_wpp_currency'] = array(
@@ -280,7 +288,9 @@ function uc_paypal_wpp_settings_form() {
   return $form;
 }
 
-// Process a credit card payment through Website Payments Pro.
+/**
+ * Processes a credit card payment through Website Payments Pro.
+ */
 function uc_paypal_wpp_charge($order_id, $amount, $data) {
   global $user;
 
@@ -477,7 +487,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
 }
 
 /**
- * Build error message(s) from PayPal failure responses.
+ * Builds error message(s) from PayPal failure responses.
  */
 function _uc_paypal_build_error_messages($nvp_response) {
   $code = 0;
@@ -489,7 +499,9 @@ function _uc_paypal_build_error_messages($nvp_response) {
   return $message;
 }
 
-// Handles the Website Payments Standard payment method.
+/**
+ * Handles the Website Payments Standard payment method.
+ */
 function uc_payment_method_paypal_wps($op, &$arg1) {
   switch ($op) {
     case 'order-view':
@@ -598,7 +610,9 @@ function uc_payment_method_paypal_wps($op, &$arg1) {
   }
 }
 
-// Handles the Express Checkout payment method.
+/**
+ * Handles the Express Checkout payment method.
+ */
 function uc_payment_method_paypal_ec($op, &$arg1) {
   switch ($op) {
     case 'order-view':
@@ -630,7 +644,9 @@ function uc_payment_method_paypal_ec($op, &$arg1) {
  * Module and Helper Functions
  ******************************************************************************/
 
-// Redirects if a customer selects PayPal Express Checkout as a payment method.
+/**
+ * Redirects if a customer selects PayPal Express Checkout as a payment method.
+ */
 function uc_paypal_ec_checkout($form, &$form_state) {
   if ($form_state['values']['panes']['payment']['payment_method'] != 'paypal_ec') {
     return;
@@ -711,7 +727,11 @@ function uc_paypal_ec_checkout($form, &$form_state) {
   exit();
 }
 
-// Returns the form for Express Checkout Shortcut Flow.
+/**
+ * Returns the form for Express Checkout Shortcut Flow.
+ *
+ * @see uc_paypal_ec_form_submit()
+ */
 function uc_paypal_ec_form() {
   if (!variable_get('uc_cap_uc_paypal_ec_enabled', FALSE)) {
     return;
@@ -732,6 +752,11 @@ function uc_paypal_ec_form() {
   return $form;
 }
 
+/**
+ * Submit handler for uc_paypal_ec_form().
+ *
+ * @see uc_paypal_ec_form()
+ */
 function uc_paypal_ec_form_submit($form, &$form_state) {
   global $user;
   $items = uc_cart_get_contents();
