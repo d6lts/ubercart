@@ -1290,11 +1290,11 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   // Empty that cart...
   uc_cart_empty(uc_cart_get_id(FALSE), 'checkout');
 
-  // Clear our the session variables used to force the cart workflow.
-  unset($_SESSION['cart_order'], $_SESSION['do_complete'], $_SESSION['new_user']);
-
   module_invoke_all('uc_checkout_complete', $order, $account);
   ca_pull_trigger('uc_checkout_complete', $order, $account);
+
+  // Clear our the session variables used to force the cart workflow.
+  unset($_SESSION['cart_order'], $_SESSION['do_complete'], $_SESSION['new_user']);
 
   return $themed_output;
 }
