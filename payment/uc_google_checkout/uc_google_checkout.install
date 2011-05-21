@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Install file for the Ubercart Google Checkout module.
+ * Install, update and uninstall functions for the uc_google_checkout module.
  */
 
 /**
- * Implementation of hook_requirements().
+ * Implements hook_requirements().
  */
 function uc_google_checkout_requirements($phase) {
   $t = get_t();
@@ -24,6 +24,9 @@ function uc_google_checkout_requirements($phase) {
   return $requirements;
 }
 
+/**
+ * Implements hook_schema().
+ */
 function uc_google_checkout_schema() {
   $schema = array();
 
@@ -132,6 +135,9 @@ function uc_google_checkout_schema() {
   return $schema;
 }
 
+/**
+ * Implements hook_install().
+ */
 function uc_google_checkout_install() {
   drupal_install_schema('uc_google_checkout');
 
@@ -140,6 +146,9 @@ function uc_google_checkout_install() {
   db_query("INSERT INTO {uc_order_statuses} (order_status_id, title, state, weight, locked) VALUES ('chargeable', '". $t('Chargeable') ."', 'post_checkout', 2, 1);");
 }
 
+/**
+ * Implements hook_uninstall().
+ */
 function uc_google_checkout_uninstall() {
   drupal_uninstall_schema('uc_google_checkout');
 
@@ -147,10 +156,16 @@ function uc_google_checkout_uninstall() {
   db_query("DELETE FROM {variable} WHERE name LIKE 'uc_google_checkout_%%'");
 }
 
+/**
+ * Implements hook_update_last_removed().
+ */
 function uc_google_checkout_update_last_removed() {
   return 1;
 }
 
+/**
+ * Implements hook_update_N().
+ */
 function uc_google_checkout_update_6000() {
   $ret = array();
 
@@ -182,6 +197,9 @@ function uc_google_checkout_update_6000() {
   return $ret;
 }
 
+/**
+ * Implements hook_update_N().
+ */
 function uc_google_checkout_update_6001() {
   variable_set('uc_google_checkout_merchant_id' , variable_get('uc_google_merchant_id' , ''));
   variable_del('uc_google_merchant_id');
@@ -195,7 +213,9 @@ function uc_google_checkout_update_6001() {
 // Removed obsolete update 6002.
 
 /**
- * Change currency fields to numeric(16,5).
+ * Implements hook_update_N().
+ *
+ * Changes currency fields to numeric(16,5).
  */
 function uc_google_checkout_update_6003() {
   $ret = array();
@@ -206,7 +226,9 @@ function uc_google_checkout_update_6003() {
 }
 
 /**
- * Delete old shipping settings.
+ * Implements hook_update_N().
+ *
+ * Deletes old shipping settings.
  */
 function uc_google_checkout_update_6004() {
   $ret = array();
