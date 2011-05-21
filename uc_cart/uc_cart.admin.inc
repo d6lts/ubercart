@@ -517,8 +517,8 @@ function uc_cart_checkout_messages_form() {
     '#title' => t('Checkout completion for existing users'),
     '#description' => t("Message displayed upon checkout for a user who has an account but wasn't logged in. <a href=\"!url\">Uses order and global tokens</a>.", array('!url' => url('admin/store/help/tokens'))),
     '#summary' => variable_get('uc_msg_order_existing_user', uc_get_message('completion_existing_user'))
-               ? t('Completion text for users who aren\'t logged in is set.')
-               : t('Completion text for users who aren\'t logged in is not set.'),
+               ? t("Completion text for users who aren't logged in is set.")
+               : t("Completion text for users who aren't logged in is not set."),
 
     '#default_value' => variable_get('uc_msg_order_existing_user', uc_get_message('completion_existing_user')),
     '#rows' => 3,
