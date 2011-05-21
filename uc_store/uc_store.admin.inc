@@ -698,7 +698,7 @@ function uc_store_display_settings_form() {
     '#title' => t('Primary customer address'),
     '#description' => $desc,
     '#options' => $address_options,
-    '#summary' => t('Customer\'s %billing is being used in lists.', array('%billing' => $address_options[variable_get('uc_customer_list_address', 'billing')])),
+    '#summary' => t("Customer's %billing is being used in lists.", array('%billing' => $address_options[variable_get('uc_customer_list_address', 'billing')])),
     '#default_value' => variable_get('uc_customer_list_address', 'billing'),
   );
 
