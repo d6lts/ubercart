@@ -852,7 +852,7 @@ function uc_order_select_customer($email = NULL) {
     if (!valid_email_address($email)) {
       $output .= t('Invalid e-mail address.') .'<br />';
     }
-    $result = db_query("SELECT uid, mail FROM {users} WHERE mail = '%s'", $email);
+    $result = db_query("SELECT uid, mail FROM {users} WHERE LOWER(mail) = LOWER('%s')", $email);
     if ($user = db_fetch_object($result)) {
       $output .= t('An account already exists for that e-mail.') .'<br /><br />';
       $output .= '<b>'. t('Use this account now?') .'</b><br />'
