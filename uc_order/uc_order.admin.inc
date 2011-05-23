@@ -1465,7 +1465,7 @@ function theme_uc_order_remove_product($form) {
     .'/images/error.gif" style="padding-top: 1px; padding-left: .8em; '
     .'padding-right: 2px; float: left; cursor: pointer;" '
     .'alt="'. t('Remove this product.') .'" onclick="'
-    .'remove_product_button(\''. t('Remove product from order?') .'\', this.id);" />'
+    .'remove_product_button(\''. addslashes(t('Remove product from order?')) .'\', this.id);" />'
     . drupal_render($form);
 }
 

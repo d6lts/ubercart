@@ -466,7 +466,7 @@ function uc_google_checkout_cart_form() {
     '#value' => ($disable ? '<img ' : '<input name="submit" type="image" ') .'alt="'. t('Google Checkout') .'" title="'. t('Fast checkout through Google.') .'" src="'. $checkout_url .'/buttons/checkout.gif?merchant_id='. $merchant_id .'&w='. $width .'&h='. $height .'&style='. variable_get('uc_google_checkout_button_color', 'trans') .'&variant='. ($disable ? 'disabled' : 'text') .'&loc=en_US" height="'. $height .'" width="'. $width .'" />',
   );
   $form['submit_help'] = array(
-    '#value' => '<br /><a href="javascript:void(window.open(\' http://checkout.google.com/seller/what_is_google_checkout.html\',\'whatischeckout\',\'scrollbars=0,resizable=1,directories=0,height=250,width=400\'));" OnMouseOver="return window.status = \''. t('What is Google Checkout?') .'\';" OnMouseOut="return window.status = \'\';">'. t('What is Google Checkout?') .'</a>',
+    '#value' => '<br /><a href="javascript:void(window.open(\' http://checkout.google.com/seller/what_is_google_checkout.html\',\'whatischeckout\',\'scrollbars=0,resizable=1,directories=0,height=250,width=400\'));" OnMouseOver="return window.status = \''. addslashes(t('What is Google Checkout?')) .'\';" OnMouseOut="return window.status = \'\';">'. addslashes(t('What is Google Checkout?')) .'</a>',
   );
 
   $form['analyticsdata'] = array(
