@@ -13,6 +13,7 @@ function ca_admin($groupby = 'trigger') {
 
   // Load all the module defined predicates into a temporary array.
   $temp = module_invoke_all('ca_predicate');
+  drupal_alter('ca_predicate', $temp);
 
   // Assign a default weight if need be.
   foreach ($temp as $key => $value) {

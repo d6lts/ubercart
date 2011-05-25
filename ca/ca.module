@@ -253,6 +253,7 @@ function ca_parse_trigger_args($trigger, $args) {
 function ca_load_trigger_predicates($trigger, $all = FALSE) {
   // Load all the module defined predicates.
   $predicates = module_invoke_all('ca_predicate');
+  drupal_alter('ca_predicate', $predicates);
 
   // Loop through the module defined predicates to prepare the data - unsets
   // inactive predicates if $all == FALSE and adds a default weight if need be.
@@ -964,6 +965,7 @@ function ca_load_predicate($pid) {
   else {
     // Otherwise look for it in the module defined predicates.
     $predicates = module_invoke_all('ca_predicate');
+    drupal_alter('ca_predicate', $predicates);
 
     if (!empty($predicates[$pid])) {
       $predicate = $predicates[$pid];
