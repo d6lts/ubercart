@@ -1236,9 +1236,12 @@ function _uc_attribute_alter_form($product) {
       $form_attributes[$attribute->aid] = array(
         '#type' => 'textfield',
         '#description' => check_markup($attribute->description),
-        '#default_value' => $attribute->required == FALSE ? $attribute->options[$attribute->default_option]->name : '',
+        '#default_value' => '',
         '#required' => $attribute->required,
       );
+      if (!$attribute->required && isset($attribute->options[$attribute->default_option])) {
+        $form_attributes[$attribute->aid]['#default_value'] = $attribute->options[$attribute->default_option]->name;
+      }
     }
 
     $name = _uc_attribute_get_name($attribute, FALSE);
