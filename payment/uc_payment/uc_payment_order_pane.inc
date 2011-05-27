@@ -16,6 +16,7 @@
 function uc_order_pane_payment($op, $arg1) {
   switch ($op) {
     case 'view':
+      $output = '';
       if (variable_get('uc_payment_tracking', TRUE)) {
         $context = array(
           'revision' => 'formatted-original',
@@ -46,7 +47,7 @@ function uc_order_pane_payment($op, $arg1) {
       if (empty($method_name)) {
         $method_name = _payment_method_data($arg1->payment_method, 'name');
       }
-      $output .= t('Method: @payment_method', array('@payment_method' => $method_name));
+      $output = t('Method: @payment_method', array('@payment_method' => $method_name));
       $func = _payment_method_data($arg1->payment_method, 'callback');
       if (function_exists($func)) {
         $method_output = $func('customer-view', $arg1);
