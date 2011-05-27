@@ -1,4 +1,3 @@
-
 /**
  * @file
  * Modifies the file selection and download access expiration interfaces.
@@ -7,7 +6,7 @@
 var uc_file_list = {};
 
 /**
- * Disable duration amount when its type is "never".
+ * Disables duration amount when its type is "never".
  */
 function _uc_file_expiration_disable_check(granularity, quantity) {
   // 'never' means there's no point in setting a duration.
@@ -21,7 +20,7 @@ function _uc_file_expiration_disable_check(granularity, quantity) {
 }
 
 /**
- * Add files to delete to the list.
+ * Adds files to delete to the list.
  */
 function _uc_file_delete_list_populate() {
   $('.affected-file-name').empty().append(uc_file_list[$('#edit-recurse-directories').attr('checked')]);

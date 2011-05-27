@@ -28,8 +28,12 @@ define('UC_FILE_ERROR_EXPIRED'                , 6);
 define('UC_FILE_ERROR_HOOK_ERROR'             , 7);
 
 /**
+ * Themes user file downloads page.
+ *
  * @param $files
  *   Array of the files.
+ *
+ * @ingroup themeable
  */
 function theme_uc_file_user_downloads($header, $files) {
   $rows = array();
@@ -129,14 +133,14 @@ function uc_file_user_downloads($account) {
 }
 
 /**
- * Handle file downloading and error states.
- *
- * @see _uc_file_download_validate()
+ * Handles file downloading and error states.
  *
  * @param $fid
  *   The fid of the file specified to download.
  * @param $key
- *   The hash key of a user's download
+ *   The hash key of a user's download.
+ *
+ * @see _uc_file_download_validate()
  */
 function _uc_file_download($fid, $key) {
 
@@ -175,7 +179,7 @@ function _uc_file_download($fid, $key) {
 }
 
 /**
- * Perform first-pass authorization. Call authorization hooks afterwards.
+ * Performs first-pass authorization. Call authorization hooks afterwards.
  *
  * Called when a user requests a file download, function checks download
  * limits then checks for any implementation of hook_download_authorize.
@@ -184,7 +188,7 @@ function _uc_file_download($fid, $key) {
  * @param $fid
  *   The fid of the file specified to download.
  * @param $key
- *   The hash key of a user's download
+ *   The hash key of a user's download.
  */
 function _uc_file_download_validate($file_download, &$user, $ip) {
 
@@ -244,12 +248,13 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
 }
 
 /**
- * Send the file's binary data to a user via HTTP and update the uc_file_users table.
+ * Sends the file's binary data to a user via HTTP and updates the
+ * uc_file_users table.
  *
  * @param $file_user
- *   The file_user object from the uc_file_users
+ *   The file_user object from the uc_file_users.
  * @param $ip
- *   The string containing the ip address the download is going to
+ *   The string containing the ip address the download is going to.
  */
 function _uc_file_download_transfer($file_user, $ip) {
 
@@ -342,7 +347,7 @@ function _uc_file_download_transfer($file_user, $ip) {
 }
 
 /**
- * Process a file download.
+ * Processes a file download.
  */
 function _uc_file_log_download($file_user, $ip) {
 

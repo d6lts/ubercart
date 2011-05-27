@@ -11,7 +11,7 @@
  ******************************************************************************/
 
 /**
- * Implementation of hook_ca_entity().
+ * Implements hook_ca_entity().
  *
  * An entity is defined in order to get file expiration(s) down
  * to token in the email.
@@ -28,7 +28,7 @@ function uc_file_ca_entity() {
 }
 
 /**
- * Implementation of hook_ca_predicate().
+ * Implements hook_ca_predicate().
  */
 function uc_file_ca_predicate() {
 
@@ -97,7 +97,7 @@ function uc_file_ca_predicate() {
 }
 
 /**
- * Implementation of hook_ca_action().
+ * Implements hook_ca_action().
  */
 function uc_file_ca_action() {
 
@@ -134,7 +134,7 @@ function uc_file_ca_action() {
 }
 
 /**
- * Implementation of hook_ca_trigger().
+ * Implements hook_ca_trigger().
  */
 function uc_file_ca_trigger() {
 
@@ -159,7 +159,7 @@ function uc_file_ca_trigger() {
 }
 
 /**
- * Send an email with order and file replacement tokens.
+ * Sends an email with order and file replacement tokens.
  *
  * The recipients, subject, and message fields take order token replacements.
  *
@@ -201,16 +201,16 @@ function uc_file_action_order_email_form($form_state, $settings = array()) {
 }
 
 /**
- * Renew an orders product files.
- *
- * @param $order
- *   An Ubercart order object.
+ * Renews an orders product files.
  *
  * This function updates access limits on all files found on all products
  * on a given order. First, the order user is loaded, then the order's products
- * are scanned for file product features. An order comment is saved, and the user is
- * notified in Drupal, as well as through the email address associated with the
- * order.
+ * are scanned for file product features. An order comment is saved, and the
+ * user is notified in Drupal, as well as through the email address associated
+ * with the order.
+ *
+ * @param $order
+ *   An Ubercart order object.
  */
 function uc_file_action_order_renew($order) {
 
