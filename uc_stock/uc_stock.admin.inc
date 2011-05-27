@@ -3,7 +3,6 @@
 /**
  * @file
  * Stock administration menu items.
- *
  */
 
 /**
@@ -44,7 +43,7 @@ function uc_stock_settings_form() {
 }
 
 /**
- * Display a stock report for products with stock tracking enabled.
+ * Displays a stock report for products with stock tracking enabled.
  */
 function uc_stock_report() {
   drupal_add_css(drupal_get_path('module', 'uc_stock') .'/uc_stock.css');
@@ -103,8 +102,8 @@ function uc_stock_report() {
 /**
  * Form builder for stock report threshold filter.
  *
- * @ingroup forms
  * @see uc_stock_report_form_submit()
+ * @ingroup forms
  */
 function uc_stock_report_form() {
   $form['threshold'] = array(
@@ -124,6 +123,8 @@ function uc_stock_report_form() {
 }
 
 /**
+ * Form submission handler for uc_stock_report_form().
+ *
  * @see uc_stock_report_form()
  */
 function uc_stock_report_form_submit($form, &$form_state) {
@@ -138,10 +139,9 @@ function uc_stock_report_form_submit($form, &$form_state) {
 /**
  * Form builder for product stock edit form.
  *
+ * @see theme_uc_stock_edit_form()
+ * @see uc_stock_edit_form_submit()
  * @ingroup forms
- * @see
- *   theme_uc_stock_edit_form()
- *   uc_stock_edit_form_submit()
  */
 function uc_stock_edit_form($form_state, $node) {
   drupal_set_title(check_plain($node->title));
@@ -209,8 +209,11 @@ function uc_stock_edit_form($form_state, $node) {
 }
 
 /**
- * @ingroup themeable
+ * Returns HTML for uc_stock_edit_form().
+ *
  * @see uc_stock_edit_form()
+ * @see uc_stock_edit_form_submit()
+ * @ingroup themeable
  */
 function theme_uc_stock_edit_form($form) {
   $header = array(
@@ -233,7 +236,10 @@ function theme_uc_stock_edit_form($form) {
 }
 
 /**
+ * Form submission handler for uc_stock_edit_form().
+ *
  * @see uc_stock_edit_form()
+ * @see theme_uc_stock_edit_form()
  */
 function uc_stock_edit_form_submit($form, &$form_state) {
   foreach (element_children($form_state['values']['stock']) as $id) {
