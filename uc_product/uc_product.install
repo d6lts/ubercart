@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Database installation, uninstallation, and updates for the product module.
+ * Install, update and uninstall functions for the uc_product module.
  */
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_product_schema() {
   $schema = array();
@@ -205,14 +205,14 @@ function uc_product_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function uc_product_install() {
   drupal_install_schema('uc_product');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function uc_product_uninstall() {
   drupal_uninstall_schema('uc_product');
@@ -229,7 +229,7 @@ function uc_product_uninstall() {
 }
 
 /**
- * Implementation of hook_update_last_removed().
+ * Implements hook_update_last_removed().
  */
 function uc_product_update_last_removed() {
   return 12;
@@ -257,7 +257,7 @@ function uc_product_update_6000() {
 }
 
 /**
- * Make sure that those who had the faulty 6000 update have the right
+ * Makes sure that those who had the faulty 6000 update have the right
  * precision and scale.
  */
 function uc_product_update_6001() {
@@ -271,7 +271,7 @@ function uc_product_update_6001() {
 }
 
 /**
- * Make the numeric fields signed for Postgres compatibility.
+ * Makes the numeric fields signed for Postgres compatibility.
  */
 function uc_product_update_6002() {
   $ret = array();
@@ -295,7 +295,7 @@ function uc_product_update_6003() {
 }
 
 /**
- * Handle the image widget upgrade.
+ * Handles the image widget upgrade.
  */
 function uc_product_update_6004() {
   $ret = array();
@@ -314,7 +314,7 @@ function uc_product_update_6004() {
 }
 
 /**
- * Set the uc_image setting to field_image_cache for all existing products.
+ * Sets the uc_image setting to field_image_cache for all existing products.
  */
 function uc_product_update_6005() {
   $ret = array();
@@ -333,7 +333,7 @@ function uc_product_update_6005() {
 }
 
 /**
- * Change to signed floats.
+ * Changes to signed floats.
  */
 function uc_product_update_6006() {
   $ret = array();
@@ -354,7 +354,7 @@ function uc_product_update_6006() {
 }
 
 /**
- * Update old product images to the imagefield widget type.
+ * Updates old product images to the imagefield widget type.
  */
 function uc_product_update_6007() {
   $ret = array();
@@ -380,7 +380,7 @@ function uc_product_update_6008() {
 }
 
 /**
- * Change currency fields to numeric(16,5).
+ * Changes currency fields to numeric(16,5).
  */
 function uc_product_update_6009() {
   $ret = array();
