@@ -1,4 +1,3 @@
-
 /**
  * @file
  * Handle asynchronous requests to calculate taxes.
