@@ -6,7 +6,7 @@
  */
 
 /**
- * Create the header for the table/pager.
+ * Creates the header for the table/pager.
  */
 function _uc_roles_expiration_header() {
   return array(
@@ -41,7 +41,7 @@ function uc_roles_expiration() {
 }
 
 /**
- * Theme user role expiration page.
+ * Themes user role expiration page.
  *
  * @ingroup themeable
  */
@@ -73,8 +73,8 @@ function theme_uc_roles_expiration($form) {
 /**
  * Form builder for role expirations.
  *
- * @ingroup forms
  * @see uc_roles_deletion_form_submit()
+ * @ingroup forms
  */
 function uc_roles_deletion_form($form_id, $account, $rid) {
   $expiration = db_result(db_query("SELECT expiration FROM {uc_roles_expirations} WHERE uid = %d AND rid = %d", $account->uid, $rid));
@@ -105,6 +105,8 @@ function uc_roles_deletion_form($form_id, $account, $rid) {
 }
 
 /**
+ * Submission handler for uc_roles_deletion_form().
+ *
  * @see uc_roles_deletion_form()
  */
 function uc_roles_deletion_form_submit($form, &$form_state) {

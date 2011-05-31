@@ -1,11 +1,11 @@
 
 /**
  * @file
- * Enable and disable expiration fields to prevent invalid configurations.
+ * Enables and disables expiration fields to prevent invalid configurations.
  */
 
 /**
- * Disable duration amount when its type is "never".
+ * Disables duration amount when its type is "never".
  */
 function _uc_role_expiration_disable_check(granularity, quantity) {
   // 'never' means there's no point in setting a duration.
