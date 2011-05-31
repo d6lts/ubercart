@@ -107,7 +107,8 @@ function uc_product_kit_uc_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Implements hook_node_info().
  *
- * @return Node type information for product kits.
+ * @return
+ *   Node type information for product kits.
  */
 function uc_product_kit_node_info() {
   return array(
