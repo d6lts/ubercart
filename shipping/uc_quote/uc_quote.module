@@ -457,12 +457,18 @@ function uc_quote_cart_pane($items) {
     if (!variable_get('uc_cap_quotes_enabled', FALSE) || (variable_get('uc_cart_delivery_not_shippable', TRUE) && !uc_cart_is_shippable())) {
       return array();
     }
+
+    $body = drupal_get_form('uc_cart_pane_quotes', $items);
   }
+  else {
+    $body = '';
+  }
+
   $panes[] = array('id' => 'quotes',
     'title' => t('Shipping quotes'),
     'enabled' => FALSE,
     'weight' => 5,
-    'body' => drupal_get_form('uc_cart_pane_quotes', $items),
+    'body' => $body,
   );
 
   return $panes;
