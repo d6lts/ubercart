@@ -245,7 +245,7 @@ function uc_cart_theme() {
       'file' => 'uc_cart.pages.inc',
     ),
     'uc_cart_complete_sale' => array(
-      'arguments' => array('message' => ''),
+      'arguments' => array('message' => '', 'order' => NULL),
     ),
   );
 }
@@ -1276,7 +1276,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     $message = check_markup($message, variable_get($format, FILTER_FORMAT_DEFAULT), FALSE);
     $output_message .= $message;
   }
-  $themed_output = theme('uc_cart_complete_sale', $output_message);
+  $themed_output = theme('uc_cart_complete_sale', $output_message, $order);
 
   // Move an order's status from "In Checkout" to "Pending"
   $status = db_result(db_query("SELECT order_status FROM {uc_orders} WHERE order_id = %d", $order->order_id));
@@ -1306,7 +1306,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
  *   Message containing order number info, account info, and link to continue shopping.
  * @ingroup themeable
  */
-function theme_uc_cart_complete_sale($message) {
+function theme_uc_cart_complete_sale($message, $order = NULL) {
   return $message;
 }
 
