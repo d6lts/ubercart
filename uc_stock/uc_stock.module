@@ -248,8 +248,8 @@ function uc_stock_is_active($sku) {
  *   The result of drupal_mail().
  */
 function _uc_stock_send_mail($order, $stock) {
-  $token_filters = array('global' => NULL, 'order' => $order, 'stock' => $stock);
-  $account = user_load(array('uid' => $order));
+  $account = uc_order_user_load($order);
+  $token_filters = array('global' => NULL, 'order' => $order, 'user' => $account, 'stock' => $stock);
 
   $to = variable_get('uc_stock_threshold_notification_recipients', variable_get('uc_store_email', ini_get('sendmail_from')));
   $to = explode(',', $to);
