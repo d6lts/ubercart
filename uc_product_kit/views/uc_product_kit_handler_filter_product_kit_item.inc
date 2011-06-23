@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Views handler: Node filter on "product-kit-part-ness".
@@ -13,4 +14,3 @@ class uc_product_kit_handler_filter_product_kit_item extends views_handler_filte
     $this->query->add_where($this->options['group'], "node.nid ". (empty($this->value) ? "NOT " : "") ."IN (SELECT product_id FROM {uc_product_kits})");
   }
 }
-

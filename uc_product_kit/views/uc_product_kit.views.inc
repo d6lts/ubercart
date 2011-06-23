@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @file
+ * Views 2 hooks and callback registries.
+ */
+
 /**
  * Implements hook_views_data()
  */
