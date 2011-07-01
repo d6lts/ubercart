@@ -879,7 +879,10 @@ function _uc_catalog_navigation($branch) {
     $here = FALSE;
   }
   if (!isset($terms)) {
-    $terms = taxonomy_node_get_terms_by_vocabulary(menu_get_object('node', 1), $vid);
+    $node = menu_get_object('node', 1);
+    if (isset($node)) {
+      $terms = taxonomy_node_get_terms_by_vocabulary($node, $vid);
+    }
   }
   // Determine whether to expand menu item.
   if ((arg(0) == 'node' && array_key_exists($branch->tid, $terms))) {
