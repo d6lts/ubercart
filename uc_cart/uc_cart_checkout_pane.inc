@@ -445,8 +445,8 @@ function uc_checkout_pane_comments($op, &$arg1, $arg2) {
       return array('description' => $description, 'contents' => $contents);
 
     case 'process':
+      db_query("DELETE FROM {uc_order_comments} WHERE order_id = %d", $arg1->order_id);
       if (strlen($arg2['comments']) > 0) {
-        db_query("DELETE FROM {uc_order_comments} WHERE order_id = %d", $arg1->order_id);
         uc_order_comment_save($arg1->order_id, 0, $arg2['comments'], 'order', uc_order_state_default('post_checkout'), TRUE);
       }
       return TRUE;
