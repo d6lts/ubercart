@@ -208,7 +208,13 @@ function uc_product_kit_update(&$node) {
   $obj->ordering = $node->ordering;
   $obj->shippable = FALSE;
 
-  $override_discounts = isset($node->kit_total) && is_numeric($node->kit_total);
+  if (!isset($node->kit_total) && isset($node->synchronized) && isset($node->sell_price)) {
+    $override_discounts = !$node->synchronized;
+    $node->kit_total = $node->sell_price;
+  }
+  else {
+    $override_discounts = isset($node->kit_total) && is_numeric($node->kit_total);
+  }
   $product_count = count($node->products);
 
   // Get the price of all the products without any discounts. This number is
@@ -377,6 +383,9 @@ function uc_product_kit_theme() {
 
 /**
  * Implements hook_nodeapi().
+ *
+ * Ensure product kit discounts are updated or components removed if their
+ * component nodes are updated or deleted.
  */
 function uc_product_kit_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
   switch ($op) {
@@ -384,11 +393,7 @@ function uc_product_kit_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
       $result = db_query("SELECT DISTINCT nid FROM {uc_product_kits} WHERE product_id = %d", $node->nid);
       while ($k = db_fetch_object($result)) {
         $kit = node_load($k->nid, NULL, TRUE);
-        $form_state = array(
-          'values' => array('nid' => $kit->nid),
-          'submit_handlers' => array('node_form_submit'),
-        );
-        drupal_execute('product_kit_node_form', $form_state, $kit);
+        node_save($kit);
       }
     break;
     case 'delete':
@@ -401,11 +406,7 @@ function uc_product_kit_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
           node_delete($kit->nid);
         }
         else {
-          $form_state = array(
-            'values' => array('nid' => $kit->nid),
-            'submit_handlers' => array('node_form_submit'),
-          );
-          drupal_execute('product_kit_node_form', $form_state, $kit);
+          node_save($kit);
         }
       }
     break;
