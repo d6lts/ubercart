@@ -38,10 +38,6 @@
   margin-right: 2em;
 }
 
-h3.title {
-  margin-top: 1em;
-}
-
 .node-form .product-field table {
   margin: 0;
   width: auto;
@@ -51,7 +47,7 @@ h3.title {
   padding: 3px 6px 0 0;
 }
 
-.node-form tbody {
+.node-form .product-field tbody {
   border: none;
   margin: 0;
 }
