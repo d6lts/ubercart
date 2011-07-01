@@ -639,21 +639,29 @@ function theme_uc_reports_product_table($header, $rows, $attributes = array(), $
  * Display the sales summary report.
  */
 function uc_reports_sales_summary() {
-  $timezone_offset = time() + _uc_reports_timezone_offset();
+  // "Now" timestamp
+  $time = time();
+
+  // Site time minus GMT time, in seconds
+  $timezone_offset = _uc_reports_timezone_offset();
+
+  // Find day/month/year of "Now" in site timezone
+  $date_month = format_date($time, 'custom', 'n', $timezone_offset);
+  $date_year = format_date($time, 'custom', 'Y', $timezone_offset);
+  $date_day_of_month = format_date($time, 'custom', 'j', $timezone_offset);
+  $date_days_in_month = format_date($time, 'custom', 't', $timezone_offset);
+
+  // Calculate Unix timecodes (defined to be in GMT time)
+  // for beginning and ending of reporting periods
+  // Use gm functions so PHP won't try to do any timezone conversions by itself
+  $month_start = gmmktime(0, 0, 0, $date_month, 1, $date_year) - $timezone_offset;
+  $month_end = gmmktime(23, 59, 59, $date_month, $date_days_in_month, $date_year) - $timezone_offset;
+  $today_start = gmmktime(0, 0, 0, $date_month, $date_day_of_month, $date_year) - $timezone_offset;
+  $today_end = gmmktime(23, 59, 59, $date_month, $date_day_of_month, $date_year) - $timezone_offset;
+
+  // Initialize variables used later
   $order_statuses = _uc_reports_order_statuses();
   $format = variable_get('uc_date_format_default', 'm/d/Y');
-
-  $date_month = gmdate('n', $timezone_offset);
-  $date_year = gmdate('Y', $timezone_offset);
-  $date_day_of_month = gmdate('j', $timezone_offset);
-  $date_days_in_month = gmdate('t', $timezone_offset);
-
-  $month_start = gmmktime(0, 0, 0, $date_month, 1, $date_year);
-  $month_end = gmmktime(23, 59, 59, $date_month, $date_days_in_month, $date_year);
-
-  $today_start = gmmktime(0, 0, 0, $date_month, $date_day_of_month, $date_year);
-  $today_end = gmmktime(23, 59, 59, $date_month, $date_day_of_month, $date_year);
-
   // Build the report table header.
   $header = array(t('Sales data'), t('Number of orders'), t('Total revenue'), t('Average order'));
 
@@ -666,7 +674,7 @@ function uc_reports_sales_summary() {
   );
 
   $rows[] = array(
-    l(t('Today, !date', array('!date' => format_date($today_start, 'custom', $format, 0))), 'admin/store/orders/search/results/0/0/0/0/0/0/'. $today_start .'/'. $today_end),
+    l(t('Today, !date', array('!date' => format_date($today_start, 'custom', $format, $timezone_offset))), 'admin/store/orders/search/results/0/0/0/0/0/0/'. $today_start .'/'. $today_end),
     $today['total'],
     uc_price($today['income'], $context),
     uc_price($today['average'], $context),
@@ -676,7 +684,7 @@ function uc_reports_sales_summary() {
   $yesterday = _uc_reports_get_sales($today_start - 86400);
 
   $rows[] = array(
-    l(t('Yesterday, !date', array('!date' => format_date($today_start - 86400, 'custom', $format, 0))), 'admin/store/orders/search/results/0/0/0/0/0/0/'. ($today_start - 86400) .'/'. ($today_end - 86400)),
+    l(t('Yesterday, !date', array('!date' => format_date($today_start - 86400, 'custom', $format, $timezone_offset))), 'admin/store/orders/search/results/0/0/0/0/0/0/'. ($today_start - 86400) .'/'. ($today_end - 86400)),
     $yesterday['total'],
     uc_price($yesterday['income'], $context),
     uc_price($yesterday['average'], $context),
@@ -684,7 +692,7 @@ function uc_reports_sales_summary() {
 
   // Get the sales report for the month.
   $month = _uc_reports_get_sales($month_start, 'month');
-  $month_title = format_date($month_start, 'custom', 'M Y', 0);
+  $month_title = format_date($month_start, 'custom', 'M Y', $timezone_offset);
 
   // Add the month-to-date details to the report table.
   $rows[] = array(
@@ -779,12 +787,17 @@ function uc_reports_sales_summary() {
  * Display the yearly sales report form and table.
  */
 function uc_reports_sales_year() {
-  $timezone_offset = time() + _uc_reports_timezone_offset();
+  // "Now" timestamp
+  $time = time();
+
+  // Site time minus GMT time, in seconds
+  $timezone_offset = _uc_reports_timezone_offset();
+  
   $order_statuses = _uc_reports_order_statuses();
 
   // Get the year for the report from the URL.
   if (intval(arg(5)) == 0) {
-    $year = format_date($timezone_offset, 'custom', 'Y', 0);
+    $year = format_date($time, 'custom', 'Y', $timezone_offset);
   }
   else {
     $year = arg(5);
@@ -804,8 +817,8 @@ function uc_reports_sales_year() {
   // For each month of the year...
   for ($i = 1; $i <= 12; $i++) {
     // Calculate the start and end timestamps for the month in local time.
-    $month_start = gmmktime(0, 0, 0, $i, 1, $year);
-    $month_end = gmmktime(23, 59, 59, $i + 1, 0, $year);
+    $month_start = gmmktime(0, 0, 0, $i, 1, $year) - $timezone_offset;
+    $month_end = gmmktime(23, 59, 59, $i + 1, 0, $year) - $timezone_offset;
 
     // Get the sales report for the month.
     $month_sales = _uc_reports_get_sales($month_start, 'month');
@@ -820,7 +833,7 @@ function uc_reports_sales_year() {
 
     // Add the month's row to the report table.
     $rows[] = array(
-      l(gmdate('M Y', $month_start), 'admin/store/orders/search/results/0/0/0/0/0/0/'. $month_start .'/'. $month_end),
+      l(format_date($month_start, 'custom', 'M Y', $timezone_offset), 'admin/store/orders/search/results/0/0/0/0/0/0/'. $month_start .'/'. $month_end),
       $month_sales['total'],
       uc_price($month_sales['income'], $context),
       uc_price($month_average, $context),
@@ -828,7 +841,7 @@ function uc_reports_sales_year() {
 
     // Add the data to the CSV export.
     $csv_rows[] = array(
-      gmdate('M Y', $month_start),
+      format_date($month_start, 'custom', 'M Y', $timezone_offset),
       $month_sales['total'],
       $month_sales['income'],
       $month_average,
@@ -836,8 +849,8 @@ function uc_reports_sales_year() {
   }
 
   // Calculate the start and end timestamps for the year in local time.
-  $year_start = gmmktime(0, 0, 0, 1, 1, $year);
-  $year_end = gmmktime(23, 59, 59, 1, 0, $year + 1);
+  $year_start = gmmktime(0, 0, 0, 1, 1, $year) - $timezone_offset;
+  $year_end = gmmktime(23, 59, 59, 1, 0, $year + 1) - $timezone_offset;
 
   // Get the sales report for the year.
   $year_sales = _uc_reports_get_sales($year_start, 'year');
@@ -970,10 +983,10 @@ function uc_reports_sales_custom() {
 
     // Create the date title for the subreport.
     if ($args['length'] == 'day') {
-      $date = format_date($subreport['start'], 'custom', $format .' - D', 0);
+      $date = format_date($subreport['start'], 'custom', $format .' - D', $timezone);
     }
     else {
-      $date = format_date($subreport['start'], 'custom', $format, 0) .' - '. format_date($subreport['end'], 'custom', $format, 0);
+      $date = format_date($subreport['start'], 'custom', $format, $timezone) .' - '. format_date($subreport['end'], 'custom', $format, $timezone);
     }
 
     // Build the order data for the subreport.
@@ -1064,6 +1077,7 @@ function uc_reports_sales_custom() {
  *   uc_reports_sales_custom_form_submit()
  */
 function uc_reports_sales_custom_form($form_state, $values, $statuses) {
+  $timezone_offset = _uc_reports_timezone_offset();
   $form['search'] = array(
     '#type' => 'fieldset',
     '#title' => t('Customize sales report parameters'),
@@ -1076,18 +1090,18 @@ function uc_reports_sales_custom_form($form_state, $values, $statuses) {
     '#type' => 'date',
     '#title' => t('Start date'),
     '#default_value' => array(
-      'month' => format_date($values['start_date'], 'custom', 'n', 0),
-      'day' => format_date($values['start_date'], 'custom', 'j', 0),
-      'year' => format_date($values['start_date'], 'custom', 'Y', 0),
+      'month' => format_date($values['start_date'], 'custom', 'n', $timezone_offset),
+      'day' => format_date($values['start_date'], 'custom', 'j', $timezone_offset),
+      'year' => format_date($values['start_date'], 'custom', 'Y', $timezone_offset),
     ),
   );
   $form['search']['end_date'] = array(
     '#type' => 'date',
     '#title' => t('End date'),
     '#default_value' => array(
-      'month' => format_date($values['end_date'], 'custom', 'n', 0),
-      'day' => format_date($values['end_date'], 'custom', 'j', 0),
-      'year' => format_date($values['end_date'], 'custom', 'Y', 0),
+      'month' => format_date($values['end_date'], 'custom', 'n', $timezone_offset),
+      'day' => format_date($values['end_date'], 'custom', 'j', $timezone_offset),
+      'year' => format_date($values['end_date'], 'custom', 'Y', $timezone_offset),
     ),
   );
 
@@ -1155,9 +1169,8 @@ function uc_reports_sales_custom_form_submit($form, &$form_state) {
   $timezone_offset = _uc_reports_timezone_offset();
 
   // Build the start and end dates from the form.
-  $start_date = gmmktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']);
-  $end_date = gmmktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']);
-
+  $start_date = gmmktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']) - $timezone_offset;
+  $end_date = gmmktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']) - $timezone_offset;
   $args = array(
     $start_date,
     $end_date,

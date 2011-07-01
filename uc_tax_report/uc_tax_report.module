@@ -26,14 +26,18 @@ function uc_tax_report_menu() {
  * Displays the sales tax report form and table.
  */
 function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status = NULL) {
-  $timezone = _uc_reports_timezone_offset();
-  $timezone_offset = time() + $timezone;
+  // "Now" timestamp
+  $time = time();
+
+  // Site time minus GMT time, in seconds
+  $timezone_offset = _uc_reports_timezone_offset();
+
   $format = variable_get('uc_date_format_default', 'm/d/Y');
 
   // Use default report parameters if we don't detect values in the URL.
   if ($start_date == '') {
     $args = array(
-      'start_date' => gmmktime(0, 0, 0, gmdate('n', $timezone_offset), 1, gmdate('Y', $timezone_offset) - 1),
+      'start_date' => gmmktime(0, 0, 0, format_date($time, 'custom', 'n', $timezone_offset), 1, format_date($time, 'custom', 'Y', $timezone_offset) - 1) - $timezone_offset,
       'end_date' => time(),
       'status' => FALSE,
     );
@@ -207,6 +211,9 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
 function uc_tax_report_params_form($form_state, $values) {
   $form = array();
 
+  // Site time minus GMT time, in seconds
+  $timezone_offset = _uc_reports_timezone_offset();
+
   $form['params'] = array(
     '#type' => 'fieldset',
     '#title' => t('Customize tax report parameters'),
@@ -219,18 +226,18 @@ function uc_tax_report_params_form($form_state, $values) {
     '#type' => 'date',
     '#title' => t('Start date'),
     '#default_value' => array(
-      'month' => format_date($values['start_date'], 'custom', 'n', 0),
-      'day' => format_date($values['start_date'], 'custom', 'j', 0),
-      'year' => format_date($values['start_date'], 'custom', 'Y', 0),
+      'month' => format_date($values['start_date'], 'custom', 'n', $timezone_offset),
+      'day' => format_date($values['start_date'], 'custom', 'j', $timezone_offset),
+      'year' => format_date($values['start_date'], 'custom', 'Y', $timezone_offset),
     ),
   );
   $form['params']['end_date'] = array(
     '#type' => 'date',
     '#title' => t('End date'),
     '#default_value' => array(
-      'month' => format_date($values['end_date'], 'custom', 'n', 0),
-      'day' => format_date($values['end_date'], 'custom', 'j', 0),
-      'year' => format_date($values['end_date'], 'custom', 'Y', 0),
+      'month' => format_date($values['end_date'], 'custom', 'n', $timezone_offset),
+      'day' => format_date($values['end_date'], 'custom', 'j', $timezone_offset),
+      'year' => format_date($values['end_date'], 'custom', 'Y', $timezone_offset),
     ),
   );
 
@@ -283,8 +290,8 @@ function uc_tax_report_params_form_submit($form, &$form_state) {
   $timezone_offset = _uc_reports_timezone_offset();
 
   // Build the start and end dates from the form.
-  $start_date = gmmktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']);
-  $end_date = gmmktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']);
+  $start_date = gmmktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']) - $timezone_offset;
+  $end_date = gmmktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']) - $timezone_offset;
 
   $args = array(
     $start_date,
