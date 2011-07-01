@@ -212,6 +212,12 @@ function uc_shipping_schema() {
         'not null' => TRUE,
         'default' => 0.0,
       ),
+      'changed' => array(
+        'description' => 'The Unix timestamp indicating the last time the shipment was modified.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('sid'),
   );
@@ -431,6 +437,17 @@ function uc_shipping_update_6005() {
 
   db_change_field($ret, 'uc_shipments', 'cost', 'cost', array('type' => 'numeric', 'precision' => 16, 'scale' => 5, 'not null' => TRUE, 'default' => 0));
   db_change_field($ret, 'uc_packages', 'value', 'value', array('type' => 'numeric', 'precision' => 16, 'scale' => 5, 'not null' => FALSE));
+
+  return $ret;
+}
+
+/**
+ * Add 'changed' column to uc_shipments
+ */
+function uc_shipping_update_6006() {
+  $ret = array();
+
+  db_add_column($ret, 'uc_shipments', 'changed', 'int', array('not null' => TRUE, 'default' => 0));
 
   return $ret;
 }
