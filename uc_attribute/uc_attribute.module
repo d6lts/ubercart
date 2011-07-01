@@ -1151,10 +1151,6 @@ function _uc_attribute_alter_form($product) {
   }
 
   $nid = $product->nid;
-  $qty = $product->default_qty;
-  if (!$qty) {
-    $qty = 1;
-  }
 
   // Load all product attributes for the given nid.
   $priced_attributes = uc_attribute_priced_attributes($nid);
@@ -1177,21 +1173,13 @@ function _uc_attribute_alter_form($product) {
         case 'total':
           $context['type'] = 'product';
           $context['subject']['node'] = $product;
-          $price_info = array(
-            'price' => $product->sell_price + $option->price,
-            'qty' => $qty,
-          );
-          $display_price = in_array($attribute->aid, $priced_attributes) ? ', '. uc_price($price_info, $context) : '';
+          $display_price = in_array($attribute->aid, $priced_attributes) ? ', '. uc_price($product->sell_price + $option->price, $context) : '';
           if (count($priced_attributes) == 1 && $attribute->display != 3) {
             break;
           }
         case 'adjustment':
           $context['type'] = 'attribute_option';
-          $price_info = array(
-            'price' => $option->price,
-            'qty' => $qty,
-          );
-          $display_price = ($option->price != 0 ? ', '. ($option->price > 0 ? '+' : '') . uc_price($price_info, $context) : '');
+          $display_price = ($option->price != 0 ? ', '. ($option->price > 0 ? '+' : '') . uc_price($option->price, $context) : '');
           break;
         case 'none':
         default:
