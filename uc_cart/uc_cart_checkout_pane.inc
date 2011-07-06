@@ -156,7 +156,7 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
       unset($_SESSION['email_match']);
 
       // Invalidate if an account already exists for this e-mail address, and the user is not logged into that account
-      if ($user->uid == 0 && !empty($arg2['primary_email'])) {
+      if (!variable_get('uc_cart_mail_existing', TRUE) && $user->uid == 0 && !empty($arg2['primary_email'])) {
         if (db_result(db_query("SELECT uid FROM {users} WHERE LOWER(mail) = LOWER('%s')", $arg2['primary_email'])) > 0) {
           form_set_error('panes][customer][primary_email', t('An account already exists for your e-mail address. You will either need to login with with this e-mail address or use a different e-mail address.'));
         }
@@ -166,23 +166,29 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
       if ((variable_get('uc_cart_new_account_name', FALSE) ||
         variable_get('uc_cart_new_account_password', FALSE)) &&
         $user->uid == 0) {
-        // Validate the username.
-        if (variable_get('uc_cart_new_account_name', FALSE) && !empty($arg2['new_account']['name'])) {
-          $message = user_validate_name($arg2['new_account']['name']);
-          if (!empty($message)) {
-            form_set_error('panes][customer][new_account][name', $message);
-          }
-          if (db_fetch_object(db_query("SELECT uid FROM {users} WHERE LOWER(name) = LOWER('%s')", $arg2['new_account']['name'])) > 0) {
-            form_set_error('panes][customer][new_account][name', t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $arg2['new_account']['name'])));
-          }
-          $arg1->data['new_user']['name'] = $arg2['new_account']['name'];
+        // Skip if an account already exists for this e-mail address.
+        if (variable_get('uc_cart_mail_existing', TRUE) && db_fetch_object(db_query("SELECT uid FROM {users} WHERE LOWER(mail) = LOWER('%s')", $arg2['primary_email'])) > 0) {
+          drupal_set_message(t('An account already exists for your e-mail address. The new account details you entered will be disregarded.'));
         }
-        // Validate the password.
-        if (variable_get('uc_cart_new_account_password', FALSE)) {
-          if (strcmp($arg2['new_account']['pass'], $arg2['new_account']['pass_confirm'])) {
-            form_set_error('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
+        else {
+          // Validate the username.
+          if (variable_get('uc_cart_new_account_name', FALSE) && !empty($arg2['new_account']['name'])) {
+            $message = user_validate_name($arg2['new_account']['name']);
+            if (!empty($message)) {
+              form_set_error('panes][customer][new_account][name', $message);
+            }
+            if (db_fetch_object(db_query("SELECT uid FROM {users} WHERE LOWER(name) = LOWER('%s')", $arg2['new_account']['name'])) > 0) {
+              form_set_error('panes][customer][new_account][name', t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $arg2['new_account']['name'])));
+            }
+            $arg1->data['new_user']['name'] = $arg2['new_account']['name'];
           }
-          $arg1->data['new_user']['pass'] = $arg2['new_account']['pass'];
+          // Validate the password.
+          if (variable_get('uc_cart_new_account_password', FALSE)) {
+            if (strcmp($arg2['new_account']['pass'], $arg2['new_account']['pass_confirm'])) {
+              form_set_error('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
+            }
+            $arg1->data['new_user']['pass'] = $arg2['new_account']['pass'];
+          }
         }
       }
 
@@ -196,6 +202,12 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
       return $review;
 
     case 'settings':
+      $form['uc_cart_mail_existing'] = array(
+        '#type' => 'checkbox',
+        '#title' => t("Allow anonymous customers to use an existing account's email address."),
+        '#default_value' => variable_get('uc_cart_mail_existing', TRUE),
+        '#description' => t('If enabled, orders will be attached to the account matching the email address. If disabled, anonymous users using a registered email address must log in or use a different email address.'),
+      );
       $form['uc_cart_email_validation'] = array(
         '#type' => 'checkbox',
         '#title' => t('Require e-mail confirmation in checkout for anonymous customers.'),
