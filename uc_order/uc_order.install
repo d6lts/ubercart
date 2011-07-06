@@ -231,6 +231,13 @@ function uc_order_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'currency' => array(
+        'description' => 'The ISO currency code for the order.',
+        'type' => 'char',
+        'length' => 3,
+        'not null' => TRUE,
+        'default' => '',
+      ),
     ),
     'indexes' => array(
       'uid' => array('uid'),
@@ -359,7 +366,7 @@ function uc_order_schema() {
       'title' => array(
         'description' => 'The label of the line item.',
         'type' => 'varchar',
-        'length' => 128,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -456,7 +463,7 @@ function uc_order_schema() {
       'title' => array(
         'description' => 'The product title, from {node}.title.',
         'type' => 'varchar',
-        'length' => 128,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -1004,4 +1011,48 @@ function uc_order_update_6015() {
 function uc_order_update_6016() {
   variable_del('uc_ubrowser_product_select');
   return array();
+}
+
+/**
+ * Change size of {uc_order_products}.title and {uc_order_line_items}.title
+ * to match size of {node}.title.
+ */
+function uc_order_update_6017() {
+  $ret = array();
+
+  db_change_field($ret, 'uc_order_products', 'title', 'title', array(
+    'description' => 'The product title, from {node}.title.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+  ));
+
+  db_change_field($ret, 'uc_order_line_items', 'title', 'title', array(
+    'description' => 'The label of the line item.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+  ));
+
+  return $ret;
+}
+
+/**
+ * Add currency code field.
+ */
+function uc_order_update_6018() {
+  $ret = array();
+
+  db_add_field($ret, 'uc_orders', 'currency', array(
+    'type' => 'char',
+    'length' => 3,
+    'not null' => TRUE,
+    'default' => '',
+  ));
+
+  db_query("UPDATE {uc_orders} SET currency = '%s'", variable_get('uc_currency_code', 'USD'));
+
+  return $ret;
 }

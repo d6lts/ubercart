@@ -134,60 +134,22 @@ function uc_cart_checkout_form() {
     $order = uc_order_load($_SESSION['cart_order']);
   }
   else {
-    $order = NULL;
+    $order = new UcOrder();
   }
 
   // Check the referer URI to clear order details and prevent identity theft.
   if (uc_referer_check(array('cart/checkout', 'cart/checkout/review'))) {
     if ($order == FALSE || uc_order_status_data($order->order_status, 'state') != 'in_checkout') {
       unset($_SESSION['cart_order']);
-      $order = NULL;
+      $order = new UcOrder();
     }
     elseif (uc_order_status_data($order->order_status, 'state') != 'in_checkout' || ($user->uid > 0 && $user->uid != $order->uid)) {
-      $order = NULL;
+      $order = new UcOrder();
     }
   }
   else {
     unset($_SESSION['cart_order']);
-    $order = NULL;
-  }
-
-  if (is_null($order)) {
-    $order = new stdClass();
-    $order->order_id = 0;
-    $order->uid = 0;
-    $order->order_status = '';
-    $order->order_total = 0;
-    $order->primary_email = '';
-
-    $order->delivery_first_name = '';
-    $order->delivery_last_name = '';
-    $order->delivery_phone = '';
-    $order->delivery_company = '';
-    $order->delivery_street1 = '';
-    $order->delivery_street2 = '';
-    $order->delivery_city = '';
-    $order->delivery_zone = 0;
-    $order->delivery_postal_code = '';
-    $order->delivery_country = 0;
-    $order->billing_first_name = '';
-    $order->billing_last_name = '';
-    $order->billing_phone = '';
-    $order->billing_company = '';
-    $order->billing_street1 = '';
-    $order->billing_street2 = '';
-    $order->billing_city = '';
-    $order->billing_zone = 0;
-    $order->billing_postal_code = '';
-    $order->billing_country = 0;
-
-    $order->products = array();
-    $order->line_items = array();
-
-    $order->payment_method = '';
-    $order->data = array();
-    $order->created = 0;
-    $order->modified = 0;
+    $order = new UcOrder();
   }
 
   $form['panes'] = array('#tree' => TRUE);

@@ -847,6 +847,21 @@ function hook_order_pane() {
 }
 
 /**
+ * Alter order pane definitions.
+ *
+ * @param $panes
+ *   Array with the panes information as defined in hook_order_pane(), passed
+ *   by reference.
+ */
+function hook_order_pane_alter(&$panes) {
+  foreach ($panes as &$pane) {
+    if ($pane['id'] == 'payment') {
+      $pane['callback'] = 'my_custom_module_callback';
+    }
+  }
+}
+
+/**
  * Allows modules to alter ordered products when they're loaded with an order.
  *
  * @param &$product
