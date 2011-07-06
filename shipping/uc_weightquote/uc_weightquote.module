@@ -214,7 +214,7 @@ function uc_weightquote_quote($products, $details, $method) {
   if ($method = db_fetch_object(db_query("SELECT * FROM {uc_weightquote_methods} WHERE mid = %d", $mid))) {
     $context['extras']['weightquote_method'] = $method;
     // Start at the base rate.
-    $rate = $method->base_rate;
+    $rate = uc_price($method->base_rate, $context);
 
     foreach ($products as $product) {
       $context['subject']['order_product'] = $product;
@@ -238,10 +238,9 @@ function uc_weightquote_quote($products, $details, $method) {
     }
 
     unset($context['subject']['order_product']);
-    $altered = uc_price($rate, $context);
     $context['revision'] = 'formatted';
     $formatted = uc_price($rate, $context);
-    $quotes[] = array('rate' => $altered, 'format' => $formatted, 'option_label' => check_plain($method->label));
+    $quotes[] = array('rate' => $rate, 'format' => $formatted, 'option_label' => check_plain($method->label));
   }
 
   return $quotes;
