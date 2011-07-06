@@ -587,10 +587,13 @@ function uc_product_form(&$node) {
  * @ingroup themeable
  */
 function theme_uc_product_form_prices($form) {
-  return "<table><tr><td>\n". drupal_render($form['list_price'])
-    .'</td><td>'. drupal_render($form['cost'])
-    .'</td><td>'. drupal_render($form['sell_price'])
-    ."</td></tr></table>\n". drupal_render($form);
+  $output = '<table><tr>';
+  foreach (element_children($form) as $field) {
+    $output .= '<td>' . drupal_render($form[$field]) . '</td>';
+  }
+  $output .= '</tr></table>';
+
+  return $output;
 }
 
 /**
