@@ -219,12 +219,12 @@ function uc_catalog_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       case 'view':
         if ($a4 == TRUE && variable_get('uc_catalog_breadcrumb', TRUE)) {
           $crumbs = array();
-          if (variable_get('site_frontpage', 'node') != 'catalog') {
+          if (!_uc_catalog_is_frontpage()) {
             $crumbs[] = l(t('Home'), '');
           }
           $terms = taxonomy_node_get_terms_by_vocabulary($node, variable_get('uc_catalog_vid', 0));
           if (count($terms)) {
-            $crumbs[] = l(variable_get('uc_catalog_name', t('Catalog')), variable_get('uc_catalog_url', 'catalog'));
+            $crumbs[] = l(variable_get('uc_catalog_name', t('Catalog')), 'catalog');
             $used_tids = array();
             foreach ($terms as $term) {
               if (!isset($parents[$term->tid])) {
@@ -800,7 +800,7 @@ function uc_catalog_set_breadcrumb($tid) {
   static $terms = array();
   if (variable_get('uc_catalog_breadcrumb', TRUE)) {
     if (empty($breadcrumbs)) {
-      if (variable_get('site_frontpage', 'node') != 'catalog') {
+      if (!_uc_catalog_is_frontpage()) {
         $breadcrumbs[] = l(t('Home'), '');
       }
       if ($tid != 0) {
@@ -1000,4 +1000,8 @@ function uc_catalog_add_node_type($type) {
   if (!db_result(db_query("SELECT vid FROM {vocabulary_node_types} WHERE vid = %d and type = '%s'", $vid, $type))){
     db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vid, $type);
   }
+}
+
+function _uc_catalog_is_frontpage() {
+  return drupal_get_normal_path(variable_get('site_frontpage', 'node')) == 'catalog';
 }
