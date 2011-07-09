@@ -447,7 +447,12 @@ function uc_shipping_update_6005() {
 function uc_shipping_update_6006() {
   $ret = array();
 
-  db_add_column($ret, 'uc_shipments', 'changed', 'int', array('not null' => TRUE, 'default' => 0));
+  db_add_field($ret, 'uc_shipments', 'changed', array(
+    'description' => 'The Unix timestamp indicating the last time the shipment was modified.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+  ));
 
   return $ret;
 }
