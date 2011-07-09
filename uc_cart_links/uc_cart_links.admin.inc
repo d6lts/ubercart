@@ -126,7 +126,7 @@ function uc_cart_links_creation_help() {
   $header = array(t('Action'), t('Description'), t('Argument'));
   $rows = array(
     array('p', t('Adds a product to the cart.'), t('A product node number, followed by optional arguments described in the table below.')),
-    array('i', t('Sets the ID of the cart link.'), t('An alphanumeric string to identify the link.')),
+    array('i', t('Sets the ID of the cart link.'), t('An alphanumeric string (32 characters max) to identify the link.')),
     array('m', t('Displays a message to the customer when the link is clicked.'), t('A <a href="!url">numeric message ID</a> to identify which message to display.', array('!url' => url('admin/store/settings/cart_links')))),
     array('e', t('Empties the cart. If used, this should be the first action.'), t('None.')),
   );

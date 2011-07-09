@@ -146,9 +146,9 @@ class UbercartCartLinksTestCase extends UbercartTestHelper {
         }
       }
 
-      // Use the same link, but this time append an '_s' to turn
+      // Use the same link, but this time append an '_m0' to turn
       // off message display for this product
-      $this->drupalGet($test_link . '_s');
+      $this->drupalGet($test_link . '_m0');
       // Default add-to-cart message is different when adding a duplicate item
       $this->assertNoText(
         t('Your item(s) have been updated.'),
@@ -340,7 +340,8 @@ class UbercartCartLinksTestCase extends UbercartTestHelper {
     unset($cart_links[$test_link_0]);
     $test_link = array_rand($cart_links);
 
-    // Attempt to click it - it should fail
+    // Attempt to click it
+    // It should fail and redirect to the home page (default)
     $this->drupalGet('node/' . $page->nid);
     $this->clickLink(t('Cart Link #@link', array('@link' => $test_link)));
     $this->assertNoText(
@@ -353,6 +354,26 @@ class UbercartCartLinksTestCase extends UbercartTestHelper {
     $this->assertText(
       t('This message will disappear once you have promoted a post to the front page.'),
       t('Redirected to front page for link not in restrictions.')
+    );
+
+    // Now create a special redirect page for bad links
+    $redirect_page = $this->drupalCreateNode(
+      array(
+        'body' => 'ERROR: Invalid Cart Link!',
+        'format' => FILTER_FORMAT_DEFAULT,
+      )
+    );
+
+    // Set redirect link
+    $this->setCartLinksUIRedirect('node/' . $redirect_page->nid);
+
+    // Attempt to click same restricted link as above.
+    // It should fail again but this time redirect to $redirect_page.
+    $this->drupalGet('node/' . $page->nid);
+    $this->clickLink(t('Cart Link #@link', array('@link' => $test_link)));
+    $this->assertText(
+      t('ERROR: Invalid Cart Link!'),
+      t('Redirected to error page for link not in restrictions.')
     );
 
     // Remove restrictions, try to add again - it should pass
@@ -513,7 +534,7 @@ class UbercartCartLinksTestCase extends UbercartTestHelper {
     }
 
     // Check report to see these clicks have been recorded correctly
-    $this->drupalGet('admin/store/reports/cart-links');
+    $this->drupalGet('admin/store/reports/cart_links');
     $total = 0;
     foreach ($tracking as $id => $clicks) {
       $total += $clicks;
@@ -653,13 +674,13 @@ class UbercartCartLinksTestCase extends UbercartTestHelper {
   function setCartLinksUIRedirect($url = '') {
     $this->drupalPost(
       'admin/store/settings/cart_links',
-      array('uc_cart_links_restrictions' => $restrictions),
+      array('uc_cart_links_invalid_page' => $url),
       t('Save configuration')
     );
     $this->assertFieldByName(
-      'uc_cart_links_restrictions',
-      $restrictions,
-      t('Cart links restrictions contains "@restrictions".', array('@restrictions' => $restrictions))
+      'uc_cart_links_invalid_page',
+      $url,
+      t('Cart links invalid page URL contains "@url".', array('@url' => $url))
     );
   }
 
