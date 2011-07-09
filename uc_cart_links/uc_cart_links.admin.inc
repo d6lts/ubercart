@@ -70,7 +70,7 @@ function uc_cart_links_report() {
   );
 
   $rows = array();
-  $result = pager_query("SELECT * FROM {uc_cart_link_clicks}". tablesort_sql($header), 25, 1);
+  $result = pager_query("SELECT * FROM {uc_cart_link_clicks}". tablesort_sql($header), 25);
   while ($data = db_fetch_object($result)) {
     $rows[] = array(
       check_plain($data->cart_link_id),
@@ -85,7 +85,7 @@ function uc_cart_links_report() {
     );
   }
 
-  return theme('table', $header, $rows) . theme('pager', array(), 25, 1);
+  return theme('table', $header, $rows) . theme('pager', array(), 25);
 }
 
 /**
