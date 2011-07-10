@@ -865,7 +865,9 @@ EOHTML;
 
   if ($labels) {
     foreach ($shipment->packages as $id => $package) {
-      if ($package->label_image && ($path = file_create_path($package->label_image)) && file_exists($path)) {
+      if (isset($package->label_image) &&
+          ($path = file_create_path($package->label_image)) &&
+          file_exists($path)) {
         // TODO: Find a way to store these magic numbers specifically for UPS.
         list($width, $height) = array(672, 392);
         $output .= '<br class="page-break" />' . "\n";;
