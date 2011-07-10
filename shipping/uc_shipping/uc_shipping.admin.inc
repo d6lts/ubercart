@@ -430,9 +430,9 @@ function uc_shipping_order_shipments($order) {
 /**
  * Set up a new shipment with the chosen packages.
  *
- * @ingroup forms
- * @see theme_uc_shipping_new_shipment()
  * @see uc_shipping_new_shipment_submit()
+ * @see theme_uc_shipping_new_shipment()
+ * @ingroup forms
  */
 function uc_shipping_new_shipment($form_state, $order) {
   $breadcrumb = drupal_get_breadcrumb();
@@ -443,7 +443,7 @@ function uc_shipping_new_shipment($form_state, $order) {
   $breadcrumb[] = l(t('Shipments'), 'admin/store/orders/'. $order->order_id .'/shipments');
   drupal_set_breadcrumb($breadcrumb);
 
-  $checked_pkgs = (array) $_REQUEST['pkgs'];
+  $checked_pkgs = isset($_REQUEST['pkgs']) ? $_REQUEST['pkgs'] : array();
 
   $form = array('#tree' => TRUE);
   $form['order_id'] = array('#type' => 'hidden', '#value' => $order->order_id);
@@ -472,10 +472,11 @@ function uc_shipping_new_shipment($form_state, $order) {
     }
   }
   foreach ($packages_by_type as $shipping_type => $packages) {
-    $form[$shipping_type] = array('#type' => 'fieldset',
+    $form['shipping_types'][$shipping_type] = array(
+      '#type' => 'fieldset',
       '#title' => $shipping_types[$shipping_type]['title'],
     );
-    $form[$shipping_type]['packages'] = array();
+    $form['shipping_types'][$shipping_type]['packages'] = array();
     foreach ($packages as $package) {
       $pkgs_exist = TRUE;
       $package_row = array();
@@ -487,10 +488,10 @@ function uc_shipping_new_shipment($form_state, $order) {
       }
       $package_row['products'] = array('#value' => '<ul><li>'. implode('</li><li>', $product_list) .'</li></ul>');
       $package_row['weight'] = array('#value' => $package->weight);
-      $form[$shipping_type]['packages'][$package->package_id] = $package_row;
+      $form['shipping_types'][$shipping_type]['packages'][$package->package_id] = $package_row;
     }
 
-    if (is_array($shipping_methods_by_type[$shipping_type])) {
+    if (isset($shipping_methods_by_type[$shipping_type])) {
       foreach ($shipping_methods_by_type[$shipping_type] as $method) {
         $option_methods += array($method['id'] => $method['title']);
       }
@@ -507,32 +508,31 @@ function uc_shipping_new_shipment($form_state, $order) {
       '#value' => t('Ship packages'),
     );
   }
-  //drupal_set_message('<pre>'. print_r($form, TRUE) .'</pre>');
   return $form;
 }
 
 /**
  * Format and display the new shipment form.
  *
+ * @see uc_shipping_new_shipment()
  * @ingroup themeable
  */
 function theme_uc_shipping_new_shipment($form) {
   $output = '';
   $header = array(theme('table_select_header_cell'), t('Package'), t('Products'), t('Weight'));
-  foreach (element_children($form) as $shipping_type) {
+  foreach (element_children($form['shipping_types']) as $shipping_type) {
     $rows = array();
-    foreach (element_children($form[$shipping_type]['packages']) as $package_id) {
+    foreach (element_children($form['shipping_types'][$shipping_type]['packages']) as $package_id) {
       $row = array();
-      $row[] = drupal_render($form[$shipping_type]['packages'][$package_id]['checked']);
-      $row[] = drupal_render($form[$shipping_type]['packages'][$package_id]['package_id']);
-      $row[] = drupal_render($form[$shipping_type]['packages'][$package_id]['products']);
-      $row[] = drupal_render($form[$shipping_type]['packages'][$package_id]['weight']);
+      $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['checked']);
+      $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['package_id']);
+      $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['products']);
+      $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['weight']);
       $rows[] = $row;
     }
     if (count($rows)) {
-      $form[$shipping_type]['packages']['table'] = array('#value' => theme('table', $header, $rows));
+      $form['shipping_types'][$shipping_type]['packages']['table'] = array('#value' => theme('table', $header, $rows));
     }
-    //$output .= drupal_render($form[$shipping_type]['methods']);
   }
   $output .= drupal_render($form);
   return $output;
@@ -543,11 +543,11 @@ function theme_uc_shipping_new_shipment($form) {
  *
  * Send package information to the chosen method.
  *
- * @see uc_shipping_make_shipment()
+ * @see uc_shipping_new_shipment()
  */
 function uc_shipping_new_shipment_submit($form, &$form_state) {
   $packages = array();
-  foreach ($form_state['values'] as $shipping_type) {
+  foreach ($form_state['values']['shipping_types'] as $shipping_type) {
     if (is_array($shipping_type['packages'])) {
       foreach ($shipping_type['packages'] as $id => $input) {
         if ($input['checked']) {
