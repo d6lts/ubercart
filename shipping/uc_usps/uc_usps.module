@@ -34,7 +34,10 @@ function uc_usps_menu() {
 function uc_usps_theme() {
   return array(
     'uc_usps_option_label' => array(
-      'arguments' => array('service' => NULL),
+      'arguments' => array(
+        'service' => NULL,
+        'packages' => NULL,
+      ),
     ),
   );
 }
@@ -463,7 +466,7 @@ function uc_usps_quote($products, $details, $method) {
       $services[$key]['rate'] = uc_price($quote['rate'], $context);
       $context['revision'] = 'formatted';
       $services[$key]['format'] = uc_price($quote['rate'], $context);
-      $services[$key]['option_label'] = theme('uc_usps_option_label', $quote['label']);
+      $services[$key]['option_label'] = theme('uc_usps_option_label', $quote['label'], $packages);
     }
   }
 
@@ -478,15 +481,21 @@ function uc_usps_quote($products, $details, $method) {
  *
  * @param $service
  *   The USPS service name.
+ * @param $packages
+ *   Package information.
+ *
  * @ingroup themeable
  */
-function theme_uc_usps_option_label($service) {
+function theme_uc_usps_option_label($service, $packages) {
   // Start with logo
   $output = '<img class="usps-logo" src="'. url(drupal_get_path('module', 'uc_usps')) .'/uc_usps_logo.gif" alt="'. t('USPS Logo') .'" /> ';
 
   // Add USPS service name, removing the first nine characters
   // (== 'U.S.P.S. ') because these replicate the logo image
   $output .= substr($service, 9);
+
+  // Add package information
+  $output .= ' ('. format_plural(count($packages), '1 package', '@count packages') .')';
 
   return $output;
 }
