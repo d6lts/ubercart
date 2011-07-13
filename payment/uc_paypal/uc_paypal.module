@@ -76,7 +76,9 @@ function uc_paypal_menu() {
   return $items;
 }
 
-// Make sure PayPal always has access to send IPNs.
+/**
+ * Access callback. Makes sure PayPal always has access to send IPNs.
+ */
 function uc_paypal_ipn_access() {
   return TRUE;
 }
@@ -812,6 +814,11 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
   exit();
 }
 
+/**
+ * Additional submit handler for uc_cart_checkout_review_form().
+ *
+ * @see uc_cart_checkout_review_form()
+ */
 function uc_paypal_ec_submit_form_submit($form, &$form_state) {
   $order = uc_order_load($_SESSION['cart_order']);
 
@@ -877,7 +884,9 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'cart/checkout/complete';
 }
 
-// Returns the form elements for the Website Payments Standard form.
+/**
+ * Returns the form elements for the Website Payments Standard form.
+ */
 function uc_paypal_wps_form($form_state, $order) {
   $shipping = 0;
   foreach ($order->line_items as $item) {
@@ -1053,7 +1062,9 @@ function uc_paypal_wps_form($form_state, $order) {
   return $form;
 }
 
-// Sends a request to PayPal and returns a response array.
+/**
+ * Sends a request to PayPal and returns a response array.
+ */
 function uc_paypal_api_request($request, $server) {
   // We use $request += to add API credentials so that
   // if a key already exists, it will not be overridden
@@ -1088,7 +1099,9 @@ function uc_paypal_api_request($request, $server) {
   return _uc_paypal_nvp_to_array($response);
 }
 
-// Returns the description and subtotal of the products on an order.
+/**
+ * Returns the description and subtotal of the products on an order.
+ */
 function _uc_paypal_product_details($items) {
   $desc = '';
   $subtotal = 0;
@@ -1106,7 +1119,9 @@ function _uc_paypal_product_details($items) {
   return array($desc, $subtotal);
 }
 
-// Returns the PayPal approved credit card type for a card number.
+/**
+ * Returns the PayPal approved credit card type for a card number.
+ */
 function _uc_paypal_card_type($cc_number) {
   switch (substr(strval($cc_number), 0, 1)) {
     case '3':
@@ -1122,7 +1137,9 @@ function _uc_paypal_card_type($cc_number) {
   return FALSE;
 }
 
-// Turns PayPal's NVP response to an API call into an associative array.
+/**
+ * Turns PayPal's NVP response to an API call into an associative array.
+ */
 function _uc_paypal_nvp_to_array($nvpstr) {
   foreach (explode('&', $nvpstr) as $nvp) {
     list($key, $value) = explode('=', $nvp);
@@ -1132,9 +1149,9 @@ function _uc_paypal_nvp_to_array($nvpstr) {
   return $nvp_array;
 }
 
-
-
-// Returns a human readable message for the AVS code.
+/**
+ * Returns a human readable message for the AVS code.
+ */
 function _uc_paypal_avscode_message($code) {
   if (is_numeric($code)) {
     switch ($code) {
@@ -1187,7 +1204,9 @@ function _uc_paypal_avscode_message($code) {
   }
 }
 
-// Returns a human readable message for the CVV2 match code.
+/**
+ * Returns a human readable message for the CVV2 match code.
+ */
 function _uc_paypal_cvvmatch_message($code) {
   if (is_numeric($code)) {
     switch ($code) {
@@ -1224,7 +1243,9 @@ function _uc_paypal_cvvmatch_message($code) {
   }
 }
 
-// Return a message for the pending reason of a PayPal payment.
+/**
+ * Return a message for the pending reason of a PayPal payment.
+ */
 function _uc_paypal_pending_message($reason) {
   switch ($reason) {
     case 'address':
@@ -1249,7 +1270,9 @@ function _uc_paypal_pending_message($reason) {
   }
 }
 
-// Return a message for the reason code of a PayPal reversal.
+/**
+ * Return a message for the reason code of a PayPal reversal.
+ */
 function _uc_paypal_reversal_message($reason) {
   switch ($reason) {
     case 'chargeback':
@@ -1266,7 +1289,9 @@ function _uc_paypal_reversal_message($reason) {
   }
 }
 
-// Returns an array of possible currency codes.
+/**
+ * Returns an array of possible currency codes.
+ */
 function _uc_paypal_currency_array() {
   return drupal_map_assoc(array('AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'SEK', 'SGD', 'THB', 'TWD', 'USD'));
 }
