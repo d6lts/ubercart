@@ -471,6 +471,7 @@ function uc_shipping_new_shipment($form_state, $order) {
       $shipping_methods_by_type[$method['ship']['type']][] = $method;
     }
   }
+  $pkgs_exist = FALSE;
   foreach ($packages_by_type as $shipping_type => $packages) {
     $form['shipping_types'][$shipping_type] = array(
       '#type' => 'fieldset',
