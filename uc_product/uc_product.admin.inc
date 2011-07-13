@@ -344,7 +344,8 @@ function uc_product_feature_settings_form() {
   );
 
   foreach ($features as $feature) {
-    if (function_exists($feature['settings'])) {
+    if (isset($feature['settings']) &&
+        function_exists($feature['settings'])) {
       $form[$feature['id']] = array(
         '#type' => 'fieldset',
         '#title' => t('!feature settings', array('!feature' => $feature['title'])),
