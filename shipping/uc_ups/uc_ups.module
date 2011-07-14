@@ -458,7 +458,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
       <Weight>". number_format($shipment_weight, 1, '.', '') ."</Weight>
     </ShipmentWeight>
     <Service>
-      <Code>{$service[code]}</Code>
+      <Code>". $service['code'] ."</Code>
       <Description>{$service[description]}</Description>
     </Service>
     ";
@@ -554,9 +554,13 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
         switch ($ups_units) {
           case 'in':
             $conversion = uc_weight_conversion($package->weight_units, 'lb');
+            $units = 'LBS';
+            $unit_name = 'Pounds';
             break;
           case 'cm':
             $conversion = uc_weight_conversion($package->weight_units, 'kg');
+            $units = 'KGS';
+            $unit_name = 'Kilograms';
             break;
         }
         $weight = max(1, $package->weight * $conversion);
@@ -592,91 +596,89 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
     <RequestOption>validate</RequestOption>
   </Request>
   <Shipment>";
-    $schema .= "<Shipper>";
-      $schema .= "<Name>". $store['name'] ."</Name>";
-      $schema .= "<ShipperNumber>". variable_get('uc_ups_shipper_number', '') ."</ShipperNumber>";
-      if ($store['phone']) {
-        $schema .= "<PhoneNumber>". $store['phone'] ."</PhoneNumber>";
-      }
-      if ($store['fax']) {
-        $schema .= "<FaxNumber>". $store['fax'] ."</FaxNumber>";
-      }
-      if ($store['email']) {
-        $schema .= "<EMailAddress>". $store['email'] ."</EMailAddress>";
-      }
-      $schema .= "<Address>";
-        $schema .= "<AddressLine1>". $store['street1'] ."</AddressLine1>";
-        if ($store['street2']) {
-          $schema .= "<AddressLine2>". $store['street2'] ."</AddressLine2>";
-        }
-        $schema .= "<City>". $store['city'] ."</City>";
-        $schema .= "<StateProvinceCode>$shipper_zone</StateProvinceCode>";
-        $schema .= "<PostalCode>$shipper_zip</PostalCode>";
-        $schema .= "<CountryCode>$shipper_country</CountryCode>";
-      $schema .= "</Address>";
-    $schema .= "</Shipper>";
-    $schema .= "<ShipTo>";
-      $schema .= "<CompanyName>". $destination->company ."</CompanyName>";
-      $schema .= "<AttentionName>". $destination->first_name .' '. $destination->last_name ."</AttentionName>";
-      $schema .= "<PhoneNumber>". $destination->phone ."</PhoneNumber>";
-      $schema .= "<EMailAddress>". $destination->email ."</EMailAddress>";
-      $schema .= "<Address>";
-        $schema .= "<AddressLine1>". $destination->street1 ."</AddressLine1>";
-        if ($destination->street2) {
-          $schema .= "<AddressLine2>". $destination->street2 ."</AddressLine2>";
-        }
-        $schema .= "<City>". $destination->city ."</City>";
-        $schema .= "<StateProvinceCode>$shipto_zone</StateProvinceCode>";
-        $schema .= "<PostalCode>$shipto_zip</PostalCode>";
-        $schema .= "<CountryCode>$shipto_country</CountryCode>";
-      if ($destination->residence) {
-        $schema .= "<ResidentialAddressIndicator/>";
-      }
-      $schema .= "</Address>";
-    $schema .= "</ShipTo>";
-    $schema .= "<ShipFrom>";
-      $schema .= "<CompanyName>". $origin->company ."</CompanyName>";
-      $schema .= "<AttentionName>". $origin->first_name .' '. $origin->last_name ."</AttentionName>";
-      $schema .= "<PhoneNumber>". $origin->phone ."</PhoneNumber>";
-      $schema .= "<EMailAddress>". $origin->email ."</EMailAddress>";
-      $schema .= "<Address>";
-        $schema .= "<AddressLine1>". $origin->street1 ."</AddressLine1>";
-        if ($origin->street2) {
-          $schema .= "<AddressLine2>". $origin->street2 ."</AddressLine2>";
-        }
-        $schema .= "<City>". $origin->city ."</City>";
-        $schema .= "<StateProvinceCode>$shipfrom_zone</StateProvinceCode>";
-        $schema .= "<PostalCode>$shipfrom_zip</PostalCode>";
-        $schema .= "<CountryCode>$shipfrom_country</CountryCode>";
-      $schema .= "</Address>";
-    $schema .= "</ShipFrom>";
-    $schema .= "<PaymentInformation>";
-      $schema .= "<Prepaid>";
-        $schema .= "<BillShipper>";
-          $schema .= "<AccountNumber>$account</AccountNumber>";
-        $schema .= "</BillShipper>";
-      $schema .= "</Prepaid>";
-    $schema .= "</PaymentInformation>";
-    if (variable_get('uc_ups_negotiated_rates', FALSE)) {
-      $schema .= "<RateInformation>
-          <NegotiatedRatesIndicator/>
-        </RateInformation>";
-    }
-    $schema .= "<Service>";
-      $schema .= "<Code>{$service[code]}</Code>";
-      $schema .= "<Description>{$service[description]}</Description>";
-    $schema .= "</Service>";
-    $schema .= $package_schema;
-  $schema .= "</Shipment>";
-  $schema .= "<LabelSpecification>";
-    $schema .= "<LabelPrintMethod>";
-      $schema .= "<Code>GIF</Code>";
-    $schema .= "</LabelPrintMethod>";
-    $schema .= "<LabelImageFormat>";
-      $schema .= "<Code>GIF</Code>";
-    $schema .= "</LabelImageFormat>";
-  $schema .= "</LabelSpecification>";
-$schema .= "</ShipmentConfirmRequest>";
+  $schema .=   "<Shipper>";
+  $schema .=     "<Name>". $store['name'] ."</Name>";
+  $schema .=     "<ShipperNumber>". variable_get('uc_ups_shipper_number', '') ."</ShipperNumber>";
+  if ($store['phone']) {
+    $schema .=   "<PhoneNumber>". $store['phone'] ."</PhoneNumber>";
+  }
+  if ($store['fax']) {
+    $schema .=   "<FaxNumber>". $store['fax'] ."</FaxNumber>";
+  }
+  if ($store['email']) {
+    $schema .=   "<EMailAddress>". $store['email'] ."</EMailAddress>";
+  }
+  $schema .=     "<Address>";
+  $schema .=       "<AddressLine1>". $store['street1'] ."</AddressLine1>";
+  if ($store['street2']) {
+    $schema .=     "<AddressLine2>". $store['street2'] ."</AddressLine2>";
+  }
+  $schema .=       "<City>". $store['city'] ."</City>";
+  $schema .=       "<StateProvinceCode>$shipper_zone</StateProvinceCode>";
+  $schema .=       "<PostalCode>$shipper_zip</PostalCode>";
+  $schema .=       "<CountryCode>$shipper_country</CountryCode>";
+  $schema .=     "</Address>";
+  $schema .=   "</Shipper>";
+  $schema .=   "<ShipTo>";
+  $schema .=     "<CompanyName>". $destination->company ."</CompanyName>";
+  $schema .=     "<AttentionName>". $destination->first_name .' '. $destination->last_name ."</AttentionName>";
+  $schema .=     "<PhoneNumber>". $destination->phone ."</PhoneNumber>";
+  $schema .=     "<EMailAddress>". $destination->email ."</EMailAddress>";
+  $schema .=     "<Address>";
+  $schema .=       "<AddressLine1>". $destination->street1 ."</AddressLine1>";
+  if ($destination->street2) {
+    $schema .=     "<AddressLine2>". $destination->street2 ."</AddressLine2>";
+  }
+  $schema .=       "<City>". $destination->city ."</City>";
+  $schema .=       "<StateProvinceCode>$shipto_zone</StateProvinceCode>";
+  $schema .=       "<PostalCode>$shipto_zip</PostalCode>";
+  $schema .=       "<CountryCode>$shipto_country</CountryCode>";
+  if ($destination->residential) {
+    $schema .=       "<ResidentialAddressIndicator/>";
+  }
+  $schema .=       "</Address>";
+  $schema .=     "</ShipTo>";
+  $schema .=     "<ShipFrom>";
+  $schema .=       "<CompanyName>". $origin->company ."</CompanyName>";
+  $schema .=       "<AttentionName>". $origin->first_name .' '. $origin->last_name ."</AttentionName>";
+  $schema .=       "<PhoneNumber>". $origin->phone ."</PhoneNumber>";
+  $schema .=       "<EMailAddress>". $origin->email ."</EMailAddress>";
+  $schema .=       "<Address>";
+  $schema .=         "<AddressLine1>". $origin->street1 ."</AddressLine1>";
+  if ($origin->street2) {
+    $schema .=       "<AddressLine2>". $origin->street2 ."</AddressLine2>";
+  }
+  $schema .=         "<City>". $origin->city ."</City>";
+  $schema .=         "<StateProvinceCode>$shipfrom_zone</StateProvinceCode>";
+  $schema .=         "<PostalCode>$shipfrom_zip</PostalCode>";
+  $schema .=         "<CountryCode>$shipfrom_country</CountryCode>";
+  $schema .=       "</Address>";
+  $schema .=     "</ShipFrom>";
+  $schema .=     "<PaymentInformation>";
+  $schema .=       "<Prepaid>";
+  $schema .=         "<BillShipper>";
+  $schema .=           "<AccountNumber>$account</AccountNumber>";
+  $schema .=         "</BillShipper>";
+  $schema .=       "</Prepaid>";
+  $schema .=     "</PaymentInformation>";
+  if (variable_get('uc_ups_negotiated_rates', FALSE)) {
+    $schema .=   "<RateInformation><NegotiatedRatesIndicator/></RateInformation>";
+  }
+  $schema .=     "<Service>";
+  $schema .=       "<Code>{$service['code']}</Code>";
+  $schema .=       "<Description>{$service['description']}</Description>";
+  $schema .=     "</Service>";
+  $schema .= $package_schema;
+  $schema .=   "</Shipment>";
+  $schema .=   "<LabelSpecification>";
+  $schema .=     "<LabelPrintMethod>";
+  $schema .=       "<Code>GIF</Code>";
+  $schema .=     "</LabelPrintMethod>";
+  $schema .=     "<LabelImageFormat>";
+  $schema .=       "<Code>GIF</Code>";
+  $schema .=     "</LabelImageFormat>";
+  $schema .=   "</LabelSpecification>";
+  $schema .= "</ShipmentConfirmRequest>";
 
   return $schema;
 }
@@ -974,19 +976,19 @@ function uc_ups_fulfill_order($form_state, $order, $package_ids) {
           'cm' => t('Centimeters'),
           'mm' => t('Millimeters'),
         ),
-        '#default_value' => $product->length_units ? $product->length_units : variable_get('uc_length_unit', 'in'),
+        '#default_value' => isset($product->length_units) ? $product->length_units : variable_get('uc_length_unit', 'in'),
       );
       $pkg_form['dimensions']['length'] = array('#type' => 'textfield',
         '#title' => t('Length'),
-        '#default_value' => $product->length,
+        '#default_value' => isset($product->length) ? $product->length : 1,
       );
       $pkg_form['dimensions']['width'] = array('#type' => 'textfield',
         '#title' => t('Width'),
-        '#default_value' => $product->width,
+        '#default_value' => isset($product->width) ? $product->width : 1,
       );
       $pkg_form['dimensions']['height'] = array('#type' => 'textfield',
         '#title' => t('Height'),
-        '#default_value' => $product->height,
+        '#default_value' => isset($product->height) ? $product->height : 1,
       );
       $form['packages'][$id] = $pkg_form;
     }
@@ -1056,6 +1058,10 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
   if (empty($destination->company)) {
     $destination->company = $destination->first_name .' '. $destination->last_name;
   }
+
+  // Determine if address is Residential or Commercial
+  $destination->residential = variable_get('uc_ups_residential_quotes', FALSE);
+
   $_SESSION['ups']['destination'] = $destination;
   foreach ($form_state['values']['packages'] as $id => $pkg_form) {
     $package = uc_shipping_package_load($id);
