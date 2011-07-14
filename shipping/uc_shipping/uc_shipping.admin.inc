@@ -98,7 +98,11 @@ function uc_shipping_new_package($form_state, $order) {
       '#weight' => $shipping_type_weights[$shipping_type],
     );
     foreach ($products as $product) {
-      $unboxed_qty = $product->qty - $packaged_products[$product->order_product_id];
+      $unboxed_qty = $product->qty;
+      if (isset($packaged_products[$product->order_product_id])) {
+        $unboxed_qty -= $packaged_products[$product->order_product_id];
+      }
+
       if ($unboxed_qty > 0) {
         $product_row = array();
         $product_row['checked'] = array('#type' => 'checkbox', '#default_value' => 0);
@@ -196,7 +200,7 @@ function uc_shipping_new_package_submit($form, &$form_state) {
           }
         }
       }
-      if (is_array($packages[0][$shipping_type])) {
+      if (isset($packages[0][$shipping_type])) {
         foreach ($packages[0][$shipping_type] as $id => $product) {
           $qty = $product->qty;
           $product->qty = 1;
