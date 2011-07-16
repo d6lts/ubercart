@@ -51,6 +51,35 @@ function uc_ups_init() {
 }
 
 /**
+ * Implements hook_cron().
+ *
+ * Deletes UPS shipping labels from the file system automatically
+ * on a periodic basis.  Default period is 1 week.
+ */
+function uc_ups_cron() {
+  $current_time = time();
+  $cutoff = $current_time - variable_get('uc_ups_label_lifetime', 0);
+  if ($cutoff == $current_time) {
+    // Label lifetime is set to 0, meaning never delete
+    return;
+  }
+
+  $path = file_create_path('ups_labels');
+  if (is_dir($path)) {
+    $files = array_diff(scandir($path), array('.', '..'));
+    if ($files) {
+      // Loop over label files in sites/default/files/ups_labels
+      // and test creation date against 'uc_ups_label_lifetime'
+      foreach ($files as $file) {
+        if ($cutoff > filectime($path .'/'. $file)) {
+          unlink($path .'/'. $file);
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function uc_ups_theme() {
@@ -148,30 +177,6 @@ function uc_ups_nodeapi(&$node, $op) {
       case 'delete revision':
         db_query("DELETE FROM {uc_ups_products} WHERE vid = %d", $node->vid);
       break;
-    }
-  }
-}
-
-/**
- * Implements hook_cron().
- *
- * Deletes UPS shipping labels from the file system automatically
- * on a periodic basis.  Default period is 1 week.
- */
-function uc_ups_cron() {
-
-  $path = file_create_path('ups_labels');
-  if (is_dir($path)) {
-    $files = array_diff(scandir($path), array('.', '..'));
-    if ($files) {
-      // Loop over label files in sites/default/files/ups_labels
-      // and test creation date against 'uc_ups_label_lifetime'
-      $cutoff = time() - variable_get('uc_ups_label_lifetime', 604800);
-      foreach ($files as $file) {
-        if ($cutoff > filectime($path .'/'. $file)) {
-          unlink($path .'/'. $file);
-        }
-      }
     }
   }
 }
