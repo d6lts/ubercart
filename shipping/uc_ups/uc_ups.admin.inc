@@ -138,6 +138,17 @@ function uc_ups_admin_settings() {
     '#description' => t('When enabled, the quotes presented to the customer will include the cost of insurance for the full sales price of all products in the order.'),
   );
 
+  $period = drupal_map_assoc(array(86400, 302400, 604800, 1209600, 2419200), 'format_interval');
+
+  // Form to select how long labels stay on server
+  $form['uc_ups_label_lifetime'] = array(
+    '#type'          => 'select',
+    '#title'         => t('Label lifetime'),
+    '#default_value' => variable_get('uc_ups_label_lifetime', 604800),
+    '#options'       => $period,
+    '#description'   => t('Controls how long labels are stored on the server before being automatically deleted. Cron must be enabled for automatic deletion. Default period is 1 week (604800 seconds).'),
+  );
+
   $form['#validate'][] = 'uc_ups_admin_settings_validate';
 
   return system_settings_form($form);
