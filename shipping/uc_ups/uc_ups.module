@@ -152,6 +152,30 @@ function uc_ups_nodeapi(&$node, $op) {
   }
 }
 
+/**
+ * Implements hook_cron().
+ *
+ * Deletes UPS shipping labels from the file system automatically
+ * on a periodic basis.  Default period is 1 week.
+ */
+function uc_ups_cron() {
+
+  $path = file_create_path('ups_labels');
+  if (is_dir($path)) {
+    $files = array_diff(scandir($path), array('.', '..'));
+    if ($files) {
+      // Loop over label files in sites/default/files/ups_labels
+      // and test creation date against 'uc_ups_label_lifetime'
+      $cutoff = time() - variable_get('uc_ups_label_lifetime', 604800);
+      foreach ($files as $file) {
+        if ($cutoff > filectime($path .'/'. $file)) {
+          unlink($path .'/'. $file);
+        }
+      }
+    }
+  }
+}
+
 /******************************************************************************
  * Conditional Actions Hooks                                                  *
  ******************************************************************************/
@@ -1008,25 +1032,45 @@ function uc_ups_fulfill_order($form_state, $order, $package_ids) {
     $method = $services[$default_service];
   }
 
-  // Inform user of customer's shipping choice
-  $form['shipping_choice'] = array(
-    '#type' => 'markup',
-    '#value' => t('Customer selected @method as the shipping method and paid @rate', array('@method' => $method, '@rate' => uc_currency_format($order->quote['rate']))),
+  // Container for shipment data
+  $form['shipment'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Shipment data'),
+    '#collapsible' => TRUE,
   );
 
-  $form['service'] = array('#type' => 'select',
+  // Inform user of customer's shipping choice
+  $form['shipment']['shipping_choice'] = array(
+    '#type' => 'markup',
+    '#prefix' => '<div>',
+    '#value' => t('Customer selected @method as the shipping method and paid @rate', array('@method' => $method, '@rate' => uc_currency_format($order->quote['rate']))),
+    '#suffix' => '</div>',
+  );
+
+  $form['shipment']['service'] = array(
+    '#type' => 'select',
     '#title' => t('UPS service'),
     '#options' => $services,
     '#default_value' => $default_service,
   );
   $today = getdate();
-  $form['ship_date'] = array('#type' => 'date',
+  $form['shipment']['ship_date'] = array(
+    '#type' => 'date',
     '#title' => t('Ship date'),
-    '#default_value' => array('year' => $today['year'], 'month' => $today['mon'], 'day' => $today['mday']),
+    '#default_value' => array(
+      'year' => $today['year'],
+      'month' => $today['mon'],
+      'day' => $today['mday']
+    ),
   );
-  $form['expected_delivery'] = array('#type' => 'date',
+  $form['shipment']['expected_delivery'] = array(
+    '#type' => 'date',
     '#title' => t('Expected delivery'),
-    '#default_value' => array('year' => $today['year'], 'month' => $today['mon'], 'day' => $today['mday']),
+    '#default_value' => array(
+      'year' => $today['year'],
+      'month' => $today['mon'],
+      'day' => $today['mday']
+    ),
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Review shipment'));
 
