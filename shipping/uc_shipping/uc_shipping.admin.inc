@@ -910,7 +910,9 @@ function uc_shipping_shipment_delete_confirm($form_state, $order, $shipment) {
 function uc_shipping_shipment_delete_confirm_submit($form, &$form_state) {
   $shipment = uc_shipping_shipment_load($form_state['values']['sid']);
   $methods = module_invoke_all('shipping_method');
-  if ($shipment->tracking_number && function_exists($methods[$shipment->shipping_method]['cancel'])) {
+  if ($shipment->tracking_number &&
+      isset($methods[$shipment->shipping_method]['cancel']) &&
+      function_exists($methods[$shipment->shipping_method]['cancel'])) {
     $result = call_user_func($methods[$shipment->shipping_method]['cancel'], $shipment->tracking_number);
     if ($result) {
       uc_shipping_shipment_delete($form_state['values']['sid']);
