@@ -6,9 +6,10 @@
  */
 
 /**
- * Display a list of an order's packaged products.
+ * Displays a list of an order's packaged products.
  */
 function uc_shipping_order_packages($order) {
+  $shipping_type_options = uc_quote_shipping_type_options();
   $header = array(t('Package ID'), t('Products'), t('Shipping type'), t('Package type'), t('Shipment ID'), t('Tracking number'), t('Labels'), array('data' => t('Actions'), 'colspan' => 4));
   $rows = array();
   $result = db_query("SELECT * FROM {uc_packages} WHERE order_id = %d", $order->order_id);
@@ -21,7 +22,7 @@ function uc_shipping_order_packages($order) {
       $product_list[] = $product->qty .' x '. check_plain($product->model);
     }
     $row[] = '<ul><li>'. implode('</li><li>', $product_list) .'</li></ul>';
-    $row[] = strtr($package->shipping_type, '_', ' ');
+    $row[] = isset($shipping_type_options[$package->shipping_type]) ? $shipping_type_options[$package->shipping_type] : strtr($package->shipping_type, '_', ' ');
     $row[] = check_plain($package->pkg_type);
     $row[] = isset($package->sid) ? l($package->sid, 'admin/store/orders/'. $order->order_id .'/shipments/'. $package->sid .'/view') : '';
     $row[] = isset($package->tracking_number) ? check_plain($package->tracking_number) : '';
@@ -53,13 +54,12 @@ function uc_shipping_order_packages($order) {
 }
 
 /**
- * Put ordered products into a package.
+ * Puts ordered products into a package.
  *
+ * @see uc_shipping_new_package_validate()
+ * @see uc_shipping_new_package_submit()
+ * @see theme_uc_shipping_new_package_fieldset()
  * @ingroup forms
- * @see
- *   theme_uc_shipping_new_package_fieldset()
- *   uc_shipping_new_package_validate()
- *   uc_shipping_new_package_submit()
  */
 function uc_shipping_new_package($form_state, $order) {
   $breadcrumb = drupal_get_breadcrumb();
@@ -90,9 +90,10 @@ function uc_shipping_new_package($form_state, $order) {
     $packaged_products[$boxed_product->order_product_id] = $boxed_product->quantity;
   }
   $form['shipping_types'] = array();
+  $shipping_type_options = uc_quote_shipping_type_options();
   foreach ($shipping_types_products as $shipping_type => $products) {
     $form['shipping_types'][$shipping_type] = array('#type' => 'fieldset',
-      '#title' => ucwords(str_replace('_', ' ', $shipping_type)),
+      '#title' => isset($shipping_type_options[$shipping_type]) ? $shipping_type_options[$shipping_type] : ucwords(str_replace('_', ' ', $shipping_type)),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#weight' => $shipping_type_weights[$shipping_type],
@@ -133,8 +134,9 @@ function uc_shipping_new_package($form_state, $order) {
 }
 
 /**
- * Format and display the products in a shipping type fieldset.
+ * Formats and displays the products in a shipping type fieldset.
  *
+ * @see uc_shipping_new_package()
  * @ingroup themeable
  */
 function theme_uc_shipping_new_package_fieldset($fieldset) {
@@ -159,6 +161,9 @@ function theme_uc_shipping_new_package_fieldset($fieldset) {
  * Validation handler for uc_shipping_new_package().
  *
  * Do not allow empty packages.
+ *
+ * @see uc_shipping_new_package()
+ * @see uc_shipping_new_package_submit()
  */
 function uc_shipping_new_package_validate($form, &$form_state) {
   if ($form_state['values']['op'] != t('Cancel')) {
@@ -179,6 +184,9 @@ function uc_shipping_new_package_validate($form, &$form_state) {
 
 /**
  * Submit handler for uc_shipping_new_package().
+ *
+ * @see uc_shipping_new_package()
+ * @see uc_shipping_new_package_validate()
  */
 function uc_shipping_new_package_submit($form, &$form_state) {
   if ($form_state['values']['op'] != t('Cancel')) {
@@ -223,11 +231,11 @@ function uc_shipping_new_package_submit($form, &$form_state) {
 }
 
 /**
- * Rearrange the products in or out of a package.
+ * Rearranges the products in or out of a package.
  *
- * @ingroup forms
  * @see theme_uc_shipping_edit_package_fieldset()
  * @see uc_shipping_package_edit_submit()
+ * @ingroup forms
  */
 function uc_shipping_package_edit($form_state, $order, $package) {
   $breadcrumb = drupal_get_breadcrumb();
@@ -274,8 +282,9 @@ function uc_shipping_package_edit($form_state, $order, $package) {
   }
   $form['products']['#theme'] = 'uc_shipping_edit_package_fieldset';
   $options = array();
+  $shipping_type_options = uc_quote_shipping_type_options();
   foreach (array_keys($shipping_types_products) as $type) {
-    $options[$type] = ucwords(str_replace('_', ' ', $type));
+    $options[$type] = isset($shipping_type_options[$type]) ? $shipping_type_options[$type] : ucwords(str_replace('_', ' ', $type));
   }
   $form['shipping_type'] = array('#type' => 'select',
     '#title' => t('Shipping type'),
@@ -291,7 +300,7 @@ function uc_shipping_package_edit($form_state, $order, $package) {
 }
 
 /**
- * Display a formatted shipping type fieldset.
+ * Displays a formatted shipping type fieldset.
  *
  * @ingroup themeable
  */
@@ -314,6 +323,8 @@ function theme_uc_shipping_edit_package_fieldset($fieldset) {
 
 /**
  * Submit handler for uc_shipping_package_edit().
+ *
+ * @see uc_shipping_package_edit()
  */
 function uc_shipping_package_edit_submit($form, &$form_state) {
   $package = uc_shipping_package_load($form_state['values']['package_id']);
@@ -332,9 +343,10 @@ function uc_shipping_package_edit_submit($form, &$form_state) {
 }
 
 /**
- * Confirm cancellation of a package's shipment.
+ * Confirms cancellation of a package's shipment.
  *
  * @see uc_shipping_package_cancel_confirm_submit()
+ * @ingroup forms
  */
 function uc_shipping_package_cancel_confirm($form_state, $order, $package) {
   $form = array();
@@ -346,6 +358,8 @@ function uc_shipping_package_cancel_confirm($form_state, $order, $package) {
 }
 
 /**
+ * Form submission handler for uc_shipping_package_cancel_confirm().
+ *
  * @see uc_shipping_package_cancel_confirm()
  */
 function uc_shipping_package_cancel_confirm_submit($form, &$form_state) {
@@ -366,10 +380,10 @@ function uc_shipping_package_cancel_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Decide to unpackage products.
+ * Decides to unpackage products.
  *
- * @ingroup forms
  * @see uc_shipping_package_delete_confirm_submit()
+ * @ingroup forms
  */
 function uc_shipping_package_delete_confirm($form_state, $order, $package) {
   $form = array();
@@ -382,6 +396,8 @@ function uc_shipping_package_delete_confirm($form_state, $order, $package) {
 
 /**
  * Submit handler for uc_shipping_package_delete_confirm().
+ *
+ * @see uc_shipping_package_delete_confirm()
  */
 function uc_shipping_package_delete_confirm_submit($form, &$form_state) {
   uc_shipping_package_delete($form_state['values']['package_id']);
@@ -389,7 +405,7 @@ function uc_shipping_package_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Display a list of shipments for an order.
+ * Displays a list of shipments for an order.
  *
  * @param $order
  *   The order object.
@@ -432,7 +448,7 @@ function uc_shipping_order_shipments($order) {
 }
 
 /**
- * Set up a new shipment with the chosen packages.
+ * Sets up a new shipment with the chosen packages.
  *
  * @see uc_shipping_new_shipment_submit()
  * @see theme_uc_shipping_new_shipment()
@@ -517,7 +533,7 @@ function uc_shipping_new_shipment($form_state, $order) {
 }
 
 /**
- * Format and display the new shipment form.
+ * Formats and displays the new shipment form.
  *
  * @see uc_shipping_new_shipment()
  * @ingroup themeable
@@ -546,7 +562,7 @@ function theme_uc_shipping_new_shipment($form) {
 /**
  * Submit handler for uc_shipping_new_shipment().
  *
- * Send package information to the chosen method.
+ * Sends package information to the chosen method.
  *
  * @see uc_shipping_new_shipment()
  */
@@ -565,7 +581,7 @@ function uc_shipping_new_shipment_submit($form, &$form_state) {
 }
 
 /**
- * Display shipment details.
+ * Displays shipment details.
  */
 function uc_shipping_shipment_view($order, $shipment) {
   $breadcrumb = drupal_get_breadcrumb();
@@ -619,12 +635,12 @@ function uc_shipping_shipment_view($order, $shipment) {
 }
 
 /**
- * Create or edit a shipment.
+ * Creates or edits a shipment.
  *
- * @ingroup forms
- * @see theme_uc_shipping_package_dimensions()
- * @see theme_uc_shipping_address()
+ * @see uc_shipping_shipment_edit_validate()
  * @see uc_shipping_shipment_edit_submit()
+ * @see theme_uc_shipping_package_dimensions()
+ * @ingroup forms
  */
 function uc_shipping_shipment_edit($form_state, $order, $shipment) {
   drupal_add_css(drupal_get_path('module', 'uc_shipping') .'/uc_shipping.css');
@@ -784,9 +800,10 @@ function uc_shipping_shipment_edit($form_state, $order, $shipment) {
 }
 
 /**
- * Ensure the package dimensions are positive numbers.
+ * Ensures the package dimensions are positive numbers.
  *
  * @see uc_shipping_shipment_edit()
+ * @see uc_shipping_shipment_submit()
  */
 function uc_shipping_shipment_edit_validate($form, &$form_state) {
   foreach ($form_state['values']['packages'] as $key => $package) {
@@ -800,6 +817,9 @@ function uc_shipping_shipment_edit_validate($form, &$form_state) {
 
 /**
  * Submit handler for uc_shipping_shipment_edit().
+ *
+ * @see uc_shipping_shipment_edit()
+ * @see uc_shipping_shipment_validate()
  */
 function uc_shipping_shipment_edit_submit($form, &$form_state) {
   $shipment = new stdClass();
@@ -848,7 +868,9 @@ function uc_shipping_shipment_edit_submit($form, &$form_state) {
 }
 
 /**
- * Display the packing slip and shipping labels for printing.
+ * Displays the packing slip and shipping labels for printing.
+ *
+ * @ingroup themeable
  */
 function theme_uc_shipping_shipment_print($order, $shipment, $labels = TRUE) {
   $language = $GLOBALS['language'];
@@ -891,9 +913,10 @@ EOHTML;
 }
 
 /**
- * Decide to release packages to be put on another shipment.
+ * Decides to release packages to be put on another shipment.
  *
  * @see uc_shipping_shipment_delete_confirm_submit()
+ * @ingroup forms
  */
 function uc_shipping_shipment_delete_confirm($form_state, $order, $shipment) {
   $form = array();
@@ -906,6 +929,8 @@ function uc_shipping_shipment_delete_confirm($form_state, $order, $shipment) {
 
 /**
  * Submit handler for uc_shipping_shipment_delete_confirm().
+ *
+ * @see uc_shipping_shipment_delete_confirm()
  */
 function uc_shipping_shipment_delete_confirm_submit($form, &$form_state) {
   $shipment = uc_shipping_shipment_load($form_state['values']['sid']);
