@@ -1053,6 +1053,13 @@ function uc_ups_fulfill_order($form_state, $order, $package_ids) {
     '#suffix' => '</div>',
   );
 
+  // Pass shipping charge paid information on to validation function so it
+  // can be displayed alongside actual costs
+  $form['shipment']['paid'] = array(
+    '#type'  => 'value',
+    '#value' => uc_currency_format($order->quote['rate']),
+  );
+
   $services = _uc_ups_service_list();
   $default_service = '';
   if ($method == 'ups') {
@@ -1120,18 +1127,19 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
 
   $_SESSION['ups']['destination'] = $destination;
   foreach ($form_state['values']['packages'] as $id => $pkg_form) {
-    $package = uc_shipping_package_load($id);
-    $package->pkg_type = $pkg_form['pkg_type'];
-    $package->value = $pkg_form['declared_value'];
-    $package->length = $pkg_form['dimensions']['length'];
-    $package->width = $pkg_form['dimensions']['width'];
-    $package->height = $pkg_form['dimensions']['height'];
+    $package               = uc_shipping_package_load($id);
+    $package->pkg_type     = $pkg_form['pkg_type'];
+    $package->value        = $pkg_form['declared_value'];
+    $package->length       = $pkg_form['dimensions']['length'];
+    $package->width        = $pkg_form['dimensions']['width'];
+    $package->height       = $pkg_form['dimensions']['height'];
     $package->length_units = $pkg_form['dimensions']['units'];
-    $package->qty = 1;
+    $package->qty          = 1;
     $_SESSION['ups']['packages'][$id] = $package;
   }
-  $_SESSION['ups']['service'] = $form_state['values']['service'];
-  $_SESSION['ups']['ship_date'] = $form_state['values']['ship_date'];
+  $_SESSION['ups']['service']           = $form_state['values']['service'];
+  $_SESSION['ups']['paid']              = $form_state['values']['paid'];
+  $_SESSION['ups']['ship_date']         = $form_state['values']['ship_date'];
   $_SESSION['ups']['expected_delivery'] = $form_state['values']['expected_delivery'];
   $_SESSION['ups']['order_id'] = $form_state['values']['order_id'];
 

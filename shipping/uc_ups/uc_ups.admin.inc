@@ -238,7 +238,8 @@ function theme_uc_ups_confirm_shipment($form) {
     'revision' => 'themed',
     'type' => 'amount',
   );
-  $output .= '<i>'. check_plain($_SESSION['ups']['rate']['type']) .'</i>: '. uc_price($_SESSION['ups']['rate']['amount'], $context) .' ('. check_plain($_SESSION['ups']['rate']['currency']) .')<br />';
+  $output .= '<i>' . check_plain($_SESSION['ups']['rate']['type']) . '</i>: ' . uc_price($_SESSION['ups']['rate']['amount'], $context) . ' (' . check_plain($_SESSION['ups']['rate']['currency']) . ') -- ';
+  $output .= '<i>' . t('Paid') . '</i>: ' . $_SESSION['ups']['paid'] . '<br />';
   $ship_date = $_SESSION['ups']['ship_date'];
   $output .= 'Ship date: '. format_date(gmmktime(12, 0, 0, $ship_date['month'], $ship_date['day'], $ship_date['year']), 'custom', variable_get('uc_date_format_default', 'm/d/Y'));
   $exp_delivery = $_SESSION['ups']['expected_delivery'];
