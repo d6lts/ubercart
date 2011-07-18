@@ -439,7 +439,7 @@ function uc_shipping_package_save($package) {
     db_query("INSERT INTO {uc_packages} (order_id) VALUES (%d)", $package->order_id);
     $package->package_id = db_last_insert_id('uc_packages', 'package_id');
   }
-  if (count($package->products)) {
+  if (isset($package->products) && count($package->products)) {
     $types = array();
     $values = array();
     foreach ($package->products as $id => $product) {
@@ -526,7 +526,7 @@ function uc_shipping_shipment_load($shipment_id) {
  * Save a shipment.
  */
 function uc_shipping_shipment_save($shipment) {
-  if (!$shipment->sid) {
+  if (!isset($shipment->sid)) {
     db_query("INSERT INTO {uc_shipments} (order_id) VALUES (%d)", $shipment->order_id);
     $shipment->sid = db_last_insert_id('uc_shipments', 'sid');
     $shipment->is_new = TRUE;
