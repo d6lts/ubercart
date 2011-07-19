@@ -656,6 +656,8 @@ function uc_shipping_shipment_edit($form_state, $order, $shipment) {
     }
   }
   $addresses = array();
+
+  // Container for package data
   $form['packages'] = array(
     '#type'        => 'fieldset',
     '#title'       => t('Packages'),
@@ -723,9 +725,10 @@ function uc_shipping_shipment_edit($form_state, $order, $shipment) {
     );
     $pkg_form['weight'] = array(
       '#type'        => 'fieldset',
+      '#title'       => t('Weight'),
       '#description' => t('Weight of the package. Default value is sum of product weights in the package.'),
       '#weight'      => 15,
-      '#theme'       => 'uc_product_inline_form',
+      '#theme'       => 'uc_shipping_package_dimensions',
     );
     $pkg_form['weight']['weight'] = array(
       '#type'          => 'textfield',
