@@ -230,7 +230,7 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
   $errors = form_get_errors();
   if (isset($errors)) {
     // Some required elements are missing - don't bother with making
-    // a FedEx API call until that gets fixed.
+    // a UPS API call until that gets fixed.
     return;
   }
 
