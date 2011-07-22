@@ -190,7 +190,8 @@ function uc_quote_method_settings() {
     foreach ($methods as $id => $title) {
 
       $form['methods'][$id]['#summary callback'] = 'summarize_form';
-      $form['methods'][$id]['uc_quote_enabled'] = array('#type' => 'checkbox',
+      $form['methods'][$id]['uc_quote_enabled'] = array(
+        '#type' => 'checkbox',
         '#default_value' => $enabled[$id],
         '#summary callback' => 'summarize_checkbox',
         '#summary arguments' => array(
@@ -198,7 +199,8 @@ function uc_quote_method_settings() {
           '',
         ),
       );
-      $form['methods'][$id]['uc_quote_method_weight'] = array('#type' => 'weight',
+      $form['methods'][$id]['uc_quote_method_weight'] = array(
+        '#type' => 'weight',
         '#delta' => 5,
         '#default_value' => isset($weight[$id]) ? $weight[$id] : 0,
       );
@@ -207,7 +209,8 @@ function uc_quote_method_settings() {
 
   $shipping_types = uc_quote_shipping_type_options();
   if (is_array($shipping_types)) {
-    $form['uc_quote_type_weight'] = array('#type' => 'fieldset',
+    $form['uc_quote_type_weight'] = array(
+      '#type' => 'fieldset',
       '#title' => t('List position'),
       '#description' => t('Determines which shipping methods are quoted at checkout when products of different shipping types are ordered. Larger values take precedence.'),
       '#collapsible' => TRUE,
@@ -225,14 +228,16 @@ function uc_quote_method_settings() {
       $form['uc_quote_type_weight']['#description'] .= format_plural($count, '<br />The %list method is compatible with any shipping type.', '<br />The %list methods are compatible with any shipping type.', array('%list' => implode(', ', $method_types['order'])));
     }
     foreach ($shipping_types as $id => $title) {
-      $form['uc_quote_type_weight'][$id] = array('#type' => 'weight',
+      $form['uc_quote_type_weight'][$id] = array(
+        '#type' => 'weight',
         '#title' => $title . (is_array($method_types[$id]) ? ' ('. implode(', ', $method_types[$id]) .')' : ''),
         '#delta' => 5,
         '#default_value' => isset($weight[$id]) ? $weight[$id] : 0,
       );
     }
   }
-  $form['uc_store_shipping_type'] = array('#type' => 'select',
+  $form['uc_store_shipping_type'] = array(
+    '#type' => 'select',
     '#title' => t('Default order fulfillment type for products'),
     '#options' => $shipping_types,
     '#default_value' => variable_get('uc_store_shipping_type', 'small_package'),
