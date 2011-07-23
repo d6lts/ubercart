@@ -1174,9 +1174,6 @@ function uc_product_store_status() {
     if (module_exists('uc_cart')) {
       $presets[] = 'cart';
     }
-    if (module_exists('uc_manufacturer')) {
-      $presets[] = 'manufacturer';
-    }
     sort($presets);
 
     $preset_check = 1;
