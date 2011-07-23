@@ -613,7 +613,8 @@ function uc_order_condition_has_products($order, $settings) {
  * @see uc_order_condition_has_products()
  */
 function uc_order_condition_has_products_form($form_state, $settings) {
-  $form['required'] = array('#type' => 'radios',
+  $form['required'] = array(
+    '#type' => 'radios',
     '#title' => t('Require selected products'),
     '#options' => array(
       0 => t('Order has any of these products.'),
@@ -621,7 +622,8 @@ function uc_order_condition_has_products_form($form_state, $settings) {
     ),
     '#default_value' => isset($settings['required']) ? $settings['required'] : 0,
   );
-  $form['forbidden'] = array('#type' => 'radios',
+  $form['forbidden'] = array(
+    '#type' => 'radios',
     '#title' => t('Forbid other products'),
     '#options' => array(
       0 => t('Order may have other products.'),
@@ -636,7 +638,8 @@ function uc_order_condition_has_products_form($form_state, $settings) {
     $options += uc_product_get_models(node_load($product->nid), FALSE);
   }
 
-  $form['products'] = array('#type' => 'select',
+  $form['products'] = array(
+    '#type' => 'select',
     '#title' => t('Product models'),
     '#options' => $options,
     '#default_value' => isset($settings['products']) ? $settings['products'] : NULL,
@@ -688,7 +691,8 @@ function uc_order_condition_count_products_form($form_state, $settings = array()
   while ($product = db_fetch_object($result)) {
     $options[$product->nid] = $product->model;
   }
-  $form['products'] = array('#type' => 'select',
+  $form['products'] = array(
+    '#type' => 'select',
     '#title' => t('Products'),
     '#options' => $options,
     '#default_value' => $settings['products'],
@@ -764,14 +768,16 @@ function uc_order_condition_products_weight_form($form_state, $settings = array(
   while ($product = db_fetch_object($result)) {
     $options[$product->nid] = $product->model;
   }
-  $form['products'] = array('#type' => 'select',
+  $form['products'] = array(
+    '#type' => 'select',
     '#title' => t('Products'),
     '#options' => $options,
     '#default_value' => $settings['products'],
     '#description' => check_plain(t('Selecting "- All products -" will override any other selections and returns the total number of products in the order.')),
     '#multiple' => TRUE,
   );
-  $form['weight_units'] = array('#type' => 'select',
+  $form['weight_units'] = array(
+    '#type' => 'select',
     '#title' => t('Unit of measurement'),
     '#default_value' => $settings['weight_units'] ? $settings['weight_units'] : variable_get('uc_weight_unit', 'lb'),
     '#options' => array(

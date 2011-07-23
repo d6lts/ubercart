@@ -439,14 +439,16 @@ function uc_product_form(&$node) {
     $form['body_field']['#weight'] = -4;
   }
 
-  $form['base'] = array('#type' => 'fieldset',
+  $form['base'] = array(
+    '#type' => 'fieldset',
     '#title' => t('Product information'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
     '#weight' => -1,
     '#attributes' => array('class' => 'product-field'),
   );
-  $form['base']['model'] = array('#type' => 'textfield',
+  $form['base']['model'] = array(
+    '#type' => 'textfield',
     '#title' => t('SKU'),
     '#required' => TRUE,
     '#default_value' => isset($node->model) ? $node->model : '',
@@ -508,7 +510,8 @@ function uc_product_form(&$node) {
     '#weight' => 15,
     '#theme' => 'uc_product_form_weight',
   );
-  $form['base']['weight']['weight'] = array('#type' => 'textfield',
+  $form['base']['weight']['weight'] = array(
+    '#type' => 'textfield',
     '#title' => t('Weight'),
     '#default_value' => isset($node->weight) ? $node->weight : 0,
     '#size' => 10,
@@ -520,18 +523,21 @@ function uc_product_form(&$node) {
     'oz' => t('Ounces'),
     'g' => t('Grams'),
   );
-  $form['base']['weight']['weight_units'] = array('#type' => 'select',
+  $form['base']['weight']['weight_units'] = array(
+    '#type' => 'select',
     '#title' => t('Unit of measurement'),
     '#default_value' => isset($node->weight_units) ? $node->weight_units : variable_get('uc_weight_unit', 'lb'),
     '#options' => $units,
   );
-  $form['base']['dimensions'] = array('#type' => 'fieldset',
+  $form['base']['dimensions'] = array(
+    '#type' => 'fieldset',
     '#title' => t('Dimensions'),
     '#description' => t('Physical dimensions of the packaged product.'),
     '#weight' => 20,
     '#theme' => 'uc_product_dimensions_form',
   );
-  $form['base']['dimensions']['length_units'] = array('#type' => 'select',
+  $form['base']['dimensions']['length_units'] = array(
+    '#type' => 'select',
     '#title' => t('Units of measurement'),
     '#options' => array(
       'in' => t('Inches'),
@@ -541,28 +547,33 @@ function uc_product_form(&$node) {
     ),
     '#default_value' => isset($node->length_units) ? $node->length_units : variable_get('uc_length_unit', 'in'),
   );
-  $form['base']['dimensions']['dim_length'] = array('#type' => 'textfield',
+  $form['base']['dimensions']['dim_length'] = array(
+    '#type' => 'textfield',
     '#title' => t('Length'),
     '#default_value' => isset($node->length) ? $node->length : '',
     '#size' => 10,
   );
- $form['base']['dimensions']['dim_width'] = array('#type' => 'textfield',
+  $form['base']['dimensions']['dim_width'] = array(
+    '#type' => 'textfield',
     '#title' => t('Width'),
     '#default_value' => isset($node->width) ? $node->width : '',
     '#size' => 10,
   );
-  $form['base']['dimensions']['dim_height'] = array('#type' => 'textfield',
+  $form['base']['dimensions']['dim_height'] = array(
+    '#type' => 'textfield',
     '#title' => t('Height'),
     '#default_value' => isset($node->height) ? $node->height : '',
     '#size' => 10,
   );
-  $form['base']['pkg_qty'] = array('#type' => 'textfield',
+  $form['base']['pkg_qty'] = array(
+    '#type' => 'textfield',
     '#title' => t('Package quantity'),
     '#default_value' => isset($node->pkg_qty) ? $node->pkg_qty : 1,
     '#description' => t('At most, how many of these items can fit in your largest box? Orders that exceed this value will be split into multiple packages when retrieving shipping quotes.'),
     '#weight' => 25,
   );
-  $form['base']['default_qty'] = array('#type' => 'textfield',
+  $form['base']['default_qty'] = array(
+    '#type' => 'textfield',
     '#title' => t('Default quantity to add to cart'),
     '#default_value' => isset($node->default_qty) ? $node->default_qty : 1,
     '#description' => t('Leave blank or zero to disable the quantity field next to the add to cart button, if it is enabled <a href="!settings_url">in general</a>. If it is disabled, this field is ignored.', array('!settings_url' => url('admin/store/settings/products/edit'))),
@@ -570,7 +581,8 @@ function uc_product_form(&$node) {
     '#size' => 5,
     '#maxlength' => 6,
   );
-  $form['base']['ordering'] = array('#type' => 'weight',
+  $form['base']['ordering'] = array(
+    '#type' => 'weight',
     '#title' => t('List position'),
     '#description' => t("Specify a value to set this product's position in product lists.<br />Products in the same position will be sorted alphabetically."),
     '#delta' => 25,
@@ -1543,7 +1555,8 @@ function uc_product_add_to_cart_form($form_state, $node) {
   $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
 
   if ($node->default_qty > 0 && variable_get('uc_product_add_to_cart_qty', FALSE)) {
-    $form['qty'] = array('#type' => 'textfield',
+    $form['qty'] = array(
+      '#type' => 'textfield',
       '#title' => t('Quantity'),
       '#default_value' => $node->default_qty,
       '#size' => 5,

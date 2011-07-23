@@ -660,7 +660,8 @@ function uc_shipping_select_address($addresses, $onchange = '', $title = NULL, $
 function uc_shipping_address_form($form_state, $addresses, $order) {
   drupal_add_js(drupal_get_path('module', 'uc_shipping') .'/uc_shipping.js');
   $form = array();
-  $form['origin'] = array('#type' => 'fieldset',
+  $form['origin'] = array(
+    '#type' => 'fieldset',
     '#title' => t('Origin address'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,

@@ -194,7 +194,8 @@ function uc_attribute_delete_confirm_submit($form, &$form_state) {
 function uc_attribute_admin_settings() {
   $form = array();
 
-  $form['uc_attribute_option_price_format'] = array('#type' => 'radios',
+  $form['uc_attribute_option_price_format'] = array(
+    '#type' => 'radios',
     '#title' => t('Option price format'),
     '#default_value' => variable_get('uc_attribute_option_price_format', 'adjustment'),
     '#options' => array('none' => t('Do not display'),

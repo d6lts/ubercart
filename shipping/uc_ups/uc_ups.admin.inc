@@ -21,27 +21,32 @@ function uc_ups_admin_settings() {
     '#value' => '<p>'. l(t('Set the conditions that will return a UPS quote.'), CA_UI_PATH .'/uc_ups_get_quote/edit/conditions') .'</p>',
   );
 
-  $form['uc_ups_access_license'] = array('#type' => 'textfield',
+  $form['uc_ups_access_license'] = array(
+    '#type' => 'textfield',
     '#title' => t('UPS OnLine Tools XML Access Key'),
     '#default_value' => variable_get('uc_ups_access_license', ''),
     '#required' => TRUE,
   );
-  $form['uc_ups_shipper_number'] = array('#type' => 'textfield',
+  $form['uc_ups_shipper_number'] = array(
+    '#type' => 'textfield',
     '#title' => t('UPS Shipper #'),
     '#description' => t('The 6-character string identifying your UPS account as a shipper.'),
     '#default_value' => variable_get('uc_ups_shipper_number', ''),
     '#required' => TRUE,
   );
-  $form['uc_ups_user_id'] = array('#type' => 'textfield',
+  $form['uc_ups_user_id'] = array(
+    '#type' => 'textfield',
     '#title' => t('UPS.com user ID'),
     '#default_value' => variable_get('uc_ups_user_id', ''),
     '#required' => TRUE,
   );
-  $form['uc_ups_password'] = array('#type' => 'password',
+  $form['uc_ups_password'] = array(
+    '#type' => 'password',
     '#title' => t('Password'),
     '#default_value' => variable_get('uc_ups_password', ''),
   );
-  $form['uc_ups_connection_address'] = array('#type' => 'select',
+  $form['uc_ups_connection_address'] = array(
+    '#type' => 'select',
     '#title' => t('Mode'),
     '#description' => t('Quotes and shipments requested in Testing mode will not be picked up or charged to your account.'),
     '#options' => array('https://wwwcie.ups.com/ups.app/xml/' => t('Testing'),
@@ -49,13 +54,15 @@ function uc_ups_admin_settings() {
     ),
     '#default_value' => variable_get('uc_ups_connection_address', 'https://wwwcie.ups.com/ups.app/xml/'),
   );
-  $form['uc_ups_services'] = array('#type' => 'checkboxes',
+  $form['uc_ups_services'] = array(
+    '#type' => 'checkboxes',
     '#title' => t('UPS services'),
     '#default_value' => variable_get('uc_ups_services', _uc_ups_service_list()),
     '#options' => _uc_ups_service_list(),
     '#description' => t('Select the UPS services that are available to customers.'),
   );
-  $form['uc_ups_pickup_type'] = array('#type' => 'select',
+  $form['uc_ups_pickup_type'] = array(
+    '#type' => 'select',
     '#title' => t('Pickup type'),
     '#options' => array(
       '01' => 'Daily Pickup',
@@ -75,7 +82,8 @@ function uc_ups_admin_settings() {
     '#options' => _uc_ups_pkg_types(),
     '#description' => t('Type of packaging to be used.  May be overridden on a per-product basis via the product node edit form.'),
   );
-  $form['uc_ups_classification'] = array('#type' => 'select',
+  $form['uc_ups_classification'] = array(
+    '#type' => 'select',
     '#title' => t('UPS Customer classification'),
     '#options' => array(
       '01' => t('Wholesale'),
@@ -85,13 +93,15 @@ function uc_ups_admin_settings() {
     '#default_value' => variable_get('uc_ups_classification', '04'),
     '#description' => t('The kind of customer you are to UPS. For daily pickups the default is wholesale; for customer counter pickups the default is retail; for other pickups the default is occasional.'),
   );
-  $form['uc_ups_negotiated_rates'] = array('#type' => 'radios',
+  $form['uc_ups_negotiated_rates'] = array(
+    '#type' => 'radios',
     '#title' => t('Negotiated rates'),
     '#default_value' => variable_get('uc_ups_negotiated_rates', 0),
     '#options' => array(1 => t('Yes'), 0 => t('No')),
     '#description' => t('Is your UPS account receiving negotiated rates on shipments?'),
   );
-  $form['uc_ups_residential_quotes'] = array('#type' => 'radios',
+  $form['uc_ups_residential_quotes'] = array(
+    '#type' => 'radios',
     '#title' => t('Assume UPS shipping quotes will be delivered to'),
     '#default_value' => variable_get('uc_ups_residential_quotes', 0),
     '#options' => array(
@@ -99,7 +109,8 @@ function uc_ups_admin_settings() {
       1 => t('Residential locations (extra fees)'),
     ),
   );
-  $form['uc_ups_markup_type'] = array('#type' => 'select',
+  $form['uc_ups_markup_type'] = array(
+    '#type' => 'select',
     '#title' => t('Markup type'),
     '#default_value' => variable_get('uc_ups_markup_type', 'percentage'),
     '#options' => array(
@@ -108,12 +119,14 @@ function uc_ups_admin_settings() {
       'currency' => t('Addition (!currency)', array('!currency' => variable_get('uc_currency_sign', '$'))),
     ),
   );
-  $form['uc_ups_markup'] = array('#type' => 'textfield',
+  $form['uc_ups_markup'] = array(
+    '#type' => 'textfield',
     '#title' => t('Shipping rate markup'),
     '#default_value' => variable_get('uc_ups_markup', '0'),
     '#description' => t('Markup shipping rate quote by currency amount, percentage, or multiplier.'),
   );
-  $form['uc_ups_all_in_one'] = array('#type' => 'radios',
+  $form['uc_ups_all_in_one'] = array(
+    '#type' => 'radios',
     '#title' => t('Product packages'),
     '#default_value' => variable_get('uc_ups_all_in_one', 1),
     '#options' => array(
@@ -122,7 +135,8 @@ function uc_ups_admin_settings() {
     ),
     '#description' => t('Indicate whether each product is quoted as shipping separately or all in one package. Orders with one kind of product will still use the package quantity to determine the number of packages needed, however.'),
   );
-  $form['uc_ups_unit_system'] = array('#type' => 'select',
+  $form['uc_ups_unit_system'] = array(
+    '#type' => 'select',
     '#title' => t('System of measurement'),
     '#default_value' => variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in')),
     '#options' => array(

@@ -321,7 +321,8 @@ function uc_quote_condition_product_shipping_type_form($form_state, $settings = 
   foreach ($types as $id => $type) {
     $options[$id] = $type['title'];
   }
-  $form['type'] = array('#type' => 'select',
+  $form['type'] = array(
+    '#type' => 'select',
     '#title' => t('Shipping type'),
     '#options' => $options,
     '#default_value' => $settings['type'],
@@ -691,19 +692,24 @@ function uc_cart_pane_quotes($form_state, $items) {
   $country_id = isset($_POST['delivery_country']) ? intval($_POST['delivery_country']) : uc_store_default_country();
   $form['delivery_zone'] = uc_zone_select(uc_get_field_name('zone'), NULL, NULL, $country_id, 'name', TRUE);
   $form['delivery_postal_code'] = uc_textfield(uc_get_field_name('postal_code'), '', TRUE, NULL, 10, 10);
-  $form['quote_method'] = array('#type' => 'hidden',
+  $form['quote_method'] = array(
+    '#type' => 'hidden',
     '#value' => key($method_choices),
   );
-  $form['get_quote'] = array('#type' => 'button',
+  $form['get_quote'] = array(
+    '#type' => 'button',
     '#value' => t('Calculate'),
   );
-  $form['page'] = array('#type' => 'hidden',
+  $form['page'] = array(
+    '#type' => 'hidden',
     '#value' => 'cart',
   );
-  $form['uid'] = array('#type' => 'hidden',
+  $form['uid'] = array(
+    '#type' => 'hidden',
     '#value' => $user->uid,
   );
-  $form['quote'] = array('#type' => 'markup',
+  $form['quote'] = array(
+    '#type' => 'markup',
     '#value' => '<div id="quote"></div>',
   );
 
@@ -778,10 +784,12 @@ function uc_checkout_pane_quotes($op, &$arg1, $arg2) {
       $description = check_markup(variable_get('uc_quote_pane_description', t('Shipping quotes are generated automatically when you enter your address and may be updated manually with the button below.')), variable_get('uc_quote_desc_format', FILTER_FORMAT_DEFAULT), FALSE);
 
       // Let Javascript know where we are.
-      $contents['page'] = array('#type' => 'hidden',
+      $contents['page'] = array(
+        '#type' => 'hidden',
         '#value' => 'checkout',
       );
-      $contents['uid'] = array('#type' => 'hidden',
+      $contents['uid'] = array(
+        '#type' => 'hidden',
         '#value' => $user->uid,
       );
       $contents['quote_button'] = array(
@@ -1099,7 +1107,8 @@ function uc_quote_cache_quotes($form) {
   if ($form['#id'] == 'uc-cart-checkout-form') {
     if (isset($_SESSION['quote']) && isset($_SESSION['quote']['rate'])) {
       $quote = $_SESSION['quote'];
-        $form['panes']['quotes']['quote'] = array('#type' => 'markup',
+        $form['panes']['quotes']['quote'] = array(
+          '#type' => 'markup',
           '#value' => '<div id="quote" class="solid-border">'. rawurldecode($_SESSION['quote']['quote_form']) .'</div>',
           '#weight' => 1,
         );
@@ -1121,7 +1130,8 @@ function uc_quote_cache_quotes($form) {
         })};', 'inline');
     }
     else {
-      $form['panes']['quotes']['quote'] = array('#type' => 'markup',
+      $form['panes']['quotes']['quote'] = array(
+        '#type' => 'markup',
         '#value' => '<div id="quote"></div>',
         '#weight' => 1,
       );
