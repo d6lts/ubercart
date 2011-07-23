@@ -92,7 +92,8 @@ function uc_shipping_new_package($form_state, $order) {
   $form['shipping_types'] = array();
   $shipping_type_options = uc_quote_shipping_type_options();
   foreach ($shipping_types_products as $shipping_type => $products) {
-    $form['shipping_types'][$shipping_type] = array('#type' => 'fieldset',
+    $form['shipping_types'][$shipping_type] = array(
+      '#type' => 'fieldset',
       '#title' => isset($shipping_type_options[$shipping_type]) ? $shipping_type_options[$shipping_type] : ucwords(str_replace('_', ' ', $shipping_type)),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
@@ -109,13 +110,15 @@ function uc_shipping_new_package($form_state, $order) {
         $product_row['checked'] = array('#type' => 'checkbox', '#default_value' => 0);
         $product_row['model'] = array('#type' => 'markup', '#value' => check_plain($product->model));
         $product_row['name'] = array('#type' => 'markup', '#value' => filter_xss_admin($product->title));
-        $product_row['qty'] = array('#type' => 'select',
+        $product_row['qty'] = array(
+          '#type' => 'select',
           '#options' => drupal_map_assoc(uc_range(1, $unboxed_qty)),
           '#default_value' => $unboxed_qty,
         );
         $options = drupal_map_assoc(uc_range(0, count($order->products)));
         $options[0] = t('Sep.');
-        $product_row['package'] = array('#type' => 'select',
+        $product_row['package'] = array(
+          '#type' => 'select',
           '#options' => $options,
           '#default_value' => 0,
         );
@@ -272,7 +275,8 @@ function uc_shipping_package_edit($form_state, $order, $package) {
       $product_row['checked'] = array('#type' => 'checkbox', '#default_value' => isset($package->products[$product->order_product_id]));
       $product_row['model'] = array('#type' => 'markup', '#value' => check_plain($product->model));
       $product_row['name'] = array('#type' => 'markup', '#value' => filter_xss_admin($product->title));
-      $product_row['qty'] = array('#type' => 'select',
+      $product_row['qty'] = array(
+        '#type' => 'select',
         '#options' => drupal_map_assoc(uc_range(1, $product->qty)),
         '#default_value' => $package->products[$product->order_product_id]->qty,
       );
@@ -286,7 +290,8 @@ function uc_shipping_package_edit($form_state, $order, $package) {
   foreach (array_keys($shipping_types_products) as $type) {
     $options[$type] = isset($shipping_type_options[$type]) ? $shipping_type_options[$type] : ucwords(str_replace('_', ' ', $type));
   }
-  $form['shipping_type'] = array('#type' => 'select',
+  $form['shipping_type'] = array(
+    '#type' => 'select',
     '#title' => t('Shipping type'),
     '#options' => $options,
     '#default_value' => $package->shipping_type,
@@ -521,12 +526,14 @@ function uc_shipping_new_shipment($form_state, $order) {
   }
   if ($pkgs_exist) {
     $option_methods = array('all' => t('Ship Manually')) + $option_methods;
-    $form['method'] = array('#type' => 'select',
+    $form['method'] = array(
+      '#type' => 'select',
       '#title' => t('Shipping method'),
       '#options' => $option_methods,
       '#default_value' => 'all',
     );
-    $form['ship'] = array('#type' => 'submit',
+    $form['ship'] = array(
+      '#type' => 'submit',
       '#value' => t('Ship packages'),
     );
   }

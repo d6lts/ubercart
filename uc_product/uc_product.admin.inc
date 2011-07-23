@@ -215,13 +215,16 @@ function uc_product_field_settings_form() {
   $form['fields']['#summary arguments'] = array($options, $enabled, $weight);
 
   foreach ($fields as $label => $field) {
-    $form['fields'][$label]['enabled'] = array('#type' => 'checkbox',
+    $form['fields'][$label]['enabled'] = array(
+      '#type' => 'checkbox',
       '#default_value' => $field['enabled'],
     );
-    $form['fields'][$label]['title'] = array('#type' => 'markup',
+    $form['fields'][$label]['title'] = array(
+      '#type' => 'markup',
       '#value' => $field['title'],
     );
-    $form['fields'][$label]['weight'] = array('#type' => 'weight',
+    $form['fields'][$label]['weight'] = array(
+      '#type' => 'weight',
       '#delta' => 10,
       '#default_value' => $field['weight'],
     );
@@ -231,7 +234,8 @@ function uc_product_field_settings_form() {
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
-  $form['buttons']['reset'] = array('#type' => 'submit',
+  $form['buttons']['reset'] = array(
+    '#type' => 'submit',
     '#value' => t('Reset to defaults'),
     '#submit' => array('uc_product_field_settings_form_reset'),
   );
