@@ -1159,6 +1159,8 @@ function uc_product_product_types() {
 }
 
 /**
+ * Implements hook_store_status().
+ *
  * Displays the status of the product image handlers.
  *
  * @see uc_product_image_defaults()
@@ -2049,7 +2051,7 @@ function uc_product_feature_form($form) {
  *   - pfid: the numeric ID of the product feature when editing an existing one
  *   - nid: the numeric ID of the product node
  *   - fid: the string ID of the feature type
- *   - description: the string description of the feature for the overview table
+ *   - description: the string description of the feature for the overview table.
  */
 function uc_product_feature_save($data) {
   if (empty($data['nid']) && arg(0) == 'node' && intval(arg(1)) > 0) {
@@ -2087,6 +2089,7 @@ function uc_product_feature_save($data) {
  */
 function uc_product_feature_load_multiple($nid) {
   $result = db_query("SELECT * FROM {uc_product_features} WHERE nid = %d ORDER BY pfid ASC", $nid);
+  $features = array();
   while ($feature = db_fetch_object($result)) {
     $features[$feature->pfid] = $feature;
   }
