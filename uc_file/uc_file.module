@@ -36,13 +36,11 @@ function uc_file_help($path, $arg) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_FORM_ID_alter() for uc_product_feature_settings_form().
  */
-function uc_file_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == "uc_product_feature_settings_form") {
-    $form['#submit'][] = 'uc_file_feature_settings_submit';
-    $form['#validate'][] = 'uc_file_feature_settings_validate';
-  }
+function uc_file_form_uc_product_feature_settings_form_alter(&$form, $form_state, $form_id) {
+  $form['#submit'][] = 'uc_file_feature_settings_submit';
+  $form['#validate'][] = 'uc_file_feature_settings_validate';
 }
 
 /**
@@ -195,8 +193,8 @@ function uc_file_user_form(&$account, $category = NULL) {
   $behavior = 0;
   while ($file_download = db_fetch_object($file_downloads)) {
 
-    // Store a flat array so we can array_diff the ones already allowed when building
-    // the list of which can be attached.
+    // Store a flat array so we can array_diff the ones already allowed when
+    // building the list of which can be attached.
     $downloadable_files[$file_download->fid] = $file_download->filename;
 
     $form['file']['download']['file_download'][$file_download->fid] = array(
@@ -316,7 +314,8 @@ function uc_file_user_validate(&$edit) {
         continue;
       }
 
-      // Either use the current expiration, or if there's none, start from right now.
+      // Either use the current expiration, or if there's none,
+      // start from right now.
       $new_expiration = _uc_file_expiration_date($download_modification, $download_modification['expiration']);
 
       if ($new_expiration <= time()) {
@@ -439,7 +438,8 @@ function uc_file_user($op, &$edit, &$account, $category = NULL) {
 }
 
 /**
- * The behaviors for each of the rows on the file download modification table.
+ * Attaches jQuery behaviors for each of the rows on the file download
+ * modification table.
  */
 function _uc_file_download_table_behavior($id, $fid) {
 
@@ -580,6 +580,8 @@ function uc_file_add_to_cart($nid, $qty, $data) {
     if ($file_user = _uc_file_user_get($user, $product_feature->fid)) {
       $file_user = (array)$file_user;
 
+      $old_limits = $file_user;
+
       // Get the limits from the product feature. (Or global if it says pass through)
       $file_modification = array(
         'download_limit' => uc_file_get_download_limit($product_feature),
@@ -590,14 +592,28 @@ function uc_file_add_to_cart($nid, $qty, $data) {
       // Calculate the new limits
       _uc_file_accumulate_limits($file_user, $file_modification, FALSE);
 
-      drupal_set_message(t('You already have privileges to download %file. If you complete the purchase of this item, your new download limit will be %download_limit, your access location limit will be %address_limit, and your new expiration time will be %expiration.',
-        array(
-          '%file' => $product_feature->filename,
-          '%download_limit' => $file_user['download_limit'] ? $file_user['download_limit'] : t('unlimited'),
-          '%address_limit'  => $file_user['address_limit' ] ? $file_user['address_limit' ] : t('unlimited'),
-          '%expiration'     => $file_user['expiration'    ] ? format_date($file_user['expiration'], 'small') : t('never'),
-        )
-      ));
+      // Don't allow the product to be purchased if it won't increase the
+      // download limit or expiration time.
+      if ($old_limits['download_limit'] || $old_limits['expiration']) {
+        // But still show the message if it does.
+        drupal_set_message(t('You already have privileges to <a href="!url">download %file</a>. If you complete the purchase of this item, your new download limit will be %download_limit, your access location limit will be %address_limit, and your new expiration time will be %expiration.',
+          array(
+            '!url' => $user->uid ? url('user/' . $user->uid . '/purchased-files') : url('user/login'),
+            '%file' => $product_feature->filename,
+            '%download_limit' => $file_user['download_limit'] ? $file_user['download_limit'] : t('unlimited'),
+            '%address_limit'  => $file_user['address_limit' ] ? $file_user['address_limit' ] : t('unlimited'),
+            '%expiration'     => $file_user['expiration'    ] ? format_date($file_user['expiration'], 'short') : t('never'),
+          )));
+      }
+      else {
+        return array(array(
+          'success' => FALSE,
+          'message' => t('You already have privileges to <a href="!url">download %file</a>.', array(
+            '!url' => $user->uid ? url('user/' . $user->uid . '/purchased-files') : url('user/login'),
+            '%file' => $product_feature->filename,
+          )),
+        ));
+      }
     }
   }
 }
@@ -783,10 +799,24 @@ function uc_file_feature_form($form_state, $node, $feature) {
     $granularity_value   = $time_status ? $file_product->time_granularity : 'never';
   }
   else {
-    $default_shippable = $node->shippable;
-    $download_status   = FALSE;
-    $address_status    = FALSE;
-    $time_status       = FALSE;
+    $file_product        = FALSE;
+
+    $default_feature     = NULL;
+
+    $default_model       = '';
+    $default_filename    = '';
+    $default_description = '';
+    $default_shippable   = $node->shippable;
+
+    $download_status     = FALSE;
+    $download_value      = NULL;
+
+    $address_status      = FALSE;
+    $address_value       = NULL;
+
+    $time_status         = FALSE;
+    $quantity_value      = NULL;
+    $granularity_value   = 'never';
   }
 
   $form['nid'] = array(
@@ -901,6 +931,7 @@ function uc_file_feature_form($form_state, $node, $feature) {
  * Sanity check for file download and expiration overrides.
  *
  * @see uc_file_feature_form()
+ * @see uc_file_feature_form_submit()
  */
 function uc_file_feature_form_validate($form, &$form_state) {
 
@@ -1069,6 +1100,7 @@ function uc_file_feature_settings() {
  * Sanity check for feature settings.
  *
  * @see uc_file_feature_settings()
+ * @see uc_file_feature_settings_submit()
  */
 function uc_file_feature_settings_validate($form, &$form_state) {
   // Make sure our base directory is valid.
@@ -1076,7 +1108,8 @@ function uc_file_feature_settings_validate($form, &$form_state) {
     form_set_error('uc_file_base_dir', t('%dir is not a valid file or directory', array('%dir' => $form_state['values']['uc_file_base_dir'])));
   }
 
-  // If the user selected a granularity, let's make sure they also selected a duration.
+  // If the user selected a granularity, let's make sure they
+  // also selected a duration.
   if ($form_state['values']['uc_file_download_limit_duration_granularity'] != 'never' &&
       $form_state['values']['uc_file_download_limit_duration_qty'] < 1) {
     form_set_error('uc_file_download_limit_duration_qty', t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', array('%gran' => $form_state['values']['uc_file_download_limit_duration_granularity'] .'(s)')));
@@ -1098,6 +1131,7 @@ function uc_file_feature_settings_validate($form, &$form_state) {
  * Submit handler for uc_file_feature_settings().
  *
  * @see uc_file_feature_settings()
+ * @see uc_file_feature_settings_validate()
  */
 function uc_file_feature_settings_submit($form, &$form_state) {
   // No directory now; truncate the file list.
@@ -1115,7 +1149,7 @@ function uc_file_feature_settings_submit($form, &$form_state) {
  ******************************************************************************/
 
 /**
- * This is used to accumulate numeric limits (as of now, download and address).
+ * Accumulates numeric limits (as of now, download and address).
  *
  * We follow a couple simple rules here...
  *
@@ -1155,12 +1189,14 @@ function _uc_file_number_accumulate_equation(&$current, $proposed, $force_overwr
 }
 
 /**
- * This is used to accumulate numeric limits (as of now, download and address).
+ * Accumulates numeric limits (as of now, download and address).
  *
  * We follow a couple simple rules here...
  *
  * If proposing no limit, it always overrides current.
+ *
  * If proposal and current are limited, then replace with the new expiration.
+ *
  * If current is unlimited, then a limited proposal will only overwrite in the
  * case of the forced overwrited explained above.
  */
@@ -1221,11 +1257,10 @@ function _uc_file_autocomplete_filename() {
  * Returns a date given an incrementation.
  *
  * $file_limits['time_polarity'] is either '+' or '-', indicating whether to
- * add or subtract the amount of time.
- * $file_limits['time_granularity'] is a unit of time like 'day', 'week',
- * or 'never'.
- * $file_limits['time_quantity'] is an amount of the previously mentioned
- * unit... e.g. $file_limits = array('time_polarity => '+', 'time_granularity' => 'day', 'time_quantity' => 4);
+ * add or subtract the amount of time. $file_limits['time_granularity'] is a
+ * unit of time like 'day', 'week', or 'never'. $file_limits['time_quantity']
+ * is an amount of the previously mentioned unit...
+ * e.g. $file_limits = array('time_polarity => '+', 'time_granularity' => 'day', 'time_quantity' => 4);
  * would read "4 days in the future."
  *
  * @param $file_limits
@@ -1241,7 +1276,8 @@ function _uc_file_expiration_date($file_limits, $timestamp) {
     return NULL;
   }
 
-  // If there's no change, return the old timestamp (strtotime() would return FALSE).
+  // If there's no change, return the old timestamp
+  // (strtotime() would return FALSE).
   if (!$file_limits['time_quantity']) {
     return $timestamp;
   }
@@ -1684,7 +1720,8 @@ function &uc_file_get_by_key($key) {
 }
 
 /**
- * Adds a file (or files) to a user's list of downloadable files, accumulating limits.
+ * Adds a file (or files) to a user's list of downloadable files,
+ * accumulating limits.
  *
  * First the function sees if the given file ID is a file or a directory,
  * if it's a directory, it gathers all the files under it recursively.
@@ -1754,7 +1791,7 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
     $file_user['expiration'] = $file_user['expiration'] ? $file_user['expiration'] : 0;
 
     // Calculate hash
-    $file_user['file_key'] = $file_user['file_key'] ? $file_user['file_key'] : drupal_get_token(serialize($file_user));
+    $file_user['file_key'] = isset($file_user['file_key']) ? $file_user['file_key'] : drupal_get_token(serialize($file_user));
 
     // Write and queue the file_user object.
     drupal_write_record('uc_file_users', $file_user, $key);
