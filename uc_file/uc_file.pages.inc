@@ -295,13 +295,13 @@ function _uc_file_download_transfer($file_user, $ip) {
   }
 
   // Figure out download piece from range (if set)
-  list($seek_start, $seek_end) = explode('-', $range, 2);
+  if (isset($range)) {
+    list($seek_start, $seek_end) = explode('-', $range, 2);
+  }
 
   // Set start and end based on range (if set), else set defaults and check for invalid ranges.
   $seek_end = intval((empty($seek_end)) ? ($size - 1) : min(abs(intval($seek_end)), ($size - 1)));
   $seek_start = intval((empty($seek_start) || $seek_end < abs(intval($seek_start))) ? 0 : max(abs(intval($seek_start)), 0));
-
-  ob_end_clean();
 
   //Only send partial content header if downloading a piece of the file (IE workaround)
   if ($seek_start > 0 || $seek_end < ($size - 1)) {
@@ -336,7 +336,6 @@ function _uc_file_download_transfer($file_user, $ip) {
     // Push the data to the client.
     print(fread($fp, UC_FILE_BYTE_SIZE));
     flush();
-    ob_flush();
   }
 
   // Finished serving the file, close the stream and log the download to the user table
