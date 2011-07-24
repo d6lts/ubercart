@@ -52,7 +52,7 @@ function theme_uc_file_user_downloads($header, $files) {
     $rows[] = array(array('data' => t('No downloads found'), 'colspan' => 5));
   }
 
-  $output .= theme('table', $header, $rows);
+  $output  = theme('table', $header, $rows);
   $output .= theme('pager', NULL, UC_FILE_PAGER_SIZE, 0);
   $output .= '<div class="form-item"><p class="description">'.
   t('Once your download is finished, you must refresh the page to download again. (Provided you have permission)') .
@@ -63,7 +63,7 @@ function theme_uc_file_user_downloads($header, $files) {
 }
 
 /**
- * Table builder for user downloads
+ * Table builder for user downloads.
  */
 function uc_file_user_downloads($account) {
   // Create a header and the pager it belongs to.
