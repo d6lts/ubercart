@@ -694,11 +694,11 @@ function uc_google_checkout_send_request($api, $request) {
   return $response;
 }
 
-function uc_google_checkout_pane_email_allowed($op, $arg1) {
+function uc_google_checkout_pane_email_allowed($op, $order) {
   switch ($op) {
     case 'customer':
     case 'view':
-      if ($arg1->data['email_allowed']) {
+      if (isset($order->data['email_allowed']) && $order->data['email_allowed']) {
         $output = t('Customer will accept marketing emails.');
       }
       else {
