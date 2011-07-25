@@ -518,7 +518,7 @@ function theme_uc_file_hook_user_file_downloads($form) {
     $rows[] = array(array('data' => t('No files can be downloaded by this user.'), 'colspan' => 5));
   }
 
-  $output .= theme('table', $header, $rows, array('id' => 'download-table'), t('Below is a list of downloads this user can access.'));
+  $output  = theme('table', $header, $rows, array('id' => 'download-table'), t('Below is a list of downloads this user can access.'));
   $output .= drupal_render($form);
 
   return $output;
