@@ -735,10 +735,6 @@ function uc_paypal_ec_checkout($form, &$form_state) {
  * @see uc_paypal_ec_form_submit()
  */
 function uc_paypal_ec_form() {
-  if (!variable_get('uc_cap_uc_paypal_ec_enabled', FALSE)) {
-    return;
-  }
-
   // Hack to allow the image button to submit.
   if (isset($_POST['submit_x'])) {
     $form['submit'] = array(
