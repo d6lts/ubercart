@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Install hooks for uc_quote.module.
+ * Install, update and uninstall functions for the uc_quote module.
  */
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_quote_schema() {
   $schema = array();
@@ -169,14 +169,14 @@ function uc_quote_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function uc_quote_install() {
   drupal_install_schema('uc_quote');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function uc_quote_uninstall() {
   drupal_uninstall_schema('uc_quote');
@@ -186,12 +186,15 @@ function uc_quote_uninstall() {
 }
 
 /**
- * Implementation of hook_update_last_removed().
+ * Implements hook_update_last_removed().
  */
 function uc_quote_update_last_removed() {
   return 8;
 }
 
+/**
+ * Implements hook_update_N().
+ */
 function uc_quote_update_6000() {
   $ret = array();
 
@@ -210,6 +213,9 @@ function uc_quote_update_6000() {
   return $ret;
 }
 
+/**
+ * Implements hook_update_N().
+ */
 function uc_quote_update_6001() {
   $ret = array();
 
@@ -218,6 +224,9 @@ function uc_quote_update_6001() {
   return $ret;
 }
 
+/**
+ * Implements hook_update_N().
+ */
 function uc_quote_update_6002() {
   $ret = array();
 
@@ -228,6 +237,9 @@ function uc_quote_update_6002() {
   return $ret;
 }
 
+/**
+ * Implements hook_update_N().
+ */
 function uc_quote_update_6003() {
   // This is the same update as #8, but it was added after 6002 was published.
   $ret = array();
@@ -238,7 +250,9 @@ function uc_quote_update_6003() {
 }
 
 /**
- * Change currency fields to numeric(16,5).
+ * Implements hook_update_N().
+ *
+ * Changes currency fields to numeric(16,5).
  */
 function uc_quote_update_6004() {
   $ret = array();

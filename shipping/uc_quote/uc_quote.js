@@ -99,7 +99,6 @@ function quoteCallback(products) {
       products += "|" + $("input[name^='products[" + i + "]']").filter("[name$='[nid]']").val();
       products += "^" + $("input[name^='products[" + i + "]']").filter("[name$='[title]']").val();
       products += "^" + $("input[name^='products[" + i + "]']").filter("[name$='[model]']").val();
-      products += "^" + $("input[name^='products[" + i + "]']").filter("[name$='[manufacturer]']").val();
       products += "^" + $("input[name^='products[" + i + "]']").filter("[name$='[qty]']").val();
       products += "^" + $("input[name^='products[" + i + "]']").filter("[name$='[cost]']").val();
       products += "^" + $("input[name^='products[" + i + "]']").filter("[name$='[price]']").val();
