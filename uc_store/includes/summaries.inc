@@ -111,7 +111,7 @@ function summarize_element($form, $title = FALSE) {
         return $form['#title'] .': '. $form['#options'][$form['#default_value']];
 
       case 'checkbox':
-        if ($form['#default_value']) {
+        if ($form['#default_value'] && isset($form['#title'])) {
           return $form['#title'];
         }
         else {
