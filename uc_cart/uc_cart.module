@@ -1128,10 +1128,9 @@ function uc_cart_view_table($table) {
   );
   $table[] = array(
     'total' => array(
-      '#value' => '<strong>'. t('Subtotal:') .'</strong> '. uc_price($subtotal, $context),
+      '#value' => '<span id="subtotal-title">'. t('Subtotal:') .'</span> '. uc_price($subtotal, $context),
       '#cell_attributes' => array(
         'colspan' => 'full',
-        'align' => 'right',
         'class' => 'subtotal',
       ),
     ),
