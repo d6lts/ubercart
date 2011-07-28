@@ -156,23 +156,6 @@ function uc_product_menu() {
 }
 
 /**
- * Implements hook_help().
- */
-function uc_product_help($path, $arg) {
-  // Do things here later. Figure out what you need to say for each section.
-  $output = '';
-  switch ($path) {
-    case 'admin/settings/module#description':
-      $output .= t('Create products for sale in an online store.');
-      break;
-    default:
-      $output = '';
-      break;
-  }
-  return $output;
-}
-
-/**
  * Implements hook_perm().
  */
 function uc_product_perm() {
