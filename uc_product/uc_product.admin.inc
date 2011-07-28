@@ -187,12 +187,16 @@ function uc_product_field_settings_form() {
     'model' => 'model',
     'image' => 'image',
     'display_price' => 'display_price',
+    'list_price' => FALSE,
+    'cost' => FALSE,
     'sell_price' => 'sell_price',
+    'weight' => FALSE,
+    'dimensions' => FALSE,
     'add_to_cart' => 'add_to_cart',
   ));
   $weight = variable_get('uc_product_field_weight', array(
     'image' => -2,
-    'display_price' -1,
+    'display_price' => -1,
     'model' => 0,
     'list_price' => 2,
     'cost' => 3,
@@ -289,7 +293,7 @@ function theme_uc_product_field_settings_form($form) {
     $row[] = drupal_render($form['fields'][$field]['weight']);
     $rows[] = $row;
   }
-  $output .= theme('table', $header, $rows);
+  $output  = theme('table', $header, $rows);
 
   $output .= drupal_render($form);
   return $output;
