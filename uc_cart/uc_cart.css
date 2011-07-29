@@ -103,7 +103,6 @@
  */
 
 #cart-form-products {
-  width: 100%;
   border: solid 1px #bbb;
   margin-top: .5em;
 }
@@ -117,7 +116,6 @@
 }
 
 #cart-form-buttons {
-  width: 100%;
   border: solid 1px #bbb;
   margin: .5em 0em;
   text-align: right;
@@ -239,7 +237,6 @@ td.subtotal {
  */
 
 #checkout-form-bottom {
-  width: 100%;
   border: solid 1px #bbb;
   text-align: right;
 }
