@@ -97,7 +97,7 @@ function uc_flatrate_nodeapi(&$node, $op) {
             db_query("DELETE FROM {uc_flatrate_products} WHERE vid = %d", $node->vid);
           }
           foreach ($node->flatrate as $mid => $rate) {
-            if ($rate !== '') {
+            if (is_numeric($rate) && $rate >= 0) {
               db_query("INSERT INTO {uc_flatrate_products} (vid, nid, mid, rate) VALUES (%d, %d, %d, %f)",
                 $node->vid, $node->nid, $mid, $rate);
             }

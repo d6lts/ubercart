@@ -99,7 +99,7 @@ function uc_weightquote_nodeapi(&$node, $op) {
             db_query("DELETE FROM {uc_weightquote_products} WHERE vid = %d", $node->vid);
           }
           foreach ($node->weightquote as $mid => $rate) {
-            if ($rate !== '') {
+            if (is_numeric($rate) && $rate >= 0) {
               db_query("INSERT INTO {uc_weightquote_products} (vid, nid, mid, rate) VALUES (%d, %d, %d, %f)",
                 $node->vid, $node->nid, $mid, $rate);
             }
