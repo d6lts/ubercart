@@ -597,8 +597,23 @@ function uc_payment_process($method, $order_id, $amount, $data = NULL, $default 
 
 /**
  * Enter a payment for an order.
+ *
+ * @param $order_id
+ *   The order ID to apply the payment to.
+ * @param $method
+ *   The payment method ID.
+ * @param $amount
+ *   The amount of the payment.
+ * @param $uid
+ *   (optional) The user ID of the person logging the payment, or 0 if the
+ *   payment was processed automatically.
+ * @param $data
+ *   (optional) Any data that should be serialized and stored with the
+ *   payment.
+ * @param $comment
+ *   (optional) The comment to enter in the payment log.
  */
-function uc_payment_enter($order_id, $method, $amount, $uid, $data, $comment) {
+function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $comment = '') {
   $method_name = _payment_method_data($method, 'review');
   if (empty($method_name)) {
     $method_name = _payment_method_data($method, 'name');
