@@ -1837,7 +1837,7 @@ function uc_product_get_picture($node_id, $format = 'product') {
     $image = $product->{$field}[0];
     $path = $image['filepath'];
     if (file_exists($path)) {
-      $img = theme('imagecache', $format, $path, $image['alt'], $image['title']);
+      $img = theme('imagecache', $format, $path, $image['data']['alt'], $image['data']['title']);
       if ($format == 'product') {
         if ($image_widget) {
           $image_widget_func = $image_widget['callback'];
