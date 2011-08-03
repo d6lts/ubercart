@@ -442,6 +442,6 @@ function uc_file_update_6006(&$sandbox) {
  */
 function uc_file_update_6007() {
   $ret = array();
-  db_add_index(&$ret, 'uc_files', 'filename', array('filename'));
+  db_add_index($ret, 'uc_files', 'filename', array('filename'));
   return $ret;
 }
