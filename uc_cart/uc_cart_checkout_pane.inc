@@ -25,29 +25,7 @@ function uc_checkout_pane_cart($op) {
 
     case 'review':
       $items = uc_cart_get_contents();
-      $output = '<table>';
-      $context = array(
-        'revision' => 'themed',
-        'type' => 'cart_item',
-        'subject' => array(),
-      );
-      foreach ($items as $item) {
-        $desc = check_plain($item->title) . uc_product_get_description($item);
-
-        $price_info = array(
-          'price' => $item->price,
-          'qty' => $item->qty,
-        );
-        $context['subject'] = array(
-          'cart' => $items,
-          'cart_item' => $item,
-          'node' => node_load($item->nid),
-        );
-        $output .= '<tr valign="top"><td>'. $item->qty .'&times;</td><td width="100%">'. $desc
-                  .'</td><td nowrap="nowrap">'. uc_price($price_info, $context) .'</td></tr>';
-      }
-      $output .= '</table>';
-      $review[] = $output;
+      $review[] = theme('uc_checkout_pane_cart_review', $items);
       return $review;
   }
 }
@@ -674,4 +652,43 @@ function theme_cart_review_table($show_subtotal = TRUE) {
   }
 
   return theme('table', $header, $rows, array('class' => 'cart-review'));
+}
+
+/**
+ * Theme cart items on the checkout review order page.
+ *
+ * @param $items
+ *   Cart items.
+ * @return
+ *   A string of HTML for the page contents.
+ * @ingroup themeable
+ */
+function theme_uc_checkout_pane_cart_review($items) {
+  $context = array(
+    'revision' => 'themed',
+    'type' => 'cart_item',
+    'subject' => array(),
+  );
+
+  $output = '<table>';
+  foreach ($items as $item) {
+    $desc = check_plain($item->title) . uc_product_get_description($item);
+
+    $price_info = array(
+      'price' => $item->price,
+      'qty' => $item->qty,
+    );
+
+    $context['subject'] = array(
+      'cart' => $items,
+      'cart_item' => $item,
+      'node' => node_load($item->nid),
+    );
+
+    $output .= '<tr valign="top"><td>'. $item->qty .'&times;</td><td width="100%">'. $desc
+              .'</td><td nowrap="nowrap">'. uc_price($price_info, $context) .'</td></tr>';
+  }
+  $output .= '</table>';
+
+  return $output;
 }
