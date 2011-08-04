@@ -1385,7 +1385,7 @@ function uc_product_table($args = array()) {
       if (module_exists('imagecache')) {
         if (($field = variable_get('uc_image_'. $node->type, '')) && isset($node->$field) && file_exists($node->{$field}[0]['filepath'])) {
           $image = $node->{$field}[0];
-          $data['image'] = array('#value' => l(theme('imagecache', 'product_list', $image['filepath'], $image['alt'], $image['title']), 'node/'. $node->nid, array('html' => TRUE)));
+          $data['image'] = array('#value' => l(theme('imagecache', 'product_list', $image['filepath'], $image['data']['alt'], $image['data']['title']), 'node/'. $node->nid, array('html' => TRUE)));
         }
         else {
           $data['image'] = array('#value' => t('n/a'));

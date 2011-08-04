@@ -48,15 +48,10 @@ function uc_product_kit_perm() {
 function uc_product_kit_access($op, $node, $account) {
   switch ($op) {
     case 'create':
-      return user_access('create product kits');
+      return user_access('create product kits', $account);
     case 'update':
     case 'delete':
-      if ($account->uid == $node->uid) {
-        return user_access('edit own product kits');
-      }
-      else {
-        return user_access('edit all product kits');
-      }
+      return user_access('edit all product kits', $account) || (user_access('edit own product kits', $account) && ($account->uid == $node->uid));
   }
 }
 
