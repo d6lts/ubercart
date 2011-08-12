@@ -6,7 +6,7 @@
  */
 
 /**
- * Display an overview of the order settings.
+ * Displays an overview of the order settings.
  */
 function uc_order_settings_overview() {
   $summaries = array();
@@ -21,7 +21,7 @@ function uc_order_settings_overview() {
 }
 
 /**
- * Generate the settings form for orders.
+ * Generates the settings form for orders.
  *
  * @ingroup forms
  */
@@ -94,18 +94,19 @@ function uc_order_settings_form() {
 }
 
 /**
- * Summarize the order status settings.
- *
- * @param $form
- *   The form passed from the summarizer
- * @param $states
- *   An array of order statuses
- * @return
- *   An array of summary information
+ * Summarizes the order status settings.
  *
  * This function summarizes the order statuses that have been defined. It is
  * organized under a parent node specifying that the following settings are
  * order statuses.
+ *
+ * @param $form
+ *   The form passed from the summarizer.
+ * @param $states
+ *   An array of order statuses.
+ *
+ * @return
+ *   An array of summary information.
  */
 function _uc_order_states_summarize($form, $states) {
   $statuses = $items = array();
@@ -123,7 +124,7 @@ function _uc_order_states_summarize($form, $states) {
 }
 
 /**
- * Display the order workflow form for order state and status customization.
+ * Displays the order workflow form for order state and status customization.
  *
  * @ingroup forms
  * @see uc_order_workflow_form_submit()
@@ -236,6 +237,8 @@ function uc_order_workflow_form() {
 }
 
 /**
+ * Form submission handler for uc_order_workflow_form().
+ *
  * @see uc_order_workflow_form()
  */
 function uc_order_workflow_form_submit($form, &$form_state) {
@@ -325,12 +328,11 @@ function uc_order_panes_form() {
 }
 
 /**
- * Present the form to create a custom order status.
+ * Presents the form to create a custom order status.
  *
+ * @see uc_order_status_create_form_validate()
+ * @see uc_order_status_create_form_submit()
  * @ingroup forms
- * @see
- *   uc_order_status_create_form_validate()
- *   uc_order_status_create_form_submit()
  */
 function uc_order_status_create_form() {
   $form['status_id'] = array(
@@ -386,9 +388,10 @@ function uc_order_status_create_form() {
 }
 
 /**
- * Ensure the new status id is unique and has no spaces.
+ * Ensures the new status id is unique and has no spaces.
  *
  * @see uc_order_status_create_form()
+ * @see uc_order_status_create_form_submit()
  */
 function uc_order_status_create_form_validate($form, &$form_state) {
   $new_status = strtolower(trim($form_state['values']['status_id']));
@@ -405,7 +408,10 @@ function uc_order_status_create_form_validate($form, &$form_state) {
 }
 
 /**
+ * Form submission handler for uc_order_status_create_form_submit().
+ *
  * @see uc_order_status_create_form()
+ * @see uc_order_status_create_form_validate()
  */
 function uc_order_status_create_form_submit($form, &$form_state) {
   db_query("INSERT INTO {uc_order_statuses} (order_status_id, title, state, "
@@ -419,7 +425,7 @@ function uc_order_status_create_form_submit($form, &$form_state) {
 }
 
 /**
- * Display the main order admin screen, an overview of all received orders.
+ * Displays the main order admin screen, an overview of all received orders.
  */
 function uc_order_admin($sql = NULL, $args = NULL, $search = FALSE) {
   $header = array(
@@ -521,10 +527,10 @@ function uc_order_admin($sql = NULL, $args = NULL, $search = FALSE) {
 }
 
 /**
- * Create the order status select box on the order overview screen.
+ * Creates the order status select box on the order overview screen.
  *
- * @ingroup forms
  * @see uc_order_admin_sort_form_submit()
+ * @ingroup forms
  */
 function uc_order_admin_sort_form() {
   $options = array('-1' => t('Active orders'));
@@ -560,6 +566,8 @@ function uc_order_admin_sort_form() {
 }
 
 /**
+ * Form submission handler for uc_order_admin_sort_form().
+ *
  * @see uc_order_admin_sort_form()
  */
 function uc_order_admin_sort_form_submit($form, &$form_state) {
@@ -574,10 +582,11 @@ function uc_order_admin_sort_form_submit($form, &$form_state) {
 }
 
 /**
- * Create the textfield box to select an order by ID on the order overview screen.
+ * Creates a textfield box to select an order by ID on the order
+ * overview screen.
  *
- * @ingroup forms
  * @see uc_order_select_form_submit()
+ * @ingroup forms
  */
 function uc_order_select_form() {
   $form['order_id'] = array(
@@ -597,6 +606,8 @@ function uc_order_select_form() {
 }
 
 /**
+ * Form submission handler for uc_order_select_form().
+ *
  * @see uc_order_select_form()
  */
 function uc_order_select_form_submit($form, &$form_state) {
@@ -606,7 +617,7 @@ function uc_order_select_form_submit($form, &$form_state) {
 }
 
 /**
- * Create a new order and redirect to its edit screen.
+ * Creates a new order and redirect to its edit screen.
  */
 function uc_order_create() {
   drupal_add_js(array('ucURL' => array('adminOrders' => url('admin/store/orders/'))), 'setting');
@@ -627,10 +638,10 @@ function uc_order_create() {
 }
 
 /**
- * Select a customer to whom to assign a new order.
+ * Selects a customer to whom to assign a new order.
  *
- * @ingroup forms
  * @see uc_order_create_form_submit()
+ * @ingroup forms
  */
 function uc_order_create_form() {
   $form['customer'] = array(
@@ -673,6 +684,8 @@ function uc_order_create_form() {
 }
 
 /**
+ * Form submission handler for uc_order_create_form().
+ *
  * @see uc_order_create_form()
  */
 function uc_order_create_form_submit($form, &$form_state) {
@@ -685,7 +698,7 @@ function uc_order_create_form_submit($form, &$form_state) {
 }
 
 /**
- * Display a search form to browse all received orders.
+ * Displays a search form to browse all received orders.
  */
 function uc_order_usearch() {
   $output = drupal_get_form('uc_order_search_form');
@@ -763,10 +776,10 @@ function uc_order_address_book() {
 }
 
 /**
- * Present previously entered addresses as selectable options.
+ * Presents previously entered addresses as selectable options.
  *
- * @ingroup forms
  * @see uc_order_address_book()
+ * @ingroup forms
  */
 function uc_order_address_book_form($form_state, $uid = 0, $type = 'billing', $func = '') {
   $select = uc_select_address($uid, $type, $func);
@@ -793,7 +806,7 @@ function uc_order_address_book_form($form_state, $uid = 0, $type = 'billing', $f
 }
 
 /**
- * Present the customer search results and let one of them be chosen.
+ * Presents the customer search results and let one of them be chosen.
  *
  * @see uc_order_select_customer_form()
  */
@@ -898,8 +911,8 @@ function uc_order_select_customer($email = NULL) {
 /**
  * Form to choose a customer from a list.
  *
- * @ingroup forms
  * @see uc_order_select_customer()
+ * @ingroup forms
  */
 function uc_order_select_customer_form($form_state, $options = NULL) {
   if (is_null(arg(4))) {
@@ -997,7 +1010,7 @@ function uc_order_select_customer_form($form_state, $options = NULL) {
 }
 
 /**
- * Return the sortable table listing of a customer's orders.
+ * Returns the sortable table listing of a customer's orders.
  *
  * @param $uid
  *   The user ID whose orders you wish to list.
@@ -1050,7 +1063,7 @@ function uc_order_history($user) {
 }
 
 /**
- * Display the order view screen, constructed via hook_order_pane().
+ * Displays the order view screen, constructed via hook_order_pane().
  */
 function uc_order_view($order, $view = 'view') {
   if ($view == 'customer') {
@@ -1097,13 +1110,12 @@ function uc_order_view($order, $view = 'view') {
 }
 
 /**
- * Display the order edit screen, constructed via hook_order_pane().
+ * Displays the order edit screen, constructed via hook_order_pane().
  *
+ * @see uc_order_edit_form_validate()
+ * @see uc_order_edit_form_submit()
+ * @see theme_uc_order_edit_form()
  * @ingroup forms
- * @see
- *   theme_uc_order_edit_form()
- *   uc_order_edit_form_validate()
- *   uc_order_edit_form_submit()
  */
 function uc_order_edit_form($form_state, $order) {
   $form['order_id'] = array('#type' => 'hidden', '#value' => $order->order_id);
@@ -1141,8 +1153,12 @@ function uc_order_edit_form($form_state, $order) {
 }
 
 /**
- * @ingroup themeable
+ * Formats the uc_order_edit_form().
+ *
  * @see uc_order_edit_form()
+ * @see uc_order_edit_form_validate()
+ * @see uc_order_edit_form_submit()
+ * @ingroup themeable
  */
 function theme_uc_order_edit_form($form) {
   $output = '';
@@ -1177,9 +1193,11 @@ function theme_uc_order_edit_form($form) {
 }
 
 /**
- * Prevent order edits from colliding.
+ * Prevents order edits from colliding.
  *
  * @see uc_order_edit_form()
+ * @see uc_order_edit_form_submit()
+ * @see theme_uc_order_edit_form()
  */
 function uc_order_edit_form_validate($form, &$form_state) {
   $order = uc_order_load($form_state['values']['order_id']);
@@ -1189,7 +1207,11 @@ function uc_order_edit_form_validate($form, &$form_state) {
 }
 
 /**
+ * Form submission handler for uc_order_edit_form().
+ *
  * @see uc_order_edit_form()
+ * @see uc_order_edit_form_validate()
+ * @see theme_uc_order_edit_form()
  */
 function uc_order_edit_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Delete')) {
@@ -1275,7 +1297,7 @@ function uc_order_edit_form_submit($form, &$form_state) {
 }
 
 /**
- * Populate the product add/edit div on the order edit screen.
+ * Populates the product add/edit div on the order edit screen.
  */
 function uc_order_edit_products($order) {
   if (is_array($_POST['products'])) {
@@ -1357,10 +1379,9 @@ function uc_order_edit_products($order) {
 /**
  * Form to allow ordered products' data to be changed.
  *
- * @see
- *   op_products_edit_table()
- *   theme_uc_order_edit_products_form()
- *   theme_uc_order_remove_product()
+ * @see op_products_edit_table()
+ * @see theme_uc_order_edit_products_form()
+ * @see theme_uc_order_remove_product()
  */
 function uc_order_edit_products_form($form_state, $products) {
   if (($product_count = count($products)) > 0) {
@@ -1446,18 +1467,18 @@ function uc_order_edit_products_form($form_state, $products) {
 }
 
 /**
- * @ingroup themeable
  * @see uc_order_edit_products_form()
+ * @ingroup themeable
  */
 function theme_uc_order_edit_products_form($form) {
   return drupal_render($form);
 }
 
 /**
- * Format the button to remove products from an order.
+ * Formats the button to remove products from an order.
  *
- * @ingroup themeable
  * @see op_products_edit_table()
+ * @ingroup themeable
  */
 function theme_uc_order_remove_product($form) {
   return '<img id="'. $form['#img_id'] .'" src="'
@@ -1472,9 +1493,8 @@ function theme_uc_order_remove_product($form) {
 /**
  * Form to add a line item to an order.
  *
- * @see
- *   uc_order_add_line_item_form_validate()
- *   uc_order_add_line_item_submit()
+ * @see uc_order_add_line_item_form_validate()
+ * @see uc_order_add_line_item_submit()
  */
 function uc_order_add_line_item_form($form_state, $order, $line_item_id) {
   $func = _line_item_data($line_item_id, 'callback');
@@ -1514,7 +1534,7 @@ function uc_order_add_line_item_form($form_state, $order, $line_item_id) {
 }
 
 /**
- * Validate new line item data.
+ * Validates new line item data.
  *
  * @see uc_order_add_line_item_form()
  */
@@ -1548,7 +1568,7 @@ function uc_order_add_line_item_form_submit($form, &$form_state) {
 }
 
 /**
- * Select a product to add to the order.
+ * Selects a product to add to the order.
  *
  * @see uc_order_load_product_select_form()
  */
@@ -1631,7 +1651,7 @@ function uc_order_add_product($order, $product) {
 }
 
 /**
- * Set the quantity and attributes of a product added to the order.
+ * Sets the quantity and attributes of a product added to the order.
  *
  * @see uc_order_add_product_form()
  */
@@ -1668,7 +1688,7 @@ function uc_order_add_product_form($form_state, $order, $node) {
 }
 
 /**
- * Display an invoice in the browser.
+ * Displays an invoice in the browser.
  */
 function uc_order_invoice($order, $op = 'view') {
   $output = theme('uc_order', $order, $op, variable_get('uc_cust_order_invoice_template', 'customer'));
@@ -1682,12 +1702,11 @@ function uc_order_invoice($order, $op = 'view') {
 }
 
 /**
- * Set recipients of an invoice, and mail it.
+ * Sets recipients of an invoice, and mail it.
  *
+ * @see uc_order_mail_invoice_form_validate()
+ * @see uc_order_mail_invoice_form_submit()
  * @ingroup forms
- * @see
- *   uc_order_mail_invoice_form_validate()
- *   uc_order_mail_invoice_form_submit()
  */
 function uc_order_mail_invoice_form($form_state, $order) {
   $form['order_id'] = array(
@@ -1746,7 +1765,7 @@ function uc_order_mail_invoice_form_submit($form, &$form_state) {
 }
 
 /**
- * Display a log of changes made to an order.
+ * Displays a log of changes made to an order.
  */
 function uc_order_log($order) {
   $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = %d ORDER BY created, order_log_id", $order->order_id);

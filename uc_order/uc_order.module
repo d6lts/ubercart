@@ -68,7 +68,7 @@ class UcOrder {
  ******************************************************************************/
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function uc_order_menu() {
   global $user;
@@ -345,7 +345,7 @@ function uc_order_page_title($order) {
 }
 
 /**
- * Implementation of hook_init().
+ * Implements hook_init().
  */
 function uc_order_init() {
   drupal_add_css(drupal_get_path('module', 'uc_order') .'/uc_order.css');
@@ -361,7 +361,7 @@ function uc_order_init() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function uc_order_theme() {
   return array(
@@ -405,7 +405,7 @@ function uc_order_theme() {
 }
 
 /**
- * Implementation of hook_token_values(). (token.module)
+ * Implements hook_token_values(). (token.module)
  */
 function uc_order_token_values($type, $object = NULL) {
   $values = array();
@@ -493,7 +493,7 @@ function uc_order_token_values($type, $object = NULL) {
 }
 
 /**
- * Implementation of hook_token_list(). (token.module)
+ * Implements hook_token_list(). (token.module)
  */
 function uc_order_token_list($type = 'all') {
   $tokens = array();
@@ -531,7 +531,7 @@ function uc_order_token_list($type = 'all') {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implements hook_perm().
  */
 function uc_order_perm() {
   return array('view own orders', 'view all orders', 'create orders', 'edit orders', 'delete orders', 'unconditionally delete orders', 'administer order workflow');
@@ -560,7 +560,7 @@ function uc_order_access_order_log() {
 }
 
 /**
- * Implementation of hook_user().
+ * Implements hook_user().
  */
 function uc_order_user($op, &$edit, &$account, $category = NULL) {
   global $user;
@@ -583,7 +583,7 @@ function uc_order_user($op, &$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_mail().
+ * Implements hook_mail().
  */
 function uc_order_mail($key, &$message, $params) {
   $langcode = isset($message['language']) ? $message['language']->language : NULL;
@@ -630,7 +630,7 @@ function uc_order_mail($key, &$message, $params) {
  ******************************************************************************/
 
 /**
- * Implementation of hook_order_pane().
+ * Implements hook_order_pane().
  */
 function uc_order_order_pane() {
   $panes[] = array(
@@ -710,7 +710,7 @@ function uc_order_order_pane() {
 }
 
 /**
- * Implementation of hook_order_state().
+ * Implements hook_order_state().
  */
 function uc_order_order_state() {
   $states[] = array(
@@ -742,7 +742,7 @@ function uc_order_order_state() {
 }
 
 /**
- * Implementation of hook_line_item().
+ * Implements hook_line_item().
  */
 function uc_order_line_item() {
   $items[] = array(
@@ -776,7 +776,7 @@ function uc_order_line_item() {
 }
 
 /**
- * Implementation of hook_uc_message().
+ * Implements hook_uc_message().
  */
 function uc_order_uc_message() {
   $messages['order_update_email'] = t("[order-first-name] [order-last-name],\n\nYour order number [order-link] at [store-name] has been updated.\n\nOrder status: [order-status]\n\nOrder comment:\n[order-last-comment]\n\nBrowse to the following page to login to your account and view your order details:\n[site-login]\n\n\nThanks again,\n\n[store-name]\n[site-slogan]");
@@ -785,7 +785,7 @@ function uc_order_uc_message() {
 }
 
 /**
- * Implementation of hook_uc_invoice_templates().
+ * Implements hook_uc_invoice_templates().
  */
 function uc_order_uc_invoice_templates() {
   return array('admin', 'customer');

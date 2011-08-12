@@ -11,7 +11,7 @@
  ******************************************************************************/
 
 /**
- * Implementation of hook_ca_entity().
+ * Implements hook_ca_entity().
  */
 function uc_order_ca_entity() {
   $entities['uc_order'] = array(
@@ -29,7 +29,7 @@ function uc_order_ca_entity() {
 }
 
 /**
- * Implementation of hook_ca_trigger().
+ * Implements hook_ca_trigger().
  */
 function uc_order_ca_trigger() {
   $triggers['uc_order_status_update'] = array(
@@ -62,7 +62,7 @@ function uc_order_ca_trigger() {
 }
 
 /**
- * Implementation of hook_ca_predicate().
+ * Implements hook_ca_predicate().
  */
 function uc_order_ca_predicate() {
   $predicates = array();
@@ -111,7 +111,7 @@ function uc_order_ca_predicate() {
 }
 
 /**
- * Implementation of hook_ca_condition().
+ * Implements hook_ca_condition().
  */
 function uc_order_ca_condition() {
   $order_arg = array(
@@ -288,7 +288,7 @@ function uc_order_ca_condition() {
 }
 
 /**
- * Implementation of hook_ca_action().
+ * Implements hook_ca_action().
  */
 function uc_order_ca_action() {
   $order_arg = array(

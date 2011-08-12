@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Install hooks for uc_order.module.
+ * Install, update and uninstall functions for the uc_order module.
  */
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_order_schema() {
   $schema = array();
@@ -572,7 +572,7 @@ function uc_order_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function uc_order_install() {
   drupal_install_schema('uc_order');
@@ -586,7 +586,7 @@ function uc_order_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function uc_order_uninstall() {
   drupal_uninstall_schema('uc_order');
@@ -601,7 +601,7 @@ function uc_order_uninstall() {
 }
 
 /**
- * Implementation of hook_update_last_removed().
+ * Implements hook_update_last_removed().
  */
 function uc_order_update_last_removed() {
   return 8;
