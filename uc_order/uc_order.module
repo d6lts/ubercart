@@ -441,6 +441,9 @@ function uc_order_token_values($type, $object = NULL) {
               ),
             );
             $subtotal = uc_price($order->line_items[$key]['amount'], $context);
+
+            $context['revision'] = 'original';
+            $subtotal_raw = uc_price($order->line_items[$key]['amount'], $context);
           }
           if ($value['type'] == 'shipping' && !isset($ship_method)) {
             $ship_method = $value['title'];
@@ -448,6 +451,7 @@ function uc_order_token_values($type, $object = NULL) {
         }
       }
       $values['order-subtotal'] = $subtotal;
+      $values['order-subtotal-raw'] = $subtotal_raw;
       $context = array(
         'revision' => 'formatted-original',
         'type' => 'order_total',
@@ -456,6 +460,10 @@ function uc_order_token_values($type, $object = NULL) {
         ),
       );
       $values['order-total'] = uc_price($order->order_total, $context);
+
+      $context['revision'] = 'original';
+      $values['order-total-raw'] = uc_price($order->order_total, $context);
+
       $values['order-email'] = check_plain($order->primary_email);
       $values['order-shipping-address'] = uc_order_address($order, 'delivery');
       $values['order-shipping-phone'] = check_plain($order->delivery_phone);
@@ -499,8 +507,10 @@ function uc_order_token_list($type = 'all') {
     $tokens['order']['order-link'] = t('A link to the order using the order ID.');
     $tokens['order']['order-admin-url'] = t('The URL to the admin view page using the order ID.');
     $tokens['order']['order-admin-link'] = t('A link to the order admin view page using the order ID.');
-    $tokens['order']['order-subtotal'] = t('The subtotal of products on an order.');
-    $tokens['order']['order-total'] = t('The order total.');
+    $tokens['order']['order-subtotal'] = t('The formatted subtotal of products on an order.');
+    $tokens['order']['order-subtotal-raw'] = t('The numerical subtotal of products on an order.');
+    $tokens['order']['order-total'] = t('The formatted order total.');
+    $tokens['order']['order-total-raw'] = t('The numerical order total.');
     $tokens['order']['order-email'] = t('The primary e-mail address of the order.');
     $tokens['order']['order-shipping-address'] = t('The order shipping address.');
     $tokens['order']['order-shipping-phone'] = t('The phone number for the shipping address.');
