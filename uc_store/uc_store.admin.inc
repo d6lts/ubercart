@@ -944,13 +944,6 @@ function uc_store_customer_orders($uid) {
   $header = array(t('View'), t('Order ID'), t('Date'), t('Billing name'),
                   t('Shipping name'), t('Items'), t('Total'));
 
-  $context = array(
-    'revision' => 'themed-original',
-    'type' => 'order_total',
-    'subject' => array(
-      'order' => $order,
-    ),
-  );
   $totals = array('orders' => 0, 'items' => 0, 'total' => 0);
   while ($order = db_fetch_object($result)) {
     $icons = l(uc_store_get_icon('file:order_view'),
@@ -979,6 +972,14 @@ function uc_store_customer_orders($uid) {
     $totals['items'] += $item_count['COUNT(*)'];
     $totals['total'] += $order->order_total;
 
+    $context = array(
+      'revision' => 'themed-original',
+      'type' => 'order_total',
+      'subject' => array(
+        'order' => $order,
+      ),
+    );
+
     $rows[] = array(
       'data' => array(
         array('data' => $icons),
@@ -991,6 +992,7 @@ function uc_store_customer_orders($uid) {
       'id' => 'order-'. $order->order_id,
     );
   }
+
   if (empty($rows)) {
     $rows[] = array(
       array('data' => t('No orders found.'), 'colspan' => 7)
