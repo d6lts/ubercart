@@ -18,7 +18,7 @@ require_once('uc_cart.ca.inc');
  ******************************************************************************/
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function uc_cart_menu() {
   $items = array();
@@ -174,7 +174,7 @@ function uc_cart_menu() {
 }
 
 /**
- * Implementation of hook_imagecache_default_presets().
+ * Implements hook_imagecache_default_presets().
  */
 function uc_cart_imagecache_default_presets() {
   $presets = array();
@@ -199,7 +199,7 @@ function uc_cart_imagecache_default_presets() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function uc_cart_theme() {
   return array(
@@ -255,7 +255,7 @@ function uc_cart_theme() {
 }
 
 /**
- * Implementation of hook_init().
+ * Implements hook_init().
  */
 function uc_cart_init() {
   global $conf;
@@ -274,7 +274,7 @@ function uc_cart_init() {
 }
 
 /**
- * Implementation of hook_cron().
+ * Implements hook_cron().
  */
 function uc_cart_cron() {
   // Empty anonymous carts.
@@ -293,7 +293,7 @@ function uc_cart_cron() {
 }
 
 /**
- * Implementation of hook_exit().
+ * Implements hook_exit().
  *
  * Code from CacheExclude - http://drupal.org/project/cacheexclude
  */
@@ -311,7 +311,7 @@ function uc_cart_exit() {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implements hook_nodeapi().
  */
 function uc_cart_nodeapi(&$node, $op, $arg3, $arg4) {
   if (uc_product_is_product($node->type)) {
@@ -324,7 +324,7 @@ function uc_cart_nodeapi(&$node, $op, $arg3, $arg4) {
 }
 
 /**
- * Implementation of hook_user().
+ * Implements hook_user().
  */
 function uc_cart_user($op, &$edit, &$user, $category = NULL) {
   switch ($op) {
@@ -341,7 +341,7 @@ function uc_cart_user($op, &$edit, &$user, $category = NULL) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function uc_cart_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'user_login' || $form_id == 'user_login_block') {
@@ -350,7 +350,7 @@ function uc_cart_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implements hook_block().
  */
 function uc_cart_block($op = 'list', $delta = 0, $edit = array()) {
   global $user;
@@ -478,10 +478,10 @@ function uc_cart_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 /**
- * Build the settings form used by the shopping cart block.
+ * Builds the settings form used by the shopping cart block.
  *
- * @ingroup forms
  * @see uc_cart_block_settings_form_submit()
+ * @ingroup forms
  */
 function uc_cart_block_settings_form() {
   $form = array();
@@ -523,7 +523,7 @@ function uc_cart_block_settings_form() {
 }
 
 /**
- * Save the shopping cart block settings.
+ * Saves the shopping cart block settings.
  *
  * @see uc_cart_block_settings_form()
  */
@@ -537,7 +537,7 @@ function uc_cart_block_settings_form_submit($edit = array()) {
 }
 
 /**
- * Preprocess the cart block output.
+ * Preprocesses the cart block output.
  */
 function uc_cart_preprocess_block(&$variables) {
   global $user;
@@ -568,7 +568,7 @@ function uc_cart_preprocess_block(&$variables) {
 }
 
 /**
- * Theme the shopping cart block title
+ * Themes the shopping cart block title
  *
  * @param $title
  *   The text to use for the title of the block.
@@ -576,6 +576,7 @@ function uc_cart_preprocess_block(&$variables) {
  *   Class to use for the cart icon image or FALSE if the icon is disabled.
  * @param $collapsible
  *   TRUE or FALSE indicating whether or not the cart block is collapsible.
+ *
  * @ingroup themeable
  */
 function theme_uc_cart_block_title($title, $icon_class = 'cart-empty', $collapsible = TRUE) {
@@ -599,10 +600,11 @@ function theme_uc_cart_block_title($title, $icon_class = 'cart-empty', $collapsi
 }
 
 /**
- * Theme the shopping cart icon.
+ * Themes the shopping cart icon.
  *
  * @param $icon_class
  *   Class to use for the cart icon image, either cart-full or cart-empty.
+ *
  * @ingroup themeable
  */
 function theme_uc_cart_block_title_icon($icon_class) {
@@ -610,7 +612,7 @@ function theme_uc_cart_block_title_icon($icon_class) {
 }
 
 /**
- * Theme the cachable shopping cart block content.
+ * Themes the cachable shopping cart block content.
  *
  * @ingroup themeable
  */
@@ -619,7 +621,7 @@ function theme_uc_cart_block_content_cachable() {
 }
 
 /**
- * Theme the shopping cart block content.
+ * Themes the shopping cart block content.
  *
  * @param $help_text
  *   Text to place in the small help text area beneath the cart block title or
@@ -635,6 +637,7 @@ function theme_uc_cart_block_content_cachable() {
  *   The unformatted total of all the products in the shopping cart.
  * @param $summary_links
  *   An array of links used in the cart summary.
+ *
  * @ingroup themeable
  */
 function theme_uc_cart_block_content($help_text, $items, $item_count, $item_text, $total, $summary_links) {
@@ -660,11 +663,12 @@ function theme_uc_cart_block_content($help_text, $items, $item_count, $item_text
 }
 
 /**
- * Theme the table listing the items in the shopping cart block.
+ * Themes the table listing the items in the shopping cart block.
  *
  * @param $items
  *   An associative array of item information containing the keys 'qty',
  *      'title', 'price', and 'desc'.
+ *
  * @ingroup themeable
  */
 function theme_uc_cart_block_items($items) {
@@ -709,7 +713,7 @@ function theme_uc_cart_block_items($items) {
 }
 
 /**
- * Theme the summary table at the bottom of the default shopping cart block.
+ * Themes the summary table at the bottom of the default shopping cart block.
  *
  * @param $item_count
  *   The number of items in the shopping cart.
@@ -719,6 +723,7 @@ function theme_uc_cart_block_items($items) {
  *   The unformatted total of all the products in the shopping cart.
  * @param $summary_links
  *   An array of links used in the summary.
+ *
  * @ingroup themeable
  */
 function theme_uc_cart_block_summary($item_count, $item_text, $total, $summary_links) {
@@ -750,7 +755,7 @@ function theme_uc_cart_block_summary($item_count, $item_text, $total, $summary_l
  ******************************************************************************/
 
 /**
- * Implementation of hook_uc_message().
+ * Implements hook_uc_message().
  */
 function uc_cart_uc_message() {
   global $user;
@@ -767,7 +772,7 @@ function uc_cart_uc_message() {
 }
 
 /**
- * Implementation of hook_cart_pane().
+ * Implements hook_cart_pane().
  */
 function uc_cart_cart_pane($items) {
   $body = '';
@@ -787,7 +792,7 @@ function uc_cart_cart_pane($items) {
 }
 
 /**
- * Implementation of hook_checkout_pane().
+ * Implements hook_checkout_pane().
  */
 function uc_cart_checkout_pane() {
   $panes[] = array(
@@ -846,7 +851,7 @@ function uc_cart_user_login_form_submit($form, &$form_state) {
 }
 
 /**
- * Update a user's cart to include items from their anonymous session.
+ * Updates a user's cart to include items from their anonymous session.
  */
 function uc_cart_login_update($uid) {
   if (!isset($_SESSION['uc_cart_id'])) {
@@ -886,7 +891,7 @@ function uc_cart_login_update($uid) {
 }
 
 /**
- * Return the text displayed for an empty shopping cart.
+ * Returns the text displayed for an empty shopping cart.
  *
  * @ingroup themeable
  */
@@ -895,18 +900,17 @@ function theme_uc_empty_cart() {
 }
 
 /**
- * Display a page allowing the customer to view the contents of his or her cart.
+ * Displays a page allowing the customer to view the contents of his or her cart.
  *
- * Handles simple or complex objects. Some cart items may have a list of products
- * that they represent. These are displayed but are not able to be changed by the
- * customer.
+ * Handles simple or complex objects. Some cart items may have a list of
+ * products that they represent. These are displayed but are not able to
+ * be changed by the customer.
  *
+ * @see uc_cart_view_form_submit()
+ * @see theme_uc_cart_view_form()
+ * @see theme_uc_cart_view_price()
+ * @see uc_cart_view_table()
  * @ingroup forms
- * @see
- *   uc_cart_view_form_submit()
- *   theme_uc_cart_view_form()
- *   theme_uc_cart_view_price()
- *   uc_cart_view_table()
  */
 function uc_cart_view_form($form_state, $items = NULL) {
   $form['items'] = array(
@@ -996,6 +1000,8 @@ function uc_cart_view_form($form_state, $items = NULL) {
 }
 
 /**
+ * Default submit handler for uc_cart_view_form().
+ *
  * @see uc_cart_view_form()
  */
 function uc_cart_view_form_submit($form, &$form_state) {
@@ -1036,8 +1042,10 @@ function uc_cart_view_form_submit($form, &$form_state) {
 }
 
 /**
- * @ingroup themeable
+ * Themes the uc_cart_view_form().
+ *
  * @see uc_cart_view_form()
+ * @ingroup themeable
  */
 function theme_uc_cart_view_form($form) {
   drupal_add_css(drupal_get_path('module', 'uc_cart') .'/uc_cart.css');
@@ -1078,15 +1086,15 @@ function theme_uc_cart_view_form($form) {
 /**
  * Dumb wrapper function, as the price has been themed by uc_price() already.
  *
- * @ingroup themeable
  * @see uc_cart_view_form()
+ * @ingroup themeable
  */
 function theme_uc_cart_view_price($form) {
   return $form['#value'];
 }
 
 /**
- * List the products in the cart in a TAPIr table.
+ * Lists the products in the cart in a TAPIr table.
  */
 function uc_cart_view_table($table) {
   $table['#attributes'] = array('width' => '100%');
@@ -1149,10 +1157,11 @@ function uc_cart_view_table($table) {
  ******************************************************************************/
 
 /**
- * Return the URL redirect for the continue shopping element on the cart page.
+ * Returns the URL redirect for the continue shopping element on the cart page.
  *
  * @param $unset
  *   TRUE or FALSE indicating whether or not to unset the last URL variable.
+ *
  * @return
  *   The URL or Drupal path that will be used for the continue shopping element.
  */
@@ -1178,12 +1187,13 @@ function uc_cart_continue_shopping_url($unset = TRUE) {
 }
 
 /**
- * Complete a sale, including adjusting order status and creating user account.
+ * Completes a sale, including adjusting order status and creating user account.
  *
  * @param $order
  *   The order object that has just been completed.
  * @param $login
  *   Whether or not to login a new user when this function is called.
+ *
  * @return
  *   The HTML text of the default order completion page.
  */
@@ -1303,10 +1313,12 @@ function uc_cart_complete_sale($order, $login = FALSE) {
 }
 
 /**
- * Theme the sale completion page.
+ * Themes the sale completion page.
  *
  * @param $message
- *   Message containing order number info, account info, and link to continue shopping.
+ *   Message containing order number info, account info, and link to continue
+ *   shopping.
+ *
  * @ingroup themeable
  */
 function theme_uc_cart_complete_sale($message, $order = NULL) {
@@ -1314,12 +1326,13 @@ function theme_uc_cart_complete_sale($message, $order = NULL) {
 }
 
 /**
- * Return the unique cart_id of the user.
+ * Returns the unique cart_id of the user.
  *
  * @param $create
- * Toggle auto creation of cart id.
+ *   Toggle auto creation of cart id.
+ *
  * @return
- * Cart id. If $create is FALSE will return FALSE if there is no cart id.
+ *     Cart id. If $create is FALSE will return FALSE if there is no cart id.
  */
 function uc_cart_get_id($create = TRUE) {
   global $user;
@@ -1335,7 +1348,7 @@ function uc_cart_get_id($create = TRUE) {
 }
 
 /**
- * Grab the items in a shopping cart for a user.
+ * Grabs the items in a shopping cart for a user.
  *
  * If $cid is not passed in, this function uses the uid of the person currently
  * accessing this function.
@@ -1401,7 +1414,7 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
 }
 
 /**
- * Return the total number of items in the shopping cart.
+ * Returns the total number of items in the shopping cart.
  *
  * The total number of items in the cart isn't simply queried directly from the
  * database, because when the shopping cart is loaded items may in fact be
@@ -1410,7 +1423,8 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
  *
  * @param $cid
  *   The cart ID of the shopping cart whose items we're totalling; defaults to
- *     the current user's cart.
+ *   the current user's cart.
+ *
  * @return
  *   An integer representing the total number of items in the cart.
  */
@@ -1432,10 +1446,11 @@ function uc_cart_get_total_qty($cid = NULL) {
 }
 
 /**
- * Allow us to get one single line item in a cart
+ * Allows us to get one single line item in a cart.
  *
  * @param $cart_item_id
  *   cart_item_id to fetch
+ *
  * @return
  *   Fully loaded cart item or NULL if item not found
  */
@@ -1466,11 +1481,13 @@ function uc_cart_get_item($cart_item_id) {
 }
 
 /**
- * Update a cart item.
+ * Updates a cart item.
  *
  * @param $item
  *   The loaded cart item.
- * @return unknown_type
+ *
+ * @return
+ *   unknown_type
  */
 function uc_cart_update_item($item) {
   db_query("UPDATE {uc_cart_products} SET qty = %d, changed = UNIX_TIMESTAMP(), data = '%s' WHERE cart_item_id = %d",
@@ -1478,7 +1495,7 @@ function uc_cart_update_item($item) {
 }
 
 /**
- * Add an item to a user's cart.
+ * Adds an item to a user's cart.
  */
 function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE, $check_redirect = TRUE, $rebuild = TRUE) {
   if (isset($_SESSION['cart_order'])) {
@@ -1573,7 +1590,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
 }
 
 /**
- * Remove an item from the cart
+ * Removes an item from the cart.
  *
  * @param $nid
  *   The node ID of the item to remove.
@@ -1607,7 +1624,7 @@ function uc_cart_remove_item($nid, $cid = NULL, $data = array(), $op = 'remove')
 }
 
 /**
- * Update the quantity of all the items in a cart object
+ * Updates the quantity of all the items in a cart object.
  */
 function uc_cart_update_item_object($cart) {
   if (is_object($cart)) {
@@ -1621,7 +1638,7 @@ function uc_cart_update_item_object($cart) {
 }
 
 /**
- * Empty a cart of its contents.
+ * Empties a cart of its contents.
  *
  * @param $cart_id
  *   The ID of the cart.
@@ -1647,7 +1664,7 @@ function uc_cart_empty($cart_id, $op = 'remove') {
 }
 
 /**
- * Get all of the enabled, sorted cart panes.
+ * Gets all of the enabled, sorted cart panes.
  *
  * @param $items
  *   The contents of the cart.
@@ -1679,7 +1696,7 @@ function uc_cart_cart_pane_list($items, $action = NULL) {
 }
 
 /**
- * Determine whether a cart contains shippable items or not.
+ * Determines whether a cart contains shippable items or not.
  */
 function uc_cart_is_shippable($cart_id = NULL, $action = '') {
   static $shippable;
@@ -1710,7 +1727,7 @@ function uc_cart_is_shippable($cart_id = NULL, $action = '') {
 }
 
 /**
- * Determine whether a product is shippable or not.
+ * Determines whether a product is shippable or not.
  */
 function uc_cart_product_is_shippable($product) {
   // Return FALSE if the product form specifies this as not shippable.
@@ -1742,9 +1759,9 @@ function uc_cart_product_is_shippable($product) {
 }
 
 /**
- * Remove panes from the list that match the given conditions.
+ * Removes panes from the list that match the given conditions.
  *
- * Return a checkout pane array with panes filtered out that have key values
+ * Returns a checkout pane array with panes filtered out that have key values
  * matching the combinations in the $remove array.
  */
 function uc_cart_filter_checkout_panes($panes, $remove = NULL) {
