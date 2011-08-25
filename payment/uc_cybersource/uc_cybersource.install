@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_requirements().
+ * Implements hook_requirements().
  */
 function uc_cybersource_requirements($phase) {
   $t = get_t();
@@ -65,14 +65,14 @@ function uc_cybersource_requirements($phase) {
 }
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function uc_cybersource_install() {
   drupal_install_schema('uc_cybersource');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function uc_cybersource_uninstall() {
   // Delete related variables all at once.
@@ -80,7 +80,7 @@ function uc_cybersource_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_cybersource_schema() {
   $schema['uc_payment_cybersource_hop_post'] = array(
@@ -154,7 +154,7 @@ function uc_cybersource_schema() {
 }
 
 /**
- * Implementation of hook_update_last_removed().
+ * Implements hook_update_last_removed().
  */
 function uc_cybersource_update_last_removed() {
   return 2;

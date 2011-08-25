@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_cart_links_schema() {
   $schema['uc_cart_link_clicks'] = array(
@@ -42,14 +42,14 @@ function uc_cart_links_schema() {
 
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function uc_cart_links_install() {
   drupal_install_schema('uc_cart_links');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function uc_cart_links_uninstall() {
   drupal_uninstall_schema('uc_cart_links');
@@ -58,7 +58,7 @@ function uc_cart_links_uninstall() {
 }
 
 /**
- * Implementation of hook_update_last_removed().
+ * Implements hook_update_last_removed().
  */
 function uc_cart_links_update_last_removed() {
   return 1;

@@ -10,7 +10,7 @@
  ******************************************************************************/
 
 /**
- * Implementation of hook_ca_entity().
+ * Implements hook_ca_entity().
  *
  * Demonstrates defining a data object that may be passed in to ca_pull_trigger
  * and mapped to a predicate's arguments.
@@ -39,7 +39,7 @@ function ca_ca_entity() {
 }
 
 /**
- * Implementation of hook_ca_condition().
+ * Implements hook_ca_condition().
  */
 function ca_ca_condition() {
   $conditions = array();
@@ -86,7 +86,7 @@ function ca_ca_condition() {
 }
 
 /**
- * Implementation of hook_ca_action().
+ * Implements hook_ca_action().
  *
  * Demonstrates defining an action for predicates to use; primarily specifies a
  * callback function to perform the action and an array that specifies arguments

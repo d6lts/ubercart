@@ -21,7 +21,7 @@ require_once('uc_payment.ca.inc');
  ******************************************************************************/
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function uc_payment_menu() {
   $items['admin/store/settings/payment'] = array(
@@ -130,7 +130,7 @@ function uc_payment_menu() {
 }
 
 /**
- * Implementation of hook_token_values().
+ * Implements hook_token_values().
  */
 function uc_payment_token_values($type, $object = NULL) {
   $values = array();
@@ -155,7 +155,7 @@ function uc_payment_token_values($type, $object = NULL) {
 }
 
 /**
- * Implementation of hook_token_list(). (token.module)
+ * Implements hook_token_list(). (token.module)
  */
 function uc_payment_token_list($type = 'all') {
   $tokens = array();
@@ -169,7 +169,7 @@ function uc_payment_token_list($type = 'all') {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implements hook_perm().
  */
 function uc_payment_perm() {
   return array('view payments', 'manual payments', 'delete payments');
@@ -190,7 +190,7 @@ function uc_payment_delete_access() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function uc_payment_theme() {
   return array(
@@ -209,7 +209,7 @@ function uc_payment_theme() {
 }
 
 /**
- * Implementation of hook_init().
+ * Implements hook_init().
  */
 function uc_payment_init() {
   global $conf;
@@ -217,7 +217,7 @@ function uc_payment_init() {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function uc_payment_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'uc_cart_checkout_form') {
@@ -232,7 +232,7 @@ function uc_payment_form_alter(&$form, $form_state, $form_id) {
  ******************************************************************************/
 
 /**
- * Implementation of hook_order().
+ * Implements hook_order().
  */
 function uc_payment_order($op, $arg1) {
   switch ($op) {
@@ -278,7 +278,7 @@ function uc_payment_order($op, $arg1) {
 }
 
 /**
- * Implementation of hook_checkout_pane().
+ * Implements hook_checkout_pane().
  */
 function uc_payment_checkout_pane() {
   $panes[] = array(
@@ -293,7 +293,7 @@ function uc_payment_checkout_pane() {
 }
 
 /**
- * Implementation of hook_order_pane().
+ * Implements hook_order_pane().
  */
 function uc_payment_order_pane() {
   $panes[] = array(
@@ -310,7 +310,7 @@ function uc_payment_order_pane() {
 }
 
 /**
- * Implementation of hook_order_state().
+ * Implements hook_order_state().
  */
 function uc_payment_order_state() {
   $states[] = array(

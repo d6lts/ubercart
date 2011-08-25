@@ -12,7 +12,7 @@
  ******************************************************************************/
 
 /**
- * Implementation of hook_ca_predicate().
+ * Implements hook_ca_predicate().
  */
 function uc_payment_ca_predicate() {
   $predicates = array();
@@ -118,7 +118,7 @@ function uc_payment_ca_predicate() {
 }
 
 /**
- * Implementation of hook_ca_trigger().
+ * Implements hook_ca_trigger().
  */
 function uc_payment_ca_trigger() {
   $triggers['uc_payment_entered'] = array(
@@ -140,7 +140,7 @@ function uc_payment_ca_trigger() {
 }
 
 /**
- * Implementation of hook_ca_condition().
+ * Implements hook_ca_condition().
  */
 function uc_payment_ca_condition() {
   $conditions['uc_payment_condition_order_balance'] = array(

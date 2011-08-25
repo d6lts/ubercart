@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Install hooks for uc_store.module.
+ * Install, update, and uninstall functions for the uc_store module.
  */
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_store_schema() {
   $schema = array();
@@ -115,7 +115,7 @@ function uc_store_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function uc_store_install() {
   drupal_install_schema('uc_store');
@@ -128,7 +128,7 @@ function uc_store_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function uc_store_uninstall() {
   drupal_uninstall_schema('uc_store');
@@ -150,7 +150,7 @@ function uc_store_uninstall() {
 }
 
 /**
- * Implementation of hook_update_last_removed().
+ * Implements hook_update_last_removed().
  */
 function uc_store_update_last_removed() {
   return 4;

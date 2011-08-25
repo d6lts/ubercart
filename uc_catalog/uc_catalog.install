@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_catalog_schema() {
   $schema = array();
@@ -64,7 +64,7 @@ function uc_catalog_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  *
  * Creates a Catalog vocabulary or uses one by that name that may already exist.
  */
@@ -87,7 +87,7 @@ function uc_catalog_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function uc_catalog_uninstall() {
   drupal_uninstall_schema('uc_catalog');
@@ -99,7 +99,7 @@ function uc_catalog_uninstall() {
 }
 
 /**
- * Implementation of hook_update_last_removed().
+ * Implements hook_update_last_removed().
  */
 function uc_catalog_update_last_removed() {
   return 8;

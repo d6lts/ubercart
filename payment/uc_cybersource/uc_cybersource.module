@@ -15,7 +15,7 @@
 
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function uc_cybersource_menu() {
   $items['cybersource/hop-post'] = array(
@@ -48,7 +48,7 @@ function uc_cybersource_hop_post_access() {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function uc_cybersource_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'uc_payment_gateways_form') {
@@ -90,7 +90,7 @@ function uc_cybersource_payment_gateway_settings_submit($form, &$form_state) {
  ******************************************************************************/
 
 /**
- * Implementation of hook_payment_gateway().
+ * Implements hook_payment_gateway().
  */
 function uc_cybersource_payment_gateway() {
   // CyberSource APIs other than HOP require uc_credit to be enabled.

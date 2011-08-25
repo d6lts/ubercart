@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_shipping_schema() {
   $schema = array();
@@ -335,21 +335,21 @@ function uc_shipping_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function uc_shipping_install() {
   drupal_install_schema('uc_shipping');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function uc_shipping_uninstall() {
   drupal_uninstall_schema('uc_shipping');
 }
 
 /**
- * Implementation of hook_update_last_removed().
+ * Implements hook_update_last_removed().
  */
 function uc_shipping_update_last_removed() {
   return 2;

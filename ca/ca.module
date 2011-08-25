@@ -17,7 +17,7 @@ require_once('ca.ca.inc');
  ******************************************************************************/
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function ca_menu() {
   $items = array();
@@ -138,7 +138,7 @@ function ca_convert_configurations_access() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implements hook_perm().
  */
 function ca_perm() {
   return array('administer conditional actions');

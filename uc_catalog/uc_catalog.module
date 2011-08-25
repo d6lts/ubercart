@@ -57,7 +57,7 @@ class UcTreeNode {
  ******************************************************************************/
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function uc_catalog_menu() {
   global $user;
@@ -126,14 +126,14 @@ function uc_catalog_menu() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implements hook_perm().
  */
 function uc_catalog_perm() {
   return array('view catalog', 'administer catalog');
 }
 
 /**
- * Implementation of hook_init().
+ * Implements hook_init().
  */
 function uc_catalog_init() {
   global $conf;
@@ -142,7 +142,7 @@ function uc_catalog_init() {
 }
 
 /**
- * Implementation of hook_enable().
+ * Implements hook_enable().
  *
  * Add imagecache preset "uc_category".
  */
@@ -153,7 +153,7 @@ function uc_catalog_enable() {
 }
 
 /**
- * Implementation of hook_imagecache_default_presets().
+ * Implements hook_imagecache_default_presets().
  */
 function uc_catalog_imagecache_default_presets() {
   $presets = array();
@@ -178,7 +178,7 @@ function uc_catalog_imagecache_default_presets() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function uc_catalog_theme() {
   return array(
@@ -209,7 +209,7 @@ function uc_catalog_theme() {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implements hook_nodeapi().
  */
 function uc_catalog_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   static $parents = array();
@@ -247,7 +247,7 @@ function uc_catalog_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 }
 
 /**
- * Implementation of hook_taxonomy().
+ * Implements hook_taxonomy().
  */
 function uc_catalog_taxonomy($op, $type, $object = NULL) {
   switch ($type) {
@@ -337,7 +337,7 @@ function uc_catalog_taxonomy($op, $type, $object = NULL) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  *
  * Add an image field to the catalog's taxonomy term form.
  */
@@ -376,7 +376,7 @@ function uc_catalog_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_link_alter().
+ * Implements hook_link_alter().
  *
  * Rewrite taxonomy term links to point to the catalog.
  */
@@ -395,7 +395,7 @@ function uc_catalog_link_alter(&$links, $node) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implements hook_block().
  *
  * Displays a menu for navigating the "Product Catalog"
  */
@@ -468,7 +468,7 @@ function theme_uc_catalog_block($menu_tree) {
  ******************************************************************************/
 
 /**
- * Implementation of hook_pathauto().
+ * Implements hook_pathauto().
  */
 function uc_catalog_pathauto($op) {
   switch ($op) {
@@ -496,7 +496,7 @@ function uc_catalog_pathauto($op) {
 }
 
 /**
- * Implementation of hook_pathauto_bulkupdate().
+ * Implements hook_pathauto_bulkupdate().
  *
  * Generate aliases for all categories without aliases
  */
@@ -539,7 +539,7 @@ function _uc_catalog_pathauto_alias($category, $op) {
 }
 
 /**
- * Implementation of hook_path_alias_types().
+ * Implements hook_path_alias_types().
  */
 function uc_catalog_path_alias_types() {
   return array('catalog/' => t('catalog pages'));
@@ -550,7 +550,7 @@ function uc_catalog_path_alias_types() {
  ******************************************************************************/
 
 /**
- * Implementation of hook_store_status().
+ * Implements hook_store_status().
  *
  * Provide status information about the "Product Catalog" and products not
  * listed in the catalog.
@@ -594,7 +594,7 @@ function uc_catalog_store_status() {
 }
 
 /**
- * Implementation of hook_product_class().
+ * Implements hook_product_class().
  *
  * Add and remove product node types to the catalog vocabulary as they are
  * created and deleted.
