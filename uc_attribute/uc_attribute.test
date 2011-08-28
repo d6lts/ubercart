@@ -13,7 +13,7 @@ module_load_include('test', 'uc_store', 'uc_store');
  */
 class UbercartAttributeTestCase extends UbercartTestHelper {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Attribute API',
       'description' => 'Test the attribute API.',
