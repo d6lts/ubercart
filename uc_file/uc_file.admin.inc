@@ -333,7 +333,7 @@ function uc_file_admin_files_form_action($form_state) {
         '#description' => t('The maximum file size that can be uploaded is %size bytes. You will need to use a different method to upload the file to the directory (e.g. (S)FTP, SCP) if your file exceeds this size.<br />The module will automatically detect files you upload using an alternate method.', array('%size' => number_format($max_bytes))),
       );
 
-      $form['#attributes']['class'] .= 'foo';
+      $form['#attributes']['class'] = 'foo';
       $form = confirm_form(
         $form, t('Upload file'),
         'admin/store/products/files',
