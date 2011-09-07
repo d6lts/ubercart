@@ -353,7 +353,7 @@ function uc_catalog_form_alter(&$form, $form_state, $form_id) {
       '#title' => t('Image'),
       '#weight' => 0,
     );
-    $image = uc_catalog_image_load($form['tid']['#value']);
+    $image = isset($form['tid']['#value']) ? uc_catalog_image_load($form['tid']['#value']) : FALSE;
     $imagecache = module_exists('imagecache');
     if ($image) {
       if ($imagecache) {
