@@ -1216,7 +1216,7 @@ function uc_product_adjustments_form_submit($form, &$form_state) {
   }
   drupal_set_message(t('Product adjustments have been saved.'));
   $goto = array($_GET['q']);
-  if ($_GET['page']) {
+  if (isset($_GET['page'])) {
     $goto[] = 'page='. $_GET['page'];
   }
   $form_state['redirect'] = $goto;
