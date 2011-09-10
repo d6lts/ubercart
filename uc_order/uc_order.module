@@ -361,6 +361,26 @@ function uc_order_init() {
 }
 
 /**
+ * Implements hook_cron().
+ */
+function uc_order_cron() {
+  // Ensure that passwords are not stored in plaintext longer than 15 minutes.
+  $first = variable_get('uc_order_cron_last', 0);
+  $last = time() - (15 * 60);
+
+  $result = db_query("SELECT order_id, data FROM {uc_orders} WHERE created >= %d AND created <= %d", $first, $last);
+  while ($row = db_fetch_object($result)) {
+    $data = unserialize($row->data);
+    if (isset($data['new_user']['pass'])) {
+      unset($data['new_user']['pass']);
+      db_query("UPDATE {uc_orders} SET data = '%s' WHERE order_id = %d", serialize($data), $row->order_id);
+    }
+  }
+
+  variable_set('uc_order_cron_last', $last);
+}
+
+/**
  * Implements hook_theme().
  */
 function uc_order_theme() {
@@ -414,9 +434,9 @@ function uc_order_token_values($type, $object = NULL) {
     case 'order':
       $order = $object;
 
-      if (isset($_SESSION['new_user']) && is_array($_SESSION['new_user'])) {
-        $values['new-username'] = check_plain($_SESSION['new_user']['name']);
-        $values['new-password'] = check_plain($_SESSION['new_user']['pass']);
+      if (isset($order->data['new_user']['name'])) {
+        $values['new-username'] = check_plain($order->data['new_user']['name']);
+        $values['new-password'] = check_plain($order->data['new_user']['pass']);
       }
       else {
         $values['new-username'] = '';
@@ -1357,7 +1377,12 @@ function uc_order_update_status($order_id, $status) {
 
   // Attempt the update if the order exists.
   if ($order !== FALSE) {
-    // Return false if any module says the update is not good to go.
+    // Return TRUE if the order status is already set.
+    if ($order->order_status == $status) {
+      return TRUE;
+    }
+  
+    // Return FALSE if any module says the update is not good to go.
     foreach (module_list() as $module) {
       $function = $module .'_order';
       // $order must be passed by reference.

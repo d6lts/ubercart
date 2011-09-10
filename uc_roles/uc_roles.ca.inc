@@ -44,23 +44,12 @@ function uc_roles_ca_predicate() {
       '#conditions' => array(
         array(
           '#name' => 'uc_order_status_condition',
-          '#title' => t('If the original order status was not Completed.'),
-          '#argument_map' => array(
-            'order' => 'order',
-          ),
-          '#settings' => array(
-            'negate' => TRUE,
-            'order_status' => 'completed',
-          ),
-        ),
-        array(
-          '#name' => 'uc_order_status_condition',
-          '#title' => t('If the updated order status is Completed.'),
+          '#title' => t('If the updated order status is payment received.'),
           '#argument_map' => array(
             'order' => 'updated_order',
           ),
           '#settings' => array(
-            'order_status' => 'completed',
+            'order_status' => 'payment_received',
           ),
         ),
       ),

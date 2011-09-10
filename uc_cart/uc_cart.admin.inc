@@ -537,6 +537,19 @@ function uc_cart_checkout_messages_form() {
   );
   $form['checkout_messages']['uc_msg_order_new_user_format'] = filter_form(variable_get('uc_msg_order_new_user_format', FILTER_FORMAT_DEFAULT), NULL, array('uc_msg_order_new_user_format'));
 
+  $form['checkout_messages']['uc_msg_order_new_user_logged_in'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Checkout completion for new logged in users'),
+    '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href="!user_login_setting_ur">checkout settings</a>. <a href="!url">Uses order and global tokens</a>.', array('!url' => url('admin/store/help/tokens'), '!user_login_setting_ur' => 'admin/store/settings/checkout/edit/basic')),
+    '#summary' => variable_get('uc_msg_order_new_user_logged_in', uc_get_message('completion_new_user_logged_in'))
+               ? t('Completion text for new logged in users is set.')
+               : t('Completion text for new logged in users is not set.'),
+    '#default_value' => variable_get('uc_msg_order_new_user_logged_in', uc_get_message('completion_new_user_logged_in')),
+    '#rows' => 3,
+  );
+  $form['checkout_messages']['uc_msg_order_new_user_logged_in_format'] = filter_form(variable_get('uc_msg_order_new_user_logged_in_format', FILTER_FORMAT_DEFAULT), NULL, array('uc_msg_order_new_user_logged_in_format'));
+
+
   $form['uc_msg_continue_shopping'] = array(
     '#type' => 'textarea',
     '#title' => t('Continue shopping message'),

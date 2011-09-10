@@ -128,6 +128,16 @@ function uc_order_ca_condition() {
     ),
   );
 
+  $conditions['uc_order_state_condition'] = array(
+    '#title' => t('Check the order state'),
+    '#description' => t('Returns TRUE if the current order status belong to the order state specified below.'),
+    '#category' => t('Order'),
+    '#callback' => 'uc_order_condition_check_order_state',
+    '#arguments' => array(
+      'order' => $order_arg,
+    ),
+  );
+
   $conditions['uc_order_condition_total'] = array(
     '#title' => t('Check the order total'),
     '#description' => t('Returns TRUE if the current order total is within the parameters below.'),
@@ -362,6 +372,36 @@ function uc_order_condition_check_order_status_form($form_state, $settings = arr
     '#title' => t('Order status'),
     '#options' => $options,
     '#default_value' => $settings['order_status'],
+  );
+
+  return $form;
+}
+
+/**
+ * Check the current order state.
+ *
+ * @see uc_order_condition_check_order_state_form()
+ */
+function uc_order_condition_check_order_state($order, $settings) {
+  // Return TRUE if the order status matches.
+  return uc_order_status_data($order->order_status, 'state') == $settings['order_state'];
+}
+
+/**
+ * @see uc_order_condition_check_order_state()
+ */
+function uc_order_condition_check_order_state_form($form_state, $settings = array()) {
+  foreach (uc_order_state_list('general') as $state) {
+    $options[$state['id']] = $state['title'];
+  }
+  foreach (uc_order_state_list('specific') as $state) {
+    $options[$state['id']] = $state['title'];
+  }
+  $form['order_state'] = array(
+    '#type' => 'select',
+    '#title' => t('Order state'),
+    '#options' => $options,
+    '#default_value' => $settings['order_state'],
   );
 
   return $form;
