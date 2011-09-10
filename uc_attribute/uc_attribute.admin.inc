@@ -1000,7 +1000,7 @@ function uc_object_options_form_validate($form, &$form_state) {
   if (isset($form_state['values']['attributes'])) {
     foreach ($form_state['values']['attributes'] as $aid => $attribute) {
       $selected_opts = array();
-      if (is_array($attribute['options'])) {
+      if (isset($attribute['options'])) {
         foreach ($attribute['options'] as $oid => $option) {
           if ($option['select'] == 1) {
             $selected_opts[] = $oid;
@@ -1037,9 +1037,11 @@ function uc_object_options_form_submit($form, &$form_state) {
   }
 
   foreach ($form_state['values']['attributes'] as $attribute) {
-    db_query("UPDATE $attr_table SET default_option = %d WHERE $id = $sql_type AND aid = %d", $attribute['default'], $form_state['values']['id'], $attribute['aid']);
+    if (isset($attribute['default'])) {
+      db_query("UPDATE $attr_table SET default_option = %d WHERE $id = $sql_type AND aid = %d", $attribute['default'], $form_state['values']['id'], $attribute['aid']);
+    }
 
-    if (is_array($attribute['options'])) {
+    if (isset($attribute['options'])) {
       foreach ($attribute['options'] as $oid => $option) {
         db_query("DELETE FROM $opt_table WHERE $id = $sql_type AND oid = %d", $form_state['values']['id'], $oid);
 
