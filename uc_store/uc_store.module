@@ -2058,6 +2058,8 @@ function uc_add_js($data = NULL, $type = 'module', $scope = 'header', $defer = F
  * Checks referers to see if they are in the allowed list.
  */
 function uc_referer_check($urls) {
+  global $base_path;
+
   $http_referer = uc_referer_uri();
 
   // Always return true if we have no referer; covers the case of page refreshes
@@ -2073,14 +2075,16 @@ function uc_referer_check($urls) {
     return FALSE;
   }
 
-  // The check itself.
-  foreach ((array) $urls as $url) {
-    if (substr($http_referer, -strlen($url)) == $url) {
-      return TRUE;
-    }
+  // Check the base path.
+  if (strncmp($referer['path'], $base_path, strlen($base_path))) {
+    return FALSE;
   }
 
-  return FALSE;
+  // Convert any path aliases.
+  $path = drupal_get_normal_path(substr($referer['path'], strlen($base_path)));
+
+  // The check itself.
+  return in_array($path, $urls);
 }
 
 /**
