@@ -1052,7 +1052,12 @@ function uc_cart_view_form_submit($form, &$form_state) {
 function theme_uc_cart_view_form($form) {
   drupal_add_css(drupal_get_path('module', 'uc_cart') .'/uc_cart.css');
 
-  $output = '<div id="cart-form-products">'
+  $output = '<div class="uc-default-submit">';
+  $output .= drupal_render($form['update']);
+  $output .= '</div>';
+  $form['update']['#printed'] = FALSE;
+
+  $output .= '<div id="cart-form-products">'
           . drupal_render($form['items']) .'</div>';
 
   foreach (element_children($form['items']) as $i) {
