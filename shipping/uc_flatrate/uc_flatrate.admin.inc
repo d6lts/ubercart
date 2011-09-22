@@ -135,7 +135,7 @@ function uc_flatrate_admin_method_edit_form_delete($form, &$form_state) {
  * @see uc_flatrate_admin_method_edit_form()
  */
 function uc_flatrate_admin_method_edit_form_submit($form, &$form_state) {
-  if ($form_state['values']['mid']) {
+  if (isset($form_state['values']['mid'])) {
     db_query("UPDATE {uc_flatrate_methods} SET title = '%s', label = '%s', base_rate = %f, product_rate = %f WHERE mid = %d",
       $form_state['values']['title'], $form_state['values']['label'], $form_state['values']['base_rate'], $form_state['values']['product_rate'], $form_state['values']['mid']);
     drupal_set_message(t("Flat rate shipping method was updated."));
