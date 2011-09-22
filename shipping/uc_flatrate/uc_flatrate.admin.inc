@@ -55,6 +55,15 @@ function uc_flatrate_admin_method_edit_form($form_state, $mid = 0) {
   if (is_numeric($mid) && ($method = db_fetch_object(db_query("SELECT * FROM {uc_flatrate_methods} WHERE mid = %d", $mid)))) {
     $form['mid'] = array('#type' => 'value', '#value' => $mid);
   }
+  else {
+    $method = (object) array(
+      'title' => '',
+      'label' => '',
+      'base_rate' => '',
+      'product_rate' => '',
+    );
+  }
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Shipping method title'),
