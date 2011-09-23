@@ -449,6 +449,8 @@ function uc_order_token_values($type, $object = NULL) {
       $values['order-admin-url'] = url('admin/store/orders/'. $order->order_id, array('absolute' => TRUE));
       $admin_url = url('admin/store/orders/'. $order->order_id, array('absolute' => TRUE));
       $values['order-admin-link'] = l($order->order_id, $admin_url);
+      $subtotal = '';
+      $subtotal_raw = 0;
       if (is_array($order->line_items)) {
         foreach ($order->line_items as $key => $value) {
           if ($value['type'] == 'subtotal') {
@@ -1580,7 +1582,7 @@ function uc_order_is_shippable($order) {
 
   foreach ($order->products as $product) {
     // Return FALSE if the product form specifies this as not shippable.
-    if ($product->data['shippable'] == FALSE) {
+    if (empty($product->data['shippable'])) {
       $results[] = FALSE;
       continue;
     }
