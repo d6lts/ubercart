@@ -120,7 +120,9 @@ function uc_payment_methods_form() {
       }
 
       $null = NULL;
-      $method_settings = $method['callback']('settings', $null);
+      if (function_exists($method['callback'])) {
+        $method_settings = $method['callback']('settings', $null);
+      }
       if (is_array($method_settings)) {
         $form['method_'. $method['id']] = array(
           '#type' => 'fieldset',
