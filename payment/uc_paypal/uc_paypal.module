@@ -141,7 +141,7 @@ function uc_paypal_cart_pane() {
  */
 function uc_paypal_payment_gateway() {
   if (!module_exists('uc_credit')) {
-    drupal_set_message(t('You must <a href="@modules">enable the Credit Card module</a> to use PayPal Website Payments Pro.', array('@modules' => url('admin/modules', array('fragment' => 'edit-modules-ubercart-payment')))), 'warning');
+    drupal_set_message(t('You must <a href="@modules">enable the Credit Card module</a> to use PayPal Website Payments Pro.', array('@modules' => url('admin/build/modules', array('fragment' => 'edit-modules-ubercart-payment')))), 'warning');
     return;
   }
 
