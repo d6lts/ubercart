@@ -438,7 +438,8 @@ function _ca_evaluate_condition($condition, $arguments, $condition_data) {
   $result = call_user_func_array($callback, $args);
 
   // If the negate operator is TRUE, then switch the result!
-  if ($condition['#settings']['negate']) {
+  if (isset($condition['#settings']['negate']) &&
+      $condition['#settings']['negate'])          {
     $result = !$result;
   }
 

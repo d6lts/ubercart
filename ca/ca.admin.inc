@@ -134,6 +134,8 @@ function ca_admin($groupby = 'trigger') {
  * Form to allow the creation and editing of conditional action predicates.
  */
 function ca_predicate_meta_form($form_state, $pid) {
+  $predicate = array();
+
   // Load the predicate if an ID is passed in.
   if (!empty($pid) && $pid !== 0) {
     $predicate = ca_load_predicate($pid);
@@ -184,7 +186,7 @@ function ca_predicate_meta_form($form_state, $pid) {
   );
 
   // Accommodate the mandatory custom prefix for predicate classes.
-  $class = $predicate['#class'];
+  $class = isset($predicate['#class']) ? $predicate['#class'] : '';
   if (strpos($class, 'custom') === 0) {
     $class = ltrim(substr($class, 6), ':');
   }
