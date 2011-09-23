@@ -849,8 +849,8 @@ function uc_roles_product_write_record($product_role) {
  */
 function uc_roles_feature_form_submit($form, &$form_state) {
   $product_role = array(
-    'pfid'        => $form_state['values']['pfid'],
-    'rpid'        => $form_state['values']['rpid'],
+    'pfid'        => isset($form_state['values']['pfid']) ? $form_state['values']['pfid'] : NULL,
+    'rpid'        => isset($form_state['values']['rpid']) ? $form_state['values']['rpid'] : NULL,
     'nid'         => $form_state['values']['nid'],
     'model'       => $form_state['values']['uc_roles_model'],
     'rid'         => $form_state['values']['uc_roles_role'],
