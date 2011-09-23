@@ -1240,8 +1240,8 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     $user = user_load($order->uid);
   }
 
-  $variables['!new_username'] = $order->data['new_user']['name'];
-  $variables['!new_password'] = $order->data['new_user']['pass'];
+  $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';
+  $variables['!new_password'] = isset($order->data['new_user']['pass']) ? $order->data['new_user']['pass'] : '';
   $messages = array(
     'uc_msg_order_submit' => uc_get_message('completion_message'),
     'uc_msg_order_' . $type => strtr(uc_get_message('completion_' . $type), $variables),
