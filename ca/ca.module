@@ -727,7 +727,7 @@ function ca_load_trigger_actions($trigger = '') {
         $entity = $argument['#entity'];
         // If the action requires an entity the trigger doesn't provide,
         // then skip to the next action.
-        if ($entity != 'arguments' && !$trigger_entities[$entity]) {
+        if ($entity != 'arguments' && !isset($trigger_entities[$entity])) {
           continue 2;
         }
       }
