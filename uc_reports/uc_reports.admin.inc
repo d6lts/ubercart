@@ -792,7 +792,7 @@ function uc_reports_sales_year() {
 
   // Site time minus GMT time, in seconds
   $timezone_offset = _uc_reports_timezone_offset();
-  
+
   $order_statuses = _uc_reports_order_statuses();
 
   // Get the year for the report from the URL.

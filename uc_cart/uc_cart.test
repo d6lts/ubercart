@@ -111,7 +111,7 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     // Confirm login.
     $this->drupalGet('<front>');
     $this->assertText('My account', 'User is logged in.');
-    
+
     // Check that cart is now empty.
     $this->drupalGet('cart');
     $this->assertText('There are no products in your shopping cart.');
@@ -125,7 +125,7 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     $this->checkout();
     $this->assertRaw('Your order is complete!');
     $this->assertRaw('While logged in');
-    
+
     // Test again with generated username and password.
     $this->drupalLogout();
     $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));

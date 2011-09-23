@@ -433,7 +433,7 @@ class UbercartCartLinksTestCase extends UbercartTestHelper {
    *
    * Note that just specifying "-m99" will display both your message 99 and the
    * default message, unless you have turned off the default message with "_m0".
-   * 
+   *
    * For additional messages, add additional actions, e.g. "-m99-m1337".
    */
   function testCartLinksMessages() {

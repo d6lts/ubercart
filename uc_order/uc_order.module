@@ -1383,7 +1383,7 @@ function uc_order_update_status($order_id, $status) {
     if ($order->order_status == $status) {
       return TRUE;
     }
-  
+
     // Return FALSE if any module says the update is not good to go.
     foreach (module_list() as $module) {
       $function = $module .'_order';
