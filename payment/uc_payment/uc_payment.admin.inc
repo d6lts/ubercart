@@ -122,16 +122,16 @@ function uc_payment_methods_form() {
       $null = NULL;
       if (function_exists($method['callback'])) {
         $method_settings = $method['callback']('settings', $null);
-      }
-      if (is_array($method_settings)) {
-        $form['method_'. $method['id']] = array(
-          '#type' => 'fieldset',
-          '#summary callback' => 'summarize_null',
-          '#title' => t('!method settings', array('!method' => $method['name'], '!weight' => $method['weight'])),
-          '#collapsible' => TRUE,
-          '#collapsed' => TRUE,
-        );
-        $form['method_'. $method['id']] = array_merge($form['method_'. $method['id']], $method_settings);
+        if (is_array($method_settings)) {
+          $form['method_'. $method['id']] = array(
+            '#type' => 'fieldset',
+            '#summary callback' => 'summarize_null',
+            '#title' => t('!method settings', array('!method' => $method['name'], '!weight' => $method['weight'])),
+            '#collapsible' => TRUE,
+            '#collapsed' => TRUE,
+          );
+          $form['method_'. $method['id']] = array_merge($form['method_'. $method['id']], $method_settings);
+        }
       }
     }
   }
