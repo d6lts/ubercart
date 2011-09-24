@@ -224,7 +224,7 @@ function uc_credit_terminal_form($form_state, $order, $lock_amount = FALSE) {
  * Validation handler for credit terminal form.
  */
 function uc_credit_terminal_form_validate($form, &$form_state) {
-  switch ($form_states['values']['op']) {
+  switch ($form_state['values']['op']) {
     case t('Charge amount'):
     case t('Authorize amount only'):
     case t('Capture amount to this authorization'):
