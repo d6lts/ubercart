@@ -74,7 +74,7 @@ function uc_attribute_menu() {
   );
   $items['admin/store/settings/attributes'] = array(
     'title' => 'Attribute settings',
-    'description' => 'Configure the attribute settings',
+    'description' => 'Configure the attribute settings.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('uc_attribute_admin_settings'),
     'access arguments' => array('administer attributes'),
