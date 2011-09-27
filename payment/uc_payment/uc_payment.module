@@ -329,14 +329,15 @@ function uc_payment_order_state() {
  ******************************************************************************/
 
 /**
- * Return a formatted list of line items for an order total preview.
+ * Returns a formatted list of line items for an order total preview.
  *
  * @param $return
  *   TRUE or FALSE to specify whether or not to return the results instead of
- *     printing them and exiting.
+ *   printing them and exiting.
  * @param $order
  *   Optionally pass in a full order object to use instead of finding it in the
- *     $_POST data.
+ *   $_POST data.
+ *
  * @return
  *   The formatted HTML of the order total preview if $return is set to TRUE.
  */
@@ -420,6 +421,9 @@ function _total_sort($a, $b) {
   return ($a[0] < $b[0]) ? -1 : 1;
 }
 
+/**
+ * TAPIr table definition for uc_payments_table.
+ */
 function uc_payments_table() {
   $table = array(
     '#type' => 'tapir_table',
@@ -465,7 +469,7 @@ function uc_payments_table() {
  ******************************************************************************/
 
 /**
- * Process a payment through an enabled payment gateway.
+ * Processes a payment through an enabled payment gateway.
  *
  * @param $method
  *   The ID of the payment method to use to process the payment.
@@ -475,17 +479,18 @@ function uc_payments_table() {
  *   The amount of the payment we're attempting to collect.
  * @param $data
  *   An array of data passed on to the payment gateway module used to process
- *     the payment for the specified payment method.
+ *   the payment for the specified payment method.
  * @param $default
  *   TRUE or FALSE to indicate we're forcing the use of the default gateway for
- *     the specified payment method. When TRUE, admin messages related to the
- *     payment will be hidden from display so customers don't see them.
+ *   the specified payment method. When TRUE, admin messages related to the
+ *   payment will be hidden from display so customers don't see them.
  * @param $selected
- *    The ID of a payment gateway to use to process the payment; normally comes
- *      from the payment gateway select form.
+ *   The ID of a payment gateway to use to process the payment; normally comes
+ *   from the payment gateway select form.
  * @param $redirect
- *    TRUE or FALSE to indicate whether or not to redirect back to the admin
- *      order view page for the order referenced in $order_id.
+ *   TRUE or FALSE to indicate whether or not to redirect back to the admin
+ *   order view page for the order referenced in $order_id.
+ *
  * @return
  *   TRUE or FALSE indicating whether or not the payment was processed.
  */
@@ -596,7 +601,7 @@ function uc_payment_process($method, $order_id, $amount, $data = NULL, $default 
 }
 
 /**
- * Enter a payment for an order.
+ * Enters a payment for an order.
  *
  * @param $order_id
  *   The order ID to apply the payment to.
@@ -649,7 +654,7 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
 }
 
 /**
- * Delete a payment from the database.
+ * Deletes a payment from the database.
  */
 function uc_payment_delete($receipt_id) {
   if (!is_numeric($receipt_id)) {
@@ -674,7 +679,7 @@ function uc_payment_delete($receipt_id) {
 }
 
 /**
- * Return the balance of payments on an order.
+ * Returns the balance of payments on an order.
  */
 function uc_payment_balance($order) {
   $total = $order->order_total;
@@ -692,7 +697,7 @@ function uc_payment_balance($order) {
 }
 
 /**
- * Load a single payment from the database by receipt_id.
+ * Loads a single payment from the database by receipt_id.
  */
 function uc_payment_load($receipt_id) {
   if (!is_numeric($receipt_id)) {
@@ -706,12 +711,13 @@ function uc_payment_load($receipt_id) {
 }
 
 /**
- * Load an array of all the payments for an order.
+ * Loads an array of all the payments for an order.
  *
  * @param $order_id
  *   The order's id.
  * @param $action
  *   Unused...
+ *
  * @return
  *   Array of payment objects or FALSE if there are none.
  */
@@ -732,7 +738,7 @@ function uc_payment_load_payments($order_id, $action = NULL) {
 }
 
 /**
- * Build a list of payment methods defined in the enabled modules.
+ * Builds a list of payment methods defined in the enabled modules.
  */
 function _payment_method_list($action = NULL) {
   static $methods;
@@ -752,7 +758,7 @@ function _payment_method_list($action = NULL) {
 }
 
 /**
- * Return data from a payment method by method ID and the array key.
+ * Returns data from a payment method by method ID and the array key.
  */
 function _payment_method_data($method_id, $key) {
   $methods = _payment_method_list();
@@ -764,7 +770,7 @@ function _payment_method_data($method_id, $key) {
 }
 
 /**
- * Build a list of payment gateways defined in the enabled modules.
+ * Builds a list of payment gateways defined in the enabled modules.
  */
 function _payment_gateway_list($filter = NULL, $enabled_only = FALSE) {
   $gateways = module_invoke_all('payment_gateway');
@@ -791,12 +797,13 @@ function _payment_gateway_list($filter = NULL, $enabled_only = FALSE) {
 }
 
 /**
- * Return data from a payment gateway by gateway ID and the array key.
+ * Returns data from a payment gateway by gateway ID and the array key.
  *
  * @param $gateway_id
  *   The ID of the payment gateway to query.
  * @param $key
  *   The key of the data being requested.
+ *
  * @return
  *   The requested data.
  */
