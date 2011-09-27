@@ -518,7 +518,7 @@ function uc_payment_process($method, $order_id, $amount, $data = NULL, $default 
     else {
       // Otherwise display a failure message to administrators.
       if (user_access('administer store')) {
-        drupal_set_message(t("Attempted to process a %type payment but the gateway's function was not found."));
+        drupal_set_message(t("Attempted to process a %type payment but the gateway's function was not found.", array('%type' => _payment_method_data($method, 'name'))));
       }
 
       $result['success'] = FALSE;
