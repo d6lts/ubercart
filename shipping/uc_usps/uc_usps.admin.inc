@@ -101,7 +101,7 @@ function uc_usps_admin_settings() {
     ),
     '#description' => t('Indicate whether each product is quoted as shipping separately or all in one package. Orders with one kind of product will still use the package quantity to determine the number of packages needed, however.'),
   );
- 
+
   // Insurance
   $form['uc_usps_insurance'] = array(
     '#type' => 'checkbox',
