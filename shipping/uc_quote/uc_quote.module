@@ -843,7 +843,7 @@ function uc_checkout_pane_quotes($op, &$arg1, $arg2) {
         var quoteButton = $("input:radio[name=quote-option]").click(function() {
           var quoteButton = $(this);
           var label = quoteButton.parent("label").text().split(":", 2)[0];
-          var rate = $("input:hidden[name=\'rate[" + quoteButton.val() + "]\']").val();
+          var rate = parseFloat($("input:hidden[name=\'rate[" + quoteButton.val() + "]\']").val());
           set_line_item("shipping", label, rate, 1, 1, false);
           if (window.getTax) {
             getTax();
