@@ -272,6 +272,12 @@ function uc_cart_init() {
   $conf['i18n_variables'][] = 'uc_msg_order_new_user';
   $conf['i18n_variables'][] = 'uc_msg_order_new_user_logged_in';
   $conf['i18n_variables'][] = 'uc_msg_order_submit';
+
+  // Don't cache any cart of checkout pages.
+  // Code based on CacheExclude - http://drupal.org/project/cacheexclude
+  if (arg(0) == 'cart') {
+    $GLOBALS['conf']['cache'] = 0;
+  }
 }
 
 /**
@@ -290,24 +296,6 @@ function uc_cart_cron() {
   $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= %d AND CHAR_LENGTH(cart_id) < 22", $time);
   while ($row = db_fetch_object($result)) {
     uc_cart_empty($row->cart_id);
-  }
-}
-
-/**
- * Implements hook_exit().
- *
- * Code from CacheExclude - http://drupal.org/project/cacheexclude
- */
-function uc_cart_exit() {
-  global $base_root;
-
-  $pages = array('cart', 'cart/checkout', 'cart/checkout/review', 'cart/checkout/complete');
-  $this_page = request_uri();
-  foreach ($pages as $page) {
-    if ($page && strstr($this_page, $page) !== FALSE) {
-      cache_clear_all($base_root . $this_page, 'cache_page');
-      return;
-    }
   }
 }
 
