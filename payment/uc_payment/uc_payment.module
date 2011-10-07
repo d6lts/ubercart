@@ -234,43 +234,43 @@ function uc_payment_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implements hook_order().
  */
-function uc_payment_order($op, $arg1) {
+function uc_payment_order($op, $order) {
   switch ($op) {
     case 'submit':
-      $func = _payment_method_data($arg1->payment_method, 'callback');
+      $func = _payment_method_data($order->payment_method, 'callback');
       if (function_exists($func)) {
-        return $func('order-submit', $arg1);
+        return $func('order-submit', $order);
       }
       break;
 
     case 'load':
-      $func = _payment_method_data($arg1->payment_method, 'callback');
+      $func = _payment_method_data($order->payment_method, 'callback');
       if (function_exists($func)) {
-        $func('order-load', $arg1);
+        $func('order-load', $order);
       }
       break;
 
     case 'save':
-      $func = _payment_method_data($arg1->payment_method, 'callback');
+      $func = _payment_method_data($order->payment_method, 'callback');
       if (function_exists($func)) {
-        $func('order-save', $arg1);
+        $func('order-save', $order);
       }
       break;
 
     case 'can_delete':
-      if (uc_payment_load_payments($arg1->order_id) !== FALSE) {
+      if (uc_payment_load_payments($order->order_id) !== FALSE) {
         return FALSE;
       }
       break;
 
     case 'delete':
-      db_query("DELETE FROM {uc_payment_receipts} WHERE order_id = %d", $arg1->order_id);
+      db_query("DELETE FROM {uc_payment_receipts} WHERE order_id = %d", $order->order_id);
       // Call each payment method to delete method specific data from the database.
       $methods = _payment_method_list();
       foreach ($methods as $method) {
         $func = $method['callback'];
         if (function_exists($func)) {
-          $func('order-delete', $arg1);
+          $func('order-delete', $order);
         }
       }
       break;

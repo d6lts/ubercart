@@ -2,8 +2,8 @@
 
 /**
  * @file
- * This file contains the Conditional Actions hooks and functions necessary to make the
- * order related entity, conditions, events, and actions work.
+ * This file contains the Conditional Actions hooks and functions necessary to
+ * make the order related entity, conditions, events, and actions work.
  */
 
 
@@ -177,7 +177,9 @@ function uc_payment_ca_condition() {
  * Condition Callbacks and Forms                                              *
  ******************************************************************************/
 
-// Check the current order balance.
+/**
+ * Check the current order balance.
+ */
 function uc_payment_condition_order_balance($order, $settings) {
   $balance = uc_payment_balance($order);
 
@@ -216,7 +218,9 @@ function uc_payment_condition_order_balance_form($form_state, $settings = array(
   return $form;
 }
 
-// Check the order payment method.
+/**
+ * Check the order payment method.
+ */
 function uc_order_condition_payment_method($order, $settings) {
   return $order->payment_method == $settings['payment_method'];
 }
