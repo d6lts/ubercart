@@ -1139,7 +1139,6 @@ function uc_order_edit_form($form_state, $order) {
     '#type' => 'submit',
     '#value' => t('Submit changes'),
     '#attributes' => array('class' => 'save-button'),
-    '#disabled' => TRUE,
   );
 
   if (uc_order_can_delete($order)) {
