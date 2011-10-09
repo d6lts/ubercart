@@ -1457,9 +1457,8 @@ function uc_order_edit_products_form($form_state, $products) {
     }
   }
   else {
-    $form['products'][]['remove'] = array(
+    $form['products'] = array(
       '#value' => t('This order contains no products.'),
-      '#cell_attributes' => array('colspan' => 'full'),
     );
   }
   return $form;
