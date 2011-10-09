@@ -529,12 +529,8 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
   }
 
   $used_aids = array();
-  $used_labels = array();
   foreach ($attributes as $attribute) {
     $used_aids[] = $attribute->aid;
-    if (!empty($attribute->label)) {
-      $used_labels[] = $attribute->label;
-    }
   }
 
   if ($view == 'overview') {
@@ -600,7 +596,7 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
     $unused_attributes = array();
     $result = db_query("SELECT a.aid, a.name, a.label FROM {uc_attributes} AS a LEFT JOIN {uc_attribute_options} AS ao ON a.aid = ao.aid GROUP BY a.aid, a.name, a.label ORDER BY a.name");
     while ($attribute = db_fetch_object($result)) {
-      if (!in_array($attribute->aid, $used_aids) && !in_array($attribute->label, $used_labels)) {
+      if (!in_array($attribute->aid, $used_aids)) {
         $unused_attributes[$attribute->aid] = $attribute->name;
       }
     }
