@@ -299,13 +299,13 @@ function bot_uc_cart_complete_sale($order, $login = FALSE) {
     'uc_msg_order_' . $type => strtr(uc_get_message('completion_' . $type), $variables),
     'uc_msg_continue_shopping' => uc_get_message('continue_shopping'),
   );
- $this->assertTrue(FALSE, var_export($messages, TRUE));
   foreach ($messages as $id => &$message) {
     $message = variable_get($id, $message);
     $message = token_replace_multiple($message, array('global' => NULL, 'order' => $order));
     $message = check_markup($message, variable_get($id . '_format', FILTER_FORMAT_DEFAULT), FALSE);
   }
   $output = implode('', $messages);
+  $this->assertTrue(FALSE, var_export($output, TRUE));
 
   // Empty that cart...
   uc_cart_empty(uc_cart_get_id(FALSE), 'checkout');
