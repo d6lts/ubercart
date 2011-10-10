@@ -258,67 +258,6 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     $this->assertEqual(count($mails), 3, '3 e-mails were sent.');
     variable_del('drupal_test_email_collector');
   }
-
-function bot_uc_cart_complete_sale($order, $login = FALSE) {
-  global $user;
-
-  // Ensure we have the latest order data.
-  $order->data = unserialize(db_result(db_query("SELECT data FROM {uc_orders} WHERE order_id = %d", $order->order_id)));
-
-  // Ensure that user creation and triggers are only run once.
-  if (empty($order->data['complete_sale'])) {
-    uc_cart_complete_sale_account($order);
-
-    // Store account data.
-    db_query("UPDATE {uc_orders} SET uid = %d, data = '%s' WHERE order_id = %d", $order->uid, serialize($order->data), $order->order_id);
-
-    // Move an order's status from "In Checkout" to "Pending"
-    $status = db_result(db_query("SELECT order_status FROM {uc_orders} WHERE order_id = %d", $order->order_id));
-    if (uc_order_status_data($status, 'state') == 'in_checkout') {
-      $status = uc_order_state_default('post_checkout');
-      if (uc_order_update_status($order->order_id, $status)) {
-        $order->order_status = $status;
-      }
-    }
-
-    // Invoke the checkout complete trigger and hook.
-    $account = user_load($order->uid);
-    module_invoke_all('uc_checkout_complete', $order, $account);
-    ca_pull_trigger('uc_checkout_complete', $order, $account);
-  }
-
-  $type = $order->data['complete_sale'];
-
-  // Log in new users, if requested.
-  if ($type == 'new_user' && $login && !$user->uid) {
-    $type = 'new_user_logged_in';
-    $user = user_load($order->uid);
-  }
-
-  $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';
-  $variables['!new_password'] = isset($order->data['new_user']['pass']) ? $order->data['new_user']['pass'] : '';
-  $messages = array(
-    'uc_msg_order_submit' => uc_get_message('completion_message'),
-    'uc_msg_order_' . $type => strtr(uc_get_message('completion_' . $type), $variables),
-    'uc_msg_continue_shopping' => uc_get_message('continue_shopping'),
-  );
-  foreach ($messages as $id => &$message) {
-    $message = variable_get($id, $message);
-    $message = token_replace_multiple($message, array('global' => NULL, 'order' => $order));
-    $message = check_markup($message, variable_get($id . '_format', FILTER_FORMAT_DEFAULT), FALSE);
-  }
-  $output = implode('', $messages);
-
-  // Empty that cart...
-  uc_cart_empty(uc_cart_get_id(FALSE), 'checkout');
-  $this->assertTrue(FALSE, 'output=' . var_export($output, TRUE));
-
-  $themed_output = theme('uc_cart_complete_sale', $output, $order);
-  $this->assertTrue(FALSE, 'themed_output=' . var_export($themed_output, TRUE));
-
-  return $themed_output;
-}
-
 }
 
 /**
