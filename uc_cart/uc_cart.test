@@ -168,6 +168,9 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
     $output = $this->bot_uc_cart_complete_sale($order);
 
+  $this->assertTrue(FALSE, 'function_return=' . var_export($output, TRUE));
+  $this->assertTrue(FALSE, 'strpos=' .  strpos($output, 'new account has been created'));
+
     // Check that a new account was created.
     $this->assertTrue(strpos($output, 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
 
@@ -199,6 +202,9 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     $order = $this->createOrder($order_data);
     $output = $this->bot_uc_cart_complete_sale($order, TRUE);
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
+
+  $this->assertTrue(FALSE, 'function_return=' . var_export($output, TRUE));
+  $this->assertTrue(FALSE, 'strpos=' .  strpos($output, 'order has been attached to the account'));
 
     // Check that no new account was created.
     $this->assertTrue(strpos($output, 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
@@ -308,9 +314,12 @@ function bot_uc_cart_complete_sale($order, $login = FALSE) {
 
   // Empty that cart...
   uc_cart_empty(uc_cart_get_id(FALSE), 'checkout');
-  $this->assertTrue(FALSE, var_export($output, TRUE));
+  $this->assertTrue(FALSE, 'output=' . var_export($output, TRUE));
 
-  return theme('uc_cart_complete_sale', $output, $order);
+  $themed_output = theme('uc_cart_complete_sale', $output, $order);
+  $this->assertTrue(FALSE, 'themed_output=' . var_export($themed_output, TRUE));
+
+  return $themed_output;
 }
 
 }
