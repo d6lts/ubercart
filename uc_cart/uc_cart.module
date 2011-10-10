@@ -249,7 +249,7 @@ function uc_cart_theme() {
       'file' => 'uc_cart_checkout_pane.inc',
     ),
     'uc_cart_complete_sale' => array(
-      'arguments' => array('message' => '', 'order' => NULL),
+      'arguments' => array('message' => NULL, 'order' => NULL),
     ),
   );
 }
