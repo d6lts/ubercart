@@ -305,10 +305,10 @@ function bot_uc_cart_complete_sale($order, $login = FALSE) {
     $message = check_markup($message, variable_get($id . '_format', FILTER_FORMAT_DEFAULT), FALSE);
   }
   $output = implode('', $messages);
-  $this->assertTrue(FALSE, var_export($output, TRUE));
 
   // Empty that cart...
   uc_cart_empty(uc_cart_get_id(FALSE), 'checkout');
+  $this->assertTrue(FALSE, var_export($output, TRUE));
 
   return theme('uc_cart_complete_sale', $output, $order);
 }
