@@ -169,7 +169,7 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     $output = uc_cart_complete_sale($order);
 
     // Check that a new account was created.
-    $this->assertTrue(strpos($output, 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
+    $this->assertTrue(strpos($output, 'new account has been created') !== FALSE, 'Checkout message mentions new account.'. var_export($output, TRUE));
 
     // 3 e-mails: new account, customer invoice, admin invoice
     $mails = $this->drupalGetMails();
@@ -201,7 +201,7 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
 
     // Check that no new account was created.
-    $this->assertTrue(strpos($output, 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
+    $this->assertTrue(strpos($output, 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.'. var_export($output, TRUE));
 
     // 2 e-mails: customer invoice, admin invoice
     $mails = $this->drupalGetMails();
