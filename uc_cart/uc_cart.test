@@ -166,10 +166,10 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     $order_data = array('primary_email' => 'simpletest@ubercart.org');
     $order = $this->createOrder($order_data);
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
-    $output = uc_cart_complete_sale($order);
+    $output = $this->bot_uc_cart_complete_sale($order);
 
     // Check that a new account was created.
-    $this->assertTrue(strpos($output, 'new account has been created') !== FALSE, 'Checkout message mentions new account.'. var_export($output, TRUE));
+    $this->assertTrue(strpos($output, 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
 
     // 3 e-mails: new account, customer invoice, admin invoice
     $mails = $this->drupalGetMails();
@@ -197,11 +197,11 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
 
     // Same user, new order.
     $order = $this->createOrder($order_data);
-    $output = uc_cart_complete_sale($order, TRUE);
+    $output = $this->bot_uc_cart_complete_sale($order, TRUE);
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
 
     // Check that no new account was created.
-    $this->assertTrue(strpos($output, 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.'. var_export($output, TRUE));
+    $this->assertTrue(strpos($output, 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
 
     // 2 e-mails: customer invoice, admin invoice
     $mails = $this->drupalGetMails();
@@ -255,6 +255,64 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     $this->assertEqual(count($mails), 3, '3 e-mails were sent.');
     variable_del('drupal_test_email_collector');
   }
+
+function bot_uc_cart_complete_sale($order, $login = FALSE) {
+  global $user;
+
+  // Ensure we have the latest order data.
+  $order->data = unserialize(db_result(db_query("SELECT data FROM {uc_orders} WHERE order_id = %d", $order->order_id)));
+
+  // Ensure that user creation and triggers are only run once.
+  if (empty($order->data['complete_sale'])) {
+    uc_cart_complete_sale_account($order);
+
+    // Store account data.
+    db_query("UPDATE {uc_orders} SET uid = %d, data = '%s' WHERE order_id = %d", $order->uid, serialize($order->data), $order->order_id);
+
+    // Move an order's status from "In Checkout" to "Pending"
+    $status = db_result(db_query("SELECT order_status FROM {uc_orders} WHERE order_id = %d", $order->order_id));
+    if (uc_order_status_data($status, 'state') == 'in_checkout') {
+      $status = uc_order_state_default('post_checkout');
+      if (uc_order_update_status($order->order_id, $status)) {
+        $order->order_status = $status;
+      }
+    }
+
+    // Invoke the checkout complete trigger and hook.
+    $account = user_load($order->uid);
+    module_invoke_all('uc_checkout_complete', $order, $account);
+    ca_pull_trigger('uc_checkout_complete', $order, $account);
+  }
+
+  $type = $order->data['complete_sale'];
+
+  // Log in new users, if requested.
+  if ($type == 'new_user' && $login && !$user->uid) {
+    $type = 'new_user_logged_in';
+    $user = user_load($order->uid);
+  }
+
+  $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';
+  $variables['!new_password'] = isset($order->data['new_user']['pass']) ? $order->data['new_user']['pass'] : '';
+  $messages = array(
+    'uc_msg_order_submit' => uc_get_message('completion_message'),
+    'uc_msg_order_' . $type => strtr(uc_get_message('completion_' . $type), $variables),
+    'uc_msg_continue_shopping' => uc_get_message('continue_shopping'),
+  );
+ $this->assertTrue(FALSE, var_export($messages, TRUE));
+  foreach ($messages as $id => &$message) {
+    $message = variable_get($id, $message);
+    $message = token_replace_multiple($message, array('global' => NULL, 'order' => $order));
+    $message = check_markup($message, variable_get($id . '_format', FILTER_FORMAT_DEFAULT), FALSE);
+  }
+  $output = implode('', $messages);
+
+  // Empty that cart...
+  uc_cart_empty(uc_cart_get_id(FALSE), 'checkout');
+
+  return theme('uc_cart_complete_sale', $output, $order);
+}
+
 }
 
 /**
