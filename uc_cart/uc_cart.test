@@ -166,10 +166,10 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     $order_data = array('primary_email' => 'simpletest@ubercart.org');
     $order = $this->createOrder($order_data);
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
-    $output = $this->bot_uc_cart_complete_sale($order);
+    uc_cart_complete_sale($order);
 
     // Check that a new account was created.
-    $this->assertTrue(strpos($output, 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
+    $this->assertTrue($order->data['complete_sale'] == 'new_user', 'A new account was created.');
 
     // 3 e-mails: new account, customer invoice, admin invoice
     $mails = $this->drupalGetMails();
@@ -183,8 +183,11 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
     // Different user, sees the checkout page first.
     $order_data = array('primary_email' => 'simpletest2@ubercart.org');
     $order = $this->createOrder($order_data);
-    $output = uc_cart_complete_sale($order, TRUE);
+    uc_cart_complete_sale($order, TRUE);
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
+
+    // Check that a new account was created.
+    $this->assertTrue($order->data['complete_sale'] == 'new_user', 'A new account was created.');
 
     // 3 e-mails: new account, customer invoice, admin invoice
     $mails = $this->drupalGetMails();
@@ -197,11 +200,11 @@ class UbercartCartCheckoutTestCase extends UbercartTestHelper {
 
     // Same user, new order.
     $order = $this->createOrder($order_data);
-    $output = $this->bot_uc_cart_complete_sale($order, TRUE);
+    uc_cart_complete_sale($order, TRUE);
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
 
     // Check that no new account was created.
-    $this->assertTrue(strpos($output, 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
+    $this->assertTrue($order->data['complete_sale'] == 'existing_user', 'The order was attached to an existing account.');
 
     // 2 e-mails: customer invoice, admin invoice
     $mails = $this->drupalGetMails();
