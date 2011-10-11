@@ -1357,7 +1357,9 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
     $result = db_query("SELECT * FROM {uc_cart_products} WHERE cart_id = '%s' ORDER BY cart_item_id ASC", $cid);
 
     while ($item = db_fetch_object($result)) {
-      $items[$cid][] = uc_cart_get_item($item);
+      if ($item = uc_cart_get_item($item)) {
+        $items[$cid][] = $item;
+      }
     }
 
     // Allow other modules a chance to alter the fully loaded cart object.
@@ -1425,6 +1427,10 @@ function uc_cart_get_item($item) {
   }
 
   $product = node_load($item->nid);
+  if (!$product) {
+    return;
+  }
+
   $item->vid = $product->vid;
   $item->title = $product->title;
   $item->cost = $product->cost;
