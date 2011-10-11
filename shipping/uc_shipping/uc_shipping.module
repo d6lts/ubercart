@@ -671,7 +671,7 @@ function uc_shipping_address_form($form_state, $addresses, $order) {
   $address = reset($addresses);
   $form['origin']['pickup_address_select'] = uc_shipping_select_address($addresses, 'apply_address(\'pickup\', this.value);', t('Saved Addresses'), TRUE);
   $form['origin']['pickup_address_select']['#weight'] = -2;
-  $form['origin']['pickup_email'] = uc_textfield(uc_get_field_name('email'), variable_get('uc_store_email', NULL), FALSE, NULL, 255);
+  $form['origin']['pickup_email'] = uc_textfield(uc_get_field_name('email'), uc_store_email(), FALSE, NULL, 255);
   $form['origin']['pickup_email']['#weight'] = -1;
   $form['origin']['pickup_first_name'] = uc_textfield(uc_get_field_name('first_name'), $address->first_name, FALSE);
   $form['origin']['pickup_last_name'] = uc_textfield(uc_get_field_name('last_name'), $address->last_name, FALSE);
