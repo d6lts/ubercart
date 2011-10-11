@@ -1043,7 +1043,7 @@ function theme_uc_cart_view_form($form) {
   $output = '<div class="uc-default-submit">';
   $output .= drupal_render($form['update']);
   $output .= '</div>';
-  $form['update']['#printed'] = FALSE;
+  unset($form['update']['#printed']);
 
   $output .= '<div id="cart-form-products">'
           . drupal_render($form['items']) .'</div>';
