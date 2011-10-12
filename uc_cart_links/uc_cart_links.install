@@ -40,7 +40,6 @@ function uc_cart_links_schema() {
   return $schema;
 }
 
-
 /**
  * Implements hook_install().
  */
@@ -55,13 +54,6 @@ function uc_cart_links_uninstall() {
   drupal_uninstall_schema('uc_cart_links');
   db_query("DELETE FROM {variable} WHERE name LIKE 'uc_cart_links_%%'");
   cache_clear_all('variables', 'cache');
-}
-
-/**
- * Implements hook_update_last_removed().
- */
-function uc_cart_links_update_last_removed() {
-  return 1;
 }
 
 /**
