@@ -156,6 +156,16 @@ function uc_product_menu() {
 }
 
 /**
+ * Implements hook_help().
+ */
+function uc_product_help($path, $arg) {
+  switch ($path) {
+    case 'admin/store/settings/products/edit/fields':
+      return t("These settings control which fields are displayed and the position they are displayed in when viewing product nodes.");
+  }
+}
+
+/**
  * Implements hook_perm().
  */
 function uc_product_perm() {
