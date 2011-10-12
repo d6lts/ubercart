@@ -243,7 +243,7 @@ function uc_file_action_order_renew($order) {
       $file_modification = array(
         'download_limit' => uc_file_get_download_limit($file),
         'address_limit' => uc_file_get_address_limit($file),
-        'expiration' => _uc_file_expiration_date(uc_file_get_time_limit($file), $file_user->expiration),
+        'expiration' => _uc_file_expiration_date(uc_file_get_time_limit($file), max($file_user->expiration, time())),
       );
 
       // Add file_user(s) for this file/directory. (No overwrite)
