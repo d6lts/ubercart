@@ -434,14 +434,22 @@ function uc_catalog_block($op = 'list', $delta = 0, $edit = array()) {
             $content = theme('uc_catalog_block', $menu_tree);
 
             $subject = variable_get('uc_catalog_name', t('Catalog'));
-            if (variable_get('uc_catalog_block_title', FALSE)) {
-              $subject = l($subject, 'catalog');
-            }
+
             $block = array('subject' => $subject, 'content' => $content);
             break;
         }
       }
     return $block;
+  }
+}
+
+/**
+ * Preprocess the catalog block output.
+ */
+function uc_catalog_preprocess_block(&$variables) {
+  $block = &$variables['block'];
+  if ($block->module == 'uc_catalog' && $block->delta == 0 && $block->subject && variable_get('uc_catalog_block_title', FALSE)) {
+    $block->subject = l($block->subject, 'catalog');
   }
 }
 
