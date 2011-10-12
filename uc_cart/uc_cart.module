@@ -695,7 +695,7 @@ function theme_uc_cart_block_items($items) {
   }
   else {
     // Otherwise display an empty message.
-    $output = '<p>'. t('There are no products in your shopping cart.') .'</p>';
+    $output = '<p class="uc-cart-empty">'. t('There are no products in your shopping cart.') .'</p>';
   }
 
   return $output;
@@ -886,7 +886,7 @@ function uc_cart_login_update($uid) {
  * @ingroup themeable
  */
 function theme_uc_empty_cart() {
-  return '<p>'. t('There are no products in your shopping cart.') .'</p>';
+  return '<p class="uc-cart-empty">'. t('There are no products in your shopping cart.') .'</p>';
 }
 
 /**
