@@ -196,7 +196,7 @@ function uc_quote_method_settings() {
         '#default_value' => $enabled[$id],
         '#summary callback' => 'summarize_checkbox',
         '#summary arguments' => array(
-          l(t('@method is enabled.', array('@method' => $title)), 'admin/store/settings/quotes/methods/'. $id),
+          t('@method is enabled.', array('@method' => $title)),
           '',
         ),
       );
