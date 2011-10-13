@@ -9,7 +9,6 @@
  * Configure USPS settings.
  *
  * @see uc_usps_admin_settings_validate()
- * @see uc_usps_admin_settings_submit()
  * @ingroup forms
  */
 function uc_usps_admin_settings() {
