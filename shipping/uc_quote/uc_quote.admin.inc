@@ -275,7 +275,7 @@ function theme_uc_quote_method_settings($form) {
 }
 
 /**
- * Form validation for uc_quote_method_settinggs().
+ * Form validation for uc_quote_method_settings().
  *
  * Requires at least one enabled shipping method.
  *
@@ -297,7 +297,7 @@ function uc_quote_method_settings_validate($form, &$form_state) {
 }
 
 /**
- * Form submission handler for uc_quote_method_settinggs().
+ * Form submission handler for uc_quote_method_settings().
  *
  * @see uc_quote_method_settings()
  * @see uc_quote_method_settings_validate()
