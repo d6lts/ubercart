@@ -1,7 +1,7 @@
 name = Shipping Quotes
-description = Retrieve and display quotes for shipping products.
+description = Retrieves and displays quotes for shipping products.
 dependencies[] = uc_cart
 dependencies[] = ca
-package = "Ubercart - core (optional)"
+package = Ubercart - core (optional)
 core = 6.x
 php = 5.0

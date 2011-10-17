@@ -1,5 +1,5 @@
 name = Product
-description = REQUIRED. A module to represent items in an online store. Imagecache and CCK Image field recommended.
+description = REQUIRED. Provides content types to represent items in an online store. Imagecache and CCK Image field recommended.
 dependencies[] = uc_store
 package = Ubercart - core
 core = 6.x
