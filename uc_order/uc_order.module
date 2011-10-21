@@ -171,6 +171,16 @@ function uc_order_menu() {
     'weight' => -5,
     'file' => 'uc_order.admin.inc',
   );
+  $items['admin/store/orders/create/%user'] = array(
+    'title' => 'Create order',
+    'description' => 'Create an empty new order.',
+    'page callback' => 'uc_order_create',
+    'page arguments' => array(4),
+    'access arguments' => array('create orders'),
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => -5,
+    'file' => 'uc_order.admin.inc',
+  );
 
   $items['admin/store/orders/search'] = array(
     'title' => 'Search orders',

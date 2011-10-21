@@ -619,7 +619,7 @@ function uc_order_select_form_submit($form, &$form_state) {
 /**
  * Creates a new order and redirect to its edit screen.
  */
-function uc_order_create() {
+function uc_order_create($account = NULL) {
   drupal_add_js(array('ucURL' => array('adminOrders' => url('admin/store/orders/'))), 'setting');
   drupal_add_js(drupal_get_path('module', 'uc_order') .'/uc_order.js');
 
@@ -632,7 +632,7 @@ function uc_order_create() {
            . uc_store_get_icon('file:menu_customers_small') .' '
            . t('Create a new customer.') .'</div>';
   $output .= '<div id="customer-select"></div><br />'
-           . drupal_get_form('uc_order_create_form');
+           . drupal_get_form('uc_order_create_form', $account);
 
   return $output;
 }
@@ -643,7 +643,7 @@ function uc_order_create() {
  * @see uc_order_create_form_submit()
  * @ingroup forms
  */
-function uc_order_create_form() {
+function uc_order_create_form(&$form_state, $account) {
   $form['customer'] = array(
     '#type' => 'fieldset',
     '#title' => t('New order customer'),
@@ -652,24 +652,24 @@ function uc_order_create_form() {
   );
   $form['customer']['uid'] = array(
     '#type' => 'hidden',
-    '#default_value' => 0,
+    '#default_value' => isset($account) ? $account->uid : 0,
   );
   $form['customer']['text']['uid_text'] = array(
     '#type' => 'textfield',
     '#title' => t('Customer number'),
-    '#default_value' => 0,
+    '#default_value' => isset($account) ? $account->uid : 0,
     '#maxlength' => 10,
     '#size' => 10,
     '#disabled' => TRUE,
   );
   $form['customer']['primary_email'] = array(
     '#type' => 'hidden',
-    '#default_value' => '',
+    '#default_value' => isset($account) ? $account->mail : '',
   );
   $form['customer']['text']['primary_email_text'] = array(
     '#type' => 'textfield',
     '#title' => t('Primary e-mail'),
-    '#default_value' => '',
+    '#default_value' => isset($account) ? $account->mail : '',
     '#maxlength' => 64,
     '#size' => 32,
     '#disabled' => TRUE,
