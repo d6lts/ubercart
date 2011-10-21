@@ -11,10 +11,10 @@
  */
 function uc_attribute_admin() {
   $header = array(
-    array('data' => t('Name'), 'field' => 'a.name', 'sort' => 'asc'),
-    array('data' => t('Label'), 'field' => 'a.label'),
+    array('data' => t('Name'), 'field' => 'name', 'sort' => 'asc'),
+    array('data' => t('Label'), 'field' => 'label'),
     t('Required'),
-    array('data' => t('List position'), 'field' => 'a.ordering'),
+    array('data' => t('List position'), 'field' => 'ordering'),
     t('Number of options'),
     t('Display type'),
     t('Operations'),
@@ -24,8 +24,9 @@ function uc_attribute_admin() {
 
   $rows = array();
 
-  $result = pager_query("SELECT a.aid, a.name, a.label, a.required, a.ordering, a.display, COUNT(ao.oid) AS options FROM {uc_attributes} AS a LEFT JOIN {uc_attribute_options} AS ao ON a.aid = ao.aid GROUP BY a.aid, a.name, a.label, a.ordering, a.required, a.display". tablesort_sql($header), 30, 0, "SELECT COUNT(aid) FROM {uc_attributes}");
+  $result = pager_query("SELECT aid, name, label, required, ordering, display FROM {uc_attributes}". tablesort_sql($header), 30, 0);
   while ($attr = db_fetch_object($result)) {
+    $attr->options = db_result(db_query('SELECT COUNT(*) FROM {uc_attribute_options} WHERE aid = %d', $attr->aid));
     if (empty($attr->label)) {
       $attr->label = $attr->name;
     }
