@@ -37,12 +37,14 @@ function uc_cart_links_settings_form() {
     '#title' => t('Cart links messages'),
     '#description' => t('Enter messages available to the cart links API for display through a link. Separate messages with a line break. Each message should have a numeric key and text value, separated by "|". For example: 1337|Message text.'),
     '#default_value' => variable_get('uc_cart_links_messages', ''),
+    '#wysiwyg' => FALSE,
   );
   $form['uc_cart_links_restrictions'] = array(
     '#type' => 'textarea',
     '#title' => t('Cart links restrictions'),
     '#description' => t('To restrict what cart links may be used on your site, enter all valid cart links in this textbox.  Separate links with a line break. Leave blank to permit any cart link.'),
     '#default_value' => variable_get('uc_cart_links_restrictions', ''),
+    '#wysiwyg' => FALSE,
   );
   $form['uc_cart_links_invalid_page'] = array(
     '#type' => 'textfield',

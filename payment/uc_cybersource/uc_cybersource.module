@@ -258,6 +258,7 @@ function uc_cybersource_settings_form() {
     '#type' => 'textarea',
     '#title' => t('Transaction key'),
     '#default_value' => $login['transaction_key'],
+    '#wysiwyg' => FALSE,
   );
   $form['soap']['uc_cybersource_soap_create_profile'] = array(
     '#type' => 'checkbox',

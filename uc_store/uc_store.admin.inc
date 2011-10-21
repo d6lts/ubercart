@@ -543,6 +543,7 @@ function uc_country_formats_form() {
         '#default_value' => variable_get('uc_address_format_'. $country->country_id, ''),
         '#description' => t('Uses the variables mentioned in the instructions to format an address for this country.'),
         '#rows' => 6,
+        '#wysiwyg' => FALSE,
       );
     }
   }

@@ -315,6 +315,7 @@ function uc_google_checkout_terminal_form($form_state, $order, $amount = 0) {
       '#type' => 'textarea',
       '#title' => t('Refund Comment'),
       '#weight' => 2,
+      '#wysiwyg' => FALSE,
     );
   }
   else {

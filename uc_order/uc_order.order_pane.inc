@@ -559,6 +559,7 @@ function uc_order_pane_admin_comments($op, $arg1) {
       $form['admin_comment_field']['admin_comment'] = array(
         '#type' => 'textarea',
         '#description' => t('Admin comments are only seen by store administrators.'),
+        '#wysiwyg' => FALSE,
       );
       return $form;
 
@@ -611,6 +612,7 @@ function uc_order_view_update_form($form_state, $order) {
   $form['order_comment_field']['order_comment'] = array(
     '#type' => 'textarea',
     '#description' => t('Order comments are used primarily to communicate with the customer.'),
+    '#wysiwyg' => FALSE,
   );
 
   $form['admin_comment_field'] = array(
@@ -622,6 +624,7 @@ function uc_order_view_update_form($form_state, $order) {
   $form['admin_comment_field']['admin_comment'] = array(
     '#type' => 'textarea',
     '#description' => t('Admin comments are only seen by store administrators.'),
+    '#wysiwyg' => FALSE,
   );
 
   $form['current_status'] = array(

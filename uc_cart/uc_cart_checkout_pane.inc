@@ -432,6 +432,7 @@ function uc_checkout_pane_comments($op, &$arg1, $arg2) {
         '#type' => 'textarea',
         '#title' => t('Order comments'),
         '#default_value' => $default,
+        '#wysiwyg' => FALSE,
       );
 
       return array('description' => $description, 'contents' => $contents);

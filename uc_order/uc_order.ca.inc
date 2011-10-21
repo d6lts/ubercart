@@ -1174,6 +1174,7 @@ function uc_order_action_add_comment_form($form_state, $settings = array()) {
     '#title' => t('Comment'),
     '#description' => t('Enter the comment message. Uses <a href="!url">order and global tokens</a>.', array('!url' => url('admin/store/help/tokens'))),
     '#default_value' => $settings['comment'],
+    '#wysiwyg' => FALSE,
   );
 
   return $form;
@@ -1246,6 +1247,7 @@ function uc_order_action_email_form($form_state, $settings = array()) {
     '#default_value' => isset($settings['addresses']) ? $settings['addresses'] : '[order-email]',
     '#description' => t('Enter the email addresses to receive the notifications, one on each line. You may use order tokens for dynamic email addresses.'),
     '#required' => TRUE,
+    '#wysiwyg' => FALSE,
   );
   $form['subject'] = array(
     '#type' => 'textfield',
@@ -1257,6 +1259,7 @@ function uc_order_action_email_form($form_state, $settings = array()) {
     '#type' => 'textarea',
     '#title' => t('Message'),
     '#default_value' => $settings['message'],
+    '#wysiwyg' => FALSE,
   );
 
   // We add the #is_format element to allow us to locate and configure the filters.
@@ -1338,6 +1341,7 @@ function uc_order_action_email_invoice_form($form_state, $settings = array()) {
     '#default_value' => isset($settings['addresses']) ? $settings['addresses'] : '[order-email]',
     '#description' => t('Enter the email addresses to receive the notifications, one on each line. You may use order tokens for dynamic email addresses.'),
     '#required' => TRUE,
+    '#wysiwyg' => FALSE,
   );
   $form['subject'] = array(
     '#type' => 'textfield',
