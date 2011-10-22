@@ -373,10 +373,10 @@ function uc_roles_user_submit(&$edit, &$account, $category) {
 
     // Push in values so user.module will save in the roles.
     $edit['roles'][$edit['new_role_add']] = _uc_roles_get_name($edit['new_role_add']);
-
-    // Reset the new role form.
-    $edit['new_role'] = $edit['new_role_add'] = $edit['new_role_add_qty'] = $edit['new_role_add_granularity'] = NULL;
   }
+
+  // Reset the new role form.
+  $edit['new_role'] = $edit['new_role_add'] = $edit['new_role_add_qty'] = $edit['new_role_add_granularity'] = NULL;
 
   // Check if any temporary role actions were taken.
   if (isset($edit['table'])) {
@@ -397,6 +397,9 @@ function uc_roles_user_submit(&$edit, &$account, $category) {
       }
     }
   }
+
+  // Reset the expiration table.
+  $edit['table'] = NULL;
 
   // If a user's role is removed using Drupal, then so is any expiration data.
   if (isset($edit['roles']) && is_array($edit['roles'])) {
