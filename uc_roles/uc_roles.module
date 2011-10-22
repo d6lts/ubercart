@@ -362,7 +362,7 @@ function uc_roles_user_submit(&$edit, &$account, $category) {
 
   // If a new temporary role is added.
   // Grant a new role.
-  if ($edit['new_role'] && $category == 'account') {
+  if (!empty($edit['new_role']) && $category == 'account') {
     // Save our role info, but don't save the user; user.module will do it.
     uc_roles_grant(
       $account,
@@ -413,7 +413,7 @@ function uc_roles_user_submit(&$edit, &$account, $category) {
  */
 function uc_roles_user_validate(&$edit, &$account, $category) {
   // Validate the amount of time for the expiration.
-  if ($edit['new_role'] && $category == 'account') {
+  if (!empty($edit['new_role']) && $category == 'account') {
     if (intval($edit['new_role_add_qty']) < 1) {
       form_set_error('new_role_add_qty', t('The expiration length must be a positive integer'));
     }
