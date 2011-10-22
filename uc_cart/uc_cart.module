@@ -478,6 +478,7 @@ function uc_cart_block_settings_form() {
   $form['uc_cart_block_empty_hide'] = array(
     '#type' => 'checkbox',
     '#title' => t('Hide block if cart is empty.'),
+    '#description' => t('This does not apply to anonymous users if page caching is enabled, as the same cached page will be served to all anonymous users whether or not they have items in their cart.'),
     '#default_value' => variable_get('uc_cart_block_empty_hide', FALSE),
   );
   $form['uc_cart_block_image'] = array(
