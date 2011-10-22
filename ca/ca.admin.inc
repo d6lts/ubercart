@@ -241,8 +241,9 @@ function ca_predicate_meta_form_submit($form, &$form_state) {
   $form_state['redirect'] = CA_UI_PATH;
   $save = FALSE;
 
-  // Load the original predicate.
-  if ($form_state['values']['pid'] !== 0) {
+  // Load the original predicate, if any.
+  $predicate = array();
+  if ($form_state['values']['predicate_pid'] !== 0) {
     $predicate = ca_load_predicate($form_state['values']['predicate_pid']);
     $predicate['#pid'] = $form_state['values']['predicate_pid'];
   }
@@ -252,7 +253,7 @@ function ca_predicate_meta_form_submit($form, &$form_state) {
 
   // Compare the values from the form submission with what is already set.
   foreach ($fields as $field) {
-    if ($form_state['values']['predicate_'. $field] != $predicate['#'. $field]) {
+    if (!isset($predicate['#'. $field]) || $form_state['values']['predicate_'. $field] != $predicate['#'. $field]) {
       $predicate['#'. $field] = $form_state['values']['predicate_'. $field];
       $save = TRUE;
     }
