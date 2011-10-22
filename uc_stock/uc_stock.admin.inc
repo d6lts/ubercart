@@ -248,7 +248,7 @@ function uc_stock_edit_form_submit($form, &$form_state) {
       intval($form_state['values']['stock'][$id]['threshold']), $form_state['values']['stock'][$id]['sku']);
 
     if (!db_affected_rows()) {
-      db_query("INSERT INTO {uc_product_stock} (sku, nid, active, stock, threshold) VALUES ('%s', %d, %d, %d, %d)",
+      @db_query("INSERT INTO {uc_product_stock} (sku, nid, active, stock, threshold) VALUES ('%s', %d, %d, %d, %d)",
         $form_state['values']['stock'][$id]['sku'], $form_state['values']['nid'], $form_state['values']['stock'][$id]['active'] ? 1 : 0,
         intval($form_state['values']['stock'][$id]['stock']), intval($form_state['values']['stock'][$id]['threshold']));
     }
