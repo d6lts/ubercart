@@ -529,24 +529,29 @@ function uc_quote_update_cart_item() {
 /**
  * Implements hook_order().
  */
-function uc_quote_order($op, $arg1, $arg2) {
+function uc_quote_order($op, $order, $arg2) {
   switch ($op) {
     case 'submit':
       unset($_SESSION['quote']);
-    break;
+      break;
+
     case 'save':
-      db_query("DELETE FROM {uc_order_quotes} WHERE order_id = %d", $arg1->order_id);
-      db_query("INSERT INTO {uc_order_quotes} (order_id, method, accessorials, rate, quote_form) VALUES (%d, '%s', '%s', %f, '%s')",
-        $arg1->order_id, $arg1->quote['method'], $arg1->quote['accessorials'], $arg1->quote['rate'], $arg1->quote['quote_form']);
-    break;
+      if (isset($order->quote['method'])) {
+        db_query("DELETE FROM {uc_order_quotes} WHERE order_id = %d", $order->order_id);
+        db_query("INSERT INTO {uc_order_quotes} (order_id, method, accessorials, rate, quote_form) VALUES (%d, '%s', '%s', %f, '%s')",
+        $order->order_id, $order->quote['method'], $order->quote['accessorials'], $order->quote['rate'], $order->quote['quote_form']);
+      }
+      break;
+
     case 'load':
-      $quote = db_fetch_array(db_query("SELECT method, accessorials, rate, quote_form FROM {uc_order_quotes} WHERE order_id = %d", $arg1->order_id));
-      $arg1->quote = $quote;
-      $arg1->quote['accessorials'] = strval($quote['accessorials']);
-    break;
+      $quote = db_fetch_array(db_query("SELECT method, accessorials, rate, quote_form FROM {uc_order_quotes} WHERE order_id = %d", $order->order_id));
+      $order->quote = $quote;
+      $order->quote['accessorials'] = strval($quote['accessorials']);
+      break;
+
     case 'delete':
-      db_query("DELETE FROM {uc_order_quotes} WHERE order_id = %d", $arg1->order_id);
-    break;
+      db_query("DELETE FROM {uc_order_quotes} WHERE order_id = %d", $order->order_id);
+      break;
   }
 }
 
