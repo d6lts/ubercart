@@ -17,11 +17,11 @@ function setQuoteCallbacks(products, context) {
   };
   $("input[name*=delivery_postal_code]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').change(triggerQuoteCallback);
   $("input[id*=quote-button]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').click(function() {
-    // returns false to prevent default actions and propogation
+    // returns false to prevent default actions and propagation
     return quoteCallback(products);
   });
   $("input[name*=quote_method]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').change(function() {
-    // returns false to prevent default actions and propogation
+    // returns false to prevent default actions and propagation
     return quoteCallback(products);
   });
   $("select[name*=delivery_address_select]:not(.getQuotes-processed)", context).addClass('getQuotes-processed').change(function() {

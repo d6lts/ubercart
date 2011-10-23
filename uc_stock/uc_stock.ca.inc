@@ -2,7 +2,7 @@
 
 /**
  * @file
- * This file contains all the Workflow-NG hooks that are neccesary for Workflow
+ * This file contains all the Workflow-NG hooks that are necessary for Workflow
  * integeration with the uc_stock module
  */
 

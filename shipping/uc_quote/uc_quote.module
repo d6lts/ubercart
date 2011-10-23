@@ -681,7 +681,7 @@ function uc_quote_get_default_shipping_address($nid) {
  */
 function uc_cart_pane_quotes($form_state, $items) {
   global $user;
-  // Get all quote types neccessary to fulfill order.
+  // Get all quote types necessary to fulfill order.
   $shipping_types = array();
   foreach ($items as $product) {
     $shipping_types[] =  uc_product_get_shipping_type($product);
