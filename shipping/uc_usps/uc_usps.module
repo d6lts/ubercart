@@ -415,6 +415,10 @@ function uc_usps_quote($products, $details, $method) {
             foreach ($package->Service as $service) {
               $id = (string)$service['ID'];
               $services[$id]['label'] = t('U.S.P.S. @service', array('@service' => (string)$service->SvcDescription));
+              // Markup rate before customer sees it
+              if (!isset($services[$id]['rate'])) {
+                $services[$id]['rate'] = 0;
+              }
               $services[$id]['rate'] += uc_usps_markup((string)$service->Postage);
             }
           }
@@ -475,7 +479,18 @@ function uc_usps_quote($products, $details, $method) {
     }
   }
 
+  // Separate debug data out of $services.  This is necessary because
+  // $services['data'] is not sortable by a 'rate' key, so it has to be
+  // kept separate from the reset of the $services array until after the sort.
+  $debug_data = $services['data'];
+  unset($services['data']);
+
   uasort($services, 'uc_quote_price_sort');
+
+  if (isset($debug_data['debug']) ||
+      (isset($debug_data['error']) && count($debug_data['error']))) {
+    $services['data'] = $debug_data;
+  }
 
   return $services;
 }
