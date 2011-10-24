@@ -376,7 +376,7 @@ function ca_actions_form($form_state, $pid, $title = TRUE) {
 
   foreach ($predicate['#actions'] as $key => $action) {
     // Add it to the form if the action's callback exists.
-    $callback = $action_data[$action['#name']]['#callback'];
+    $callback = isset($action_data[$action['#name']]['#callback']) ? $action_data[$action['#name']]['#callback'] : '';
 
     if (function_exists($callback)) {
       $form['actions'][$i] = array(
