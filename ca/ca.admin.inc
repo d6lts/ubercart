@@ -182,7 +182,9 @@ function ca_predicate_meta_form($form_state, $pid) {
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#description' => t('Enter a description that summarizes the use and intent of the predicate.'),
-    '#default_value' => $pid ? $predicate['#description'] : '',
+    '#default_value' => $pid ?
+                        (isset($predicate['#description']) ? $predicate['#description'] : '') :
+                        '',
   );
 
   // Accommodate the mandatory custom prefix for predicate classes.
@@ -380,7 +382,7 @@ function ca_actions_form($form_state, $pid, $title = TRUE) {
       $form['actions'][$i] = array(
         '#type' => 'fieldset',
         '#title' => t('Action: @title', array('@title' => $action_data[$action['#name']]['#title'])),
-        '#description' => $action_data[$action['#name']]['#description'],
+        '#description' => isset($action_data[$action['#name']]['#description']) ?  $action_data[$action['#name']]['#description'] : '',
         '#collapsible' => TRUE,
         '#collapsed' => isset($_SESSION['ca_action_focus']) && $i == $_SESSION['ca_action_focus'] ? FALSE : TRUE,
       );
