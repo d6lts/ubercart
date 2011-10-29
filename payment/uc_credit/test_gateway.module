@@ -22,6 +22,7 @@
 /**
  * Implements hook_payment_gateway().
  *
+ * @see test_gateway.module
  * @see test_gateway_charge()
  */
 function test_gateway_payment_gateway() {
