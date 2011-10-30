@@ -1610,15 +1610,13 @@ function hook_uc_product_default_classes() {
  *
  * Code lifted from uc_attribute.module.
  */
-function hook_uc_product_models($node) {
+function hook_uc_product_models($nid) {
   $models = array();
 
   // Get all the SKUs for all the attributes on this node.
-  $adjustments = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
-  while ($adjustment = db_fetch_object($adjustments)) {
-    if (!in_array($adjustment->model, $models)) {
-      $models[] = $adjustment->model;
-    }
+  $adjustments = db_query("SELECT DISTINCT model FROM {uc_product_adjustments} WHERE nid = %d", $nid);
+  while ($adjustment = db_result($adjustments)) {
+    $models[] = $adjustment;
   }
 
   return $models;

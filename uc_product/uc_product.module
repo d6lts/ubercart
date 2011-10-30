@@ -1782,11 +1782,16 @@ function uc_product_is_product_form($form) {
  *   An associative array of model numbers. The key for '- Any -' is the empty
  *   string.
  */
-function uc_product_get_models($node, $add_blank = TRUE) {
+function uc_product_get_models($nid, $add_blank = TRUE) {
+  // Keep backward compatibility with previous versions of 6.x-2.x, where
+  // first argument was a product object.
+  if (is_object($nid)) {
+    $nid = $nid->nid;
+  }
   // Get any modules' SKUs on this node.
-  $models = module_invoke_all('uc_product_models', $node);
+  $models = module_invoke_all('uc_product_models', $nid);
   // Add the base SKU of the node.
-  $models[] = $node->model;
+  $models[] = db_result(db_query("SELECT model FROM {uc_products} WHERE nid = %d", $nid));
 
   // Now we map the SKUs to the keys, for form handling, etc.
   $models = drupal_map_assoc($models);

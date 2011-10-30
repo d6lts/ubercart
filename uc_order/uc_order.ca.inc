@@ -674,8 +674,8 @@ function uc_order_condition_has_products_form($form_state, $settings) {
 
   $options = array();
   $result = db_query("SELECT nid FROM {uc_products}");
-  while ($product = db_fetch_object($result)) {
-    $options += uc_product_get_models(node_load($product->nid), FALSE);
+  while ($nid = db_result($result)) {
+    $options += uc_product_get_models($nid, FALSE);
   }
 
   $form['products'] = array(
