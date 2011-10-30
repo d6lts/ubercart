@@ -643,10 +643,7 @@ function uc_order_view_update_form($form_state, $order) {
   );
 
   $options = array();
-  foreach (uc_order_status_list('general') as $status) {
-    $options[$status['id']] = $status['title'];
-  }
-  foreach (uc_order_status_list('specific') as $status) {
+  foreach (uc_order_status_list() as $status) {
     $options[$status['id']] = $status['title'];
   }
   $form['controls']['status'] = array(
