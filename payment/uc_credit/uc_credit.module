@@ -5,38 +5,32 @@
  * Defines the credit card payment method and hooks in payment gateways.
  */
 
-
-/** Just authorize an amount on a credit card account. */
+// Used to just authorize an amount on a credit card account.
 define('UC_CREDIT_AUTH_ONLY', 'authorize');
 
-/** Capture funds from a prior authorization. */
+// Used to capture funds from a prior authorization.
 define('UC_CREDIT_PRIOR_AUTH_CAPTURE', 'prior_auth_capture');
 
-/** Authorize and capture money all at once. */
+// Used to authorize and capture money all at once.
 define('UC_CREDIT_AUTH_CAPTURE', 'auth_capture');
 
-/** Set up a credit card reference through the payment gateway. */
+// Used to set up a credit card reference through the payment gateway.
 define('UC_CREDIT_REFERENCE_SET', 'reference_set');
 
-/** Capture funds using a credit card reference. */
+// Used to capture funds using a credit card reference.
 define('UC_CREDIT_REFERENCE_TXN', 'reference_txn');
 
-/** Remove a reference from the payment gateway. */
+// Used to remove a reference from the payment gateway.
 define('UC_CREDIT_REFERENCE_REMOVE', 'reference_remove');
 
-/** Credit funds to a reference at the payment gateway. */
+// Used to credit funds to a reference at the payment gateway.
 define('UC_CREDIT_REFERENCE_CREDIT', 'reference_credit');
 
-/** Credit funds to a credit card account. */
+// Used to credit funds to a credit card account.
 define('UC_CREDIT_CREDIT', 'credit');
 
-/** Void a transaction before the transaction clears. */
+// Used to void a transaction before the transaction clears.
 define('UC_CREDIT_VOID', 'void');
-
-
-/** Name of encryption key file. */
-define('UC_CREDIT_KEYFILE_NAME', 'uc_credit.key');
-
 
 /*******************************************************************************
  * Hook Functions (Drupal)
@@ -107,7 +101,7 @@ function uc_credit_form_alter(&$form, $form_state, $form_id) {
           $form['method_credit']['#collapsed'] = FALSE;
         }
         $form['#validate'][] = 'uc_credit_settings_form_validate';
-        $form['#submit'][]   = 'uc_credit_settings_form_submit';
+        $form['#submit'][] = 'uc_credit_settings_form_submit';
       }
       break;
 
@@ -705,9 +699,9 @@ function uc_payment_method_credit($op, &$arg1, $silent = FALSE) {
       );
       $form['cc_security']['uc_credit_encryption_path'] = array(
         '#type' => 'textfield',
-        '#title' => t('Encryption key directory'),
-        '#description' => t('The card type, expiration date and last four digits of the card number are encrypted and stored temporarily while the customer is in the process of checking out..<br /><b>You must enable encryption</b> by following the <a href="!url">encryption instructions</a> in order to accept credit card payments.<br />In short, you must specify a path outside of your document root where the encryption key may be stored.<br />Relative paths will be resolved relative to the Drupal installation directory.<br />Once this is set, you should not change it.', array('!url' => 'http://drupal.org/1309226')),
-        '#default_value' => uc_credit_encryption_key() ? variable_get('uc_credit_encryption_path', t('Not configured.')) : t('Not configured.'),
+        '#title' => t('Card number encryption key filepath'),
+        '#description' => t('The card type, expiration date and last four digits of the card number are encrypted and stored.<br /><b>You must enable encryption</b> by following the <a href="!url">encryption instructions</a> in order to accept credit card payments.<br />In short, you must specify a path outside of your document root where the encryption key may be stored.<br />Relative paths will be resolved relative to the Drupal installation directory.<br />Once this is set, you should not change it.', array('!url' => 'http://www.ubercart.org/docs/user/14512/credit_card_settings#security')),
+        '#default_value' => variable_get('uc_credit_encryption_path', t('Not configured, see below.')),
       );
       $form['cc_security']['uc_credit_debug'] = array(
         '#type' => 'checkbox',
@@ -876,66 +870,20 @@ function uc_payment_method_credit($op, &$arg1, $silent = FALSE) {
 }
 
 /**
- * Validates the encryption key directory and key file.
- *
- * Checks that the encryption key directory has been specified, that it
- * exists, and is readable. and writeable so
- *
- * @see uc_credit_settings_form_submit()
+ * Makes sure the encryption key directory in the credit card settings is valid.
  */
 function uc_credit_settings_form_validate($form, &$form_state) {
-  // Trim trailing whitespace and any trailing / or \ from the key path name.
-  $key_path = rtrim(trim($form_state['values']['uc_credit_encryption_path']), '/\\');
+  $dir = variable_get('uc_credit_encryption_path', t('Not configured, see below.'));
+  $filename = rtrim($dir, '/\\') .'/uc_credit.key';
 
-  // Test to see if a path was entered.
-  if (empty($key_path)) {
-    form_set_error('uc_credit_encryption_path', t('Key path must be specified i
- security settings tab.'));
-  }
+  if ($form_state['values']['uc_credit_encryption_path'] !== variable_get('uc_credit_encryption_path', t('Not configured, see below.'))) {
+    $dir = rtrim($form_state['values']['uc_credit_encryption_path'], '/\\');
 
-  // Construct complete key file path.
-  $key_file = $key_path .'/'. UC_CREDIT_KEYFILE_NAME;
-
-  // Shortcut - test to see if we already have a usable key file.
-  if (file_exists($key_file)) {
-    if (is_readable($key_file)) {
-      // Test contents - must contain 32-character hexadecimal string.
-      $key = uc_credit_encryption_key();
-      if ($key) {
-        if (!preg_match("([0-9a-fA-F]{32})", $key)) {
-          form_set_error('uc_credit_encryption_path', t('Key file already exists in directory, but it contains an invalid key.'));
-        }
-        else {
-          // Key file exists and is valid, save result of trim() back into
-          // $form_state and proceed to submit handler.
-          $form_state['values']['uc_credit_encryption_path'] = $key_path;
-          return;
-        }
-      }
-    }
-    else {
-      form_set_error('uc_credit_encryption_path', t('Key file already exists in directory, but is not readable. Please verify the file permissions.'));
-    }
-  }
-
-  // Check if directory exists and is writeable.
-  if (is_dir($key_path)) {
-    // The entered directory is valid and in need of a key file.
-    // Flag this condition for the submit handler.
-    $form_state['uc_credit']['update_cc_encrypt_dir'] = TRUE;
-
-    // Can we open for writing?
-    $file = @fopen($key_path . '/encrypt.test', 'w');
-    if ($file === FALSE) {
-      form_set_error('uc_credit_encryption_path', t('Cannot write to directory, please verify the directory permissions.'));
-      unset($form_state['uc_credit']['update_cc_encrypt_dir']);
-    }
-    else {
-      // Can we actually write?
-      if (@fwrite($file, '0123456789') === FALSE) {
-        form_set_error('uc_credit_encryption_path', t('Cannot write to directory, please verify the directory permissions.'));
-        unset($form_state['uc_credit']['update_cc_encrypt_dir']);
-        fclose($file);
+    $_SESSION['update_cc_encrypt_dir'] = TRUE;
+    if (!empty($dir) && $dir !== t('Not configured, see below.')) {
+      if (!is_dir($dir)) {
+        form_set_error('uc_credit_encryption_path', t('You have specified a non-existent directory.'));
+        unset($_SESSION['update_cc_encrypt_dir']);
       }
       else {
         $file = fopen($dir .'/encrypt.test', 'w');
@@ -967,8 +915,6 @@ function uc_credit_settings_form_validate($form, &$form_state) {
 
 /**
  * Creates the encryption key file if it doesn't already exist.
- *
- * @see uc_credit_settings_form_validate()
  */
 function uc_credit_settings_form_submit($form, &$form_state) {
   if (isset($_SESSION['update_cc_encrypt_dir']) &&
@@ -976,8 +922,8 @@ function uc_credit_settings_form_submit($form, &$form_state) {
     $dir = rtrim($form_state['values']['uc_credit_encryption_path'], '/\\');
 
     if (!empty($dir) && $dir !== t('Not configured, see below.')) {
-      if (!file_exists($dir .'/'. UC_CREDIT_KEYFILE_NAME)) {
-        if (!$file = fopen($dir .'/'. UC_CREDIT_KEYFILE_NAME, 'wb')) {
+      if (!file_exists($dir .'/uc_credit.key')) {
+        if (!$file = fopen($dir .'/uc_credit.key', 'wb')) {
           drupal_set_message(t('Credit card encryption key file creation failed. Check your filepath settings and directory permissions.'), 'error');
           watchdog('uc_credit', 'Credit card encryption key file creation failed. Check your filepath settings and directory permissions.', array(), WATCHDOG_ERROR);
         }
@@ -1482,11 +1428,7 @@ function _valid_card_issue($issue) {
 /**
  * Loads the key for CC number encryption from a file.
  *
- * Path to key file is stored in system variable 'uc_credit_encryption_path'.
- * Key file name is stored in constant UC_CREDIT_KEYFILE_NAME.
- *
- * @return
- *   FALSE if no encryption key is found.
+ * @return FALSE if no encryption key is found.
  */
 function uc_credit_encryption_key() {
   static $key;
@@ -1495,15 +1437,17 @@ function uc_credit_encryption_key() {
     return $key;
   }
 
-  $key_dir = variable_get('uc_credit_encryption_path', '');
-  if (is_dir($key_dir)) {
-    $key_file = $key_dir .'/'. UC_CREDIT_KEYFILE_NAME;
-    if (file_exists($key_file)) {
-      if (!$file = @fopen($key_file, 'r')) {
+  $dir = variable_get('uc_credit_encryption_path', t('Not configured, see below.'));
+
+  if (!empty($dir) && $dir !== t('Not configured, see below.')) {
+    $filename = rtrim($dir, '/\\') .'/uc_credit.key';
+
+    if (file_exists($filename)) {
+      if (!$file = fopen($filename, 'r')) {
         return FALSE;
       }
 
-      $key = fread($file, filesize($key_file));
+      $key = fread($file, filesize($filename));
       fclose($file);
     }
   }
@@ -1721,3 +1665,4 @@ function uc_credit_gateway_txn_types($gateway) {
 function uc_credit_terminal_title($order) {
   return t('Credit card terminal: Order @order_id', array('@order_id' => $order->order_id));
 }
+

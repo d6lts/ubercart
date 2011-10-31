@@ -3,6 +3,7 @@
 /**
  * @file
  * Credit administration menu items.
+ *
  */
 
 /**
@@ -34,9 +35,6 @@ function uc_credit_terminal($order) {
 
 /**
  * Displays the credit card terminal form for administrators.
- *
- * @see uc_credit_terminal_form_validate()
- * @see uc_credit_terminal_form_submit()
  */
 function uc_credit_terminal_form($form_state, $order, $lock_amount = FALSE) {
   // Get the transaction types available to our default gateway.
@@ -224,9 +222,6 @@ function uc_credit_terminal_form($form_state, $order, $lock_amount = FALSE) {
 
 /**
  * Validation handler for credit terminal form.
- *
- * @see uc_credit_terminal_form()
- * @see uc_credit_terminal_form_submit()
  */
 function uc_credit_terminal_form_validate($form, &$form_state) {
   switch ($form_state['values']['op']) {
@@ -246,9 +241,6 @@ function uc_credit_terminal_form_validate($form, &$form_state) {
 
 /**
  * Submit handler for credit terminal form.
- *
- * @see uc_credit_terminal_form()
- * @see uc_credit_terminal_form_validate()
  */
 function uc_credit_terminal_form_submit($form, &$form_state) {
   // Load the order.
