@@ -21,12 +21,12 @@
  */
 function uc_usps_country_map($code = NULL) {
   $countries = array(
-    92 => 'British Virgin Islands',
+     92 => 'British Virgin Islands',
     268 => 'Georgia, Republic of',
     826 => 'Great Britain and Northern Ireland',
     300 => 'Greece',
     364 => 'Iran',
-    833 => 'Isle of Man (Great Britain)',
+    833 => 'Isle of Man (Great Britain and Northern Ireland)',
     410 => 'Korea, Republic of (South Korea)',
     428 => 'Latvia',
     440 => 'Lithuania',
