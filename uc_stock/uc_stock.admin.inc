@@ -70,7 +70,7 @@ function uc_stock_report() {
   $result = pager_query($sql . tablesort_sql($header), $page_size, 0, NULL);
   while ($stock = db_fetch_object($result)) {
     $op = array();
-    if (user_access('administer products')) {
+    if (user_access('administer product stock')) {
       $op[] = l(t('edit'), 'node/'. $stock->nid .'/edit/stock', $options = array('query' => 'destination=admin/store/reports/stock'));
     }
 
