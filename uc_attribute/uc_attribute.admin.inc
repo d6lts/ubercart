@@ -1203,17 +1203,11 @@ function uc_product_adjustments_form($form_state, $node) {
  */
 function uc_product_adjustments_form_submit($form, &$form_state) {
   foreach ($form_state['values']['body'] as $value) {
+    db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d AND combination = '%s'",
+      $form_state['values']['nid'], $value['combo_array']);
     if (!empty($value['model']) && $value['model'] != $form_state['values']['default']) {
-      db_query("UPDATE {uc_product_adjustments} SET model = '%s' WHERE nid = %d AND combination = '%s'",
-        $value['model'], $form_state['values']['nid'], $value['combo_array']);
-      if (!db_affected_rows()) {
-        db_query("INSERT INTO {uc_product_adjustments} (nid, combination, model) VALUES (%d, '%s', '%s')",
-          $form_state['values']['nid'], $value['combo_array'], $value['model']);
-      }
-    }
-    else {
-      db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d AND combination = '%s'",
-        $form_state['values']['nid'], $value['combo_array']);
+      db_query("INSERT INTO {uc_product_adjustments} (nid, combination, model) VALUES (%d, '%s', '%s')",
+        $form_state['values']['nid'], $value['combo_array'], $value['model']);
     }
   }
   drupal_set_message(t('Product adjustments have been saved.'));
