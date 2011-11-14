@@ -849,35 +849,18 @@ function uc_cart_login_update($uid) {
     return;
   }
 
-  // Get the current contents of the cart.
-  $items = uc_cart_get_contents($uid);
+  // If there are items in the anonymous cart, consolidate them.
+  if ($items = uc_cart_get_contents($_SESSION['uc_cart_id'])) {
+    // Remove the anonymous cart items.
+    db_query("DELETE FROM {uc_cart_products} WHERE cart_id = '%s'", $_SESSION['uc_cart_id']);
 
-  // Update the cart so the ID is switched from the session to user ID.
-  db_query("UPDATE {uc_cart_products} SET cart_id = %d WHERE cart_id = '%s'", $uid, $_SESSION['uc_cart_id']);
-
-  // If there were items before the update, we need to re-add them all to
-  // take care of item consolidation.
-  if (count($items) > 0) {
-    // Store again what items these are.
-    $items = uc_cart_get_contents($uid, 'rebuild');
-
-    // Remove from the table all the items in the cart.
-    // Should be a function call instead of a single query. -RS
-    db_query("DELETE FROM {uc_cart_products} WHERE cart_id = '%s'", $uid);
-
-    // Reset the cart item cache.
-    uc_cart_get_contents($uid, 'rebuild');
-
-    // Loop through what the items should be and re-add them to the cart.
+    // Merge the anonymous items into the user cart.
     foreach ($items as $key => $item) {
       uc_cart_add_item($item->nid, $item->qty, $item->data, $uid, FALSE, FALSE, FALSE);
     }
 
     // Unset the anonymous cart ID, it's no longer needed
     unset($_SESSION['uc_cart_id']);
-
-    // Rebuild the cart item cache.
-    uc_cart_get_contents($uid, 'rebuild');
   }
 }
 
