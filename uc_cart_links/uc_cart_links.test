@@ -5,6 +5,9 @@
  * Ubercart Cart Links Tests.
  */
 
+// Ensure UbercartTestHelper is available.
+module_load_include('test', 'uc_store', 'uc_store');
+
 /**
  * SimpleTests for Ubercart Cart Links.
  */
