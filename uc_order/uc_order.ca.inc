@@ -677,6 +677,7 @@ function uc_order_condition_has_products_form($form_state, $settings) {
   while ($nid = db_result($result)) {
     $options += uc_product_get_models($nid, FALSE);
   }
+  asort($options);
 
   $form['products'] = array(
     '#type' => 'select',
