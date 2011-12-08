@@ -27,7 +27,7 @@
 
 .uc-orders-table tr.odd:hover,
 .uc-orders-table tr.even:hover {
-  background-color: #DDD;
+  background-color: #ddd;
 }
 
 .uc-orders-table img {
@@ -46,7 +46,7 @@
 }
 
 .order-pane {
-  border-color: #BBB;
+  border-color: #bbb;
   border-style: solid;
   border-width: 1px;
   line-height: 1.1em;
@@ -56,7 +56,7 @@
 }
 
 .order-pane thead {
-  background-color: #DDD;
+  background-color: #ddd;
 }
 
 .order-pane tbody {
@@ -107,16 +107,16 @@
 }
 
 .order-pane-table thead th {
-  background-color: #DDD;
+  background-color: #ddd;
   border-style: solid;
   border-width: 0px 0px 2px 0px;
-  border-color: #BBB;
+  border-color: #bbb;
   font-weight: bold;
   padding: 4px 8px;
 }
 
 .order-pane-table tr {
-  border-color: #BBB;
+  border-color: #bbb;
   border-style: solid;
   border-width: 0px 0px 1px 0px;
 }
@@ -140,7 +140,7 @@
 }
 
 .address-select-box {
-  background-color: #DDD;
+  background-color: #ddd;
   border: solid 1px #999;
   padding-bottom: 1em;
   padding-left: 1em;
@@ -149,7 +149,7 @@
 }
 
 .customer-select-box {
-  background-color: #DDD;
+  background-color: #ddd;
   border: solid 1px #999;
   padding: 1em;
   margin-top: 1em;
@@ -157,7 +157,7 @@
 }
 
 .product-select-box {
-  background-color: #DDD;
+  background-color: #ddd;
   border: solid 1px #999;
   margin-right: auto;
   margin-bottom: 1em;
@@ -165,7 +165,7 @@
 }
 
 .product-select-box2 {
-  background-color: #DDD;
+  background-color: #ddd;
   border: solid 1px #999;
   margin-right: auto;
   margin-bottom: 1em;
