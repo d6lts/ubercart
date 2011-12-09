@@ -407,7 +407,7 @@ function hook_checkout_pane() {
   $panes[] = array(
     'id' => 'cart',
     'callback' => 'uc_checkout_pane_cart',
-    'title' => t('Cart Contents'),
+    'title' => t('Cart contents'),
     'desc' => t("Display the contents of a customer's shopping cart."),
     'weight' => 1,
     'process' => FALSE,
@@ -454,7 +454,7 @@ function hook_checkout_pane_alter(&$panes) {
  */
 function hook_download_authorize($user, $file_download) {
   if (!$user->status) {
-    drupal_set_message(t("This account has been banned and can't download files anymore. "),'error');
+    drupal_set_message(t("This account has been banned and can't download files anymore. "), 'error');
     return FALSE;
   }
   else {
@@ -544,18 +544,19 @@ function hook_file_action($op, $args) {
     case 'info':
       return array('uc_image_watermark_add_mark' => 'Add Watermark');
     case 'insert':
-      //automatically adds watermarks to any new files that are uploaded to the file download directory
+      // Automatically adds watermarks to any new files that are uploaded to
+      // the file download directory
       _add_watermark($args['file_object']->filepath);
     break;
     case 'form':
       if ($args['action'] == 'uc_image_watermark_add_mark') {
         $form['watermark_text'] = array(
           '#type' => 'textfield',
-          '#title' => t('Watermark Text'),
+          '#title' => t('Watermark text'),
         );
         $form['submit_watermark'] = array(
           '#type' => 'submit',
-          '#value' => t('Add Watermark'),
+          '#value' => t('Add watermark'),
         );
       }
     return $form;
@@ -563,23 +564,23 @@ function hook_file_action($op, $args) {
       _add_watermark($args['file_object']->filepath);
       break;
     case 'upload_validate':
-      //Given a file path, function checks if file is valid JPEG
-      if(!_check_image($args['file_object']->filepath)) {
-        form_set_error('upload',t('Uploaded file is not a valid JPEG'));
+      // Given a file path, function checks if file is valid JPEG
+      if (!_check_image($args['file_object']->filepath)) {
+        form_set_error('upload', t('Uploaded file is not a valid JPEG'));
       }
     break;
     case 'validate':
       if ($args['form_values']['action'] == 'uc_image_watermark_add_mark') {
         if (empty($args['form_values']['watermark_text'])) {
-          form_set_error('watermar_text',t('Must fill in text'));
+          form_set_error('watermar_text', t('Must fill in text'));
         }
       }
     break;
     case 'submit':
       if ($args['form_values']['action'] == 'uc_image_watermark_add_mark') {
         foreach ($args['form_values']['file_ids'] as $file_id) {
-          $filename = db_result(db_query("SELECT filename FROM {uc_files} WHERE fid = %d",$file_id));
-          //Function adds watermark to image
+          $filename = db_result(db_query("SELECT filename FROM {uc_files} WHERE fid = %d", $file_id));
+          // Function adds watermark to image
           _add_watermark($filename);
         }
       }
@@ -613,9 +614,9 @@ function hook_file_action($op, $args) {
  *   The path of the new file to transfer to customer.
  */
 function hook_file_transfer_alter($file_user, $ip, $fid, $file) {
-  $file_data = file_get_contents($file)." [insert personalized data]"; //for large files this might be too memory intensive
-  $new_file = tempnam(file_directory_temp(),'tmp');
-  file_put_contents($new_file,$file_data);
+  $file_data = file_get_contents($file) ." [insert personalized data]"; // For large files this might be too memory intensive
+  $new_file = tempnam(file_directory_temp(), 'tmp');
+  file_put_contents($new_file, $file_data);
   return $new_file;
 }
 
@@ -679,7 +680,7 @@ function hook_file_transfer_alter($file_user, $ip, $fid, $file) {
 function hook_line_item() {
   $items[] = array(
     'id' => 'generic',
-    'title' => t('Empty Line'),
+    'title' => t('Empty line'),
     'weight' => 2,
     'default' => FALSE,
     'stored' => TRUE,
@@ -1151,7 +1152,7 @@ function hook_shipment($op, &$shipment) {
           if ($package->tracking_number) {
             $tracking_number = $package->tracking_number;
           }
-          else if ($shipment->tracking_number) {
+          elseif ($shipment->tracking_number) {
             $tracking_number = $shipment->tracking_number;
           }
           if ($tracking_number) {
@@ -1311,7 +1312,7 @@ function hook_shipping_type() {
   $types = array();
   $types['small_package'] = array(
     'id' => 'small_package',
-    'title' => t('Small Packages'),
+    'title' => t('Small packages'),
     'weight' => $weight['small_package'],
   );
 
@@ -1369,7 +1370,7 @@ function hook_tapir_table_alter(&$table, $table_id) {
       $node = node_load($table['#parameters'][1][$key]);
 
       $table[$key]['designer'] = array(
-        '#value' => l($node->designer, 'collections/'.$node->designer_tid),
+        '#value' => l($node->designer, 'collections/'. $node->designer_tid),
         '#cell_attributes' => array(
           'nowrap' => 'nowrap',
         ),
@@ -1396,10 +1397,10 @@ function hook_tapir_table_alter(&$table, $table_id) {
  *
  * @see hook_db_rewrite_sql()
  *
- * @param $header Reference to the array header declaration
- *   (i.e $table['#header']).
- * @param $table_id Table ID. Also the function called to build the table
- *   declaration.
+ * @param $header
+ *   Reference to the array header declaration (i.e $table['#header']).
+ * @param $table_id
+ *   Table ID. Also the function called to build the table declaration.
  */
 function hook_tapir_table_header_alter(&$header, $table_id) {
   if ($table_id == 'uc_product_table') {

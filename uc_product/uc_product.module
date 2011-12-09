@@ -1006,7 +1006,7 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
 function uc_product_i18nsync_fields_alter($fields, $type) {
   if (uc_product_is_product($type)) {
     $fields['uc_products']['#title'] = t('Product fields');
-    $fields['uc_products']['#options'] = array (
+    $fields['uc_products']['#options'] = array(
       'model' => t('SKU'),
       'list_price' => t('List price'),
       'cost' => t('Cost'),
@@ -2061,7 +2061,7 @@ function uc_product_feature_save($data) {
     }
   }
 
-  if(!empty($data['pfid']) && db_result(db_query("SELECT COUNT(*) FROM {uc_product_features} WHERE pfid = %d", intval($data['pfid'])))) {
+  if (!empty($data['pfid']) && db_result(db_query("SELECT COUNT(*) FROM {uc_product_features} WHERE pfid = %d", intval($data['pfid'])))) {
     // First attempt to update an existing row.
     db_query("UPDATE {uc_product_features} SET description = '%s' WHERE pfid = %d", $data['description'], intval($data['pfid']));
     drupal_set_message(t('The product feature has been updated.'));

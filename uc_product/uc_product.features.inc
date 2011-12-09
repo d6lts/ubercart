@@ -63,7 +63,7 @@ function uc_product_classes_features_revert($module) {
         // Our existing fields ($fields) needs to be the first argument here,
         // so only fields that don't exist in code can be de-activated.
         if ($deleted_fields = array_diff(content_features_fields_normal($type_name), content_features_fields_default($type_name))) {
-          foreach($deleted_fields as $field_name) {
+          foreach ($deleted_fields as $field_name) {
             db_query("UPDATE {". content_instance_tablename() ."} SET widget_active = 0 WHERE field_name = '%s' AND type_name = '%s'", $field_name, $type_name);
           }
         }

@@ -680,7 +680,7 @@ function uc_order_update_6000() {
   db_change_field($ret, 'uc_order_products', 'order_id', 'order_id', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0), array('indexes' => array('order_id' => array('order_id'))));
   db_change_field($ret, 'uc_order_products', 'nid', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   db_change_field($ret, 'uc_order_products', 'qty', 'qty', array('type' => 'int', 'unsigned' => TRUE, 'size' => 'small', 'not null' => TRUE, 'default' => 0));
-  db_change_field($ret, 'uc_order_products', 'cost', 'cost', array('type' => 'numeric', 'precision' => 10, 'scale' => 2,'not null' => TRUE, 'default' => 0));
+  db_change_field($ret, 'uc_order_products', 'cost', 'cost', array('type' => 'numeric', 'precision' => 10, 'scale' => 2, 'not null' => TRUE, 'default' => 0));
   db_change_field($ret, 'uc_order_products', 'price', 'price', array('type' => 'numeric', 'precision' => 10, 'scale' => 2, 'not null' => TRUE, 'default' => 0));
   db_change_field($ret, 'uc_order_products', 'weight', 'weight', array('type' => 'float', 'not null' => TRUE, 'default' => 0));
   if ($GLOBALS['db_type'] == 'pgsql') {
@@ -701,7 +701,7 @@ function uc_order_update_6001() {
   $ret = array();
 
   db_change_field($ret, 'uc_order_products', 'cost', 'cost', array('type' => 'numeric', 'precision' => 10, 'scale' => 2, 'not null' => TRUE, 'default' => 0));
-  db_change_field($ret, 'uc_order_products', 'price', 'price', array('type' => 'numeric', 'precision' => 10, 'scale' => 2,'not null' => TRUE, 'default' => 0));
+  db_change_field($ret, 'uc_order_products', 'price', 'price', array('type' => 'numeric', 'precision' => 10, 'scale' => 2, 'not null' => TRUE, 'default' => 0));
 
   return $ret;
 }
@@ -757,7 +757,7 @@ function uc_order_update_6005() {
   $ret = array();
 
   $result = db_query("SELECT * FROM {permission}");
-  while($perm = db_fetch_object($result)) {
+  while ($perm = db_fetch_object($result)) {
     $perm->perm = str_replace("delete any order", "unconditionally delete orders", $perm->perm);
     drupal_write_record('permission', $perm, 'pid');
   }
