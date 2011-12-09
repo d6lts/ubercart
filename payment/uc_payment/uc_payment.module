@@ -748,6 +748,10 @@ function _payment_method_list($action = NULL) {
   }
 
   $methods = module_invoke_all('payment_method');
+
+  // Allow other modules to alter the payment methods.
+  drupal_alter('payment_method', $methods);
+  
   foreach ($methods as $i => $value) {
     $methods[$i]['checkout'] = variable_get('uc_payment_method_'. $methods[$i]['id'] .'_checkout', $methods[$i]['checkout']);
     $methods[$i]['weight'] = variable_get('uc_payment_method_'. $methods[$i]['id'] .'_weight', $methods[$i]['weight']);

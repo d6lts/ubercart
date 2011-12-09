@@ -1020,6 +1020,20 @@ function hook_payment_method() {
 }
 
 /**
+ * Alter payment methods.
+ *
+ * @param $methods
+ *   Payment methods passed by reference.
+ */
+function hook_payment_method_alter(&$methods) {
+  // Change the title of all methods.
+  foreach ($methods as &$method) {
+    // $method was passed by reference.
+    $method['title'] = t('Altered method @original', array('@original' => $method['title']));
+  }
+}
+
+/**
  * Performs actions on product classes.
  *
  * @param $type
