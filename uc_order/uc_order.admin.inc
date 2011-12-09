@@ -284,17 +284,16 @@ function uc_order_panes_form() {
 
   foreach ($panes as $pane) {
     foreach ($pane['show'] as $view) {
-      $form['panes'][$view][$pane['id']]['title'] = array(
-        '#value' => $pane['title'],
-      );
       $form['panes'][$view][$pane['id']]['uc_order_pane_'. $pane['id'] .'_show_'. $view] = array(
         '#type' => 'checkbox',
+        '#title' => $pane['title'],
         '#default_value' => variable_get('uc_order_pane_'. $pane['id'] .'_show_'. $view, $pane['enabled']),
       );
       $form['panes'][$view][$pane['id']]['uc_order_pane_'. $pane['id'] .'_enabled'] = &$form['panes'][$view][$pane['id']]['uc_order_pane_'. $pane['id'] .'_show_'. $view];
       $form['panes'][$view][$pane['id']]['uc_order_pane_'. $pane['id'] .'_weight_'. $view] = array(
         '#type' => 'weight',
         '#default_value' => variable_get('uc_order_pane_'. $pane['id'] .'_weight_'. $view, $pane['weight']),
+        '#attributes' => array('class' => 'uc-order-pane-' . $view . '-weight'),
       );
       $form['panes'][$view][$pane['id']]['uc_order_pane_'. $pane['id'] .'_weight'] = &$form['panes'][$view][$pane['id']]['uc_order_pane_'. $pane['id'] .'_weight_'. $view];
       $form['panes'][$view][$pane['id']]['weight'] = variable_get('uc_order_pane_'. $pane['id'] .'_weight_'. $view, $pane['weight']);
@@ -315,6 +314,7 @@ function uc_order_panes_form() {
     $fieldset = array(
       '#theme' => 'uc_pane_sort_table',
       '#pane_prefix' => 'uc_order_pane',
+      '#draggable' => 'uc-order-pane-' . $view . '-weight',
       '#type' => 'fieldset',
       '#title' => t('Order panes on !screen screen', array('!screen' => $titles[$view])),
       '#summary callback' => '_uc_order_panes_summarize',
