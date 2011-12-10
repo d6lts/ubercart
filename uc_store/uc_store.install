@@ -75,6 +75,13 @@ function uc_store_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'weight' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The list order for this country.',
+      ),
     ),
     'indexes' => array(
       'country_name' => array('country_name'),
@@ -279,6 +286,25 @@ function uc_store_update_6006() {
   }
 
   variable_del('uc_price_caching');
+
+  return $ret;
+}
+
+/**
+ * Add weight column to uc_countries table.
+ */
+function uc_store_update_6007() {
+  $ret = array();
+
+  $weight_schema = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The list order for this country.',
+  );
+
+  db_add_field($ret, 'uc_countries', 'weight', $weight_schema);
 
   return $ret;
 }
