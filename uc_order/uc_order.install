@@ -484,7 +484,6 @@ function uc_order_schema() {
       'qty' => array(
         'description' => 'The number of the same product ordered.',
         'type' => 'int',
-        'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
@@ -1067,6 +1066,23 @@ function uc_order_update_6019() {
 
   db_add_index($ret, 'uc_order_products', 'qty', array('qty'));
   db_add_index($ret, 'uc_order_products', 'nid', array('nid'));
+
+  return $ret;
+}
+
+/**
+ * Increase maximum order item quantity.
+ */
+function uc_cart_update_6020() {
+  $ret = array();
+
+  db_change_field($ret, 'uc_order_products', 'qty', 'qty', array(
+    'description' => 'The number of the same product ordered.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+   ));
 
   return $ret;
 }

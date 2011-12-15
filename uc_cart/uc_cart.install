@@ -37,7 +37,6 @@ function uc_cart_schema() {
       'qty' => array(
         'description' => 'The number of this product in the cart.',
         'type' => 'int',
-        'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
@@ -188,6 +187,23 @@ function uc_cart_update_6202() {
   }
 
   variable_del('uc_cart_block_title');
+
+  return $ret;
+}
+
+/**
+ * Increase maximum cart item quantity.
+ */
+function uc_cart_update_6203() {
+  $ret = array();
+
+  db_change_field($ret, 'uc_cart_products', 'qty', 'qty', array(
+    'description' => 'The number of this product in the cart.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+   ));
 
   return $ret;
 }
