@@ -1073,7 +1073,7 @@ function uc_order_update_6019() {
 /**
  * Increase maximum order item quantity.
  */
-function uc_cart_update_6020() {
+function uc_order_update_6020() {
   $ret = array();
 
   db_change_field($ret, 'uc_order_products', 'qty', 'qty', array(
