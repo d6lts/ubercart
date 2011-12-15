@@ -294,6 +294,14 @@ function uc_stock_decrement_product_stock($product, $key, $order) {
 }
 
 /**
+ * Increment a product's stock.
+ */
+function uc_stock_increment_product_stock($product, $key, $order) {
+  $product->qty = -$product->qty;
+  return uc_stock_adjust_product_stock($product, $key, $order);
+}
+
+/**
  * Adjusts a product's stock.
  *
  * @param $product
