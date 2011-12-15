@@ -58,6 +58,17 @@ function uc_order_ca_trigger() {
     ),
   );
 
+  $triggers['uc_order_delete'] = array(
+    '#title' => t('An order is being deleted'),
+    '#category' => t('Order'),
+    '#arguments' => array(
+      'order' => array(
+        '#entity' => 'uc_order',
+        '#title' => t('Order'),
+      ),
+    ),
+  );
+
   return $triggers;
 }
 

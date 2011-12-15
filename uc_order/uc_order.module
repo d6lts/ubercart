@@ -1258,6 +1258,7 @@ function uc_order_delete($order_id) {
 
   // Perform the operations if we're deleting a valid order.
   if ($order !== FALSE) {
+    ca_pull_trigger('uc_order_delete', $order);
     uc_order_module_invoke('delete', $order, NULL);
 
     // Delete data from the appropriate Ubercart order tables.
