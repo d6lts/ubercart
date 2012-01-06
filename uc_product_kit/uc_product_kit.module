@@ -580,7 +580,7 @@ function uc_product_kit_form(&$node) {
     '#type' => 'textfield',
     '#title' => t('Default quantity to add to cart'),
     '#default_value' => !is_null($node->default_qty) ? $node->default_qty : 1,
-    '#description' => t('Leave blank or zero to disable the quantity field in the add to cart form.'),
+    '#description' => t('Use 0 to disable the quantity field next to the add to cart button.'),
     '#weight' => 27,
     '#size' => 5,
     '#maxlength' => 6,
