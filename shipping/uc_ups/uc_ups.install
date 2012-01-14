@@ -203,7 +203,7 @@ function uc_ups_update_6000() {
 /**
  * Updates UPS Production URL.
  */
-function uc_ups_update_7301() {
+function uc_ups_update_6201() {
   $current = variable_get('uc_ups_connection_address', '');
 
   // If currently using production URL, update variable to new value.
