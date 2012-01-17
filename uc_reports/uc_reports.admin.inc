@@ -454,10 +454,9 @@ function uc_reports_products_custom() {
   $csv_data = uc_reports_store_csv('uc_products', $csv_rows);
 
   // Build the page output holding the form, table, and CSV export link.
-  $output = drupal_get_form('uc_reports_products_custom_form', $args, $args['status'])
-          . theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'))
-           .'<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'</div>';
-
+  $output = drupal_get_form('uc_reports_products_custom_form', $args, $args['status']);
+  $output .= theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'));
+  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. ((isset($_GET['nopage'])) ? l(t('Show paged records'), 'admin/store/reports/products/custom') : l(t('Show all records'), 'admin/store/reports/products/custom', array('query' => 'nopage=1'))) .'</div>';
   $output .= theme('pager', NULL, $page_size);
   $output .= '<small>*'. t('Make sure %setting_name is set to %state in the <a href="!url">access log settings page</a> to enable views column.', array('%setting_name' => 'count content views', '%state' => 'enabled', '!url' => url('admin/reports/settings', array('query' => 'destination=admin/store/reports/products/custom')))) .'</small>';
 
@@ -885,9 +884,9 @@ function uc_reports_sales_year() {
   $csv_data = uc_reports_store_csv('uc_sales_yearly', $csv_rows);
 
   // Build the page output holding the form, table, and CSV export link.
-  $output = drupal_get_form('uc_reports_sales_year_form', $year)
-          . theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'))
-           .'<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'</div>';
+  $output = drupal_get_form('uc_reports_sales_year_form', $year);
+  $output .= theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'));
+  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'</div>';
 
   return $output;
 }
@@ -1063,9 +1062,9 @@ function uc_reports_sales_custom() {
   $csv_data = uc_reports_store_csv('uc_sales_custom', $csv_rows);
 
   // Build the page output holding the form, table, and CSV export link.
-  $output = drupal_get_form('uc_reports_sales_custom_form', $args, $args['status'])
-          . theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'))
-           .'<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'</div>';
+  $output = drupal_get_form('uc_reports_sales_custom_form', $args, $args['status']);
+  $output .= theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'));
+  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'</div>';
 
   return $output;
 }
