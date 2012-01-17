@@ -382,7 +382,7 @@ function uc_order_condition_check_order_status_form($form_state, $settings = arr
     '#type' => 'select',
     '#title' => t('Order status'),
     '#options' => $options,
-    '#default_value' => $settings['order_status'],
+    '#default_value' => isset($settings['order_status']) ? $settings['order_status'] : '',
   );
 
   return $form;
@@ -412,7 +412,7 @@ function uc_order_condition_check_order_state_form($form_state, $settings = arra
     '#type' => 'select',
     '#title' => t('Order state'),
     '#options' => $options,
-    '#default_value' => $settings['order_state'],
+    '#default_value' => isset($settings['order_state']) ? $settings['order_state'] : '',
   );
 
   return $form;
@@ -447,7 +447,7 @@ function uc_order_condition_total_form($form_state, $settings = array()) {
     '#type' => 'textfield',
     '#title' => t('Order total value'),
     '#description' => t('Specify a value to compare the order total against.'),
-    '#default_value' => $settings['order_total_value'],
+    '#default_value' => isset($settings['order_total_value']) ? $settings['order_total_value'] : 0,
     '#size' => 16,
     '#field_prefix' => variable_get('uc_sign_after_amount', FALSE) ? '' : variable_get('uc_currency_sign', '$'),
     '#field_suffix' => variable_get('uc_sign_after_amount', FALSE) ? variable_get('uc_currency_sign', '$') : '',
@@ -490,7 +490,7 @@ function uc_order_condition_delivery_postal_code_form($form_state, $settings = a
   $form['pattern'] = array(
     '#type' => 'textfield',
     '#title' => uc_get_field_name('postal_code'),
-    '#default_value' => $settings['pattern'],
+    '#default_value' => isset($settings['pattern']) ? $settings['pattern'] : NULL,
     '#description' => t('Specify a postal code or postal code pattern. Use "*" as a wild card to specify a range of postal codes.<br /><b>Example:</b> In the US, 402* represents all areas from 40200 to 40299.'),
     '#size' => 15,
     // '#required' => TRUE,
@@ -545,7 +545,7 @@ function uc_order_condition_delivery_country($order, $settings) {
  */
 function uc_order_condition_delivery_country_form($form_state, $settings = array()) {
   $form['countries'] = uc_country_select(uc_get_field_name('country'));
-  $form['countries']['#default_value'] = $settings['countries'];
+  $form['countries']['#default_value'] = isset($settings['countries']) ? $settings['countries'] : NULL;
   $form['countries']['#multiple'] = TRUE;
   // $form['countries']['#required'] = TRUE;
 
@@ -747,7 +747,7 @@ function uc_order_condition_count_products_form($form_state, $settings = array()
     '#type' => 'select',
     '#title' => t('Products'),
     '#options' => $options,
-    '#default_value' => $settings['products'],
+    '#default_value' => isset($settings['products']) ? $settings['products'] : 'all',
     '#description' => check_plain(t('Selecting "- All products -" will override any other selections and returns the total number of products in the order.')),
     '#multiple' => TRUE,
   );
@@ -755,7 +755,7 @@ function uc_order_condition_count_products_form($form_state, $settings = array()
     '#type' => 'textfield',
     '#title' => t('Product count value'),
     '#description' => t('Specify a value to compare the product count against.'),
-    '#default_value' => $settings['product_count_value'],
+    '#default_value' => isset($settings['product_count_value']) ? $settings['product_count_value'] : '',
     '#size' => 16,
   );
 
@@ -824,7 +824,7 @@ function uc_order_condition_products_weight_form($form_state, $settings = array(
     '#type' => 'select',
     '#title' => t('Products'),
     '#options' => $options,
-    '#default_value' => $settings['products'],
+    '#default_value' => isset($settings['products']) ? $settings['products'] : 'all',
     '#description' => check_plain(t('Selecting "- All products -" will override any other selections and returns the total number of products in the order.')),
     '#multiple' => TRUE,
   );
@@ -843,7 +843,7 @@ function uc_order_condition_products_weight_form($form_state, $settings = array(
     '#type' => 'textfield',
     '#title' => t('Product weight value'),
     '#description' => t('Specify a value to compare the product weight against.'),
-    '#default_value' => $settings['product_weight_value'],
+    '#default_value' => isset($settings['product_weight_value']) ? $settings['product_weight_value'] : 0,
     '#size' => 16,
   );
 
@@ -1149,7 +1149,7 @@ function uc_order_action_update_status_form($form_state, $settings = array()) {
     '#type' => 'select',
     '#title' => t('Order status'),
     '#options' => $options,
-    '#default_value' => $settings['order_status'],
+    '#default_value' => isset($settings['order_status']) ? $settings['order_status'] : '',
   );
 
   return $form;
@@ -1179,13 +1179,13 @@ function uc_order_action_add_comment_form($form_state, $settings = array()) {
       'order' => t('Enter this as a customer order comment.'),
       'notified' => t('Enter this as a customer order comment with a notified icon.'),
     ),
-    '#default_value' => $settings['comment_type'],
+    '#default_value' => isset($settings['comment_type']) ? $settings['comment_type'] : 'admin',
   );
   $form['comment'] = array(
     '#type' => 'textarea',
     '#title' => t('Comment'),
     '#description' => t('Enter the comment message. Uses <a href="!url">order and global tokens</a>.', array('!url' => url('admin/store/help/tokens'))),
-    '#default_value' => $settings['comment'],
+    '#default_value' => isset($settings['comment']) ? $settings['comment'] : '',
     '#wysiwyg' => FALSE,
   );
 
@@ -1264,13 +1264,13 @@ function uc_order_action_email_form($form_state, $settings = array()) {
   $form['subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => $settings['subject'],
+    '#default_value' => isset($settings['subject']) ? $settings['subject'] : '',
     '#required' => TRUE,
   );
   $form['message'] = array(
     '#type' => 'textarea',
     '#title' => t('Message'),
-    '#default_value' => $settings['message'],
+    '#default_value' => isset($settings['message']) ? $settings['message'] : '',
     '#wysiwyg' => FALSE,
   );
 
@@ -1358,7 +1358,7 @@ function uc_order_action_email_invoice_form($form_state, $settings = array()) {
   $form['subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => $settings['subject'],
+    '#default_value' => isset($settings['subject']) ? $settings['subject'] : '',
     '#required' => TRUE,
   );
 
@@ -1386,7 +1386,7 @@ function uc_order_action_email_invoice_form($form_state, $settings = array()) {
     '#title' => t('Invoice template'),
     '#description' => t('Select the invoice template to use for this email.'),
     '#options' => uc_order_template_options(),
-    '#default_value' => $settings['template'],
+    '#default_value' => isset($settings['template']) ? $settings['template'] : '',
   );
   $form['view'] = array(
     '#type' => 'radios',
@@ -1396,7 +1396,7 @@ function uc_order_action_email_invoice_form($form_state, $settings = array()) {
       'admin-mail' => t('Show all of the above plus the help text, email text, and store footer.'),
       'checkout-mail' => t('Show all of the above plus the "thank you" message.'),
     ),
-    '#default_value' => $settings['view'],
+    '#default_value' => isset($settings['view']) ? $settings['view'] : 'print',
   );
 
   return $form;
