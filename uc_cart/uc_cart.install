@@ -183,7 +183,7 @@ function uc_cart_update_6202() {
   $ret = array();
 
   if ($title = variable_get('uc_cart_block_title', '')) {
-    $ret[] = update_sql("UPDATE {blocks} SET title = '" . db_escape_string($title) . "' WHERE module = 'uc_cart' AND delta = 0");
+    $ret[] = update_sql("UPDATE {blocks} SET title = '" . db_escape_string($title) . "' WHERE module = 'uc_cart' AND delta = '0'");
   }
 
   variable_del('uc_cart_block_title');
