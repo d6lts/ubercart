@@ -515,8 +515,13 @@ function uc_usps_quote($products, $details, $method) {
  * @ingroup themeable
  */
 function theme_uc_usps_option_label($service, $packages) {
-  // Start with logo
-  $output = '<img class="usps-logo" src="'. url(drupal_get_path('module', 'uc_usps')) .'/uc_usps_logo.gif" alt="'. t('USPS Logo') .'" /> ';
+  // Start with USPS logo
+  $output  = theme('image',
+    drupal_get_path('module', 'uc_usps') . '/uc_usps_logo.gif',
+    t('USPS logo'),
+    '',
+    array('class' => 'usps-logo')
+  );
 
   // Add USPS service name, removing the first nine characters
   // (== 'U.S.P.S. ') because these replicate the logo image
