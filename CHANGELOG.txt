@@ -1,3 +1,8 @@
+Ubercart 3.0, 2012-2-1
+----------------------
+- Theme:
+    * Use theme('image') for UPS and USPS logos.
+
 Ubercart 3.0-rc4, 2012-1-23
 ---------------------------
 - API:
