@@ -26,7 +26,9 @@ function uc_product_classes_features_export($data, &$export, $module_name = '') 
   }
 
   // Create a pipe for the CCK fields and variables to be exported.
-  $pipe = array('node' => $data);
+  // This used to just return $pipe = array('node' => $data); but this
+  // stopped working in Features 6.x-1.2. See http://drupal.org/node/1404486
+  $pipe = node_features_export($data, $export, $module_name);
 
   // If strongarm is available, export the shippable and image settings.
   if (module_exists('strongarm')) {
