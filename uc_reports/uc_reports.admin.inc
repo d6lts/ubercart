@@ -92,12 +92,12 @@ function uc_reports_customers() {
     $average_revenue = uc_price($customer['average'], $context);
     $rows[] = array(
       array('data' => $customer_number),
-      array('data' => $name, 'nowrap' => 'nowrap'),
-      array('data' => l($customer_name, 'user/'. $customer['uid']), 'nowrap' => 'nowrap'),
+      array('data' => $name),
+      array('data' => l($customer_name, 'user/'. $customer['uid'])),
       array('data' => $orders),
       array('data' => $products),
-      array('data' => $total_revenue, 'nowrap' => 'nowrap'),
-      array('data' => $average_revenue, 'nowrap' => 'nowrap'),
+      array('data' => $total_revenue),
+      array('data' => $average_revenue),
     );
     $csv_rows[] = array($customer_number, $customer_order_name, $customer_name, $orders, $products, $customer['total'], $customer['average']);
   }
@@ -202,8 +202,8 @@ function uc_reports_products() {
         $row_cell,
         $product_cell,
         "<strong>$sold_cell</strong>",
-        array('data' => "<strong>$revenue_cell</strong>", 'nowrap' => 'nowrap'),
-        array('data' => "<strong>$gross_cell</strong>", 'nowrap' => 'nowrap'),
+        "<strong>$revenue_cell</strong>",
+        "<strong>$gross_cell</strong>",
       ),
       'primary' => TRUE,
     );
@@ -244,8 +244,8 @@ function uc_reports_products() {
             '',
             $breakdown_product,
             $breakdown_sold,
-            array('data' => $breakdown_revenue, 'nowrap' => 'nowrap'),
-            array('data' => $breakdown_gross, 'nowrap' => 'nowrap'),
+            $breakdown_revenue,
+            $breakdown_gross,
           ),
         );
         $csv_row = array('', $product_csv, $sold_csv, $revenue_csv, $gross_csv);
@@ -432,8 +432,8 @@ function uc_reports_products_custom() {
         array('data' => $product_cell),
         array('data' => $views),
         array('data' => $sold_cell),
-        array('data' => $revenue_cell, 'nowrap' => 'nowrap'),
-        array('data' => $gross_cell, 'nowrap' => 'nowrap'),
+        array('data' => $revenue_cell),
+        array('data' => $gross_cell),
       );
       $csv_rows[] = array($row_cell, $product_csv, $views, $sold_csv, $revenue_csv, $gross_csv);
     }
@@ -442,8 +442,8 @@ function uc_reports_products_custom() {
         array('data' => $row_cell),
         array('data' => $product_cell),
         array('data' => $sold_cell),
-        array('data' => $revenue_cell, 'nowrap' => 'nowrap'),
-        array('data' => $gross_cell, 'nowrap' => 'nowrap'),
+        array('data' => $revenue_cell),
+        array('data' => $gross_cell),
       );
       $csv_rows[] = array($row_cell, $product_csv, $sold_csv, $revenue_csv, $gross_csv);
     }
@@ -1022,7 +1022,7 @@ function uc_reports_sales_custom() {
 
     // Add the subreport's row to the report table.
     $rows[] = array(
-      array('data' => $date, 'nowrap' => 'nowrap'),
+      $date,
       empty($order_data) ? '0' : $order_data,
       empty($product_data) ? '0' : $product_data,
       uc_price($revenue_count, $context),
