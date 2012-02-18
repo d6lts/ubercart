@@ -21,6 +21,7 @@
   width: 100%;
 }
 
+.uc-orders-table td,
 .uc-orders-table thead th {
   white-space: nowrap;
 }
@@ -86,45 +87,54 @@
   float: right;
 }
 
-.text-right {
-  text-align: right;
-}
-
 .text-center {
   text-align: center;
-}
-
-.header-wide {
-  width: 80%;
 }
 
 .full-width {
   width: 100%;
 }
 
-.order-pane-table {
-  width: 100%;
-}
-
-.order-pane-table thead th {
-  background-color: #ddd;
-  border-style: solid;
-  border-width: 0px 0px 2px 0px;
-  border-color: #bbb;
+.order-pane-table th {
+  padding: 4px 8px;
   font-weight: bold;
-  padding: 4px 8px;
 }
 
-.order-pane-table tr {
-  border-color: #bbb;
-  border-style: solid;
-  border-width: 0px 0px 1px 0px;
+.order-pane-table td {
+  padding: 4px 8px;
+  vertical-align: top;
 }
 
-.order-pane-table tr.odd td,
-.order-pane-table tr.even td {
-  padding: 4px 8px;
+.order-pane-table td.qty,
+.order-pane-table td.sku {
+  text-align: center;
+  white-space: nowrap;
 }
+
+.order-pane-table td.product {
+  width: 80%;
+}
+
+.order-pane-table td.cost,
+.order-pane-table td.price,
+.order-pane-table td.total {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.uc-order-comments td {
+  vertical-align: top;
+}
+
+.uc-order-comments td.date,
+.uc-order-comments td.status {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.uc-order-comments td.message {
+  width: 100%;
+ }
 
 .order-edit-table {
   width: auto;
