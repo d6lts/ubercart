@@ -49,13 +49,13 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
 
   // Query to get the tax line items in this date range
 
-  $result = db_query("SELECT ucoli.amount, ucoli.title, ucoli.data FROM {uc_orders} ucord LEFT JOIN {uc_order_statuses} ON order_status_id = order_status LEFT JOIN {uc_order_line_items} ucoli ON ucord.order_id = ucoli.order_id WHERE %d <= created AND created <= %d AND order_status IN $order_statuses AND ucoli.type = 'tax'", $args['start_date'], $args['end_date']);
+  $result = db_query("SELECT ucoli.amount, ucoli.title, ucoli.data FROM {uc_orders} ucord LEFT JOIN {uc_order_statuses} ON order_status_id = order_status LEFT JOIN {uc_order_line_items} ucoli ON ucord.order_id = ucoli.order_id WHERE %d <= created AND created <= %d AND order_status IN '%s' AND ucoli.type = 'tax'", $args['start_date'], $args['end_date'], $order_statuses);
 
   // add up the amounts by jurisdiction
   $totals = array();
   $no_meta_totals = array();
 
-  while($item = db_fetch_object($result)) {
+  while ($item = db_fetch_object($result)) {
     $name = trim($item->title);
     $amount = floatval($item->amount);
 
@@ -68,9 +68,9 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
     // make a line item in the report for each name/jurisdiction/rate
     $key = strtolower($name) . strtolower($jurisdiction) . number_format($rate, 5);
 
-    if(!empty($jurisdiction) && $amount && $taxable_amount) {
+    if (!empty($jurisdiction) && $amount && $taxable_amount) {
       // we have meta-data
-      if(empty($totals[$key])) {
+      if (empty($totals[$key])) {
         $totals[$key] = array(
           'name' => $name,
           'jurisdiction' => $jurisdiction,
@@ -86,7 +86,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
     }
     elseif ($amount) {
       // Old data: no meta-data was stored. Just report the amount collected.
-      if(empty($no_meta_totals[$key])) {
+      if (empty($no_meta_totals[$key])) {
         $no_meta_totals[$key] = array(
           'name' => $name,
           'amount' => $amount,
@@ -111,7 +111,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
     'revision' => 'themed-original',
     'type' => 'amount',
   );
-  foreach($totals as $line) {
+  foreach ($totals as $line) {
     $row = array(
       $line['name'],
       $line['jurisdiction'],
@@ -131,7 +131,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
     $amount += $line['amount'];
   }
 
-  foreach($no_meta_totals as $line) {
+  foreach ($no_meta_totals as $line) {
     $row = array(
       $line['name'],
       '*',

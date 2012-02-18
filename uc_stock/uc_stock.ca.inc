@@ -124,7 +124,7 @@ function uc_stock_ca_predicate() {
         ),
       ),
     ),
-  ); 
+  );
 
   $predicates['uc_stock_decrement_on_uncancel'] = array(
     '#title' => t('Decrement stock when order cancellation is being undone'),
@@ -177,7 +177,7 @@ function uc_stock_ca_predicate() {
         ),
       ),
     ),
-  ); 
+  );
 
   return $predicates;
 }
