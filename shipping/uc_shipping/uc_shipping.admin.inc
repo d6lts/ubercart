@@ -43,7 +43,8 @@ function uc_shipping_order_packages($order) {
     $rows[] = $row;
   }
   if (empty($rows)) {
-    $rows[][] = array('data' => t("This order's products have not been organized into packages."), 'colspan' => 11);
+    drupal_set_message(t("This order's products have not been organized into packages."));
+    drupal_goto('admin/store/orders/' . $order->order_id . '/packages/new');
   }
   $output = theme('table', $header, $rows);
   $result = db_query("SELECT op.order_product_id, CASE WHEN COUNT(pp.qty) = 0 THEN 0 ELSE SUM(op.qty) / COUNT(pp.qty) END AS total, SUM(pp.qty) AS packaged FROM {uc_order_products} AS op LEFT JOIN {uc_packaged_products} AS pp ON op.order_product_id = pp.order_product_id WHERE op.order_id = %d AND op.data LIKE '%%%s%%' GROUP BY op.order_product_id HAVING SUM(pp.qty) IS NULL OR CASE WHEN COUNT(pp.qty) = 0 THEN 0 ELSE SUM(op.qty) / COUNT(pp.qty) END > SUM(pp.qty)", $order->order_id, 's:9:"shippable";s:1:"1";');
@@ -437,7 +438,8 @@ function uc_shipping_order_shipments($order) {
     $rows[] = $row;
   }
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No shipments have been made for this order.'), 'colspan' => 12));
+    drupal_set_message(t('No shipments have been made for this order.'));
+    drupal_goto('admin/store/orders/' . $order->order_id . '/shipments/new');
   }
   $output = theme('table', $header, $rows);
   $packages = db_result(db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = %d AND sid IS NULL", $order->order_id));
