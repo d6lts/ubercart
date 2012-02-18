@@ -398,7 +398,7 @@ function uc_product_features($node) {
       $feature = uc_product_feature_load(intval(arg(5)), arg(4));
       if (isset($feature)) {
         // If the user confirmed the delete, process it!
-        if ($_POST['pf_delete']) {
+        if (isset($_POST['pf_delete']) && $_POST['pf_delete']) {
           uc_product_feature_delete(intval(arg(5)));
 
           drupal_set_message(t('The product feature has been deleted.'));
@@ -454,22 +454,18 @@ function uc_product_features($node) {
   else {
     foreach ($features as $feature) {
       $operations = array(
-        l(t('edit'), 'node/'. $node->nid .'/edit/features/'. $feature->fid .'/'. $feature->pfid),
-        l(t('delete'), 'node/'. $node->nid .'/edit/features/'. $feature->fid .'/'. $feature->pfid .'/delete'),
+        'edit' => array('title' => t('edit'), 'href' => 'node/'. $node->nid .'/edit/features/'. $feature->fid .'/'. $feature->pfid),
+        'delete' => array('title' => t('delete'), 'href' => 'node/'. $node->nid .'/edit/features/'. $feature->fid .'/'. $feature->pfid .'/delete'),
       );
       $rows[] = array(
-        'data' => array(
-          array('data' => uc_product_feature_data($feature->fid, 'title'), 'nowrap' => 'nowrap'),
-          array('data' => $feature->description, 'width' => '100%'),
-          array('data' => implode(' ', $operations), 'nowrap' => 'nowrap'),
-        ),
-        'valign' => 'top',
+        array('data' => uc_product_feature_data($feature->fid, 'title')),
+        array('data' => $feature->description),
+        theme('links', $operations, array('class' => 'links inline')),
       );
     }
   }
 
-  $output = theme('table', $header, $rows)
-          . drupal_get_form('uc_product_feature_add_form');
+  $output = theme('table', $header, $rows, array('class' => 'uc-product-features')) . drupal_get_form('uc_product_feature_add_form');
 
   return $output;
 }
