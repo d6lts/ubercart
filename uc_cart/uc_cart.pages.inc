@@ -422,33 +422,38 @@ function theme_uc_cart_checkout_review($panes, $form) {
            .'<table class="order-review-table">';
 
   foreach ($panes as $title => $data) {
-    $output .= '<tr class="pane-title-row"><td colspan="2">'. $title
-              .'</td></tr>';
+    $output .= '<tr class="pane-title-row">';
+    $output .= '<td colspan="2">' . $title . '</td>';
+    $output .= '</tr>';
     if (is_array($data)) {
       foreach ($data as $row) {
         if (is_array($row)) {
           if (isset($row['border'])) {
-            $border = ' class="row-border-'. $row['border'] .'"';
+            $border = ' class="row-border-'. $row['border'] . '"';
           }
           else {
             $border = '';
           }
-          $output .= '<tr valign="top"'. $border .'><td class="title-col" '
-                    .'nowrap>'. $row['title'] .':</td><td class="data-col">'
-                   . $row['data'] .'</td></tr>';
+          $output .= '<tr valign="top"' . $border . '>';
+          $output .= '<td class="title-col">' . $row['title'] . ':</td>';
+          $output .= '<td class="data-col">' . $row['data'] . '</td>';
+          $output .= '</tr>';
         }
         else {
-          $output .= '<tr valign="top"><td colspan="2">'. $row .'</td></tr>';
+          $output .= '<tr valign="top"><td colspan="2">' . $row . '</td></tr>';
         }
       }
     }
     else {
-      $output .= '<tr valign="top"><td colspan="2">'. $data .'</td></tr>';
+      $output .= '<tr valign="top"><td colspan="2">' . $data . '</td></tr>';
     }
   }
 
-  $output .= '<tr class="review-button-row"><td colspan="2">'. $form
-            .'</td></tr></table>';
+  $output .= '<tr class="review-button-row">';
+  $output .= '<td colspan="2">' . $form . '</td>';
+  $output .= '</tr>';
+
+  $output .= '</table>';
 
   return $output;
 }

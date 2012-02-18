@@ -678,10 +678,9 @@ function theme_uc_checkout_pane_cart_review($items) {
     'subject' => array(),
   );
 
-  $output = '<table>';
-  foreach ($items as $item) {
-    $desc = check_plain($item->title) . uc_product_get_description($item);
+  $rows = array();
 
+  foreach ($items as $item) {
     $price_info = array(
       'price' => $item->price,
       'qty' => $item->qty,
@@ -693,10 +692,12 @@ function theme_uc_checkout_pane_cart_review($items) {
       'node' => node_load($item->nid),
     );
 
-    $output .= '<tr valign="top"><td>'. $item->qty .'&times;</td><td width="100%">'. $desc
-              .'</td><td nowrap="nowrap">'. uc_price($price_info, $context) .'</td></tr>';
+    $rows[] = array(
+      array('data' => $item->qty . '&times;', 'class' => array('qty')),
+      array('data' => check_plain($item->title) . uc_product_get_description($item), 'class' => array('products')),
+      array('data' => uc_price($price_info, $context), 'class' => array('price')),
+    );
   }
-  $output .= '</table>';
 
-  return $output;
+  return theme('table', NULL, $rows, array('class' => 'cart-review'));
 }
