@@ -26,26 +26,27 @@ function uc_store_admin() {
   foreach ($results as $message) {
     switch ($message['status']) {
       case 'warning':
-        $icon = base_path() . drupal_get_path('module', 'uc_store') .'/images/alert.gif';
+        $icon = 'alert.gif';
         break;
       case 'error':
-        $icon = base_path() . drupal_get_path('module', 'uc_store') .'/images/error.gif';
+        $icon = 'error.gif';
         break;
       case 'ok':
       default:
-        $icon = base_path() . drupal_get_path('module', 'uc_store') .'/images/info.gif';
+        $icon = 'info.gif';
     }
+    $icon = theme('image', drupal_get_path('module', 'uc_store') . '/images/' . $icon);
 
-    $rows[] = array('data' => array(
-      array('data' => '<img src="'. $icon .'" />'),
-      array('data' => '<strong>'. $message['title'] .'</strong>', 'nowrap' => 'nowrap'),
-      array('data' => $message['desc'], 'width' => '100%')), 'valign' => 'top');
+    $rows[] = array(
+      array('data' => $icon, 'class' => 'icon'),
+      array('data' => $message['title'], 'class' => 'title'),
+      array('data' => $message['desc'], 'class' => 'message'),
+    );
   }
 
-  $header = array('&nbsp;', t('Title'), t('Description'));
-
-  $output .= '<div style="clear: both;"><h2>'. t('Status messages:') .'</h2>'
-           . theme('table', $header, $rows) .'</div>';
+  $output .= '<div style="clear: both;">';
+  $output .= theme('table', NULL, $rows, array('class' => 'uc-store-status'), '<h2>' . t('Store status') . '</h2>');
+  $output .= '</div>';
 
   return $output;
 }

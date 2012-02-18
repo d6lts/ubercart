@@ -1385,9 +1385,7 @@ function hook_tapir_table_alter(&$table, $table_id) {
 
       $table[$key]['designer'] = array(
         '#value' => l($node->designer, 'collections/'. $node->designer_tid),
-        '#cell_attributes' => array(
-          'nowrap' => 'nowrap',
-        ),
+        '#cell_attributes' => array('class' => 'designer'),
       );
     }
   }

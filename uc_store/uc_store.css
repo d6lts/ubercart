@@ -70,6 +70,19 @@
   width: 0px;
 }
 
+.uc-store-status td {
+  vertical-align: top;
+}
+
+.uc-store-status td.title {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.uc-store-status td.message {
+  width: 100%;
+}
+
 table.section-items {
   width: auto;
 }
