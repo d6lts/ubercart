@@ -140,7 +140,7 @@ function uc_payment_methods_form() {
   }
   else {
     $form['pmtable'] = array(
-      '#value' => '<p>' . t('No payment methods are available.') . '</p>',
+      '#value' => '<div>' . t('No payment methods are available. Modules providing payment methods must first be enabled on the !modules administration page under the "Ubercart - payment" fieldset.', array('!modules' => l(t('Modules'), 'admin/build/modules'))) . '</div>',
     );
   }
 
@@ -158,6 +158,7 @@ function theme_uc_payment_method_table($form) {
 
   $header = array(t('Payment method'), t('List position'), t('Default gateway'));
 
+  $rows = array();
   foreach (element_children($form) as $method) {
     $row = array(
       drupal_render($form[$method]['uc_payment_method_'. $method .'_checkout']),
@@ -189,8 +190,7 @@ function uc_payment_gateways_form() {
 
   if (is_array($gateways) && count($gateways) > 0) {
     $form['gateways_info'] = array(
-      '#value' => '<div><strong>'. t('Payment gateways') .'</strong><br />'
-                . t('Payment gateways are web services that allow you to process various types of payments remotely.  The settings forms below are for the payment gateways you have installed.  Click a name to expand its options and adjust the settings accordingly.') .'</div>',
+      '#value' => '<div>' . t('Payment gateways are web services that allow you to process various types of payments remotely.  The settings forms below are for the payment gateways you have installed.  Click a name to expand its options and adjust the settings accordingly.') .'</div>',
       '#weight' => -10,
     );
 
@@ -230,8 +230,7 @@ function uc_payment_gateways_form() {
   }
   else {
     $form['gateways_info'] = array(
-      '#markup' => '<div><strong>' . t('Payment gateways') . '</strong><br />'
-                . t('Payment gateways are web services that allow you to process various types of payments remotely. No payment gateways are currently enabled.') . '</div>',
+      '#value' => '<div>' . t('Payment gateways are web services that allow you to process various types of payments remotely. No payment gateways are currently enabled. Modules providing payment gateways must first be enabled on the !modules administration page under the "Ubercart - payment" fieldset.', array('!modules' => l(t('Modules'), 'admin/build/modules'))) . '</div>',
       '#weight' => -10,
     );
   }
@@ -250,7 +249,7 @@ function _uc_payment_gateways_summarize($form, $gateways) {
   }
 
   if (empty($items)) {
-    $items[] = t('No payment gateway modules are installed.');
+    $items[] = t('No payment gateway modules are installed. Modules providing payment gateways must first be enabled on the !modules administration page under the "Ubercart - payment" fieldset.', array('!modules' => l(t('Modules'), 'admin/modules')));
   }
 
   return $items;
