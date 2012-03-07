@@ -94,11 +94,13 @@ function uc_shipping_new_package($form_state, $order) {
   $shipping_type_options = uc_quote_shipping_type_options();
   foreach ($shipping_types_products as $shipping_type => $products) {
     $form['shipping_types'][$shipping_type] = array(
-      '#type' => 'fieldset',
-      '#title' => isset($shipping_type_options[$shipping_type]) ? $shipping_type_options[$shipping_type] : ucwords(str_replace('_', ' ', $shipping_type)),
+      '#type'        => 'fieldset',
+      '#title'       => isset($shipping_type_options[$shipping_type]) ?
+                        $shipping_type_options[$shipping_type]        :
+                        ucwords(str_replace('_', ' ', $shipping_type)),
       '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
-      '#weight' => $shipping_type_weights[$shipping_type],
+      '#collapsed'   => FALSE,
+      '#weight'      => isset($shipping_type_weights[$shipping_type]) ? $shipping_type_weights[$shipping_type] : 0,
     );
     foreach ($products as $product) {
       $unboxed_qty = $product->qty;
