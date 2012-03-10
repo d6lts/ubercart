@@ -42,8 +42,8 @@ function uc_reports_customers() {
   $address_preference = variable_get('uc_customer_list_address', 'billing');
   $first_name = ($address_preference == 'billing') ? 'billing_first_name' : 'delivery_first_name';
   $last_name = ($address_preference == 'billing') ? 'billing_last_name' : 'delivery_last_name';
-  $page = (isset($_GET['page'])) ? intval($_GET['page']) : 0;
-  $page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+  $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+  $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
   $order_statuses = _uc_reports_order_statuses();
   $rows = array();
   $csv_rows = array();
@@ -108,7 +108,7 @@ function uc_reports_customers() {
 
   $output = theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'));
   $output .= theme('pager', NULL, $page_size);
-  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. ((isset($_GET['nopage'])) ? l(t('Show paged records'), 'admin/store/reports/customers') : l(t('Show all records'), 'admin/store/reports/customers', array('query' => 'nopage=1'))) .'</div>';
+  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. (isset($_GET['nopage']) ? l(t('Show paged records'), 'admin/store/reports/customers') : l(t('Show all records'), 'admin/store/reports/customers', array('query' => 'nopage=1'))) .'</div>';
 
   return $output;
 }
@@ -117,17 +117,10 @@ function uc_reports_customers() {
  * Display the product reports
  */
 function uc_reports_products() {
-  $statistics = db_result(db_query("SELECT status FROM {system} WHERE name = 'statistics'"));
-  $count_views = variable_get('statistics_count_content_views', FALSE);
-  if ($statistics && $count_views) {
-    $views_column = TRUE;
-  }
-  else {
-    $views_column = FALSE;
-  }
+  $views_column = module_exists('statistics') && variable_get('statistics_count_content_views', FALSE);
 
-  $page = (isset($_GET['page'])) ? intval($_GET['page']) : 0;
-  $page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+  $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+  $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
   $order_statuses = _uc_reports_order_statuses();
   $row_cell = $page * variable_get('uc_reports_table_size', 30) + 1;
   $csv_rows = array();
@@ -309,13 +302,14 @@ function _uc_reports_product_get_skus($nid) {
 function uc_reports_products_custom() {
   $timezone = _uc_reports_timezone_offset();
   $timezone_offset = time() + $timezone;
-  $statistics = db_result(db_query("SELECT status FROM {system} WHERE name = 'statistics'"));
-  $count_views = variable_get('statistics_count_content_views', FALSE);
-  $page = (isset($_GET['page'])) ? intval($_GET['page']) : 0;
-  $page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+  $views_column = module_exists('statistics') && variable_get('statistics_count_content_views', FALSE);
+
+  $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+  $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
   $product_types = array("'product'");
-  $types = db_query("SELECT DISTINCT(pcid) FROM {uc_product_classes}");
   $csv_rows = array();
+
+  $types = db_query("SELECT DISTINCT(pcid) FROM {uc_product_classes}");
   while ($type = db_fetch_object($types)) {
     $product_types[] = "'". $type->pcid ."'";
   }
@@ -345,16 +339,16 @@ function uc_reports_products_custom() {
   }
   $time_condition = "o.created >= ". $args['start_date'] ." AND o.created <= ". $args['end_date'];
 
-  if ($statistics && $count_views) {
+  if ($views_column) {
     $header = array(
       array('data' => t('#')),
       array('data' => t('Product'), 'field' => 'n.title'),
-      array('data' => t('Views'), 'field' => 'c.totalcount'),
       array('data' => t('Sold'), 'field' => 'sold'),
       array('data' => t('Revenue'), 'field' => 'revenue', 'sort' => 'desc'),
       array('data' => t('Gross'), 'field' => 'gross'),
+      array('data' => t('Views'), 'field' => 'c.totalcount'),
     );
-    $csv_rows[] = array(t('#'), t('Product'), t('Views'), t('Sold'), t('Revenue'), t('Gross'));
+    $csv_rows[] = array(t('#'), t('Product'), t('Sold'), t('Revenue'), t('Gross'), t('Views'));
 
     $sql = '';
     switch ($GLOBALS['db_type']) {
@@ -425,15 +419,15 @@ function uc_reports_products_custom() {
       $revenue_cell = '<strong>'. $revenue_cell .'</strong>'. $breakdown_revenue;
       $gross_cell = '<strong>'. $gross_cell .'</strong>'. $breakdown_gross;
     }
-    if ($statistics && $count_views) {
+    if ($views_column) {
       $views = (empty($product['totalcount'])) ? 0 : $product['totalcount'];
       $rows[] = array(
         array('data' => $row_cell),
         array('data' => $product_cell),
-        array('data' => $views),
         array('data' => $sold_cell),
         array('data' => $revenue_cell),
         array('data' => $gross_cell),
+        array('data' => $views),
       );
       $csv_rows[] = array($row_cell, $product_csv, $views, $sold_csv, $revenue_csv, $gross_csv);
     }
@@ -456,7 +450,7 @@ function uc_reports_products_custom() {
   // Build the page output holding the form, table, and CSV export link.
   $output = drupal_get_form('uc_reports_products_custom_form', $args, $args['status']);
   $output .= theme('table', $header, $rows, array('width' => '100%', 'class' => 'uc-sales-table'));
-  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. ((isset($_GET['nopage'])) ? l(t('Show paged records'), 'admin/store/reports/products/custom') : l(t('Show all records'), 'admin/store/reports/products/custom', array('query' => 'nopage=1'))) .'</div>';
+  $output .= '<div class="uc-reports-links">'. l(t('Export to CSV file.'), 'admin/store/reports/getcsv/'. $csv_data['report'] .'/'. $csv_data['user']) .'&nbsp;&nbsp;&nbsp;'. (isset($_GET['nopage']) ? l(t('Show paged records'), 'admin/store/reports/products/custom') : l(t('Show all records'), 'admin/store/reports/products/custom', array('query' => 'nopage=1'))) .'</div>';
   $output .= theme('pager', NULL, $page_size);
   $output .= '<small>*'. t('Make sure %setting_name is set to %state in the <a href="!url">access log settings page</a> to enable views column.', array('%setting_name' => 'count content views', '%state' => 'enabled', '!url' => url('admin/reports/settings', array('query' => 'destination=admin/store/reports/products/custom')))) .'</small>';
 
