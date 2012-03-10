@@ -86,8 +86,8 @@ function uc_reports_customers() {
     $customer_number = ($page * variable_get('uc_reports_table_size', 30)) + (count($rows) + 1);
     $customer_order_name = (!empty($customer[$last_name]) || !empty($customer[$first_name])) ? $customer[$last_name] .', '. $customer[$first_name] : $customer['name'];
     $customer_name = $customer['name'];
-    $orders = (!empty($customer['orders']) ? $customer['orders'] : 0);
-    $products = (!empty($customer['products']) ? $customer['products'] : 0);
+    $orders = !empty($customer['orders']) ? $customer['orders'] : 0;
+    $products = !empty($customer['products']) ? $customer['products'] : 0;
     $total_revenue = uc_price($customer['total'], $context);
     $average_revenue = uc_price($customer['average'], $context);
     $rows[] = array(
@@ -181,14 +181,14 @@ function uc_reports_products() {
 
   $products = pager_query("SELECT $sql_vars FROM $sql_tables WHERE $sql_conditions GROUP BY n.nid, n.title" . tablesort_sql($header), $page_size, 0, $sql_count);
   while ($product = db_fetch_array($products)) {
-    $product_cell = l($product['title'], 'node/'. ($product['nid']));
+    $product_cell = l($product['title'], 'node/'. $product['nid']);
     $product_csv = $product['title'];
-    $sold_cell = (empty($product['sold'])) ? 0 : $product['sold'];
+    $sold_cell = empty($product['sold']) ? 0 : $product['sold'];
     $sold_csv = $sold_cell;
-    $revenue_cell = uc_price((empty($product['revenue'])) ? 0 : $product['revenue'], $context);
-    $revenue_csv = (empty($product['revenue'])) ? 0 : $product['revenue'];
-    $gross_cell = uc_price((empty($product['gross'])) ? 0 : $product['gross'], $context);
-    $gross_csv = (empty($product['gross'])) ? 0 : $product['gross'];
+    $revenue_csv = empty($product['revenue']) ? 0 : $product['revenue'];
+    $revenue_cell = uc_price($revenue_csv, $context);
+    $gross_csv = empty($product['gross']) ? 0 : $product['gross'];
+    $gross_cell = uc_price($gross_csv, $context);
 
     $row = array(
       'data' => array(
@@ -221,16 +221,17 @@ function uc_reports_products() {
         $gross = db_result(db_query("SELECT (SUM(p.price * p.qty) - SUM(p.cost * p.qty)) FROM {uc_order_products} AS p LEFT JOIN {uc_orders} AS o ON p.order_id = o.order_id WHERE o.order_status IN $order_statuses AND p.model = '%s' AND p.nid = %d", $model, $product['nid']));
         $breakdown_product = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$model";
         $product_csv = "     $model";
-        $breakdown_sold = ((!empty($sold)) ? $sold : 0);
-        $sold_csv = ((!empty($sold)) ? $sold : 0);
+
+        $sold_csv = !empty($sold) ? $sold : 0;
+        $breakdown_sold = $sold_csv;
 
         $context['revision'] = 'themed';
-        $breakdown_revenue = uc_price((!empty($revenue)) ? $revenue : 0, $context);
-        $breakdown_gross = uc_price((!empty($gross)) ? $gross : 0, $context);
+        $revenue_csv = !empty($revenue) ? $revenue : 0;
+        $breakdown_revenue = uc_price($revenue_csv, $context);
 
+        $gross_csv = !empty($gross) ? $gross : 0;
+        $breakdown_gross = uc_price($gross_csv, $context);
         $context['revision'] = 'formatted';
-        $revenue_csv = (!empty($revenue)) ? $revenue : 0;
-        $gross_csv = (!empty($gross)) ? $gross : 0;
 
         $row = array(
           'data' => array(
@@ -389,30 +390,37 @@ function uc_reports_products_custom() {
   $rows = array();
   while ($product = db_fetch_array($products)) {
     $row_cell = ($page * variable_get('uc_reports_table_size', 30)) + count($rows) + 1;
-    $product_cell = l($product['title'], 'node/'. ($product['nid']));
+    $product_cell = l($product['title'], 'node/'. $product['nid']);
     $product_csv = $product['title'];
-    $sold_cell = (empty($product['sold'])) ? 0 : $product['sold'];
+    $sold_cell = empty($product['sold']) ? 0 : $product['sold'];
     $sold_csv = $sold_cell;
-    $revenue_cell = uc_currency_format((empty($product['revenue'])) ? 0 : $product['revenue']);
-    $revenue_csv = (empty($product['revenue'])) ? 0 : $product['revenue'];
-    $gross_cell = uc_currency_format((empty($product['gross'])) ? 0 : $product['gross']);
-    $gross_csv = (empty($product['gross'])) ? 0 : $product['gross'];
+    $revenue_cell = uc_currency_format(empty($product['revenue']) ? 0 : $product['revenue']);
+    $revenue_csv = empty($product['revenue']) ? 0 : $product['revenue'];
+    $gross_cell = uc_currency_format(empty($product['gross']) ? 0 : $product['gross']);
+    $gross_csv = empty($product['gross']) ? 0 : $product['gross'];
 
     if (module_exists('uc_attribute')) {
       $breakdown_product = $breakdown_sold = $breakdown_revenue = $breakdown_gross = '';
 
       foreach (_uc_reports_product_get_skus($product['nid']) as $model) {  // was $models
         $sold = db_result(db_query("SELECT SUM(qty) FROM {uc_order_products} AS p LEFT JOIN {uc_orders} AS o ON p.order_id = o.order_id WHERE o.order_status IN $order_statuses AND p.model = '%s' AND p.nid = %d AND $time_condition", $model, $product['nid']));
+        $sold = empty($sold) ? 0 : $sold;
         $revenue = db_result(db_query("SELECT SUM(p.price * p.qty) FROM {uc_order_products} AS p LEFT JOIN {uc_orders} AS o ON p.order_id = o.order_id WHERE o.order_status IN $order_statuses AND p.model = '%s' AND p.nid = %d AND $time_condition", $model, $product['nid']));
+        $revenue = empty($revenue) ? 0 : $revenue;
         $gross = db_result(db_query("SELECT (SUM(p.price * p.qty) - SUM(p.cost * p.qty)) FROM {uc_order_products} AS p LEFT JOIN {uc_orders} AS o ON p.order_id = o.order_id WHERE o.order_status IN $order_statuses AND p.model = '%s' AND p.nid = %d AND $time_condition", $model, $product['nid']));
+        $gross = empty($gross) ? 0 : $gross;
+
         $breakdown_product .= "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$model";
         $product_csv .= "\n     $model";
-        $breakdown_sold .= "<br />". ((!empty($sold)) ? $sold : 0);
-        $sold_csv .= "\n     ". ((!empty($sold)) ? $sold : 0);
-        $breakdown_revenue .= "<br />". (uc_currency_format((!empty($revenue)) ? $revenue : 0));
-        $revenue_csv .= "\n     ". ((!empty($revenue)) ? $revenue : 0);
-        $breakdown_gross .= "<br />". (uc_currency_format((!empty($gross)) ? $gross : 0));
-        $gross_csv .= "\n     ". ((!empty($gross)) ? $gross : 0);
+
+        $breakdown_sold .= "<br />" . $sold;
+        $sold_csv .= "\n     " . $sold;
+
+        $breakdown_revenue .= "<br />" . uc_currency_format($revenue);
+        $revenue_csv .= "\n     " . $revenue;
+
+        $breakdown_gross .= "<br />" . uc_currency_format($gross);
+        $gross_csv .= "\n     " . $gross;
       }
       $product_cell = $product_cell . $breakdown_product;
       $sold_cell = '<strong>'. $sold_cell .'</strong>'. $breakdown_sold;
@@ -420,7 +428,7 @@ function uc_reports_products_custom() {
       $gross_cell = '<strong>'. $gross_cell .'</strong>'. $breakdown_gross;
     }
     if ($views_column) {
-      $views = (empty($product['totalcount'])) ? 0 : $product['totalcount'];
+      $views = empty($product['totalcount']) ? 0 : $product['totalcount'];
       $rows[] = array(
         array('data' => $row_cell),
         array('data' => $product_cell),
