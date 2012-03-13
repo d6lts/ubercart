@@ -276,10 +276,10 @@ function uc_order_pane_customer($op, $arg1) {
 function uc_order_pane_products($op, $arg1) {
   switch ($op) {
     case 'view':
-      return drupal_render(tapir_get_table('op_products_view_table', $arg1));
+      return tapir_get_table('op_products_view_table', $arg1);
 
     case 'customer':
-      return drupal_render(tapir_get_table('op_products_customer_table', $arg1));
+      return tapir_get_table('op_products_customer_table', $arg1);
 
     case 'edit-theme':
       drupal_add_js('uc_order_load_product_edit_div('. $arg1['order_id']['#value'] .');', 'inline');
@@ -514,7 +514,7 @@ function uc_order_pane_order_comments($op, $order) {
   switch ($op) {
     case 'view':
       $comments = uc_order_comments_load($order->order_id);
-      return drupal_render(tapir_get_table('op_order_comments_view_table', $comments));
+      return tapir_get_table('op_order_comments_view_table', $comments);
 
     case 'customer':
       $comments = uc_order_comments_load($order->order_id);
@@ -546,7 +546,7 @@ function uc_order_pane_admin_comments($op, $arg1) {
   switch ($op) {
     case 'view':
       $comments = uc_order_comments_load($arg1->order_id, TRUE);
-      return drupal_render(tapir_get_table('op_admin_comments_view_table', $comments));
+      return tapir_get_table('op_admin_comments_view_table', $comments);
 
     case 'edit-form':
       $form['admin_comment_field'] = array(

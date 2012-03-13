@@ -1092,7 +1092,8 @@ function uc_order_view($order, $view = 'view') {
           $output .= '<div class="order-pane-title">'. $pane['title'] .': '
                    . $func('view-title', $order) .'</div>';
         }
-        $output .= $contents .'</div>';
+        $output .= is_array($contents) ? drupal_render($contents) : $contents;
+        $output .= '</div>';
       }
     }
   }
