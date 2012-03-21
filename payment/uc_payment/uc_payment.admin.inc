@@ -190,7 +190,7 @@ function uc_payment_gateways_form() {
 
   if (is_array($gateways) && count($gateways) > 0) {
     $form['gateways_info'] = array(
-      '#value' => '<div>' . t('Payment gateways are web services that allow you to process various types of payments remotely.  The settings forms below are for the payment gateways you have installed.  Click a name to expand its options and adjust the settings accordingly.') .'</div>',
+      '#value' => '<div>' . t('Payment gateways are web services that allow you to process various types of payments remotely. The settings forms below are for the payment gateways you have installed. Click a name to expand its options and adjust the settings accordingly.') .'</div>',
       '#weight' => -10,
     );
 
@@ -256,25 +256,34 @@ function _uc_payment_gateways_summarize($form, $gateways) {
 }
 
 /**
- * Selects a payment gateway to process a payment when multiple gateways
- * exist for a given payment method.
+ * Selects a specific gateway when multiple gateways are available.
  */
 function uc_payment_gateway_select() {
+
+  // Find the available gateways.
   $gateways = _payment_gateway_list($_SESSION['uc_payment_method'], TRUE);
   foreach ($gateways as $gateway) {
     $options[$gateway['id']] = $gateway['title'];
   }
 
+  // Construct form for selection of a gateway.
   $output = t('Please choose a payment gateway to use for that payment.');
 
-  $output .= drupal_get_form('uc_payment_gateway_select_form', $options,
-               $_SESSION['uc_payment_method'], $_SESSION['uc_payment_order_id'],
-               $_SESSION['uc_payment_amount'], $_SESSION['uc_payment_data']);
+  $output .= drupal_get_form(
+    'uc_payment_gateway_select_form',
+    $options,
+    $_SESSION['uc_payment_method'],
+    $_SESSION['uc_payment_order_id'],
+    $_SESSION['uc_payment_amount'],
+    $_SESSION['uc_payment_data']
+  );
 
   return $output;
 }
 
 /**
+ * Form builder: Selects a specific payment gateway.
+ *
  * @see uc_payment_gateway_select_form_submit()
  * @ingroup forms
  */
@@ -395,10 +404,16 @@ function uc_payment_by_order_form($form_state, $order) {
     '#value' => $order->order_id,
   );
 
+  $now = time();
   if (user_access('manual payments')) {
     $form['payments']['new']['#attributes'] = array('valign' => 'top');
     $form['payments']['new']['received'] = array(
-      '#value' => '-',
+      '#type' => 'date',
+      '#default_value' => array(
+        'month' => format_date($now, 'custom', 'n'),
+        'day' => format_date($now, 'custom', 'j'),
+        'year' => format_date($now, 'custom', 'Y'),
+      ),
     );
     $form['payments']['new']['user'] = array(
       '#value' => '-',
@@ -471,8 +486,16 @@ function uc_payment_by_order_form_submit($form, &$form_state) {
   global $user;
 
   $payment = $form_state['values']['payments']['new'];
-  uc_payment_enter($form_state['values']['order_id'], $payment['method'], $payment['amount'],
-                   $user->uid, '', $payment['comment']);
+  $received = strtotime($payment['received']['year'] . '-' . $payment['received']['month'] . '-' . $payment['received']['day'] . ' 00:00:00');
+
+  // If the value entered is today, use the exact timestamp instead
+  $startofday = mktime(0, 0, 0);
+
+  if ($received == $startofday) {
+    $received = mktime();
+  }
+
+  uc_payment_enter($form_state['values']['order_id'], $payment['method'], $payment['amount'], $user->uid, '', $payment['comment'], $received);
 
   drupal_set_message(t('Payment entered.'));
 }
