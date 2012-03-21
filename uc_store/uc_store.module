@@ -1142,8 +1142,12 @@ function uc_get_zone_code($zone = NULL) {
 }
 
 /**
- * Returns the rows of countries whose data matches the fields specified in the
- * $fields array.
+ * Returns country data based on the supplied criteria.
+ *
+ * @param $match
+ *   An associative array of fields to match.
+ * @param $sort
+ *   The field to sort by.
  */
 function uc_get_country_data($match = array(), $sort = 'country_name') {
   $valid_fields = array('country_id', 'country_name', 'country_iso_code_2', 'country_iso_code_3', 'version');
@@ -1319,7 +1323,12 @@ function uc_country_get_by_id($id) {
 
 /**
  * Creates a country select box for a form.
- * $display can be 'name', 'code2' for the 2-digit code, or 'code3' for the 3-digit code.
+ *
+ * @param $display
+ *   One of:
+ *   - 'name': for the country name.
+ *   - 'code2': for the 2-digit ISO code.
+ *   - 'code3': for the 3-digit ISO code.
  */
 function uc_country_select($title, $default = NULL, $description = NULL, $display = 'name', $required = FALSE) {
   if ($display == 'code2') {
