@@ -126,8 +126,10 @@ function _uc_order_states_summarize($form, $states) {
 /**
  * Displays the order workflow form for order state and status customization.
  *
- * @ingroup forms
  * @see uc_order_workflow_form_submit()
+ * @see theme_uc_order_state_table()
+ * @see theme_uc_order_status_table()
+ * @ingroup forms
  */
 function uc_order_workflow_form() {
   $states = uc_order_state_list();
@@ -618,6 +620,10 @@ function uc_order_select_form_submit($form, &$form_state) {
 
 /**
  * Creates a new order and redirect to its edit screen.
+ *
+ * @see uc_order_create_form_create_validate()
+ * @see uc_order_create_form_create_submit()
+ * @ingroup forms
  */
 function uc_order_create($account = NULL) {
   drupal_add_js(array('ucURL' => array('adminOrders' => url('admin/store/orders/'))), 'setting');
@@ -820,6 +826,7 @@ function uc_order_select_customer($email = NULL) {
     $first_name = strtolower(str_replace('*', '%', $_POST['first_name']));
     $last_name = strtolower(str_replace('*', '%', $_POST['last_name']));
     $email = strtolower(str_replace('*', '%', $_POST['email']));
+    $username = strtolower(str_replace('*', '%', $_POST['username']));
 
     if ($first_name && $first_name !== '%') {
       $where .= " AND LOWER(o.billing_first_name) LIKE '". db_escape_string($first_name) ."'";
@@ -828,11 +835,13 @@ function uc_order_select_customer($email = NULL) {
       $where .= " AND LOWER(o.billing_last_name) LIKE '". db_escape_string($last_name) ."'";
     }
     if ($email && $email !== '%') {
-      $where .= " AND (LOWER(o.primary_email) LIKE '". db_escape_string($email) ."' OR LOWER(u.mail) LIKE '"
-              . db_escape_string($email) ."')";
+      $where .= " AND (LOWER(o.primary_email) LIKE '". db_escape_string($email) ."' OR LOWER(u.mail) LIKE '" . db_escape_string($email) ."')";
+    }
+    if ($username && $username !== '%') {
+      $where .= " AND LOWER(u.name) LIKE '". db_escape_string($username) ."'";
     }
 
-    $query = "SELECT DISTINCT u.uid, u.mail, o.billing_first_name, "
+    $query = "SELECT DISTINCT u.uid, u.name, u.mail, o.billing_first_name, "
             ."o.billing_last_name FROM {users} AS u LEFT JOIN {uc_orders} "
             ."AS o ON u.uid = o.uid WHERE u.uid > 0 AND (o.order_status "
             ."IS NULL OR o.order_status IN ". uc_order_status_list('general', TRUE) .")". $where
@@ -841,20 +850,21 @@ function uc_order_select_customer($email = NULL) {
 
     $options = array();
     while ($user = db_fetch_object($result)) {
-      if (empty($user->billing_first_name) && empty($user->billing_last_name)) {
-        $name = '';
-      }
-      else {
+      $name = '';
+      if (!empty($user->billing_first_name) && !empty($user->billing_last_name)) {
         $name = $user->billing_last_name .', '. $user->billing_first_name .' ';
       }
-      $options[$user->uid .':'. $user->mail] = $name .'('. $user->mail .')';
+      // Options formated as "First Last <email@example.com> (username)".
+      $options[$user->uid . ':' . $user->mail] = $name . '<' . $user->mail . '>' . ' (' . $user->name . ')';
     }
 
     if (count($options) == 0) {
+      // No search results found.
       $output .= '<p>'. t('Search returned no results.') .'</p>';
       $options = NULL;
     }
     else {
+      // Display search results.
       $output .= '<p>'. t('Search returned the following:') .'</p>';
     }
   }
@@ -923,6 +933,7 @@ function uc_order_select_customer_form($form_state, $options = NULL) {
                  .'</em>)</div>',
     );
 
+    // Customer first name.
     $form['first_name'] = array(
       '#type' => 'textfield',
       '#title' => t('First name'),
@@ -930,6 +941,7 @@ function uc_order_select_customer_form($form_state, $options = NULL) {
       '#maxlength' => 32,
     );
 
+    // Customer last name.
     $form['last_name'] = array(
       '#type' => 'textfield',
       '#title' => t('Last name'),
@@ -937,14 +949,24 @@ function uc_order_select_customer_form($form_state, $options = NULL) {
       '#maxlength' => 32,
     );
 
+    // Customer e-mail address.
     $form['email'] = array(
       '#type' => 'textfield',
       '#title' => t('E-mail'),
       '#size' => 24,
       '#maxlength' => 96,
     );
+
+    // Customer username.
+    $form['customer']['username'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Username'),
+      '#size' => 24,
+      '#maxlength' => 96,
+    );
   }
   elseif (arg(4) == 'search' && !is_null($options)) {
+    // Display search results.
     $form['cust_select'] = array(
       '#type' => 'select',
       '#title' => t('Select a customer'),
@@ -959,9 +981,10 @@ function uc_order_select_customer_form($form_state, $options = NULL) {
       '#value' => '<div>'. t('Enter an e-mail address for the new customer.') .'</div>',
     );
 
+    // Customer e-mail address.
     $form['email'] = array(
       '#type' => 'textfield',
-      '#title' => t('E-mail'),
+      '#title' => t('Customer e-mail address'),
       '#size' => 24,
       '#maxlength' => 96,
     );
@@ -989,9 +1012,10 @@ function uc_order_select_customer_form($form_state, $options = NULL) {
     );
   }
   elseif (arg(4) == 'new') {
+    // Option to notify customer.
     $form['sendmail'] = array(
       '#type' => 'checkbox',
-      '#title' => t('E-mail customer account details.'),
+      '#title' => t('E-mail account details to customer.'),
     );
     $form['submit'] = array(
       '#type' => 'submit',
@@ -1550,6 +1574,8 @@ function uc_order_add_line_item_form_validate($form, &$form_state) {
 }
 
 /**
+ * Form submission handler for uc_order_add_line_item_form().
+ *
  * @see uc_order_add_line_item_form()
  */
 function uc_order_add_line_item_form_submit($form, &$form_state) {
@@ -1738,6 +1764,8 @@ function uc_order_mail_invoice_form_validate($form, &$form_state) {
 }
 
 /**
+ * Form submission handler for uc_order_mail_invoice_form().
+ *
  * @see uc_order_mail_invoice_form()
  */
 function uc_order_mail_invoice_form_submit($form, &$form_state) {
@@ -1805,6 +1833,8 @@ function uc_order_delete_confirm_form($form_state, $order) {
 }
 
 /**
+ * Form submission handler for uc_order_delete_confirm_form().
+ *
  * @see uc_order_delete_confirm_form()
  */
 function uc_order_delete_confirm_form_submit($form, &$form_state) {
