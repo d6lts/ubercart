@@ -757,7 +757,7 @@ function uc_order_usearch() {
       $args[] = $end_date;
     }
 
-    $sql = 'SELECT o.order_id, o.billing_first_name, o.billing_last_name, o.order_total, '
+    $sql = 'SELECT o.order_id, o.uid, o.billing_first_name, o.billing_last_name, o.order_total, '
           .'o.order_status, o.created, os.title FROM {uc_orders} o LEFT JOIN {uc_order_statuses} os '
           .'ON o.order_status = os.order_status_id WHERE o.order_status NOT IN '. uc_order_status_list('specific', TRUE)
          . $where .' ORDER BY o.created DESC';
