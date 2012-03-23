@@ -721,6 +721,7 @@ function uc_order_usearch() {
     $start_date = check_plain(arg(11));
     $end_date = check_plain(arg(12));
 
+    $where = '';
     $args = array();
     if ($billing_first_name !== '0' && $billing_first_name !== '%') {
       $where .= " AND LOWER(o.billing_first_name) LIKE '%s'";
