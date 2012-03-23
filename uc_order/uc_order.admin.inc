@@ -518,6 +518,7 @@ function uc_order_admin($sql = NULL, $args = NULL, $search = FALSE) {
   ), 'setting');
   drupal_add_js(drupal_get_path('module', 'uc_order') .'/uc_order.js');
 
+  $output = '';
   if ($search === FALSE) {
     $output = '<div class="order-overview-form">'. drupal_get_form('uc_order_select_form') .'</div>'
              .'<div class="order-overview-form">'. drupal_get_form('uc_order_admin_sort_form') .'</div>';
