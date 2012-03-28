@@ -442,7 +442,7 @@ function uc_attribute_option_form_validate($form, &$form_state) {
 }
 
 /**
- * @see uc_attribute_option_form().
+ * @see uc_attribute_option_form()
  */
 function uc_attribute_option_form_submit($form, &$form_state) {
   if (!isset($form_state['values']['oid'])) {
@@ -486,7 +486,7 @@ function uc_attribute_option_delete_confirm($form_state, $attribute, $option) {
 }
 
 /**
- * @see uc_attribute_option_delete_confirm().
+ * @see uc_attribute_option_delete_confirm()
  */
 function uc_attribute_option_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {

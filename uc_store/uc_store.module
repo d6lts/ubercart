@@ -2313,7 +2313,7 @@ function uc_store_format_price_field_value($price, $prec = NULL) {
  * modules to alter the form before the Drupal layer hook_form_alter() is
  * invoked.
  *
- * @see hook_uc_form_alter().
+ * @see hook_uc_form_alter()
  */
 function uc_form_alter(&$form, &$form_state, $form_id) {
   $form['__drupal_alter_by_ref'] = array(&$form_state);

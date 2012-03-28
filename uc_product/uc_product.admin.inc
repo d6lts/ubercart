@@ -511,7 +511,7 @@ function theme_uc_product_feature_add_form($form) {
 /**
  * Form submission handler for uc_product_feature_add_form().
  *
- * @see uc_product_feature_add_form().
+ * @see uc_product_feature_add_form()
  */
 function uc_product_feature_add_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'node/'. arg(1) .'/edit/features/'. $form_state['values']['feature'] .'/add';
