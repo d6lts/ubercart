@@ -551,7 +551,7 @@ function uc_attribute_product_description($product) {
  *   The ID of the product/class this attribute belongs to.
  *
  * @return
- *   The array of loaded attributes.
+ *   An array of loaded attributes.
  */
 function uc_attribute_load_multiple($aids = array(), $type = '', $id = NULL) {
   $sql = uc_attribute_type_info($type);
@@ -679,8 +679,8 @@ function uc_attribute_load($aid, $id = NULL, $type = '') {
 }
 
 /**
- * Fetches an array of attribute objects from the database who belong to a
- * product.
+ * Fetches an array of attribute objects from the database that
+ * belong to a product.
  *
  * @param $nid
  *   Product whose attributes to load.
@@ -1299,8 +1299,8 @@ function uc_attribute_priced_attributes($nid) {
 /**
  * Displays the attribute selection form elements.
  *
- * @ingroup themeable
  * @see _uc_attribute_alter_form()
+ * @ingroup themeable
  */
 function theme_uc_attribute_add_to_cart($form) {
   $output = '<div class="attributes">';
