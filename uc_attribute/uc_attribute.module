@@ -249,6 +249,9 @@ function uc_attribute_init() {
  */
 function uc_attribute_theme() {
   return array(
+    'uc_attribute_option' => array(
+      'arguments' => array('option' => '', 'price' => ''),
+    ),
     'uc_attribute_add_to_cart' => array(
       'arguments' => array('form' => NULL),
     ),
@@ -679,8 +682,7 @@ function uc_attribute_load($aid, $id = NULL, $type = '') {
 }
 
 /**
- * Fetches an array of attribute objects from the database that
- * belong to a product.
+ * Fetches an array of attribute objects that belong to a product.
  *
  * @param $nid
  *   Product whose attributes to load.
@@ -830,8 +832,7 @@ function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALS
 }
 
 /**
- * Deletes all the options associated with this product/class attribute, and
- * then the attribute itself.
+ * Deletes an attribute and all options associated with it.
  *
  * @param $aid
  *   The base attribute ID.
@@ -1046,8 +1047,7 @@ function uc_attribute_subject_option_exists($oid, $type, $id) {
 }
 
 /**
- * Returns a list of db helpers to abstract the queries between
- * products/classes.
+ * Returns a list of names to abstract queries between products and classes.
  *
  * @param $type
  *   Is this a product or a class?
@@ -1193,29 +1193,31 @@ function _uc_attribute_alter_form($product) {
     $options = array();
     foreach ($attribute->options as $option) {
       $context['subject']['option'] = $option;
-      switch (variable_get('uc_attribute_option_price_format', 'adjustment')) {
-        case 'total':
-          $context['type'] = 'product';
-          $context['subject']['node'] = $product;
-          $display_price = in_array($attribute->aid, $priced_attributes) ? ', '. uc_price($product->sell_price + $option->price, $context) : '';
-          if (count($priced_attributes) == 1 && $attribute->display != 3) {
+      $display_price = '';
+      if (in_array($attribute->aid, $priced_attributes)) {
+        switch (variable_get('uc_attribute_option_price_format', 'adjustment')) {
+          case 'total':
+            $context['type'] = 'product';
+            $context['subject']['node'] = $product;
+            if (count($priced_attributes) == 1 && $attribute->display != 3) {
+              $display_price = uc_price($product->sell_price + $option->price, $context);
+              break;
+            }
+          case 'adjustment':
+            $context['type'] = 'attribute_option';
+            if ($option->price != 0) {
+              $display_price = $option->price > 0 ? '+' : '-';
+              $display_price .= uc_price(abs($option->price), $context);
+            }
             break;
-          }
-        case 'adjustment':
-          $context['type'] = 'attribute_option';
-          $display_price = ($option->price != 0 ? ', '. ($option->price > 0 ? '+' : '') . uc_price($option->price, $context) : '');
-          break;
-        case 'none':
-        default:
-          $display_price = '';
-          break;
+        }
       }
-      $options[$option->oid] = $option->name;
-      if ($attribute->display == 2) {
-        // Select options are check_plain()ed, but radio button labels are not.
-        $options[$option->oid] = check_plain($options[$option->oid]);
-      }
-      $options[$option->oid] .= $display_price;
+
+      // Select options are check_plain()ed, but radio button labels are not.
+      $options[$option->oid] = theme('uc_attribute_option',
+        $attribute->display == 2 ? check_plain($option->name) : $option->name,
+        $display_price
+      );
     }
 
     if (count($attribute->options) && $attribute->display > 0) {
@@ -1294,6 +1296,25 @@ function uc_attribute_priced_attributes($nid) {
     $aids[] = $attribute['aid'];
   }
   return $aids;
+}
+
+/**
+ * Displays an attribute option with an optional total or adjustment price.
+ *
+ * @param $option
+ *   The option name.
+ * @param $price
+ *   The price total or adjustment, if any.
+ *
+ * @see _uc_attribute_alter_form()
+ * @ingroup themeable
+ */
+function theme_uc_attribute_option($option, $price) {
+  $output = $option;
+  if ($price) {
+    $output .= ', ' . $price;
+  }
+  return $output;
 }
 
 /**
