@@ -190,6 +190,64 @@ function uc_attribute_delete_confirm_submit($form, &$form_state) {
   }
 }
 
+function uc_attribute_bulk_update_form($form_state, $object) {
+  drupal_set_title(check_plain($object->name));
+  $form = array();
+
+  $node_type = $object->pcid;
+
+  $form['node_type'] = array(
+    '#type' => 'hidden',
+    '#value' => $node_type,
+  );
+
+  // Select all products with current class.
+  $result = pager_query("SELECT n.nid, n.title, n.status, nt.name FROM {node} n LEFT JOIN {node_type} nt ON nt.type = n.type WHERE nt.type = '%s'", 50, 0, NULL, $node_type);
+  $nodes = array();
+  while ($node = db_fetch_object($result)) {
+    $nodes[$node->nid] = '';
+    $form['title'][$node->nid] = array('#value' => l($node->title, 'node/' . $node->nid));
+    $form['status'][$node->nid] =  array('#value' => ($node->status ? t('published') : t('not published')));
+    $form['type'][$node->nid] =  array('#value' => check_plain($node->name));
+  }
+
+  $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
+
+  $form['flush'] = array(
+    '#type' => 'submit',
+    '#value' => t('Flush selected'),
+    '#submit' => array('uc_attribute_bulk_update_flush'),
+  );
+  $form['flush_all'] = array(
+    '#type' => 'submit',
+    '#value' => t('Flush all'),
+    '#submit' => array('uc_attribute_bulk_update_flush_all'),
+  );
+
+  $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
+  $form['#theme'] = 'uc_attribute_bulk_update';
+
+  return $form;
+}
+
+function uc_attribute_bulk_update_flush($form, &$form_state) {
+  $nodes = array_filter($form_state['values']['nodes']);
+  foreach ($nodes as $nid) {
+    $node = node_load($nid);
+    uc_attribute_reset($node);
+  }
+  drupal_set_message(t("Bulk update completed successfully on selected products."));
+}
+
+function uc_attribute_bulk_update_flush_all($form, &$form_state) {
+  $result = db_query("SELECT nid FROM {node} WHERE type = '%s'", $form_state['values']['node_type']);
+  while ($item = db_fetch_object($result)) {
+    $node = node_load($item->nid);
+    uc_attribute_reset($node);
+  }
+  drupal_set_message(t("Bulk update completed successfully on all products in this class."));
+}
+
 /**
  * Changes the display of attribute option prices.
  *
@@ -419,7 +477,15 @@ function uc_attribute_option_form($form_state, $attribute, $option = NULL) {
     '#default_value' => $option->weight,
     '#weight' => 3,
   );
-
+  if (isset($form['oid'])) {
+    $form['bulk_update'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Update existing products?'),
+      '#description' => t('If selected, existing products and product classes with this attribute will be updated with the values on this page.<br /><em><strong>Warning:</strong> any option adjustments set at the product level will be overridden!</em>'),
+      '#default_value' => 0,
+      '#weight' => 4,
+    );
+  }
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
@@ -468,8 +534,16 @@ function uc_attribute_option_form_submit($form, &$form_state) {
   else {
     db_query("UPDATE {uc_attribute_options} SET name = '%s', cost = %f, price = %f, weight = %f, ordering = %d WHERE aid = %d AND oid = %d",
       $form_state['values']['name'], $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['aid'], $form_state['values']['oid']);
-    drupal_set_message(t('Updated option %option.', array('%option' => $form_state['values']['name'])));
-    watchdog('uc_attribute', 'Updated option %option.', array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/attributes/'. $form_state['values']['aid'] .'/options/'. $form_state['values']['oid']);
+    $message = t('Updated option %option.', array('%option' => $form_state['values']['name']));
+    if ($form_state['values']['bulk_update'] == 1) {
+      db_query("UPDATE {uc_product_options} SET cost = '%f', price = '%f', weight = '%f', ordering = '%d' WHERE oid = '%d'",
+        $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['oid']);
+      db_query("UPDATE {uc_class_attribute_options} SET cost = '%f', price = '%f', weight = '%f', ordering = '%d' WHERE oid = '%d'",
+        $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['oid']);
+      $message .= t(' Bulk updates applied to all products and classes which have this attribute.');
+    }
+    drupal_set_message($message);
+    watchdog('uc_attribute', $message, array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/attributes/'. $form_state['values']['aid'] .'/options/'. $form_state['values']['oid']);
     $form_state['redirect'] = 'admin/store/attributes/'. $form_state['values']['aid'] .'/options';
   }
 }
@@ -603,6 +677,14 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
         '#value' => t('Save changes'),
         '#weight' => -2,
       );
+      if ($type == 'product') {
+        $form['reset'] = array(
+          '#type' => 'submit',
+          '#value' => t('Reset to defaults'),
+          '#submit' => array('uc_attribute_product_attributes_reset'),
+          '#weight' => -1,
+        );
+      }
     }
   }
   elseif ($view == 'add') {
@@ -778,6 +860,18 @@ function uc_object_attributes_form_submit($form, &$form_state) {
   else {
     $form_state['redirect'] = 'admin/store/products/classes/'. $form_state['values']['id'] .'/attributes';
   }
+}
+
+/**
+ * Reset product attributes to defaults for product class.
+ *
+ * @see uc_object_attributes_form()
+ */
+function uc_attribute_product_attributes_reset($form, &$form_state) {
+  $nid = $form_state['values']['id'];
+  $node = node_load($nid);
+  uc_attribute_reset($node);
+  drupal_set_message(t('Product attributes and options reset to class defaults.'));
 }
 
 /**
@@ -1239,4 +1333,40 @@ function uc_product_adjustments_form_submit($form, &$form_state) {
     $goto[] = 'page='. $_GET['page'];
   }
   $form_state['redirect'] = $goto;
+}
+
+function theme_uc_attribute_bulk_update($form) {
+  $output = '';
+
+  $has_products = isset($form['title']) && is_array($form['title']);
+
+  $header[] = theme('table_select_header_cell');
+  $header[] = t('Title');
+  $header[] = t('Status');
+  $header[] = t('Type');
+
+  if ($has_products) {
+    foreach (element_children($form['title']) as $key) {
+      $row = array();
+      $row[] = drupal_render($form['nodes'][$key]);
+      $row[] = drupal_render($form['title'][$key]);
+      $row[] = drupal_render($form['status'][$key]);
+      $row[] = drupal_render($form['type'][$key]);
+      $rows[] = $row;
+    }
+  }
+  else {
+    $rows[] = array(array('data' => t('No products available.'), 'colspan' => '6'));
+  }
+
+  $output .= theme('table', $header, $rows);
+  if ($form['pager']['#value']) {
+    $output .= drupal_render($form['pager']);
+  }
+
+  $output .= drupal_render($form);
+
+  $output .= '<p>' . t('Flush actions take place immediately and cannot be undone.') . '</p>';
+
+  return $output;
 }

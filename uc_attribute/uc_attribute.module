@@ -42,6 +42,10 @@ function uc_attribute_help($path, $arg) {
     // Help message for the product Adjustments tab.
     case 'node/%/edit/adjustments':
       return t('Enter an alternate SKU to be used when the specified set of options are chosen and the product is added to the cart. <b>Warning:</b> Adding or removing attributes from this product will reset all the SKUs on this page to the default product SKU.');
+
+    // Help message for bulk updates tab.
+    case 'admin/store/products/classes/%/attributes_bulk':
+      return t('Bulk updates performed here will reset all attributes and options on the selected products to the current defaults for this product class.<p><em><strong>Warning:</strong> any product level customizations will be lost!</em></p>To perform bulk updates on specific option values without resetting attributes to the class defaults, go to <a href="!url">Store administration->Attributes</a> and edit the option, selecting the checkbox to update existing products.', array('!url' => url('admin/store/attributes')));
   }
 }
 
@@ -153,6 +157,15 @@ function uc_attribute_menu() {
     'access callback' => 'uc_attribute_product_class_access',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'uc_attribute.admin.inc',
+  );
+  $items['admin/store/products/classes/%uc_product_class/attributes_bulk'] = array(
+    'title' => 'Bulk',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('uc_attribute_bulk_update_form', 4, 'class'),
+    'access callback' => 'uc_attribute_product_class_access',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
     'file' => 'uc_attribute.admin.inc',
   );
 
@@ -271,6 +284,10 @@ function uc_attribute_theme() {
       'arguments' => array('product' => NULL),
       'file' => 'uc_attribute.admin.inc',
     ),
+    'uc_attribute_bulk_update' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'uc_attribute.admin.inc',
+    ),
   );
 }
 
@@ -349,23 +366,10 @@ function uc_attribute_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
         }
         break;
       case 'insert':
-        switch ($GLOBALS['db_type']) {
-          case 'mysqli':
-          case 'mysql':
-            db_query("INSERT IGNORE INTO {uc_product_attributes} (nid, aid, label, ordering, required, display, default_option) SELECT %d, aid, label, ordering, required, display, default_option FROM {uc_class_attributes} WHERE pcid = '%s'", $node->nid, $node->type);
-            db_query("INSERT IGNORE INTO {uc_product_options} (nid, oid, cost, price, weight, ordering) SELECT %d, oid, cost, price, weight, ordering FROM {uc_class_attribute_options} WHERE pcid = '%s'", $node->nid, $node->type);
-            break;
-          case 'pgsql':
-            db_query("INSERT INTO {uc_product_attributes} (nid, aid, label, ordering, required, display, default_option) SELECT %d, aid, label, ordering, required, display, default_option FROM {uc_class_attributes} WHERE pcid = '%s'", $node->nid, $node->type);
-            db_query("INSERT INTO {uc_product_options} (nid, oid, cost, price, weight, ordering) SELECT %d, oid, cost, price, weight, ordering FROM {uc_class_attribute_options} WHERE pcid = '%s'", $node->nid, $node->type);
-            break;
-        }
-
+        uc_attribute_insert($node);
         break;
       case 'delete':
-        db_query("DELETE FROM {uc_product_options} WHERE nid = %d", $node->nid);
-        db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
-        db_query("DELETE FROM {uc_product_attributes} WHERE nid = %d", $node->nid);
+        uc_attribute_remove($node);
         break;
       case 'update index':
         $output = '';
@@ -384,6 +388,40 @@ function uc_attribute_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
         return $output;
     }
   }
+}
+
+/**
+ * Add default attributes to a product node.
+ */
+function uc_attribute_insert($node) {
+  switch ($GLOBALS['db_type']) {
+    case 'mysqli':
+    case 'mysql':
+      db_query("INSERT IGNORE INTO {uc_product_attributes} (nid, aid, label, ordering, required, display, default_option) SELECT %d, aid, label, ordering, required, display, default_option FROM {uc_class_attributes} WHERE pcid = '%s'", $node->nid, $node->type);
+      db_query("INSERT IGNORE INTO {uc_product_options} (nid, oid, cost, price, weight, ordering) SELECT %d, oid, cost, price, weight, ordering FROM {uc_class_attribute_options} WHERE pcid = '%s'", $node->nid, $node->type);
+      break;
+    case 'pgsql':
+      db_query("INSERT INTO {uc_product_attributes} (nid, aid, label, ordering, required, display, default_option) SELECT %d, aid, label, ordering, required, display, default_option FROM {uc_class_attributes} WHERE pcid = '%s'", $node->nid, $node->type);
+      db_query("INSERT INTO {uc_product_options} (nid, oid, cost, price, weight, ordering) SELECT %d, oid, cost, price, weight, ordering FROM {uc_class_attribute_options} WHERE pcid = '%s'", $node->nid, $node->type);
+      break;
+  }
+}
+
+/**
+ * Remove all attributes from a product node.
+ */
+function uc_attribute_remove($node) {
+  db_query("DELETE FROM {uc_product_options} WHERE nid = %d", $node->nid);
+  db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
+  db_query("DELETE FROM {uc_product_attributes} WHERE nid = %d", $node->nid);
+}
+
+/**
+ * Reset attributes to class defaults for a product node.
+ */
+function uc_attribute_reset($node) {
+  uc_attribute_remove($node);
+  uc_attribute_insert($node);
 }
 
 /******************************************************************************
