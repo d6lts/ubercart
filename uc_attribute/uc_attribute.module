@@ -419,7 +419,7 @@ function uc_attribute_node_delete($node) {
 /**
  * Reset attributes to class defaults for a product node.
  */
-function uc_attribute_reset($node) {
+function uc_attribute_node_reset($node) {
   uc_attribute_node_delete($node);
   uc_attribute_node_insert($node);
 }

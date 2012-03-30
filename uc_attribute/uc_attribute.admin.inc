@@ -288,7 +288,7 @@ function uc_attribute_bulk_update_flush($form, &$form_state) {
   $nodes = array_filter($form_state['values']['nodes']);
   foreach ($nodes as $nid) {
     $node = node_load($nid);
-    uc_attribute_reset($node);
+    uc_attribute_node_reset($node);
   }
   drupal_set_message(t("Bulk update completed successfully on selected products."));
 }
@@ -302,7 +302,7 @@ function uc_attribute_bulk_update_flush_all($form, &$form_state) {
   $result = db_query("SELECT nid FROM {node} WHERE type = '%s'", $form_state['values']['node_type']);
   while ($item = db_fetch_object($result)) {
     $node = node_load($item->nid);
-    uc_attribute_reset($node);
+    uc_attribute_node_reset($node);
   }
   drupal_set_message(t("Bulk update completed successfully on all products in this class."));
 }
@@ -932,7 +932,7 @@ function uc_object_attributes_form_submit($form, &$form_state) {
 function uc_attribute_product_attributes_reset($form, &$form_state) {
   $nid = $form_state['values']['id'];
   $node = node_load($nid);
-  uc_attribute_reset($node);
+  uc_attribute_node_reset($node);
   drupal_set_message(t('Product attributes and options reset to class defaults.'));
 }
 
