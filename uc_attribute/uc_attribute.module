@@ -284,7 +284,7 @@ function uc_attribute_theme() {
       'arguments' => array('product' => NULL),
       'file' => 'uc_attribute.admin.inc',
     ),
-    'uc_attribute_bulk_update' => array(
+    'uc_attribute_bulk_update_form' => array(
       'arguments' => array('form' => NULL),
       'file' => 'uc_attribute.admin.inc',
     ),
@@ -366,10 +366,10 @@ function uc_attribute_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
         }
         break;
       case 'insert':
-        uc_attribute_insert($node);
+        uc_attribute_node_insert($node);
         break;
       case 'delete':
-        uc_attribute_remove($node);
+        uc_attribute_node_delete($node);
         break;
       case 'update index':
         $output = '';
@@ -393,7 +393,7 @@ function uc_attribute_nodeapi(&$node, $op, $arg3 = NULL, $arg4 = NULL) {
 /**
  * Add default attributes to a product node.
  */
-function uc_attribute_insert($node) {
+function uc_attribute_node_insert($node) {
   switch ($GLOBALS['db_type']) {
     case 'mysqli':
     case 'mysql':
@@ -410,7 +410,7 @@ function uc_attribute_insert($node) {
 /**
  * Remove all attributes from a product node.
  */
-function uc_attribute_remove($node) {
+function uc_attribute_node_delete($node) {
   db_query("DELETE FROM {uc_product_options} WHERE nid = %d", $node->nid);
   db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d", $node->nid);
   db_query("DELETE FROM {uc_product_attributes} WHERE nid = %d", $node->nid);
@@ -420,8 +420,8 @@ function uc_attribute_remove($node) {
  * Reset attributes to class defaults for a product node.
  */
 function uc_attribute_reset($node) {
-  uc_attribute_remove($node);
-  uc_attribute_insert($node);
+  uc_attribute_node_delete($node);
+  uc_attribute_node_insert($node);
 }
 
 /******************************************************************************

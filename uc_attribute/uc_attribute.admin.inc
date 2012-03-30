@@ -190,6 +190,14 @@ function uc_attribute_delete_confirm_submit($form, &$form_state) {
   }
 }
 
+/**
+ * Form builder for bulk product updates.
+ *
+ * @see uc_attribute_bulk_update_flush()
+ * @see uc_attribute_bulk_update_flush_all()
+ * @see theme_uc_attribute_bulk_update_form()
+ * @ingroup forms
+ */
 function uc_attribute_bulk_update_form($form_state, $object) {
   drupal_set_title(check_plain($object->name));
   $form = array();
@@ -197,7 +205,7 @@ function uc_attribute_bulk_update_form($form_state, $object) {
   $node_type = $object->pcid;
 
   $form['node_type'] = array(
-    '#type' => 'hidden',
+    '#type' => 'value',
     '#value' => $node_type,
   );
 
@@ -225,11 +233,57 @@ function uc_attribute_bulk_update_form($form_state, $object) {
   );
 
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
-  $form['#theme'] = 'uc_attribute_bulk_update';
 
   return $form;
 }
 
+/**
+ * Displays the bulk product update form.
+ *
+ * @see uc_attribute_bulk_update_form()
+ * @ingroup themeable
+ */
+function theme_uc_attribute_bulk_update_form($form) {
+  $output = '';
+
+  $has_products = isset($form['title']) && is_array($form['title']);
+
+  $header[] = theme('table_select_header_cell');
+  $header[] = t('Title');
+  $header[] = t('Status');
+  $header[] = t('Type');
+
+  if ($has_products) {
+    foreach (element_children($form['title']) as $key) {
+      $row = array();
+      $row[] = drupal_render($form['nodes'][$key]);
+      $row[] = drupal_render($form['title'][$key]);
+      $row[] = drupal_render($form['status'][$key]);
+      $row[] = drupal_render($form['type'][$key]);
+      $rows[] = $row;
+    }
+  }
+  else {
+    $rows[] = array(array('data' => t('No products available.'), 'colspan' => '6'));
+  }
+
+  $output .= theme('table', $header, $rows);
+  if ($form['pager']['#value']) {
+    $output .= drupal_render($form['pager']);
+  }
+
+  $output .= drupal_render($form);
+
+  $output .= '<p>' . t('Flush actions take place immediately and cannot be undone.') . '</p>';
+
+  return $output;
+}
+
+/**
+ * Form submission handler for uc_attribute_bulk_update_form().
+ *
+ * @see uc_attribute_bulk_update_form()
+ */
 function uc_attribute_bulk_update_flush($form, &$form_state) {
   $nodes = array_filter($form_state['values']['nodes']);
   foreach ($nodes as $nid) {
@@ -239,6 +293,11 @@ function uc_attribute_bulk_update_flush($form, &$form_state) {
   drupal_set_message(t("Bulk update completed successfully on selected products."));
 }
 
+/**
+ * Form submission handler for uc_attribute_bulk_update_form().
+ *
+ * @see uc_attribute_bulk_update_form()
+ */
 function uc_attribute_bulk_update_flush_all($form, &$form_state) {
   $result = db_query("SELECT nid FROM {node} WHERE type = '%s'", $form_state['values']['node_type']);
   while ($item = db_fetch_object($result)) {
@@ -535,13 +594,15 @@ function uc_attribute_option_form_submit($form, &$form_state) {
     db_query("UPDATE {uc_attribute_options} SET name = '%s', cost = %f, price = %f, weight = %f, ordering = %d WHERE aid = %d AND oid = %d",
       $form_state['values']['name'], $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['aid'], $form_state['values']['oid']);
     $message = t('Updated option %option.', array('%option' => $form_state['values']['name']));
-    if ($form_state['values']['bulk_update'] == 1) {
+
+    if ($form_state['values']['bulk_update']) {
       db_query("UPDATE {uc_product_options} SET cost = '%f', price = '%f', weight = '%f', ordering = '%d' WHERE oid = '%d'",
         $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['oid']);
       db_query("UPDATE {uc_class_attribute_options} SET cost = '%f', price = '%f', weight = '%f', ordering = '%d' WHERE oid = '%d'",
         $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['oid']);
-      $message .= t(' Bulk updates applied to all products and classes which have this attribute.');
+      $message .= ' '. t('Bulk updates applied to all products and classes which have this attribute.');
     }
+
     drupal_set_message($message);
     watchdog('uc_attribute', $message, array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/attributes/'. $form_state['values']['aid'] .'/options/'. $form_state['values']['oid']);
     $form_state['redirect'] = 'admin/store/attributes/'. $form_state['values']['aid'] .'/options';
@@ -591,6 +652,7 @@ function uc_attribute_option_delete_confirm_submit($form, &$form_state) {
  * Form to associate attributes with products or classes.
  *
  * @see uc_object_attributes_form_submit()
+ * @see uc_attribute_product_attributes_reset()
  * @see theme_uc_object_attributes_form()
  * @ingroup forms
  */
@@ -1333,40 +1395,4 @@ function uc_product_adjustments_form_submit($form, &$form_state) {
     $goto[] = 'page='. $_GET['page'];
   }
   $form_state['redirect'] = $goto;
-}
-
-function theme_uc_attribute_bulk_update($form) {
-  $output = '';
-
-  $has_products = isset($form['title']) && is_array($form['title']);
-
-  $header[] = theme('table_select_header_cell');
-  $header[] = t('Title');
-  $header[] = t('Status');
-  $header[] = t('Type');
-
-  if ($has_products) {
-    foreach (element_children($form['title']) as $key) {
-      $row = array();
-      $row[] = drupal_render($form['nodes'][$key]);
-      $row[] = drupal_render($form['title'][$key]);
-      $row[] = drupal_render($form['status'][$key]);
-      $row[] = drupal_render($form['type'][$key]);
-      $rows[] = $row;
-    }
-  }
-  else {
-    $rows[] = array(array('data' => t('No products available.'), 'colspan' => '6'));
-  }
-
-  $output .= theme('table', $header, $rows);
-  if ($form['pager']['#value']) {
-    $output .= drupal_render($form['pager']);
-  }
-
-  $output .= drupal_render($form);
-
-  $output .= '<p>' . t('Flush actions take place immediately and cannot be undone.') . '</p>';
-
-  return $output;
 }
