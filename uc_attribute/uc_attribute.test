@@ -538,6 +538,57 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
   }
 
   /**
+   * Tests the "bulk edit attribute options" user interface.
+   */
+  public function testAttributeUIAttributeOptionsBulkEdit() {
+    $attribute = self::createAttribute();
+    $option = self::createAttributeOption(array('aid' => $attribute->aid));
+    uc_attribute_option_save($option);
+
+    $class = $this->createProductClass();
+    uc_attribute_subject_save($attribute, 'class', $class->pcid);
+    uc_attribute_subject_option_save($option, 'class', $class->pcid);
+
+    $product = $this->createProduct();
+    uc_attribute_subject_save($attribute, 'product', $product->nid);
+    uc_attribute_subject_option_save($option, 'product', $product->nid);
+
+    $edit = (array) self::createAttributeOption(array('aid' => $attribute->aid), FALSE);
+    unset($edit['aid']);
+    $edit['bulk_update'] = TRUE;
+    $this->drupalPost('admin/store/attributes/'. $attribute->aid .'/options/'. $option->oid .'/edit', $edit, t('Submit'));
+    unset($edit['bulk_update']);
+
+    $this->assertText('Bulk updates applied', t('Bulk update selected.'), t('Ubercart'));
+
+    $option = uc_attribute_subject_option_load($option->oid, 'class', $class->pcid);
+    $fields_ok = TRUE;
+    foreach ($edit as $field => $value) {
+      if ($option->$field != $value) {
+        $this->showVar($option);
+        $this->showVar($edit);
+        $fields_ok = FALSE;
+        break;
+      }
+    }
+
+    $this->assertTrue($fields_ok, t('Class bulk updated successfully.'), t('Ubercart'));
+
+    $product_attributes = uc_attribute_load_multiple(array(), 'product', $product->nid);
+    $fields_ok = TRUE;
+    foreach ($edit as $field => $value) {
+      if ($product_attributes[$attribute->aid]->options[$option->oid]->$field != $value) {
+        $this->showVar($product_attributes);
+        $this->showVar($edit);
+        $fields_ok = FALSE;
+        break;
+      }
+    }
+
+    $this->assertTrue($fields_ok, t('Product bulk updated successfully.'), t('Ubercart'));
+  }
+
+  /**
    * Tests the "delete attribute option" user interface.
    */
   public function testAttributeUIAttributeOptionsDelete() {
