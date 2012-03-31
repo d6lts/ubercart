@@ -590,18 +590,18 @@ function uc_attribute_option_form_submit($form, &$form_state) {
   else {
     db_query("UPDATE {uc_attribute_options} SET name = '%s', cost = %f, price = %f, weight = %f, ordering = %d WHERE aid = %d AND oid = %d",
       $form_state['values']['name'], $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['aid'], $form_state['values']['oid']);
-    $message = t('Updated option %option.', array('%option' => $form_state['values']['name']));
-
+    drupal_set_message(t('Updated option %option.', array('%option' => $form_state['values']['name'])));
     if ($form_state['values']['bulk_update']) {
       db_query("UPDATE {uc_product_options} SET cost = '%f', price = '%f', weight = '%f', ordering = '%d' WHERE oid = '%d'",
         $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['oid']);
       db_query("UPDATE {uc_class_attribute_options} SET cost = '%f', price = '%f', weight = '%f', ordering = '%d' WHERE oid = '%d'",
         $form_state['values']['cost'], $form_state['values']['price'], $form_state['values']['weight'], $form_state['values']['ordering'], $form_state['values']['oid']);
-      $message .= ' '. t('Bulk updates applied to all products and classes which have this attribute.');
+      drupal_set_message(t('Bulk updates applied to all products and classes which have this attribute.'));
+      watchdog('uc_attribute', 'Updated option %option for all products and classes.', array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/attributes/'. $form_state['values']['aid'] .'/options/'. $form_state['values']['oid']);
     }
-
-    drupal_set_message($message);
-    watchdog('uc_attribute', $message, array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/attributes/'. $form_state['values']['aid'] .'/options/'. $form_state['values']['oid']);
+    else {
+      watchdog('uc_attribute', 'Updated option %option.', array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/attributes/'. $form_state['values']['aid'] .'/options/'. $form_state['values']['oid']);
+    }
     $form_state['redirect'] = 'admin/store/attributes/'. $form_state['values']['aid'] .'/options';
   }
 }
