@@ -95,6 +95,8 @@ class UbercartTestHelper extends DrupalWebTestCase {
     $product_class = (object) $product_class;
 
     drupal_write_record('uc_product_classes', $product_class);
+    uc_product_node_info(TRUE);
+    node_types_rebuild();
 
     return $product_class;
   }

@@ -25,7 +25,7 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
    * Overrides DrupalWebTestCase::setUp().
    */
   function setUp() {
-    parent::setUp(array('uc_attribute'), array('administer attributes'));
+    parent::setUp(array('uc_attribute'), array('administer attributes', 'administer nodes'));
     $this->drupalLogin($this->adminUser);
   }
 
@@ -711,6 +711,58 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
       }
     }
     $this->assertTrue($fields_ok, t('Class attribute option edited successfully by form.'), t('Ubercart'));
+  }
+
+  /**
+   * Tests the product node attribute user interface.
+   */
+  public function testAttributeUIProductAttributeOverview() {
+    $class = $this->createProductClass();
+    $attribute = self::createAttribute();
+    uc_attribute_subject_save($attribute, 'class', $class->pcid);
+    $product = $this->createProduct(array('type' => $class->pcid));
+
+    // Check product has attribute added by default.
+    $loaded_attribute = uc_attribute_load($attribute->aid, $product->nid, 'product');
+    $this->assertEqual($attribute->name, $loaded_attribute->name, t('Product attribute added by default.'), t('Ubercart'));
+    uc_attribute_subject_delete($attribute->aid, 'product', $product->nid);
+
+    $this->drupalGet('node/'. $product->nid .'/edit/attributes/add');
+    $edit = array();
+    $edit['add_attributes[]'] = $attribute->aid;
+    $this->drupalPost(NULL, $edit, t('Add attributes'));
+    $this->assertText($attribute->name, t('Product attribute added.'), t('Ubercart'));
+
+    $edit = array();
+    $edit["attributes[{$attribute->aid}][remove]"] = TRUE;
+    $this->drupalPost(NULL, $edit, t('Save changes'));
+    $this->assertText(t('You must first add attributes to this product.'), t('Product attribute removed.'), t('Ubercart'));
+
+    $this->drupalPost(NULL, array(), t('Reset to defaults'));
+    $this->drupalPost(NULL, array(), t('Reset'));
+    $this->assertText($attribute->name, t('Product attribute reset successfully.'), t('Ubercart'));
+  }
+
+  /**
+   * Tests the bulk product attribute update user interface.
+   */
+  public function testAttributeUIProductAttributeBulkUpdate() {
+    $class = $this->createProductClass();
+    $attribute = self::createAttribute();
+    uc_attribute_subject_save($attribute, 'class', $class->pcid);
+    $product = $this->createProduct(array('type' => $class->pcid));
+
+    $edit = array();
+    $edit["attributes[{$attribute->aid}][remove]"] = TRUE;
+    $this->drupalPost('node/'. $product->nid .'/edit/attributes', $edit, t('Save changes'));
+    $this->assertText(t('You must first add attributes to this product.'), t('Product attribute removed.'), t('Ubercart'));
+
+    $this->drupalGet('admin/store/products/classes/'. $class->pcid .'/attributes_bulk');
+    $this->assertText($product->title, t('Product name found.'), t('Ubercart'));
+    $this->drupalPost(NULL, array(), t('Flush all'));
+
+    $this->drupalGet('node/'. $product->nid .'/edit/attributes');
+    $this->assertText($attribute->name, t('Product attribute reset successfully.'), t('Ubercart'));
   }
 
   /**

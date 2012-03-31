@@ -198,19 +198,16 @@ function uc_attribute_delete_confirm_submit($form, &$form_state) {
  * @see theme_uc_attribute_bulk_update_form()
  * @ingroup forms
  */
-function uc_attribute_bulk_update_form($form_state, $object) {
-  drupal_set_title(check_plain($object->name));
-  $form = array();
-
-  $node_type = $object->pcid;
+function uc_attribute_bulk_update_form($form_state, $class) {
+  drupal_set_title(check_plain($class->name));
 
   $form['node_type'] = array(
     '#type' => 'value',
-    '#value' => $node_type,
+    '#value' => $class->pcid,
   );
 
   // Select all products with current class.
-  $result = pager_query("SELECT n.nid, n.title, n.status, nt.name FROM {node} n LEFT JOIN {node_type} nt ON nt.type = n.type WHERE nt.type = '%s'", 50, 0, NULL, $node_type);
+  $result = pager_query("SELECT n.nid, n.title, n.status, nt.name FROM {node} n LEFT JOIN {node_type} nt ON nt.type = n.type WHERE nt.type = '%s'", 50, 0, NULL, $class->pcid);
   $nodes = array();
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
@@ -739,14 +736,14 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
         '#value' => t('Save changes'),
         '#weight' => -2,
       );
-      if ($type == 'product') {
-        $form['reset'] = array(
-          '#type' => 'submit',
-          '#value' => t('Reset to defaults'),
-          '#submit' => array('uc_object_attributes_form_reset'),
-          '#weight' => -1,
-        );
-      }
+    }
+    if ($type == 'product') {
+      $form['reset'] = array(
+        '#type' => 'submit',
+        '#value' => t('Reset to defaults'),
+        '#submit' => array('uc_object_attributes_form_reset'),
+        '#weight' => -1,
+      );
     }
   }
   elseif ($view == 'add') {
@@ -949,7 +946,7 @@ function uc_attribute_node_reset_confirm(&$form_state, $node) {
     t('Are you sure you want to reset the product attributes and options for %title?', array('%title' => $node->title)),
     'node/'. $node->nid .'/edit/attributes',
     t('This action cannot be undone.'),
-    t('Delete'),
+    t('Reset'),
     t('Cancel')
   );
 }
