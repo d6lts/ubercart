@@ -652,7 +652,7 @@ function uc_attribute_option_delete_confirm_submit($form, &$form_state) {
  * Form to associate attributes with products or classes.
  *
  * @see uc_object_attributes_form_submit()
- * @see uc_attribute_product_attributes_reset()
+ * @see uc_object_attributes_form_reset()
  * @see theme_uc_object_attributes_form()
  * @ingroup forms
  */
@@ -743,7 +743,7 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
         $form['reset'] = array(
           '#type' => 'submit',
           '#value' => t('Reset to defaults'),
-          '#submit' => array('uc_attribute_product_attributes_reset'),
+          '#submit' => array('uc_object_attributes_form_reset'),
           '#weight' => -1,
         );
       }
@@ -927,13 +927,45 @@ function uc_object_attributes_form_submit($form, &$form_state) {
 /**
  * Reset product attributes to defaults for product class.
  *
- * @see uc_object_attributes_form()
+ * @see uc_object_attributes_form_reset()
  */
-function uc_attribute_product_attributes_reset($form, &$form_state) {
-  $nid = $form_state['values']['id'];
+function uc_object_attributes_form_reset($form, &$form_state) {
+  $form_state['redirect'] = array('node/'. $form_state['values']['id'] .'/edit/attributes/reset');
+}
+
+/**
+ * Confirmation form to reset product attributes to defaults.
+ *
+ * @see uc_object_attributes_form()
+ * @see uc_attribute_node_reset_confirm_submit()
+ */
+function uc_attribute_node_reset_confirm(&$form_state, $node) {
+  $form['nid'] = array(
+    '#type' => 'value',
+    '#value' => $node->nid,
+  );
+
+  return confirm_form($form,
+    t('Are you sure you want to reset the product attributes and options for %title?', array('%title' => $node->title)),
+    'node/'. $node->nid .'/edit/attributes',
+    t('This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Execute product attribute reset.
+ *
+ * @see uc_attribute_node_reset_confirm()
+ */
+function uc_attribute_node_reset_confirm_submit($form, &$form_state) {
+  $nid = $form_state['values']['nid'];
   $node = node_load($nid);
   uc_attribute_node_reset($node);
   drupal_set_message(t('Product attributes and options reset to class defaults.'));
+
+  $form_state['redirect'] = 'node/'. $node->nid .'/edit/attributes';
 }
 
 /**

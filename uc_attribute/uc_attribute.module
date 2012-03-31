@@ -190,6 +190,15 @@ function uc_attribute_menu() {
     'weight' => 1,
     'file' => 'uc_attribute.admin.inc',
   );
+  $items['node/%node/edit/attributes/reset'] = array(
+    'title' => 'Reset to defaults',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('uc_attribute_node_reset_confirm', 1),
+    'access callback' => 'uc_attribute_product_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+    'file' => 'uc_attribute.admin.inc',
+  );
   $items['node/%node/edit/options'] = array(
     'title' => 'Options',
     'page callback' => 'drupal_get_form',
