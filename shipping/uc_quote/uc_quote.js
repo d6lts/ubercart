@@ -72,7 +72,7 @@ function quoteCallback(products) {
 
   page = $("input:hidden[name*=page]").val();
   details = new Object();
-  details["uid"] = $("input[name*=uid]").val();
+  details["uid"] = $("input:hidden[name*=uid]").val();
   //details["details[zone]"] = $("select[name*=delivery_zone] option:selected").val();
   //details["details[country]"] = $("select[name*=delivery_country] option:selected").val();
 
