@@ -227,12 +227,10 @@ function uc_credit_cron() {
 
       $cache = uc_credit_cache('save', $data['cc_data']);
 
-      $cc_data = array(
-        'cc_number' => substr($data['cc_data']['cc_number'], -4),
-        'cc_type' => $data['cc_data']['cc_type'],
-      );
+      // Save only some limited, PCI compliant data.
+      $data['cc_data']['cc_number'] = substr($data['cc_data']['cc_number'], -4);
+      unset($data['cc_data']['cc_cvv']);
 
-      // Stuff the serialized and encrypted CC details into the array.
       $data['cc_data'] = $crypt->encrypt(uc_credit_encryption_key(), base64_encode(serialize($cc_data)));
       uc_store_encryption_errors($crypt, 'uc_credit');
 
@@ -354,13 +352,10 @@ function uc_credit_order($op, $arg1, $arg2) {
             $cc_data = $arg1->payment_details;
           }
           else {
-            // Otherwise, save only some limited, PCI compliant data.
-            $cc_data = array(
-              'cc_number' => substr($arg1->payment_details['cc_number'], -4),
-              'cc_exp_month' => $arg1->payment_details['cc_exp_month'],
-              'cc_exp_year' => $arg1->payment_details['cc_exp_year'],
-              'cc_type' => $arg1->payment_details['cc_type'],
-            );
+            // Save only some limited, PCI compliant data.
+            $cc_data = $arg1->payment_details;
+            $cc_data['cc_number'] = substr($cc_data['cc_number'], -4);
+            unset($cc_data['cc_cvv']);
           }
 
           _save_cc_data_to_order($cc_data, $arg1->order_id);
