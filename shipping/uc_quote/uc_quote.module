@@ -921,7 +921,7 @@ function uc_checkout_pane_quotes($op, &$order, $arg2) {
       $predicates = ca_load_trigger_predicates('get_quote_from_'. $method['id']);
       $predicate = array_shift($predicates);
       if ($predicate && ca_evaluate_conditions($predicate, $arguments)) {
-        $quote_data = uc_quote_action_get_quote($order, $method, $user);
+        $quote_data = uc_quote_action_get_quote($order, $method);
       }
 
       if (!isset($quote_data[$quote_option[1]])) {
@@ -1076,7 +1076,7 @@ function uc_order_pane_quotes($op, $arg1) {
             ),
           );
           if (ca_evaluate_conditions($predicate, $arguments)) {
-            $quote_data = uc_quote_action_get_quote($order, $method, $user);
+            $quote_data = uc_quote_action_get_quote($order, $method);
           }
 
           //drupal_set_message('Chosen quote method:<pre>'. print_r($method, TRUE) .'</pre>');
