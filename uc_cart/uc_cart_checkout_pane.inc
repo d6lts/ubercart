@@ -165,7 +165,7 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
               form_set_error('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
             }
             if (!empty($arg2['new_account']['pass'])) {
-              $arg1->data['new_user']['pass'] = $arg2['new_account']['pass'];
+              $arg1->data['new_user']['hash'] = md5(trim($arg2['new_account']['pass']));
             }
           }
         }

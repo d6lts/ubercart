@@ -1086,3 +1086,24 @@ function uc_order_update_6020() {
 
   return $ret;
 }
+
+/**
+ * Delete unwanted sensitive data.
+ */
+function uc_order_update_6200() {
+  $ret = array();
+
+  $result = db_query("SELECT order_id, data FROM {uc_orders} WHERE data LIKE '%s:4:\"pass\"%'");
+  while ($row = db_fetch_object($result)) {
+    $data = unserialize($row->data);
+    if (isset($data['new_user']['pass'])) {
+      unset($data['new_user']['pass']);
+      db_query("UPDATE {uc_orders} SET data = '%s' WHERE order_id = %d", serialize($data), $row->order_id);
+    }
+  }
+
+  variable_del('uc_order_cron_last');
+
+  $ret[] = array('success' => FALSE, 'query' => 'Deleted unwanted sensitive data.');
+  return $ret;
+}
