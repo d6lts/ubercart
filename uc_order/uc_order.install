@@ -1104,6 +1104,6 @@ function uc_order_update_6200() {
 
   variable_del('uc_order_cron_last');
 
-  $ret[] = array('success' => FALSE, 'query' => 'Deleted unwanted sensitive data.');
+  $ret[] = array('success' => TRUE, 'query' => 'Deleted unwanted sensitive data.');
   return $ret;
 }
