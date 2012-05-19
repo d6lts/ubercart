@@ -41,6 +41,6 @@ class UbercartRolesTestCase extends UbercartTestHelper {
     $this->assertTrue(isset($account->roles[$rid]), 'Existing user was granted role.');
 
     // Test that the email is correct.
-    $mail = $this->findMail('/Ubercart: ' . preg_quote($account->roles[$rid]) . ' role granted/');
+    $mail = $this->findMail('/Our store: ' . preg_quote($account->roles[$rid]) . ' role granted/');
   }
 }
