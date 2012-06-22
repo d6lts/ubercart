@@ -78,6 +78,10 @@ function uc_credit_perm() {
  */
 function uc_credit_theme() {
   return array(
+    'uc_credit_cvv_help' => array(
+      'arguments' => array(),
+      'file' => 'uc_credit.theme',
+    ),
     'uc_payment_method_credit_form' => array(
       'arguments' => array('form' => NULL),
     ),
@@ -1181,8 +1185,7 @@ function theme_uc_payment_method_credit_form($form) {
     if (variable_get('uc_credit_cvv_enabled', TRUE)) {
       $form['cc_cvv']['#title'] = '';
       $output .= '<tr><td class="field-label">'. t('CVV:') .'</td><td>'. drupal_render($form['cc_cvv'])
-                .' <img src="'. $path .'/images/info.png" onclick="cvv_info_popup();" style="cursor: pointer; position: relative; top: 3px;" /> <a style="cursor: pointer; font-weight: normal;" onclick="cvv_info_popup();">'
-                . t("What's the CVV?") .'</a></td></tr>';
+               . theme('uc_credit_cvv_help') . '</td></tr>';
     }
     if (variable_get('uc_credit_bank_enabled', FALSE)) {
       $form['cc_bank']['#title'] = '';
