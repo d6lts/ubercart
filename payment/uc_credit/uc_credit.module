@@ -394,7 +394,7 @@ function uc_credit_payment_method() {
   $cc_types = array('visa', 'mastercard', 'discover', 'amex');
   foreach ($cc_types as $type) {
     if (variable_get('uc_credit_'. $type, TRUE)) {
-      $title .= ' <img class="uc-credit-cctype uc-credit-cctype-' . $type . '" src="'. $path .'/images/'. $type .'.gif" style="position: relative; top: 5px;" />';
+      $title .= ' ' . theme('image', drupal_get_path('module', 'uc_credit') . '/images/' . $type . '.gif', '',  '', array('class' => 'uc-credit-cctype uc-credit-cctype-' . $type));
     }
   }
   $methods[] = array(
