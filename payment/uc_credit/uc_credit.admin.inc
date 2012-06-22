@@ -328,9 +328,9 @@ function uc_credit_terminal_form_submit($form, &$form_state) {
       $cc_data = $cache;
     }
     else {
-      $cc_data = array(
-        'cc_number' => substr($cache['cc_number'], -4),
-      );
+      $cc_data = $cache;
+      $cc_data['cc_number'] = substr($cc_data['cc_number'], -4);
+      unset($cc_data['cc_cvv']);
     }
 
     // Stuff the serialized and encrypted CC details into the array.
