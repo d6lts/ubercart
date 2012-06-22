@@ -414,7 +414,6 @@ function uc_store_theme() {
  * Implements hook_token_values(). (token.module)
  */
 function uc_store_token_values($type, $object = NULL) {
-  global $base_url;
   $values = array();
 
   switch ($type) {
@@ -437,15 +436,15 @@ function uc_store_token_values($type, $object = NULL) {
 
       // Use a logo; but only if we have one to use.
       if (isset($settings['logo']) && $settings['logo']) {
-        $values['site-logo'] = '<img src="'. url($base_url .'/'. $settings['logo'], array('absolute' => TRUE)) .'" />';
+        $values['site-logo'] = theme('image', $settings['logo']);
       }
       else {
         $values['site-logo'] = '';
       }
 
       $values['store-name'] = variable_get('uc_store_name', t('Our store'));
-      $values['store-url'] = $base_url;
-      $values['store-link'] = l(variable_get('uc_store_name', t('Our store')), $base_url);
+      $values['store-url'] = url('<front>', array('absolute' => TRUE));
+      $values['store-link'] = l(variable_get('uc_store_name', t('Our store')), '<front>', array('absolute' => TRUE));
       $values['store-owner'] = variable_get('uc_store_owner', '');
       $values['store-email'] = uc_store_email();
       $values['store-phone'] = variable_get('uc_store_phone', '');
