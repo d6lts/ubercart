@@ -1040,36 +1040,41 @@ function uc_payment_method_credit_form($form_state, $order) {
   }
 
   // Set up the default CC number on the credit card form.
-  if (variable_get('uc_credit_validate_numbers', TRUE) && (strlen($order->payment_details['cc_number']) > 4 && !_valid_card_number($order->payment_details['cc_number']))) {
+  if (isset($_SESSION['clear_cc']) || !isset($order->payment_details['cc_number'])) {
+    $default_num = NULL;
+  }
+  elseif (variable_get('uc_credit_validate_numbers', TRUE) && !_valid_card_number($order->payment_details['cc_number'])) {
     // Display the number as is if it does not validate so it can be corrected.
     $default_num = $order->payment_details['cc_number'];
   }
-  elseif (!empty($order->payment_details['cc_number'])) {
-    if (user_access('view cc numbers') && strlen($order->payment_details['cc_number']) > 4) {
-      // Display the full number to those with access.
-      $default_num = $order->payment_details['cc_number'];
-    }
-    else {
-      // Otherwise default to the last 4 digits.
-      $default_num = t('(Last 4) ') . substr($order->payment_details['cc_number'], -4);
-    }
+  elseif (user_access('view cc numbers') && strlen($order->payment_details['cc_number']) > 4) {
+    // Display the full number to those with access.
+    $default_num = $order->payment_details['cc_number'];
+  }
+  else {
+    // Otherwise default to the last 4 digits.
+    $default_num = t('(Last 4) ') . substr($order->payment_details['cc_number'], -4);
   }
   $form['cc_number'] = array(
     '#type' => 'textfield',
     '#title' => t('Card number'),
-    '#default_value' => $_SESSION['clear_cc'] ? '' : $default_num,
+    '#default_value' => $default_num,
     '#attributes' => array('autocomplete' => 'off'),
     '#size' => 20,
     '#maxlength' => 19,
   );
 
   if (variable_get('uc_credit_start_enabled', FALSE)) {
-    $form['cc_start_month'] = uc_select_month(t('Start Month'), $order->payment_details['cc_start_month'], TRUE);
-    $form['cc_start_year'] = uc_select_year(t('Start Year'), $order->payment_details['cc_start_year'], date('Y') - 10, date('Y'), TRUE);
+    $month = isset($order->payment_details['cc_start_month']) ? $order->payment_details['cc_start_month'] : NULL;
+    $year = isset($order->payment_details['cc_start_year']) ? $order->payment_details['cc_start_year'] : NULL;
+    $form['cc_start_month'] = uc_select_month(t('Start Month'), $month, TRUE);
+    $form['cc_start_year'] = uc_select_year(t('Start Year'), $year, date('Y') - 10, date('Y'), TRUE);
   }
 
-  $form['cc_exp_month'] = uc_select_month(t('Expiration Month'), $order->payment_details['cc_exp_month']);
-  $form['cc_exp_year'] = uc_select_year(t('Expiration Year'), $order->payment_details['cc_exp_year']);
+  $month = isset($order->payment_details['cc_exp_month']) ? $order->payment_details['cc_exp_month'] : 1;
+  $year = isset($order->payment_details['cc_exp_year']) ? $order->payment_details['cc_exp_year'] : date('Y');
+  $form['cc_exp_month'] = uc_select_month(t('Expiration Month'), $month);
+  $form['cc_exp_year'] = uc_select_year(t('Expiration Year'), $year);
 
   if (variable_get('uc_credit_issue_enabled', FALSE)) {
     // Set up the default Issue Number on the credit card form.
@@ -1099,24 +1104,25 @@ function uc_payment_method_credit_form($form_state, $order) {
 
   if (variable_get('uc_credit_cvv_enabled', TRUE)) {
     // Set up the default CVV  on the credit card form.
-    if (!_valid_cvv($order->payment_details['cc_cvv'])) {
+    if (isset($_SESSION['clear_cc']) || empty($order->payment_details['cc_cvv'])) {
+      $default_cvv = NULL;
+    }
+    elseif (!_valid_cvv($order->payment_details['cc_cvv'])) {
       // Display the CVV as is if it does not validate so it can be corrected.
       $default_cvv = $order->payment_details['cc_cvv'];
     }
-    elseif (!empty($order->payment_details['cc_cvv'])) {
-      if (user_access('view cc numbers')) {
-        // Display the full number to those with access.
-        $default_cvv = $order->payment_details['cc_cvv'];
-      }
-      else {
-        // Otherwise mask it with dashes.
-        $default_cvv = str_repeat('-', strlen($order->payment_details['cc_cvv']));
-      }
+    elseif (user_access('view cc numbers')) {
+      // Display the full number to those with access.
+      $default_cvv = $order->payment_details['cc_cvv'];
+    }
+    else {
+      // Otherwise mask it with dashes.
+      $default_cvv = str_repeat('-', strlen($order->payment_details['cc_cvv']));
     }
     $form['cc_cvv'] = array(
       '#type' => 'textfield',
       '#title' => t('CVV'),
-      '#default_value' => $_SESSION['clear_cc'] ? '' : $default_cvv,
+      '#default_value' => $default_cvv,
       '#attributes' => array('autocomplete' => 'off'),
       '#size' => variable_get('uc_credit_amex', TRUE) ? 4 : 3,
       '#maxlength' => variable_get('uc_credit_amex', TRUE) ? 4 : 3,
