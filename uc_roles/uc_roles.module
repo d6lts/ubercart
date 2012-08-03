@@ -54,8 +54,8 @@ function uc_roles_cron() {
 
     // Role expired.
     elseif ($expiration->expiration <= time()) {
-      uc_roles_revoke($account, $expiration->rid);
       ca_pull_trigger('uc_roles_notify_revoke', $account, $expiration);
+      uc_roles_revoke($account, $expiration->rid);
     }
 
     // Remind the user about an upcoming expiration.
