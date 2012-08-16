@@ -1086,10 +1086,8 @@ function uc_product_kit_cart_display($item) {
       $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
       $element['title'] = array('#value' => l($kit->title, 'node/'. $kit->nid));
       $element['qty'] = array(
-        '#type' => 'textfield',
+        '#type' => 'uc_quantity',
         '#default_value' => $item->qty / $kit->products[$item->nid]->qty,
-        '#size' => 5,
-        '#maxlength' => 6,
       );
       $element['description'] = array('#value' => '');
       $element['#total'] = 0;
