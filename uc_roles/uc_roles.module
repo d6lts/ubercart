@@ -273,7 +273,7 @@ function uc_roles_user_form(&$edit, &$account, $category = NULL) {
   }
 
   return $form;
- }
+}
 
 /**
  * Themes the roles dialog on the account edit page.
