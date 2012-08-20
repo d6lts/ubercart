@@ -939,9 +939,6 @@ function uc_product_kit_add_to_cart($nid, $qty, $kit_data) {
         if ($item->nid == $product->nid && isset($item->data['kit_id']) && $item->data['kit_id'] == $node->nid) {
           // There is something in the cart like the product kit. Update
           // by default, but check that it's possible.
-          if (is_null($add_new)) {
-            $add_new = FALSE;
-          }
           $data['unique_id'] = $item->data['unique_id'];
           if ($item->data == $data) {
             // This product is a candidate for updating the cart quantity.
