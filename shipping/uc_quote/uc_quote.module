@@ -826,7 +826,10 @@ function uc_checkout_pane_quotes($op, &$order, $arg2) {
       ), 'setting');
       drupal_add_js('misc/progress.js');
       drupal_add_js(drupal_get_path('module', 'uc_quote') .'/uc_quote.js');
-      $default = $order->quote['method'] .'---'. ($order->quote['accessorials'] ? $order->quote['accessorials'] : 0);
+      $default = NULL;
+      if (!empty($order->quote['method'])) {
+        $default = $order->quote['method'] .'---'. (!empty($order->quote['accessorials']) ? $order->quote['accessorials'] : 0);
+      }
       $prod_string = '';
       foreach (uc_cart_get_contents() as $item) {
         $prod_string .= '|'. $item->nid;
