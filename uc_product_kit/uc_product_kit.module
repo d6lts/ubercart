@@ -212,28 +212,33 @@ function uc_product_kit_update(&$node) {
   }
   $product_count = count($node->products);
 
+  // Usually, $node is $form_state['values'] cast as an object.
+  // However, there could be times where node_save() is called with an
+  // actual product kit node. $node->products is an array of objects and
+  // $node->items doesn't exist then, so we create it.
+  foreach ($node->products as $nid) {
+    if (is_numeric($nid)) {
+      // For an actual form submission, ensure that the qty is numeric.
+      $product = node_load($nid, NULL, TRUE);
+      if (is_null($node->items[$nid]['qty']) || $node->items[$nid]['qty'] === '') {
+        $node->items[$nid]['qty'] = 1;
+      }
+    }
+    else {
+      // When $product is an object, populate the items array.
+      $product = $nid;
+      $nid = $product->nid;
+      $node->items[$nid] = (array)$product;
+    }
+  }
+
   // Get the price of all the products without any discounts. This number is
   // used if a total kit price was specified to calculate the individual
   // product discounts.
   if ($override_discounts) {
     $base_price = 0;
-    foreach ($node->products as $nid) {
-      // Usually, $node is $form_state['values'] cast as an object.
-      // However, there could be times where node_save() is called with an
-      // actual product kit node. $node->products is an array of objects and
-      // $node->items doesn't exist then.
-      if (is_numeric($nid)) {
-        $product = node_load($nid, NULL, TRUE);
-        if (is_null($node->items[$nid]['qty']) || $node->items[$nid]['qty'] === '') {
-          $node->items[$nid]['qty'] = 1;
-        }
-      }
-      else {
-        $product = $nid;
-        $nid = $product->nid;
-        $node->items[$nid] = (array)$product;
-      }
-      $base_price += $product->sell_price * $node->items[$nid]['qty'];
+    foreach ($node->items as $item) {
+      $base_price += $product->sell_price * $item['qty'];
     }
   }
 
