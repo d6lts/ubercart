@@ -350,7 +350,7 @@ function uc_payment_get_totals($return = FALSE, $order = NULL) {
     usort($order->line_items, 'uc_weight_sort');
 
     $output = t('Order total preview:')
-             .' <span id="order-total-throbber"></span><table>';
+             .' <span id="order-total-throbber"></span><table id="uc-order-total-preview">';
     $grand_total = 0;
 
     $context = array(
