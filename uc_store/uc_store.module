@@ -460,7 +460,7 @@ function uc_store_token_values($type, $object = NULL) {
 
       // Use a logo; but only if we have one to use.
       if (isset($settings['logo']) && $settings['logo']) {
-        $values['site-logo'] = theme('image', $settings['logo']);
+        $values['site-logo'] = theme('image', url($settings['logo'], array('absolute' => TRUE)), '', '', NULL, FALSE);
       }
       else {
         $values['site-logo'] = '';
