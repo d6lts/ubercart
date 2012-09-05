@@ -217,13 +217,13 @@ function uc_credit_form_alter(&$form, $form_state, $form_id) {
  * Implements hook_cron().
  */
 function uc_credit_cron() {
-  // Truncate stored data when in debug per the credt card method settings.
+  // Truncate stored data when in debug per the credit card method settings.
   if (variable_get('uc_credit_debug', FALSE)) {
     $time = strtotime(variable_get('uc_credit_number_duration', '1') .' '. variable_get('uc_credit_number_unit', 'years') .' ago');
     $key = uc_credit_encryption_key();
     $crypt = new uc_encryption_class();
 
-    $result = db_query("SELECT order_id FROM {uc_orders} WHERE modified <= %d AND order_status = '%s'", $time, variable_get('uc_credit_clear_status', uc_order_state_default('completed')));
+    $result = db_query("SELECT order_id FROM {uc_orders} WHERE payment_method = 'credit' AND modified <= %d AND order_status = '%s'", $time, variable_get('uc_credit_clear_status', uc_order_state_default('completed')));
     while ($order = db_fetch_array($result)) {
       // Load up the existing data array.
       $data = db_result(db_query("SELECT data FROM {uc_orders} WHERE order_id = %d", $order['order_id']));
