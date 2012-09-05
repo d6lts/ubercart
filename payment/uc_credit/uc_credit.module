@@ -1166,37 +1166,70 @@ function theme_uc_payment_method_credit_form($form) {
     }
     if (variable_get('uc_credit_type_enabled', FALSE)) {
       $form['cc_type']['#title'] = '';
-      $output .= '<tr><td class="field-label">'. t('Card Type:') .'</td><td>'
-               . drupal_render($form['cc_type']) .'</td></tr>';
+      $output .= '<tr><td class="field-label">'
+               . '<label for="' . $form['cc_type']['#id'] . '">'
+               . t('Card Type:')
+               . '</label></td><td>'
+               . drupal_render($form['cc_type'])
+               . '</td></tr>';
     }
     if (variable_get('uc_credit_owner_enabled', FALSE)) {
       $form['cc_owner']['#title'] = '';
-      $output .= '<tr><td class="field-label">'. t('Card Owner:') .'</td><td>'
-               . drupal_render($form['cc_owner']) .'</td></tr>';
+      $output .= '<tr><td class="field-label">'
+               . '<label for="' . $form['cc_owner']['#id'] . '">'
+               . t('Card Owner:')
+               . '</label></td><td>'
+               . drupal_render($form['cc_owner'])
+               . '</td></tr>';
     }
-    $output .= '<tr><td class="field-label">'. t('Card Number:') .'</td><td>'
-             . drupal_render($form['cc_number']) .'</td></tr>';
+    $output .= '<tr><td class="field-label">'
+             . '<label for="' . $form['cc_number']['#id'] . '">'
+             . t('Card Number:')
+             . '</label></td><td>'
+             . drupal_render($form['cc_number'])
+             . '</td></tr>';
     if (variable_get('uc_credit_start_enabled', FALSE)) {
-      $output .= '<tr><td class="field-label">'. t('Start Date:') .'</td><td>'
-               . drupal_render($form['cc_start_month']) .' '. drupal_render($form['cc_start_year'])
-                .' '. t('(if present)') .'</td></tr>';
+      $output .= '<tr><td class="field-label">'
+               . '<label for="' . $form['cc_start_month']['#id'] . '">'
+               . t('Start Date:')
+               . '</label></td><td>'
+               . drupal_render($form['cc_start_month']) . ' ' . drupal_render($form['cc_start_year'])
+               . ' ' . t('(if present)')
+               . '</td></tr>';
     }
-    $output .= '<tr><td class="field-label">'. t('Expiration Date:') .'</td><td>'
-             . drupal_render($form['cc_exp_month']) .' '
-             . drupal_render($form['cc_exp_year']) .'</td></tr>';
+    $output .= '<tr><td class="field-label">'
+             . '<label for="' . $form['cc_exp_month']['#id'] . '">'
+             . t('Expiration Date:')
+             . '</label></td><td>'
+             . drupal_render($form['cc_exp_month']) . ' ' . drupal_render($form['cc_exp_year'])
+             . '</td></tr>';
     if (variable_get('uc_credit_issue_enabled', FALSE)) {
-      $output .= '<tr><td class="field-label">'. t('Issue Number:') .'</td><td>'
-               . drupal_render($form['cc_issue']) .' '. t('(if present)') .'</td></tr>';
+      $output .= '<tr><td class="field-label">'
+               . '<label for="' . $form['cc_issue']['#id'] . '">'
+               . t('Issue Number:')
+               . '</label></td><td>'
+               . drupal_render($form['cc_issue'])
+               . ' ' . t('(if present)')
+               . '</td></tr>';
     }
     if (variable_get('uc_credit_cvv_enabled', TRUE)) {
       $form['cc_cvv']['#title'] = '';
-      $output .= '<tr><td class="field-label">'. t('CVV:') .'</td><td>'. drupal_render($form['cc_cvv'])
-               . theme('uc_credit_cvv_help') . '</td></tr>';
+      $output .= '<tr><td class="field-label">'
+               . '<label for="' . $form['cc_cvv']['#id'] . '">'
+               . t('CVV:')
+               . '</label></td><td>'
+               . drupal_render($form['cc_cvv'])
+               . theme('uc_credit_cvv_help')
+               . '</td></tr>';
     }
     if (variable_get('uc_credit_bank_enabled', FALSE)) {
       $form['cc_bank']['#title'] = '';
-      $output .= '<tr><td class="field-label">'. t('Issuing Bank:') .'</td><td>'
-               . drupal_render($form['cc_bank']) .'</td></tr>';
+      $output .= '<tr><td class="field-label">'
+               . '<label for="' . $form['cc_bank']['#id'] . '">'
+               . t('Issuing Bank:')
+               . '</label></td><td>'
+               . drupal_render($form['cc_bank'])
+               . '</td></tr>';
     }
     $output .= '</table>';
   }
