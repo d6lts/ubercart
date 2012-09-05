@@ -178,6 +178,13 @@ class UbercartTestHelper extends DrupalWebTestCase {
     $this->fail(t('E-mail not found with subject matching %pattern.', array('%pattern' => $pattern)));
     return FALSE;
   }
+
+  /**
+   * Runs cron in the Drupal installed by Simpletest.
+   */
+  protected function cronRun() {
+    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE));
+  }
 }
 
 /**
