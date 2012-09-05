@@ -481,10 +481,12 @@ function theme_address_pane($form) {
         $title = ' ';
       }
       $output .= '<tr><td class="field-label">';
+      $output .= '<label for="'. $form[$field]['#id'] .'">';
       if ($form[$field]['#required']) {
         $output .= $req;
       }
-      $output .= $title .'</td><td>'. drupal_render($form[$field]) .'</td></tr>';
+      $output .= $title .'</label></td>';
+      $output .= '<td>'. drupal_render($form[$field]) .'</td></tr>';
     }
   }
   $output .= '</table></div>';
