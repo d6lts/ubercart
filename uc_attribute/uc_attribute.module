@@ -434,7 +434,7 @@ function uc_attribute_node_reset($node) {
 }
 
 /**
- * Implementation of hook_locale().
+ * Implements hook_locale().
  */
 function uc_attribute_locale($op = 'groups') {
   switch ($op) {
@@ -448,18 +448,18 @@ function uc_attribute_locale($op = 'groups') {
 }
 
 /**
- * Refresh translated attribute and option strings.
+ * Refreshes translated attribute and option strings.
  */
 function uc_attribute_locale_refresh() {
   $attributes = db_query("SELECT aid, name, label, description FROM {uc_attributes}");
   while ($attribute = db_fetch_object($attributes)) {
-    i18nstrings_update('uc_attribute:attribute:'. $attribute->aid .':name', $attribute->name);
-    i18nstrings_update('uc_attribute:attribute:'. $attribute->aid .':label', $attribute->label);
-    i18nstrings_update('uc_attribute:attribute:'. $attribute->aid .':description', $attribute->description);
+    i18nstrings_update('uc_attribute:attribute:' . $attribute->aid . ':name', $attribute->name);
+    i18nstrings_update('uc_attribute:attribute:' . $attribute->aid . ':label', $attribute->label);
+    i18nstrings_update('uc_attribute:attribute:' . $attribute->aid . ':description', $attribute->description);
 
     $options = db_query("SELECT oid, name FROM {uc_attribute_options} WHERE aid = %d", array($attribute->aid));
     while ($option = db_fetch_object($options)) {
-      i18nstrings_update('uc_attribute:option:'. $option->oid .':name', $option->name);
+      i18nstrings_update('uc_attribute:option:' . $option->oid . ':name', $option->name);
     }
   }
 
@@ -467,22 +467,23 @@ function uc_attribute_locale_refresh() {
 }
 
 /**
- * Translate an attribute.
+ * Translates an attribute.
  *
  * @param &$attribute
  *   The attribute object to translate.
  */
 function uc_attribute_translate(&$attribute) {
   if (function_exists('i18nstrings')) {
-    $attribute->name        = i18nstrings('uc_attribute:attribute:'. $attribute->aid .':name', $attribute->name);
-    $attribute->label       = i18nstrings('uc_attribute:attribute:'. $attribute->aid .':label', $attribute->label);
-    $attribute->description = i18nstrings('uc_attribute:attribute:'. $attribute->aid .':description', $attribute->description);
+    $attribute->name        = i18nstrings('uc_attribute:attribute:' . $attribute->aid . ':name', $attribute->name);
+    $attribute->label       = i18nstrings('uc_attribute:attribute:' . $attribute->aid . ':label', $attribute->label);
+    $attribute->description = i18nstrings('uc_attribute:attribute:' . $attribute->aid . ':description', $attribute->description);
 
     foreach ($attribute->options as &$option) {
-      $option->name = i18nstrings('uc_attribute:option:'. $option->oid .':name', $option->name);
+      $option->name = i18nstrings('uc_attribute:option:' . $option->oid . ':name', $option->name);
     }
   }
 }
+
 
 /******************************************************************************
  * Ubercart Hooks                                                             *
