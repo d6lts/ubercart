@@ -1297,8 +1297,8 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
     return;
   }
 
-  // Update the expiration date.
-  db_query("UPDATE {uc_roles_expirations} SET expiration = %d WHERE uid = %d AND rid = %d", $timestamp, $account->uid, $rid);
+  // Update the expiration date and reset the notified flag.
+  db_query("UPDATE {uc_roles_expirations} SET expiration = %d, notified = NULL WHERE uid = %d AND rid = %d", $timestamp, $account->uid, $rid);
 
   if (!$silent) {
     $role_name = db_result(db_query('SELECT name FROM {role} WHERE rid = %d', $rid));
