@@ -232,10 +232,10 @@ function uc_credit_cron() {
       $cache = uc_credit_cache('save', $data['cc_data']);
 
       // Save only some limited, PCI compliant data.
-      $data['cc_data']['cc_number'] = substr($data['cc_data']['cc_number'], -4);
-      unset($data['cc_data']['cc_cvv']);
+      $cache['cc_number'] = substr($cache['cc_number'], -4);
+      unset($cache['cc_cvv']);
 
-      $data['cc_data'] = $crypt->encrypt(uc_credit_encryption_key(), base64_encode(serialize($cc_data)));
+      $data['cc_data'] = $crypt->encrypt(uc_credit_encryption_key(), base64_encode(serialize($cache)));
       uc_store_encryption_errors($crypt, 'uc_credit');
 
       // Save it again.
