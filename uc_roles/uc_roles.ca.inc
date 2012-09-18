@@ -454,6 +454,9 @@ function uc_roles_action_order_renew_form($form_state, $settings = array()) {
   return $form;
 }
 
+/**
+ * Implements hook_ca_condition().
+ */
 function uc_roles_ca_condition() {
   $conditions['uc_roles_condition_role'] = array(
     '#title' => t('Check the role being granted'),
