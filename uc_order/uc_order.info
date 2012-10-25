@@ -4,7 +4,7 @@ dependencies[] = uc_product
 dependencies[] = rules
 dependencies[] = views
 package = Ubercart - core
-core = 7.x
+core = 8.x
 
 files[] = uc_order.module
 

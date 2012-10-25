@@ -1,7 +1,7 @@
 name = Store
 description = REQUIRED. Handles store settings and management of your Ubercart site.
 package = Ubercart - core
-core = 7.x
+core = 8.x
 
 ; Class definitions
 files[] = classes/mail.inc

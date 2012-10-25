@@ -3,7 +3,7 @@ description = Enables payments to be taken at checkout.
 dependencies[] = uc_order
 dependencies[] = uc_store
 package = Ubercart - core (optional)
-core = 7.x
+core = 8.x
 
 ; Test cases
 files[] = tests/uc_payment.test

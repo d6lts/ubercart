@@ -5,7 +5,7 @@ dependencies[] = taxonomy
 dependencies[] = uc_product
 dependencies[] = views
 package = Ubercart - core (optional)
-core = 7.x
+core = 8.x
 
 ; Class definitions
 files[] = classes/treenode.inc

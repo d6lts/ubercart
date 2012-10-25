@@ -3,4 +3,4 @@ description = Provides a report of sales tax your customers paid.
 dependencies[] = uc_reports
 dependencies[] = uc_taxes
 package = Ubercart - core (optional)
-core = 7.x
+core = 8.x

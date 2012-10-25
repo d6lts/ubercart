@@ -3,7 +3,7 @@ description = REQUIRED. Provides content types to represent items in an online s
 dependencies[] = image
 dependencies[] = uc_store
 package = Ubercart - core
-core = 7.x
+core = 8.x
 
 ; Test cases
 files[] = tests/uc_product.test

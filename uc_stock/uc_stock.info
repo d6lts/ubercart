@@ -2,7 +2,7 @@ name = Stock
 description = Manages stock levels of your products.
 dependencies[] = uc_product
 package = Ubercart - extra
-core = 7.x
+core = 8.x
 
 ; Test cases
 files[] = tests/uc_stock.test

@@ -4,7 +4,7 @@ dependencies[] = uc_store
 dependencies[] = uc_payment
 dependencies[] = uc_product
 package = Ubercart - core (optional)
-core = 7.x
+core = 8.x
 
 ; Test cases
 files[] = tests/uc_taxes.test

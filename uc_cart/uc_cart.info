@@ -3,7 +3,7 @@ description = REQUIRED. Controls the shopping cart and checkout for an Ubercart 
 dependencies[] = uc_order
 dependencies[] = uc_product
 package = Ubercart - core
-core = 7.x
+core = 8.x
 
 ; Test cases
 files[] = tests/uc_cart.test

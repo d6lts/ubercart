@@ -2,6 +2,6 @@ name = U.S. Postal Service
 description = Integrates USPS Rate Calculator and Mail Service Standards Web Tools.
 dependencies[] = uc_quote
 package = Ubercart - fulfillment
-core = 7.x
+core = 8.x
 
 configure = admin/store/settings/quotes/settings/usps

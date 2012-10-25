@@ -3,6 +3,6 @@ description = Provides reports about your store's sales, customers, and products
 dependencies[] = uc_order
 dependencies[] = uc_product
 package = Ubercart - core (optional)
-core = 7.x
+core = 8.x
 
 configure = admin/store/settings/store
