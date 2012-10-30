@@ -237,7 +237,8 @@ function uc_product_kit_update(&$node) {
   // product discounts.
   if ($override_discounts) {
     $base_price = 0;
-    foreach ($node->items as $item) {
+    foreach ($node->items as $nid => $item) {
+      $product = node_load($nid, NULL, TRUE);
       $base_price += $product->sell_price * $item['qty'];
     }
   }
