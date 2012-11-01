@@ -4,6 +4,3 @@ dependencies[] = uc_product
 dependencies[] = uc_order
 package = Ubercart - core (optional)
 core = 8.x
-
-; Test cases
-files[] = tests/uc_roles.test

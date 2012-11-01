@@ -5,8 +5,4 @@ dependencies[] = uc_payment
 dependencies[] = uc_product
 package = Ubercart - core (optional)
 core = 8.x
-
-; Test cases
-files[] = tests/uc_taxes.test
-
 configure = admin/store/settings/taxes

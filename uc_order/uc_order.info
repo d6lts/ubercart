@@ -6,11 +6,6 @@ dependencies[] = views
 package = Ubercart - core
 core = 8.x
 
-files[] = uc_order.module
-
-; Test cases
-files[] = tests/uc_order.test
-
 ; Views handlers
 files[] = views/uc_order_handler_field_money_amount.inc
 files[] = views/uc_order_handler_field_money_total.inc

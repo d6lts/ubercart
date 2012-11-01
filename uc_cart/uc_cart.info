@@ -5,9 +5,6 @@ dependencies[] = uc_product
 package = Ubercart - core
 core = 8.x
 
-; Test cases
-files[] = tests/uc_cart.test
-
 ; Views handlers
 files[] = views/uc_cart_handler_field_cart_user.inc
 
