@@ -47,6 +47,16 @@ abstract class UbercartTestBase extends WebTestBase {
   function setUp() {
     parent::setUp();
 
+    // Collect admin permissions.
+    $class = get_class($this);
+    $adminPermissions = array();
+    while ($class) {
+      if (property_exists($class, 'adminPermissions')) {
+        $adminPermissions = array_merge($adminPermissions, $class::$adminPermissions);
+      }
+      $class = get_parent_class($class);
+    }
+
     // Create a store administrator user account.
     $this->adminUser = $this->drupalCreateUser($adminPermissions);
 
