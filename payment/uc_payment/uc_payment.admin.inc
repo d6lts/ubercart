@@ -51,10 +51,10 @@ function uc_payment_methods_form($form, &$form_state) {
       );
     }
 
-    $links['conditions'] = array(
-      'title' => t('conditions'),
-      'href' => 'admin/store/settings/payment/manage/uc_payment_method_' . $id,
-    );
+    // $links['conditions'] = array(
+    //   'title' => t('Conditions'),
+    //   'href' => 'admin/store/settings/payment/manage/uc_payment_method_' . $id,
+    // );
 
     $form['pmtable'][$id]['settings'] = array(
       '#theme' => 'links',

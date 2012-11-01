@@ -48,8 +48,8 @@ function uc_quote_assemble_quotes($order) {
 
   $quote_data = array();
   foreach ($methods as $method) {
-    $set = rules_config_load('get_quote_from_' . $method['id']);
-    if (!$set || $set->execute($order)) {
+    // $set = rules_config_load('get_quote_from_' . $method['id']);
+    // if (!$set || $set->execute($order)) {
       $data = uc_quote_action_get_quote($order, $method);
 
       foreach ($data as &$quote) {
@@ -58,7 +58,7 @@ function uc_quote_assemble_quotes($order) {
         }
       }
       $quote_data[$method['id']] = $data;
-    }
+    // }
   }
   return $quote_data;
 }

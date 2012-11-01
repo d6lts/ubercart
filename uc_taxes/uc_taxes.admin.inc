@@ -189,11 +189,11 @@ function uc_taxes_form_submit($form, &$form_state) {
   $rate = uc_taxes_rate_save($rate);
 
   // Update the name of the associated conditions.
-  $conditions = rules_config_load('uc_taxes_' . $form_state['values']['id']);
-  if ($conditions) {
-    $conditions->label = $form_state['values']['name'];
-    $conditions->save();
-  }
+  // $conditions = rules_config_load('uc_taxes_' . $form_state['values']['id']);
+  // if ($conditions) {
+  //   $conditions->label = $form_state['values']['name'];
+  //   $conditions->save();
+  // }
 
   // Display a message and redirect back to the overview,
   // or the conditions page for new taxes.
@@ -223,13 +223,13 @@ function uc_taxes_clone($rate_id) {
   $rate = uc_taxes_rate_save($rate, FALSE);
 
   // Clone the associated conditions as well.
-  if ($conditions = rules_config_load('uc_taxes_' . $rate_id)) {
-    $conditions->id = NULL;
-    $conditions->name = '';
-    $conditions->save('uc_taxes_' . $rate->id);
-  }
+  // if ($conditions = rules_config_load('uc_taxes_' . $rate_id)) {
+  //   $conditions->id = NULL;
+  //   $conditions->name = '';
+  //   $conditions->save('uc_taxes_' . $rate->id);
+  // }
 
-  entity_flush_caches();
+  // entity_flush_caches();
 
   // Display a message and redirect back to the overview.
   drupal_set_message(t('Tax rate %name cloned.', array('%name' => $name)));

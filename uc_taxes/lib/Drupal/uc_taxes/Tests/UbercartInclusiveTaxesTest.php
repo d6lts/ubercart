@@ -15,7 +15,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 class UbercartInclusiveTaxesTest extends UbercartTestBase {
 
   public static $modules = array('uc_product_kit', 'uc_attribute', 'uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_taxes');
-  public static $adminPermissions = array('administer rules', 'configure taxes');
+  public static $adminPermissions = array(/*'administer rules', */'configure taxes');
 
   public static function getInfo() {
     return array(
@@ -43,7 +43,7 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
     uc_taxes_rate_save($rate);
 
     // Ensure Rules picks up the new condition.
-    entity_flush_caches();
+    // entity_flush_caches();
 
     // Create a $10 product.
     $product = $this->createProduct(array(

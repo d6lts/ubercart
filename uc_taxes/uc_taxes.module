@@ -61,7 +61,7 @@ function uc_taxes_menu() {
     'file' => 'uc_taxes.admin.inc',
   );
 
-  $items += rules_ui()->config_menu('admin/store/settings/taxes');
+  // $items += rules_ui()->config_menu('admin/store/settings/taxes');
 
   return $items;
 }
@@ -384,10 +384,10 @@ function uc_taxes_rate_save($rate, $reset = TRUE) {
   $p_insert->execute();
   $l_insert->execute();
 
-  if ($reset) {
-    // Ensure Rules picks up the new condition.
-    entity_flush_caches();
-  }
+  // if ($reset) {
+  //   // Ensure Rules picks up the new condition.
+  //   entity_flush_caches();
+  // }
 
   return $rate;
 }
@@ -437,9 +437,9 @@ function uc_taxes_filter_rates($order) {
   else {
     foreach (uc_taxes_rate_load() as $rate) {
       $tax = clone $rate;
-      if (rules_invoke_component('uc_taxes_' . $tax->id, $order)) {
+      // if (rules_invoke_component('uc_taxes_' . $tax->id, $order)) {
         $taxes[] = $tax;
-      }
+      // }
     }
   }
 
@@ -511,7 +511,7 @@ function uc_taxes_rate_delete($rate_id) {
     ->execute();
 
   // Delete the associated conditions if they have been saved to the database.
-  rules_config_delete(array('uc_taxes_' . $rate_id));
+  // rules_config_delete(array('uc_taxes_' . $rate_id));
 }
 
 /**

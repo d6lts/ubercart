@@ -35,7 +35,7 @@ function uc_payment_menu() {
     'access arguments' => array('administer store'),
     'file' => 'uc_payment.admin.inc',
   );
-  $items += rules_ui()->config_menu('admin/store/settings/payment');
+  // $items += rules_ui()->config_menu('admin/store/settings/payment');
 
   $items['admin/store/orders/%uc_order/payments'] = array(
     'title' => 'Payments',
@@ -517,7 +517,7 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
   }
 
   module_invoke_all('uc_payment_entered', $order, $method, $amount, $account, $data, $comment);
-  rules_invoke_event('uc_payment_entered', $order, $account);
+  // rules_invoke_event('uc_payment_entered', $order, $account);
 
   return $receipt_id;
 }

@@ -1,7 +1,7 @@
 name = Order
 description = REQUIRED. Receives and manages orders through your website.
 dependencies[] = uc_product
-dependencies[] = rules
+;dependencies[] = rules
 dependencies[] = views
 package = Ubercart - core
 core = 8.x

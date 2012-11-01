@@ -993,7 +993,7 @@ function uc_order_delete($order_id) {
 
   // Perform the operations if we're deleting a valid order.
   if ($order !== FALSE) {
-    rules_invoke_event('uc_order_delete', $order);
+    // rules_invoke_event('uc_order_delete', $order);
     uc_order_module_invoke('delete', $order, NULL);
     module_invoke_all('entity_delete', $order, 'uc_order');
 
@@ -1499,7 +1499,7 @@ function uc_order_update_status($order_id, $status) {
     uc_order_log_changes($order->order_id, $change);
 
     $updated = uc_order_load($order_id, TRUE);
-    rules_invoke_event('uc_order_status_update', $order, $updated);
+    // rules_invoke_event('uc_order_status_update', $order, $updated);
 
     return TRUE;
   }
@@ -2328,7 +2328,7 @@ function uc_order_action_set_status($order, $context = array()) {
     // Update order object, as uc_order_update_status() cannot.
     $order->order_status = $context['status'];
 
-    rules_invoke_event('uc_order_status_email_update', $order);
+    // rules_invoke_event('uc_order_status_email_update', $order);
   }
 }
 

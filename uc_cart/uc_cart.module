@@ -51,16 +51,16 @@ function uc_cart_menu() {
     'access arguments' => array('administer store'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/store/settings/checkout/rules'] = array(
-    'title' => 'Rules',
-    'description' => 'Edit the checkout rules.',
-    'page callback' => 'uc_cart_checkout_rules',
-    'access arguments' => array('administer store'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
-    'file' => 'uc_cart.admin.inc',
-  );
-  $items += rules_ui()->config_menu('admin/store/settings/checkout/rules');
+  // $items['admin/store/settings/checkout/rules'] = array(
+  //   'title' => 'Rules',
+  //   'description' => 'Edit the checkout rules.',
+  //   'page callback' => 'uc_cart_checkout_rules',
+  //   'access arguments' => array('administer store'),
+  //   'type' => MENU_LOCAL_TASK,
+  //   'weight' => 2,
+  //   'file' => 'uc_cart.admin.inc',
+  // );
+  // $items += rules_ui()->config_menu('admin/store/settings/checkout/rules');
 
   $items['cart'] = array(
     'title' => 'Shopping cart',
@@ -882,7 +882,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     // Invoke the checkout complete trigger and hook.
     $account = user_load($order->uid);
     module_invoke_all('uc_checkout_complete', $order, $account);
-    rules_invoke_event('uc_checkout_complete', $order);
+    // rules_invoke_event('uc_checkout_complete', $order);
   }
 
   $type = $order->data['complete_sale'];

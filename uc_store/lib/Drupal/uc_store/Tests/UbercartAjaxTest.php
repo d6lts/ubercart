@@ -11,8 +11,8 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 class UbercartAjaxTest extends UbercartTestBase {
 
-  public static $modules = array('rules_admin', 'uc_payment', 'uc_payment_pack');
-  public static $adminPermissions = array('administer rules', 'bypass rules access');
+  public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack');
+  public static $adminPermissions = array(/*'administer rules', 'bypass rules access'*/);
 
   public static function getInfo() {
     return array(
@@ -77,7 +77,7 @@ class UbercartAjaxTest extends UbercartTestBase {
     // Enable two payment methods and set a condition on one.
     variable_set('uc_payment_method_check_checkout', TRUE);
     variable_set('uc_payment_method_other_checkout', TRUE);
-    $this->addPaymentZoneCondition('other', '26');
+    // $this->addPaymentZoneCondition('other', '26');
 
     // Speciy that the billing zone should update the payment pane.
     $config = variable_get('uc_ajax_checkout', _uc_ajax_defaults('checkout'));

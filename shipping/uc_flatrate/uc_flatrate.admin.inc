@@ -96,7 +96,7 @@ function uc_flatrate_admin_method_edit_form_submit($form, &$form_state) {
     drupal_write_record('uc_flatrate_methods', $form_state['values']);
 
     // Ensure Rules picks up the new condition.
-    entity_flush_caches();
+    // entity_flush_caches();
 
     drupal_set_message(t('Created and enabled new flat rate shipping method.'));
     $form_state['redirect'] = 'admin/store/settings/quotes/manage/get_quote_from_flatrate_' . $form_state['values']['mid'];
@@ -133,7 +133,7 @@ function uc_flatrate_admin_method_confirm_delete_submit($form, &$form_state) {
     ->condition('mid', $mid)
     ->execute();
 
-  rules_config_delete(array('get_quote_from_flatrate_' . $mid));
+  // rules_config_delete(array('get_quote_from_flatrate_' . $mid));
 
   drupal_set_message(t('Flat rate shipping method deleted.'));
   $form_state['redirect'] = 'admin/store/settings/quotes/methods';

@@ -14,8 +14,8 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class UbercartQuoteTest extends UbercartTestBase {
 
-  public static $modules = array('rules_admin', 'uc_payment', 'uc_payment_pack', 'uc_quote', 'uc_flatrate');
-  public static $adminPermissions = array('administer rules', 'bypass rules access');
+  public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack', 'uc_quote', 'uc_flatrate');
+  public static $adminPermissions = array(/*'administer rules', 'bypass rules access'*/);
 
   public static function getInfo() {
     return array(
@@ -51,17 +51,17 @@ class UbercartQuoteTest extends UbercartTestBase {
     $form_state = array('values' => $edit);
     drupal_form_submit('uc_flatrate_admin_method_edit_form', $form_state);
     $method = db_query("SELECT * FROM {uc_flatrate_methods} WHERE mid = :mid", array(':mid' => $form_state['values']['mid']))->fetchObject();
-    if ($condition) {
-      $name = 'get_quote_from_flatrate_' . $method->mid;
-      $condition['LABEL'] = $edit['label'] . ' conditions';
-      $oldconfig = rules_config_load($name);
-      $newconfig = rules_import(array($name => $condition));
-      $newconfig->id = $oldconfig->id;
-      unset($newconfig->is_new);
-      $newconfig->status = ENTITY_CUSTOM;
-      $newconfig->save();
-      entity_flush_caches();
-    }
+    // if ($condition) {
+    //   $name = 'get_quote_from_flatrate_' . $method->mid;
+    //   $condition['LABEL'] = $edit['label'] . ' conditions';
+    //   $oldconfig = rules_config_load($name);
+    //   $newconfig = rules_import(array($name => $condition));
+    //   $newconfig->id = $oldconfig->id;
+    //   unset($newconfig->is_new);
+    //   $newconfig->status = ENTITY_CUSTOM;
+    //   $newconfig->save();
+    //   entity_flush_caches();
+    // }
     $this->assertTrue($method->base_rate == $edit['base_rate'], 'Flatrate quote was created successfully');
     return $method;
   }

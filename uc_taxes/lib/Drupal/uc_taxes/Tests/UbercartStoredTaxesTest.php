@@ -15,7 +15,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 class UbercartStoredTaxesTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_taxes');
-  public static $adminPermissions = array('administer rules', 'configure taxes');
+  public static $adminPermissions = array(/*'administer rules', */'configure taxes');
 
   public static function getInfo() {
     return array(
@@ -67,8 +67,8 @@ class UbercartStoredTaxesTest extends UbercartTestBase {
     $this->drupalGet('admin/store/settings/taxes');
     $this->assertText($rate->name, t('Tax was saved successfully.'));
 
-    $this->drupalGet("admin/store/settings/taxes/manage/uc_taxes_$rate->id");
-    $this->assertText(t('Conditions'), t('Rules configuration linked to tax.'));
+    // $this->drupalGet("admin/store/settings/taxes/manage/uc_taxes_$rate->id");
+    // $this->assertText(t('Conditions'), t('Rules configuration linked to tax.'));
 
     $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
 
@@ -135,7 +135,7 @@ class UbercartStoredTaxesTest extends UbercartTestBase {
       $class = $this->createProductClass();
       $rate->taxed_product_types = array($class->name);
       uc_taxes_rate_save($rate);
-      entity_flush_caches();
+      // entity_flush_caches();
       $this->drupalPost('admin/store/orders/' . $order_id . '/edit', array(), t('Submit changes'));
       $this->assertText(t('Order changes saved.'));
       $this->assertTaxLineCorrect($this->loadTaxLine($order_id), $oldrate, 'after applicable product change');

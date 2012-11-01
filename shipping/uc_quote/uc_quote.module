@@ -53,7 +53,7 @@ function uc_quote_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
-  $items += rules_ui()->config_menu('admin/store/settings/quotes');
+  // $items += rules_ui()->config_menu('admin/store/settings/quotes');
 
   return $items;
 }

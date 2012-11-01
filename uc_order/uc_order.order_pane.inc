@@ -1047,10 +1047,10 @@ function uc_order_view_update_form_submit($form, &$form_state) {
   }
 
   // Let Rules send email if requested.
-  if ($form_state['values']['notify']) {
-    $order = uc_order_load($form_state['values']['order_id']);
-    rules_invoke_event('uc_order_status_email_update', $order);
-  }
+  // if ($form_state['values']['notify']) {
+  //   $order = uc_order_load($form_state['values']['order_id']);
+  //   rules_invoke_event('uc_order_status_email_update', $order);
+  // }
 
   drupal_set_message(t('Order updated.'));
 }
