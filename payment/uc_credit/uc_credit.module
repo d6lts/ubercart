@@ -181,14 +181,9 @@ function uc_credit_form_uc_cart_checkout_review_form_alter(&$form, &$form_state)
 function uc_credit_exit() {
   // Make sure sensitive checkout session data doesn't persist on other pages.
   if (isset($_SESSION['sescrd'])) {
-    if (isset($_GET['q'])) {
-      // Separate the args ourself since the arg() function may not be loaded.
-      $args = explode('/', $_GET['q']);
-      if (!isset($args[1]) || $args[1] != 'checkout') {
-        unset($_SESSION['sescrd']);
-      }
-    }
-    else {
+    // Separate the args ourself since the arg() function may not be loaded.
+    $args = explode('/', current_path());
+    if (!isset($args[1]) || $args[1] != 'checkout') {
       unset($_SESSION['sescrd']);
     }
   }

@@ -616,7 +616,7 @@ function uc_store_page_alter(&$page) {
   }
 
   // Figure out what page is being viewed.
-  $path = drupal_get_normal_path($_GET['q']);
+  $path = current_path();
   $parts = explode('/', $path);
 
   // Exit if the page isn't governed by Ubercart.
