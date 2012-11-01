@@ -5,6 +5,8 @@
  * Rules hooks for uc_shipping.module.
  */
 
+use Drupal\uc_store\UcAddress;
+
 /**
  * Implements hook_rules_data_info().
  */

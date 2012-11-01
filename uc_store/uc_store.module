@@ -9,6 +9,8 @@
  * settings pages for use in store administration.
  */
 
+use Drupal\uc_store\UcAddress;
+
 /**
  * Weight unit conversion constants, used by uc_weight_conversion().
  */

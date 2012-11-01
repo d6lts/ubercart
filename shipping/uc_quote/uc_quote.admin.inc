@@ -5,6 +5,8 @@
  * Shipping quotes administration menu items.
  */
 
+use Drupal\uc_store\UcAddress;
+
 /**
  * Default shipping settings.
  *

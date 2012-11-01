@@ -5,6 +5,8 @@
  * UcAddress utility class definition.
  */
 
+namespace Drupal\uc_store;
+
 /**
  * Defines an object to hold Ubercart mailing address information.
  */

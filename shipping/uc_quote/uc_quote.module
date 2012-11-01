@@ -9,6 +9,7 @@
  * their specific information so that a shipment may be quoted and requested.
  */
 
+use Drupal\uc_store\UcAddress;
 
 /**
  * Implements hook_permission().
