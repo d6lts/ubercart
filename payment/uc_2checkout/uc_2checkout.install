@@ -15,8 +15,8 @@ function uc_2checkout_uninstall() {
 }
 
 /**
- * Remove unused variable.
+ * Implements hook_update_last_removed().
  */
-function uc_2checkout_update_7300() {
-  variable_del('uc_2checkout_checkout_button');
+function uc_2checkout_update_last_removed() {
+  return 7300;
 }

@@ -191,12 +191,5 @@ function uc_quote_uninstall() {
  * Implements hook_update_last_removed().
  */
 function uc_quote_update_last_removed() {
-  return 6004;
-}
-
-/**
- * Drops {uc_order_quotes}.quote_form.
- */
-function uc_quote_update_7001() {
-  db_drop_field('uc_order_quotes', 'quote_form');
+  return 7001;
 }

@@ -84,19 +84,5 @@ function uc_stock_uninstall() {
  * Implements hook_update_last_removed().
  */
 function uc_stock_update_last_removed() {
-  return 6000;
-}
-
-/**
- * Remove unused message format variable.
- */
-function uc_stock_update_7000() {
-  variable_del('uc_stock_threshold_notification_format');
-}
-
-/**
- * Remove unused message format variable.
- */
-function uc_stock_update_7001() {
-  variable_del('uc_stock_threshold_notification_message_format');
+  return 7001;
 }

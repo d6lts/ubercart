@@ -239,48 +239,5 @@ function uc_file_uninstall() {
  * Implements hook_update_last_removed().
  */
 function uc_file_update_last_removed() {
-  return 6006;
-}
-
-/**
- * Change 'uc_file_file_mask' variable to a preg regular expression.
- */
-function uc_file_update_7000() {
-  $mask = '/' . variable_get('uc_file_file_mask', '.*') . '/';
-  variable_set('uc_file_file_mask', $mask);
-
-  return t("Variable 'uc_file_file_mask' changed to @mask.", array('@mask' => $mask));
-}
-
-/**
- * Increase the length of {uc_file_users}.file_key.
- */
-function uc_file_update_7001() {
-  db_change_field('uc_file_users', 'file_key', 'file_key', array(
-    'type' => 'varchar',
-    'length' => 64,
-    'not null' => TRUE,
-    'default' => '',
-  ));
-}
-
-/**
- * Add a index on filename since we query on it fairly frequently.
- */
-function uc_file_update_7002() {
-  // Index may have been added by uc_file_update_6007() in 6.x-2.x.
-  if (!db_index_exists('uc_files', 'filename')) {
-    db_add_index('uc_files', 'filename', array('filename'));
-  }
-}
-
-/**
- * Change index on uc_file_users.fid to be over fid and uid.
- */
-function uc_file_update_7003() {
-  // Index may have been changed in 6.x-2.x.
-  if (!db_index_exists('uc_file_users', 'fid_uid')) {
-    db_add_index('uc_file_users', 'fid_uid', array('fid', 'uid'));
-    db_drop_index('uc_file_users', 'fid');
-  }
+  return 7003;
 }

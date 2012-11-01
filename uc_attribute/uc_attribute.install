@@ -437,68 +437,8 @@ function uc_attribute_uninstall() {
 }
 
 /**
- * Implements hook_update_dependencies().
- */
-function uc_attribute_update_dependencies() {
-  $dependencies['uc_attribute'][7000] = array(
-    'filter' => 7005,
-  );
-
-  return $dependencies;
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function uc_attribute_update_last_removed() {
-  return 6005;
-}
-
-/**
- * Add description format for attributes.
- */
-function uc_attribute_update_7000() {
-  db_add_field('uc_attributes', 'format', array(
-    'description' => 'Format of the attribute description.',
-    'type' => 'int',
-    'not null' => TRUE,
-    'default' => 0,
-  ));
-
-  db_update('uc_attributes')
-    ->fields(array('format' => 0))
-    ->execute();
-}
-
-/**
- * Change default description format to NULL.
- */
-function uc_attribute_update_7001() {
-  db_change_field('uc_attributes', 'format', 'format', array(
-    'description' => 'Format of the attribute description.',
-    'type' => 'int',
-    'not null' => FALSE,
-    'default' => NULL,
-  ));
-
-  db_update('uc_attributes')
-    ->fields(array('format' => filter_fallback_format()))
-    ->execute();
-}
-
-/**
- * Remove attribute description format..
- */
-function uc_attribute_update_7002() {
-  db_drop_field('uc_attributes', 'format');
-}
-
-/**
- * Add index to attribute options table.
- */
-function uc_attribute_update_7003() {
-  // Indexes may have been added in 6.x-2.x.
-  if (!db_index_exists('uc_attribute_options', 'aid')) {
-    db_add_index('uc_attribute_options', 'aid', array('aid'));
-  }
+  return 7003;
 }

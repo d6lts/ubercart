@@ -123,44 +123,5 @@ function uc_product_kit_uninstall() {
  * Implements hook_update_last_removed().
  */
 function uc_product_kit_update_last_removed() {
-  return 6003;
-}
-
-/**
- * Use actual node permissions for product kits.
- */
-function uc_product_kit_update_7000() {
-  $node_perms = array_keys(node_list_permissions('product_kit'));
-
-  foreach ($node_perms as $node_perm) {
-    $product_perm = str_replace(array('any', 'product_kit content'), array('all', 'product kits'), $node_perm);
-
-    foreach (user_roles(FALSE, $product_perm) as $rid => $role) {
-      db_merge('role_permission')
-        ->key(array(
-          'rid' => $rid,
-          'permission' => $node_perm,
-        ))
-        ->fields(array(
-          'module' => 'node',
-        ))
-        ->execute();
-    }
-
-    // Clean up.
-    db_delete('role_permission')
-      ->condition('permission', $product_perm)
-      ->execute();
-  }
-
-  return t('Changed product node permissions to the actual node permissions.');
-}
-
-/**
- * Set default display settings for product kit teasers.
- */
-function uc_product_kit_update_7001() {
-  uc_product_set_teaser_display('product_kit');
-
-  return t('Set display settings for product kit teasers.');
+  return 7001;
 }
