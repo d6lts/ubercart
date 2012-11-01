@@ -5,6 +5,8 @@
  * Reports administration menu items.
  */
 
+use Drupal\Core\Template\Attribute;
+
 /**
  * Displays the customer report.
  */
@@ -604,7 +606,7 @@ function theme_uc_reports_product_table($variables) {
     $attributes['class'][] = 'sticky-enabled';
   }
 
-  $output = '<table' . drupal_attributes($attributes) . ">\n";
+  $output = '<table' . $attributes . ">\n";
 
   if (isset($caption)) {
     $output .= '<caption>' . $caption . "</caption>\n";
@@ -632,15 +634,15 @@ function theme_uc_reports_product_table($variables) {
 
       // Build colgroup
       if (is_array($cols) && count($cols)) {
-        $output .= ' <colgroup' . drupal_attributes($attributes) . '>';
+        $output .= ' <colgroup' . new Attribute($attributes) . '>';
         $i = 0;
         foreach ($cols as $col) {
-          $output .= ' <col' . drupal_attributes($col) . ' />';
+          $output .= ' <col' . new Attribute($col) . ' />';
         }
         $output .= " </colgroup>\n";
       }
       else {
-        $output .= ' <colgroup' . drupal_attributes($attributes) . " />\n";
+        $output .= ' <colgroup' . new Attribute($attributes) . " />\n";
       }
     }
   }
@@ -708,7 +710,7 @@ function theme_uc_reports_product_table($variables) {
         $attributes['class'][] = $class;
 
         // Build row
-        $output .= ' <tr' . drupal_attributes($attributes) . '>';
+        $output .= ' <tr' . new Attribute($attributes) . '>';
         $i = 0;
         foreach ($cells as $cell) {
           $cell = tablesort_cell($cell, $header, $ts, $i++);

@@ -830,7 +830,7 @@ function uc_product_preprocess_node(&$variables) {
 function uc_product_preprocess_html(&$variables) {
   if ($node = menu_get_object()) {
     if (uc_product_is_product($node)) {
-      $variables['classes_array'][] = 'uc-product-node';
+      $variables['attributes']['class'][] = 'uc-product-node';
     }
   }
 }
