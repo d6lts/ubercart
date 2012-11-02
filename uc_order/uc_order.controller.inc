@@ -12,13 +12,12 @@ class UcOrderController extends DrupalDefaultEntityController {
   function attachLoad(&$orders, $revision_id = FALSE) {
     foreach ($orders as &$order) {
       $order->data = unserialize($order->data);
-      $efq = new EntityFieldQuery();
-      $result = $efq->entityCondition('entity_type', 'uc_order_product')
-        ->propertyCondition('order_id', $order->order_id)
-        ->propertyOrderBy('order_product_id', 'ASC')
+      $result = entity_query('uc_order_product')
+        ->condition('order_id', $order->order_id)
+        ->orderBy('order_product_id', 'ASC')
         ->execute();
-      if (!empty($result['uc_order_product'])) {
-        $order->products = uc_order_product_load_multiple(array_keys($result['uc_order_product']), TRUE);
+      if (!empty($result)) {
+        $order->products = entity_load('uc_order_product', array_keys($result), NULL, TRUE);
         foreach ($order->products as $product) {
           $product->order = $order;
           $product->order_uid = $order->uid;

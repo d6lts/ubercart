@@ -1035,13 +1035,12 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
   if (!isset($items[$cid])) {
     // Find all cart items associated with this cart.
     if ($action != 'empty') {
-      $efq = new EntityFieldQuery();
-      $result = $efq->entityCondition('entity_type', 'uc_cart_item')
-        ->propertyCondition('cart_id', $cid)
-        ->propertyOrderBy('cart_item_id', 'ASC')
+      $result = entity_query('uc_cart_item')
+        ->condition('cart_id', $cid)
+        ->orderBy('cart_item_id', 'ASC')
         ->execute();
-      if (!empty($result['uc_cart_item'])) {
-        $items[$cid] = entity_load('uc_cart_item', array_keys($result['uc_cart_item']), NULL, TRUE);
+      if (!empty($result)) {
+        $items[$cid] = entity_load('uc_cart_item', array_keys($result), NULL, TRUE);
 
         // Create a bare order and attach it to each item as context.
         $order = new UcOrder($cid);
@@ -1240,15 +1239,14 @@ function uc_cart_remove_item($nid, $cid = NULL, $data = array()) {
 
   $cart_id = !(is_null($cid) || empty($cid)) ? $cid : uc_cart_get_id();
 
-  $efq = new EntityFieldQuery();
-  $result = $efq->entityCondition('entity_type', 'uc_cart_item')
-    ->propertyCondition('cart_id', $cart_id)
-    ->propertyCondition('nid', $nid)
-    ->propertyCondition('data', serialize($data))
+  $result = entity_query('uc_cart_item')
+    ->condition('cart_id', $cart_id)
+    ->condition('nid', $nid)
+    ->condition('data', serialize($data))
     ->execute();
 
-  if (!empty($result['uc_cart_item'])) {
-    entity_delete_multiple('uc_cart_item', array_keys($result['uc_cart_item']));
+  if (!empty($result)) {
+    entity_delete_multiple('uc_cart_item', array_keys($result));
   }
 }
 
@@ -1279,13 +1277,12 @@ function uc_cart_empty($cart_id = NULL) {
     return;
   }
 
-  $efq = new EntityFieldQuery();
-  $result = $efq->entityCondition('entity_type', 'uc_cart_item')
-    ->propertyCondition('cart_id', $cart_id)
+  $result = entity_query('uc_cart_item')
+    ->condition('cart_id', $cart_id)
     ->execute();
 
-  if (!empty($result['uc_cart_item'])) {
-    entity_delete_multiple('uc_cart_item', array_keys($result['uc_cart_item']));
+  if (!empty($result)) {
+    entity_delete_multiple('uc_cart_item', array_keys($result));
   }
 
   // Remove cached cart.
