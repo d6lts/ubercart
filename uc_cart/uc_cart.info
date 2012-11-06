@@ -8,7 +8,4 @@ core = 8.x
 ; Views handlers
 files[] = views/uc_cart_handler_field_cart_user.inc
 
-; Classes
-files[] = uc_cart.controller.inc
-
 configure = admin/store/settings/cart
