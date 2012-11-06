@@ -1110,8 +1110,8 @@ function uc_op_products_view_table($order) {
   );
 
   if (!empty($order->products)) {
-    $build = uc_order_product_view_multiple($order->products);
-    $table['#rows'] = $build['uc_order_product'];
+    $build = entity_view_multiple($order->products);
+    $table['#rows'] = $build;
   }
   else {
     $table['#rows'][]['product'] = array(
@@ -1178,8 +1178,8 @@ function uc_op_products_customer_table($order) {
   );
 
   if (!empty($order->products)) {
-    $build = uc_order_product_view_multiple($order->products);
-    $table['#rows'] = $build['uc_order_product'];
+    $build = entity_view_multiple($order->products);
+    $table['#rows'] = $build;
   }
   else {
     $table['#rows'][]['product'] = array(

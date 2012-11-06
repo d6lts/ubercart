@@ -482,10 +482,10 @@ function theme_uc_cart_review_table($variables) {
   );
 
   // Set up table rows.
-  $display_items = uc_order_product_view_multiple($items);
-  if (!empty($display_items['uc_order_product'])) {
-    foreach (element_children($display_items['uc_order_product']) as $key) {
-      $display_item = $display_items['uc_order_product'][$key];
+  $display_items = entity_view_multiple($items, 'cart');
+  if (!empty($display_items)) {
+    foreach (element_children($display_items) as $key) {
+      $display_item = $display_items[$key];
       $subtotal += $display_item['total']['#price'];
       $rows[] = array(
         array('data' => $display_item['qty'], 'class' => array('qty')),
@@ -537,10 +537,10 @@ function theme_uc_cart_review_table($variables) {
  */
 function theme_uc_checkout_pane_cart_review($variables) {
   $rows = array();
-  $items = uc_order_product_view_multiple($variables['items']);
+  $items = entity_view_multiple($variables['items']);
 
-  foreach (element_children($items['uc_order_product']) as $key) {
-    $item = $items['uc_order_product'][$key];
+  foreach (element_children($items) as $key) {
+    $item = $items[$key];
     $rows[] = array(
       array('data' => $item['qty'], 'class' => array('qty')),
       array('data' => $item['product'], 'class' => array('products')),
