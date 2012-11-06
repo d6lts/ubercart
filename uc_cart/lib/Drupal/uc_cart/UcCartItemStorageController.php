@@ -21,6 +21,7 @@ class UcCartItemStorageController extends DatabaseStorageController {
   protected function attachLoad(&$items, $load_revision = FALSE) {
     foreach ($items as &$item) {
       $item->data = unserialize($item->data);
+
       $item->product = uc_product_load_variant($item->nid, $item->data);
       if ($item->product) {
         $item->title = $item->product->title;
