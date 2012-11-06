@@ -1120,15 +1120,17 @@ function uc_order_view_invoice($order, $print = FALSE) {
 
 /**
  * Loads one order entity from the database.
+ *
+ * @param int $order_id
+ *   The order ID.
+ * @param bool $reset
+ *   (optional) Whether to reset the internal cache. Defaults to FALSE.
+ *
+ * @return Drupal\uc_order\UcOrder|false
+ *   A fully-populated order entity, or FALSE if the order is not found.
  */
 function uc_order_load($order_id, $reset = FALSE) {
-  if (is_null($order_id) || $order_id < 1) {
-    return FALSE;
-  }
-
-  $orders = uc_order_load_multiple(array($order_id), $reset);
-
-  return $orders ? reset($orders) : FALSE;
+  return entity_load('uc_order', $order_id, $reset);
 }
 
 /**
