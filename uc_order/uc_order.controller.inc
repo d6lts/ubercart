@@ -5,60 +5,6 @@
  */
 
 /**
- * Controller class for uc_order entity.
- */
-class UcOrderController extends DrupalDefaultEntityController {
-
-  function attachLoad(&$orders, $revision_id = FALSE) {
-    foreach ($orders as &$order) {
-      $order->data = unserialize($order->data);
-      $result = entity_query('uc_order_product')
-        ->condition('order_id', $order->order_id)
-        ->orderBy('order_product_id', 'ASC')
-        ->execute();
-      if (!empty($result)) {
-        $order->products = entity_load_multiple('uc_order_product', array_keys($result), TRUE);
-        foreach ($order->products as $product) {
-          $product->order = $order;
-          $product->order_uid = $order->uid;
-        }
-      }
-      else {
-        $order->products = array();
-      }
-
-      uc_order_module_invoke('load', $order, NULL);
-
-      // Load line items... has to be last after everything has been loaded.
-      $order->line_items = uc_order_load_line_items($order);
-
-      $fields = array();
-
-      // Make sure the total still matches up...
-      if (($total = uc_order_get_total($order)) !== $order->order_total) {
-        $fields['order_total'] = $total;
-        $order->order_total = $total;
-      }
-
-      if (($count = uc_order_get_product_count($order)) !== $order->product_count) {
-        $fields['product_count'] = $count;
-        $order->product_count = $count;
-      }
-
-      if (count($fields)) {
-        $query = db_update('uc_orders')
-          ->fields($fields)
-          ->condition('order_id', $order->order_id)
-          ->execute();
-      }
-    }
-
-    parent::attachLoad($orders, $revision_id);
-  }
-
-}
-
-/**
  * Controller class for the uc_order_product entity.
  */
 class UcOrderProductController extends EntityAPIController {

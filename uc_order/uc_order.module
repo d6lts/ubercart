@@ -15,75 +15,6 @@ use Drupal\uc_store\UcAddress;
 require_once dirname(__FILE__) . '/uc_order.order_pane.inc';
 require_once dirname(__FILE__) . '/uc_order.line_item.inc';
 
-/**
- * Defines an order object.
- */
-class UcOrder {
-
-  public $order_id = 0;
-  public $uid = 0;
-  public $order_status = '';
-  public $order_total = 0;
-  public $primary_email = '';
-
-  public $delivery_first_name = '';
-  public $delivery_last_name = '';
-  public $delivery_phone = '';
-  public $delivery_company = '';
-  public $delivery_street1 = '';
-  public $delivery_street2 = '';
-  public $delivery_city = '';
-  public $delivery_zone = 0;
-  public $delivery_postal_code = '';
-  public $delivery_country = 0;
-
-  public $billing_first_name = '';
-  public $billing_last_name = '';
-  public $billing_phone = '';
-  public $billing_company = '';
-  public $billing_street1 = '';
-  public $billing_street2 = '';
-  public $billing_city = '';
-  public $billing_zone = 0;
-  public $billing_postal_code = '';
-  public $billing_country = 0;
-
-  public $products = array();
-  public $line_items = array();
-
-  public $payment_method = '';
-  public $data = array();
-  public $created = 0;
-  public $modified = 0;
-  public $currency = '';
-
-  /**
-   * Order object constructor.
-   *
-   * @param $uid
-   *   The user ID that owns the order, or a cart ID. Cart IDs are integer
-   *   user IDs for authenticated users, or are strings of 22 characters
-   *   or more for anonymous users.
-   * @param $state
-   *   The initial order state.
-   */
-  function __construct($uid = 0, $state = 'in_checkout') {
-    if (strlen($uid) < 22 && $uid > 0) {
-      $this->uid = $uid;
-      if ($account = user_load($uid)) {
-        $this->primary_email = $account->mail;
-      }
-    }
-
-    $this->order_status = uc_order_state_default($state);
-    $this->currency = variable_get('uc_currency_code', 'USD');
-    $this->billing_country = variable_get('uc_store_country', 840);
-    $this->delivery_country = variable_get('uc_store_country', 840);
-    $this->created = REQUEST_TIME;
-    $this->modified = REQUEST_TIME;
-  }
-
-}
 
 /**
  * Implements hook_help().
@@ -935,49 +866,7 @@ function uc_order_create($values, $entity_type) {
  * Saves an order to the database.
  */
 function uc_order_save($order) {
-  $transaction = db_transaction();
-
-  try {
-    if (is_null($order->order_id) || intval($order->order_id) == 0) {
-      return FALSE;
-    }
-
-    field_attach_presave('uc_order', $order);
-
-    $order->order_total = uc_order_get_total($order);
-    $order->product_count = uc_order_get_product_count($order);
-    if (is_null($order->delivery_country) || $order->delivery_country == 0) {
-      $order->delivery_country = variable_get('uc_store_country', 840);
-    }
-    if (is_null($order->billing_country) || $order->billing_country == 0) {
-      $order->billing_country = variable_get('uc_store_country', 840);
-    }
-    $order->host = ip_address();
-    $order->modified = REQUEST_TIME;
-
-    uc_order_module_invoke('presave', $order, NULL);
-    module_invoke_all('entity_presave', $order, 'uc_order');
-
-    drupal_write_record('uc_orders', $order, 'order_id');
-
-    if (is_array($order->products)) {
-      foreach ($order->products as $product) {
-        drupal_alter('uc_order_product', $product, $order);
-        uc_order_product_save($order->order_id, $product);
-      }
-    }
-
-    field_attach_update('uc_order', $order);
-
-    uc_order_module_invoke('save', $order, NULL);
-    module_invoke_all('entity_update', $order, 'uc_order');
-    $order->order_total = uc_order_get_total($order);
-  }
-  catch (Exception $e) {
-    $transaction->rollback('uc_order');
-    watchdog_exception('uc_order', $e);
-    throw $e;
-  }
+  $order->save();
 }
 
 /**
@@ -989,44 +878,7 @@ function uc_order_save($order) {
  *   The ID of the order you wish to delete.
  */
 function uc_order_delete($order_id) {
-  global $user;
-
-  $order = uc_order_load($order_id);
-
-  // Perform the operations if we're deleting a valid order.
-  if ($order !== FALSE) {
-    // rules_invoke_event('uc_order_delete', $order);
-    uc_order_module_invoke('delete', $order, NULL);
-    module_invoke_all('entity_delete', $order, 'uc_order');
-
-    // Delete data from the appropriate Ubercart order tables.
-    db_delete('uc_orders')
-      ->condition('order_id', $order_id)
-      ->execute();
-    $efq = new EntityFieldQuery();
-    $result = $efq->entityCondition('entity_type', 'uc_order_product')
-      ->propertyCondition('order_id', $order->order_id)
-      ->execute();
-    if (!empty($result['uc_order_product'])) {
-      $product_ids = array_keys($result['uc_order_product']);
-      uc_order_product_delete_multiple($product_ids);
-    }
-    db_delete('uc_order_comments')
-      ->condition('order_id', $order_id)
-      ->execute();
-    db_delete('uc_order_admin_comments')
-      ->condition('order_id', $order_id)
-      ->execute();
-    db_delete('uc_order_log')
-      ->condition('order_id', $order_id)
-      ->execute();
-
-    // Delete line items for the order.
-    uc_order_delete_line_item($order_id, TRUE);
-
-    // Log the action in the database.
-    watchdog('uc_order', 'Order @order_id deleted by user @uid.', array('@order_id' => $order_id, '@uid' => $user->uid));
-  }
+  entity_delete_multiple('uc_order', array($order_id));
 }
 
 /**
