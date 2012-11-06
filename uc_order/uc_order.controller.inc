@@ -17,7 +17,7 @@ class UcOrderController extends DrupalDefaultEntityController {
         ->orderBy('order_product_id', 'ASC')
         ->execute();
       if (!empty($result)) {
-        $order->products = entity_load('uc_order_product', array_keys($result), NULL, TRUE);
+        $order->products = entity_load_multiple('uc_order_product', array_keys($result), TRUE);
         foreach ($order->products as $product) {
           $product->order = $order;
           $product->order_uid = $order->uid;

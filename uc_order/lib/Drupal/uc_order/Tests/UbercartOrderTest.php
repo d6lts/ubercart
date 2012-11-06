@@ -57,7 +57,7 @@ class UbercartOrderTest extends UbercartTestBase {
 
     // Test deletion.
     entity_delete('uc_order', $order->order_id);
-    $deleted_order = entity_load('uc_order', array($order->order_id), array(), TRUE);
+    $deleted_order = entity_load('uc_order', $order->order_id, TRUE);
     $this->assertFalse($deleted_order, 'Order was successfully deleted');
   }
 

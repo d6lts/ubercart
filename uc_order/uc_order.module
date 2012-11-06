@@ -1274,7 +1274,7 @@ function uc_order_load($order_id, $reset = FALSE) {
     return FALSE;
   }
 
-  $orders = uc_order_load_multiple(array($order_id), array(), $reset);
+  $orders = uc_order_load_multiple(array($order_id), $reset);
 
   return $orders ? reset($orders) : FALSE;
 }
@@ -1284,15 +1284,12 @@ function uc_order_load($order_id, $reset = FALSE) {
  *
  * @param $ids
  *   An array of order IDs.
- * @param $conditions
- *   An array of conditions on the {uc_orders} table in the form
- *  'field' => $value.
  *
  * @return
  *   An array of order objects indexed by order_id.
  */
-function uc_order_load_multiple($ids, $conditions = array(), $reset = FALSE) {
-  return entity_load('uc_order', $ids, $conditions, $reset);
+function uc_order_load_multiple($ids, $reset = FALSE) {
+  return entity_load_multiple('uc_order', $ids, $reset);
 }
 
 /**

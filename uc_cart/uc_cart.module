@@ -1040,7 +1040,7 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
         ->orderBy('cart_item_id', 'ASC')
         ->execute();
       if (!empty($result)) {
-        $items[$cid] = entity_load('uc_cart_item', array_keys($result), NULL, TRUE);
+        $items[$cid] = entity_load_multiple('uc_cart_item', array_keys($result), TRUE);
 
         // Create a bare order and attach it to each item as context.
         $order = new UcOrder($cid);
