@@ -1136,10 +1136,12 @@ function uc_order_load($order_id, $reset = FALSE) {
 /**
  * Loads one or more order entities from the database.
  *
- * @param $ids
+ * @param array $ids
  *   An array of order IDs.
+ * @param bool $reset
+ *   (optional) Whether to reset the internal cache. Defaults to FALSE.
  *
- * @return
+ * @return array
  *   An array of order objects indexed by order_id.
  */
 function uc_order_load_multiple($ids, $reset = FALSE) {
