@@ -1043,7 +1043,9 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
         $items[$cid] = entity_load_multiple('uc_cart_item', array_keys($result), TRUE);
 
         // Create a bare order and attach it to each item as context.
-        $order = new UcOrder($cid);
+        $order = entity_create('uc_order', array(
+          'uid' => $cid,
+        ));
         foreach ($items[$cid] as $item) {
           $item->order = $order;
         }

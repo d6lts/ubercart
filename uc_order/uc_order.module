@@ -895,7 +895,10 @@ function uc_order_order_entity_access($op, $order = NULL, $account = NULL) {
  *   The initial state of the order.
  */
 function uc_order_new($uid = 0, $state = 'in_checkout') {
-  $order = new UcOrder($uid, $state);
+  $order = entity_create('uc_order', array(
+    'uid' => $uid,
+    'order_status' => uc_order_state_default($state),
+  ));
 
   module_invoke_all('entity_presave', $order, 'uc_order');
 
@@ -914,10 +917,7 @@ function uc_order_new($uid = 0, $state = 'in_checkout') {
  *   A set of default values for the order.
  */
 function uc_order_create($values, $entity_type) {
-  $order = new UcOrder();
-  foreach ($values as $key => $value) {
-    $order->$key = $value;
-  }
+  $order = entity_create('uc_order', $values);
 
   module_invoke_all('entity_presave', $order, 'uc_order');
 
