@@ -1387,7 +1387,7 @@ function uc_product_get_picture($nid, $style = 'uc_product') {
   $field_name = variable_get('uc_image_' . $product->type, 'uc_product_image');
   $output = array();
 
-  if ($field_name && isset($product->$field_name)) {
+  if ($field_name && !empty($product->$field_name)) {
     $elements = field_view_field('node', $product, $field_name, array(
       'label' => 'hidden',
       'type' => 'image',
