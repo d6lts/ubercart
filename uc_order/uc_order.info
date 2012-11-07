@@ -27,9 +27,5 @@ files[] = views/uc_order_handler_sort_total.inc
 files[] = views/uc_order_plugin_argument_validate_user_perm.inc
 files[] = views/uc_order_plugin_row_invoice_view.inc
 
-; Classes
-files[] = uc_order.controller.inc
-files[] = uc_order.info.inc
-
 configure = admin/store/settings/orders
 stylesheets[all][] = uc_order.css
