@@ -62,7 +62,7 @@ class UcOrderStorageController extends DatabaseStorageController {
       $order->data = unserialize($order->data);
       $result = entity_query('uc_order_product')
         ->condition('order_id', $order->order_id)
-        ->orderBy('order_product_id', 'ASC')
+        ->sort('order_product_id', 'ASC')
         ->execute();
       if (!empty($result)) {
         $order->products = entity_load_multiple('uc_order_product', array_keys($result), TRUE);
