@@ -208,14 +208,6 @@ function uc_cart_theme() {
 }
 
 /**
- * Implements hook_init().
- */
-function uc_cart_init() {
-  global $conf;
-  $conf['i18n_variables'][] = 'uc_cart_breadcrumb_text';
-}
-
-/**
  * Implements hook_cron().
  */
 function uc_cart_cron() {

@@ -114,9 +114,6 @@ function uc_google_checkout_init() {
     variable_set('uc_google_checkout_order_users', $users);
   }
 
-  global $conf;
-  $conf['i18n_variables'][] = 'uc_google_checkout_order_cancel_reason';
-
   $id = variable_get('googleanalytics_account', '');
   if (module_exists('googleanalytics') && !empty($id) && _googleanalytics_visibility_pages() && _googleanalytics_visibility_user($user)) {
     $scope = variable_get('googleanalytics_js_scope', 'footer');
