@@ -1012,7 +1012,7 @@ function uc_order_edit_form_validate($form, &$form_state) {
     form_set_error('order_modified', t('This order has been modified by another user, changes cannot be saved.'));
   }
 
-  entity_form_field_validate('uc_order', $form, $form_state);
+  field_attach_form_validate('uc_order', $order, $form, $form_state);
 
   // Build list of changes to be applied.
   $panes = _uc_order_pane_list();
