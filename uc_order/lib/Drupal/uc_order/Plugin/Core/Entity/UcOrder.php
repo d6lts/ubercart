@@ -21,9 +21,19 @@ use Drupal\Core\Annotation\Translation;
  *   module = "uc_order",
  *   controller_class = "Drupal\uc_order\UcOrderStorageController",
  *   base_table = "uc_orders",
+ *   uri_callback = "uc_order_uri",
  *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "order_id",
+ *   },
+ *   bundles = {
+ *     "uc_order" = {
+ *       "label" = @Translation("Order"),
+ *       "admin" = {
+ *         "path" = "admin/store/settings/orders",
+ *         "access arguments" = {"administer store"}
+ *       }
+ *     }
  *   },
  *   view_modes = {
  *     "admin" = {

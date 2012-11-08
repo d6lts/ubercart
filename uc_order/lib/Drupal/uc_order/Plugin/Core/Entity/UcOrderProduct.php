@@ -11,7 +11,6 @@ use Drupal\Core\Entity\Entity;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
-
 /**
  * Defines the order product entity class.
  *
@@ -23,6 +22,19 @@ use Drupal\Core\Annotation\Translation;
  *   base_table = "uc_order_products",
  *   entity_keys = {
  *     "id" = "order_product_id",
+ *   },
+ *   bundles = {
+ *     "uc_order_product" = {
+ *       "label" = @Translation("Order product"),
+ *     }
+ *   },
+ *   view_modes = {
+ *     "full" = {
+ *       "label" = "Normal view",
+ *     },
+ *     "cart" = {
+ *       "label" = "Cart view",
+ *     },
  *   }
  * )
  */

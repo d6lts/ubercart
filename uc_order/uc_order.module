@@ -410,78 +410,6 @@ function uc_order_can_view_order($account, $order, $view_invoice = FALSE) {
 }
 
 /**
- * Implements hook_entity_info().
- */
-function uc_order_entity_info() {
-  return array(
-    'uc_order' => array(
-      'label' => t('Order'),
-      'controller class' => 'UcOrderController',
-      'base table' => 'uc_orders',
-      'fieldable' => TRUE,
-      'entity keys' => array(
-        'id' => 'order_id',
-        'label' => t('Order'),
-      ),
-      'bundles' => array(
-        'uc_order' => array(
-          'label' => t('Order'),
-          'admin' => array(
-            'path' => 'admin/store/settings/orders',
-            'access arguments' => array('administer store'),
-          ),
-        ),
-      ),
-      'view modes' => array(
-        'view' => array(
-          'label' => t('Admin view'),
-        ),
-        'customer' => array(
-          'label' => t('Customer view'),
-        ),
-      ),
-      'uri callback' => 'uc_order_uri',
-      // Entity API callbacks.
-      'access callback'   => 'uc_order_order_entity_access',
-      'creation callback' => 'uc_order_create',
-      'save callback'     => 'uc_order_save',
-      'deletion callback' => 'uc_order_delete',
-    ),
-    'uc_order_product' => array(
-      'label' => t('Order product'),
-      'base table' => 'uc_order_products',
-      'controller class' => 'UcOrderProductController',
-      'metadata controller class' => 'UcOrderProductMetadataController',
-      'fieldable' => TRUE,
-      'module' => 'uc_order',
-      'entity keys' => array(
-        'id' => 'order_product_id',
-        'label' => t('Order product'),
-      ),
-      'bundles' => array(
-        'uc_order_product' => array(
-          'label' => t('Order product'),
-          'admin' => array(
-            'path' => 'admin/store/settings/orders/products',
-            'access arguments' => array('administer store'),
-          ),
-        ),
-      ),
-      'view modes' => array(
-        'full' => array(
-          'label' => t('Normal view'),
-        ),
-        'cart' => array(
-          'label' => t('Cart view'),
-        ),
-      ),
-      // Entity API callbacks.
-      'access callback'   => 'uc_order_order_product_access',
-    ),
-  );
-}
-
-/**
  * Implements hook_field_extra_fields().
  */
 function uc_order_field_extra_fields() {
@@ -778,46 +706,6 @@ function uc_order_uri($order) {
 }
 
 /**
- * Entity API "access callback" for uc_order entity.
- *
- * Checks order access for various operations.
- *
- * @param $op
- *   The operation being performed. One of 'view', 'update', 'create' or
- *   'delete'.
- * @param $order
- *   Optionally an order to check access for.
- * @param $account
- *   The user to check for. Leave it to NULL to check for the current user.
- */
-function uc_order_order_entity_access($op, $order = NULL, $account = NULL) {
-  if ($op == 'delete') {
-    if (!empty($order)) {
-      return uc_order_can_delete($order, $account);
-    }
-    else {
-      return FALSE;
-    }
-  }
-
-  if ($op == 'update') {
-    return user_access('edit orders', $account);
-  }
-
-  if ($op == 'create') {
-    return user_access('create orders', $account);
-  }
-
-  if ($op == 'view') {
-    if (user_access('view all orders', $account)) {
-      return TRUE;
-    }
-
-    return (!empty($order) && $order->uid == $account->uid && user_access('view own orders', $account));
-  }
-}
-
-/**
  * Generates and saves a new order.
  *
  * @param $uid
@@ -842,27 +730,6 @@ function uc_order_new($uid = 0, $state = 'in_checkout') {
 }
 
 /**
- * Entity API "creation callback" for uc_order entity.
- *
- * @param $values
- *   A set of default values for the order.
- */
-function uc_order_create($values, $entity_type) {
-  $order = entity_create('uc_order', $values);
-
-  module_invoke_all('entity_presave', $order, 'uc_order');
-
-  drupal_write_record('uc_orders', $order);
-
-  uc_order_module_invoke('new', $order, NULL);
-  module_invoke_all('entity_insert', $order, 'uc_order');
-
-  return $order;
-}
-
-/**
- * Entity API "save callback" for uc_order entity.
- *
  * Saves an order to the database.
  */
 function uc_order_save($order) {
@@ -870,8 +737,6 @@ function uc_order_save($order) {
 }
 
 /**
- * Entity API "deletion callback" for uc_order entity.
- *
  * Deletes an order and tells other modules to do the same.
  *
  * @param $order_id
@@ -882,42 +747,11 @@ function uc_order_delete($order_id) {
 }
 
 /**
- * Entity API "access callback" for uc_order_product entity.
- *
- * Checks order product access for various operations.
- *
- * @param $op
- *   The operation being performed. One of 'view', 'update', 'create' or
- *   'delete'.
- * @param $order
- *   Optionally an order to check access for.
- * @param $account
- *   The user to check for. Leave it to NULL to check for the current user.
- */
-function uc_order_order_product_access($op, $product = NULL, $account = NULL) {
-  if (isset($product) && $product->order_id) {
-    $order = uc_order_load($product->order_id);
-    return uc_order_order_entity_access($op, $order, $account);
-  }
-
-  return FALSE;
-}
-
-/**
  * Save a product to an order.
  */
 function uc_order_product_save($order_id, $product) {
   $product->order_id = $order_id;
   return entity_save('uc_order_product', $product);
-}
-
-/**
- * API wrapper for uc_order_product_save().
- *
- * @todo: Change the signature for uc_order_product_save() to this one.
- */
-function uc_order_product_entity_save($product) {
-  return uc_order_product_save($product->order_id, $product);
 }
 
 /**
