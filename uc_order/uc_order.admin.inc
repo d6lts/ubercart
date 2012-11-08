@@ -568,7 +568,8 @@ function uc_order_create_form_create_submit($form, &$form_state) {
         'pass' => user_password(),
         'status' => variable_get('uc_new_customer_status_active', TRUE) ? 1 : 0,
       );
-      $account = user_save(NULL, $fields);
+      $account = entity_create('user', $fields);
+      $account->save();
       $uid = $account->uid;
 
       if ($form_state['values']['customer']['sendmail']) {
@@ -728,7 +729,8 @@ function uc_order_select_customer($email = NULL) {
         'status' => variable_get('uc_new_customer_status_active', TRUE) ? 1 : 0,
       );
 
-      $account = user_save('', $fields);
+      $account = entity_create('user', $fields);
+      $account->save();
 
       if ($_POST['sendmail'] == 'true') {
         // Manually set the password so it appears in the e-mail.
