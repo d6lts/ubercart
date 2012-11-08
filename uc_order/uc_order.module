@@ -1423,7 +1423,7 @@ function template_preprocess_uc_order(&$variables) {
   $variables['shippable'] = uc_order_is_shippable($order);
 
   $variables['products'] = $order->products;
-  $display = entity_view_multiple($order->products);
+  $display = entity_view_multiple($order->products, 'full');
   foreach ($variables['products'] as &$product) {
     $product->total_price = render($display[$product->order_product_id]['total']);
     if ($product->qty > 1) {

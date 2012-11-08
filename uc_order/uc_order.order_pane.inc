@@ -1110,7 +1110,7 @@ function uc_op_products_view_table($order) {
   );
 
   if (!empty($order->products)) {
-    $build = entity_view_multiple($order->products);
+    $build = entity_view_multiple($order->products, 'full');
     $table['#rows'] = $build;
   }
   else {
@@ -1178,7 +1178,7 @@ function uc_op_products_customer_table($order) {
   );
 
   if (!empty($order->products)) {
-    $build = entity_view_multiple($order->products);
+    $build = entity_view_multiple($order->products, 'full');
     $table['#rows'] = $build;
   }
   else {
