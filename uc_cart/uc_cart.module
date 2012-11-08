@@ -270,7 +270,7 @@ function uc_cart_user_load($users) {
 /**
  * Implements hook_user_login().
  */
-function uc_cart_user_login(&$edit, $account) {
+function uc_cart_user_login($edit, $account) {
   // Add items from an anonymous cart to a user's permanent cart on login.
   uc_cart_login_update($account->uid);
 }
