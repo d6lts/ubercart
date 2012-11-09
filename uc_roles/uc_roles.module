@@ -133,16 +133,9 @@ function uc_roles_theme() {
  * Implements hook_form_user_profile_form_alter().
  */
 function uc_roles_form_user_profile_form_alter(&$form, &$form_state) {
-  $account = $form_state['build_info']['args'][0];
-  if (isset($form_state['build_info']['args'][1])) {
-    $category = $form_state['build_info']['args'][1];
-  }
-  else {
-    // user_profile_form() has a default value for $category.
-    $category = 'account';
-  }
+  $account = $form_state['user'];
 
-  if (!user_access('administer users') || $category != 'account') {
+  if (!user_access('administer users')) {
     return;
   }
 
@@ -251,16 +244,9 @@ function uc_roles_form_user_profile_form_alter(&$form, &$form_state) {
 function uc_roles_user_validate($form, &$form_state) {
   $edit = $form_state['values'];
   $account = $form_state['build_info']['args'][0];
-  if (isset($form_state['build_info']['args'][1])) {
-    $category = $form_state['build_info']['args'][1];
-  }
-  else {
-    // user_profile_form() has a default value for $category.
-    $category = 'account';
-  }
 
   // Validate the amount of time for the expiration.
-  if (!empty($edit['new_role']) && $category == 'account') {
+  if (!empty($edit['new_role'])) {
     if (intval($edit['new_role_add_qty']) < 1) {
       form_set_error('new_role_add_qty', t('The expiration length must be a positive integer'));
     }
@@ -296,13 +282,13 @@ function uc_roles_user_cancel($edit, $account, $method) {
 /**
  * Implements hook_user_presave().
  */
-function uc_roles_user_presave(&$edit, $account, $category) {
-  if (!user_access('administer users') || $category != 'account') {
+function uc_roles_user_presave(&$edit, $account) {
+  if (!user_access('administer users')) {
     return;
   }
 
   // Grant a new role if a new temporary role is added.
-  if (isset($edit['new_role']) && $edit['new_role'] && $category == 'account') {
+  if (isset($edit['new_role']) && $edit['new_role']) {
     // Save our role info, but don't save the user; user.module will do that.
     uc_roles_grant($account, $edit['new_role_add'], _uc_roles_get_expiration($edit['new_role_add_qty'], $edit['new_role_add_granularity']), FALSE);
 
