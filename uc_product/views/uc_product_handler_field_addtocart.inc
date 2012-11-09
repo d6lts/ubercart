@@ -23,7 +23,7 @@ class uc_product_handler_field_addtocart extends views_handler_field {
    */
   function render($values) {
     if (uc_product_is_product($values->{$this->aliases['type']})) {
-      $type = node_type_get_type($values->{$this->aliases['type']});
+      $type = node_type_load($values->{$this->aliases['type']});
       $base = $type->base;
       $product = node_load($values->{$this->aliases['nid']});
       if (function_exists($base . '_add_to_cart_form')) {

@@ -352,7 +352,7 @@ function uc_product_class_form($form, &$form_state, $class = NULL) {
  */
 function uc_product_class_form_validate($form, &$form_state) {
   if ($form['pcid']['#type'] == 'textfield') {
-    $type = node_type_get_type($form_state['values']['pcid']);
+    $type = node_type_load($form_state['values']['pcid']);
     if ($type) {
       if ($type->base == 'uc_product') {
         form_set_error('pcid', t('This product class already exists.'));
@@ -411,7 +411,7 @@ function uc_product_class_form_submit($form, &$form_state) {
 
   node_types_rebuild();
   if ($is_new) {
-    $type = node_type_get_type($pcid);
+    $type = node_type_load($pcid);
     node_add_body_field($type, t('Description'));
     uc_product_add_default_image_field($pcid);
   }
@@ -450,7 +450,7 @@ function uc_product_class_delete_confirm($form, &$form_state, $class) {
  * @see uc_product_class_delete_confirm()
  */
 function uc_product_class_delete_confirm_submit($form, &$form_state) {
-  $type = node_type_get_type($form_state['values']['pcid']);
+  $type = node_type_load($form_state['values']['pcid']);
   $type->base = 'node_content';
   $type->custom = 1;
   node_type_save($type);

@@ -314,7 +314,7 @@ function uc_product_edit_access($node) {
  * @ingroup forms
  */
 function uc_product_form($node, $form_state) {
-  $type = node_type_get_type($node);
+  $type = node_type_load($node->type);
 
   $form['title'] = array(
     '#type' => 'textfield',
