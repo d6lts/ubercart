@@ -164,8 +164,8 @@ function uc_googleanalytics_ecommerce_js($order) {
     // $node->taxonomy_catalog) is chosen.
     if (module_exists('taxonomy')) {
       $node = node_load($product->nid);
-      if (isset($node->taxonomy_catalog[LANGUAGE_NONE][0]['tid'])) {
-        $term = taxonomy_term_load($node->taxonomy_catalog[LANGUAGE_NONE][0]['tid']);
+      if (isset($node->taxonomy_catalog[LANGUAGE_NOT_SPECIFIED][0]['tid'])) {
+        $term = taxonomy_term_load($node->taxonomy_catalog[LANGUAGE_NOT_SPECIFIED][0]['tid']);
         $product->category = $term->name;
       }
     }

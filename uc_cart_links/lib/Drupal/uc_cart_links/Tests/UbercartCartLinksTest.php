@@ -362,7 +362,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     $redirect_page = $this->drupalCreateNode(
       array(
         'body' => array(
-          LANGUAGE_NONE => array(
+          LANGUAGE_NOT_SPECIFIED => array(
             array('value' => 'ERROR: Invalid Cart Link!')
           )
         )
@@ -680,7 +680,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
 
     $page = array(
       'type' => 'page',  // This is default anyway ...
-      'body' => array(LANGUAGE_NONE => array(
+      'body' => array(LANGUAGE_NOT_SPECIFIED => array(
         array(
           'value' => isset($body) ? theme('links', $body) : $this->randomName(128),
           'format' => filter_default_format(),
