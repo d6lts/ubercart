@@ -5,6 +5,8 @@
  * Product administration menu items.
  */
 
+use Drupal\Core\Database\Query\Merge;
+
 /**
  * Displays a list of product classes.
  */
@@ -396,7 +398,7 @@ function uc_product_class_form_submit($form, &$form_state) {
 
   uc_product_node_info(TRUE);
 
-  if ($result == MergeQuery::STATUS_INSERT) {
+  if ($result == Merge::STATUS_INSERT) {
     variable_set('node_options_' . $pcid, variable_get('node_options_product', array('status', 'promote')));
 
     if (module_exists('comment')) {
