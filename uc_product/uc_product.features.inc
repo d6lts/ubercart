@@ -88,6 +88,6 @@ function uc_product_classes_features_revert($module) {
     }
     uc_product_node_info(TRUE);
     node_types_rebuild();
-    menu_rebuild();
+    state()->set('menu_rebuild_needed', TRUE);
   }
 }

@@ -417,7 +417,7 @@ function uc_product_class_form_submit($form, &$form_state) {
     node_add_body_field($type, t('Description'));
     uc_product_add_default_image_field($pcid);
   }
-  menu_rebuild();
+  state()->set('menu_rebuild_needed', TRUE);
 
   drupal_set_message(t('Product class saved.'));
 }
@@ -463,7 +463,7 @@ function uc_product_class_delete_confirm_submit($form, &$form_state) {
   module_invoke_all('uc_product_class', $form_state['values']['pcid'], 'delete');
   uc_product_node_info(TRUE);
   node_types_rebuild();
-  menu_rebuild();
+  state()->set('menu_rebuild_needed', TRUE);
 
   drupal_set_message(t('Product class %type deleted.', array('%type' => $form_state['values']['pcid'])));
 
