@@ -282,26 +282,29 @@ function uc_roles_user_cancel($edit, $account, $method) {
 /**
  * Implements hook_user_presave().
  */
-function uc_roles_user_presave(&$edit, $account) {
+function uc_roles_user_presave($account) {
   if (!user_access('administer users')) {
     return;
   }
 
   // Grant a new role if a new temporary role is added.
-  if (isset($edit['new_role']) && $edit['new_role']) {
+  if (!empty($account->new_role)) {
     // Save our role info, but don't save the user; user.module will do that.
-    uc_roles_grant($account, $edit['new_role_add'], _uc_roles_get_expiration($edit['new_role_add_qty'], $edit['new_role_add_granularity']), FALSE);
+    uc_roles_grant($account, $account->new_role, _uc_roles_get_expiration($account->new_role_add_qty, $account->new_role_add_granularity), FALSE);
 
     // Push in values so user.module will save in the roles.
-    $edit['roles'][$edit['new_role_add']] = _uc_roles_get_name($edit['new_role_add']);
+    $account->roles[$account->new_role_add] = _uc_roles_get_name($account->new_role_add);
 
     // Reset the new role form.
-    $edit['new_role'] = $edit['new_role_add'] = $edit['new_role_add_qty'] = $edit['new_role_add_granularity'] = NULL;
+    unset($account->new_role);
+    unset($account->new_role_add);
+    unset($account->new_role_add_qty);
+    unset($account->new_role_add_qty);
   }
 
   // Check if any temporary role actions were taken.
-  if (isset($edit['table'])) {
-    foreach ((array)$edit['table'] as $rid => $value) {
+  if (isset($account->table)) {
+    foreach ($account->table as $rid => $value) {
       // Remove this expiration.
       if ($value['remove']) {
         uc_roles_delete($account, $rid);
@@ -309,7 +312,7 @@ function uc_roles_user_presave(&$edit, $account) {
 
       // Adjust it.
       else {
-        if ($value['qty'] && $edit['roles'][$rid]) {
+        if ($value['qty'] && $account->roles[$rid]) {
           $qty = $value['qty'];
           $qty *= $value['polarity'] == 'add' ? 1 : -1;
 
@@ -320,9 +323,9 @@ function uc_roles_user_presave(&$edit, $account) {
   }
 
   // If a user's role is removed using Drupal, then so is any expiration data.
-  if (isset($edit['roles']) && is_array($edit['roles']) && isset($account->roles)) {
-    foreach ($account->roles as $rid => $role) {
-      if (!in_array($rid, array_keys($edit['roles'])) && $rid != DRUPAL_AUTHENTICATED_RID) {
+  if (isset($account->original->roles)) {
+    foreach ($account->original->roles as $rid => $role) {
+      if (!in_array($rid, $account->roles) && $rid != DRUPAL_AUTHENTICATED_RID) {
         uc_roles_delete($account, $rid);
       }
     }
