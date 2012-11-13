@@ -242,16 +242,6 @@ function _uc_stock_send_mail($order, $node, $stock) {
 }
 
 /**
- * Implements hook_views_api().
- */
-function uc_stock_views_api() {
-  return array(
-    'api' => '2.0',
-    'path' => drupal_get_path('module', 'uc_stock') . '/views',
-  );
-}
-
-/**
  * Decrement a product's stock.
  *
  * @param $product

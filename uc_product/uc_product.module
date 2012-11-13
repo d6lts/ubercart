@@ -1803,17 +1803,6 @@ function uc_product_image_default_styles() {
 }
 
 /**
- * Implements hook_views_api().
- */
-function uc_product_views_api() {
-  return array(
-    'api' => '2.0',
-    'path' => drupal_get_path('module', 'uc_product') . '/views',
-  );
-}
-
-
-/**
  * Implements hook_features_api().
  */
 function uc_product_features_api() {

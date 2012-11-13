@@ -333,16 +333,6 @@ function uc_catalog_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hooks_views_api().
- */
-function uc_catalog_views_api() {
-  return array(
-    'api' => '2.0',
-    'path' => drupal_get_path('module', 'uc_catalog') . '/views',
-  );
-}
-
-/**
  * Implements hook_uc_store_status().
  *
  * Provides status information about the "Product Catalog" and products not
