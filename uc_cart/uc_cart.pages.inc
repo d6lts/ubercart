@@ -160,7 +160,10 @@ function uc_cart_checkout() {
 
     if ($rebuild) {
       // Copy the cart contents to the cart order.
-      $order->products = uc_cart_get_contents();
+      $order->products = array();
+      foreach ($items as $item) {
+        $order->products[] = $item->toOrderProduct();
+      }
       unset($_SESSION['uc_cart_order_rebuild']);
     }
     elseif (!uc_order_product_revive($order->products)) {

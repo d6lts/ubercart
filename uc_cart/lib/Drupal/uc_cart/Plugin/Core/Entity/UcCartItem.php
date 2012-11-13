@@ -78,4 +78,16 @@ class UcCartItem extends Entity implements ContentEntityInterface {
     return $this->cart_item_id;
   }
 
+  /**
+   * Converts a cart item into an order product.
+   */
+  public function toOrderProduct() {
+    return entity_create('uc_order_product', array(
+      'nid' => $this->nid,
+      'qty' => $this->qty,
+      'price' => $this->price,
+      'title' => $this->title,
+    ));
+  }
+
 }
