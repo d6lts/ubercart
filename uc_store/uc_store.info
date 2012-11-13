@@ -4,7 +4,6 @@ package = Ubercart - core
 core = 8.x
 
 ; Class definitions
-files[] = classes/mail.inc
 files[] = classes/encrypt.inc
 
 configure = admin/store/settings/store

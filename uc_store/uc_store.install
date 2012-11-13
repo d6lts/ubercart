@@ -136,14 +136,14 @@ function uc_store_install() {
   // Set mail handler for all Ubercart modules
   variable_set('mail_system',
     array_merge(
-      variable_get('mail_system', array('default-system' => 'DefaultMailSystem')),
+      variable_get('mail_system', array('default-system' => 'Drupal\Core\Mail\PhpMail')),
       array(
-        'uc_cart'  => 'UbercartMailSystem',
-        'uc_order' => 'UbercartMailSystem',
-        'uc_file'  => 'UbercartMailSystem',
-        'uc_roles' => 'UbercartMailSystem',
-        'uc_stock' => 'UbercartMailSystem',
-        'uc_store' => 'UbercartMailSystem',
+        'uc_cart'  => 'Drupal\uc_store\Mail\UbercartMail',
+        'uc_order' => 'Drupal\uc_store\Mail\UbercartMail',
+        'uc_file'  => 'Drupal\uc_store\Mail\UbercartMail',
+        'uc_roles' => 'Drupal\uc_store\Mail\UbercartMail',
+        'uc_stock' => 'Drupal\uc_store\Mail\UbercartMail',
+        'uc_store' => 'Drupal\uc_store\Mail\UbercartMail',
       )
     )
   );
@@ -183,7 +183,7 @@ function uc_store_uninstall() {
   variable_del('uc_footer_message');
 
   // Unset mail Ubercart hander in variable mail_system
-  $mail_system = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
+  $mail_system = variable_get('mail_system', array('default-system' => 'Drupal\Core\Mail\PhpMail'));
   unset($mail_system['uc_cart']);
   unset($mail_system['uc_order']);
   unset($mail_system['uc_file']);
