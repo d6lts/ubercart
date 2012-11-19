@@ -49,11 +49,21 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
       else {
         $email = $order->primary_email;
         $description = t('Enter a valid email address for this order or <a href="!url">click here</a> to login with an existing account and return to checkout.', array('!url' => url('user/login', array('query' => drupal_get_destination()))));
-        $contents['primary_email'] = uc_textfield(t('E-mail address'), $email, TRUE, NULL, 64);
+        $contents['primary_email'] = array(
+          '#type' => 'textfield',
+          '#title' => t('E-mail address'),
+          '#default_value' => $email,
+          '#required' => TRUE,
+        );
       }
 
       if (variable_get('uc_cart_email_validation', FALSE) && !$user->uid) {
-        $contents['primary_email_confirm'] = uc_textfield(t('Confirm e-mail address'), $email, TRUE, NULL, 64);
+        $contents['primary_email_confirm'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Confirm e-mail address'),
+          '#default_value' => $email,
+          '#required' => TRUE,
+        );
       }
 
       if ($user->uid == 0) {

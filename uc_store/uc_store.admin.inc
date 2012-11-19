@@ -242,8 +242,16 @@ function uc_store_settings_form($form, &$form_state) {
     '#title' => t('Basic information'),
     '#group' => 'store',
   );
-  $form['basic']['uc_store_name'] = uc_textfield(t('Store name'), uc_store_name(), FALSE, NULL, 64);
-  $form['basic']['uc_store_owner'] = uc_textfield(t('Store owner'), variable_get('uc_store_owner', NULL), FALSE, NULL, 64);
+  $form['basic']['uc_store_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Store name'),
+    '#default_value' => uc_store_name(),
+  );
+  $form['basic']['uc_store_owner'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Store owner'),
+    '#description' => variable_get('uc_store_owner', ''),
+  );
   $form['basic']['uc_store_email'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
@@ -259,8 +267,16 @@ function uc_store_settings_form($form, &$form_state) {
     '#description' => t('May not be available on all server configurations. Turn off if this causes problems.'),
     '#default_value' => variable_get('uc_store_email_include_name', TRUE),
   );
-  $form['basic']['uc_store_phone'] = uc_textfield(t('Phone number'), variable_get('uc_store_phone', NULL), FALSE);
-  $form['basic']['uc_store_fax'] = uc_textfield(t('Fax number'), variable_get('uc_store_fax', NULL), FALSE);
+  $form['basic']['uc_store_phone'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Phone number'),
+    '#default_value' => variable_get('uc_store_phone', ''),
+  );
+  $form['basic']['uc_store_fax'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Fax number'),
+    '#default_value' => variable_get('uc_store_fax', ''),
+  );
   $form['basic']['uc_store_help_page'] = array(
     '#type' => 'textfield',
     '#title' => t('Store help page'),
@@ -309,14 +325,32 @@ function uc_store_settings_form($form, &$form_state) {
     '#disabled' => TRUE,
     '#size' => 10,
   );
-  $form['currency']['uc_currency_sign'] = uc_textfield(t('Currency Sign'), variable_get('uc_currency_sign', '$'), FALSE, NULL, 10, 10);
+  $form['currency']['uc_currency_sign'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Currency sign'),
+    '#default_value' => variable_get('uc_currency_sign', '$'),
+    '#size' => 10,
+    '#maxlength' => 10,
+  );
   $form['currency']['uc_sign_after_amount'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display currency sign after amount.'),
     '#default_value' => variable_get('uc_sign_after_amount', FALSE),
   );
-  $form['currency']['uc_currency_thou'] = uc_textfield(t('Thousands Marker'), variable_get('uc_currency_thou', ','), FALSE, NULL, 10, 10);
-  $form['currency']['uc_currency_dec'] = uc_textfield(t('Decimal Marker'), variable_get('uc_currency_dec', '.'), FALSE, NULL, 10, 10);
+  $form['currency']['uc_currency_thou'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Thousands marker'),
+    '#default_value' => variable_get('uc_currency_thou', ','),
+    '#size' => 10,
+    '#maxlength' => 10,
+  );
+  $form['currency']['uc_currency_dec'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Decimal marker'),
+    '#default_value' => variable_get('uc_currency_dec', '.'),
+    '#size' => 10,
+    '#maxlength' => 10,
+  );
   $form['currency']['uc_currency_prec'] = array(
     '#type' => 'select',
     '#title' => t('Number of decimal places'),

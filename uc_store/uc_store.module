@@ -1170,26 +1170,6 @@ function uc_store_address_field_weights() {
 }
 
 /**
- * A simple Forms API textfield generator...
- */
-function uc_textfield($title, $default = NULL, $required = TRUE, $description = NULL, $maxlength = 32, $size = 32) {
-  if (is_null($title) || empty($title))
-    return NULL;
-
-  $textfield = array(
-    '#type' => 'textfield',
-    '#title' => $title,
-    '#description' => $description,
-    '#size' => $size,
-    '#maxlength' => $maxlength,
-    '#required' => $required,
-    '#default_value' => $default,
-  );
-
-  return $textfield;
-}
-
-/**
  * Retrieves a zone's name from the database, using its ID.
  *
  * @param $id

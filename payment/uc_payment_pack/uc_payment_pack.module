@@ -368,7 +368,12 @@ function uc_payment_method_check($op, &$order, $form = NULL, &$form_state = NULL
       $form['check_address_info'] = array(
         '#markup' => '<div>' . t('Set the mailing address to display to customers who choose this payment method during checkout.') . '</div>',
       );
-      $form['uc_check_mailing_name'] = uc_textfield(t('Contact'), variable_get('uc_check_mailing_name', ''), FALSE, t('Direct checks to a person or department.'), 128);
+      $form['uc_check_mailing_name'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Contact'),
+        '#description' => t('Direct checks to a person or department.'),
+        '#default_value' => variable_get('uc_check_mailing_name', ''),
+      );
       $form['uc_check_address'] = array(
         '#type' => 'uc_address',
         '#default_value' => array(
