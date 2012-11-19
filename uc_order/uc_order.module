@@ -1480,8 +1480,8 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   }
   else {
     $head_title = array('name' => $config->get('name'));
-    if (variable_get('site_slogan', '')) {
-      $head_title['slogan'] = variable_get('site_slogan', '');
+    if ($config->get('slogan')) {
+      $head_title['slogan'] = $config->get('slogan');
     }
   }
 
