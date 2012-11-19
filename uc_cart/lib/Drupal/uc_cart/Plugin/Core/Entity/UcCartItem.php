@@ -84,9 +84,14 @@ class UcCartItem extends Entity implements ContentEntityInterface {
   public function toOrderProduct() {
     return entity_create('uc_order_product', array(
       'nid' => $this->nid,
-      'qty' => $this->qty,
-      'price' => $this->price,
       'title' => $this->title,
+      'model' => $this->model,
+      'qty' => $this->qty,
+      'cost' => $this->cost,
+      'price' => $this->price,
+      'weight' => $this->weight,
+      'weight_units' => $this->weight_units,
+      'data' => $this->data,
     ));
   }
 
