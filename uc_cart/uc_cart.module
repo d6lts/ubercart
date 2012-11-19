@@ -1119,7 +1119,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
   }
 
   if (!uc_product_is_product($node->type)) {
-    drupal_set_message(t('@title is not a product. Unable to add to cart.', array('@title' => $node->title)), 'error');
+    drupal_set_message(t('@title is not a product. Unable to add to cart.', array('@title' => $node->label())), 'error');
     return;
   }
 
@@ -1173,7 +1173,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     ));
     entity_save('uc_cart_item', $item_entity);
     if ($msg) {
-      drupal_set_message(t('<strong>@product-title</strong> added to <a href="!url">your shopping cart</a>.', array('@product-title' => $node->title, '!url' => url('cart'))));
+      drupal_set_message(t('<strong>@product-title</strong> added to <a href="!url">your shopping cart</a>.', array('@product-title' => $node->label(), '!url' => url('cart'))));
     }
   }
   else {

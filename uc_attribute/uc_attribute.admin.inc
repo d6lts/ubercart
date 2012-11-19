@@ -1197,7 +1197,7 @@ function uc_object_options_form_submit($form, &$form_state) {
  * @ingroup forms
  */
 function uc_product_adjustments_form($form, &$form_state, $node) {
-  drupal_set_title($node->title);
+  drupal_set_title($node->label());
   $nid = $node->nid;
 
   // Populate table and such.

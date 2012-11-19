@@ -120,7 +120,7 @@ function uc_product_settings_form($form, &$form_state) {
  * Displays the product features tab on a product node edit form.
  */
 function uc_product_features($node, $fid = NULL, $pfid = NULL) {
-  drupal_set_title($node->title);
+  drupal_set_title($node->label());
 
   $header = array(t('Type'), t('Description'), t('Operations'));
   $rows = array();
@@ -261,7 +261,7 @@ function uc_product_feature_confirm_delete($form, &$form_state, $node, $fid, $fe
   $description = t('Are you sure you wish to delete this %feature?', array('%feature' => uc_product_feature_data($fid, 'title')))
     . '<div><b>' . t('Description') . ':</b><br />' . $feature['description'] . '</div><br />';
 
-  return confirm_form($form, check_plain($node->title), 'node/' . $node->nid . '/edit/features', $description, t('Delete'), t('Cancel'), 'pf_delete');
+  return confirm_form($form, check_plain($node->label()), 'node/' . $node->nid . '/edit/features', $description, t('Delete'), t('Cancel'), 'pf_delete');
 }
 
 /**

@@ -191,7 +191,7 @@ function uc_stock_report_form_submit($form, &$form_state) {
  * @ingroup forms
  */
 function uc_stock_edit_form($form, &$form_state, $node) {
-  drupal_set_title($node->title);
+  drupal_set_title($node->label());
 
   $form['stock'] = array('#tree' => TRUE);
 

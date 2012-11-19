@@ -346,7 +346,7 @@ function uc_order_add_product_form($form, &$form_state, $order, $node) {
   }
   $node = uc_product_load_variant(intval($form_state['values']['product_controls']['nid']), $data);
   $form['title'] = array(
-    '#markup' => '<h3>' . check_plain($node->title) . '</h3>',
+    '#markup' => '<h3>' . check_plain($node->label()) . '</h3>',
   );
   $form['nid'] = array(
     '#type' => 'hidden',
