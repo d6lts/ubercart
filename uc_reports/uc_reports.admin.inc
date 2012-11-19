@@ -121,7 +121,7 @@ function uc_reports_customers() {
  * Displays the product reports.
  */
 function uc_reports_products() {
-  $views_column = module_exists('statistics') && variable_get('statistics_count_content_views', FALSE);
+  $views_column = module_exists('statistics') && config('statistics.settings')->get('count_content_views');
 
   $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
   $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
@@ -318,7 +318,7 @@ function uc_reports_product_get_skus($nid) {
  * Displays the custom product report.
  */
 function uc_reports_products_custom() {
-  $views_column = module_exists('statistics') && variable_get('statistics_count_content_views', FALSE);
+  $views_column = module_exists('statistics') && config('statistics.settings')->get('count_content_views');
 
   $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
   $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
