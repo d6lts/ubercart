@@ -1469,15 +1469,17 @@ function template_preprocess_uc_order(&$variables) {
  * @see uc_order-invoice-page.tpl.php
  */
 function template_preprocess_uc_order_invoice_page(&$variables) {
+  $config = config('system.site');
+
   // Construct page title.
   if (drupal_get_title()) {
     $head_title = array(
       'title' => strip_tags(drupal_get_title()),
-      'name' => variable_get('site_name', 'Drupal'),
+      'name' => $config->get('name'),
     );
   }
   else {
-    $head_title = array('name' => variable_get('site_name', 'Drupal'));
+    $head_title = array('name' => $config->get('name'));
     if (variable_get('site_slogan', '')) {
       $head_title['slogan'] = variable_get('site_slogan', '');
     }

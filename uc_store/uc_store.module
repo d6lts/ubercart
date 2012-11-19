@@ -1535,7 +1535,7 @@ function uc_get_message($message_id) {
  * Returns the store name if set, or the site name otherwise.
  */
 function uc_store_name() {
-  return variable_get('uc_store_name', variable_get('site_name', 'Ubercart'));
+  return variable_get('uc_store_name', config('system.site')->get('name'));
 }
 
 /**
