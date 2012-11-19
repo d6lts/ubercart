@@ -544,14 +544,14 @@ function uc_catalog_add_node_type($type) {
   if (!$vid) {
     $vid = db_query("SELECT vid FROM {taxonomy_vocabulary} WHERE machine_name = 'catalog'")->fetchField();
     if (!$vid) {
-      $vocabulary = new stdClass();
-      $vocabulary->name = t('Catalog');
-      $vocabulary->description = '';
-      $vocabulary->hierarchy = 1;
-      $vocabulary->module = 'uc_catalog';
-      $vocabulary->machine_name = 'catalog';
-
-      taxonomy_vocabulary_save($vocabulary);
+      $vocabulary = entity_create('taxonomy_vocabulary', array(
+        'name' => t('Catalog'),
+        'description' => '',
+        'hierarchy' => 1,
+        'module' => 'uc_catalog',
+        'machine_name' => 'catalog',
+      ));
+      $vocabulary->save();
       $vid = $vocabulary->vid;
     }
 
