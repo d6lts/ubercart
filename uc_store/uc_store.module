@@ -1556,7 +1556,10 @@ function uc_store_address() {
 function uc_store_email() {
   $email_from = variable_get('uc_store_email', '');
   if (empty($email_from)) {
-    $email_from = variable_get('site_mail', ini_get('sendmail_from'));
+    $email_from = config('system.site')->get('mail');
+  }
+  if (empty($email_from)) {
+    $email_from = ini_get('sendmail_from');
   }
 
   return $email_from;
