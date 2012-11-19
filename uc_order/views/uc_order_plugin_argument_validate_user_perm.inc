@@ -62,7 +62,7 @@ class uc_order_plugin_argument_validate_user_perm extends views_plugin_argument_
     }
     else {
       if ($type == 'name' || $type == 'either') {
-        $name = !empty($GLOBALS['user']->name) ? $GLOBALS['user']->name : variable_get('anonymous', t('Anonymous'));
+        $name = !empty($GLOBALS['user']->name) ? $GLOBALS['user']->name : config('user.settings')->get('anonymous');
         if ($argument == $name) {
           $account = clone $GLOBALS['user'];
         }
@@ -91,7 +91,7 @@ class uc_order_plugin_argument_validate_user_perm extends views_plugin_argument_
     }
 
     $this->argument->argument = $account->uid;
-    $this->argument->validated_title = isset($account->name) ? check_plain($account->name) : check_plain(variable_get('anonymous', t('Anonymous')));
+    $this->argument->validated_title = isset($account->name) ? check_plain($account->name) : check_plain(config('user.settings')->get('anonymous'));
     return TRUE;
   }
 }
