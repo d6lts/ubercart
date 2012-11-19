@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Utility classes for catalog module.
+ * Definition of Drupal\uc_catalog\UcTreeNode.
  */
+
+namespace Drupal\uc_catalog;
 
 /**
  * Data structure to mimic Drupal's menu system.

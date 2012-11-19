@@ -11,6 +11,7 @@
  * not listed in it.
  */
 
+use Drupal\uc_catalog\UcTreeNode;
 
 /**
  * Implements hook_help().
