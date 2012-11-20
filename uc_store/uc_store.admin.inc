@@ -283,7 +283,7 @@ function uc_store_settings_form($form, &$form_state) {
     '#description' => t('The Drupal page for the store help link.'),
     '#default_value' => variable_get('uc_store_help_page', ''),
     '#size' => 32,
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)),
   );
 
   $form['address'] = array(
