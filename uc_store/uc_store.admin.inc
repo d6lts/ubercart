@@ -56,7 +56,7 @@ function uc_store_admin() {
         case 'error':   $icon = 'error.gif'; break;
         default:        $icon = 'info.gif';
       }
-      $icon = theme('image', array('path' => drupal_get_path('module', 'uc_store') . '/images/' . $icon));
+      $icon = theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/' . $icon));
 
       $rows[] = array(
         array('data' => $icon, 'class' => array('icon')),

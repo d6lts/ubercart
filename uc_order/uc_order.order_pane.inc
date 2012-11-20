@@ -1280,7 +1280,7 @@ function uc_op_order_comments_view_table($comments) {
       );
       $icon = $comment->notified ? 'true-icon.gif' : 'false-icon.gif';
       $data['notified'] = array(
-        '#markup' => theme('image', array('path' => drupal_get_path('module', 'uc_order') . '/images/' . $icon)),
+        '#markup' => theme('image', array('uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon)),
         '#cell_attributes' => array('class' => 'notified'),
       );
       $data['status'] = array(

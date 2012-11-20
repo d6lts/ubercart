@@ -1726,7 +1726,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $actions[] = array(
       'name' => t('View'),
       'url' => 'admin/store/orders/' . $order->order_id,
-      'icon' => theme('image', array('path' => drupal_get_path('module', 'uc_store') . '/images/order_view.gif', 'alt' => $alt)),
+      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/order_view.gif', 'alt' => $alt)),
       'title' => $alt,
     );
 
@@ -1734,7 +1734,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $actions[] = array(
       'name' => t('Print'),
       'url' => 'admin/store/orders/' . $order->order_id . '/invoice/print',
-      'icon' => theme('image', array('path' => drupal_get_path('module', 'uc_store') . '/images/print.gif', 'alt' => $alt)),
+      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/print.gif', 'alt' => $alt)),
       'title' => $alt,
     );
   }
@@ -1743,7 +1743,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $actions[] = array(
       'name' => t('View'),
       'url' => 'user/' . $user->uid . '/orders/' . $order->order_id,
-      'icon' => theme('image', array('path' => drupal_get_path('module', 'uc_store') . '/images/order_view.gif', 'alt' => $alt)),
+      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/order_view.gif', 'alt' => $alt)),
       'title' => $alt,
     );
 
@@ -1752,7 +1752,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
       $actions[] = array(
         'name' => t('Print'),
         'url' => 'user/' . $user->uid . '/orders/' . $order->order_id . '/print',
-        'icon' => theme('image', array('path' => drupal_get_path('module', 'uc_store') . '/images/print.gif', 'alt' => $alt)),
+        'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/print.gif', 'alt' => $alt)),
         'title' => $alt,
       );
     }
@@ -1763,7 +1763,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $actions[] = array(
       'name' => t('Edit'),
       'url' => 'admin/store/orders/' . $order->order_id . '/edit',
-      'icon' => theme('image', array('path' => drupal_get_path('module', 'uc_store') . '/images/order_edit.gif', 'alt' => $alt)),
+      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/order_edit.gif', 'alt' => $alt)),
       'title' => $alt,
     );
   }
@@ -1773,7 +1773,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $actions[] = array(
       'name' => t('Delete'),
       'url' => 'admin/store/orders/' . $order->order_id . '/delete',
-      'icon' => theme('image', array('path' => drupal_get_path('module', 'uc_store') . '/images/order_delete.gif', 'alt' => $alt)),
+      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/order_delete.gif', 'alt' => $alt)),
       'title' => $alt,
     );
   }

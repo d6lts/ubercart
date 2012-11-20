@@ -800,7 +800,7 @@ function uc_store_get_icon($path, $small = FALSE, $class = 'uc-store-icon', $alt
   }
 
   return theme('image', array(
-    'path' => drupal_get_path('module', 'uc_store') . '/images/' . $file . '.gif',
+    'uri' => drupal_get_path('module', 'uc_store') . '/images/' . $file . '.gif',
     'alt' => $alt,
     'attributes' => array('class' => array($class)),
   ));

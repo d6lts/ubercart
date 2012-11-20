@@ -23,7 +23,7 @@ function theme_uc_usps_option_label($variables) {
 
   // Start with USPS logo.
   $output  = theme('image', array(
-    'path' => drupal_get_path('module', 'uc_usps') . '/uc_usps_logo.gif',
+    'uri' => drupal_get_path('module', 'uc_usps') . '/uc_usps_logo.gif',
     'alt' => t('U.S.P.S.'),
     'attributes' => array('class' => 'usps-logo')
   ));

@@ -319,7 +319,7 @@ function uc_shipping_uc_order_actions($order) {
       $actions[] = array(
         'name' => t('Package'),
         'url' => 'admin/store/orders/' . $order->order_id . '/packages',
-        'icon' => theme('image', array('path' => drupal_get_path('module', 'uc_shipping') . '/images/package.gif', 'alt' => $title)),
+        'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_shipping') . '/images/package.gif', 'alt' => $title)),
         'title' => $title,
       );
       $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->order_id));
@@ -328,7 +328,7 @@ function uc_shipping_uc_order_actions($order) {
         $actions[] = array(
           'name' => t('Ship'),
           'url' => 'admin/store/orders/' . $order->order_id . '/shipments',
-          'icon' => theme('image', array('path' => drupal_get_path('module', 'uc_shipping') . '/images/ship.gif', 'alt' => $title)),
+          'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_shipping') . '/images/ship.gif', 'alt' => $title)),
           'title' => $title,
         );
       }

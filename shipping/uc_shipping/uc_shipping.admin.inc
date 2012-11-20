@@ -42,7 +42,7 @@ function uc_shipping_order_packages($order) {
       $row[] = l(
         theme('image_style', array(
           'style_name' => 'uc_thumbnail',
-          'path' => $package->label_image->uri,
+          'uri' => $package->label_image->uri,
           'alt' => t('Shipping label'),
           'title' => t('Shipping label'),
         )),
@@ -1098,7 +1098,7 @@ function theme_uc_shipping_shipment_print($variables) {
         list($width, $height) = array(672, 392);
         $output .= '<br class="page-break" />' . "\n";;
         $output .= theme('image', array(
-          'path' => $package->label_image->uri,
+          'uri' => $package->label_image->uri,
           'attributes' => array('width' => $width, 'height' => $height),
           'getsize' => FALSE,
         )) . "\n";
