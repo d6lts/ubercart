@@ -747,66 +747,6 @@ function uc_address_property_info() {
 }
 
 /**
- * Returns an IMG tag for a store icon. Deprecated; use theme('image') instead.
- *
- * @param $path
- *   The Drupal path of the menu item. Atlernately may specify a filename by
- *   passing this string as file:filename.png.
- * @param $small
- *   Pass TRUE to get a link to the small version of the icon. If specifying a
- *   filename, you should let this be FALSE.
- *
- * @return
- *   HTML output for the image.
- */
-function uc_store_get_icon($path, $small = FALSE, $class = 'uc-store-icon', $alt = NULL) {
-  $file = FALSE;
-
-  switch ($path) {
-    case 'admin/store':
-      $file = 'store_monitor';
-      break;
-    case 'admin/store/orders':
-      $file = 'menu_orders';
-      break;
-    case 'admin/store/customers':
-      $file = 'menu_customers';
-      break;
-    case 'admin/store/products':
-      $file = 'menu_products';
-      break;
-    case 'admin/store/reports':
-      $file = 'menu_reports';
-      break;
-    case 'admin/store/settings':
-      $file = 'menu_store_settings';
-      break;
-    case 'admin/store/help':
-      $file = 'menu_help';
-      break;
-  }
-
-  if (substr($path, 0, 5) == 'file:') {
-    $file = substr($path, 5);
-  }
-
-  if (!$file) {
-    // See if it's hooked in anywhere else...
-    return '';
-  }
-
-  if ($small) {
-    $file .= '_small';
-  }
-
-  return theme('image', array(
-    'uri' => drupal_get_path('module', 'uc_store') . '/images/' . $file . '.gif',
-    'alt' => $alt,
-    'attributes' => array('class' => array($class)),
-  ));
-}
-
-/**
  * Formats an amount for display with the store's currency settings.
  *
  * @param $value
