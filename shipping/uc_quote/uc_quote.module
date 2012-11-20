@@ -436,7 +436,7 @@ function uc_product_get_shipping_type($product) {
  *   the store's shipping address if the product's is not set.
  */
 function uc_quote_get_default_shipping_address($nid) {
-  $address = db_query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", array(':nid' => $nid))->fetchObject('UcAddress');
+  $address = db_query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", array(':nid' => $nid))->fetchObject('Drupal\uc_store\UcAddress');
 
   if (empty($address)) {
     $address = variable_get('uc_quote_store_default_address', new UcAddress());
