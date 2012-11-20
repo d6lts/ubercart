@@ -836,11 +836,11 @@ function uc_product_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  *
  * @see uc_product_save_continue_submit()
  */
-function uc_product_form_alter(&$form, &$form_state, $form_id) {
+function uc_product_form_node_form_alter(&$form, &$form_state, $form_id) {
   // Add a button to product node forms to continue editing after saving.
   if (uc_product_is_product_form($form)) {
     $form['actions']['save_continue'] = array(

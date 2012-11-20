@@ -45,13 +45,13 @@ function uc_usps_theme() {
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_form_BASE_FORM_ID_alter().
  *
  * Adds package type to products.
  *
  * @see uc_product_form()
  */
-function uc_usps_form_alter(&$form, &$form_state, $form_id) {
+function uc_usps_form_node_form_alter(&$form, &$form_state, $form_id) {
   if (uc_product_is_product_form($form)) {
     $node = $form['#node'];
     $enabled = variable_get('uc_quote_enabled', array()) + array('usps' => FALSE, 'usps_intl' => FALSE);
