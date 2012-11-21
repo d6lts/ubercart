@@ -670,6 +670,10 @@ function uc_payment_method_credit($op, &$arg1, $silent = FALSE) {
       }
 
     case 'edit-process':
+      if (!variable_get('uc_credit_debug', FALSE)) {
+        return;
+      }
+
       $cache = uc_credit_cache('load');
 
       $changes['payment_details']['cc_type'] = check_plain($_POST['cc_type']);
