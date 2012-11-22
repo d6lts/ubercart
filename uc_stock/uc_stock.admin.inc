@@ -37,7 +37,6 @@ function uc_stock_settings_form() {
     '#description' => t('The message the user receives when the stock level reaches its threshold value (uses <a href="!token-help-page">global, order, product and stock tokens</a>).', array('!token-help-page' => url('admin/store/help/tokens'))),
     '#rows' => 10,
   );
-  $form['uc_stock_threshold_notification_format'] = filter_form(variable_get('uc_stock_threshold_notification_format', FILTER_FORMAT_DEFAULT), NULL, array('uc_stock_threshold_notification_format'));
 
   return system_settings_form($form);
 }
