@@ -324,7 +324,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $this->assertText('No options for this attribute have been added yet.');
 
     $this->drupalGet('admin/store/products/attributes');
-    $this->assertRaw('<td class="active">' . $edit['name'] . '</td>', t('Verify name field.'));
+    $this->assertRaw('<td>' . $edit['name'] . '</td>', t('Verify name field.'));
     $this->assertRaw('<td>' . $edit['label'] . '</td>', t('Verify label field.'));
     $this->assertRaw('<td>' . ($edit['required'] ? t('Yes') : t('No')) . '</td>', t('Verify required field.'));
     $this->assertRaw('<td>' . $edit['ordering'] . '</td>', t('Verify ordering field.'));
