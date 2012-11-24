@@ -9,20 +9,9 @@
  * Pulls the get_quote_from_* triggers and assembles their returned data.
  */
 function uc_quote_assemble_quotes($order) {
-  $products = $order->products;
-  foreach ($products as $id => $product) {
-    $node = (array) node_load($product->nid);
-    foreach ($node as $key => $value) {
-      if (!isset($product->$key)) {
-        $product->$key = $value;
-      }
-    }
-    $order->products[$id] = $product;
-  }
-
   $shipping_types = array();
-  foreach ($products as $product) {
-    $shipping_types[] =  uc_product_get_shipping_type($product);
+  foreach ($order->products as $product) {
+    $shipping_types[] = uc_product_get_shipping_type($product);
   }
 
   $shipping_types = array_unique($shipping_types);
@@ -76,11 +65,9 @@ function uc_quote_assemble_quotes($order) {
  */
 function uc_quote_action_get_quote($order, $method) {
   $details = array();
-  foreach ($order as $key => $value) {
-    if (substr($key, 0, 9) == 'delivery_') {
-      $field = substr($key, 9);
-      $details[$field] = $value;
-    }
+  $fields = array('first_name', 'last_name', 'phone', 'company', 'street1', 'street2', 'city', 'zone', 'postal_code', 'country');
+  foreach ($fields as $field) {
+    $details[$field] = $order->{'delivery_' . $field};
   }
   ob_start();
   // Load include file containing quote callback, if there is one
@@ -92,15 +79,7 @@ function uc_quote_action_get_quote($order, $method) {
   }
 
   if (function_exists($method['quote']['callback'])) {
-    // This feels wrong, but it's the only way I can ensure that shipping
-    // methods won't mess up the products in their methods.
-    $products = array();
-    foreach ($order->products as $key => $item) {
-      if (uc_order_product_is_shippable($item)) {
-        $products[$key] = clone $item;
-      }
-    }
-    $quote_data = call_user_func($method['quote']['callback'], $products, $details, $method);
+    $quote_data = call_user_func($method['quote']['callback'], $order->products, $details, $method);
   }
   $messages = ob_get_contents();
   ob_end_clean();
