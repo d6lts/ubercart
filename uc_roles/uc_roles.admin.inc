@@ -38,7 +38,7 @@ function uc_roles_expiration($form, &$form_state) {
   // Stick the expirations into the form.
   foreach ($result as $row) {
     $account = user_load($row->uid);
-    $name = check_plain(format_username($account));
+    $name = check_plain(user_format_name($account));
     $form['name'][$row->uid . ' ' . $row->rid] = array(
       '#theme' => 'username',
       '#account' => $account,
@@ -103,7 +103,7 @@ function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
 
     $role_name = _uc_roles_get_name($rid);
 
-    $form['user'] = array('#type' => 'value', '#value' => format_username($account));
+    $form['user'] = array('#type' => 'value', '#value' => user_format_name($account));
     $form['uid'] = array('#type' => 'value', '#value' => $account->uid);
     $form['role'] = array('#type' => 'value', '#value' => $role_name);
     $form['rid'] = array('#type' => 'value', '#value' => $rid);
@@ -113,7 +113,7 @@ function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
       t('Delete expiration of %role_name role for the user !user?', array(
         '!user' => theme('username', array(
           'account' => $account,
-          'name' => check_plain(format_username($account)),
+          'name' => check_plain(user_format_name($account)),
           'link_path' => 'user/' . $account->uid,
         )),
         '%role_name' => $role_name,
@@ -122,7 +122,7 @@ function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
       t('Deleting the expiration will give !user privileges set by the %role_name role indefinitely unless manually removed.', array(
         '!user' => theme('username', array(
           'account' => $account,
-          'name' => check_plain(format_username($account)),
+          'name' => check_plain(user_format_name($account)),
           'link_path' => 'user/' . $account->uid,
         )),
         '%role_name' => $role_name,

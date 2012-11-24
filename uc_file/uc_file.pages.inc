@@ -251,7 +251,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
   $request_cache = cache_get('uc_file_' . $ip);
   $requests = ($request_cache) ? $request_cache->data + 1 : 1;
 
-  $message_user = ($user->uid) ? t('The user %username', array('%username' => format_username($user))) : t('The IP address %ip', array('%ip' => $ip));
+  $message_user = ($user->uid) ? t('The user %username', array('%username' => user_format_name($user))) : t('The IP address %ip', array('%ip' => $ip));
 
   if ($requests > UC_FILE_REQUEST_LIMIT) {
     return UC_FILE_ERROR_TOO_MANY_BOGUS_REQUESTS;
