@@ -25,6 +25,11 @@ class UbercartAttributeTest extends UbercartTestBase {
     );
   }
 
+  public function setUp() {
+    parent::setUp();
+    $this->drupalLogin($this->adminUser);
+  }
+
   /**
    * Tests the basic attribute API.
    */
