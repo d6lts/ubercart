@@ -25,7 +25,9 @@ function uc_roles_expiration($form, &$form_state) {
   $header = _uc_roles_expiration_header();
 
   // Grab all the info to build the pager.
-  $query = db_select('uc_roles_expirations', 'e')->extend('PagerDefault')->extend('TableSort')
+  $query = db_select('uc_roles_expirations', 'e')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('Drupal\Core\Database\Query\TableSortExtender')
     ->fields('e')
     ->limit(50)
     ->orderByHeader($header);

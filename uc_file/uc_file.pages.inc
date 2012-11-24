@@ -93,7 +93,9 @@ function uc_file_user_downloads($account) {
 
   $files = array();
 
-  $query = db_select('uc_file_users', 'u')->extend('PagerDefault')->extend('TableSort')
+  $query = db_select('uc_file_users', 'u')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('Drupal\Core\Database\Query\TableSortExtender')
     ->condition('uid', $account->uid)
     ->orderByHeader($header)
     ->limit(UC_FILE_PAGER_SIZE);

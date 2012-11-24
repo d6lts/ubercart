@@ -65,7 +65,9 @@ function uc_stock_report() {
 
   $csv_rows[] = array(t('SKU'), t('Product'), t('Stock'), t('Threshold'));
 
-  $query = db_select('uc_product_stock', 's')->extend('PagerDefault')->extend('TableSort')
+  $query = db_select('uc_product_stock', 's')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('Drupal\Core\Database\Query\TableSortExtender')
     ->orderByHeader($header)
     ->limit($page_size)
     ->fields('s', array(

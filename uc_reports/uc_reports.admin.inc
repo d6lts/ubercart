@@ -31,7 +31,9 @@ function uc_reports_customers() {
   );
   $csv_rows[] = array(t('#'), t('Customer'), t('Username'), t('Orders'), t('Products'), t('Total'), t('Average'));
 
-  $query = db_select('users', 'u', array('fetch' => PDO::FETCH_ASSOC))->extend('PagerDefault')->extend('TableSort');
+  $query = db_select('users', 'u', array('fetch' => PDO::FETCH_ASSOC))
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('TableSort');
   $query->leftJoin('uc_orders', 'ou', 'u.uid = ou.uid');
   $query->fields('u', array(
       'uid',
@@ -143,7 +145,7 @@ function uc_reports_products() {
   }
 
   $query = db_select('node', 'n', array('fetch' => PDO::FETCH_ASSOC))
-    ->extend('PagerDefault')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('TableSort')
     ->limit($page_size);
 
@@ -354,7 +356,7 @@ function uc_reports_products_custom() {
   }
 
   $query = db_select('node', 'n', array('fetch' => PDO::FETCH_ASSOC))
-    ->extend('PagerDefault')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('TableSort')
     ->limit($page_size)
     ->fields('n', array(

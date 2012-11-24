@@ -21,7 +21,9 @@ function uc_attribute_admin() {
 
   $display_types = _uc_attribute_display_types();
 
-  $query = db_select('uc_attributes', 'a')->extend('PagerDefault')->extend('TableSort')
+  $query = db_select('uc_attributes', 'a')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('Drupal\Core\Database\Query\TableSortExtender')
     ->fields('a', array('aid', 'name', 'label', 'required', 'ordering', 'display'))
     ->orderByHeader($header)
     ->limit(30);
@@ -1226,7 +1228,8 @@ function uc_product_adjustments_form($form, &$form_state, $node) {
   $full_attributes = array();
   $values = array();
 
-  $query = db_select('uc_product_options', "po$i")->extend('PagerDefault')
+  $query = db_select('uc_product_options', "po$i")
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->limit(20);
 
   $attribute_ids = array();

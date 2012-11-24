@@ -57,7 +57,9 @@ function uc_file_admin_files_form_show_files($form, &$form_state) {
   );
 
   // Create pager.
-  $query = db_select('uc_files', 'f')->extend('PagerDefault')->extend('TableSort')
+  $query = db_select('uc_files', 'f')
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('Drupal\Core\Database\Query\TableSortExtender')
     ->orderByHeader($header)
     ->limit(UC_FILE_PAGER_SIZE);
   $query->leftJoin('uc_file_products', 'fp', 'f.fid = fp.fid');

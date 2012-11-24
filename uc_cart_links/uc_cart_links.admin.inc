@@ -63,7 +63,9 @@ function uc_cart_links_report() {
     array('data' => t('Last click'), 'field' => 'last_click', 'sort' => 'desc'),
   );
 
-  $query = db_select('uc_cart_link_clicks')->extend('PagerDefault')->extend('TableSort')
+  $query = db_select('uc_cart_link_clicks')#
+    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+    ->extend('Drupal\Core\Database\Query\TableSortExtender')
     ->fields('uc_cart_link_clicks')
     ->limit(25)
     ->element(1)
