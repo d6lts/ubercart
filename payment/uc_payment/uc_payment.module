@@ -404,13 +404,15 @@ function theme_uc_payment_totals($order) {
 }
 
 function uc_payment_get_details($method_id, $view = 'cart', $order = NULL) {
+  global $user;
+
   if ($view == 'cart') {
-    if (!($order = uc_order_load($_SESSION['cart_order']))) {
+    if (!isset($_SESSION['cart_order']) || !($order = uc_order_load($_SESSION['cart_order']))) {
       $_SESSION['cart_order'] = NULL;
       $order = NULL;
     }
 
-    if ($order->order_status != 0 || ($user->uid && $user->uid != $order->uid)) {
+    if (!empty($order) && ($order->order_status != 0 || (!empty($user->uid) && $user->uid != $order->uid))) {
       $order = NULL;
     }
   }
