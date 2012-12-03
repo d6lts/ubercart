@@ -11,7 +11,7 @@ use Drupal\Core\Template\Attribute;
  * Displays the customer report.
  */
 function uc_reports_customers() {
-  $address_preference = variable_get('uc_customer_list_address', 'billing');
+  $address_preference = config('uc_store.settings')->get('customer_address');
   $first_name = ($address_preference == 'billing') ? 'billing_first_name' : 'delivery_first_name';
   $last_name = ($address_preference == 'billing') ? 'billing_last_name' : 'delivery_last_name';
   $page = isset($_GET['page']) ? intval($_GET['page']) : 0;

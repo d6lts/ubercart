@@ -163,7 +163,7 @@ function uc_usps_admin_settings($form, &$form_state) {
     '#options' => array(
       'percentage' => t('Percentage (%)'),
       'multiplier' => t('Multiplier (×)'),
-      'currency' => t('Addition (!currency)', array('!currency' => variable_get('uc_currency_sign', '$'))),
+      'currency' => t('Addition (!currency)', array('!currency' => config('uc_store.settings')->get('currency.symbol'))),
     ),
   );
   $form['uc_usps_markups']['uc_usps_rate_markup'] = array(

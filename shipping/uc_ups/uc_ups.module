@@ -348,19 +348,6 @@ function uc_ups_access_request() {
  *   RatingServiceSelectionRequest XML document to send to UPS.
  */
 function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
-  $store['name'] = uc_store_name();
-  $store['owner'] = variable_get('uc_store_owner', NULL);
-  $store['email'] = uc_store_email();
-  $store['email_from'] = uc_store_email();
-  $store['phone'] = variable_get('uc_store_phone', NULL);
-  $store['fax'] = variable_get('uc_store_fax', NULL);
-  $store['street1'] = variable_get('uc_store_street1', NULL);
-  $store['street2'] = variable_get('uc_store_street2', NULL);
-  $store['city'] = variable_get('uc_store_city', NULL);
-  $store['zone'] = variable_get('uc_store_zone', NULL);
-  $store['postal_code'] = variable_get('uc_store_postal_code', NULL);
-  $store['country'] = variable_get('uc_store_country', 840);
-
   $account = variable_get('uc_ups_shipper_number', '');
   $ua = explode(' ', $_SERVER['HTTP_USER_AGENT']);
   $user_agent = $ua[0];
@@ -370,10 +357,11 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
 
   $pkg_types = _uc_ups_pkg_types();
 
-  $shipper_zone = uc_get_zone_code($store['zone']);
-  $shipper_country = uc_get_country_data(array('country_id' => $store['country']));
+  $store_config = config('uc_store.settings');
+  $shipper_zone = uc_get_zone_code($store_config->get('address.zone'));
+  $shipper_country = uc_get_country_data(array('country_id' => $store_config->get('address.country')));
   $shipper_country = $shipper_country[0]['country_iso_code_2'];
-  $shipper_zip = $store['postal_code'];
+  $shipper_zip = $store_config->get('address.postal_code');
   $shipto_zone = uc_get_zone_code($destination->zone);
   $shipto_country = uc_get_country_data(array('country_id' => $destination->country));
   $shipto_country = $shipto_country[0]['country_iso_code_2'];
@@ -383,7 +371,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
   $shipfrom_country = $shipfrom_country[0]['country_iso_code_2'];
   $shipfrom_zip = $origin->postal_code;
 
-  $ups_units = variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in'));
+  $ups_units = variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length'));
   switch ($ups_units) {
     case 'in':
       $units = 'LBS';
@@ -401,7 +389,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
 
     // Determine length conversion factor and weight conversion factor
     // for this shipment.
-    $length_factor = uc_length_conversion($package->length_units, variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in')));
+    $length_factor = uc_length_conversion($package->length_units, variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length')));
     switch ($ups_units) {
       case 'in':
         $weight_factor = uc_weight_conversion($package->weight_units, 'lb');
@@ -426,7 +414,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
         }
         $package_schema .= "<Dimensions>";
         $package_schema .=   "<UnitOfMeasurement>";
-        $package_schema .=     "<Code>" . strtoupper(variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in'))) . "</Code>";
+        $package_schema .=     "<Code>" . strtoupper(variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length'))) . "</Code>";
         $package_schema .=   "</UnitOfMeasurement>";
         $package_schema .=   "<Length>" . number_format($package->length * $length_factor, 2, '.', '') . "</Length>";
         $package_schema .=   "<Width>" . number_format($package->width * $length_factor, 2, '.', '') . "</Width>";
@@ -452,7 +440,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
       if (variable_get('uc_ups_insurance', TRUE)) {
         $package_schema .= "<PackageServiceOptions>";
         $package_schema .=   "<InsuredValue>";
-        $package_schema .=     "<CurrencyCode>" . variable_get('uc_currency_code', 'USD') . "</CurrencyCode>";
+        $package_schema .=     "<CurrencyCode>" . config('uc_store.settings')->get('currency.code') . "</CurrencyCode>";
         $package_schema .=     "<MonetaryValue>" . $package->price . "</MonetaryValue>";
         $package_schema .=   "</InsuredValue>";
         $package_schema .= "</PackageServiceOptions>";
@@ -482,7 +470,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
     <Shipper>
       <ShipperNumber>" . variable_get('uc_ups_shipper_number', '') . "</ShipperNumber>
       <Address>
-        <City>" . $store['city'] . "</City>
+        <City>" . $store_config->get('address.city') . "</City>
         <StateProvinceCode>$shipper_zone</StateProvinceCode>
         <PostalCode>$shipper_zip</PostalCode>
         <CountryCode>$shipper_country</CountryCode>
@@ -746,7 +734,7 @@ function uc_ups_quote($products, $details, $method) {
         if (isset($response->RatedShipment->NegotiatedRates)) {
           $charge = $response->RatedShipment->NegotiatedRates->NetSummaryCharges->GrandTotal;
         }
-        if (!isset($charge->CurrencyCode) || (string)$charge->CurrencyCode == variable_get('uc_currency_code', "USD")) {
+        if (!isset($charge->CurrencyCode) || (string)$charge->CurrencyCode == config('uc_store.settings')->get('currency.code')) {
           // Markup rate before customer sees it.
           if (!isset($quotes[$ups_service]['rate'])) {
             $quotes[$ups_service]['rate'] = 0;

@@ -99,9 +99,7 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
           'oz' => t('Ounces'),
           'g'  => t('Grams'),
         ),
-        '#default_value' => isset($package->weight_units) ?
-                            $package->weight_units        :
-                            variable_get('uc_weight_unit', 'lb'),
+        '#default_value' => isset($package->weight_units) ? $package->weight_units : config('uc_store.settings')->get('units.weight'),
       );
       $pkg_form['dimensions'] = array(
         '#type'          => 'container',
@@ -136,9 +134,7 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
           'cm' => t('Centimeters'),
           'mm' => t('Millimeters'),
         ),
-        '#default_value' => isset($package->length_units) ?
-                            $package->length_units        :
-                            variable_get('uc_length_unit', 'in'),
+        '#default_value' => isset($package->length_units) ? $package->length_units : config('uc_store.settings')->get('units.length'),
       );
 
       $form['packages'][$id] = $pkg_form;
@@ -354,19 +350,6 @@ function uc_ups_fulfill_order_submit($form, &$form_state) {
  *   ShipConfirm XML document to send to UPS.
  */
 function uc_ups_shipment_request($packages, $origin, $destination, $ups_service) {
-  $store['name'] = uc_store_name();
-  $store['owner'] = variable_get('uc_store_owner', NULL);
-  $store['email'] = uc_store_email();
-  $store['email_from'] = uc_store_email();
-  $store['phone'] = variable_get('uc_store_phone', NULL);
-  $store['fax'] = variable_get('uc_store_fax', NULL);
-  $store['street1'] = variable_get('uc_store_street1', NULL);
-  $store['street2'] = variable_get('uc_store_street2', NULL);
-  $store['city'] = variable_get('uc_store_city', NULL);
-  $store['zone'] = variable_get('uc_store_zone', NULL);
-  $store['postal_code'] = variable_get('uc_store_postal_code', NULL);
-  $store['country'] = variable_get('uc_store_country', 840);
-
   $account = variable_get('uc_ups_shipper_number', '');
   $ua = explode(' ', $_SERVER['HTTP_USER_AGENT']);
   $user_agent = $ua[0];
@@ -376,10 +359,11 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
 
   $pkg_types = _uc_ups_pkg_types();
 
-  $shipper_zone = uc_get_zone_code($store['zone']);
-  $shipper_country = uc_get_country_data(array('country_id' => $store['country']));
+  $store_config = config('uc_store.settings');
+  $shipper_zone = uc_get_zone_code($store_config->get('address.zone'));
+  $shipper_country = uc_get_country_data(array('country_id' => $store_config->get('address.country')));
   $shipper_country = $shipper_country[0]['country_iso_code_2'];
-  $shipper_zip = $store['postal_code'];
+  $shipper_zip = $store_config->get('address.postal_code');
   $shipto_zone = uc_get_zone_code($destination->zone);
   $shipto_country = uc_get_country_data(array('country_id' => $destination->country));
   $shipto_country = $shipto_country[0]['country_iso_code_2'];
@@ -389,13 +373,13 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
   $shipfrom_country = $shipfrom_country[0]['country_iso_code_2'];
   $shipfrom_zip = $origin->postal_code;
 
-  $ups_units = variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in'));
+  $ups_units = variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length'));
 
   $package_schema = '';
   foreach ($packages as $package) {
     // Determine length conversion factor and weight conversion factor
     // for this shipment
-    $length_factor = uc_length_conversion($package->length_units, variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in')));
+    $length_factor = uc_length_conversion($package->length_units, variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length')));
     switch ($ups_units) {
       case 'in':
         $weight_factor = uc_weight_conversion($package->weight_units, 'lb');
@@ -422,7 +406,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
         }
         $package_schema .= "<Dimensions>";
         $package_schema .=   "<UnitOfMeasurement>";
-        $package_schema .=     "<Code>" . strtoupper(variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in'))) . "</Code>";
+        $package_schema .=     "<Code>" . strtoupper(variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length'))) . "</Code>";
         $package_schema .=   "</UnitOfMeasurement>";
         $package_schema .=   "<Length>" . (floor($package->length * $length_factor) + 1) . "</Length>";
         $package_schema .=   "<Width>" . (floor($package->width * $length_factor) + 1) . "</Width>";
@@ -443,7 +427,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
       }
       $package_schema .=   "<PackageServiceOptions>";
       $package_schema .=     "<InsuredValue>";
-      $package_schema .=       "<CurrencyCode>" . variable_get('uc_currency_code', 'USD') . "</CurrencyCode>";
+      $package_schema .=       "<CurrencyCode>" . $store_config->get('currency.code') . "</CurrencyCode>";
       $package_schema .=       "<MonetaryValue>" . number_format($package->value, 2, '.', '') . "</MonetaryValue>";
       $package_schema .=     "</InsuredValue>";
       $package_schema .=   "</PackageServiceOptions>";
@@ -464,23 +448,23 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
   </Request>
   <Shipment>";
     $schema .= "<Shipper>";
-      $schema .= "<Name>" . $store['name'] . "</Name>";
+      $schema .= "<Name>" . $store_config->get('name') . "</Name>";
       $schema .= "<ShipperNumber>" . variable_get('uc_ups_shipper_number', '') . "</ShipperNumber>";
-      if ($store['phone']) {
-        $schema .= "<PhoneNumber>" . $store['phone'] . "</PhoneNumber>";
+      if ($phone = $store_config->get('phone')) {
+        $schema .= "<PhoneNumber>" . $phone . "</PhoneNumber>";
       }
-      if ($store['fax']) {
-        $schema .= "<FaxNumber>" . $store['fax'] . "</FaxNumber>";
+      if ($fax = $store_config->get('fax')) {
+        $schema .= "<FaxNumber>" . $fax . "</FaxNumber>";
       }
-      if ($store['email']) {
-        $schema .= "<EMailAddress>" . $store['email'] . "</EMailAddress>";
+      if ($mail = uc_store_email()) {
+        $schema .= "<EMailAddress>" . $mail . "</EMailAddress>";
       }
       $schema .= "<Address>";
-        $schema .= "<AddressLine1>" . $store['street1'] . "</AddressLine1>";
-        if ($store['street2']) {
-          $schema .= "<AddressLine2>" . $store['street2'] . "</AddressLine2>";
+        $schema .= "<AddressLine1>" . $store_config->get('address.street1') . "</AddressLine1>";
+        if ($street2 = $store_config->get('address.street2')) {
+          $schema .= "<AddressLine2>" . $street2 . "</AddressLine2>";
         }
-        $schema .= "<City>" . $store['city'] . "</City>";
+        $schema .= "<City>" . $store_config->get('address.city') . "</City>";
         $schema .= "<StateProvinceCode>$shipper_zone</StateProvinceCode>";
         $schema .= "<PostalCode>$shipper_zip</PostalCode>";
         $schema .= "<CountryCode>$shipper_country</CountryCode>";

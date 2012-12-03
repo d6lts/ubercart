@@ -116,7 +116,7 @@ function uc_google_checkout_merchant_calculation() {
     foreach ($options as $accsrl => $data) {
       $results .= '<result shipping-name="' . check_plain($methods[$method_id]['quote']['accessorials'][$accsrl]) . '" address-id="' . $address['id'] . '">';
 
-      $results .= '<shipping-rate currency="' . variable_get('uc_currency_code', 'USD') . '">' . $data['rate'] . '</shipping-rate>';
+      $results .= '<shipping-rate currency="' . config('uc_store.settings')->get('currency.code') . '">' . $data['rate'] . '</shipping-rate>';
       $results .= '<shippable>true</shippable>';
 
       $results .= '</result>';

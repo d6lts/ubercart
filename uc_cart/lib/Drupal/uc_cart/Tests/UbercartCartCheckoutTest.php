@@ -477,7 +477,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     );
 
     // Build the panes.
-    $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => variable_get('uc_store_country', 840)))->fetchField();
+    $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => config('uc_store.settings')->get('address.country')))->fetchField();
     $oldname = $this->randomName(10);
     $edit = array(
       'panes[delivery][delivery_first_name]' => $oldname,

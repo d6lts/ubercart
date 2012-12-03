@@ -254,8 +254,9 @@ function uc_store_element_info() {
     '#hidden' => FALSE,
   );
 
-  $sign_flag = variable_get('uc_sign_after_amount', FALSE);
-  $currency_sign = variable_get('uc_currency_sign', '$');
+  $config = config('uc_store.settings')->get('currency');
+  $sign_flag = $config['symbol_after'];
+  $currency_sign = $config['symbol'];
 
   $types['uc_price'] = array(
     '#input' => TRUE,
@@ -607,7 +608,7 @@ function uc_store_date_format_types() {
  * Implements hook_page_alter().
  */
 function uc_store_page_alter(&$page) {
-  $id = variable_get('uc_footer_message', 0);
+  $id = config('uc_store.settings')->get('footer_message');
 
   // Exit if the store footer is turned off.
   if ($id === 'none') {
@@ -774,16 +775,17 @@ function uc_currency_format($value, $sign = NULL, $thou = NULL, $dec = NULL) {
 
   $output = '';
 
-  $sign_after = variable_get('uc_sign_after_amount', FALSE);
-  $prec = variable_get('uc_currency_prec', 2);
+  $config = config('uc_store.settings')->get('currency');
+  $sign_after = $config['symbol_after'];
+  $prec = $config['precision'];
   if (is_null($sign)) {
-    $sign = variable_get('uc_currency_sign', '$');
+    $sign = $config['symbol'];
   }
   if (is_null($thou)) {
-    $thou = variable_get('uc_currency_thou', ',');
+    $thou = $config['thousands_marker'];
   }
   if (is_null($dec)) {
-    $dec = variable_get('uc_currency_dec', '.');
+    $dec = $config['decimal_marker'];
   }
 
   // If the value is significantly less than the minimum precision, zero it.
@@ -829,7 +831,7 @@ function uc_weight_format($value, $unit = NULL) {
   $vars = array('!value' => $value);
 
   if (is_null($unit)) {
-    $unit = variable_get('uc_weight_unit', 'lb');
+    $unit = config('uc_store.settings')->get('units.weight');
   }
 
   $defaults = array(
@@ -854,7 +856,7 @@ function uc_weight_format($value, $unit = NULL) {
  */
 function uc_weight_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $to_units = variable_get('uc_weight_unit', 'lb');
+    $to_units = config('uc_store.settings')->get('units.weight');
   }
   $constant = strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
@@ -881,7 +883,7 @@ function uc_length_format($value, $unit = NULL) {
   $vars = array('!value' => $value);
 
   if (is_null($unit)) {
-    $unit = variable_get('uc_length_unit', 'in');
+    $unit = config('uc_store.settings')->get('units.length');
   }
 
   $defaults = array(
@@ -906,7 +908,7 @@ function uc_length_format($value, $unit = NULL) {
  */
 function uc_length_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $to_units = variable_get('uc_length_unit', 'in');
+    $to_units = config('uc_store.settings')->get('units.length');
   }
   $constant = strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
@@ -1452,20 +1454,21 @@ function uc_get_message($message_id) {
 }
 
 /**
- * Returns the store name if set, or the site name otherwise.
+ * Returns the store name.
  */
 function uc_store_name() {
-  return variable_get('uc_store_name', config('system.site')->get('name'));
+  return config('uc_store.settings')->get('name');
 }
 
 /**
  * Returns the user-defined store address.
  */
 function uc_store_address() {
-  $store_address = uc_address_format(NULL, NULL, uc_store_name(),
-    variable_get('uc_store_street1', NULL), variable_get('uc_store_street2', NULL),
-    variable_get('uc_store_city', NULL), variable_get('uc_store_zone', NULL),
-    variable_get('uc_store_postal_code', NULL), uc_store_default_country());
+  $config = config('uc_store.settings');
+  $store_address = uc_address_format(NULL, NULL, $config->get('name'),
+    $config->get('address.street1'), $config->get('address.street2'),
+    $config->get('address.city'), $config->get('address.zone'),
+    $config->get('address.postal_code'), $config->get('address.country'));
 
   return $store_address;
 }
@@ -1474,7 +1477,7 @@ function uc_store_address() {
  * Returns the store e-mail address if set, otherwise the site email address.
  */
 function uc_store_email() {
-  $email_from = variable_get('uc_store_email', '');
+  $email_from = config('uc_store.settings')->get('mail');
   if (empty($email_from)) {
     $email_from = config('system.site')->get('mail');
   }
@@ -1500,7 +1503,7 @@ function uc_store_email_from() {
 
   // Add the store name to the e-mail "From" line.
   // Must be optional to prevent server conflicts.
-  if (variable_get('uc_store_email_include_name', TRUE)) {
+  if (config('uc_store.settings')->get('mail_include_name')) {
     $email_from = uc_store_rfc2822_display_name(uc_store_name()) . ' <' . $email_from . '>';
   }
 
@@ -1593,7 +1596,7 @@ function uc_store_default_country() {
     return $default;
   }
 
-  $default = variable_get('uc_store_country', 840);
+  $default = config('uc_store.settings')->get('address.country');
 
   $result = db_query("SELECT COUNT(*) FROM {uc_countries} WHERE country_id = :id AND version > :version", array(':id' => $default, ':version' => 0))->fetchField();
   if ($result == 0) {
@@ -1706,7 +1709,7 @@ function uc_store_mail_recipient_langcode($address) {
  */
 function uc_store_format_price_field_value($price) {
   $exact = rtrim(number_format($price, 6, '.', ''), '0');
-  $round = number_format($price, variable_get('uc_currency_prec', 2), '.', '');
+  $round = number_format($price, config('uc_store.settings')->get('currency.precision'), '.', '');
 
   if ($exact == rtrim($round, '0')) {
     return $round;

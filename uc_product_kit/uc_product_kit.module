@@ -130,7 +130,7 @@ function uc_product_kit_insert(&$node) {
   $obj->cost = 0;
   $obj->sell_price = 0;
   $obj->weight = 0;
-  $obj->weight_units = variable_get('uc_weight_unit', 'lb');
+  $obj->weight_units = config('uc_store.settings')->get('units.weight');
   $obj->default_qty = $node->default_qty;
   $obj->ordering = $node->ordering;
   $obj->shippable = FALSE;
@@ -189,7 +189,7 @@ function uc_product_kit_update(&$node) {
   $obj->cost = 0;
   $obj->sell_price = 0;
   $obj->weight = 0;
-  $obj->weight_units = variable_get('uc_weight_unit', 'lb');
+  $obj->weight_units = config('uc_store.settings')->get('units.weight');
   $obj->default_qty = $node->default_qty;
   $obj->ordering = $node->ordering;
   $obj->shippable = FALSE;

@@ -50,13 +50,11 @@ class UcAddress {
    * Constructor.
    *
    * @param $country
-   *   ISO 3166-1 3-digit numeric country code.  Defaults to the value of the
-   *   uc_store_country system variable if that variable is set, or 840
-   *   (United States of America) if it is not set.
+   *   ISO 3166-1 3-digit numeric country code.  Defaults to the store country.
    */
   public function __construct($country = NULL) {
     if (!$this->country) {
-      $this->country = isset($country) ? $country : variable_get('uc_store_country', 840);
+      $this->country = isset($country) ? $country : config('uc_store.settings')->get('address.country');
     }
   }
 

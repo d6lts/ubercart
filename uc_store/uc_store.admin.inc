@@ -235,6 +235,8 @@ function uc_store_address_fields_form_submit($form, &$form_state) {
  * @ingroup forms
  */
 function uc_store_settings_form($form, &$form_state) {
+  $config = config('uc_store.settings');
+
   $form['store'] = array('#type' => 'vertical_tabs');
 
   $form['basic'] = array(
@@ -250,14 +252,12 @@ function uc_store_settings_form($form, &$form_state) {
   $form['basic']['uc_store_owner'] = array(
     '#type' => 'textfield',
     '#title' => t('Store owner'),
-    '#description' => variable_get('uc_store_owner', ''),
+    '#description' => $config->get('owner'),
   );
   $form['basic']['uc_store_email'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
-    '#description' => NULL,
     '#size' => 32,
-    '#maxlength' => 128,
     '#required' => TRUE,
     '#default_value' => uc_store_email(),
   );
@@ -265,23 +265,23 @@ function uc_store_settings_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Include the store name in the "From" line of store e-mails.'),
     '#description' => t('May not be available on all server configurations. Turn off if this causes problems.'),
-    '#default_value' => variable_get('uc_store_email_include_name', TRUE),
+    '#default_value' => $config->get('mail_include_name'),
   );
   $form['basic']['uc_store_phone'] = array(
     '#type' => 'textfield',
     '#title' => t('Phone number'),
-    '#default_value' => variable_get('uc_store_phone', ''),
+    '#default_value' => $config->get('phone'),
   );
   $form['basic']['uc_store_fax'] = array(
     '#type' => 'textfield',
     '#title' => t('Fax number'),
-    '#default_value' => variable_get('uc_store_fax', ''),
+    '#default_value' => $config->get('fax'),
   );
   $form['basic']['uc_store_help_page'] = array(
     '#type' => 'textfield',
     '#title' => t('Store help page'),
     '#description' => t('The Drupal page for the store help link.'),
-    '#default_value' => variable_get('uc_store_help_page', ''),
+    '#default_value' => $config->get('help_page'),
     '#size' => 32,
     '#field_prefix' => url(NULL, array('absolute' => TRUE)),
   );
@@ -294,12 +294,12 @@ function uc_store_settings_form($form, &$form_state) {
   $form['address']['address'] = array(
     '#type' => 'uc_address',
     '#default_value' => array(
-      'uc_store_street1' => variable_get('uc_store_street1', ''),
-      'uc_store_street2' => variable_get('uc_store_street2', ''),
-      'uc_store_city' => variable_get('uc_store_city', ''),
-      'uc_store_zone' => variable_get('uc_store_zone', 0),
-      'uc_store_country' => isset($form_state['values']) ? $form_state['values']['uc_store_country'] : uc_store_default_country(),
-      'uc_store_postal_code' => variable_get('uc_store_postal_code', ''),
+      'uc_store_street1' => $config->get('address.street1'),
+      'uc_store_street2' => $config->get('address.street2'),
+      'uc_store_city' => $config->get('address.city'),
+      'uc_store_zone' => $config->get('address.zone'),
+      'uc_store_country' => isset($form_state['values']) ? $form_state['values']['uc_store_country'] : $config->get('address.country'),
+      'uc_store_postal_code' => $config->get('address.postal_code'),
     ),
     '#required' => FALSE,
     '#key_prefix' => 'uc_store',
@@ -312,9 +312,9 @@ function uc_store_settings_form($form, &$form_state) {
   );
   $form['currency']['uc_currency_code'] = array(
     '#type' => 'textfield',
-    '#title' => t('Default currency'),
+    '#title' => t('Currency code'),
     '#description' => t('While not used directly in formatting, the currency code is used by other modules as the primary currency for your site.  Enter here your three character <a href="!url">ISO 4217</a> currency code.', array('!url' => 'http://en.wikipedia.org/wiki/ISO_4217#Active_codes')),
-    '#default_value' => variable_get('uc_currency_code', 'USD'),
+    '#default_value' => $config->get('currency.code'),
     '#maxlength' => 3,
     '#size' => 5,
   );
@@ -328,26 +328,26 @@ function uc_store_settings_form($form, &$form_state) {
   $form['currency']['uc_currency_sign'] = array(
     '#type' => 'textfield',
     '#title' => t('Currency sign'),
-    '#default_value' => variable_get('uc_currency_sign', '$'),
+    '#default_value' => $config->get('currency.symbol'),
     '#size' => 10,
     '#maxlength' => 10,
   );
   $form['currency']['uc_sign_after_amount'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display currency sign after amount.'),
-    '#default_value' => variable_get('uc_sign_after_amount', FALSE),
+    '#default_value' => $config->get('currency.symbol_after'),
   );
   $form['currency']['uc_currency_thou'] = array(
     '#type' => 'textfield',
     '#title' => t('Thousands marker'),
-    '#default_value' => variable_get('uc_currency_thou', ','),
+    '#default_value' => $config->get('currency.thousands_marker'),
     '#size' => 10,
     '#maxlength' => 10,
   );
   $form['currency']['uc_currency_dec'] = array(
     '#type' => 'textfield',
     '#title' => t('Decimal marker'),
-    '#default_value' => variable_get('uc_currency_dec', '.'),
+    '#default_value' => $config->get('currency.decimal_marker'),
     '#size' => 10,
     '#maxlength' => 10,
   );
@@ -355,7 +355,7 @@ function uc_store_settings_form($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Number of decimal places'),
     '#options' => drupal_map_assoc(array(0, 1, 2)),
-    '#default_value' => variable_get('uc_currency_prec', 2),
+    '#default_value' => $config->get('currency.precision'),
   );
 
   $form['weight'] = array(
@@ -373,7 +373,7 @@ function uc_store_settings_form($form, &$form_state) {
   $form['weight']['uc_weight_unit'] = array(
     '#type' => 'select',
     '#title' => t('Default unit of measurement'),
-    '#default_value' => variable_get('uc_weight_unit', 'lb'),
+    '#default_value' => $config->get('units.weight'),
     '#options' => $units,
   );
   foreach ($units as $unit => $name) {
@@ -399,7 +399,7 @@ function uc_store_settings_form($form, &$form_state) {
   $form['length']['uc_length_unit'] = array(
     '#type' => 'select',
     '#title' => t('Default unit of measurement'),
-    '#default_value' => variable_get('uc_length_unit', 'in'),
+    '#default_value' => $config->get('units.length'),
     '#options' => $units,
   );
   foreach ($units as $unit => $name) {
@@ -423,7 +423,7 @@ function uc_store_settings_form($form, &$form_state) {
       'billing' => t('Billing address'),
       'shipping' => t('Shipping address'),
     ),
-    '#default_value' => variable_get('uc_customer_list_address', 'billing'),
+    '#default_value' => $config->get('customer_address'),
   );
   $form['display']['uc_footer_message'] = array(
     '#type' => 'radios',
@@ -433,11 +433,11 @@ function uc_store_settings_form($form, &$form_state) {
       _uc_store_footer_options(),
       array('none' => t('(Do not display a message in the footer.)'))
     ),
-    '#default_value' => variable_get('uc_footer_message', 0),
+    '#default_value' => $config->get('footer_message'),
     '#weight' => 10,
   );
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
 }
 
 /**
@@ -450,6 +450,39 @@ function uc_store_settings_form_validate($form, &$form_state) {
   if (!valid_email_address($mail)) {
     form_set_error('uc_store_email', t('The e-mail address %mail is not valid.', array('%mail' => $mail)));
   }
+}
+
+/**
+ * Submission handler for store settings form.
+ *
+ * @see uc_store_settings_form()
+ */
+function uc_store_settings_form_submit($form, &$form_state) {
+  config('uc_store.settings')
+    ->set('name', $form_state['values']['uc_store_name'])
+    ->set('owner', $form_state['values']['uc_store_owner'])
+    ->set('mail', $form_state['values']['uc_store_email'])
+    ->set('mail_include_name', $form_state['values']['uc_store_email_include_name'])
+    ->set('phone', $form_state['values']['uc_store_phone'])
+    ->set('fax', $form_state['values']['uc_store_fax'])
+    ->set('help_page', $form_state['values']['uc_store_help_page'])
+    ->set('address.street1', $form_state['values']['address']['uc_store_street1'])
+    ->set('address.street2', $form_state['values']['address']['uc_store_street2'])
+    ->set('address.city', $form_state['values']['address']['uc_store_city'])
+    ->set('address.zone', $form_state['values']['address']['uc_store_zone'])
+    ->set('address.country', $form_state['values']['address']['uc_store_country'])
+    ->set('address.postal_code', $form_state['values']['address']['uc_store_postal_code'])
+    ->set('currency.code', $form_state['values']['uc_currency_code'])
+    ->set('currency.symbol', $form_state['values']['uc_currency_sign'])
+    ->set('currency.symbol_after', $form_state['values']['uc_sign_after_amount'])
+    ->set('currency.thousands_marker', $form_state['values']['uc_currency_thou'])
+    ->set('currency.decimal_marker', $form_state['values']['uc_currency_dec'])
+    ->set('currency.precision', $form_state['values']['uc_currency_prec'])
+    ->set('units.weight', $form_state['values']['uc_weight_unit'])
+    ->set('units.length', $form_state['values']['uc_length_unit'])
+    ->set('customer_address', $form_state['values']['uc_customer_list_address'])
+    ->set('footer_message', $form_state['values']['uc_footer_message'])
+    ->save();
 }
 
 /**
@@ -493,7 +526,7 @@ function uc_store_uc_store_status() {
   }
 
   // Check to see if the store e-mail address has been set.
-  if (variable_get('uc_store_email', '') == '') {
+  if (!config('uc_store.settings')->get('mail')) {
     $messages[] = array(
       'status' => 'error',
       'title'  => t('Store settings'),

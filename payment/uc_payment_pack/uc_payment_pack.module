@@ -270,17 +270,7 @@ function uc_payment_method_check($op, &$order, $form = NULL, &$form_state = NULL
 
       if (!variable_get('uc_check_mailing_street1', FALSE)) {
         $build['address'] = array(
-          '#markup' => uc_address_format(
-            uc_store_name(),
-            NULL,
-            variable_get('uc_store_company', ''),
-            variable_get('uc_store_street1', ''),
-            variable_get('uc_store_street2', ''),
-            variable_get('uc_store_city', ''),
-            variable_get('uc_store_zone', ''),
-            variable_get('uc_store_postal_code', ''),
-            variable_get('uc_store_country', 840)
-          ),
+          '#markup' => uc_store_address(),
           '#prefix' => '<p>',
           '#suffix' => '</p>',
         );
@@ -312,17 +302,7 @@ function uc_payment_method_check($op, &$order, $form = NULL, &$form_state = NULL
       if (!variable_get('uc_check_mailing_street1', FALSE)) {
         $review[] = array(
           'title' => t('Mail to'),
-          'data' => uc_address_format(
-            uc_store_name(),
-            NULL,
-            variable_get('uc_store_company', ''),
-            variable_get('uc_store_street1', ''),
-            variable_get('uc_store_street2', ''),
-            variable_get('uc_store_city', ''),
-            variable_get('uc_store_zone', ''),
-            variable_get('uc_store_postal_code', ''),
-            variable_get('uc_store_country', 840)
-          )
+          'data' => uc_store_address(),
         );
       }
       else {

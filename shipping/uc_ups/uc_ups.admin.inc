@@ -166,7 +166,7 @@ function uc_ups_admin_settings($form, &$form_state) {
   $form['uc_ups_quote_options']['uc_ups_unit_system'] = array(
     '#type' => 'select',
     '#title' => t('System of measurement'),
-    '#default_value' => variable_get('uc_ups_unit_system', variable_get('uc_length_unit', 'in')),
+    '#default_value' => variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length')),
     '#options' => array(
       'in' => t('British'),
       'cm' => t('Metric'),
@@ -199,7 +199,7 @@ function uc_ups_admin_settings($form, &$form_state) {
     '#options' => array(
       'percentage' => t('Percentage (%)'),
       'multiplier' => t('Multiplier (×)'),
-      'currency' => t('Addition (!currency)', array('!currency' => variable_get('uc_currency_sign', '$'))),
+      'currency' => t('Addition (!currency)', array('!currency' => config('uc_store.settings')->get('currency.symbol'))),
     ),
   );
 

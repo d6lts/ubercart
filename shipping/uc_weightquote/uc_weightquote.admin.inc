@@ -46,13 +46,14 @@ function uc_weightquote_admin_method_edit_form($form, &$form_state, $mid = 0) {
     '#default_value' => $method->base_rate,
     '#required' => TRUE,
   );
+  $unit = config('uc_store.settings')->get('units.weight');
   $form['product_rate'] = array(
     '#type' => 'uc_price',
-    '#title' => t('Default cost adjustment per !unit', array('!unit' => variable_get('uc_weight_unit', 'lb'))),
+    '#title' => t('Default cost adjustment per !unit', array('!unit' => $unit)),
     '#description' => t('The amount per weight unit to add to the shipping cost for an item.'),
     '#default_value' => $method->product_rate,
     '#required' => TRUE,
-    '#field_suffix' => t('per @unit', array('@unit' => variable_get('uc_weight_unit', 'lb'))),
+    '#field_suffix' => t('per @unit', array('@unit' => $unit)),
   );
 
   $form['actions'] = array('#type' => 'actions');

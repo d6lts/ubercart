@@ -1,0 +1,26 @@
+name: Ubercart
+owner: ''
+mail: ''
+mail_include_name: '1'
+phone: ''
+fax: ''
+help_page: ''
+address:
+  street1: ''
+  street2: ''
+  city: ''
+  zone: '0'
+  country: '840'
+  postal_code: ''
+currency:
+  code: USD
+  symbol: $
+  symbol_after: '0'
+  thousands_marker: ','
+  decimal_marker: .
+  precision: '2'
+units:
+  weight: lb
+  length: in
+customer_address: billing
+footer_message: '0'

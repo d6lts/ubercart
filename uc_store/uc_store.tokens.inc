@@ -92,6 +92,8 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
   }
 
   if ($type == 'store') {
+    $config = config('uc_store.settings');
+
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'name':
@@ -103,7 +105,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'owner':
-          $replacements[$original] = variable_get('uc_store_owner', '');
+          $replacements[$original] = $config->get('owner');
           break;
 
         case 'email':
@@ -111,11 +113,11 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'phone':
-          $replacements[$original] = variable_get('uc_store_phone', '');
+          $replacements[$original] = $config->get('phone');
           break;
 
         case 'fax':
-          $replacements[$original] = variable_get('uc_store_fax', '');
+          $replacements[$original] = $config->get('fax');
           break;
 
         case 'address':
@@ -123,14 +125,14 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'help-url':
-          $replacements[$original] = url(variable_get('uc_store_help_page', ''), array('absolute' => TRUE));
+          $replacements[$original] = url($config->get('help_page'), array('absolute' => TRUE));
           break;
       }
     }
 
     // Handle chaining for tokens that have 'type' defined in hook_token_info()
     if ($link_tokens = token_find_with_prefix($tokens, 'help-url')) {
-      $replacements += token_generate('url', $link_tokens, array('path' => variable_get('uc_store_help_page', '')), $options);
+      $replacements += token_generate('url', $link_tokens, array('path' => $config->get('help_page')), $options);
     }
   }
 

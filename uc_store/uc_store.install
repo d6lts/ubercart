@@ -166,21 +166,16 @@ function uc_store_uninstall() {
   db_delete('variable')
     ->condition(db_or()
       ->condition('name', 'uc_address_format_%', 'LIKE')
-      ->condition('name', 'uc_currency_%', 'LIKE')
-      ->condition('name', 'uc_store_%', 'LIKE')
       ->condition('name', 'uc_weight_%', 'LIKE')
       ->condition('name', 'uc_length_%', 'LIKE')
       ->condition('name', 'uc_field_%', 'LIKE')
     )
     ->execute();
 
-  variable_del('uc_customer_list_address');
-  variable_del('uc_sign_after_amount');
   variable_del('date_format_uc_store');
   variable_del('uc_address_fields');
   variable_del('uc_address_fields_required');
   variable_del('uc_address_fields_weight');
-  variable_del('uc_footer_message');
 
   // Unset mail Ubercart hander in variable mail_system
   $mail_system = variable_get('mail_system', array('default-system' => 'Drupal\Core\Mail\PhpMail'));
@@ -198,4 +193,35 @@ function uc_store_uninstall() {
  */
 function uc_store_update_last_removed() {
   return 7300;
+}
+
+/**
+ * Moves store settings from variable to config.
+ */
+function uc_store_update_8000() {
+  update_variables_to_config('uc_store.settings', array(
+    'uc_store_name' => 'name',
+    'uc_store_owner' => 'owner',
+    'uc_store_email' => 'mail',
+    'uc_store_email_include_name' => 'mail_include_name',
+    'uc_store_phone' => 'phone',
+    'uc_store_fax' => 'fax',
+    'uc_store_help_page' => 'help_page',
+    'uc_store_street1' => 'address.street1',
+    'uc_store_street2' => 'address.street2',
+    'uc_store_city' => 'address.city',
+    'uc_store_zone' => 'address.zone',
+    'uc_store_country' => 'address.country',
+    'uc_store_postal_code' => 'address.postal_code',
+    'uc_currency_code' => 'currency.code',
+    'uc_currency_sign' => 'currency.symbol',
+    'uc_sign_after_amount' => 'currency.symbol_after',
+    'uc_currency_thou' => 'currency.thousands_marker',
+    'uc_currency_dec' => 'currency.decimal_marker',
+    'uc_currency_prec' => 'currency.precision',
+    'uc_weight_unit' => 'units.weight',
+    'uc_length_unit' => 'units.length',
+    'uc_customer_list_address' => 'customer_address',
+    'uc_footer_message' => 'footer_message',
+  ));
 }

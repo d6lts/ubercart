@@ -538,7 +538,7 @@ function uc_google_checkout_cart_request($order) {
       $output .= '<item>';
       $output .= '<item-name>' . check_plain($product->model) . '</item-name>';
       $output .= '<item-description>' . check_plain($product->title) . '</item-description>';
-      $output .= '<unit-price currency="' . variable_get('uc_currency_code', 'USD') . '">' . $product->price . '</unit-price>';
+      $output .= '<unit-price currency="' . config('uc_store.settings')->get('currency.code') . '">' . $product->price . '</unit-price>';
       $output .= '<item-weight unit="LB" value="' . $product->weight * uc_weight_conversion($product->weight_units, 'lb') . '" />';
       if (!uc_order_product_is_shippable($product)) {
         $output .= '<digital-content>';
@@ -574,7 +574,7 @@ function uc_google_checkout_cart_request($order) {
         foreach ($options as $accsrl => $data) {
           if (isset($data['rate'])) {
             $output .= '<merchant-calculated-shipping name="' . check_plain($methods[$method_id]['quote']['accessorials'][$accsrl]) . '">';
-            $output .= '<price currency="' . variable_get('uc_currency_code', 'USD') . '">' . $data['rate'] . '</price>';
+            $output .= '<price currency="' . config('uc_store.settings')->get('currency.code') . '">' . $data['rate'] . '</price>';
             $output .= '</merchant-calculated-shipping>';
           }
         }
@@ -1055,7 +1055,7 @@ function uc_google_checkout_charge($order_id, $amount) {
   $output .= '<?xml version="1.0" encoding="UTF-8"?>';
   $output .= "\n";
   $output .= '<charge-and-ship-order xmlns="http://checkout.google.com/schema/2" google-order-number="' . $google_order_number . '">';
-  $output .= '<amount currency="' . variable_get('uc_currency_code', 'USD') . '">' . $amount . '</amount>';
+  $output .= '<amount currency="' . config('uc_store.settings')->get('currency.code') . '">' . $amount . '</amount>';
   $output .= '</charge-and-ship-order>';
 
   if ($response = uc_google_checkout_send_request('request', $output)) {
@@ -1114,7 +1114,7 @@ function uc_google_checkout_refund($order_id, $amount, $reason, $comment = '') {
   $output .= '<?xml version="1.0" encoding="UTF-8"?>';
   $output .= "\n";
   $output .= '<refund-order xmlns="http://checkout.google.com/schema/2" google-order-number="' . $google_order_number . '">';
-  $output .= '<amount currency="' . variable_get('uc_currency_code', 'USD') . '">' . $amount . '</amount>';
+  $output .= '<amount currency="' . config('uc_store.settings')->get('currency.code') . '">' . $amount . '</amount>';
   $output .= '<comment>' . check_plain($comment) . '</comment>';
   $output .= '<reason>' . check_plain($reason) . '</reason>';
   $output .= '</refund-order>';

@@ -509,11 +509,11 @@ function uc_product_prepare($node) {
     'cost' => 0,
     'sell_price' => 0,
     'weight' => 0,
-    'weight_units' => variable_get('uc_weight_unit', 'lb'),
+    'weight_units' => config('uc_store.settings')->get('units.weight'),
     'length' => 0,
     'width' => 0,
     'height' => 0,
-    'length_units' => variable_get('uc_length_unit', 'in'),
+    'length_units' => config('uc_store.settings')->get('units.length'),
     'pkg_qty' => 1,
     'default_qty' => 1,
     'shippable' => variable_get('uc_product_shippable_' . $node->type, 1),
@@ -1120,8 +1120,8 @@ function uc_product_uc_product_class($pcid, $op) {
         ->execute();
       $result = db_query("SELECT n.vid, n.nid FROM {node} n LEFT JOIN {uc_products} p ON n.vid = p.vid WHERE n.type = :pcid AND p.vid IS NULL", array(':pcid' => $pcid));
       foreach ($result as $node) {
-        $node->weight_units = variable_get('uc_weight_unit', 'lb');
-        $node->length_units = variable_get('uc_length_unit', 'in');
+        $node->weight_units = config('uc_store.settings')->get('units.weight');
+        $node->length_units = config('uc_store.settings')->get('units.length');
         $node->pkg_qty = 1;
         $node->default_qty = 1;
         $node->shippable = 1;

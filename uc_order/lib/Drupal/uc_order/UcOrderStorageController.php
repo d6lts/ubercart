@@ -20,6 +20,7 @@ class UcOrderStorageController extends DatabaseStorageController {
    */
   public function create(array $values) {
     $order = parent::create($values);
+    $store_config = config('uc_store.settings');
 
     // Set the primary email address.
     if (!empty($order->uid)) {
@@ -35,15 +36,15 @@ class UcOrderStorageController extends DatabaseStorageController {
 
     // Set the default currency.
     if (empty($order->currency)) {
-      $order->currency = variable_get('uc_currency_code', 'USD');
+      $order->currency = $store_config->get('currency.code');
     }
 
     // Set the default country codes.
     if (empty($order->billing_country)) {
-      $order->billing_country = variable_get('uc_store_country', 840);
+      $order->billing_country = $store_config->get('address.country');
     }
     if (empty($order->delivery_country)) {
-      $order->delivery_country = variable_get('uc_store_country', 840);
+      $order->delivery_country = $store_config->get('address.country');
     }
 
     // Set the created time to now.

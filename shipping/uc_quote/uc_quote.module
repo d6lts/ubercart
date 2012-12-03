@@ -853,7 +853,7 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
   }
   elseif ($show_errors) {
     $return['error'] = array(
-      '#markup' => filter_xss_admin(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery address and product information and try again.\nIf this does not resolve the issue, please call @phone to complete your order.", array('@phone' => variable_get('uc_store_phone', NULL))))),
+      '#markup' => filter_xss_admin(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery address and product information and try again.\nIf this does not resolve the issue, please call @phone to complete your order.", array('@phone' => config('uc_store.settings')->get('phone'))))),
     );
   }
 
