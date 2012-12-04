@@ -28,7 +28,7 @@ function uc_order_views_data() {
     'title' => t('Order ID'),
     'help' => t('The order ID.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_order_id',
+      'id' => 'uc_order',
       'click sortable' => TRUE,
     ),
     'sort' => array(

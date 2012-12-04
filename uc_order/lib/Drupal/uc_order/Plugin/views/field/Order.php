@@ -2,18 +2,31 @@
 
 /**
  * @file
- * Contains the basic 'order' field handler.
+ * Definition of Drupal\uc_order\Plugin\views\field\Order.
  */
 
+namespace Drupal\uc_order\Plugin\views\field;
+
+use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
+use Drupal\views\ViewExecutable;
+
 /**
- * Field handler: simple renderer that links to the order administration page.
+ * Field handler to provide simple renderer that allows linking to an order.
+ *
+ * @ingroup views_field_handlers
+ *
+ * @Plugin(
+ *   id = "uc_order",
+ *   module = "uc_orders"
+ * )
  */
-class uc_order_handler_field_order_id extends views_handler_field {
+class Order extends FieldPluginBase {
 
   /**
    * Override init function to provide generic option to link to user.
    */
-  function init(&$view, &$data) {
+  public function init(ViewExecutable $view, &$data) {
     parent::init($view, $data);
     if (!empty($this->options['link_to_order'])) {
       $this->additional_fields['order_id'] = array('table' => 'uc_orders', 'field' => 'order_id');
@@ -22,27 +35,27 @@ class uc_order_handler_field_order_id extends views_handler_field {
   }
 
   /**
-   * Overrides views_handler::option_definition().
+   * Overrides FieldPluginBase::defineOptions().
    */
-  function option_definition() {
-    $options = parent::option_definition();
-    $options['link_to_order'] = array('default' => FALSE);
+  protected function defineOptions() {
+    $options = parent::defineOptions();
+    $options['link_to_order'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
   /**
-   * Overrides views_handler::options_form().
+   * Overrides FieldPluginBase::buildOptionsForm().
    *
-   * Provides link to order administration page.
+   * Provide link to order option
    */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  public function buildOptionsForm(&$form, &$form_state) {
     $form['link_to_order'] = array(
       '#title' => t('Link this field to the order view page'),
-      '#description' => t('This will override any other link you have set.'),
+      '#description' => t("Enable to override this field's links."),
       '#type' => 'checkbox',
-      '#default_value' => !empty($this->options['link_to_order']),
+      '#default_value' => $this->options['link_to_order'],
     );
+    parent::buildOptionsForm($form, $form_state);
   }
 
   /**
@@ -73,10 +86,11 @@ class uc_order_handler_field_order_id extends views_handler_field {
   }
 
   /**
-   * Overrides views_handler_field::render().
+   * Overrides FieldPluginBase::render().
    */
   function render($values) {
-    return $this->render_link(check_plain($values->{$this->field_alias}), $values);
+    $value = $this->get_value($values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
 }
