@@ -50,7 +50,7 @@ function uc_order_views_data() {
     'title' => t('Order status'),
     'help' => t('The order status.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_order_status',
+      'id' => 'uc_order_status',
       'click sortable' => TRUE,
     ),
     'sort' => array(
