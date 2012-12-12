@@ -17,12 +17,6 @@ function uc_order_views_data() {
     'help' => t('Orders placed in your Ubercart store.'),
   );
 
-  // Pull in user fields directly.
-  $data['users']['table']['join']['uc_orders'] = array(
-    'left_field' => 'uid',
-    'field' => 'uid',
-  );
-
   // Order ID field.
   $data['uc_orders']['order_id'] = array(
     'title' => t('Order ID'),
@@ -407,18 +401,6 @@ function uc_order_views_data() {
     'field' => 'order_product_id',
     'title' => t('Ordered products'),
     'help' => t('Products that have been ordered in your Ubercart store.'),
-  );
-
-  // Pull in node fields directly.
-  $data['node']['table']['join']['uc_order_products'] = array(
-    'left_field' => 'nid',
-    'field' => 'nid',
-  );
-
-  // Pull in order fields directly.
-  $data['uc_orders']['table']['join']['uc_order_products'] = array(
-    'left_field' => 'order_id',
-    'field' => 'order_id',
   );
 
   // Expose products to their orders as a relationship.
