@@ -85,9 +85,8 @@ function uc_order_views_data() {
     'title' => t('Order total'),
     'help' => t('The total amount to be paid for the order.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_money_amount',
+      'id' => 'uc_price',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -487,9 +486,8 @@ function uc_order_views_data() {
     'title' => t('Price'),
     'help' => t('The price paid for one product.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_money_amount',
+      'id' => 'uc_price',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -520,9 +518,8 @@ function uc_order_views_data() {
     'title' => t('Cost'),
     'help' => t('The cost to the store for one product.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_money_amount',
+      'id' => 'uc_price',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -663,9 +660,8 @@ function uc_order_views_data() {
       'title' => t('!line_item_desc amount', array('!line_item_desc' => $line_item_desc)),
       'help' => t('!line_item_desc order line item', array('!line_item_desc' => $line_item_desc)),
       'field' => array(
-        'handler' => 'uc_order_handler_field_money_amount',
+        'id' => 'uc_price',
         'click sortable' => TRUE,
-        'float' => TRUE,
       ),
       'filter' => array(
         'handler' => 'views_handler_filter_numeric',
