@@ -51,7 +51,7 @@ function uc_order_views_data() {
       'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'uc_order_handler_filter_order_status',
+      'id' => 'uc_order_status',
     ),
   );
 

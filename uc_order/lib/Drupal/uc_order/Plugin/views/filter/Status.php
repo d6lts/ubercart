@@ -2,18 +2,30 @@
 
 /**
  * @file
- * Views handler.
+ * Definition of Drupal\uc_order\Plugin\views\filter\Status.
  */
+
+namespace Drupal\uc_order\Plugin\views\filter;
+
+use Drupal\views\Plugin\views\filter\InOperator;
+use Drupal\Core\Annotation\Plugin;
 
 /**
- * Filters by order status.
+ * Filter handler for order statuses.
+ *
+ * @ingroup views_filter_handlers
+ *
+ * @Plugin(
+ *   id = "uc_order_status",
+ *   module = "uc_order"
+ * )
  */
-class uc_order_handler_filter_order_status extends views_handler_filter_in_operator {
+class Status extends InOperator {
 
   /**
-   * Overrides views_handler_filter_in_operator::get_value_options().
+   * Overrides InOperator::getValueOptions().
    */
-  function get_value_options() {
+  function getValueOptions() {
     if (!isset($this->value_options)) {
       $options['_active'] = t('Active');
       foreach (uc_order_status_list() as $status => $name) {
@@ -26,7 +38,7 @@ class uc_order_handler_filter_order_status extends views_handler_filter_in_opera
   }
 
   /**
-   * Overrides views_handler_field::query().
+   * Overrides InOperator::query().
    */
   function query() {
     if (is_array($this->value) && in_array('_active', $this->value)) {
@@ -35,4 +47,5 @@ class uc_order_handler_filter_order_status extends views_handler_filter_in_opera
 
     parent::query();
   }
+
 }
