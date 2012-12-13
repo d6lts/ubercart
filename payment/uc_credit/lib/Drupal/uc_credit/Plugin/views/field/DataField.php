@@ -2,16 +2,28 @@
 
 /**
  * @file
- * Credit card data views field handler.
+ * Definition of Drupal\uc_credit\Plugin\views\field\DataField.
  */
+
+namespace Drupal\uc_credit\Plugin\views\field;
+
+use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\Core\Annotation\Plugin;
 
 /**
- * Field handler: displays credit card data.
+ * Field handler to display encrypted credit card data.
+ *
+ * @ingroup views_field_handlers
+ *
+ * @Plugin(
+ *   id = "uc_credit_data",
+ *   module = "uc_credit"
+ * )
  */
-class uc_order_handler_field_order_cc_data extends views_handler_field {
+class DataField extends FieldPluginBase {
 
   /**
-   * Overrides views_handler_field::render().
+   * Overrides FieldPluginBase::render().
    */
   function render($values) {
     // Initialize the encryption key and class.

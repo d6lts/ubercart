@@ -96,26 +96,6 @@ function uc_order_views_data() {
     ),
   );
 
-  $data['uc_orders']['cc_type'] = array(
-    'title' => t('Credit card type'),
-    'help' => t('Credit card type used, if the payment method was credit.'),
-    'real field' => 'data',
-    'field' => array(
-      'handler' => 'uc_order_handler_field_order_cc_data',
-      'cc field' => 'cc_type',
-    ),
-  );
-
-  $data['uc_orders']['cc_number'] = array(
-    'title' => t('Credit card number'),
-    'help' => t('Credit card number (last 4) used, if the payment method was credit.'),
-    'real field' => 'data',
-    'field' => array(
-      'handler' => 'uc_order_handler_field_order_cc_data',
-      'cc field' => 'cc_number',
-    ),
-  );
-
   $data['uc_orders']['product_count'] = array(
     'title' => t('Product count'),
     'help' => t('The total number of products in the order.'),
