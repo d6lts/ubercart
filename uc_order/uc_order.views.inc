@@ -96,21 +96,6 @@ function uc_order_views_data() {
     ),
   );
 
-  $data['uc_orders']['payment_method'] = array(
-    'title' => t('Payment method'),
-    'help' => t('The method of payment.'),
-    'field' => array(
-      'handler' => 'uc_order_handler_field_payment_method',
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-    'filter' => array(
-      'handler' => 'uc_order_handler_filter_payment_method',
-    ),
-  );
-
   $data['uc_orders']['cc_type'] = array(
     'title' => t('Credit card type'),
     'help' => t('Credit card type used, if the payment method was credit.'),
