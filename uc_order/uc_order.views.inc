@@ -246,7 +246,9 @@ function uc_order_views_data() {
         'id' => 'standard',
       ),
       'filter' => array(
-        'id' => 'string',
+        'id' => 'in_operator',
+        'real field' => 'country_id',
+        'options callback' => 'uc_country_option_list',
       ),
     );
     $data[$prefix . '_countries']['country_iso_code_2'] = array(
@@ -295,7 +297,9 @@ function uc_order_views_data() {
         'id' => 'standard',
       ),
       'filter' => array(
-        'id' => 'string',
+        'id' => 'in_operator',
+        'real field' => 'zone_code',
+        'options callback' => 'uc_zone_option_list',
       ),
     );
     $data[$prefix . '_zones']['zone_code'] = array(
