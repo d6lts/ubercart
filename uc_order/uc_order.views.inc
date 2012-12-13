@@ -145,7 +145,8 @@ function uc_order_views_data() {
     'title' => t('Actions'),
     'help' => t('Clickable links to actions a user may perform on an order.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_order_actions',
+      'id' => 'uc_order_actions',
+      'real field' => 'order_id',
       'click sortable' => FALSE,
     ),
   );
