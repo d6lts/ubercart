@@ -421,7 +421,7 @@ function uc_order_views_data() {
       'id' => 'numeric',
     ),
     'field' => array(
-      'handler' => 'uc_order_handler_field_order_id',
+      'id' => 'uc_order',
     ),
   );
 
