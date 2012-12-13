@@ -208,12 +208,13 @@ function uc_order_views_data() {
       'title' => t('Full name'),
       'help' => t('The !field of the !address of the order.', array('!field' => t('full name'), '!address' => drupal_strtolower($address))),
       'field' => array(
+        'id' => 'uc_order_full_name',
+        'real field' => $prefix . '_first_name',
         'additional fields' => array(
-          $prefix . '_first_name',
-          $prefix . '_last_name'
+          'last_name' => array(
+            'field' => $prefix . '_last_name'
+          ),
         ),
-        'handler' => 'uc_order_handler_field_order_fullname',
-        'prefix' => $prefix,
       ),
     );
 
