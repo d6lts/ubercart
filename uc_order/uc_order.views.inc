@@ -96,15 +96,6 @@ function uc_order_views_data() {
     ),
   );
 
-  $data['uc_orders']['order_total_cost'] = array(
-    'title' => t('Total cost'),
-    'help' => t('The total cost of the products in the order.'),
-    'field' => array(
-      'handler' => 'uc_order_handler_field_order_cost',
-      'float' => TRUE,
-    ),
-  );
-
   $data['uc_orders']['payment_method'] = array(
     'title' => t('Payment method'),
     'help' => t('The method of payment.'),
