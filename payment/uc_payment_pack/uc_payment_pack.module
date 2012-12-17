@@ -193,6 +193,7 @@ function uc_payment_method_cod($op, &$order) {
 
     case 'order-view':
     case 'customer-view':
+      $output = '';
       if (variable_get('uc_cod_delivery_date', FALSE)) {
         $output = t('Desired delivery date:') .'<br />'.
           uc_date_format(
@@ -245,11 +246,18 @@ function uc_payment_method_cod($op, &$order) {
         $_SESSION['expanded_panes'][] = 'payment';
         return $result;
       }
+      // TODO: This falls through to the order-save case - is this deliberate?
+      // If so, it should be documented.
+
     case 'order-save':
-      db_query("DELETE FROM {uc_payment_cod} WHERE order_id = %d", $order->order_id);
-      db_query("INSERT INTO {uc_payment_cod} VALUES (%d, %d, %d, %d)",
-               $order->order_id, $order->payment_details['delivery_month'],
-               $order->payment_details['delivery_day'], $order->payment_details['delivery_year']);
+      if (isset($order->payment_details['delivery_month']) &&
+          isset($order->payment_details['delivery_day'])   &&
+          isset($order->payment_details['delivery_year'])    ) {
+        db_query("DELETE FROM {uc_payment_cod} WHERE order_id = %d", $order->order_id);
+        db_query("INSERT INTO {uc_payment_cod} VALUES (%d, %d, %d, %d)",
+                 $order->order_id, $order->payment_details['delivery_month'],
+                 $order->payment_details['delivery_day'], $order->payment_details['delivery_year']);
+      }
       break;
 
     case 'order-delete':
@@ -392,6 +400,7 @@ function uc_payment_method_check($op, &$order) {
       if (!variable_get('uc_payment_tracking', TRUE)) {
         return '';
       }
+      $output = '';
       $result = db_query("SELECT clear_date FROM {uc_payment_check} WHERE order_id = %d ", $order->order_id);
       if ($check = db_fetch_object($result)) {
         $output = t('Check received') .'<br />'
