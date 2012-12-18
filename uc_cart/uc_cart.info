@@ -4,8 +4,4 @@ dependencies[] = uc_order
 dependencies[] = uc_product
 package = Ubercart - core
 core = 8.x
-
-; Views handlers
-files[] = views/uc_cart_handler_field_cart_user.inc
-
 configure = admin/store/settings/cart
