@@ -89,7 +89,7 @@ function uc_product_views_data() {
     'title' => t('Display price'),
     'help' => t('The price for which the product is sold, altered for display (e.g. with inclusive taxes).'),
     'field' => array(
-      'handler' => 'uc_product_handler_field_display_price',
+      'id' => 'uc_product_display_price',
       'real field' => 'nid',
       'click sortable' => TRUE,
     ),
