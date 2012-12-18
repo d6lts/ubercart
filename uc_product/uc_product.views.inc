@@ -26,17 +26,17 @@ function uc_product_views_data() {
     'title' => t('SKU'),
     'help' => t('The model number.'),
     'field' => array(
-      'handler' => 'views_handler_field_node',
+      'id' => 'node',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'id' => 'string',
     ),
   );
 
@@ -44,21 +44,14 @@ function uc_product_views_data() {
     'title' => t('List price'),
     'help' => t("The manufacturer's suggested price."),
     'field' => array(
-      'handler' => 'uc_product_handler_field_price',
+      'id' => 'uc_price',
       'click sortable' => TRUE,
-      'float' => TRUE,
-      'additional fields' => array(
-        'nid' => array(
-          'table' => 'node',
-          'field' => 'nid',
-        ),
-      ),
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -66,21 +59,14 @@ function uc_product_views_data() {
     'title' => t('Cost'),
     'help' => t('The cost of the product to the store.'),
     'field' => array(
-      'handler' => 'uc_product_handler_field_price',
+      'id' => 'uc_price',
       'click sortable' => TRUE,
-      'float' => TRUE,
-      'additional fields' => array(
-        'nid' => array(
-          'table' => 'node',
-          'field' => 'nid',
-        ),
-      ),
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -88,21 +74,14 @@ function uc_product_views_data() {
     'title' => t('Sell price'),
     'help' => t('The price for which the product is sold.'),
     'field' => array(
-      'handler' => 'uc_product_handler_field_price',
+      'id' => 'uc_price',
       'click sortable' => TRUE,
-      'float' => TRUE,
-      'additional fields' => array(
-        'nid' => array(
-          'table' => 'node',
-          'field' => 'nid',
-        ),
-      ),
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -128,10 +107,10 @@ function uc_product_views_data() {
       'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -147,10 +126,10 @@ function uc_product_views_data() {
       'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_float',
+      'id' => 'numeric',
     ),
   );
 
@@ -166,10 +145,10 @@ function uc_product_views_data() {
       'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_float',
+      'id' => 'numeric',
     ),
   );
   $data['uc_products']['height'] = array(
@@ -184,10 +163,10 @@ function uc_product_views_data() {
       'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_float',
+      'id' => 'numeric',
     ),
   );
 
@@ -195,14 +174,14 @@ function uc_product_views_data() {
     'title' => t('Package quantity'),
     'help' => t('The number of items that fit in the largest package.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -211,10 +190,13 @@ function uc_product_views_data() {
     'help' => t('The default sort criteria in the catalog.'),
     'field' => array(
       'help' => t("The product list position."),
-      'handler' => 'views_handler_field_numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
+    ),
+    'filter' => array(
+      'id' => 'numeric',
     ),
   );
 
@@ -222,14 +204,14 @@ function uc_product_views_data() {
     'title' => t('Shippable'),
     'help' => t('Is the product shippable?'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'handler' => 'boolean',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'handler' => 'boolean',
     ),
   );
 
