@@ -214,9 +214,9 @@ function uc_product_views_data() {
   $data['uc_products']['is_product'] = array(
     'title' => t('Is a product'),
     'help' => t('Check for the fields provided by the Ubercart product module.'),
-    'group' => t('Node'),
+    'group' => t('Content'),
     'filter' => array(
-      'handler' => 'uc_product_handler_filter_product',
+      'id' => 'uc_product',
       'label' => t('Is a product'),
     ),
   );
