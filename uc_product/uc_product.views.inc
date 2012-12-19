@@ -221,40 +221,23 @@ function uc_product_views_data() {
     ),
   );
 
-  $data['uc_products']['addtocartlink'] = array(
-    'title' => t('Add to cart form'),
+  $data['uc_products']['add_to_cart'] = array(
+    'title' => t('Add to cart'),
     'help' => t("Form to put the product in the customer's cart."),
     'group' => t('Product'),
     'field' => array(
-      'additional fields' => array(
-        'nid' => array(
-          'table' => 'node',
-          'field' => 'nid',
-        ),
-        'type' => array(
-          'table' => 'node',
-          'field' => 'type',
-        ),
-      ),
-      'handler' => 'uc_product_handler_field_addtocart',
-      'element type' => 'div',
+      'id' => 'uc_product_add_to_cart',
+      'real field' => 'nid',
     ),
   );
 
-  $data['uc_products']['buyitnowbutton'] = array(
-    'title' => t('Buy it now button'),
+  $data['uc_products']['buy_it_now'] = array(
+    'title' => t('Buy it now'),
     'help' => t('A button to add a product to the cart without quantity or attribute fields.'),
     'group' => t('Product'),
     'field' => array(
-      'table' => 'node',
-      'additional fields' => array(
-        'nid' => array(
-          'table' => 'node',
-          'field' => 'nid',
-        ),
-      ),
-      'handler' => 'uc_product_handler_field_buyitnow',
-      'element type' => 'div',
+      'id' => 'uc_product_buy_it_now',
+      'real field' => 'nid',
     ),
   );
 
