@@ -102,9 +102,8 @@ function uc_product_views_data() {
       'additional fields' => array(
         'field' => 'weight_units',
       ),
-      'handler' => 'uc_product_handler_field_weight',
+      'id' => 'uc_weight',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',

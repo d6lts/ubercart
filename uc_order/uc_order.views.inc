@@ -517,8 +517,7 @@ function uc_order_views_data() {
           'field' => 'weight_units',
         ),
       ),
-      'handler' => 'uc_product_handler_field_weight',
-      'float' => TRUE,
+      'id' => 'uc_weight',
     ),
   );
 
