@@ -120,9 +120,8 @@ function uc_product_views_data() {
       'additional fields' => array(
         'field' => 'length_units',
       ),
-      'handler' => 'uc_product_handler_field_length',
+      'id' => 'uc_length',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -139,9 +138,8 @@ function uc_product_views_data() {
       'additional fields' => array(
         'field' => 'length_units',
       ),
-      'handler' => 'uc_product_handler_field_length',
+      'id' => 'uc_length',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
@@ -157,9 +155,8 @@ function uc_product_views_data() {
       'additional fields' => array(
         'field' => 'length_units',
       ),
-      'handler' => 'uc_product_handler_field_length',
+      'id' => 'uc_length',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
