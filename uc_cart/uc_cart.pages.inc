@@ -281,10 +281,7 @@ function uc_cart_checkout_form_validate($form, &$form_state) {
     $_SESSION['cart_order'] = $order->order_id;
   }
   else {
-    $order = new stdClass();
-    $order->uid = $user->uid;
-    $order->order_id = $_SESSION['cart_order'];
-    $order->order_status = uc_order_state_default('in_checkout');
+    $order = uc_order_load($_SESSION['cart_order']);
   }
 
   db_query("DELETE FROM {uc_order_products} WHERE order_id = %d", $order->order_id);
