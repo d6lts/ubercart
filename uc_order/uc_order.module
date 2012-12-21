@@ -1940,13 +1940,9 @@ function uc_order_actions($order, $icon_html = FALSE) {
         // See if any modules have a say in this order's eligibility for deletion
         foreach (module_list() as $module) {
           $function = $module .'_order';
-          // $order must be passed by reference.
-          if (function_exists($function) && ($response = $function('can_delete', $order, NULL))) {
-            // Break out early if possible.
-            if ($response === FALSE) {
-              $can_delete = FALSE;
-              break;
-            }
+          if (function_exists($function) && $function('can_delete', $order, NULL) === FALSE) {
+            $can_delete = FALSE;
+            break;
           }
         }
       }
