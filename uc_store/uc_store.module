@@ -9,6 +9,7 @@
  * settings pages for use in store administration.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\uc_store\UcAddress;
 
 /**
@@ -420,7 +421,7 @@ function uc_store_process_address_field($element, $form_state) {
  * Store the current address for use when rebuilding the form.
  */
 function uc_store_validate_address_field_country($element, &$form_state) {
-  $address = drupal_array_get_nested_value($form_state['values'], array_slice($element['#parents'], 0, -1));
+  $address = NestedArray::getValue($form_state['values'], array_slice($element['#parents'], 0, -1));
   $form_state['uc_address'] = isset($form_state['uc_address']) ? array_merge($form_state['uc_address'], $address) : $address;
 }
 

@@ -11,6 +11,7 @@
  * instead of listing each combination separately.
  */
 
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Implements hook_help().
@@ -1242,7 +1243,7 @@ function uc_attribute_option_ajax($form, $form_state) {
   while ($key = array_pop($parents)) {
     if ($key == 'attributes') {
       array_push($parents, $key);
-      $element = drupal_array_get_nested_value($form, $parents);
+      $element = NestedArray::getValue($form, $parents);
       $commands[] = ajax_command_replace($wrapper, drupal_render($element));
       break;
     }
