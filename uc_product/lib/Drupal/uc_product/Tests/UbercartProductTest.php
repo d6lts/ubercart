@@ -26,6 +26,14 @@ class UbercartProductTest extends UbercartTestBase {
     $this->drupalLogin($this->adminUser);
   }
 
+  public function testProductAdmin() {
+    $this->drupalGet('admin/store/products/view');
+    $this->assertText('Title');
+    $this->assertText($this->product->title);
+    $this->assertText('Price');
+    $this->assertText(uc_currency_format($this->product->sell_price));
+  }
+
   public function testProductNodeForm() {
     $this->drupalGet('node/add/product');
 
