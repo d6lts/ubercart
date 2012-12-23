@@ -70,7 +70,7 @@ function uc_authorizenet_arb_user_update_form($form, &$form_state, $user, $rfid)
   );
 
   $form['cc_data'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Credit card details'),
     '#theme' => 'uc_payment_method_credit_form',
     '#tree' => TRUE,

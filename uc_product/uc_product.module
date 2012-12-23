@@ -326,7 +326,7 @@ function uc_product_form($node, $form_state) {
   );
 
   $form['base'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Product information'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -876,7 +876,7 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   }
 
   $form['uc_product'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Ubercart product settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,

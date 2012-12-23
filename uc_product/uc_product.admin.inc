@@ -53,7 +53,7 @@ function uc_product_settings_form($form, &$form_state) {
   $form['product-settings'] = array('#type' => 'vertical_tabs');
 
   $form['product'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Product settings'),
     '#group' => 'product-settings',
     '#weight' => -10,
@@ -98,7 +98,7 @@ function uc_product_settings_form($form, &$form_state) {
     if (isset($feature['settings']) &&
         function_exists($feature['settings'])) {
       $form[$feature['id']] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('@feature settings', array('@feature' => $feature['title'])),
         '#group' => 'product-settings',
       );

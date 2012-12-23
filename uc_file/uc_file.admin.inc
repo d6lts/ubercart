@@ -99,7 +99,7 @@ function uc_file_admin_files_form_show_files($form, &$form_state) {
   );
 
   $form['uc_file_action'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('File options'),
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,

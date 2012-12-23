@@ -271,7 +271,7 @@ function uc_paypal_ec_review_form($form, &$form_state, $order) {
 
     $result = uc_checkout_pane_quotes('view', $order, NULL);
     $form['panes']['quotes'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Shipping cost'),
       '#collapsible' => FALSE,
     );

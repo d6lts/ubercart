@@ -190,7 +190,7 @@ function uc_reports_init() {
  */
 function uc_reports_form_uc_store_settings_form_alter(&$form, &$form_state) {
   $form['reports'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Report settings'),
     '#group' => 'store',
   );

@@ -58,7 +58,7 @@ function uc_usps_form_node_form_alter(&$form, &$form_state, $form_id) {
     $weight = variable_get('uc_quote_method_weight', array()) + array('usps' => 0, 'usps_intl' => 1);
 
     $form['shipping']['usps'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('USPS product description'),
       '#collapsible' => TRUE,
       '#collapsed' => ($enabled['usps'] == FALSE || uc_product_get_shipping_type($node) != 'small_package'),

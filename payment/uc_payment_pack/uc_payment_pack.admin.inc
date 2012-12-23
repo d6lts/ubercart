@@ -34,7 +34,7 @@ function uc_payment_pack_receive_check_form($form, &$form_state, $order) {
     '#maxlength' => 256,
   );
   $form['clear'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Expected clear date'),
     '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
   );

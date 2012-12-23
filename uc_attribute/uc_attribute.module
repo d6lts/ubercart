@@ -278,7 +278,7 @@ function uc_attribute_theme() {
  */
 function uc_attribute_form_uc_product_settings_form_alter(&$form, &$form_state) {
   $form['attributes'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => 'Attribute settings',
     '#group' => 'product-settings',
     '#weight' => -3,
@@ -334,7 +334,7 @@ function uc_attribute_uc_form_alter(&$form, &$form_state, $form_id) {
 
         if (is_array($element[$key]['attributes'])) {
           $element[$key]['attributes']['#tree'] = TRUE;
-          $element[$key]['#type'] = 'fieldset';
+          $element[$key]['#type'] = 'details';
         }
       }
     }

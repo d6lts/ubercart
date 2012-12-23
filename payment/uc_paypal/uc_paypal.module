@@ -528,7 +528,7 @@ function uc_payment_method_paypal_ec($op, &$order) {
         '#default_value' => variable_get('uc_paypal_wpp_server', 'https://api-3t.sandbox.paypal.com/nvp'),
       );
       $form['api'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('API credentials'),
         '#description' => t('!link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', array('!link' => l(t('Click here'), 'https://www.paypal.com/IntegrationCenter/ic_certificate.html'))),
         '#collapsible' => TRUE,

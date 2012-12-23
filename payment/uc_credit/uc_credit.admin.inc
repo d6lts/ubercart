@@ -37,7 +37,7 @@ function uc_credit_settings_form($form, &$form_state) {
   );
 
   $form['cc_basic'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Basic settings'),
     '#group' => 'uc_credit',
   );
@@ -60,7 +60,7 @@ function uc_credit_settings_form($form, &$form_state) {
 
   // Form elements that deal specifically with card number security.
   $form['cc_security'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Security settings'),
     '#description' => t('You are responsible for the security of your website, including the protection of credit card numbers.  Please be aware that choosing some settings in this section may decrease the security of credit card data on your website and increase your liability for damages in the case of fraud.'),
     '#group' => 'uc_credit',
@@ -74,7 +74,7 @@ function uc_credit_settings_form($form, &$form_state) {
 
   // Form elements that deal with the type of data requested at checkout.
   $form['cc_fields'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Credit card fields'),
     '#description' => t('Specify what information to collect from customers in addition to the card number.'),
     '#group' => 'uc_credit',
@@ -121,7 +121,7 @@ function uc_credit_settings_form($form, &$form_state) {
 
   // Form elements that deal with card types accepted.
   $form['cc_fields']['cc_types'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Card types'),
     '#description' => t('Use the checkboxes to specify which card types you accept for payment. Selected card types will show their icons in the payment method selection list and be used for card number validation.'),
   );
@@ -148,7 +148,7 @@ function uc_credit_settings_form($form, &$form_state) {
 
   // Form elements that deal with credit card messages to customers.
   $form['cc_messages'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Customer messages'),
     '#description' => t('Here you can alter messages displayed to customers using credit cards.'),
     '#collapsible' => FALSE,
@@ -177,7 +177,7 @@ function uc_credit_settings_form($form, &$form_state) {
 
   foreach ($gateways as $id => $gateway) {
     $form['gateways'][$id] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => check_plain($gateway['title']),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
@@ -385,7 +385,7 @@ function uc_credit_terminal_form($form, &$form_state, $order, $lock_amount = FAL
 
   // Build a credit card form.
   $form['specify_card'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Credit card details'),
     '#description' => t('Use the available buttons in this fieldset to process with the specified card details.'),
   );
@@ -446,7 +446,7 @@ function uc_credit_terminal_form($form, &$form_state, $order, $lock_amount = FAL
   if (!empty($options)) {
     // Display a fieldset with the authorizations and available action buttons.
     $form['authorizations'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Prior authorizations'),
       '#description' => t('Use the available buttons in this fieldset to select and act on a prior authorization. The charge amount specified above will be captured against the authorization listed below.  Only one capture is possible per authorization, and a capture for more than the amount of the authorization may result in additional fees to you.'),
     );
@@ -498,7 +498,7 @@ function uc_credit_terminal_form($form, &$form_state, $order, $lock_amount = FAL
   if (!empty($options)) {
     // Display a fieldset with the authorizations and available action buttons.
     $form['references'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Customer references'),
       '#description' => t('Use the available buttons in this fieldset to select and act on a customer reference.'),
     );

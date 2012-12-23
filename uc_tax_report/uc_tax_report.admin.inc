@@ -186,7 +186,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
  */
 function uc_tax_report_params_form($form, &$form_state, $values) {
   $form['params'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Customize tax report parameters'),
     '#description' => t('Adjust these values and update the report to build your sales tax report. Once submitted, the report may be bookmarked for easy reference in the future.'),
     '#collapsible' => TRUE,

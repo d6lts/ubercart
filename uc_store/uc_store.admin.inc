@@ -233,7 +233,7 @@ function uc_store_settings_form($form, &$form_state) {
   $form['store'] = array('#type' => 'vertical_tabs');
 
   $form['basic'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Basic information'),
     '#group' => 'store',
   );
@@ -280,7 +280,7 @@ function uc_store_settings_form($form, &$form_state) {
   );
 
   $form['address'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Store address'),
     '#group' => 'store',
   );
@@ -299,7 +299,7 @@ function uc_store_settings_form($form, &$form_state) {
   );
 
   $form['currency'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Currency format'),
     '#group' => 'store',
   );
@@ -352,7 +352,7 @@ function uc_store_settings_form($form, &$form_state) {
   );
 
   $form['weight'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Weight format'),
     '#description' => t('Supply a format string for each unit. !value represents the weight value.'),
     '#group' => 'store',
@@ -378,7 +378,7 @@ function uc_store_settings_form($form, &$form_state) {
   }
 
   $form['length'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Length format'),
     '#description' => t('Supply a format string for each unit. !value represents the length value.'),
     '#group' => 'store',
@@ -404,7 +404,7 @@ function uc_store_settings_form($form, &$form_state) {
   }
 
   $form['display'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Display settings'),
     '#group' => 'store',
   );

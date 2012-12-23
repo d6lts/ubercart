@@ -58,7 +58,7 @@ function uc_country_import_form($form, &$form_state) {
 
     $form['country_import'] = array(
       '#title' => t('Import countries'),
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#collapsed' => TRUE,
       '#collapsible' => TRUE,
     );
@@ -115,7 +115,7 @@ function uc_country_import_form_submit($form, &$form_state) {
  */
 function uc_country_formats_form($form, &$form_state) {
   $form['instructions'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Address format variables'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -157,7 +157,7 @@ function uc_country_formats_form($form, &$form_state) {
     );
     foreach ($countries as $country) {
       $form['countries'][$country->country_id] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => check_plain(t($country->country_name)),
         '#group' => 'country',
       );

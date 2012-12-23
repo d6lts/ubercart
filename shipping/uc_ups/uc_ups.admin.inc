@@ -29,7 +29,7 @@ function uc_ups_admin_settings($form, &$form_state) {
 
   // Container for credential forms
   $form['uc_ups_credentials'] = array(
-    '#type'          => 'fieldset',
+    '#type'          => 'details',
     '#title'         => t('Credentials'),
     '#description'   => t('Account number and authorization information.'),
     '#collapsible'   => TRUE,
@@ -72,7 +72,7 @@ function uc_ups_admin_settings($form, &$form_state) {
   );
 
   $form['services'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Service options'),
     '#description' => t('Set the conditions that will return a UPS quote.'),
     '#collapsible' => TRUE,
@@ -90,7 +90,7 @@ function uc_ups_admin_settings($form, &$form_state) {
 
   // Container for quote options
   $form['uc_ups_quote_options'] = array(
-    '#type'          => 'fieldset',
+    '#type'          => 'details',
     '#title'         => t('Quote options'),
     '#description'   => t('Preferences that affect computation of quote.'),
     '#collapsible'   => TRUE,
@@ -183,7 +183,7 @@ function uc_ups_admin_settings($form, &$form_state) {
 
   // Container for markup forms
   $form['uc_ups_markups'] = array(
-    '#type'          => 'fieldset',
+    '#type'          => 'details',
     '#title'         => t('Markups'),
     '#description'   => t('Modifiers to the shipping weight and quoted rate.'),
     '#collapsible'   => TRUE,
@@ -235,7 +235,7 @@ function uc_ups_admin_settings($form, &$form_state) {
 
   // Container for label printing
   $form['uc_ups_labels'] = array(
-    '#type'          => 'fieldset',
+    '#type'          => 'details',
     '#title'         => t('Label Printing'),
     '#description'   => t('Preferences for UPS Shipping Label Printing.  Additional permissions from UPS are required to use this feature.'),
     '#collapsible'   => TRUE,

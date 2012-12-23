@@ -130,7 +130,7 @@ function uc_file_user_cancel($edit, $account, $method) {
  */
 function uc_file_user_form($form, &$form_state, $account) {
   $form['file'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Administration'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -649,7 +649,7 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
   );
 
   $form['uc_file_limits'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#description' => t('Use these options to override any global download limits set at the !url.', array('!url' => l(t('Ubercart product settings page'), 'admin/store/settings/products', array('query' => array('destination' => 'node/' . $node->nid . '/edit/features/file/add'))))),
     '#collapsed' => FALSE,
     '#collapsible' => FALSE,
@@ -848,7 +848,7 @@ function uc_file_feature_settings($form, &$form_state) {
     '#default_value' => variable_get('uc_file_duplicate_warning', TRUE),
   );
   $form['uc_file_download_limit'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Default download limits'),
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,

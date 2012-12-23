@@ -26,7 +26,7 @@ function uc_usps_admin_settings($form, &$form_state) {
 
   // Container for credential forms
   $form['uc_usps_credentials'] = array(
-    '#type'          => 'fieldset',
+    '#type'          => 'details',
     '#title'         => t('Credentials'),
     '#description'   => t('Account number and authorization information.'),
     '#collapsible'   => TRUE,
@@ -42,7 +42,7 @@ function uc_usps_admin_settings($form, &$form_state) {
   );
 
   $form['domestic'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('USPS Domestic'),
     '#description' => t('Set the conditions that will return a USPS quote.'),
     '#collapsible' => TRUE,
@@ -74,7 +74,7 @@ function uc_usps_admin_settings($form, &$form_state) {
   );
 
   $form['international'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('USPS International'),
     '#description' => t('Set the conditions that will return a USPS International quote.'),
     '#collapsible' => TRUE,
@@ -100,7 +100,7 @@ function uc_usps_admin_settings($form, &$form_state) {
 
   // Container for quote options
   $form['uc_usps_quote_options'] = array(
-    '#type'          => 'fieldset',
+    '#type'          => 'details',
     '#title'         => t('Quote options'),
     '#description'   => t('Preferences that affect computation of quote.'),
     '#collapsible'   => TRUE,
@@ -148,7 +148,7 @@ function uc_usps_admin_settings($form, &$form_state) {
 
   // Container for markup forms
   $form['uc_usps_markups'] = array(
-    '#type'          => 'fieldset',
+    '#type'          => 'details',
     '#title'         => t('Markups'),
     '#description'   => t('Modifiers to the shipping weight and quoted rate.'),
     '#collapsible'   => TRUE,

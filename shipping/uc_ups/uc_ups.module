@@ -106,7 +106,7 @@ function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
     $weight = variable_get('uc_quote_method_weight', array()) + array('ups' => 0);
 
     $ups = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('UPS product description'),
       '#collapsible' => TRUE,
       '#collapsed' => ($enabled['ups'] == FALSE || uc_product_get_shipping_type($node) != 'small_package'),

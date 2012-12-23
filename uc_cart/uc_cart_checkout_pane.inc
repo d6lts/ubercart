@@ -96,7 +96,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
 
         if (!empty($contents['new_account'])) {
           $array = array(
-            '#type' => 'fieldset',
+            '#type' => 'details',
             '#title' => t('New account details'),
             '#description' => variable_get('uc_cart_new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
             '#collapsible' => FALSE,

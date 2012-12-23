@@ -109,7 +109,7 @@ function uc_shipping_new_package($form, &$form_state, $order) {
   $shipping_type_options = uc_quote_shipping_type_options();
   foreach ($shipping_types_products as $shipping_type => $products) {
     $form['shipping_types'][$shipping_type] = array(
-      '#type'        => 'fieldset',
+      '#type'        => 'details',
       '#title'       => isset($shipping_type_options[$shipping_type]) ?
                         $shipping_type_options[$shipping_type]        :
                         ucwords(str_replace('_', ' ', $shipping_type)),
@@ -577,7 +577,7 @@ function uc_shipping_new_shipment($form, &$form_state, $order) {
   $pkgs_exist = FALSE;
   foreach ($packages_by_type as $shipping_type => $packages) {
     $form['shipping_types'][$shipping_type] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $shipping_types[$shipping_type]['title'],
     );
     $form['shipping_types'][$shipping_type]['packages'] = array();
@@ -754,7 +754,7 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
   }
   $addresses = array();
   $form['packages'] = array(
-    '#type'        => 'fieldset',
+    '#type'        => 'details',
     '#title'       => t('Packages'),
     '#collapsible' => TRUE,
     '#tree'        => TRUE,
@@ -784,7 +784,7 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
       $declared_value += $product->qty * $product->price;
     }
     $pkg_form = array(
-      '#type'  => 'fieldset',
+      '#type'  => 'details',
       '#title' => t('Package @id', array('@id' => $id)),
     );
     $pkg_form['products'] = array(
@@ -889,7 +889,7 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
   $form = uc_shipping_address_form($form, $form_state, $addresses, $order);
 
   $form['shipment'] = array(
-    '#type'        => 'fieldset',
+    '#type'        => 'details',
     '#title'       => t('Shipment data'),
     '#collapsible' => TRUE,
   );

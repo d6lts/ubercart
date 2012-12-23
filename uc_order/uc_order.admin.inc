@@ -52,7 +52,7 @@ function uc_order_workflow_form($form, &$form_state) {
   $statuses = uc_order_status_list();
 
   $form['order_states'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Order states'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -87,7 +87,7 @@ function uc_order_workflow_form($form, &$form_state) {
   }
 
   $form['order_statuses'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Order statuses'),
     '#collapsible' => FALSE,
     '#theme' => 'uc_order_status_table',
@@ -365,7 +365,7 @@ function uc_order_create_form($form, &$form_state) {
 
     // Container for customer search fields.
     $form['customer'] += array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('Customer search'),
       '#description' => t('Enter full or partial information in one or more of the following fields, then press the "Search" button. Search results will match all the provided information.'),
     );
@@ -475,7 +475,7 @@ function uc_order_create_form($form, &$form_state) {
   elseif ($form_state['values']['customer_type'] == 'create') {
     // Container for new customer information.
     $form['customer'] += array(
-      '#type'  => 'fieldset',
+      '#type'  => 'details',
       '#title' => t('New customer details'),
     );
     // Customer e-mail address.

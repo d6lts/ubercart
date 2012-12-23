@@ -17,7 +17,7 @@ define('UC_PRODUCT_KIT_MUTABLE', 1);
  */
 function uc_product_kit_form_uc_product_settings_form_alter(&$form, &$form_state) {
   $form['product_kit'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => 'Product kit settings',
     '#group' => 'product-settings',
     '#weight' => -5,
@@ -509,7 +509,7 @@ function uc_product_kit_form(&$node, $form_state) {
   $products = db_query("SELECT nid, title FROM {node} WHERE type IN (:types) ORDER BY title, nid", array(':types' => $product_types))->fetchAllKeyed();
 
   $form['base'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Product kit information'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
@@ -545,7 +545,7 @@ function uc_product_kit_form(&$node, $form_state) {
   if (!empty($node->products)) {
     foreach ($node->products as $i => $product) {
       $form['base']['items'][$i] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
       );
       $form['base']['items'][$i]['link'] = array(
         '#type' => 'item',

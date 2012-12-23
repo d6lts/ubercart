@@ -53,7 +53,7 @@ function hook_uc_form_alter(&$form, &$form_state, $form_id) {
       $form['products'][$key]['attributes'] = _uc_attribute_alter_form(node_load($key));
       if (is_array($form['products'][$key]['attributes'])) {
         $form['products'][$key]['attributes']['#tree'] = TRUE;
-        $form['products'][$key]['#type'] = 'fieldset';
+        $form['products'][$key]['#type'] = 'details';
       }
     }
   }

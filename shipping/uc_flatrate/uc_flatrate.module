@@ -56,7 +56,7 @@ function uc_flatrate_form_node_form_alter(&$form, &$form_state, $form_id) {
 
       if (!isset($form['shipping']['flatrate'])) {
         $form['shipping']['flatrate'] = array(
-          '#type' => 'fieldset',
+          '#type' => 'details',
           '#title' => t('Flat shipping rates'),
           '#description' => t("Overrides the default shipping rate per product for each flat rate shipping method. Leave field empty to use the method's default value."),
           '#tree' => TRUE,

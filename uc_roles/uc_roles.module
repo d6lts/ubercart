@@ -166,7 +166,7 @@ function uc_roles_form_user_profile_form_alter(&$form, &$form_state) {
   );
 
   $form['uc_roles'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Ubercart roles'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -175,7 +175,7 @@ function uc_roles_form_user_profile_form_alter(&$form, &$form_state) {
   );
 
   $form['uc_roles']['expirations'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Pending expirations'),
     '#collapsible' => FALSE,
     '#weight' => 0,
@@ -566,7 +566,7 @@ function uc_roles_feature_form($form, &$form_state, $node, $feature) {
   );
 
   $form['role_lifetime'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Role expiration'),
     '#states' => array(
       'visible' => array('input[name="end_override"]' => array('checked' => TRUE)),
@@ -799,7 +799,7 @@ function uc_roles_feature_settings($form, &$form_state) {
   );
 
   $form['role_lifetime'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Default role expiration'),
   );
 

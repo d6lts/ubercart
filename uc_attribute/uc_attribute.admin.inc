@@ -396,7 +396,7 @@ function uc_attribute_option_form($form, &$form_state, $attribute, $option = NUL
     '#weight' => 4,
   );
   $form['adjustments'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Default adjustments'),
     '#description' => t('Enter a positive or negative value for each adjustment applied when this option is selected.<br />Any of these may be overriden at the product level.'),
     '#collapsible' => FALSE,

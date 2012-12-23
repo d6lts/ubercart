@@ -911,7 +911,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
 
     case 'edit-form':
       $form['admin_comment_field'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Add an admin comment'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
@@ -961,7 +961,7 @@ function uc_order_pane_update($op, $order, &$form = NULL, &$form_state = NULL) {
  */
 function uc_order_view_update_form($form, &$form_state, $order) {
   $form['order_comment_field'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Add an order comment'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -972,7 +972,7 @@ function uc_order_view_update_form($form, &$form_state, $order) {
   );
 
   $form['admin_comment_field'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Add an admin comment'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,

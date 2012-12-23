@@ -24,7 +24,7 @@ function uc_cart_cart_settings_form($form, &$form_state) {
   );
 
   $form['general'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Basic settings'),
     '#group' => 'cart-settings',
   );
@@ -77,7 +77,7 @@ function uc_cart_cart_settings_form($form, &$form_state) {
   );
 
   $form['lifetime'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Cart lifetime'),
     '#description' => t('Set the length of time that products remain in the cart. Cron must be running for this feature to work.'),
     '#group' => 'cart-settings',
@@ -101,7 +101,7 @@ function uc_cart_cart_settings_form($form, &$form_state) {
   );
 
   $form['lifetime']['anonymous'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Anonymous users'),
     '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
   );
@@ -125,7 +125,7 @@ function uc_cart_cart_settings_form($form, &$form_state) {
   );
 
   $form['lifetime']['authenticated'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Authenticated users'),
     '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
   );
@@ -148,7 +148,7 @@ function uc_cart_cart_settings_form($form, &$form_state) {
   );
 
   $form['continue_shopping'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Continue shopping element'),
     '#description' => t('These settings control the <em>continue shopping</em> option on the cart page.'),
     '#group' => 'cart-settings',
@@ -178,7 +178,7 @@ function uc_cart_cart_settings_form($form, &$form_state) {
   );
 
   $form['breadcrumb'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Cart breadcrumb'),
     '#description' => t('Drupal automatically adds a <em>Home</em> breadcrumb to the cart page, or you can use these settings to specify a custom breadcrumb.'),
     '#group' => 'cart-settings',
@@ -229,7 +229,7 @@ function uc_cart_checkout_settings_form($form, &$form_state) {
   );
 
   $form['checkout'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Basic settings'),
     '#group' => 'checkout-settings',
   );
@@ -241,7 +241,7 @@ function uc_cart_checkout_settings_form($form, &$form_state) {
   );
 
   $form['anonymous'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Anonymous checkout'),
     '#group' => 'checkout-settings',
   );
@@ -320,7 +320,7 @@ function uc_cart_checkout_settings_form($form, &$form_state) {
     $pane_settings = $pane['callback']('settings', $null, array());
     if (is_array($pane_settings)) {
       $form['pane_' . $id] = $pane_settings + array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('@pane pane', array('@pane' => $pane['title'])),
         '#group' => 'checkout-settings',
       );
@@ -355,7 +355,7 @@ function uc_cart_checkout_settings_form($form, &$form_state) {
   );
 
   $form['instructions'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Instruction messages'),
     '#group' => 'checkout-settings',
   );
@@ -375,7 +375,7 @@ function uc_cart_checkout_settings_form($form, &$form_state) {
   );
 
   $form['completion_messages'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Completion messages'),
     '#group' => 'checkout-settings',
   );

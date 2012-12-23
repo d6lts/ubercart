@@ -504,7 +504,7 @@ function uc_reports_products_custom() {
  */
 function uc_reports_products_custom_form($form, &$form_state, $values) {
   $form['search'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Customize product report parameters'),
     '#description' => t('Adjust these values and update the report to build your custom product report. Once submitted, the report may be bookmarked for easy reference in the future.'),
     '#collapsible' => TRUE,
@@ -1164,7 +1164,7 @@ function uc_reports_sales_custom() {
  */
 function uc_reports_sales_custom_form($form, &$form_state, $values, $statuses) {
   $form['search'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Customize sales report parameters'),
     '#description' => t('Adjust these values and update the report to build your custom sales summary. Once submitted, the report may be bookmarked for easy reference in the future.'),
     '#collapsible' => TRUE,

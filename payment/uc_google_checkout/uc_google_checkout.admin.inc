@@ -12,7 +12,7 @@
  */
 function uc_google_checkout_settings($form, &$form_state) {
   $form['authentication'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Authentication'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
@@ -30,7 +30,7 @@ function uc_google_checkout_settings($form, &$form_state) {
   );
 
   $form['authentication']['sandbox'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Test environment settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -56,7 +56,7 @@ function uc_google_checkout_settings($form, &$form_state) {
   );
 
   $form['messages'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Customer messages'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
@@ -75,7 +75,7 @@ function uc_google_checkout_settings($form, &$form_state) {
   }
 
   $form['button'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Button settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,

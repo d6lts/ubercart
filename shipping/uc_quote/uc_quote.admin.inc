@@ -38,7 +38,7 @@ function uc_quote_admin_settings($form, &$form_state) {
   );
 
   $form['uc_quote_pane_description'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Shipping quote pane description'),
     '#tree' => TRUE,
     '#collapsible' => TRUE,
@@ -51,7 +51,7 @@ function uc_quote_admin_settings($form, &$form_state) {
   );
 
   $form['uc_quote_err_msg'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Shipping quote error message'),
     '#tree' => TRUE,
     '#collapsible' => TRUE,
@@ -64,7 +64,7 @@ function uc_quote_admin_settings($form, &$form_state) {
   );
 
   $form['default_address'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Default pickup address'),
     '#description' => t("When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. This form provides the default location for all products in the store. If a product's individual pickup address is blank, Ubercart uses the store's default pickup address specified here."),
     '#collapsible' => TRUE,
@@ -166,7 +166,7 @@ function uc_quote_method_settings($form, &$form_state) {
   $shipping_types = uc_quote_shipping_type_options();
   if (is_array($shipping_types)) {
     $form['uc_quote_type_weight'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => t('List position'),
       '#description' => t('Determines which shipping methods are quoted at checkout when products of different shipping types are ordered. Larger values take precedence.'),
       '#collapsible' => TRUE,

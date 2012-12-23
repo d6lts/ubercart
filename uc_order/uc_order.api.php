@@ -356,7 +356,7 @@ function uc_order_pane_callback($op, $order, &$form = NULL, &$form_state = NULL)
 
     case 'edit-form':
       $form['admin_comment_field'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Add an admin comment'),
         '#collapsible' => TRUE,
         '#collapsed' => TRUE,
