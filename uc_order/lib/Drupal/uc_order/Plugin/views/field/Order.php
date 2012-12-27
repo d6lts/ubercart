@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Annotation\Plugin;
 use Drupal\views\ViewExecutable;
 
@@ -18,7 +19,7 @@ use Drupal\views\ViewExecutable;
  *
  * @Plugin(
  *   id = "uc_order",
- *   module = "uc_orders"
+ *   module = "uc_order"
  * )
  */
 class Order extends FieldPluginBase {
@@ -26,8 +27,8 @@ class Order extends FieldPluginBase {
   /**
    * Override init function to provide generic option to link to user.
    */
-  public function init(ViewExecutable $view, &$data) {
-    parent::init($view, $data);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+    parent::init($view, $display, $options);
     if (!empty($this->options['link_to_order'])) {
       $this->additional_fields['order_id'] = array('table' => 'uc_orders', 'field' => 'order_id');
       $this->additional_fields['uid'] = array('table' => 'uc_orders', 'field' => 'uid');
