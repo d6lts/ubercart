@@ -55,11 +55,27 @@ function uc_order_views_data() {
     ),
   );
 
-  // Expose the uid as a relationship.
   $data['uc_orders']['uid'] = array(
-    'title' => t('Customer'),
-    'help' => t('Relate an order to the user who placed it.'),
+    'title' => t('Uid'),
+    'help' => t('The user ID that the order belongs to.'),
+    'field' => array(
+      'id' => 'user',
+      'click sortable' => TRUE,
+    ),
+    'argument' => array(
+      'id' => 'user_uid',
+      'name field' => 'name', // display this field in the summary
+    ),
+    'filter' => array(
+      'title' => t('Name'),
+      'id' => 'user_name',
+    ),
+    'sort' => array(
+      'id' => 'standard',
+    ),
     'relationship' => array(
+      'title' => t('Customer'),
+      'help' => t('Relate an order to the user who placed it.'),
       'base' => 'users',
       'field' => 'uid',
       'id' => 'standard',
