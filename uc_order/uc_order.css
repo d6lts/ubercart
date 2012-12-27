@@ -35,18 +35,6 @@
   padding-top: 0;
 }
 
-.view-uc-orders tbody tr:hover {
-  background-color: #ddd;
-}
-
-.view-uc-orders tbody td.views-field-order-total {
-  text-align: right;
-}
-
-.view-uc-orders tbody td.views-field-created {
-  text-align: center;
-}
-
 .order-overview-form {
   float: left;
   padding: 0 2em 0 0;
