@@ -36,7 +36,7 @@ function uc_catalog_pathauto_bulkupdate(&$context) {
     $context['sandbox']['current'] = 0;
   }
 
-  $catalog_vid = variable_get('uc_catalog_vid', 0);
+  $catalog_vid = config('uc_catalog.settings')->get('vocabulary');
   $query = db_select('taxonomy_term_data', 'td');
   $query->leftJoin('url_alias', 'ua', "CONCAT('catalog/', td.tid) = ua.source");
   $query->addField('td', 'tid');
@@ -87,7 +87,7 @@ function _uc_catalog_pathauto_alias($category, $op) {
   module_load_include('inc', 'pathauto');
   $count = 0;
 
-  if ($category->vid == variable_get('uc_catalog_vid', 0)) {
+  if ($category->vid == config('uc_catalog.settings')->get('vocabulary')) {
     // Check that the term has its bundle, which is the vocabulary's machine name.
     if (!isset($category->vocabulary_machine_name)) {
       $vocabulary = taxonomy_vocabulary_load($term->vid);

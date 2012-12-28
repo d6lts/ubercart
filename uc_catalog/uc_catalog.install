@@ -19,9 +19,9 @@ function uc_catalog_enable() {
  * Implements hook_uninstall().
  */
 function uc_catalog_uninstall() {
-  if ($vid = variable_get('uc_catalog_vid', 0)) {
+  if ($vid = config('uc_catalog.settings')->get('vocabulary')) {
     $vocab = taxonomy_vocabulary_load($vid);
-    drupal_set_message(t('The Ubercart Catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', array('@url' => url('admin/structure/taxonomy/' . $vocab->machine_name . '/edit'))), 'warning');
+    drupal_set_message(t('The Ubercart Catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', array('@url' => url('admin/structure/taxonomy/' . $vocab->id() . '/edit'))), 'warning');
   }
 
   db_delete('variable')
@@ -34,4 +34,15 @@ function uc_catalog_uninstall() {
  */
 function uc_catalog_update_last_removed() {
   return 7006;
+}
+
+/**
+ * Moves catalog settings from variable to config.
+ */
+function uc_catalog_update_8000() {
+  update_variables_to_config('uc_catalog.settings', array(
+    'uc_catalog_display' => 'display',
+    'uc_catalog_vid' => 'vocabulary',
+    'uc_catalog_breadcrumb' => 'breadcrumb',
+  ));
 }

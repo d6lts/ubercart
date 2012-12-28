@@ -11,9 +11,12 @@
  *
  * Configures the display of the catalog breadcrumb.
  *
+ * @see uc_catalog_settings_form_submit()
  * @ingroup forms
  */
 function uc_catalog_settings_form($form, &$form_state) {
+  $config = config('uc_catalog.settings');
+
   $view = views_get_view('uc_catalog');
   $displays = array();
   foreach ($view->display as $display) {
@@ -25,38 +28,51 @@ function uc_catalog_settings_form($form, &$form_state) {
   $form['catalog-top-level']['uc_catalog_display'] = array(
     '#type' => 'select',
     '#title' => t('Catalog display'),
-    '#default_value' => variable_get('uc_catalog_display', 'catalog'),
+    '#default_value' => $config->get('display'),
     '#options' => $displays,
   );
 
-  $vid = variable_get('uc_catalog_vid', NULL);
+  $vid = config('uc_catalog.settings')->get('vocabulary');
   if ($vid) {
     $catalog = taxonomy_vocabulary_load($vid);
 
     $form['catalog_vid'] = array(
-      '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => url('admin/structure/taxonomy/' . $catalog->machine_name), '%name' => $catalog->name)) . '</p>',
+      '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => url('admin/structure/taxonomy/' . $catalog->id()), '%name' => $catalog->label())) . '</p>',
     );
   }
 
   $vocabs = array();
-  $vocabularies = taxonomy_vocabulary_load_multiple(FALSE);
+  $vocabularies = taxonomy_vocabulary_load_multiple();
   foreach ($vocabularies as $vid => $vocabulary) {
-    $vocabs[$vid] = $vocabulary->name;
+    $vocabs[$vid] = $vocabulary->label();
   }
 
   $form['catalog-top-level']['uc_catalog_vid'] = array(
     '#type' => 'select',
     '#title' => t('Catalog vocabulary'),
-    '#default_value' => variable_get('uc_catalog_vid', 0),
+    '#default_value' => $config->get('vocabulary'),
     '#options' => $vocabs,
   );
   $form['catalog-top-level']['uc_catalog_breadcrumb'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display the catalog breadcrumb'),
-    '#default_value' => variable_get('uc_catalog_breadcrumb', TRUE),
+    '#default_value' => $config->get('breadcrumb'),
   );
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Submission handler for catalog settings form.
+ *
+ * @see uc_store_settings_form()
+ */
+function uc_catalog_settings_form_submit($form, &$form_state) {
+  config('uc_catalog.settings')
+    ->set('display', $form_state['values']['ùc_catalog_display'])
+    ->set('vocabulary', $form_state['values']['ùc_catalog_vid'])
+    ->set('breadcrumb', $form_state['values']['ùc_catalog_breadcrumb'])
+    ->save();
 }
 
 /**
@@ -66,7 +82,7 @@ function uc_catalog_orphaned_products() {
   $build = array();
 
   if (variable_get('taxonomy_maintain_index_table', TRUE)) {
-    $vid = variable_get('uc_catalog_vid', 0);
+    $vid = config('uc_catalog.settings')->get('vocabulary');
     $product_types = uc_product_types();
     $field = field_info_field('taxonomy_catalog');
     $types = array_intersect($product_types, $field['bundles']['node']);
