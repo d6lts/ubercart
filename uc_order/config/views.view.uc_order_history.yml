@@ -1,0 +1,502 @@
+api_version: '3.0'
+base_field: order_id
+base_table: uc_orders
+core: 8.x
+description: ''
+disabled: '0'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: ''
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'view own orders'
+      cache:
+        type: none
+      query:
+        type: views_query
+      exposed_form:
+        type: basic
+      pager:
+        type: full
+        options:
+          items_per_page: '20'
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: '1'
+          row_class_special: '1'
+          override: '1'
+          sticky: '0'
+          summary: ''
+          columns:
+            created: created
+            order_id: order_id
+            actions: order_id
+            order_status: order_status
+            product_count: product_count
+            order_total: order_total
+          info:
+            created:
+              sortable: '1'
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+            order_id:
+              sortable: '1'
+              default_sort_order: desc
+              align: ''
+              separator: ' '
+              empty_column: '0'
+              responsive: ''
+            actions:
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+            order_status:
+              sortable: '1'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+            product_count:
+              sortable: '1'
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: priority-medium
+            order_total:
+              sortable: '1'
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+          default: created
+          empty_table: '0'
+      row:
+        type: fields
+      fields:
+        created:
+          id: created
+          table: uc_orders
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Date
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          date_format: short
+          custom_date_format: ''
+          timezone: ''
+        order_id:
+          id: order_id
+          table: uc_orders
+          field: order_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Order #'
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '0'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_order: '1'
+        actions:
+          id: actions
+          table: uc_orders
+          field: actions
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Actions
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+        order_status:
+          id: order_status
+          table: uc_orders
+          field: order_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Status
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+        product_count:
+          id: product_count
+          table: uc_orders
+          field: product_count
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Products
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          set_precision: '0'
+          precision: '0'
+          decimal: .
+          separator: ','
+          format_plural: '0'
+          format_plural_singular: '1'
+          format_plural_plural: '@count'
+          prefix: ''
+          suffix: ''
+        order_total:
+          id: order_total
+          table: uc_orders
+          field: order_total
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Total
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          set_precision: '0'
+          precision: '0'
+          decimal: .
+          separator: ','
+          format_plural: '0'
+          format_plural_singular: '1'
+          format_plural_plural: '@count'
+          prefix: ''
+          suffix: ''
+          format: uc_price
+      filters:
+        order_status:
+          id: order_status
+          table: uc_orders
+          field: order_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value:
+            _active: _active
+          group: '1'
+          exposed: '0'
+          expose:
+            operator_id: '0'
+            label: ''
+            description: ''
+            use_operator: '0'
+            operator: ''
+            identifier: ''
+            required: '0'
+            remember: '0'
+            multiple: '0'
+            remember_roles:
+              authenticated: authenticated
+            reduce: '0'
+          is_grouped: '0'
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: '1'
+            widget: select
+            multiple: '0'
+            remember: '0'
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      sorts: {  }
+      title: 'My order history'
+      arguments:
+        uid:
+          id: uid
+          table: uc_orders
+          field: uid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: 'not found'
+          exception:
+            value: all
+            title_enable: '0'
+            title: All
+          title_enable: '0'
+          title: ''
+          breadcrumb_enable: '0'
+          breadcrumb: ''
+          default_argument_type: fixed
+          default_argument_options:
+            argument: ''
+          default_argument_skip_url: '0'
+          summary_options:
+            base_path: ''
+            count: '1'
+            items_per_page: '25'
+            override: '0'
+          summary:
+            sort_order: asc
+            number_of_records: '0'
+            format: default_summary
+          specify_validation: '1'
+          validate:
+            type: user_or_permission
+            fail: 'not found'
+          validate_options:
+            type: uid
+            perm: 'view all orders'
+          break_phrase: '0'
+          not: '0'
+      filter_groups:
+        operator: AND
+        groups: {  }
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: ''
+    display_options:
+      path: user/%/orders
+      menu:
+        type: tab
+        title: Orders
+        description: ''
+        name: account
+        weight: '0'
+        context: '0'
+human_name: 'Order history'
+module: views
+name: uc_order_history
+tag: ''
+uuid: 622cebf6-8e47-43ff-8d14-20dc72b8f6cf
