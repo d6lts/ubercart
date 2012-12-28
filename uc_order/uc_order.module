@@ -441,9 +441,9 @@ function uc_order_field_extra_fields() {
 function uc_order_user_view($account, $view_mode) {
   global $user;
 
-  if ($user->uid && (($user->uid == $account->uid && user_access('view own orders')) || user_access('view all orders'))) {
-    $account->content['summary']['orders'] = array(
-      '#type' => 'user_profile_item',
+  if ($view_mode == 'full' && $user->uid && (($user->uid == $account->uid && user_access('view own orders')) || user_access('view all orders'))) {
+    $account->content['orders'] = array(
+      '#type' => 'item',
       '#title' => t('Orders'),
       '#markup' => l(t('Click here to view your order history.'), 'user/' . $account->uid . '/orders'),
     );

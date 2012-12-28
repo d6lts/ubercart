@@ -365,17 +365,15 @@ function uc_file_user_view($account, $view_mode) {
   // If user has files and permission to view them, put a link
   // on the user's profile.
   $existing_download = db_query("SELECT fid FROM {uc_file_users} WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
-  if (!$existing_download || (!user_access('view all downloads') && $user->uid != $account->uid)) {
+  if ($view_mode != 'full' || !$existing_download || (!user_access('view all downloads') && $user->uid != $account->uid)) {
     return;
   }
 
-  $item = array(
-    '#type' => 'user_profile_item',
+  $account->content['uc_file_download'] = array(
+    '#type' => 'item',
     '#title' => t('File downloads'),
     '#markup' => l(t('Click here to view your file downloads.'), 'user/' . $account->uid . '/purchased-files'),
   );
-
-  $account->content['summary']['uc_file_download'] = $item;
 }
 
 /**
