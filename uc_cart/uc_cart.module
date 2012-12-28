@@ -68,6 +68,7 @@ function uc_cart_menu() {
     'page callback' => 'uc_cart_view',
     'access arguments' => array('access content'),
     'file' => 'uc_cart.pages.inc',
+    'menu_name' => 'account',
   );
   $items['cart/empty'] = array(
     'title' => 'Empty cart',
