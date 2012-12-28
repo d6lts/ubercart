@@ -310,7 +310,7 @@ function uc_file_action_order_renew($order) {
         $comment = t('User can now download files in the directory %dir.', array('%dir' => $file->filename));
       }
       else {
-        $comment = t('User can now download the file %file.', array('%file' => basename($file->filename)));
+        $comment = t('User can now download the file %file.', array('%file' => drupal_basename($file->filename)));
       }
       uc_order_comment_save($order->order_id, $order_user->uid, $comment);
     }

@@ -138,17 +138,17 @@ function uc_file_user_downloads($account) {
 
     // Expiration set to 'never'
     if ($file->expiration == FALSE) {
-      $file_link = l(basename($file->filename), 'download/' . $file->fid, $onclick);
+      $file_link = l(drupal_basename($file->filename), 'download/' . $file->fid, $onclick);
     }
 
     // Expired.
     elseif (REQUEST_TIME > $file->expiration) {
-      $file_link = basename($file->filename);
+      $file_link = drupal_basename($file->filename);
     }
 
     // Able to be downloaded.
     else {
-      $file_link = l(basename($file->filename), 'download/' . $file->fid, $onclick) . ' (' . t('expires on @date', array('@date' => format_date($file->expiration, 'uc_store'))) . ')';
+      $file_link = l(drupal_basename($file->filename), 'download/' . $file->fid, $onclick) . ' (' . t('expires on @date', array('@date' => format_date($file->expiration, 'uc_store'))) . ')';
     }
 
     $files[] = array(
@@ -307,7 +307,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
 
   // Everything's ok!
   // $message_user has already been passed through check_plain()
-  watchdog('uc_file', '!username has started download of the file %filename.', array('!username' => $message_user, '%filename' => basename($file_download->filename)), WATCHDOG_NOTICE);
+  watchdog('uc_file', '!username has started download of the file %filename.', array('!username' => $message_user, '%filename' => drupal_basename($file_download->filename)), WATCHDOG_NOTICE);
 }
 
 /**
