@@ -141,7 +141,7 @@ function _uc_quote_assemble_quotes($order) {
       $data = uc_quote_action_get_quote($order, $method);
 
       foreach ($data as &$quote) {
-        if (isset($quote['rate'])) {
+        if (isset($quote['rate']) && !isset($quote['format'])) {
           $context['subject']['line_item'] = array(
             'type' => 'shipping',
             'name' => $quote['option_label'],
