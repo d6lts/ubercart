@@ -254,7 +254,7 @@ function uc_shipping_order_pane() {
 }
 
 /**
- * Implemenation of hook_order_actions().
+ * Implements hook_order_actions().
  */
 function uc_shipping_order_actions($order) {
   $actions = array();

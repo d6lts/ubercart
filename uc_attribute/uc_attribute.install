@@ -6,7 +6,7 @@
  */
 
 /**
- * Implemenation of hook_schema()
+ * Implements hook_schema().
  */
 function uc_attribute_schema() {
   $schema = array();
@@ -377,7 +377,7 @@ function uc_attribute_schema() {
 }
 
 /**
- * Implmentation of hook_install().
+ * Implements hook_install().
  */
 function uc_attribute_install() {
   drupal_install_schema('uc_attribute');

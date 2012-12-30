@@ -6,7 +6,7 @@
  */
 
 /**
- * Implmentation of hook_schema().
+ * Implements hook_schema().
  */
 function uc_flatrate_schema() {
   $schema = array();
