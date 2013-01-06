@@ -15,4 +15,3 @@ files[] = views/uc_product_handler_field_weight.inc
 files[] = views/uc_product_handler_filter_product.inc
 
 configure = admin/store/settings/products
-stylesheets[all][] = uc_product.css

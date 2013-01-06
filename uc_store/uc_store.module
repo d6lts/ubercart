@@ -230,6 +230,14 @@ function uc_store_init() {
 }
 
 /**
+ * Implements hook_page_build().
+ */
+function uc_store_page_build(&$page) {
+  $path = drupal_get_path('module', 'uc_store');
+  $page['#attached']['css'][$path . '/uc_store.css'] = array('every_page' => TRUE);
+}
+
+/**
  * Implements hook_element_info().
  */
 function uc_store_element_info() {

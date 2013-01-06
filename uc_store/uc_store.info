@@ -7,4 +7,3 @@ core = 8.x
 files[] = classes/encrypt.inc
 
 configure = admin/store/settings/store
-stylesheets[all][] = uc_store.css

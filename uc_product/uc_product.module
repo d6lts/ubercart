@@ -132,6 +132,14 @@ function uc_product_admin_paths() {
 }
 
 /**
+ * Implements hook_page_build().
+ */
+function uc_product_page_build(&$page) {
+  $path = drupal_get_path('module', 'uc_product');
+  $page['#attached']['css'][$path . '/uc_product.css'] = array('every_page' => TRUE);
+}
+
+/**
  * Implements hook_permission().
  */
 function uc_product_permission() {

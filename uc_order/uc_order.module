@@ -292,6 +292,14 @@ function uc_order_init() {
 }
 
 /**
+ * Implements hook_page_build().
+ */
+function uc_order_page_build(&$page) {
+  $path = drupal_get_path('module', 'uc_order');
+  $page['#attached']['css'][$path . '/uc_order.css'] = array('every_page' => TRUE);
+}
+
+/**
  * Implements hook_theme().
  */
 function uc_order_theme($existing, $type, $theme, $path) {
