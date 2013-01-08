@@ -1878,5 +1878,66 @@ function hook_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
 }
 
 /**
+ * Allows modules to react to the removal of an expiring role.
+ *
+ * @param $account
+ *   The Drupal user object.
+ * @param $rid
+ *   The Drupal role ID.
+ */
+function hook_uc_roles_delete($account, $rid) {
+  // Example: set the expiration date CCK field on a content profile node
+  // to midnight of the current date when an expiring role is deleted
+  $node = content_profile_load('profile', $account->uid, '', true);
+
+  if ($node) {
+    $node->field_expiration_date['0']['value'] = date('Y-m-dT00:00:00');
+    node_save($node);
+  }
+}
+
+/**
+ * Allows modules to react to the addition of an expiring role.
+ *
+ * @param $account
+ *   The Drupal user object.
+ * @param $rid
+ *   The Drupal role ID.
+ * @param $timestamp
+ *   The UNIX timestamp of the role expiration.
+ */
+function hook_uc_roles_grant($account, $rid, $timestamp) {
+  // Example: update the expiration date CCK field on a content profile node
+  // when an expiring role is granted
+  $node = content_profile_load('profile', $account->uid, '', true);
+
+  if ($node) {
+    $node->field_expiration_date['0']['value'] = date('c', $timestamp);
+    node_save($node);
+  }
+}
+
+/**
+ * Allows modules to react to the renewal of an expiring role.
+ *
+ * @param $account
+ *   The Drupal user object.
+ * @param $rid
+ *   The Drupal role ID.
+ * @param $timestamp
+ *   The UNIX timestamp of the role expiration.
+ */
+function hook_uc_roles_renew($account, $rid, $timestamp) {
+  // Example: update the expiration date CCK field on a content profile node
+  // when an expiring role is renewed
+  $node = content_profile_load('profile', $account->uid, '', true);
+
+  if ($node) {
+    $node->field_expiration_date['0']['value'] = date('c', $timestamp);
+    node_save($node);
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

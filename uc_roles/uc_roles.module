@@ -1165,6 +1165,8 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
     }
   }
 
+  module_invoke_all('uc_roles_delete', $account, $rid);
+
   // Flush visible menu items, since our permissions could've changed.
   _uc_roles_flush_menu_cache($account);
 }
@@ -1265,6 +1267,8 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
 
     drupal_set_message($message);
   }
+
+  module_invoke_all('uc_roles_grant', $account, $rid, $timestamp);
 }
 
 /**
@@ -1310,6 +1314,8 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
 
     drupal_set_message($message);
   }
+
+  module_invoke_all('uc_roles_renew', $account, $rid, $timestamp);
 }
 
 /**
