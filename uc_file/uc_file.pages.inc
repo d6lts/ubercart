@@ -208,7 +208,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
   }
 
   // Must be a valid file.
-  if (!$file_download || !is_file($file_download->full_path)) {
+  if (!$file_download || !is_readable($file_download->full_path)) {
     cache_set('uc_file_'. $ip, $requests, 'cache', time() + 86400);
     if ($requests == UC_FILE_REQUEST_LIMIT) {
       watchdog('uc_file', '%username has been temporarily banned from file downloads.', array('%username' => $message_user), WATCHDOG_WARNING);
