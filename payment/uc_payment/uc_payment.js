@@ -68,6 +68,7 @@ function serializeOrder() {
     return false;
   }
 
+  var uid = $("input[name*=uid]").val() || 0;
   var p_email = $("input[name*=primary_email]").val() || '';
   var s_f_name = $("input[name*=delivery_first_name]").val() || '';
   var s_l_name = $("input[name*=delivery_last_name]").val() || '';
@@ -107,7 +108,7 @@ function serializeOrder() {
   var order_size = 21;
   var order = 'O:8:"stdClass":' + order_size + ':{s:8:"products";' + products
     + 's:8:"order_id";i:0;'
-    + 's:3:"uid";i:0;'
+    + 's:3:"uid";i:' + uid + ';'
     + 's:13:"primary_email";s:' + p_email.bytes() + ':"' + p_email
     + '";s:19:"delivery_first_name";s:' + s_f_name.bytes() + ':"' + s_f_name
     + '";s:18:"delivery_last_name";s:' + s_l_name.bytes() + ':"' + s_l_name

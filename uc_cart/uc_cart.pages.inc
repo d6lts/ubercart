@@ -221,6 +221,10 @@ function uc_cart_checkout_form() {
     '#type' => 'hidden',
     '#value' => serialize($contents),
   );
+  $form['uid'] = array(
+    '#type' => 'hidden',
+    '#value' => $user->uid,
+  );
 
   $form['cancel'] = array(
     '#type' => 'submit',

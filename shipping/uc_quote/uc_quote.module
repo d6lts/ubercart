@@ -811,10 +811,6 @@ function uc_checkout_pane_quotes($op, &$order, $arg2) {
         '#type' => 'hidden',
         '#value' => 'checkout',
       );
-      $contents['uid'] = array(
-        '#type' => 'hidden',
-        '#value' => $user->uid,
-      );
       $contents['quote_button'] = array(
         '#type' => 'button',
         '#value' => t('Click to calculate shipping'),
