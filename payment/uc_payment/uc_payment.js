@@ -106,6 +106,15 @@ function serializeOrder() {
   line_item = 's:10:"line_items";a:' + i + ':{' + line_item + '}';
 
   var order_size = 21;
+
+  var shipping = '';
+  var shipping_option = $('input:radio[name=quote-option]:checked').val() || $('input:[name=quote-option]').val();
+  if (shipping_option) {
+    shipping_option = /(.*)---.*$/.exec(shipping_option)[1];
+    shipping = 's:5:"quote";a:1:{s:6:"method";s:' + shipping_option.bytes() + ':"' + shipping_option + '";}';
+    order_size++;
+  }
+
   var order = 'O:8:"stdClass":' + order_size + ':{s:8:"products";' + products
     + 's:8:"order_id";i:0;'
     + 's:3:"uid";i:' + uid + ';'
@@ -126,7 +135,7 @@ function serializeOrder() {
     + '";s:12:"billing_zone";i:' + b_zone
     + ';s:19:"billing_postal_code";s:' + b_code.bytes() +':"' + b_code
     + '";s:15:"billing_country";i:' + b_country + ';'
-    + line_item + '}';
+    + shipping + line_item + '}';
 
   return order;
 }
