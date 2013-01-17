@@ -763,6 +763,7 @@ function op_products_view_table($order) {
     ),
     'weight' => 5,
   );
+  drupal_alter('tapir_table_header', $table['#columns'], 'op_products_view_table');
 
   $context = array(
     'revision' => 'themed',
@@ -880,6 +881,7 @@ function op_products_customer_table($order) {
     ),
     'weight' => 5,
   );
+  drupal_alter('tapir_table_header', $table['#columns'], 'op_products_customer_table');
 
   $context = array(
     'revision' => 'themed',
@@ -972,6 +974,7 @@ function op_order_comments_view_table($comments) {
     'cell' => array('data' => t('Comment'), 'width' => '80%'),
     'weight' => 4,
   );
+  drupal_alter('tapir_table_header', $table['#columns'], 'op_order_comments_view_table');
 
   if (is_array($comments)) {
     foreach ($comments as $comment) {
@@ -1032,6 +1035,7 @@ function op_admin_comments_view_table($comments) {
     'cell' => array('data' => t('Comment'), 'width' => '80%'),
     'weight' => 2,
   );
+  drupal_alter('tapir_table_header', $table['#columns'], 'op_admin_comments_view_table');
 
   if (is_array($comments)) {
     foreach ($comments as $comment) {
