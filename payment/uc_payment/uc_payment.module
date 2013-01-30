@@ -384,7 +384,8 @@ function theme_uc_payment_totals($order) {
       $context['revision'] = 'themed';
       $context['subject']['line_item'] = $line;
 
-      $output .= '<tr><td align="right"><b>'. filter_xss($line['title']) .':</b></td>'
+      $attributes = drupal_attributes(array('class' => 'line-item-' . $line['type']));
+      $output .= '<tr' . $attributes . '><td align="right"><b>'. filter_xss($line['title']) .':</b></td>'
                 .'<td align="right">'. uc_price($line['amount'], $context) .'</td></tr>';
 
       if ($line['summed']) {
@@ -396,7 +397,7 @@ function theme_uc_payment_totals($order) {
   $context['revision'] = 'themed';
   $context['type'] = 'amount';
   unset($context['subject']);
-  $output .= '<tr><td align="right"><b>'. t('Order total:') .'</b></td>'
+  $output .= '<tr class="line-item-total"><td align="right"><b>'. t('Order total:') .'</b></td>'
             .'<td align="right">'. uc_price(uc_order_get_total($order), $context)
             .'</td></tr></table>';
 
