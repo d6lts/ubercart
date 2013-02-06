@@ -1640,7 +1640,7 @@ function uc_product_type_names() {
  */
 function uc_product_is_product($node) {
   // Load the node object if we received an integer as an argument.
-  if (is_int($node)) {
+  if (is_numeric($node)) {
     $node = node_load($node);
   }
 
