@@ -43,6 +43,9 @@ function uc_quote_request_quotes() {
   }
   $fake_order = new stdClass();
   $fake_order->uid = $_POST['uid'];
+  if (isset($_POST['payment_method'])) {
+    $fake_order->payment_method = $_POST['payment_method'];
+  }
   $fake_order->products = $products;
   foreach ((array) $_POST['details'] as $type => $address) {
     foreach ($address as $key => $value) {

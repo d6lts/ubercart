@@ -88,6 +88,10 @@ function quoteCallback(products) {
   $("input[name*=billing_]").each(function(i) {
     details["details[billing][" + $(this).attr("name").split("billing_")[1].replace(/]/, "") + "]"] = $(this).val();
   });
+  var paymentMethod = $('input[name*=payment_method]:checked').val();
+  if (paymentMethod !== undefined) {
+    details["payment_method"] = paymentMethod;
+  }
 
   if (!!products) {
     details["products"] = products;
