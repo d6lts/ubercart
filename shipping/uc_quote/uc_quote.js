@@ -170,7 +170,7 @@ function displayQuote(data) {
       if (data[i].notes) {
         item += '<div class="quote-notes">' + data[i].notes + "</div>";
       }
-      if (data[i].rate == undefined && item.length) {
+      if (data[i].rate == undefined && item.length && label) {
         item = label + ': ' + item;
       }
       quoteDiv.append('<div class="form-item">' + item + "</div>\n");
