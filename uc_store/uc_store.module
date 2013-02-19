@@ -438,6 +438,8 @@ function uc_store_theme() {
  * Implements hook_token_values(). (token.module)
  */
 function uc_store_token_values($type, $object = NULL) {
+  global $theme_key;
+
   $values = array();
 
   switch ($type) {
@@ -445,9 +447,22 @@ function uc_store_token_values($type, $object = NULL) {
       $login_link = url('user', array('absolute' => TRUE));
       $values['site-login'] = l($login_link, $login_link);
 
-      if ($logo = theme_get_setting('logo')) {
-        // Strip base_path from path returned by theme_get_setting().
-        $logo = substr($logo, strlen(base_path()));
+      // The site logo is available through theme_get_setting(), but calling
+      // it here may incorrectly initialise the static cache.
+      $settings = theme_get_settings($theme_key);
+      $themes = list_themes();
+      $theme_object = $themes[$theme_key];
+      if ($settings['toggle_logo']) {
+        if ($settings['default_logo']) {
+          $logo = dirname($theme_object->filename) . '/logo.png';
+        }
+        elseif ($settings['logo_path']) {
+          $logo = $settings['logo_path'];
+        }
+      }
+
+      // Use a logo; but only if we have one to use.
+      if (!empty($logo)) {
         $values['site-logo'] = theme('image', url($logo, array('absolute' => TRUE)), '', '', NULL, FALSE);
       }
       else {
