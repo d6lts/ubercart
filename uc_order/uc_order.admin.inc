@@ -1247,6 +1247,8 @@ function uc_order_edit_form_submit($form, &$form_state) {
   $order = uc_order_load($form_state['values']['order_id']);
   $log = array();
 
+  uc_order_module_invoke('edit-products', $order, $_POST);
+
   $panes = _order_pane_list();
   foreach ($panes as $pane) {
     if (in_array('edit', $pane['show']) &&
@@ -1270,13 +1272,6 @@ function uc_order_edit_form_submit($form, &$form_state) {
     }
   }
 
-  if (module_exists('uc_stock')) {
-    $qtys = array();
-    foreach ($order->products as $product) {
-      $qtys[$product->order_product_id] = $product->qty;
-    }
-  }
-
   unset($order->products);
   if (isset($_POST['products']) && is_array($_POST['products'])) {
     foreach ($_POST['products'] as $product) {
@@ -1284,13 +1279,6 @@ function uc_order_edit_form_submit($form, &$form_state) {
         $product['data'] = unserialize($product['data']);
         $product = (object)$product;
         $order->products[] = $product;
-
-        if (module_exists('uc_stock')) {
-          $temp = $product->qty;
-          $product->qty = $product->qty - $qtys[$product->order_product_id];
-          uc_stock_adjust_product_stock($product, 0, $order);
-          $product->qty = $temp;
-        }
       }
       else {
         $log['remove_'. $product['nid']] = $product['title'] .' removed from order.';
@@ -1326,6 +1314,8 @@ function uc_order_edit_form_submit($form, &$form_state) {
  * Populates the product add/edit div on the order edit screen.
  */
 function uc_order_edit_products($order) {
+  uc_order_module_invoke('edit-products', $order, $_POST);
+
   if (is_array($_POST['products'])) {
     foreach ($_POST['products'] as $key => $product) {
       $product['data'] = unserialize($product['data']);
@@ -1376,19 +1366,9 @@ function uc_order_edit_products($order) {
       if (variable_get('uc_order_logging', TRUE)) {
         uc_order_log_changes($order->order_id, array('add' => t('Added (@qty) @product-title to order.', array('@qty' => $product->qty, '@product-title' => $product->title))));
       }
-
-      // Decrement stock?
-      if (module_exists('uc_stock')) {
-        uc_stock_adjust_product_stock($product, 0, $order);
-      }
       break;
     case 'remove':
       $order_product_id = intval($_POST['opid']);
-      // Put back the stock?
-      if (module_exists('uc_stock')) {
-        $product = db_fetch_object(db_query("SELECT model, qty FROM {uc_order_products} WHERE order_product_id = %d", $order_product_id));
-        uc_stock_adjust($product->model, $product->qty);
-      }
       db_query("DELETE FROM {uc_order_products} WHERE order_product_id = %d", $order_product_id);
       break;
   }

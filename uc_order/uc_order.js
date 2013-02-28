@@ -382,16 +382,16 @@ function add_product_to_order(order_id, node_id) {
 function fetch_product_data() {
   var pdata = { };
 
-  $('.order-pane-table :input').each(
-    function() {
+  $('#products-container :input').each(function() {
+    if (this.type == 'checkbox') {
+      if (this.checked) {
+        pdata[$(this).attr('name')] = $(this).val();
+      }
+    }
+    else {
       pdata[$(this).attr('name')] = $(this).val();
     }
-  );
-  $('.order-pane-table ~ :input').each(
-    function() {
-      pdata[$(this).attr('name')] = $(this).val();
-    }
-  );
+  });
 
   return pdata;
 }
