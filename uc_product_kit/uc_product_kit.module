@@ -598,6 +598,9 @@ function uc_product_kit_form(&$node) {
     '#weight' => 30,
   );
 
+  // Disable all shipping related functionality.
+  $form['shipping']['#access'] = FALSE;
+
   return $form;
 }
 
