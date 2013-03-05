@@ -398,7 +398,7 @@ function _uc_authorizenet_cim_profile_charge_request($order, $amount, $data) {
           'amount' => _uc_authorizenet_format_amount($amount),
           'customerProfileId' => $profile['customerProfileId'],
           'customerPaymentProfileId' => $profile['customerPaymentProfileId'],
-          'customerShippingAddressId' => $profile['customerAddressId'],
+          'customerShippingAddressId' => (!empty($profile['customerAddressId'])) ? $profile['customerAddressId'] : '0',
           'order' => array(
             'invoiceNumber' => $order->order_id,
           ),
