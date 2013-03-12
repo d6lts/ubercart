@@ -8,7 +8,7 @@
 namespace Drupal\uc_credit\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to display encrypted credit card data.

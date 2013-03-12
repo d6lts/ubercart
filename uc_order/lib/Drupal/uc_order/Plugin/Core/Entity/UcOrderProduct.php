@@ -8,7 +8,7 @@
 namespace Drupal\uc_order\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\Entity;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 
 /**

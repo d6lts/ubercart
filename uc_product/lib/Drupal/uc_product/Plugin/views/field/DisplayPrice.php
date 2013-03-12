@@ -8,7 +8,7 @@
 namespace Drupal\uc_product\Plugin\views\field;
 
 use Drupal\uc_store\Plugin\views\field\Price;
-use Drupal\Core\Annotation\Plugin;
+use Drupal\Component\Annotation\Plugin;
 
 /**
  * Field handler to provide formatted display prices.
