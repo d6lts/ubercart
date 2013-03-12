@@ -1,0 +1,6 @@
+name: Cart item entity test module
+type: module
+core: 8.x
+dependencies:
+  - uc_cart
+hidden: true

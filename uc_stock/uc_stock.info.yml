@@ -1,0 +1,8 @@
+name: Stock
+type: module
+description: Manages stock levels of your products.
+dependencies:
+  - uc_product
+package: Ubercart - extra
+core: 8.x
+configure: admin/store/settings/stock

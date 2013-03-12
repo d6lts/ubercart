@@ -1,5 +1,0 @@
-name = Product attributes
-description = Extends product content types to support product variations that customers may select before purchase.
-dependencies[] = uc_product
-package = Ubercart - core (optional)
-core = 8.x

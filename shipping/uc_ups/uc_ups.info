@@ -1,7 +1,0 @@
-name = UPS
-description = Integrates UPS Rates and Services Selection and Shipping Online Tools.
-dependencies[] = uc_quote
-package = Ubercart - fulfillment
-core = 8.x
-
-configure = admin/store/settings/quotes/settings/ups

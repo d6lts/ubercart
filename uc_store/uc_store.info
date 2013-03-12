@@ -1,9 +1,0 @@
-name = Store
-description = REQUIRED. Handles store settings and management of your Ubercart site.
-package = Ubercart - core
-core = 8.x
-
-; Class definitions
-files[] = classes/encrypt.inc
-
-configure = admin/store/settings/store

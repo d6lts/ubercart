@@ -1,0 +1,9 @@
+name: Google Checkout
+type: module
+description: Integrates Google's Checkout, Merchant Calculated Shipping, and Order Processing APIs.
+dependencies:
+  - uc_cart
+  - uc_payment
+  - uc_quote
+package: Ubercart - payment
+core: 8.x

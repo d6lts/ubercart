@@ -1,5 +1,0 @@
-name = PayPal
-description = Processes payments using PayPal Website Payments Standard, Website Payments Pro and Express Checkout.
-dependencies[] = uc_payment
-package = Ubercart - payment
-core = 8.x

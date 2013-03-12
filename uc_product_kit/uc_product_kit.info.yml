@@ -1,0 +1,7 @@
+name: Product kit
+type: module
+description: Provides a content type that groups two or more products together, allowing them to be purchased as a bundle with an optional discount.
+dependencies:
+  - uc_product
+package: Ubercart - extra
+core: 8.x

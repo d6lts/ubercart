@@ -1,9 +1,0 @@
-name = Catalog
-description = Displays a hierarchical product catalog page and block.
-dependencies[] = path
-dependencies[] = taxonomy
-dependencies[] = uc_product
-dependencies[] = views
-package = Ubercart - core (optional)
-core = 8.x
-configure = admin/store/settings/catalog

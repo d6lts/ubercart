@@ -1,0 +1,7 @@
+name: Payment method pack
+type: module
+description: Provides the check/money order, COD, and 'other' payment methods.
+dependencies:
+  - uc_payment
+package: Ubercart - payment
+core: 8.x

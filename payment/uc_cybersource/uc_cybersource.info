@@ -1,8 +1,0 @@
-name = CyberSource
-description = Processes payments using the CyberSource Silent Order POST and Hosted Order Page services.
-dependencies[] = uc_payment
-package = Ubercart - payment
-core = 8.x
-
-; Class definitions
-files[] = uc_cybersource.soap.inc

@@ -1,0 +1,9 @@
+name: Cart
+type: module
+description: REQUIRED. Controls the shopping cart and checkout for an Ubercart e-commerce site.
+dependencies:
+  - uc_order
+  - uc_product
+package: Ubercart - core
+core: 8.x
+configure: admin/store/settings/cart

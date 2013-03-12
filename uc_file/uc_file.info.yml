@@ -1,0 +1,8 @@
+name: File downloads
+type: module
+description: Allows products to be associated with downloadable files.
+dependencies:
+  - uc_product
+  - uc_order
+package: Ubercart - core (optional)
+core: 8.x

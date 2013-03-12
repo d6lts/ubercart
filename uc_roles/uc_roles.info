@@ -1,6 +1,0 @@
-name = Roles
-description = Assigns permanent or expirable roles based on product purchases.
-dependencies[] = uc_product
-dependencies[] = uc_order
-package = Ubercart - core (optional)
-core = 8.x
