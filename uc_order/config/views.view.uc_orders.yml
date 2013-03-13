@@ -872,7 +872,6 @@ display:
         groups:
           1: AND
 human_name: Orders
-module: views
-name: uc_orders
+id: uc_orders
+module: uc_order
 tag: Ubercart
-uuid: d82f768d-f037-4bd1-b600-e5b6a1569728

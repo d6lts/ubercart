@@ -327,7 +327,6 @@ display:
         context: '0'
     new_id: admin_page
 human_name: Products
-module: views
-name: uc_products
+id: uc_products
+module: uc_product
 tag: Ubercart
-uuid: eba08bfc-05bf-4bda-8c04-04fa76d22a70

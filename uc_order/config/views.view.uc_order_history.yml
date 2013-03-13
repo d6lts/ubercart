@@ -496,7 +496,6 @@ display:
         weight: '0'
         context: '0'
 human_name: 'Order history'
-module: views
-name: uc_order_history
-tag: ''
-uuid: 622cebf6-8e47-43ff-8d14-20dc72b8f6cf
+id: uc_order_history
+module: uc_order
+tag: Ubercart
