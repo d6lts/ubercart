@@ -549,7 +549,12 @@ function uc_product_insert($node) {
     $node->height = $node->dim_height;
   }
 
-  drupal_write_record('uc_products', $node);
+  $record = new \stdClass();
+  $fields = array('vid', 'nid', 'model', 'list_price', 'cost', 'sell_price', 'weight', 'weight_units', 'length', 'width', 'height', 'length_units', 'pkg_qty', 'default_qty', 'ordering', 'shippable');
+  foreach ($fields as $name) {
+    $record->$name = $node->$name;
+  }
+  drupal_write_record('uc_products', $record);
 }
 
 /**
@@ -566,11 +571,16 @@ function uc_product_update($node) {
     $node->height = $node->dim_height;
   }
 
+  $record = new \stdClass();
+  $fields = array('vid', 'nid', 'model', 'list_price', 'cost', 'sell_price', 'weight', 'weight_units', 'length', 'width', 'height', 'length_units', 'pkg_qty', 'default_qty', 'ordering', 'shippable');
+  foreach ($fields as $name) {
+    $record->$name = $node->$name;
+  }
   if (!empty($node->revision)) {
-    drupal_write_record('uc_products', $node);
+    drupal_write_record('uc_products', $record);
   }
   else {
-    drupal_write_record('uc_products', $node, 'vid');
+    drupal_write_record('uc_products', $record, 'vid');
   }
 }
 
