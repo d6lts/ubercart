@@ -18,7 +18,10 @@ use Drupal\Core\Template\Attribute;
  */
 function theme_uc_product_model($variables) {
   $model = $variables['model'];
-  $attributes = $variables['attributes'];
+  $attributes = new Attribute($variables['attributes']);
+  if (!isset($attributes['class'])) {
+    $attributes['class'] = array();
+  }
   $attributes['class'][] = "product-info";
   $attributes['class'][] = "model";
 
@@ -98,7 +101,10 @@ function theme_uc_product_price($variables) {
 function theme_uc_product_weight($variables) {
   $amount = $variables['amount'];
   $units = $variables['units'];
-  $attributes = $variables['attributes'];
+  $attributes = new Attribute($variables['attributes']);
+  if (!isset($attributes['class'])) {
+    $attributes['class'] = array();
+  }
   $attributes['class'][] = "product-info";
   $attributes['class'][] = "weight";
 
@@ -132,7 +138,10 @@ function theme_uc_product_dimensions($variables) {
   $width = $variables['width'];
   $height = $variables['height'];
   $units = $variables['units'];
-  $attributes = $variables['attributes'];
+  $attributes = new Attribute($variables['attributes']);
+  if (!isset($attributes['class'])) {
+    $attributes['class'] = array();
+  }
   $attributes['class'][] = "product-info";
   $attributes['class'][] = "dimensions";
 
