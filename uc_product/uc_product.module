@@ -8,6 +8,8 @@
  * classes for more specification.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Implements hook_menu().
@@ -724,7 +726,7 @@ function uc_product_view_ajax_commands($form_state, $keys) {
 /**
  * Implements hook_view().
  */
-function uc_product_view($node, $view_mode) {
+function uc_product_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   // Give modules a chance to alter this product.  If it is a variant, this will
   // have been done already by uc_product_load_variant(), so we check a flag to
   // be sure not to alter twice -- cf. entity_prepare_view().

@@ -11,6 +11,8 @@
  * not listed in it.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\uc_catalog\UcTreeNode;
 
 /**
@@ -143,7 +145,7 @@ function uc_catalog_theme() {
 /**
  * Implements hook_node_view().
  */
-function uc_catalog_node_view($node, $view_mode) {
+function uc_catalog_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   static $parents = array();
 
   if (uc_product_is_product($node->type) && isset($node->taxonomy_catalog)) {
