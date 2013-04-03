@@ -17,8 +17,8 @@ class UcOrderProductRenderController extends EntityRenderController {
   /**
    * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
    */
-  public function buildContent(array $entities = array(), $view_mode = 'full', $langcode = NULL) {
-    parent::buildContent($entities, $view_mode, $langcode);
+  public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
+    parent::buildContent($entities, $displays, $view_mode, $langcode);
 
     foreach ($entities as $product) {
       $product->content['qty'] = array(
