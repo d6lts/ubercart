@@ -53,11 +53,10 @@ function uc_cybersource_requirements($phase) {
     );
     if (!$has_cybersource_hop) {
       $requirements['uc_cybersource']['description'] = t('For instructions on how to generate this file, please refer to <a href="http://www.cybersource.com/support_center/implementation/downloads/hosted_order_page/">CyberSource\'s Hosted Order Pages Documentation</a>, specifically the "Downloading Security Scripts" in Chapter 2 of the <a href="http://apps.cybersource.com/library/documentation/sbc/HOP_UG/html/">HOP User\'s Guide</a>.');
-      $severity = $phase == 'install' ? REQUIREMENT_INFO : REQUIREMENT_ERROR;
+      $severity = $phase == 'install' ? NULL : REQUIREMENT_ERROR;
       $requirements['uc_cybersource']['severity'] = $severity;
     }
     else {
-      $requirements['uc_cybersource']['severity'] = REQUIREMENT_OK;
       $requirements['uc_cybersource']['description'] = t('The HOP.php library is readable.');
     }
   }
