@@ -10,6 +10,7 @@
  * displayed to customers.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\uc_store\UcAddress;
 
 require_once dirname(__FILE__) . '/uc_order.order_pane.inc';
@@ -886,47 +887,18 @@ function uc_order_product_revive($products, $published = TRUE) {
 }
 
 /**
- * Displays the order view screen, constructed via hook_uc_order_pane().
+ * Generates an array for rendering the given order.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $order
+ *   A node entity.
+ * @param $view_mode
+ *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
+ *
+ * @return
+ *   An array as expected by drupal_render().
  */
-function uc_order_view($order, $view_mode = 'full') {
-  $order->content['#view_mode'] = $view_mode;
-
-  // Build fields content.
-  // In case of a multiple view, node_view_multiple() already ran the
-  // 'prepare_view' step. An internal flag prevents the operation from running
-  // twice.
-  field_attach_prepare_view('uc_order', array($order->order_id => $order), $view_mode);
-  $order->content += field_attach_view('uc_order', $order, $view_mode);
-
-  $panes = _uc_order_pane_list($view_mode);
-  foreach ($panes as $pane) {
-    if (in_array($view_mode, $pane['show'])) {
-      $func = $pane['callback'];
-      if (function_exists($func) && ($contents = $func($view_mode, $order)) != NULL) {
-        $title = isset($pane['display title']) ? $pane['display title'] : $pane['title'];
-        if ($title) {
-          $title = array(
-            '#markup' => $pane['title'] . ':',
-            '#prefix' => '<div class="order-pane-title">',
-            '#suffix' => '</div>',
-          );
-        }
-        else {
-          $title = array();
-        }
-
-        $order->content[$pane['id']] = array(
-          '#prefix' => '<div class="order-pane ' . $pane['class'] . '" id="order-pane-' . $pane['id'] . '">',
-          '#suffix' => '</div>',
-        );
-
-        $order->content[$pane['id']]['title'] = $title;
-        $order->content[$pane['id']]['pane'] = $contents;
-      }
-    }
-  }
-
-  return $order->content;
+function uc_order_view(EntityInterface $order, $view_mode = 'full') {
+  return entity_view($order, $view_mode);
 }
 
 /**
