@@ -947,7 +947,7 @@ function uc_cart_update_item($item) {
   $item_entity = entity_load('uc_cart_item', $item->cart_item_id);
   $item_entity->qty = $item->qty;
   $item_entity->data = $item->data;
-  entity_save('uc_cart_item', $item_entity);
+  $item_entity->save();
 }
 
 /**
@@ -1016,7 +1016,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
       'qty' => $qty,
       'data' => $data,
     ));
-    entity_save('uc_cart_item', $item_entity);
+    $item_entity->save();
     if ($msg) {
       drupal_set_message(t('<strong>@product-title</strong> added to <a href="!url">your shopping cart</a>.', array('@product-title' => $node->label(), '!url' => url('cart'))));
     }

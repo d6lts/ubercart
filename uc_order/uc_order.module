@@ -749,7 +749,7 @@ function uc_order_delete($order_id) {
  */
 function uc_order_product_save($order_id, $product) {
   $product->order_id = $order_id;
-  return entity_save('uc_order_product', $product);
+  return $product->save();
 }
 
 /**
