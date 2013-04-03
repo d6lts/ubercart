@@ -8,6 +8,7 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for ordered products.
