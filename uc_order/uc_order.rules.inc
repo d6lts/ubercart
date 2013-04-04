@@ -791,7 +791,7 @@ function uc_order_action_email_invoice($order, $from, $addresses, $subject, $tem
     }
   }
 
-  $settings['message'] = theme('uc_order', array('order' => $order, 'op' => $settings['view'], 'template' => $settings['template']));
+  $settings['message'] = theme('uc_order_invoice', array('order' => $order, 'op' => $settings['view'], 'template' => $settings['template']));
 
   foreach ($recipients as $email) {
     $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);

@@ -305,8 +305,8 @@ function uc_order_page_build(&$page) {
  */
 function uc_order_theme($existing, $type, $theme, $path) {
   $theme_hooks = array(
-    'uc_order' => array(
-      'template' => 'uc-order',
+    'uc_order_invoice' => array(
+      'template' => 'uc-order-invoice',
       'path' => $path . '/templates',
       'variables' => array(
         'order' => NULL,
@@ -343,15 +343,15 @@ function uc_order_theme($existing, $type, $theme, $path) {
   );
 
   $theme_hooks += array(
-    'uc_order__customer' => array(
-      'template' => 'uc-order--customer',
+    'uc_order_invoice__customer' => array(
+      'template' => 'uc-order-invoice--customer',
       'path' => $path . '/templates',
-      'variables' => $theme_hooks['uc_order']['variables'],
+      'variables' => $theme_hooks['uc_order_invoice']['variables'],
     ),
-    'uc_order__admin' => array(
-      'template' => 'uc-order--admin',
+    'uc_order_invoice__admin' => array(
+      'template' => 'uc-order-invoice--admin',
       'path' => $path . '/templates',
-      'variables' => $theme_hooks['uc_order']['variables'],
+      'variables' => $theme_hooks['uc_order_invoice']['variables'],
     ),
   );
 
@@ -472,7 +472,7 @@ function uc_order_mail($key, &$message, $params) {
       $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
       $message['subject'] = t('Your Order Invoice', array(), array('langcode' => $langcode));
       $message['from'] = uc_store_email_from();
-      $message['body'][] = theme('uc_order', array('order' => $params['order'], 'op' => 'admin-mail', 'template' => variable_get('uc_cust_order_invoice_template', 'customer')));
+      $message['body'][] = theme('uc_order_invoice', array('order' => $params['order'], 'op' => 'admin-mail', 'template' => variable_get('uc_cust_order_invoice_template', 'customer')));
       break;
 
     // Setup a custom e-mail defined by an action on a predicate.
@@ -906,7 +906,7 @@ function uc_order_view(EntityInterface $order, $view_mode = 'full') {
  */
 function uc_order_view_invoice($order, $print = FALSE) {
   $build = array(
-    '#theme' => 'uc_order',
+    '#theme' => 'uc_order_invoice',
     '#order' => $order,
     '#op' => $print ? 'print' : 'view',
     '#template' => variable_get('uc_cust_order_invoice_template', 'customer'),
@@ -1373,7 +1373,7 @@ function uc_order_is_shippable($order) {
  * @see uc_order--admin.tpl.php
  * @see uc_order--customer.tpl.php
  */
-function template_preprocess_uc_order(&$variables) {
+function template_preprocess_uc_order_invoice(&$variables) {
   $order = &$variables['order'];
 
   switch ($variables['op']) {
@@ -1438,8 +1438,8 @@ function template_preprocess_uc_order(&$variables) {
 
   // Add hook suggestions, default to customer template.
   $variables['theme_hook_suggestions'] = array(
-    'uc_order__customer',
-    'uc_order__' . $variables['template'],
+    'uc_order_invoice__customer',
+    'uc_order_invoice__' . $variables['template'],
   );
 }
 
@@ -2024,7 +2024,7 @@ function uc_order_action_print($orders, $context = array()) {
 
   foreach ($orders as $order) {
     $output .= '<div style="page-break-after: always;">';
-    $output .= theme('uc_order', array(
+    $output .= theme('uc_order_invoice', array(
       'order' => $order,
       'op' => 'print',
       'template' => variable_get('uc_cust_order_invoice_template', 'customer'),
