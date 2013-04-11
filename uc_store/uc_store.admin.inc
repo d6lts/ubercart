@@ -351,58 +351,6 @@ function uc_store_settings_form($form, &$form_state) {
     '#default_value' => $config->get('currency.precision'),
   );
 
-  $form['weight'] = array(
-    '#type' => 'details',
-    '#title' => t('Weight format'),
-    '#description' => t('Supply a format string for each unit. !value represents the weight value.'),
-    '#group' => 'store',
-  );
-  $units = array(
-    'lb' => t('Pounds'),
-    'oz' => t('Ounces'),
-    'kg' => t('Kilograms'),
-    'g' => t('Grams'),
-  );
-  $form['weight']['uc_weight_unit'] = array(
-    '#type' => 'select',
-    '#title' => t('Default unit of measurement'),
-    '#default_value' => $config->get('units.weight'),
-    '#options' => $units,
-  );
-  foreach ($units as $unit => $name) {
-    $form['weight']['uc_weight_format_' . $unit] = array(
-      '#type' => 'textfield',
-      '#title' => t('@unit format string', array('@unit' => $name)),
-      '#default_value' => variable_get('uc_weight_format_' . $unit, '!value ' . $unit),
-    );
-  }
-
-  $form['length'] = array(
-    '#type' => 'details',
-    '#title' => t('Length format'),
-    '#description' => t('Supply a format string for each unit. !value represents the length value.'),
-    '#group' => 'store',
-  );
-  $units = array(
-    'in' => t('Inches'),
-    'ft' => t('Feet'),
-    'cm' => t('Centimeters'),
-    'mm' => t('Millimeters'),
-  );
-  $form['length']['uc_length_unit'] = array(
-    '#type' => 'select',
-    '#title' => t('Default unit of measurement'),
-    '#default_value' => $config->get('units.length'),
-    '#options' => $units,
-  );
-  foreach ($units as $unit => $name) {
-    $form['length']['uc_length_format_' . $unit] = array(
-      '#type' => 'textfield',
-      '#title' => t('@unit format string', array('@unit' => $name)),
-      '#default_value' => variable_get('uc_length_format_' . $unit, '!value ' . $unit),
-    );
-  }
-
   $form['display'] = array(
     '#type' => 'details',
     '#title' => t('Display settings'),

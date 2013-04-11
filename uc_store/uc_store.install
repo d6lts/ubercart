@@ -165,8 +165,6 @@ function uc_store_uninstall() {
   db_delete('variable')
     ->condition(db_or()
       ->condition('name', 'uc_address_format_%', 'LIKE')
-      ->condition('name', 'uc_weight_%', 'LIKE')
-      ->condition('name', 'uc_length_%', 'LIKE')
       ->condition('name', 'uc_field_%', 'LIKE')
     )
     ->execute();
@@ -223,4 +221,18 @@ function uc_store_update_8000() {
     'uc_customer_list_address' => 'customer_address',
     'uc_footer_message' => 'footer_message',
   ));
+}
+
+/**
+ * Deletes unused variables.
+ */
+function uc_store_update_8001() {
+  update_variable_del('uc_weight_format_lb');
+  update_variable_del('uc_weight_format_oz');
+  update_variable_del('uc_weight_format_kg');
+  update_variable_del('uc_weight_format_g');
+  update_variable_del('uc_length_format_in');
+  update_variable_del('uc_length_format_ft');
+  update_variable_del('uc_length_format_cm');
+  update_variable_del('uc_length_format_mm');
 }

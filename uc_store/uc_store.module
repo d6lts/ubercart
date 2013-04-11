@@ -845,21 +845,13 @@ function uc_weight_format($value, $unit = NULL) {
     $unit = config('uc_store.settings')->get('units.weight');
   }
 
-  $defaults = array(
-    'lb' => '!value lb.',
-    'oz' => '!value oz.',
-    'kg' => '!valuekg',
-    'g' => '!valueg',
-  );
-
-  $pattern = variable_get('uc_weight_format_' . $unit, $defaults[$unit]);
-  if (strpos($pattern, '!value') === FALSE) {
-    $pattern = $defaults[$unit];
+  switch ($unit) {
+    case 'lb': return t('!value lb.', $vars);
+    case 'oz': return t('!value oz.', $vars);
+    case 'kg': return t('!valuekg', $vars);
+    case 'g':  return t('!valueg', $vars);
+    default:   return $value;
   }
-
-  $format = strtr($pattern, $vars);
-
-  return $format;
 }
 
 /**
@@ -897,21 +889,13 @@ function uc_length_format($value, $unit = NULL) {
     $unit = config('uc_store.settings')->get('units.length');
   }
 
-  $defaults = array(
-    'in' => '!valuein.',
-    'ft' => '!valueft.',
-    'cm' => '!valuecm',
-    'mm' => '!valuemm',
-  );
-
-  $pattern = variable_get('uc_length_format_' . $unit, $defaults[$unit]);
-  if (strpos($pattern, '!value') === FALSE) {
-    $pattern = $defaults[$unit];
+  switch ($unit) {
+    case 'in': return t('!valuein.', $vars);
+    case 'ft': return t('!valueft.', $vars);
+    case 'cm': return t('!valuecm', $vars);
+    case 'mm': return t('!valuemm', $vars);
+    default:   return $value;
   }
-
-  $format = strtr($pattern, $vars);
-
-  return $format;
 }
 
 /**
