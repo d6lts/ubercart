@@ -3,12 +3,6 @@
  * Styles for uc_order module.
  */
 
-.uc-order-action img {
-  padding: 0 3px;
-  position: relative;
-  top: 3px;
-}
-
 .view-uc-orders .form-item {
   padding-top: 4px;
 }
@@ -66,16 +60,6 @@
 .uc-orders-table img {
   float: left;
   margin-right: .5em;
-}
-
-.order-admin-icons {
-  margin-left: 2px;
-}
-
-.order-admin-icons img {
-  padding: 0 3px;
-  position: relative;
-  top: 3px;
 }
 
 .order-pane {

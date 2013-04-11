@@ -200,32 +200,27 @@ function hook_uc_order($op, $order, $arg2) {
  *   An order object.
  *
  * @return
- *   An array of specialized link arrays. Each link has the following keys:
- *   - name: The title of page being linked.
- *   - url: The link path. Do not use url(), but do use the $order's order_id.
- *   - icon: HTML of an image.
- *   - title: Title attribute text (mouseover tool-tip).
+ *   An array of operations links. Each link has the following keys:
+ *   - title: The title of page being linked.
+ *   - href: The link path. Do not use url(), but do use the $order's order_id.
+ *   - weight: Sets the display order of operations.
  */
 function hook_uc_order_actions($order) {
   $actions = array();
   if (user_access('fulfill orders')) {
     $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", array(':id' => $order->order_id, ':data' => '%s:9:\"shippable\";s:1:\"1\";%'));
     if ($result->fetchField()) {
-      $title = t('Package order !order_id products.', array('!order_id' => $order->order_id));
-      $actions[] = array(
-        'name' => t('Package'),
-        'url' => 'admin/store/orders/' . $order->order_id . '/packages',
-        'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_shipping') . '/images/package.gif')),
-        'title' => $title,
+      $actions['package'] = array(
+        'title' => t('Package'),
+        'href' => 'admin/store/orders/' . $order->order_id . '/packages',
+        'weight' => 12,
       );
       $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->order_id));
       if ($result->fetchField()) {
-        $title = t('Ship order !order_id packages.', array('!order_id' => $order->order_id));
-        $actions[] = array(
-          'name' => t('Ship'),
-          'url' => 'admin/store/orders/' . $order->order_id . '/shipments',
-          'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_shipping') . '/images/ship.gif')),
-          'title' => $title,
+        $actions['ship'] = array(
+          'title' => t('Ship'),
+          'href' => 'admin/store/orders/' . $order->order_id . '/shipments',
+          'weight' => 13,
         );
       }
     }
@@ -242,9 +237,7 @@ function hook_uc_order_actions($order) {
  *   An order object.
  */
 function hook_uc_order_actions_alter(&$actions, $order) {
-  foreach ($actions as &$action) {
-    $action['classes'][] = 'custom-action-class';
-  }
+  $actions['view']['title'] = t('Display');
 }
 
 /**

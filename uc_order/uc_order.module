@@ -1683,74 +1683,57 @@ function uc_order_status_options_list() {
 /**
  * Returns the actions a user may perform on an order.
  *
- * @param $icon_html
- *   Specify whether or not to return the result as an HTML string with the
- *   order action icon links.
+ * @param $order
+ *   The order to return the actions for.
  *
  * @return
- *   Valid actions for an order; returned according to the $icon_html parameter.
+ *   A renderable set of operation links.
  */
 function uc_order_actions($order, $icon_html = FALSE) {
   global $user;
 
-  $state = uc_order_status_data($order->order_status, 'state');
-  $order_id = array('@order_id' => $order->order_id);
   $actions = array();
 
   if (user_access('view all orders')) {
-    $alt = t('View order @order_id.', $order_id);
-    $actions[] = array(
-      'name' => t('View'),
-      'url' => 'admin/store/orders/' . $order->order_id,
-      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/order_view.gif', 'alt' => $alt)),
-      'title' => $alt,
+    $actions['view'] = array(
+      'title' => t('View'),
+      'href' => 'admin/store/orders/' . $order->order_id,
+      'weight' => 0,
     );
-
-    $alt = t('Print order @order_id.', $order_id);
-    $actions[] = array(
-      'name' => t('Print'),
-      'url' => 'admin/store/orders/' . $order->order_id . '/invoice/print',
-      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/print.gif', 'alt' => $alt)),
-      'title' => $alt,
+    $actions['print'] = array(
+      'title' => t('Print'),
+      'href' => 'admin/store/orders/' . $order->order_id . '/invoice/print',
+      'weight' => 5,
     );
   }
   elseif (user_access('view own orders') && $order->uid == $user->uid) {
-    $alt = t('View order @order_id.', $order_id);
-    $actions[] = array(
-      'name' => t('View'),
-      'url' => 'user/' . $user->uid . '/orders/' . $order->order_id,
-      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/order_view.gif', 'alt' => $alt)),
-      'title' => $alt,
+    $actions['view'] = array(
+      'title' => t('View'),
+      'href' => 'user/' . $user->uid . '/orders/' . $order->order_id,
+      'weight' => 0,
     );
-
     if (user_access('view own invoices')) {
-      $alt = t('Print order @order_id.', $order_id);
-      $actions[] = array(
-        'name' => t('Print'),
-        'url' => 'user/' . $user->uid . '/orders/' . $order->order_id . '/print',
-        'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/print.gif', 'alt' => $alt)),
-        'title' => $alt,
+      $actions['print'] = array(
+        'title' => t('Print'),
+        'href' => 'user/' . $user->uid . '/orders/' . $order->order_id . '/print',
+        'weight' => 5,
       );
     }
   }
 
   if (user_access('edit orders')) {
-    $alt = t('Edit order @order_id.', $order_id);
-    $actions[] = array(
-      'name' => t('Edit'),
-      'url' => 'admin/store/orders/' . $order->order_id . '/edit',
-      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/order_edit.gif', 'alt' => $alt)),
-      'title' => $alt,
+    $actions['edit'] = array(
+      'title' => t('Edit'),
+      'href' => 'admin/store/orders/' . $order->order_id . '/edit',
+      'weight' => 10,
     );
   }
 
   if (uc_order_can_delete($order)) {
-    $alt = t('Delete order @order_id.', $order_id);
-    $actions[] = array(
-      'name' => t('Delete'),
-      'url' => 'admin/store/orders/' . $order->order_id . '/delete',
-      'icon' => theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/order_delete.gif', 'alt' => $alt)),
-      'title' => $alt,
+    $actions['delete'] = array(
+      'title' => t('Delete'),
+      'href' => 'admin/store/orders/' . $order->order_id . '/delete',
+      'weight' => 20,
     );
   }
 
@@ -1760,26 +1743,10 @@ function uc_order_actions($order, $icon_html = FALSE) {
   }
   drupal_alter('uc_order_actions', $actions, $order);
 
-  if ($icon_html) {
-    $output = '';
-    foreach ($actions as $action) {
-      $action['classes'][] = 'uc-order-action';
-      if (empty($action['attributes'])) {
-        $action['attributes'] = array();
-      }
-      $action['attributes']['title'] = $action['title'];
-      $action['attributes']['class'] = implode(' ', $action['classes']);
-
-      $output .= l($action['icon'], $action['url'], array(
-        'attributes' => $action['attributes'],
-        'html' => TRUE,
-      ));
-    }
-    return $output;
-  }
-  else {
-    return $actions;
-  }
+  return array(
+    '#type' => 'operations',
+    '#links' => $actions,
+  );
 }
 
 /**
