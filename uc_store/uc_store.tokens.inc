@@ -31,10 +31,6 @@ function uc_store_token_info() {
     'name' => t('Store link'),
     'description' => t('A link to the Ubercart store using the store name.'),
   );
-  $store['owner'] = array(
-    'name' => t('Owner'),
-    'description' => t('The Ubercart store owner.'),
-  );
   $store['email'] = array(
     'name' => t('Email'),
     'description' => t('The Ubercart store e-mail address.'),
@@ -102,10 +98,6 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
 
         case 'link':
           $replacements[$original] = l(uc_store_name(), '<front>', array('absolute' => TRUE));
-          break;
-
-        case 'owner':
-          $replacements[$original] = $config->get('owner');
           break;
 
         case 'email':

@@ -198,7 +198,6 @@ function uc_store_update_last_removed() {
 function uc_store_update_8000() {
   update_variables_to_config('uc_store.settings', array(
     'uc_store_name' => 'name',
-    'uc_store_owner' => 'owner',
     'uc_store_email' => 'mail',
     'uc_store_email_include_name' => 'mail_include_name',
     'uc_store_phone' => 'phone',
@@ -221,6 +220,7 @@ function uc_store_update_8000() {
     'uc_customer_list_address' => 'customer_address',
     'uc_footer_message' => 'footer_message',
   ));
+  update_variable_del('uc_store_owner');
 }
 
 /**

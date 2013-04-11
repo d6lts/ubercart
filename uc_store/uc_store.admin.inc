@@ -242,11 +242,6 @@ function uc_store_settings_form($form, &$form_state) {
     '#title' => t('Store name'),
     '#default_value' => uc_store_name(),
   );
-  $form['basic']['uc_store_owner'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Store owner'),
-    '#description' => $config->get('owner'),
-  );
   $form['basic']['uc_store_email'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
@@ -401,7 +396,6 @@ function uc_store_settings_form_validate($form, &$form_state) {
 function uc_store_settings_form_submit($form, &$form_state) {
   config('uc_store.settings')
     ->set('name', $form_state['values']['uc_store_name'])
-    ->set('owner', $form_state['values']['uc_store_owner'])
     ->set('mail', $form_state['values']['uc_store_email'])
     ->set('mail_include_name', $form_state['values']['uc_store_email_include_name'])
     ->set('phone', $form_state['values']['uc_store_phone'])
