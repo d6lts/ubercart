@@ -9,13 +9,13 @@ namespace Drupal\uc_order\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the order entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "uc_order",
  *   label = @Translation("Order"),
  *   module = "uc_order",

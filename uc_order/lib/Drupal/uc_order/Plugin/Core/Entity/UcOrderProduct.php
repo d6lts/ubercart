@@ -8,13 +8,13 @@
 namespace Drupal\uc_order\Plugin\Core\Entity;
 
 use Drupal\Core\Entity\Entity;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the order product entity class.
  *
- * @Plugin(
+ * @EntityType(
  *   id = "uc_order_product",
  *   label = @Translation("Order product"),
  *   module = "uc_order",
