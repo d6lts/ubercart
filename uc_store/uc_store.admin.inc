@@ -67,9 +67,9 @@ function uc_store_admin() {
       $icon = theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/' . $icon));
 
       $rows[] = array(
-        array('data' => $icon, 'class' => array('icon')),
-        array('data' => $message['title'], 'class' => array('title')),
-        array('data' => $message['desc'], 'class' => array('message')),
+        array('data' => $icon, 'class' => array('status-icon')),
+        array('data' => $message['title'], 'class' => array('status-title')),
+        array('data' => $message['desc'], 'class' => array('status-value')),
       );
     }
 
@@ -77,7 +77,7 @@ function uc_store_admin() {
       '#theme' => 'table',
       '#caption' => '<h2>' . t('Store status') . '</h2>',
       '#rows' => $rows,
-      '#attributes' => array('class' => array('uc-store-status')),
+      '#attributes' => array('class' => array('system-status-report')),
     );
   }
 
