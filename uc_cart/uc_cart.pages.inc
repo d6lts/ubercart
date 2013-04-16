@@ -146,7 +146,7 @@ function uc_cart_checkout() {
     }
     elseif (!empty($_SESSION['uc_cart_order_rebuild'])) {
       // Or, if the cart has changed, then remove old products and line items.
-      $result = entity_query('uc_order_product')
+      $result = Drupal::entityQuery('uc_order_product')
         ->condition('order_id', $order->order_id)
         ->execute();
       if (!empty($result)) {

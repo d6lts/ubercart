@@ -61,7 +61,7 @@ class UcOrderStorageController extends DatabaseStorageController {
   protected function attachLoad(&$orders, $load_revision = FALSE) {
     foreach ($orders as &$order) {
       $order->data = unserialize($order->data);
-      $result = entity_query('uc_order_product')
+      $result = \Drupal::entityQuery('uc_order_product')
         ->condition('order_id', $order->order_id)
         ->sort('order_product_id', 'ASC')
         ->execute();
@@ -151,7 +151,7 @@ class UcOrderStorageController extends DatabaseStorageController {
   protected function postDelete($orders) {
     // Delete data from the appropriate Ubercart order tables.
     $ids = array_keys($orders);
-    $result = entity_query('uc_order_product')
+    $result = \Drupal::entityQuery('uc_order_product')
       ->condition('order_id', $ids, 'IN')
       ->execute();
     if (!empty($result)) {

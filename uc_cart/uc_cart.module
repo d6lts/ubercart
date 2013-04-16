@@ -243,7 +243,7 @@ function uc_cart_cron() {
  */
 function uc_cart_node_delete($node) {
   if (uc_product_is_product($node->type)) {
-    $result = entity_query('uc_cart_item')
+    $result = Drupal::entityQuery('uc_cart_item')
       ->condition('nid', $node->nid)
       ->execute();
 
@@ -864,7 +864,7 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
   if (!isset($items[$cid])) {
     // Find all cart items associated with this cart.
     if ($action != 'empty') {
-      $result = entity_query('uc_cart_item')
+      $result = Drupal::entityQuery('uc_cart_item')
         ->condition('cart_id', $cid)
         ->sort('cart_item_id', 'ASC')
         ->execute();
@@ -1002,7 +1002,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     }
   }
 
-  $result = entity_query('uc_cart_item')
+  $result = Drupal::entityQuery('uc_cart_item')
     ->condition('cart_id', $cid)
     ->condition('nid', $node->nid)
     ->condition('data', serialize($data))
@@ -1069,7 +1069,7 @@ function uc_cart_remove_item($nid, $cid = NULL, $data = array()) {
 
   $cart_id = !(is_null($cid) || empty($cid)) ? $cid : uc_cart_get_id();
 
-  $result = entity_query('uc_cart_item')
+  $result = Drupal::entityQuery('uc_cart_item')
     ->condition('cart_id', $cart_id)
     ->condition('nid', $nid)
     ->condition('data', serialize($data))
@@ -1107,7 +1107,7 @@ function uc_cart_empty($cart_id = NULL) {
     return;
   }
 
-  $result = entity_query('uc_cart_item')
+  $result = Drupal::entityQuery('uc_cart_item')
     ->condition('cart_id', $cart_id)
     ->execute();
 
