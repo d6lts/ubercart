@@ -329,6 +329,12 @@ function uc_product_kit_update(&$node) {
       );
     }
   }
+
+  // When a kit is updated, remove matching kits from the cart, as there is no
+  // simple way to handle product addition or removal at this point.
+  if (module_exists('uc_cart')) {
+    db_query("DELETE FROM {uc_cart_products} WHERE data LIKE '%%s:6:\"kit_id\";s:%d:\"%s\";%%'", strlen($node->nid), $node->nid);
+  }
 }
 
 /**
