@@ -496,7 +496,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     // 'x_fax' => substr('', 0, 25),
     'x_email' => substr($order->primary_email, 0, 255),
     'x_cust_id' => substr($order->uid, 0, 20),
-    'x_customer_ip' => substr(ip_address(), 0, 15),
+    'x_customer_ip' => substr(Drupal::request()->getClientIp(), 0, 15),
 
     // Shipping information.
     'x_ship_to_first_name' => substr($order->delivery_first_name, 0, 50),

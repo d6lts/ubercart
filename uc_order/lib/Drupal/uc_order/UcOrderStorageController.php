@@ -117,7 +117,7 @@ class UcOrderStorageController extends DatabaseStorageController {
     if (is_null($order->billing_country) || $order->billing_country == 0) {
       $order->billing_country = config('uc_store.settings')->get('address.country');
     }
-    $order->host = ip_address();
+    $order->host = \Drupal::request()->getClientIp();
     $order->modified = REQUEST_TIME;
 
     uc_order_module_invoke('presave', $order, NULL);

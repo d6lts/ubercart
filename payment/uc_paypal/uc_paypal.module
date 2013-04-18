@@ -239,7 +239,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
     }
 
     // Paypal doesn't accept IPv6 addresses.
-    $ip_address = ltrim(ip_address(), '::ffff:');
+    $ip_address = ltrim(Drupal::request()->getClientIp(), '::ffff:');
 
     $nvp_request = array(
       'METHOD' => 'DoDirectPayment',
