@@ -1098,8 +1098,10 @@ function uc_product_kit_uc_cart_display($item) {
 
     if ($kit->mutable == UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST) {
       $elements[$unique_id]['#extra'][] = array(
-        'data' => theme('uc_product_kit_list_item', array('product' => $item)) . $extra,
-        'class' => array('kit-component-cart-desc'),
+        '#markup' => theme('uc_product_kit_list_item', array('product' => $item)) . $extra,
+        '#wrapper_attributes' => array(
+          'class' => array('kit-component-cart-desc'),
+        ),
       );
     }
 
