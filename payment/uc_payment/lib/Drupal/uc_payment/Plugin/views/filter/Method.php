@@ -8,17 +8,14 @@
 namespace Drupal\uc_payment\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\InOperator;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler for payment methods.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "uc_payment_method",
- *   module = "uc_payment"
- * )
+ * @PluginID("uc_payment_method")
  */
 class Method extends InOperator {
 

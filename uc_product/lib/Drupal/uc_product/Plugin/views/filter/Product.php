@@ -8,17 +8,14 @@
 namespace Drupal\uc_product\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\BooleanOperator;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler for "is a product".
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "uc_product",
- *   module = "uc_product"
- * )
+ * @PluginID("uc_product")
  */
 class Product extends BooleanOperator {
 

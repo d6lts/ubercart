@@ -9,7 +9,7 @@ namespace Drupal\uc_order\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -17,10 +17,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "uc_order",
- *   module = "uc_order"
- * )
+ * @PluginID("uc_order")
  */
 class Order extends FieldPluginBase {
 

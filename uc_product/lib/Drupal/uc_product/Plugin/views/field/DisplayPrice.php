@@ -8,17 +8,14 @@
 namespace Drupal\uc_product\Plugin\views\field;
 
 use Drupal\uc_store\Plugin\views\field\Price;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide formatted display prices.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "uc_product_display_price",
- *   module = "uc_product"
- * )
+ * @PluginID("uc_product_display_price")
  */
 class DisplayPrice extends Price {
 

@@ -8,17 +8,14 @@
 namespace Drupal\uc_order\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\InOperator;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler for order statuses.
  *
  * @ingroup views_filter_handlers
  *
- * @Plugin(
- *   id = "uc_order_status",
- *   module = "uc_order"
- * )
+ * @PluginID("uc_order_status")
  */
 class Status extends InOperator {
 

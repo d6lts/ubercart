@@ -8,17 +8,14 @@
 namespace Drupal\uc_payment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide payment method.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "uc_payment_method",
- *   module = "uc_payment"
- * )
+ * @PluginID("uc_payment_method")
  */
 class Method extends FieldPluginBase {
 

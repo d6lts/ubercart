@@ -8,17 +8,14 @@
 namespace Drupal\uc_store\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Numeric;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide formatted lengths.
  *
  * @ingroup views_field_handlers
  *
- * @Plugin(
- *   id = "uc_length",
- *   module = "uc_store"
- * )
+ * @PluginID("uc_length")
  */
 class Length extends Numeric {
 
