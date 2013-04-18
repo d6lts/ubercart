@@ -163,7 +163,7 @@ abstract class UbercartTestBase extends WebTestBase {
     // Complete the review page.
     $this->drupalPost(NULL, array(), t('Submit order'));
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][delivery_first_name]']))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE billing_first_name = :name", array(':name' => $edit['panes[billing][billing_first_name]']))->fetchField();
     if ($order_id) {
       $this->pass(
         t('Order %order_id has been created', array('%order_id' => $order_id))
@@ -173,6 +173,23 @@ abstract class UbercartTestBase extends WebTestBase {
     else {
       $this->fail(t('No order was created.'));
       $order = FALSE;
+    }
+
+    return $order;
+  }
+
+  /**
+   * Creates a new order.
+   */
+  function createOrder($edit = array()) {
+    $this->drupalPost('node/' . $this->product->nid, array(), 'Add to cart');
+
+    $order = $this->checkout();
+    if ($order && !empty($edit)) {
+      foreach ($edit as $key => $value) {
+        $order->$key = $value;
+      }
+      $order->save();
     }
 
     return $order;

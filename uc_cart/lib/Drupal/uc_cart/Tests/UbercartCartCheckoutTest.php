@@ -25,34 +25,6 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     );
   }
 
-  /**
-   * Creates a new order.
-   */
-  function createOrder($fields = array()) {
-    $order = uc_order_new();
-    foreach ($fields as $key => $value) {
-      $order->$key = $value;
-    }
-
-    if (empty($order->primary_email)) {
-      $order->primary_email = $this->randomString() . '@example.org';
-    }
-
-    if (!isset($fields['products'])) {
-      $item = clone $this->product;
-      $item->qty = 1;
-      $item->price = $item->sell_price;
-      $item->data = array();
-      $order->products = array($item);
-    }
-
-    $order->order_total = uc_order_get_total($order, TRUE);
-    $order->line_items = uc_order_load_line_items($order, TRUE);
-    uc_order_save($order);
-
-    return $order;
-  }
-
   function testCartAPI() {
     // Test the empty cart.
     $items = uc_cart_get_contents();
