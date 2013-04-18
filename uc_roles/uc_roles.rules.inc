@@ -250,7 +250,7 @@ function uc_roles_action_order_email($order, $role_expiration, $from, $addresses
 
   // Replace tokens and parse recipients.
   $recipients = array();
-  $addresses = token_replace($settings['addresses'], $settings['replacements']);
+  $addresses = Drupal::token()->replace($settings['addresses'], $settings['replacements']);
   foreach (explode("\n", $addresses) as $address) {
     $address = trim($address);
     // Remove blank lines
@@ -292,7 +292,7 @@ function uc_roles_action_user_email($account, $role_expiration, $from, $addresse
 
   // Replace tokens and parse recipients.
   $recipients = array();
-  $addresses = token_replace($settings['addresses'], $settings['replacements']);
+  $addresses = Drupal::token()->replace($settings['addresses'], $settings['replacements']);
   foreach (explode("\n", $addresses) as $address) {
     $address = trim($address);
     // Remove blank lines

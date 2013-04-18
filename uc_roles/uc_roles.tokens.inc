@@ -35,6 +35,8 @@ function uc_roles_token_info() {
  * Implements hook_tokens().
  */
 function uc_roles_tokens($type, $tokens, $data = array(), $options = array()) {
+  $token_service = Drupal::token();
+
   $language_code = NULL;
   if (isset($options['language'])) {
     $language_code = $options['language']->language;
@@ -57,8 +59,8 @@ function uc_roles_tokens($type, $tokens, $data = array(), $options = array()) {
       }
     }
 
-    if ($expiration_tokens = token_find_with_prefix($tokens, 'expiration')) {
-      $replacements += token_generate('date', $expiration_tokens, array('date' => $object->expiration), $options);
+    if ($expiration_tokens = $token_service->findWithPrefix($tokens, 'expiration')) {
+      $replacements += $token_service->generate('date', $expiration_tokens, array('date' => $object->expiration), $options);
     }
   }
 

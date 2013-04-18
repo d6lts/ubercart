@@ -217,6 +217,8 @@ function uc_stock_is_active($sku) {
  *   The result of drupal_mail().
  */
 function _uc_stock_send_mail($order, $node, $stock) {
+  $token_service = Drupal::token();
+
   $account = user_load($order->uid);
   $token_filters = array('uc_order' => $order, 'user' => $account, 'uc_stock' => $stock, 'node' => $node);
 
@@ -226,10 +228,10 @@ function _uc_stock_send_mail($order, $node, $stock) {
   $from = uc_store_email_from();
 
   $subject = variable_get('uc_stock_threshold_notification_subject', uc_get_message('uc_stock_threshold_notification_subject'));
-  $subject = token_replace($subject, $token_filters);
+  $subject = $token_service->replace($subject, $token_filters);
 
   $body = variable_get('uc_stock_threshold_notification_message', uc_get_message('uc_stock_threshold_notification_message'));
-  $body = token_replace($body, $token_filters);
+  $body = $token_service->replace($body, $token_filters);
 
   // Send to each recipient.
   foreach ($to as $email) {

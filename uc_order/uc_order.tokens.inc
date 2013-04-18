@@ -133,6 +133,8 @@ function uc_order_token_info() {
  * Implements hook_tokens().
  */
 function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
+  $token_service = Drupal::token();
+
   $language_code = NULL;
   if (isset($options['language'])) {
     $language_code = $options['language']->language;
@@ -311,25 +313,25 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
     }
 
     // Handles chaining for tokens that have 'type' defined in hook_token_info()
-    if ($link_tokens = token_find_with_prefix($tokens, 'url')) {
-      $replacements += token_generate('url', $link_tokens, array('path' => $path), $options);
+    if ($link_tokens = $token_service->findWithPrefix($tokens, 'url')) {
+      $replacements += $token_service->generate('url', $link_tokens, array('path' => $path), $options);
     }
 
-    if ($link_tokens = token_find_with_prefix($tokens, 'admin-url')) {
-      $replacements += token_generate('url', $link_tokens, array('path' => $admin_path), $options);
+    if ($link_tokens = $token_service->findWithPrefix($tokens, 'admin-url')) {
+      $replacements += $token_service->generate('url', $link_tokens, array('path' => $admin_path), $options);
     }
 
-    if ($customer_tokens = token_find_with_prefix($tokens, 'customer')) {
+    if ($customer_tokens = $token_service->findWithPrefix($tokens, 'customer')) {
       $customer = user_load($order->uid);
-      $replacements += token_generate('user', $customer_tokens, array('user' => $customer), $options);
+      $replacements += $token_service->generate('user', $customer_tokens, array('user' => $customer), $options);
     }
 
-    if ($created_tokens = token_find_with_prefix($tokens, 'created')) {
-      $replacements += token_generate('date', $created_tokens, array('date' => $order->created), $options);
+    if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $order->created), $options);
     }
 
-    if ($changed_tokens = token_find_with_prefix($tokens, 'modified')) {
-      $replacements += token_generate('date', $changed_tokens, array('date' => $order->modified), $options);
+    if ($changed_tokens = $token_service->findWithPrefix($tokens, 'modified')) {
+      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $order->modified), $options);
     }
   }
 

@@ -482,8 +482,9 @@ function uc_order_mail($key, &$message, $params) {
       $message['from'] = $params['from'];
 
       // Perform token replacement on the subject and body.
-      $subject = token_replace($params['subject'], $params['replacements'], $langcode ? array('language' => $message['language']) : array());
-      $body = token_replace($params['message'], $params['replacements'], $langcode ? array('language' => $message['language']) : array());
+      $token_service = Drupal::token();
+      $subject = $token_service->replace($params['subject'], $params['replacements'], $langcode ? array('language' => $message['language']) : array());
+      $body = $token_service->replace($params['message'], $params['replacements'], $langcode ? array('language' => $message['language']) : array());
 
       // Strip newline characters from e-mail subjects.
       // @todo: Maybe drupal_mail_send() should do this?
@@ -1421,11 +1422,12 @@ function template_preprocess_uc_order_invoice(&$variables) {
     'uc_order' => $order,
   );
 
-  $token_info = token_info();
+  $token_service = Drupal::token();
+  $token_info = $token_service->getInfo();
 
   $replacements = array();
   foreach (array('site', 'store', 'uc_order') as $type) {
-    $replacements[$type] = token_generate($type, drupal_map_assoc(array_keys($token_info['tokens'][$type])), $types);
+    $replacements[$type] = $token_service->generate($type, drupal_map_assoc(array_keys($token_info['tokens'][$type])), $types);
   }
 
   foreach ($replacements as $type => $tokens) {

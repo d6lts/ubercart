@@ -238,7 +238,7 @@ function uc_file_action_order_email($order, $file_expiration, $from, $addresses,
 
   // Replace tokens and parse recipients.
   $recipients = array();
-  $addresses = token_replace($settings['addresses'], $settings['replacements']);
+  $addresses = Drupal::token()->replace($settings['addresses'], $settings['replacements']);
   foreach (explode("\n", $addresses) as $address) {
     $recipients[] = trim($address);
   }

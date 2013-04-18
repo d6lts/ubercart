@@ -730,7 +730,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   );
   foreach ($messages as $id => &$message) {
     $message = variable_get($id, $message);
-    $message = token_replace($message, array('uc_order' => $order));
+    $message = Drupal::token()->replace($message, array('uc_order' => $order));
     if ($id == 'uc_msg_order_' . $type) {
       $message = strtr($message, $variables);
     }

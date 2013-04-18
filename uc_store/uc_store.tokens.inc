@@ -66,6 +66,8 @@ function uc_store_token_info() {
  * Implements hook_tokens().
  */
 function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
+  $token_service = Drupal::token();
+
   $replacements = array();
 
   if ($type == 'site') {
@@ -123,8 +125,8 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
     }
 
     // Handle chaining for tokens that have 'type' defined in hook_token_info()
-    if ($link_tokens = token_find_with_prefix($tokens, 'help-url')) {
-      $replacements += token_generate('url', $link_tokens, array('path' => $config->get('help_page')), $options);
+    if ($link_tokens = $token_service->findWithPrefix($tokens, 'help-url')) {
+      $replacements += $token_service->generate('url', $link_tokens, array('path' => $config->get('help_page')), $options);
     }
   }
 

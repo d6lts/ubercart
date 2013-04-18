@@ -675,7 +675,7 @@ function uc_order_action_update_status_options() {
  */
 function uc_order_action_add_comment($order, $comment, $comment_type) {
   uc_order_comment_save($order->order_id, 0,
-    token_replace($comment, array('uc_order' => $order)),
+    Drupal::token()->replace($comment, array('uc_order' => $order)),
     $comment_type == 'admin' ? 'admin' : 'order',
     $order->order_status, $comment_type == 'notified');
 }
@@ -700,6 +700,8 @@ function uc_order_action_order_comment_types() {
  * @see uc_order_action_email_form()
  */
 function uc_order_action_email($order, $from, $addresses, $subject, $message, $format) {
+  $token_service = Drupal::token();
+
   $settings = array(
     'from' => $from,
     'addresses' => $addresses,
@@ -714,13 +716,13 @@ function uc_order_action_email($order, $from, $addresses, $subject, $message, $f
   );
 
   // Apply token replacements to the 'from' e-mail address.
-  $from = token_replace($settings['from'], $settings['replacements']);
+  $from = $token_service->replace($settings['from'], $settings['replacements']);
   if (empty($from)) {
     $from = uc_store_email_from();
   }
 
   // Apply token replacements to 'recipient' e-mail addresses.
-  $addresses = token_replace($settings['addresses'], $settings['replacements']);
+  $addresses = $token_service->replace($settings['addresses'], $settings['replacements']);
   // Split up our recipient e-mail addresses.
   $recipients = array();
   foreach (explode("\n", $addresses) as $address) {
@@ -761,6 +763,8 @@ function uc_order_message_formats() {
  * The 'Sender', 'Subject' and 'Addresses' fields take order token replacements.
  */
 function uc_order_action_email_invoice($order, $from, $addresses, $subject, $template, $view) {
+  $token_service = Drupal::token();
+
   $settings = array(
     'from' => $from,
     'addresses' => $addresses,
@@ -774,13 +778,13 @@ function uc_order_action_email_invoice($order, $from, $addresses, $subject, $tem
   );
 
   // Apply token replacements to the 'from' e-mail address.
-  $from = token_replace($settings['from'], $settings['replacements']);
+  $from = $token_service->replace($settings['from'], $settings['replacements']);
   if (empty($from)) {
     $from = uc_store_email_from();
   }
 
   // Apply token replacements to 'recipient' e-mail addresses.
-  $addresses = token_replace($settings['addresses'], $settings['replacements']);
+  $addresses = $token_service->replace($settings['addresses'], $settings['replacements']);
   // Split up our recipient e-mail addresses.
   $recipients = array();
   foreach (explode("\n", $addresses) as $address) {
