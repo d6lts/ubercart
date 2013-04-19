@@ -81,14 +81,14 @@ class UbercartAttributeTest extends UbercartTestBase {
     $product_class = $this->createProductClass();
 
     // Attach the attribute to a product class.
-    uc_attribute_subject_save($attribute, 'class', $product_class->pcid);
+    uc_attribute_subject_save($attribute, 'class', $product_class->id());
 
     // Confirm the database is correct.
-    $this->assertEqual($attribute->aid, db_query("SELECT aid FROM {uc_class_attributes} WHERE pcid = :pcid", array(':pcid' => $product_class->pcid))->fetchField(), t('Attribute was attached to a product class properly.'));
-    $this->assertTrue(uc_attribute_subject_exists($attribute->aid, 'class', $product_class->pcid));
+    $this->assertEqual($attribute->aid, db_query("SELECT aid FROM {uc_class_attributes} WHERE pcid = :pcid", array(':pcid' => $product_class->id()))->fetchField(), t('Attribute was attached to a product class properly.'));
+    $this->assertTrue(uc_attribute_subject_exists($attribute->aid, 'class', $product_class->id()));
 
     // Test retrieval.
-    $loaded_attribute = uc_attribute_load($attribute->aid, $product_class->pcid, 'class');
+    $loaded_attribute = uc_attribute_load($attribute->aid, $product_class->id(), 'class');
 
     // Check the attribute integrity.
     foreach (self::attributeFieldsToTest('class') as $field) {
@@ -99,11 +99,11 @@ class UbercartAttributeTest extends UbercartTestBase {
     }
 
     // Delete it.
-    uc_attribute_subject_delete($attribute->aid, 'class', $product_class->pcid);
+    uc_attribute_subject_delete($attribute->aid, 'class', $product_class->id());
 
     // Confirm again.
-    $this->assertFalse(db_query("SELECT aid FROM {uc_class_attributes} WHERE pcid = :pcid", array(':pcid' => $product_class->pcid))->fetchField(), t('Attribute was detached from a product class properly.'));
-    $this->assertFalse(uc_attribute_subject_exists($attribute->aid, 'class', $product_class->pcid));
+    $this->assertFalse(db_query("SELECT aid FROM {uc_class_attributes} WHERE pcid = :pcid", array(':pcid' => $product_class->id()))->fetchField(), t('Attribute was detached from a product class properly.'));
+    $this->assertFalse(uc_attribute_subject_exists($attribute->aid, 'class', $product_class->id()));
 
     // Create a few more.
     for ($i = 0; $i < 5; $i++) {
@@ -206,12 +206,12 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     // Add the selected attributes to the product.
     foreach ($loaded_attributes as $loaded_attribute) {
-      uc_attribute_subject_save($loaded_attribute, 'class', $product_class->pcid, TRUE);
+      uc_attribute_subject_save($loaded_attribute, 'class', $product_class->id(), TRUE);
     }
 
     // Test loading all product attributes. (This covers uc_attribute_load_product_attributes(),
     // as the semantics are the same -cha0s)
-    $loaded_class_attributes = uc_attribute_load_multiple(array(), 'class', $product_class->pcid);
+    $loaded_class_attributes = uc_attribute_load_multiple(array(), 'class', $product_class->id());
 
     // We'll get all in $loaded_attributes above, plus the original.
     $class_attributes = $loaded_attributes;
@@ -271,7 +271,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $this->assertEqual(count($loaded_product_attributes), count(array_intersect_key($loaded_product_attributes, $product_attributes)), t('Verifying attribute result.'));
 
     // Test the deletion applied to classes too.
-    $loaded_class_attributes = uc_attribute_load_multiple(array(), 'class', $product_class->pcid);
+    $loaded_class_attributes = uc_attribute_load_multiple(array(), 'class', $product_class->id());
 
     // We'll get all in $loaded_attributes above, without the original. (Which
     // has been deleted.)
@@ -536,13 +536,13 @@ class UbercartAttributeTest extends UbercartTestBase {
     $class = $this->createProductClass();
     $attribute = self::createAttribute();
 
-    $this->drupalGet('admin/store/products/classes/' . $class->pcid . '/attributes');
+    $this->drupalGet('admin/store/products/classes/' . $class->id() . '/attributes');
 
     $this->assertText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
 
-    uc_attribute_subject_save($attribute, 'class', $class->pcid);
+    uc_attribute_subject_save($attribute, 'class', $class->id());
 
-    $this->drupalGet('admin/store/products/classes/' . $class->pcid . '/attributes');
+    $this->drupalGet('admin/store/products/classes/' . $class->id() . '/attributes');
 
     $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
 
@@ -552,9 +552,9 @@ class UbercartAttributeTest extends UbercartTestBase {
       $edit["attributes[{$attribute->aid}][$field]"] = $value;
     }
     $this->showVar($edit);
-    $this->drupalPost('admin/store/products/classes/' . $class->pcid . '/attributes', $edit, t('Save changes'));
+    $this->drupalPost('admin/store/products/classes/' . $class->id() . '/attributes', $edit, t('Save changes'));
 
-    $attribute = uc_attribute_load($attribute->aid, $class->pcid, 'class');
+    $attribute = uc_attribute_load($attribute->aid, $class->id(), 'class');
 
     $fields_ok = TRUE;
     foreach ($a as $field => $value) {
@@ -570,7 +570,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $edit = array();
     $edit["attributes[{$attribute->aid}][remove]"] = TRUE;
-    $this->drupalPost('admin/store/products/classes/' . $class->pcid . '/attributes', $edit, t('Save changes'));
+    $this->drupalPost('admin/store/products/classes/' . $class->id() . '/attributes', $edit, t('Save changes'));
 
     $this->assertText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
   }
@@ -582,13 +582,13 @@ class UbercartAttributeTest extends UbercartTestBase {
     $class = $this->createProductClass();
     $attribute = self::createAttribute();
 
-    $this->drupalGet('admin/store/products/classes/' . $class->pcid . '/attributes/add');
+    $this->drupalGet('admin/store/products/classes/' . $class->id() . '/attributes/add');
 
-    $this->assertRaw(t('@attribute </label>', array('@attribute' => $attribute->name)), t('Class attribute add form working.'));
+    $this->assertRaw(t('@attribute</label>', array('@attribute' => $attribute->name)), t('Class attribute add form working.'));
 
     $edit['add_attributes[' . $attribute->aid . ']'] = 1;
 
-    $this->drupalPost('admin/store/products/classes/' . $class->pcid . '/attributes/add', $edit, t('Add attributes'));
+    $this->drupalPost('admin/store/products/classes/' . $class->id() . '/attributes/add', $edit, t('Add attributes'));
 
     $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
   }
@@ -601,11 +601,11 @@ class UbercartAttributeTest extends UbercartTestBase {
     $attribute = self::createAttribute();
     $option = self::createAttributeOption(array('aid' => $attribute->aid));
 
-    uc_attribute_subject_save($attribute, 'class', $class->pcid);
+    uc_attribute_subject_save($attribute, 'class', $class->id());
 
-    $this->drupalGet('admin/store/products/classes/' . $class->pcid . '/options');
+    $this->drupalGet('admin/store/products/classes/' . $class->id() . '/options');
 
-    $this->assertRaw(t('@option </label>', array('@option' => $option->name)), t('Class attribute option form working.'));
+    $this->assertRaw(t('@option</label>', array('@option' => $option->name)), t('Class attribute option form working.'));
 
     $o = (array) self::createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($o['name'], $o['aid']);
@@ -616,11 +616,11 @@ class UbercartAttributeTest extends UbercartTestBase {
     unset($o['select']);
     $edit["attributes[$attribute->aid][default]"] = $option->oid;
     $this->showVar($edit);
-    $this->drupalPost('admin/store/products/classes/' . $class->pcid . '/options', $edit, t('Submit'));
+    $this->drupalPost('admin/store/products/classes/' . $class->id() . '/options', $edit, t('Submit'));
     $this->assertText('The product class options have been saved.', t('Class attribute option saved.'));
     $this->showVar($option);
 
-    $option = uc_attribute_subject_option_load($option->oid, 'class', $class->pcid);
+    $option = uc_attribute_subject_option_load($option->oid, 'class', $class->id());
 
     $fields_ok = TRUE;
     foreach ($o as $field => $value) {
@@ -772,7 +772,7 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public static function createProductAdjustment($data) {
     $adjustment = $data + array(
-      'model' => self::randomName(8),
+      'model' => $this->randomName(8),
     );
     db_insert('uc_product_adjustments')
       ->fields($adjustment)
@@ -828,9 +828,9 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public static function createAttribute($data = array(), $save = TRUE) {
     $attribute = $data + array(
-      'name' => self::randomName(8),
-      'label' => self::randomName(8),
-      'description' => self::randomName(8),
+      'name' => $this->randomName(8),
+      'label' => $this->randomName(8),
+      'description' => $this->randomName(8),
       'required' => mt_rand(0, 1) ? TRUE : FALSE,
       'display' => mt_rand(0, 3),
       'ordering' => mt_rand(-10, 10),
@@ -858,7 +858,7 @@ class UbercartAttributeTest extends UbercartTestBase {
       ->fetchField();
     $option = $data + array(
       'aid' => $max_aid,
-      'name' => self::randomName(8),
+      'name' => $this->randomName(8),
       'cost' => mt_rand(-500, 500),
       'price' => mt_rand(-500, 500),
       'weight' => mt_rand(-500, 500),

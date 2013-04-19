@@ -28,6 +28,7 @@ abstract class UbercartTestBase extends WebTestBase {
     'administer product classes',
     'administer product features',
     'administer products',
+    'administer content types',
     'create product content',
     'delete any product content',
     'edit any product content',

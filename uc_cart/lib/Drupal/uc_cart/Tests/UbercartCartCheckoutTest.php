@@ -257,7 +257,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // Test again with an existing email address
     $this->drupalLogout();
     $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
-    $this->checkout(array('panes[customer][primary_email]' => $this->customer->mail));
+    $this->checkout(array('panes[customer][primary_email]' => $this->customer->getEmail()));
     $this->assertRaw('Your order is complete!');
     $this->assertRaw('order has been attached to the account we found');
   }
@@ -421,7 +421,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // Test again with an existing email address and a non-shippable order.
     $item->data = array('shippable' => FALSE);
     $order = $this->createOrder(array(
-      'primary_email' => $this->customer->mail,
+      'primary_email' => $this->customer->getEmail(),
       'products' => array($item),
     ));
     uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
@@ -521,7 +521,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->drupalPost('cart', array(), 'Checkout');
 
     // Test the customer information pane.
-    $mail = $this->customer->mail;
+    $mail = $this->customer->getEmail();
     $this->assertText('Customer information');
     $this->assertText('Order information will be sent to your account e-mail listed below.');
     $this->assertText('E-mail address: ' . $mail);
