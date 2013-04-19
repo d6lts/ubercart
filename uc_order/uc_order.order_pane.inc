@@ -10,6 +10,10 @@
  * default order panes are defined in uc_order_order_pane() in uc_order.module.
  */
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
+
 /**
  * Handles the "Print button" order pane.
  */
@@ -618,20 +622,21 @@ function uc_order_edit_products_remove($form, &$form_state) {
  * AJAX callback to render the order product controls.
  */
 function uc_order_pane_products_ajax_callback($form, &$form_state) {
-  $commands[] = ajax_command_replace('#product-controls', trim(drupal_render($form['product_controls'])));
-  $commands[] = ajax_command_prepend('#product-controls', trim(theme('status_messages')));
+  $response = new AjaxResponse();
+  $response->addCommand(new ReplaceCommand('#product-controls', trim(drupal_render($form['product_controls']))));
+  $response->addCommand(new PrependCommand('#product-controls', trim(theme('status_messages'))));
 
   if (isset($form_state['refresh_products']) && $form_state['refresh_products']) {
-    $commands[] = ajax_command_replace('#order-edit-products', trim(drupal_render($form['products'])));
-    $commands[] = ajax_command_replace('#order-line-items', trim(drupal_render($form['line_items'])));
-    $commands[] = ajax_command_prepend('#order-edit-products', trim(theme('status_messages')));
+    $response->addCommand(new ReplaceCommand('#order-edit-products', trim(drupal_render($form['products']))));
+    $response->addCommand(new ReplaceCommand('#order-line-items', trim(drupal_render($form['line_items']))));
+    $response->addCommand(new PrependCommand('#order-edit-products', trim(theme('status_messages'))));
   }
 
   // Remove the field so we only refresh the admin comments item-list.
   unset($form['admin_comment_field']);
-  $commands[] = ajax_command_replace('#order-pane-admin_comments .item-list', uc_order_pane_admin_comments('edit-theme', $form['#order'], $form, $form_state));
+  $response->addCommand(new ReplaceCommand('#order-pane-admin_comments .item-list', uc_order_pane_admin_comments('edit-theme', $form['#order'], $form, $form_state)));
 
-  return array('#type' => 'ajax', '#commands' => $commands);
+  return $response;
 }
 
 /**
@@ -855,10 +860,11 @@ function uc_order_pane_line_items_remove($form, &$form_state) {
  * AJAX callback to render the line items.
  */
 function uc_order_pane_line_items_update($form, &$form_state) {
-  $commands[] = ajax_command_replace('#order-line-items', trim(drupal_render($form['line_items'])));
-  $commands[] = ajax_command_prepend('#order-line-items', theme('status_messages'));
+  $response = new AjaxResponse();
+  $response->addCommand(new ReplaceCommand('#order-line-items', trim(drupal_render($form['line_items']))));
+  $response->addCommand(new PrependCommand('#order-line-items', theme('status_messages')));
 
-  return array('#type' => 'ajax', '#commands' => $commands);
+  return $response;
 }
 
 /**

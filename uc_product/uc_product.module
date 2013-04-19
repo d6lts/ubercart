@@ -8,6 +8,8 @@
  * classes for more specification.
  */
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
@@ -696,6 +698,8 @@ function uc_product_delete(&$node) {
  * #ajax callback to that form element, and use this function in the callback
  * to build updated content for the affected fields.
  *
+ * @param \Drupal\Core\Ajax\AjaxResponse $response
+ *   The response object to add the Ajax commands to.
  * @param $form_state
  *   The current form state.  This must contain a 'variant' entry in the
  *   'storage' array which represents the product as configured by user input
@@ -704,23 +708,18 @@ function uc_product_delete(&$node) {
  * @param $keys
  *   An array of keys in the built product content which should be replaced
  *   (e.g. 'display_price').
- *
- * @return
- *   An array of Ajax commands.
  */
-function uc_product_view_ajax_commands($form_state, $keys) {
-  $commands = array();
+function uc_product_view_ajax_commands(AjaxResponse $response, $form_state, $keys) {
   if (variable_get('uc_product_update_node_view', FALSE) && !empty($form_state['storage']['variant'])) {
     $node_div = '.uc-product-' . $form_state['storage']['variant']->nid;
     $build = node_view($form_state['storage']['variant']);
     foreach ($keys as $key) {
       if (isset($build[$key])) {
         $id = $node_div . '.' . str_replace('_', '-', $key);
-        $commands[] = ajax_command_replace($id, drupal_render($build[$key]));
+        $response->addCommand(new ReplaceCommand($id, drupal_render($build[$key])));
       }
     }
   }
-  return $commands;
 }
 
 /**

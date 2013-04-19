@@ -11,6 +11,10 @@
  * uc_payment.module.
  */
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
+
 /**
  * Handles the Payment order pane.
  */
@@ -122,7 +126,9 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
  * AJAX callback to render the payment method pane.
  */
 function uc_payment_order_pane_ajax_callback($form, &$form_state) {
-  $commands[] = ajax_command_replace('#payment-details', trim(drupal_render($form['payment']['payment_details'])));
-  $commands[] = ajax_command_prepend('#payment-details', theme('status_messages'));
-  return array('#type' => 'ajax', '#commands' => $commands);
+  $response = new AjaxResponse();
+  $response->addCommand(new ReplaceCommand('#payment-details', trim(drupal_render($form['payment']['payment_details']))));
+  $response->addCommand(new PrependCommand('#payment-details', trim(theme('status_messages'))));
+
+  return $response;
 }

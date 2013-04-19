@@ -12,6 +12,9 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 
 /**
  * Implements hook_help().
@@ -1238,21 +1241,23 @@ function _uc_cart_product_get_options($item) {
  * Ajax callback for attribute selection form elements.
  */
 function uc_attribute_option_ajax($form, $form_state) {
+  $response = new AjaxResponse();
+
   $parents = $form_state['triggering_element']['#array_parents'];
   $wrapper = '#' . $form_state['triggering_element']['#ajax']['wrapper'];
   while ($key = array_pop($parents)) {
     if ($key == 'attributes') {
       array_push($parents, $key);
       $element = NestedArray::getValue($form, $parents);
-      $commands[] = ajax_command_replace($wrapper, drupal_render($element));
+      $response->addCommand(new ReplaceCommand($wrapper, drupal_render($element)));
       break;
     }
   }
   if (strpos($form['#form_id'], 'add_to_cart_form') !== FALSE) {
-    $commands = array_merge($commands, uc_product_view_ajax_commands($form_state, array('display_price', 'weight', 'cost')));
+    uc_product_view_ajax_commands($response, $form_state, array('display_price', 'weight', 'cost'));
   }
-  $commands[] = ajax_command_prepend($wrapper, theme('status_messages'));
-  return array('#type' => 'ajax', '#commands' => $commands);
+  $response->addCommand(new PrependCommand($wrapper, trim(theme('status_messages'))));
+  return $response;
 }
 
 /**

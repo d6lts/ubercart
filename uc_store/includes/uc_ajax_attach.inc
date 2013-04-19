@@ -41,8 +41,9 @@
  *   $form_state['uc_ajax']['mymodule']['panes][quotes][quote_button'] = array('my_ajax_callback');
  *   ...
  *   function my_ajax_callback($form, $form_state) {
- *     $commands[] = ajax_command_invoke('#my-input-element', 'val', 0);
- *     return array('#type' => 'ajax', '#commands' => $commands);
+ *     $response = new AjaxResponse();
+ *     $response->addCommand(new InvokeCommand('#my-input-element', 'val', 0));
+ *     return $response;
  *   }
  * @endcode
  *
@@ -65,6 +66,10 @@
  *   );
  * @endcode
  */
+
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 
 /**
  * Form process callback to allow multiple Ajax callbacks on form elements.
@@ -153,6 +158,8 @@ function uc_ajax_process_form($form, &$form_state) {
  * Processes a set of Ajax commands attached to the triggering element.
  */
 function uc_ajax_multiplex($form, $form_state) {
+  $response = new AjaxResponse();
+
   $element = $form_state['triggering_element'];
   if (!empty($element['#ajax']['list'])) {
     $commands = array();
@@ -160,20 +167,20 @@ function uc_ajax_multiplex($form, $form_state) {
       if (!empty($callback) && function_exists($callback) && $result = $callback($form, $form_state, $wrapper)) {
         if (is_array($result) && !empty($result['#type']) && $result['#type'] == 'ajax') {
           // If the callback returned an array of commands, simply add these to the list.
+          // @TODO Fix this for D8's new AjaxResponse object.
           $commands = array_merge($commands, $result['#commands']);
         }
         elseif (is_string($wrapper)) {
           // Otherwise, assume the callback returned a string or render-array, and insert it into the wrapper.
           $html = is_string($result) ? $result : drupal_render($result);
-          $commands[] = ajax_command_replace('#' . $wrapper, trim($html));
-          $commands[] = ajax_command_prepend('#' . $wrapper, theme('status_messages'));
+          $response->addCommand(new ReplaceCommand('#' . $wrapper, trim($html)));
+          $response->addCommand(new PrependCommand('#' . $wrapper, trim(theme('status_messages'))));
         }
       }
     }
   }
-  if (!empty($commands)) {
-    return array('#type' => 'ajax', '#commands' => $commands);
-  }
+
+  return $response;
 }
 
 /**
