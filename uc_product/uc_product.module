@@ -340,16 +340,7 @@ function uc_product_form($node, $form_state) {
   $form['base'] = array(
     '#type' => 'details',
     '#title' => t('Product information'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
-    '#weight' => -10,
-    '#attributes' => array('class' => array('product-field')),
-    '#group' => 'additional_settings',
-    '#attached' => array(
-      'js' => array(
-        'vertical-tabs' => drupal_get_path('module', 'uc_product') . '/uc_product.js',
-      ),
-    ),
+    '#weight' => 0,
   );
   $form['base']['model'] = array(
     '#type' => 'textfield',
@@ -947,6 +938,13 @@ function uc_product_field_extra_fields() {
 
   foreach (uc_product_types() as $type) {
     $extra['node'][$type] = array(
+      'form' => array(
+        'base' => array(
+          'label' => t('Product information'),
+          'description' => t('Product form elements.'),
+          'weight' => 0,
+        ),
+      ),
       'display' => array(
         'display_price' => array(
           'label' => t('Display price'),

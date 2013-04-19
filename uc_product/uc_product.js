@@ -17,30 +17,6 @@ Drupal.behaviors.ucProductFieldsetSummaries = {
       }
       return vals.join(', ');
     });
-
-    $('fieldset.product-field', context).drupalSetSummary(function(context) {
-      var vals = [];
-
-      if (Drupal.checkPlain($('#edit-model', context).val())) {
-        vals.push(Drupal.t('SKU') + ': ' + Drupal.checkPlain($('#edit-model', context).val()));
-      }
-
-      if (Drupal.checkPlain($('#edit-sell-price', context).val()) != '0') {
-        vals.push(Drupal.t('Sell price') + ': '
-          + $('.form-item-sell-price .field-prefix', context).html()
-          + Drupal.checkPlain($('#edit-sell-price', context).val())
-          + $('.form-item-sell-price .field-suffix', context).html());
-      }
-
-      if ($('#edit-shippable', context).is(':checked')) {
-        vals.push(Drupal.t('Shippable'));
-      }
-      else {
-        vals.push(Drupal.t('Not shippable'));
-      }
-
-      return vals.join(', ');
-    });
   }
 };
 

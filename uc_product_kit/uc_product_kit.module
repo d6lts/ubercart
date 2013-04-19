@@ -513,10 +513,7 @@ function uc_product_kit_form(&$node, $form_state) {
   $form['base'] = array(
     '#type' => 'details',
     '#title' => t('Product kit information'),
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
-    '#weight' => -10,
-    '#group' => 'additional_settings',
+    '#weight' => 0,
   );
   $form['base']['mutable'] = array(
     '#type' => 'radios',
