@@ -431,52 +431,79 @@ function uc_cart_view_form($form, &$form_state, $items = NULL) {
   $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/uc_cart.css';
 
   $form['items'] = array(
-    '#type' => 'tapir_table',
+    '#type' => 'table',
     '#tree' => TRUE,
+    '#header' => array(
+      'remove' => array(
+        'data' => t('Remove'),
+        'class' => array('remove'),
+      ),
+      'image' => array(
+        'data' => t('Products'),
+        'class' => array('image'),
+      ),
+      'desc' => array(
+        'data' => '',
+        'class' => array('desc'),
+      ),
+      'qty' => array(
+        'data' => theme('uc_qty_label'),
+        'class' => array('qty'),
+      ),
+      'total' => array(
+        'data' => t('Total'),
+        'class' => array('price'),
+      ),
+    ),
+  );
+
+  $form['data'] = array(
+    '#tree' => TRUE,
+    '#parents' => array('items'),
   );
 
   $i = 0;
+  $subtotal = 0;
   $display_items = entity_view_multiple($items, 'cart');
   foreach (element_children($display_items) as $key) {
-    $display_item = $display_items[$key];
-    if (count(element_children($display_item))) {
-      $form['items'][$i] = $display_item;
-      $form['items'][$i]['image'] = uc_product_get_picture($display_item['nid']['#value'], 'uc_cart');
-
-      $description = $display_item['title']['#markup'] . $display_item['description']['#markup'];
-      $form['items'][$i]['desc']['#markup'] = $description;
-
-      if (isset($form['items'][$i]['remove'])) {
-        // Backward compatibility with old checkbox method.
-        if ($form['items'][$i]['remove']['#type'] == 'checkbox') {
-          $form['items'][$i]['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
-        }
-
-        $form['items'][$i]['remove']['#name'] = 'remove-' . $i;
-      }
-
-      unset($form['items'][$i]['title']);
-      unset($form['items'][$i]['description']);
-
-      if (empty($display_item['qty'])) {
-        $form['items'][$i]['qty'] = array(
-          '#type' => 'hidden',
-          '#value' => 0,
-        );
-      }
-
+    $item = $display_items[$key];
+    if (element_children($item)) {
+      $form['items'][$i]['remove'] = $item['remove'];
+      $form['items'][$i]['remove']['#name'] = 'remove-' . $i;
+      $form['items'][$i]['image'] = uc_product_get_picture($item['nid']['#value'], 'uc_cart');
+      $form['items'][$i]['desc']['#markup'] = $item['title']['#markup'] . $item['description']['#markup'];
+      $form['items'][$i]['qty'] = $item['qty'];
       $form['items'][$i]['total'] = array(
         '#theme' => 'uc_price',
-        '#price' => $display_item['#total'],
+        '#price' => $item['#total'],
+        '#wrapper_attributes' => array('class' => 'total'),
       );
-      if (!empty($display_item['#suffixes'])) {
-        $form['items'][$i]['total']['#suffixes'] = $display_item['#suffixes'];
+      if (!empty($item['#suffixes'])) {
+        $form['items'][$i]['total']['#suffixes'] = $item['#suffixes'];
       }
+
+      $form['data'][$i]['module'] = $item['module'];
+      $form['data'][$i]['nid'] = $item['nid'];
+      $form['data'][$i]['data'] = $item['data'];
+      $form['data'][$i]['title'] = array(
+        '#type' => 'value',
+        '#value' => $item['title']['#markup'],
+      );
+
+      $subtotal += $item['#total'];
     }
     $i++;
   }
 
-  $form['items'] = tapir_get_table('uc_cart_view_table', $form['items']);
+  $form['items'][]['total'] = array(
+    '#theme' => 'uc_price',
+    '#prefix' => '<span id="subtotal-title">' . t('Subtotal:') . '</span> ',
+    '#price' => $subtotal,
+    '#wrapper_attributes' => array(
+      'colspan' => 5,
+      'class' => array('subtotal'),
+    ),
+  );
 
   $form['actions'] = array('#type' => 'actions');
 
@@ -537,7 +564,7 @@ function uc_cart_view_form_submit($form, &$form_state) {
   if (substr($form_state['triggering_element']['#name'], 0, 7) == 'remove-') {
     $item = substr($form_state['triggering_element']['#name'], 7);
     $form_state['values']['items'][$item]['qty'] = 0;
-    drupal_set_message(t('<strong>!product-title</strong> removed from your shopping cart.', array('!product-title' => $form['items'][$item]['title']['#markup'])));
+    drupal_set_message(t('<strong>!product-title</strong> removed from your shopping cart.', array('!product-title' => $form['data'][$item]['title']['#value'])));
   }
 
   // Update the items in the shopping cart based on the form values, but only
@@ -583,59 +610,6 @@ function uc_cart_view_form_empty($form, &$form_state) {
  */
 function uc_cart_view_form_checkout($form, &$form_state) {
   $form_state['redirect'] = 'cart/checkout';
-}
-
-/**
- * Lists the products in the cart in a TAPIr table.
- */
-function uc_cart_view_table($table) {
-  $table['#columns'] = array(
-    'remove' => array(
-      'cell' => t('Remove'),
-      'weight' => 0,
-    ),
-    'image' => array(
-      'cell' => t('Products'),
-      'weight' => 1,
-    ),
-    'desc' => array(
-      'cell' => '',
-      'weight' => 2,
-    ),
-    'qty' => array(
-      'cell' => theme('uc_qty_label'),
-      'weight' => 3,
-    ),
-    'total' => array(
-      'cell' => t('Total'),
-      'weight' => 4,
-    ),
-  );
-
-  $subtotal = 0;
-  foreach (element_children($table) as $i) {
-    $subtotal += $table[$i]['#total'];
-
-    $table[$i]['remove']['#cell_attributes'] = array('class' => array('remove'));
-    $table[$i]['image']['#cell_attributes'] = array('class' => array('image'));
-    $table[$i]['desc']['#cell_attributes'] = array('class' => array('desc'));
-    $table[$i]['qty']['#cell_attributes'] = array('class' => array('qty'));
-    $table[$i]['total']['#cell_attributes'] = array('class' => array('price'));
-  }
-
-  $table[] = array(
-    'total' => array(
-      '#theme' => 'uc_price',
-      '#prefix' => '<span id="subtotal-title">' . t('Subtotal:') . '</span> ',
-      '#price' => $subtotal,
-      '#cell_attributes' => array(
-        'colspan' => 'full',
-        'class' => array('subtotal'),
-      ),
-    ),
-  );
-
-  return $table;
 }
 
 /**
