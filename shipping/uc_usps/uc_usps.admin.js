@@ -7,7 +7,7 @@
 
 Drupal.behaviors.uspsAdminFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-domestic', context).drupalSetSummary(function(context) {
+    $('details#edit-domestic', context).drupalSetSummary(function(context) {
       if ($('#edit-uc-usps-online-rates').is(':checked')) {
         return Drupal.t('Using "online" rates');
       }
@@ -16,7 +16,7 @@ Drupal.behaviors.uspsAdminFieldsetSummaries = {
       }
     });
 
-    $('fieldset#edit-uc-usps-markups', context).drupalSetSummary(function(context) {
+    $('details#edit-uc-usps-markups', context).drupalSetSummary(function(context) {
       return Drupal.t('Rate markup') + ': '
         + $('#edit-uc-usps-rate-markup', context).val() + ' '
         + $('#edit-uc-usps-rate-markup-type', context).val() + '<br />'

@@ -7,7 +7,7 @@
 
 Drupal.behaviors.ucProductFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-uc-product', context).drupalSetSummary(function(context) {
+    $('details#edit-uc-product', context).drupalSetSummary(function(context) {
       var vals = [];
       $('input:checked', context).next('label').each(function() {
         vals.push(Drupal.checkPlain($(this).text()));

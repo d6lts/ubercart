@@ -7,7 +7,7 @@
 
 Drupal.behaviors.ucCartAdminFieldsetSummaries = {
   attach: function (context) {
-    $('fieldset#edit-lifetime', context).drupalSetSummary(function(context) {
+    $('details#edit-lifetime', context).drupalSetSummary(function(context) {
       return Drupal.t('Anonymous users') + ': '
         + $('#edit-uc-cart-anon-duration', context).val() + ' '
         + $('#edit-uc-cart-anon-unit', context).val() + '<br />'
@@ -16,7 +16,7 @@ Drupal.behaviors.ucCartAdminFieldsetSummaries = {
         + $('#edit-uc-cart-auth-unit', context).val();
     });
 
-    $('fieldset#edit-checkout', context).drupalSetSummary(function(context) {
+    $('details#edit-checkout', context).drupalSetSummary(function(context) {
       if ($('#edit-uc-checkout-enabled').is(':checked')) {
         return Drupal.t('Checkout is enabled.');
       }
@@ -24,7 +24,7 @@ Drupal.behaviors.ucCartAdminFieldsetSummaries = {
         return Drupal.t('Checkout is disabled.');
       }
     });
-    $('fieldset#edit-anonymous', context).drupalSetSummary(function(context) {
+    $('details#edit-anonymous', context).drupalSetSummary(function(context) {
       if ($('#edit-uc-checkout-anonymous').is(':checked')) {
         return Drupal.t('Anonymous checkout is enabled.');
       }
