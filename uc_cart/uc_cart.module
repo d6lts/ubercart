@@ -455,8 +455,8 @@ function uc_cart_view_form($form, &$form_state, $items = NULL) {
         $form['items'][$i]['remove']['#name'] = 'remove-' . $i;
       }
 
-      $form['items'][$i]['title']['#type'] = 'value';
-      $form['items'][$i]['description']['#type'] = 'value';
+      unset($form['items'][$i]['title']);
+      unset($form['items'][$i]['description']);
 
       if (empty($display_item['qty'])) {
         $form['items'][$i]['qty'] = array(
