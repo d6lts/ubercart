@@ -18,7 +18,10 @@ use Drupal\Core\Annotation\Translation;
  *   id = "uc_order_product",
  *   label = @Translation("Order product"),
  *   module = "uc_order",
- *   render_controller_class = "Drupal\uc_order\UcOrderProductRenderController",
+ *   controllers = {
+ *     "render" = "Drupal\uc_order\UcOrderProductRenderController",
+ *     "storage" = "Drupal\uc_order\UcOrderProductStorageController"
+ *   },
  *   base_table = "uc_order_products",
  *   entity_keys = {
  *     "id" = "order_product_id",

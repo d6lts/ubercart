@@ -19,8 +19,10 @@ use Drupal\Core\Annotation\Translation;
  *   id = "uc_cart_item",
  *   label = @Translation("Cart item"),
  *   module = "uc_cart",
- *   controller_class = "Drupal\uc_cart\UcCartItemStorageController",
- *   render_controller_class = "Drupal\uc_cart\UcCartItemRenderController",
+ *   controllers = {
+ *     "storage" = "Drupal\uc_cart\UcCartItemStorageController",
+ *     "render" = "Drupal\uc_cart\UcCartItemRenderController",
+ *   },
  *   base_table = "uc_cart_products",
  *   entity_keys = {
  *     "id" = "cart_item_id",

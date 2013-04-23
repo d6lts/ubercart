@@ -19,8 +19,10 @@ use Drupal\Core\Annotation\Translation;
  *   id = "uc_order",
  *   label = @Translation("Order"),
  *   module = "uc_order",
- *   controller_class = "Drupal\uc_order\UcOrderStorageController",
- *   render_controller_class = "Drupal\uc_order\UcOrderRenderController",
+ *   controllers = {
+ *     "storage" = "Drupal\uc_order\UcOrderStorageController",
+ *     "render" = "Drupal\uc_order\UcOrderRenderController",
+ *   },
  *   base_table = "uc_orders",
  *   uri_callback = "uc_order_uri",
  *   fieldable = TRUE,
