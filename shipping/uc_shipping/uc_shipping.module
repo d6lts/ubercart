@@ -777,16 +777,6 @@ function uc_shipping_address_form($form, &$form_state, $addresses, $order) {
 }
 
 /**
- * Implements hook_views_api().
- */
-function uc_shipping_views_api() {
-  return array(
-    'api' => '2.0',
-    'path' => drupal_get_path('module', 'uc_shipping') . '/views',
-  );
-}
-
-/**
  * Implements hook_date_views_tables().
  */
 function uc_shipping_date_views_tables() {
