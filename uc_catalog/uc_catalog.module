@@ -132,7 +132,7 @@ function uc_catalog_node_view(EntityInterface $node, EntityDisplay $display, $vi
         $crumbs[] = l(t('Home'), '');
       }
 
-      if ($terms = field_get_items('node', $node, 'taxonomy_catalog')) {
+      if ($terms = field_get_items($node, 'taxonomy_catalog')) {
         $crumbs[] = l(t('Catalog'), 'catalog');
         $used_tids = array();
 
@@ -452,7 +452,7 @@ function _uc_catalog_navigation($branch) {
   if (!isset($terms)) {
     $node = menu_get_object('node', 1);
     $terms = array();
-    if ($node && $field_data = field_get_items('node', $node, 'taxonomy_catalog')) {
+    if ($node && $field_data = field_get_items($node, 'taxonomy_catalog')) {
       foreach ($field_data as $term) {
         $terms[$term['tid']] = $term['tid'];
       }
