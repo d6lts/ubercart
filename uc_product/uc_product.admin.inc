@@ -59,27 +59,6 @@ function uc_product_settings_form($form, &$form_state) {
     '#weight' => -10,
   );
 
-  // Loop through all the integrated image widgets and build an options array.
-  $options = array();
-  foreach (module_invoke_all('uc_image_widget') as $key => $widget) {
-    $options[$key] = check_plain($widget['name']);
-  }
-  if (empty($options)) {
-    $options[NULL] = t('No image widgets installed.');
-  }
-  else {
-    // If we have widgets installed, add option to not use any of them
-    $options['none'] = "Don't use any image widgets.";
-  }
-
-  $form['product']['uc_product_image_widget'] = array(
-    '#type' => 'radios',
-    '#title' => t('Product image widget'),
-    '#description' => t('The selected widget will be used to display a zoomed version of product images when they are clicked.'),
-    '#options' => $options,
-    '#default_value' => variable_get('uc_product_image_widget', NULL),
-  );
-
   if (module_exists('uc_cart')) {
     $form['product']['uc_product_add_to_cart_qty'] = array(
       '#type' => 'checkbox',

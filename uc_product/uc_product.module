@@ -199,10 +199,6 @@ function uc_product_theme() {
       'variables' => array('length' => 0, 'width' => 0, 'height' => 0, 'units' => NULL, 'view_mode' => 'full', 'attributes' => array()),
       'file' => 'uc_product.theme.inc',
     ),
-    'uc_product_image' => array(
-      'variables' => array('images' => array(), 'view_mode' => 'full'),
-      'file' => 'uc_product.theme.inc',
-    ),
     'uc_product_feature_add_form' => array(
       'render element' => 'form',
       'file' => 'uc_product.admin.inc',
@@ -211,34 +207,12 @@ function uc_product_theme() {
 }
 
 /**
- * Implements hook_field_formatter_info().
+ * Theme preprocess function for Ubercart product image fields.
  */
-function uc_product_field_formatter_info() {
-  return array(
-    'uc_product_image' => array(
-      'label' => t('Ubercart product'),
-      'description' => t('The first image is displayed with the "uc_product" image style, and subsequent images are displayed below it with the "uc_thumbnail" image style.'),
-      'field types' => array('image'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_formatter_view().
- */
-function uc_product_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  $element = array();
-
-  switch ($display['type']) {
-    case 'uc_product_image':
-      $element[0] = array(
-        '#theme' => 'uc_product_image',
-        '#images' => $items,
-      );
-      break;
+function uc_product_preprocess_field(&$variables) {
+  if ($variables['element']['#formatter'] == 'uc_product_image') {
+    $variables['attributes']['class'][] = 'uc-product-image';
   }
-
-  return $element;
 }
 
 /**
@@ -1421,40 +1395,6 @@ function uc_product_get_picture($nid, $style = 'uc_product') {
   }
 
   return $output;
-}
-
-/**
- * Finds the JavaScript image display module to use on product pages.
- */
-function uc_product_get_image_widget() {
-  static $got_widget = FALSE, $image_widget = array();
-
-  // Get the current image widget, if any.
-  if (!$got_widget) {
-    // Invoke hook to find widgets.
-    $image_widgets = uc_store_get_image_widgets();
-
-    // Find widget preference, if any.
-    $widget_name = variable_get('uc_product_image_widget', NULL);
-
-    if ($widget_name != NULL) {
-      // Widget to use has been set in admin menu.
-      $image_widget = $image_widgets[$widget_name];
-    }
-    else {
-      // Widget to use has not been chosen, so default to first element of
-      // array, if any.
-      $keys = array_keys($image_widgets);
-      if ($keys) {
-        $image_widget = $image_widgets[$keys[0]];
-        variable_set('uc_product_image_widget', $keys[0]);
-      }
-    }
-
-    $got_widget = TRUE;
-  }
-
-  return $image_widget;
 }
 
 /**

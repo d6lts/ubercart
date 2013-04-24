@@ -277,3 +277,10 @@ function uc_product_set_teaser_display($type) {
 
   field_bundle_settings('node', $type, $settings);
 }
+
+/**
+ * Delete unused variables.
+ */
+function uc_product_update_8000() {
+  update_variable_del('uc_product_image_widget');
+}
