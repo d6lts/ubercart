@@ -148,7 +148,11 @@ function uc_store_install() {
   );
 
   // Set the default store date format.
-  variable_set('date_format_uc_store', 'm/d/Y');
+  config('system.date')
+    ->set('formats.uc_store.name', t('Ubercart'))
+    ->set('formats.uc_store.locked', 0)
+    ->set('formats.uc_store.pattern.php', 'm/d/Y')
+    ->save();
 
   // Install United States and Canada by default.
   $path = drupal_get_path('module', 'uc_store');
@@ -169,7 +173,6 @@ function uc_store_uninstall() {
     )
     ->execute();
 
-  variable_del('date_format_uc_store');
   variable_del('uc_address_fields');
   variable_del('uc_address_fields_required');
   variable_del('uc_address_fields_weight');
