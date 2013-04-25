@@ -7,6 +7,8 @@
  * Allows tax rules to be set up and applied to orders.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 
 /**
  * Implements hook_permission().
@@ -106,11 +108,11 @@ function uc_taxes_form_uc_order_edit_form_alter(&$form, &$form_state) {
  *
  * Adds included taxes (VAT) to display price of applicable products.
  */
-function uc_taxes_entity_view_alter(&$build, $entity_type) {
-  switch ($entity_type) {
+function uc_taxes_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay $display) {
+  switch ($entity->entityType()) {
     case 'node':
-      if (uc_product_is_product($build['#node'])) {
-        list($amount, $suffixes) = uc_taxes_get_included_tax($build['#node']);
+      if (uc_product_is_product($entity)) {
+        list($amount, $suffixes) = uc_taxes_get_included_tax($entity);
         $build['display_price']['#value'] += $amount;
         if (!empty($suffixes)) {
           $build['display_price']['#suffixes'] += $suffixes;
@@ -119,7 +121,7 @@ function uc_taxes_entity_view_alter(&$build, $entity_type) {
       break;
 
     case 'uc_cart_item':
-      list($amount, $suffixes) = uc_taxes_get_included_tax($build['#entity'], isset($build['#entity']->order) ? $build['#entity']->order : NULL);
+      list($amount, $suffixes) = uc_taxes_get_included_tax($entity, isset($entity->order) ? $entity->order : NULL);
 
       if (!empty($amount) && !empty($build['#total'])) {
         $build['#total'] += $amount * $build['qty']['#default_value'];
@@ -134,10 +136,10 @@ function uc_taxes_entity_view_alter(&$build, $entity_type) {
       break;
 
     case 'uc_order_product':
-      list($amount, $suffixes) = uc_taxes_get_included_tax($build['#entity'], isset($build['#entity']->order) ? $build['#entity']->order : NULL);
+      list($amount, $suffixes) = uc_taxes_get_included_tax($entity, isset($entity->order) ? $entity->order : NULL);
 
       $build['price']['#price'] += $amount;
-      $build['total']['#price'] += $amount * $build['#entity']->qty;
+      $build['total']['#price'] += $amount * $entity->qty;
       $build['price']['#suffixes'] += $suffixes;
       $build['total']['#suffixes'] += $suffixes;
       break;
