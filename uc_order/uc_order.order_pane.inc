@@ -199,10 +199,54 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
 function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL) {
   switch ($op) {
     case 'view':
-      return tapir_get_table('uc_op_products_view_table', $order);
-
     case 'customer':
-      return tapir_get_table('uc_op_products_customer_table', $order);
+      $build = array(
+        '#type' => 'table',
+        '#attributes' => array('class' => array('order-pane-table')),
+        '#header' => array(
+          'qty' => array(
+            'data' => theme('uc_qty_label'),
+            'class' => array('qty'),
+          ),
+          'product' => array(
+            'data' => t('Product'),
+            'class' => array('product'),
+          ),
+          'cost' => array(
+            'data' => t('Cost'),
+            'class' => array('cost'),
+          ),
+          'model' => array(
+            'data' => t('SKU'),
+            'class' => array('sku'),
+          ),
+          'price' => array(
+            'data' => t('Price'),
+            'class' => array('price'),
+          ),
+          'total' => array(
+            'data' => t('Total'),
+            'class' => array('price'),
+          ),
+        ),
+        '#empty' => t('This order contains no products.'),
+      );
+
+      if (!user_access('administer products')) {
+        unset($build['#header']['cost']);
+      }
+
+      if (!empty($order->products)) {
+        $products = entity_view_multiple($order->products, 'full');
+        foreach ($products as $id => $product) {
+          foreach (array_keys($build['#header']) as $field) {
+            $build[$id][$field] = $product[$field];
+            $build[$id][$field]['#wrapper_attributes']['class'] = $build['#header'][$field]['class'];
+          }
+        }
+      }
+
+      return $build;
 
     case 'edit-form':
       $form['add_product_button'] = array(
@@ -1059,142 +1103,6 @@ function uc_order_view_update_form_submit($form, &$form_state) {
   // }
 
   drupal_set_message(t('Order updated.'));
-}
-
-/**
- * Builds the order view products table.
- */
-function uc_op_products_view_table($order) {
-  $table = array(
-    '#type' => 'tapir_table',
-    '#attributes' => array('class' => array('order-pane-table')),
-  );
-
-  $table['#columns']['qty'] = array(
-    'cell' => array(
-      'data' => theme('uc_qty_label'),
-      'class' => array('qty'),
-    ),
-    'weight' => 0,
-  );
-  $table['#columns']['product'] = array(
-    'cell' => array(
-      'data' => t('Product'),
-      'class' => array('product'),
-    ),
-    'weight' => 1,
-  );
-  $table['#columns']['model'] = array(
-    'cell' => array(
-      'data' => t('SKU'),
-      'class' => array('sku'),
-    ),
-    'weight' => 2,
-  );
-  if (user_access('administer products')) {
-    $table['#columns']['cost'] = array(
-      'cell' => array(
-        'data' => t('Cost'),
-        'class' => array('cost'),
-      ),
-      'weight' => 3,
-    );
-  }
-  $table['#columns']['price'] = array(
-    'cell' => array(
-      'data' => t('Price'),
-      'class' => array('price'),
-    ),
-    'weight' => 4,
-  );
-  $table['#columns']['total'] = array(
-    'cell' => array(
-      'data' => t('Total'),
-      'class' => array('total'),
-    ),
-    'weight' => 5,
-  );
-
-  if (!empty($order->products)) {
-    $build = entity_view_multiple($order->products, 'full');
-    $table['#rows'] = $build;
-  }
-  else {
-    $table['#rows'][]['product'] = array(
-      '#markup' => t('This order contains no products.'),
-      '#cell_attributes' => array('colspan' => 'full'),
-    );
-  }
-
-  return $table;
-}
-
-/**
- * Builds the order customer's view products table.
- */
-function uc_op_products_customer_table($order) {
-  $table = array(
-    '#type' => 'tapir_table',
-    '#attributes' => array('class' => array('order-pane-table')),
-  );
-
-  $table['#columns']['qty'] = array(
-    'cell' => array(
-      'data' => theme('uc_qty_label'),
-      'class' => array('qty'),
-    ),
-    'weight' => 0,
-  );
-  $table['#columns']['product'] = array(
-    'cell' => array(
-      'data' => t('Product'),
-      'class' => array('product'),
-    ),
-    'weight' => 1,
-  );
-  $table['#columns']['model'] = array(
-    'cell' => array(
-      'data' => t('SKU'),
-      'class' => array('sku'),
-    ),
-    'weight' => 2,
-  );
-  if (user_access('administer products')) {
-    $table['#columns']['cost'] = array(
-      'cell' => array(
-        'data' => t('Cost'),
-        'class' => array('cost'),
-      ),
-      'weight' => 3,
-    );
-  }
-  $table['#columns']['price'] = array(
-    'cell' => array(
-      'data' => t('Price'),
-      'class' => array('price'),
-    ),
-    'weight' => 4,
-  );
-  $table['#columns']['total'] = array(
-    'cell' => array(
-      'data' => t('Total'),
-      'class' => array('total'),
-    ),
-    'weight' => 5,
-  );
-
-  if (!empty($order->products)) {
-    $build = entity_view_multiple($order->products, 'full');
-    $table['#rows'] = $build;
-  }
-  else {
-    $table['#rows'][]['product'] = array(
-      '#markup' => t('This order contains no products.'),
-      '#cell_attributes' => array('colspan' => 'full'),
-    );
-  }
-
-  return $table;
 }
 
 /**
