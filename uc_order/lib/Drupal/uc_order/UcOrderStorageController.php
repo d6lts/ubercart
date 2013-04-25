@@ -61,19 +61,10 @@ class UcOrderStorageController extends DatabaseStorageController {
   protected function attachLoad(&$orders, $load_revision = FALSE) {
     foreach ($orders as &$order) {
       $order->data = unserialize($order->data);
-      $result = \Drupal::entityQuery('uc_order_product')
-        ->condition('order_id', $order->order_id)
-        ->sort('order_product_id', 'ASC')
-        ->execute();
-      if (!empty($result)) {
-        $order->products = entity_load_multiple('uc_order_product', array_keys($result), TRUE);
-        foreach ($order->products as $product) {
-          $product->order = $order;
-          $product->order_uid = $order->uid;
-        }
-      }
-      else {
-        $order->products = array();
+
+      $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $order->order_id));
+      foreach ($order->products as $product) {
+        $product->order = $order;
       }
 
       uc_order_module_invoke('load', $order, NULL);
