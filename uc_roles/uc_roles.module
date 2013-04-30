@@ -765,7 +765,7 @@ function uc_roles_feature_form_submit($form, &$form_state) {
  * @ingroup forms
  */
 function uc_roles_feature_settings($form, &$form_state) {
-  $default_role_choices = user_roles(TRUE);
+  $default_role_choices = user_role_names(TRUE);
   unset($default_role_choices[DRUPAL_AUTHENTICATED_RID]);
 
   if (!count($default_role_choices)) {
@@ -907,7 +907,7 @@ function uc_roles_feature_settings($form, &$form_state) {
  *   A string containing the name of the role, returns FALSE if rid is invalid.
  */
 function _uc_roles_get_name($rid) {
-  $roles = user_roles(TRUE);
+  $roles = user_role_names(TRUE);
   return (!is_null($roles[$rid])) ? $roles[$rid] : FALSE;
 }
 
@@ -924,7 +924,7 @@ function _uc_roles_get_choices($exclude = array()) {
   $output = array();
 
   // Get roles from Drupal, excluding Anonymous and Authenticated.
-  $roles = user_roles(TRUE);
+  $roles = user_role_names(TRUE);
   unset($roles[DRUPAL_AUTHENTICATED_RID]);
 
   // User set specific roles that we must use?
