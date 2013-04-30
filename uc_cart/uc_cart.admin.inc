@@ -240,6 +240,19 @@ function uc_cart_checkout_settings_form($form, &$form_state) {
     '#default_value' => variable_get('uc_checkout_enabled', TRUE),
   );
 
+  if (!module_exists('rules')) {
+    $form['checkout']['uc_checkout_email_customer'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Send e-mail invoice to customer after checkout.'),
+      '#default_value' => variable_get('uc_checkout_email_customer', TRUE),
+    );
+    $form['checkout']['uc_checkout_email_admin'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Send e-mail order notification to admin after checkout.'),
+      '#default_value' => variable_get('uc_checkout_email_admin', TRUE),
+    );
+  }
+
   $form['anonymous'] = array(
     '#type' => 'details',
     '#title' => t('Anonymous checkout'),
