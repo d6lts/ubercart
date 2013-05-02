@@ -37,7 +37,7 @@ function uc_catalog_settings_form($form, &$form_state) {
     $catalog = taxonomy_vocabulary_load($vid);
 
     $form['catalog_vid'] = array(
-      '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => url('admin/structure/taxonomy/' . $catalog->id()), '%name' => $catalog->label())) . '</p>',
+      '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => url('admin/structure/taxonomy/manage/' . $catalog->id()), '%name' => $catalog->label())) . '</p>',
     );
   }
 
