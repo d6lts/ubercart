@@ -244,6 +244,17 @@ function _uc_stock_send_mail($order, $node, $stock) {
 }
 
 /**
+ * Implements hook_uc_checkout_complete().
+ *
+ * Decrements stock if Rules is not installed.
+ */
+function uc_stock_uc_checkout_complete($order) {
+  if (!module_exists('rules')) {
+    array_walk($order->products, 'uc_stock_adjust_product_stock', $order);
+  }
+}
+
+/**
  * Decrement a product's stock.
  *
  * @param $product
