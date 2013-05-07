@@ -167,10 +167,7 @@ function uc_store_install() {
  */
 function uc_store_uninstall() {
   db_delete('variable')
-    ->condition(db_or()
-      ->condition('name', 'uc_address_format_%', 'LIKE')
-      ->condition('name', 'uc_field_%', 'LIKE')
-    )
+    ->condition('name', 'uc_address_format_%', 'LIKE')
     ->execute();
 
   variable_del('uc_address_fields');
@@ -230,6 +227,10 @@ function uc_store_update_8000() {
  * Deletes unused variables.
  */
 function uc_store_update_8001() {
+  db_delete('variable')
+    ->condition('name', 'uc_field_%', 'LIKE')
+    ->execute();
+
   update_variable_del('uc_weight_format_lb');
   update_variable_del('uc_weight_format_oz');
   update_variable_del('uc_weight_format_kg');

@@ -304,6 +304,20 @@ function uc_store_element_info() {
  * Element process hook for address fields.
  */
 function uc_store_process_address_field($element, $form_state) {
+  $labels = array(
+    'first_name' => t('First name'),
+    'last_name' => t('Last name'),
+    'company' => t('Company'),
+    'street1' => t('Street address'),
+    'street2' => t(''),
+    'city' => t('City'),
+    'zone' => t('State/Province'),
+    'country' => t('Country'),
+    'postal_code' => t('Postal code'),
+    'phone' => t('Phone number'),
+    'email' => t('E-mail'),
+  );
+
   $element['#tree'] = TRUE;
   $prefix = $element['#key_prefix'] ? ($element['#key_prefix'] . '_') : '';
   $weight = uc_store_address_field_weights();
@@ -411,9 +425,8 @@ function uc_store_process_address_field($element, $form_state) {
     }
 
     // Set common values for all address fields.
-    $label = uc_get_field_name($base_field);
     $element[$field] = $subelement + array(
-      '#title' => $label ? $label : '&nbsp;',
+      '#title' => $labels[$base_field] ? $labels[$base_field] : '&nbsp;',
       '#default_value' => $value[$field],
       '#parents' => array_merge(array_slice($element['#parents'], 0, -1), array($field)),
       '#pre_render' => array_merge(array('uc_store_pre_render_address_field'), element_info_property('textfield', '#pre_render', array())),
@@ -1013,32 +1026,6 @@ function uc_get_country_data($match = array(), $sort = 'country_name') {
   $countries = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
 
   return empty($countries) ? FALSE : $countries;
-}
-
-/**
- * Returns the name of an address field.
- */
-function uc_get_field_name($field) {
-  $fields = array(
-    'first_name' => t('First name'),
-    'last_name' => t('Last name'),
-    'company' => t('Company'),
-    'street1' => t('Street address'),
-    'street2' => t(''),
-    'city' => t('City'),
-    'zone' => t('State/Province'),
-    'country' => t('Country'),
-    'postal_code' => t('Postal code'),
-    'phone' => t('Phone number'),
-    'email' => t('E-mail'),
-  );
-
-  if (!isset($fields[$field])) {
-    drupal_set_message(t('The field title %field is being accessed incorrectly.', array('%field' => $field)), 'error');
-    return '';
-  }
-
-  return variable_get('uc_field_' . $field, $fields[$field]);
 }
 
 /**

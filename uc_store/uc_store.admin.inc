@@ -159,11 +159,6 @@ function uc_store_address_fields_form($form, &$form_state) {
     $form['fields'][$field]['default'] = array(
       '#markup' => $label,
     );
-    $form['fields'][$field]['uc_field_' . $field] = array(
-      '#type' => 'textfield',
-      '#default_value' => uc_get_field_name($field),
-      '#size' => 32,
-    );
     $form['fields'][$field]['#weight'] = (isset($weight[$field])) ? $weight[$field] : 99;
   }
 
@@ -187,7 +182,7 @@ function uc_store_address_fields_form($form, &$form_state) {
 function theme_uc_store_address_fields_form($variables) {
   $form = $variables['form'];
 
-  $header = array(t('Field'), t('Title'), t('Enabled'), t('Required'), t('List position'));
+  $header = array(t('Field'), t('Enabled'), t('Required'), t('List position'));
 
   // Sort fields by weight
   uasort($form['fields'], 'element_sort');
@@ -195,7 +190,6 @@ function theme_uc_store_address_fields_form($variables) {
   foreach (element_children($form['fields']) as $field) {
     $row = array(
       drupal_render($form['fields'][$field]['default']),
-      drupal_render($form['fields'][$field]['uc_field_' . $field]),
       drupal_render($form['uc_address_fields'][$field]),
       drupal_render($form['uc_address_fields_required'][$field]),
       drupal_render($form['uc_address_fields_weight'][$field]),

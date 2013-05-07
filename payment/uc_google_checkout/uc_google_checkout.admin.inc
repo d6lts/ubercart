@@ -185,7 +185,7 @@ function uc_google_checkout_taxes_settings($form, &$form_state) {
 function theme_uc_google_checkout_taxes_settings($variables) {
   $form = $variables['form'];
 
-  $header = array(t('Delete'), uc_get_field_name('zone'), t('Rate'), t('Tax shipping?'));
+  $header = array(t('Delete'), t('State/Province'), t('Rate'), t('Tax shipping?'));
 
   $rows = array();
   foreach (element_children($form['taxes']) as $zone) {

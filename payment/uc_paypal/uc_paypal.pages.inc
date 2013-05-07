@@ -284,7 +284,7 @@ function uc_paypal_ec_review_form($form, &$form_state, $order) {
   if (variable_get('uc_paypal_ec_review_company', TRUE)) {
     $form['delivery_company'] = array(
       '#type' => 'textfield',
-      '#title' => uc_get_field_name('company'),
+      '#title' => t('Company'),
       '#description' => uc_order_is_shippable($order) ? t('Leave blank if shipping to a residence.') : '',
       '#default_value' => $order->delivery_company,
     );
