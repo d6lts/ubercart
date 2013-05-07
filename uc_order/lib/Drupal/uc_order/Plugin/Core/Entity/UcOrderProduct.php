@@ -23,21 +23,10 @@ use Drupal\Core\Annotation\Translation;
  *     "storage" = "Drupal\uc_order\UcOrderProductStorageController"
  *   },
  *   base_table = "uc_order_products",
+ *   fieldable = TRUE,
+ *   route_base_path = "admin/store/settings/orders/products",
  *   entity_keys = {
  *     "id" = "order_product_id",
- *   },
- *   bundles = {
- *     "uc_order_product" = {
- *       "label" = @Translation("Order product"),
- *     }
- *   },
- *   view_modes = {
- *     "full" = {
- *       "label" = "Normal view",
- *     },
- *     "cart" = {
- *       "label" = "Cart view",
- *     },
  *   }
  * )
  */

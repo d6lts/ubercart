@@ -241,7 +241,7 @@ function uc_order_menu_alter(&$items) {
   $items['admin/store/settings/orders/products/fields']['title'] = 'Ordered product fields';
   $items['admin/store/settings/orders/products/fields']['weight'] = 3;
   // Disable field display settings for ordered products, as we don't use this anywhere (yet).
-  $items['admin/store/settings/orders/products/display']['access callback'] = FALSE;
+  unset($items['admin/store/settings/orders/products/display']);
 }
 
 /**
@@ -356,6 +356,35 @@ function uc_order_theme($existing, $type, $theme, $path) {
   );
 
   return $theme_hooks;
+}
+
+/**
+ * Implements hook_entity_view_mode_info().
+ */
+function uc_order_entity_view_mode_info() {
+  $view_modes['uc_order']['admin'] = array(
+    'label' => t('Admin view'),
+  );
+  $view_modes['uc_order']['customer'] = array(
+    'label' => t('Customer view'),
+    'custom_settings' => TRUE,
+  );
+  $view_modes['uc_order_product']['full'] = array(
+    'label' => t('Normal view'),
+  );
+  $view_modes['uc_order_product']['cart'] = array(
+    'label' => t('Cart view'),
+  );
+  return $view_modes;
+}
+
+/**
+ * Implements hook_entity_bundle_info().
+ */
+function uc_order_entity_bundle_info() {
+  $bundles['uc_order']['uc_order']['label'] = t('Order');
+  $bundles['uc_order_product']['uc_order_product']['label'] = t('Order product');
+  return $bundles;
 }
 
 /**

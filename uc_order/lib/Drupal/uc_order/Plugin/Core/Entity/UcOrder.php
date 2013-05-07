@@ -26,27 +26,9 @@ use Drupal\Core\Annotation\Translation;
  *   base_table = "uc_orders",
  *   uri_callback = "uc_order_uri",
  *   fieldable = TRUE,
+ *   route_base_path = "admin/store/settings/orders",
  *   entity_keys = {
  *     "id" = "order_id",
- *   },
- *   bundles = {
- *     "uc_order" = {
- *       "label" = @Translation("Order"),
- *       "admin" = {
- *         "path" = "admin/store/settings/orders",
- *         "access arguments" = {"administer store"}
- *       }
- *     }
- *   },
- *   view_modes = {
- *     "admin" = {
- *       "label" = "Admin view",
- *       "custom_settings" = FALSE
- *     },
- *     "customer" = {
- *       "label" = "Customer view",
- *       "custom_settings" = TRUE
- *     },
  *   }
  * )
  */
