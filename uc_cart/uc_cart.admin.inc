@@ -29,26 +29,6 @@ function uc_cart_cart_settings_form($form, &$form_state) {
     '#group' => 'cart-settings',
   );
 
-  $panes = uc_cart_cart_pane_list(NULL);
-  $form['general']['panes'] = array(
-    '#theme' => 'uc_pane_sort_table',
-    '#pane_prefix' => 'uc_cap',
-    '#draggable' => 'uc-cart-pane-weight',
-  );
-  foreach ($panes as $id => $pane) {
-    $form['general']['panes'][$id]['uc_cap_' . $id . '_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => check_plain($pane['title']),
-      '#default_value' => variable_get('uc_cap_'. $pane['id'] .'_enabled', $pane['enabled']),
-    );
-    $form['general']['panes'][$id]['uc_cap_' . $id . '_weight'] = array(
-      '#type' => 'weight',
-      '#delta' => 10,
-      '#default_value' => variable_get('uc_cap_'. $pane['id'] .'_weight', $pane['weight']),
-      '#attributes' => array('class' => array('uc-cart-pane-weight')),
-    );
-  }
-
   $form['general']['uc_cart_add_item_msg'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display a message when a customer adds an item to their cart.'),

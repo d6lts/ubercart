@@ -28,23 +28,13 @@ function uc_cart_view() {
     );
   }
 
-  $build = array();
-  // Load through the cart panes...
-  foreach (uc_cart_cart_pane_list($items) as $id => $pane) {
-    // If the pane is enabled...
-    if ($pane['enabled']) {
-      // Add its output to the cart view.
-      $build[$id] = $pane['body'];
-    }
-  }
-
   // Add a custom cart breadcrumb if specified.
   if (($text = variable_get('uc_cart_breadcrumb_text', '')) !== '') {
     $link = l($text, variable_get('uc_cart_breadcrumb_url', '<front>'));
     drupal_set_breadcrumb(array($link));
   }
 
-  return $build;
+  return drupal_get_form('uc_cart_view_form', $items);
 }
 
 /**

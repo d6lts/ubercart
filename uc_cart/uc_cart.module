@@ -304,29 +304,6 @@ function uc_cart_uc_message() {
 }
 
 /**
- * Implements hook_uc_cart_pane().
- */
-function uc_cart_uc_cart_pane($items) {
-  $body = array();
-
-  if (!is_null($items)) {
-    $body = drupal_get_form('uc_cart_view_form', $items) + array(
-      '#prefix' => '<div id="cart-form-pane">',
-      '#suffix' => '</div>',
-    );
-  }
-
-  $panes['cart_form'] = array(
-    'title' => t('Default cart form'),
-    'enabled' => TRUE,
-    'weight' => 0,
-    'body' => $body,
-  );
-
-  return $panes;
-}
-
-/**
  * Implements hook_uc_checkout_pane().
  */
 function uc_cart_uc_checkout_pane() {
@@ -1089,43 +1066,6 @@ function uc_cart_empty($cart_id = NULL) {
 
   // Remove cached cart.
   uc_cart_get_contents($cart_id, 'empty');
-}
-
-/**
- * Gets all of the enabled, sorted cart panes.
- *
- * @param $items
- *   The contents of the cart.
- */
-function uc_cart_cart_pane_list($items) {
-  $panes = array();
-
-  foreach (module_invoke_all('uc_cart_pane', $items) as $id => $pane) {
-    // Preserve backward compatibility for panes with no key specified.
-    if (is_numeric($id)) {
-      $id = $pane['id'];
-    }
-
-    // Set defaults.
-    $pane += array(
-      'id' => $id,
-      'enabled' => TRUE,
-      'weight' => 0,
-      'body' => array(),
-    );
-
-    $pane['enabled'] = variable_get('uc_cap_' . $id . '_enabled', $pane['enabled']);
-    $pane['weight'] = variable_get('uc_cap_' . $id . '_weight', $pane['weight']);
-
-    $panes[$id] = $pane;
-  }
-
-  // Allow other modules to alter the defaults.
-  drupal_alter('uc_cart_pane', $panes, $items);
-
-  uasort($panes, 'uc_weight_sort');
-
-  return $panes;
 }
 
 /**

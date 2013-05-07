@@ -75,7 +75,6 @@ function uc_cart_uninstall() {
   db_delete('variable')
     ->condition('name', 'uc_cart_%', 'LIKE')
     ->condition('name', 'uc_pane_%', 'LIKE')
-    ->condition('name', 'uc_cap_%', 'LIKE')
     ->condition('name', 'uc_checkout_%', 'LIKE')
     ->condition('name', 'uc_msg_%', 'LIKE')
     ->condition('name', 'uc_new_customer_%', 'LIKE')
@@ -96,4 +95,13 @@ function uc_cart_uninstall() {
  */
 function uc_cart_update_last_removed() {
   return 7300;
+}
+
+/**
+ * Deletes unused variables.
+ */
+function uc_cart_update_8000() {
+  db_delete('variable')
+    ->condition('name', 'uc_cap_%', 'LIKE')
+    ->execute();
 }

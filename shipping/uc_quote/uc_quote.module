@@ -237,6 +237,8 @@ function uc_quote_form_node_form_alter(&$form, &$form_state, $form_id) {
 
 /**
  * Implements hook_uc_cart_pane().
+ *
+ * @TODO: Replace with block implementation.
  */
 function uc_quote_uc_cart_pane($items) {
   if (arg(0) == 'cart') {
