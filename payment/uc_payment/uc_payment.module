@@ -290,49 +290,6 @@ function uc_payment_method_free_order($op, &$order) {
 }
 
 /**
- * TAPIr table definition for uc_payments_table.
- */
-function uc_payments_table() {
-  $table = array(
-    '#type' => 'tapir_table',
-    '#tree' => TRUE,
-    '#columns' => array(
-      'received' => array(
-        'cell' => t('Received'),
-        'weight' => 0,
-      ),
-      'user' => array(
-        'cell' => t('User'),
-        'weight' => 1,
-      ),
-      'method' => array(
-        'cell' => t('Method'),
-        'weight' => 2,
-      ),
-      'amount' => array(
-        'cell' => t('Amount'),
-        'weight' => 3,
-      ),
-      'balance' => array(
-        'cell' => t('Balance'),
-        'weight' => 4,
-      ),
-      'comment' => array(
-        'cell' => t('Comment'),
-        'weight' => 5,
-      ),
-      'action' => array(
-        'cell' => t('Action'),
-        'weight' => 6,
-      ),
-    ),
-    '#rows' => array(),
-  );
-
-  return $table;
-}
-
-/**
  * Processes a payment through an enabled payment gateway.
  *
  * @param $method

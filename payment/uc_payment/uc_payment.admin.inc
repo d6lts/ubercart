@@ -130,8 +130,12 @@ function uc_payment_by_order_form($form, &$form_state, $order) {
     '#theme' => 'uc_price',
     '#price' => $total,
   );
-  $form['payments'] = tapir_get_table('uc_payments_table');
-  $form['payments']['#weight'] = 10;
+  $form['payments'] = array(
+    '#type' => 'table',
+    '#tree' => TRUE,
+    '#header' => array(t('Received'), t('User'), t('Method'), t('Amount'), t('Balance'), t('Comment'), t('Action')),
+    '#weight' => 10,
+  );
 
   if ($payments !== FALSE) {
     foreach ($payments as $payment) {
