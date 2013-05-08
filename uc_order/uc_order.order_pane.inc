@@ -979,8 +979,26 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
 
   switch ($op) {
     case 'view':
+      $build = array(
+        '#theme' => 'table',
+        '#header' => array(
+          array('data' => t('Date'), 'class' => array('date')),
+          array('data' => t('User'), 'class' => array('user')),
+          array('data' => t('Comment'), 'class' => array('message')),
+        ),
+        '#rows' => array(),
+        '#attributes' => array('class' => array('order-pane-table uc-order-comments')),
+        '#empty' => t('This order has no admin comments associated with it.'),
+      );
       $comments = uc_order_comments_load($order->order_id, TRUE);
-      return tapir_get_table('uc_op_admin_comments_view_table', $comments);
+      foreach ($comments as $comment) {
+        $build['#rows'][] = array(
+          array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
+          array('data' => theme('uc_uid', array('uid' => $comment->uid)), 'class' => array('user')),
+          array('data' => filter_xss_admin($comment->message), 'class' => array('message')),
+        );
+      }
+      return $build;
 
     case 'edit-form':
       $form['admin_comment_field'] = array(
@@ -1170,57 +1188,6 @@ function uc_op_products_edit_table() {
     'cell' => t('Price'),
     'weight' => 7,
   );
-
-  return $table;
-}
-
-/**
- * Builds the order admin comments table.
- */
-function uc_op_admin_comments_view_table($comments) {
-  $table = array(
-    '#type' => 'tapir_table',
-    '#attributes' => array('class' => array('order-pane-table uc-order-comments')),
-  );
-
-  $table['#columns']['date'] = array(
-    'cell' => array('data' => t('Date'), 'class' => array('date')),
-    'weight' => 0,
-  );
-  $table['#columns']['user'] = array(
-    'cell' => array('data' => t('User'), 'class' => array('user')),
-    'weight' => 1,
-  );
-  $table['#columns']['comment'] = array(
-    'cell' => array('data' => t('Comment'), 'class' => array('message')),
-    'weight' => 2,
-  );
-
-  if (is_array($comments) && !empty($comments)) {
-    foreach ($comments as $comment) {
-      $data = array();
-      $data['date'] = array(
-        '#markup' => format_date($comment->created, 'short'),
-        '#cell_attributes' => array('class' => 'date'),
-      );
-      $data['user'] = array(
-        '#markup' => theme('uc_uid', array('uid' => $comment->uid)),
-        '#cell_attributes' => array('class' => 'user'),
-      );
-      $data['comment'] = array(
-        '#markup' => filter_xss_admin($comment->message),
-        '#cell_attributes' => array('class' => 'message'),
-      );
-      $table['#rows'][] = $data;
-    }
-  }
-  else {
-    $data['comment'] = array(
-      '#markup' => t('This order has no admin comments associated with it.'),
-      '#cell_attributes' => array('colspan' => 'full'),
-    );
-    $table['#rows'][] = $data;
-  }
 
   return $table;
 }
