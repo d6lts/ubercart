@@ -5,6 +5,8 @@
  * Cart menu items.
  */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Displays the cart view page.
  *
@@ -15,7 +17,7 @@ function uc_cart_view() {
   // Failsafe so that this function only works when called with no arguments.
   // This prevents the accidental wiping of the cart_order session variable.
   if (func_num_args() > 0) {
-    return MENU_NOT_FOUND;
+    throw new NotFoundHttpException();
   }
 
   // Load the array of shopping cart items.

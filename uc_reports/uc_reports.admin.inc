@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Template\Attribute;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Displays the customer report.
@@ -1312,8 +1313,7 @@ function uc_reports_get_csv($report_id, $user_id) {
 
   if (!$csv_data || $user_id != $user_check) {
     drupal_set_message(t("The CSV data could not be retrieved. It's possible the data might have expired. Refresh the report page and try to retrieve the CSV file again."), 'error');
-    drupal_not_found();
-    exit();
+    throw new NotFoundHttpException();
   }
   else {
     ob_end_clean();

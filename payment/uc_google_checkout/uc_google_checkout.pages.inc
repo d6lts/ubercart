@@ -5,6 +5,9 @@
  * Callback functions to handle responses from Google Checkout.
  */
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Handles Google Checkout payment notification callback.
  */
@@ -50,7 +53,7 @@ function uc_google_checkout_callback() {
     uc_google_checkout_notification_error();
   }
 
-  return MENU_NOT_FOUND;
+  throw new NotFoundHttpException();
 }
 
 /**
@@ -69,7 +72,7 @@ function uc_google_checkout_merchant_calculation() {
 
   if ($_SERVER['PHP_AUTH_USER'] != $merchant_id || $_SERVER['PHP_AUTH_PW'] != $merchant_key) {
     watchdog('google', 'HTTP Authorization header does not match settings.', array(), WATCHDOG_ERROR);
-    return MENU_ACCESS_DENIED;
+    throw new AccessDeniedHttpException();
   }
 
   $input = file_get_contents('php://input');

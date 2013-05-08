@@ -5,6 +5,7 @@
  * UPS functions for label generation.
  */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Shipment creation callback.
@@ -739,7 +740,7 @@ function uc_ups_request_pickup($digest, $order_id = 0, $packages = array()) {
 function theme_uc_ups_label_image() {
   $args = explode('/', current_path(), 8);
   if (count($args) != 8) {
-    return MENU_NOT_FOUND;
+    throw new NotFoundHttpException();
   }
 
   $image_path = file_create_url(file_stream_wrapper_uri_normalize($args[7]));

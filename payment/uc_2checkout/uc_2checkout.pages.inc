@@ -5,6 +5,8 @@
  * 2checkout menu items.
  */
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 /**
  * Finalizes 2checkout transaction.
  */
@@ -22,7 +24,7 @@ function uc_2checkout_complete($cart_id = 0) {
   $valid = md5(variable_get('uc_2checkout_secret_word', 'tango') . $_REQUEST['sid'] . $order_number . $_REQUEST['total']);
   if (drupal_strtolower($key) != drupal_strtolower($valid)) {
     uc_order_comment_save($order->order_id, 0, t('Attempted unverified 2Checkout completion for this order.'), 'admin');
-    return MENU_ACCESS_DENIED;
+    throw new AccessDeniedHttpException();
   }
 
   if ($_REQUEST['demo'] == 'Y' xor variable_get('uc_2checkout_demo', TRUE)) {
@@ -34,7 +36,7 @@ function uc_2checkout_complete($cart_id = 0) {
     ), WATCHDOG_ERROR);
 
     if (!variable_get('uc_2checkout_demo', TRUE)) {
-      return MENU_ACCESS_DENIED;
+      throw new AccessDeniedHttpException();
     }
   }
 

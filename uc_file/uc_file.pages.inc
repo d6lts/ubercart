@@ -5,6 +5,8 @@
  * File menu items.
  */
 
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
 /**
  * The number of bogus requests one IP address can make before being banned.
  */
@@ -213,7 +215,7 @@ function _uc_file_download($fid) {
     $file_download->full_path = uc_file_qualify_file($file_download->filename);
   }
   else {
-    return MENU_ACCESS_DENIED;
+    throw new AccessDeniedHttpException();
   }
 
   // If it's ok, we push the file to the user.
@@ -444,7 +446,7 @@ function _uc_file_download_redirect($uid = NULL) {
 
   // Shoo away anonymous users.
   if ($uid == 0) {
-    drupal_access_denied();
+    throw new AccessDeniedHttpException();
   }
   // Redirect users back to their file page.
   else {

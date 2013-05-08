@@ -5,6 +5,8 @@
  * Configures Ajax behaviours on the Ubercart checkout page.
  */
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Implements hook_help().
  */
@@ -53,7 +55,7 @@ function uc_ajax_admin_form($form, &$form_state, $target_form = 'checkout') {
       break;
 
     default:
-      drupal_not_found();
+      throw new NotFoundHttpException();
   }
   $form['#uc_ajax_target'] = $target_form;
   $form['#uc_ajax_config'] = variable_get('uc_ajax_' . $target_form, _uc_ajax_defaults($target_form));
