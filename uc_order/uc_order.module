@@ -307,7 +307,6 @@ function uc_order_theme($existing, $type, $theme, $path) {
   $theme_hooks = array(
     'uc_order_invoice' => array(
       'template' => 'uc-order-invoice',
-      'path' => $path . '/templates',
       'variables' => array(
         'order' => NULL,
         'op' => 'view',
@@ -322,7 +321,7 @@ function uc_order_theme($existing, $type, $theme, $path) {
     ),
     'uc_order_invoice_page' => array(
       'variables' => array('content' => NULL),
-      'template' => 'uc_order-invoice-page',
+      'template' => 'uc-order-invoice-page',
     ),
     'uc_order_state_table' => array(
       'render element' => 'form',
@@ -345,12 +344,10 @@ function uc_order_theme($existing, $type, $theme, $path) {
   $theme_hooks += array(
     'uc_order_invoice__customer' => array(
       'template' => 'uc-order-invoice--customer',
-      'path' => $path . '/templates',
       'variables' => $theme_hooks['uc_order_invoice']['variables'],
     ),
     'uc_order_invoice__admin' => array(
       'template' => 'uc-order-invoice--admin',
-      'path' => $path . '/templates',
       'variables' => $theme_hooks['uc_order_invoice']['variables'],
     ),
   );
