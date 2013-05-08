@@ -60,7 +60,7 @@ function uc_ajax_admin_form($form, &$form_state, $target_form = 'checkout') {
   $form['#uc_ajax_target'] = $target_form;
   $form['#uc_ajax_config'] = variable_get('uc_ajax_' . $target_form, _uc_ajax_defaults($target_form));
 
-  $form['table'] = tapir_get_table('uc_ajax_admin_table', $triggers, $wrappers, $form['#uc_ajax_config']);
+  $form['table'] = uc_ajax_admin_table($triggers, $wrappers, $form['#uc_ajax_config']);
   $form['actions'] = array(
     '#type' => 'actions',
     'submit' => array(
@@ -105,10 +105,15 @@ function uc_ajax_admin_form_submit($form, &$form_state) {
  *   The existing configuration.
  */
 function uc_ajax_admin_table($trigger_options, $wrapper_options, $config) {
-  $rows = array();
+  $build = array(
+    '#type' => 'table',
+    '#tree' => TRUE,
+    '#header' => array(t('Triggering form element'), t('Panes to update'), t('Remove')),
+  );
+
   foreach ($config as $key => $panes) {
     list(, $pane) = explode('][', $key);
-    $rows[] = array(
+    $build[] = array(
       'key' => array(
         '#type' => 'hidden',
         '#value' => $key,
@@ -126,7 +131,7 @@ function uc_ajax_admin_table($trigger_options, $wrapper_options, $config) {
       ),
     );
   }
-  $rows['_new'] = array(
+  $build['_new'] = array(
     'key' => array(
       '#type' => 'select',
       '#options' => array(0 => t('--Add a new element--')) + $trigger_options,
@@ -142,26 +147,7 @@ function uc_ajax_admin_table($trigger_options, $wrapper_options, $config) {
     ),
   );
 
-  $table = array(
-    '#type' => 'tapir_table',
-    '#tree' => TRUE,
-    '#columns' => array(
-      'remove' => array(
-        'cell' => t('Remove'),
-        'weight' => 3,
-      ),
-      'key' => array(
-        'cell' => t('Triggering form element'),
-        'weight' => 1,
-      ),
-      'panes' => array(
-        'cell' => t('Panes to update'),
-        'weight' => 2,
-      ),
-    ),
-  ) + $rows;
-
-  return $table;
+  return $build;
 }
 
 /**
