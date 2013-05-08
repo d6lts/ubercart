@@ -13,6 +13,8 @@
  * Development sponsored by the Ubercart project.  http://www.ubercart.org
  */
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 /**
  * The maximum amount of rows shown in tables of file downloads.
  */
@@ -1046,7 +1048,7 @@ function _uc_file_autocomplete_filename() {
     $matches[$filename] = $filename;
   }
 
-  drupal_json_output($matches);
+  return new JsonResponse($matches);
 }
 
 /**
