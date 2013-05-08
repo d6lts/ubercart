@@ -567,6 +567,10 @@ function uc_catalog_add_node_type($type) {
     );
 
     field_create_instance($instance);
+
+    entity_get_display('node', $type, 'default')
+      ->setComponent('taxonomy_catalog')
+      ->save();
   }
 }
 
@@ -598,18 +602,19 @@ function uc_catalog_add_image_field() {
       'widget' => array(
         'type' => 'image_image',
       ),
-      'display' => array(
-        'full' => array(
-          'label' => 'hidden',
-          'type' => 'image',
-          'settings' => array(
-            'image_link' => 'content',
-            'image_style' => 'uc_category',
-          ),
-        ),
-      ),
     );
 
     field_create_instance($instance);
+
+    entity_get_display('taxonomy_term', 'catalog', 'default')
+      ->setComponent('uc_catalog_image', array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array(
+          'image_link' => 'content',
+          'image_style' => 'uc_category',
+        ),
+      ))
+      ->save();
   }
 }

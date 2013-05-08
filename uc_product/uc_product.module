@@ -1665,16 +1665,6 @@ function uc_product_add_default_image_field($type = NULL) {
     'widget' => array(
       'type' => 'image_image',
     ),
-    'display' => array(
-      'full' => array(
-        'label' => 'hidden',
-        'type' => 'uc_product_image',
-      ),
-      'teaser' => array(
-        'label' => 'hidden',
-        'type' => 'uc_product_image',
-      ),
-    ),
   );
 
   if ($type) {
@@ -1699,6 +1689,20 @@ function uc_product_add_default_image_field($type = NULL) {
     if (!$instance) {
       field_create_instance($new_instance);
       variable_set('uc_image_' . $type, $field_name);
+
+      entity_get_display('node', $type, 'default')
+        ->setComponent($field_name, array(
+          'label' => 'hidden',
+          'type' => 'uc_product_image',
+        ))
+        ->save();
+
+      entity_get_display('node', $type, 'teaser')
+        ->setComponent($field_name, array(
+          'label' => 'hidden',
+          'type' => 'uc_product_image',
+        ))
+        ->save();
     }
   }
 }
