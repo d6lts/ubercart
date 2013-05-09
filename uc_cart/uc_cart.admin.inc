@@ -8,7 +8,7 @@
 /**
  * General settings for the shopping cart.
  *
- * @see uc_cart_cart_settings_form_validate()
+ * @see uc_cart_cart_settings_form_submit()
  * @ingroup forms
  */
 function uc_cart_cart_settings_form($form, &$form_state) {
@@ -177,18 +177,28 @@ function uc_cart_cart_settings_form($form, &$form_state) {
     '#field_prefix' => url(NULL, array('absolute' => TRUE)),
   );
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
 }
 
 /**
- * Form validation for uc_cart_cart_settings_form().
+ * Submit handler for shopping cart settings.
  *
  * @see uc_cart_cart_settings_form()
  */
-function uc_cart_cart_settings_form_validate($form, &$form_state) {
-  if (!is_numeric($form_state['values']['uc_minimum_subtotal']) || $form_state['values']['uc_minimum_subtotal'] < 0 || $form_state['values']['uc_minimum_subtotal'] === '-0') {
-    form_set_error('uc_minimum_subtotal', t('Minimum order subtotal should be a non-negative number.'));
-  }
+function uc_cart_cart_settings_form_submit($form, &$form_state) {
+  variable_set('uc_cart_add_item_msg', $form_state['values']['uc_cart_add_item_msg']);
+  variable_set('uc_add_item_redirect', $form_state['values']['uc_add_item_redirect']);
+  variable_set('uc_cart_empty_button', $form_state['values']['uc_cart_empty_button']);
+  variable_set('uc_minimum_subtotal', $form_state['values']['uc_minimum_subtotal']);
+  variable_set('uc_cart_anon_duration', $form_state['values']['uc_cart_anon_duration']);
+  variable_set('uc_cart_anon_unit', $form_state['values']['uc_cart_anon_unit']);
+  variable_set('uc_cart_auth_duration', $form_state['values']['uc_cart_auth_duration']);
+  variable_set('uc_cart_auth_unit', $form_state['values']['uc_cart_auth_unit']);
+  variable_set('uc_continue_shopping_type', $form_state['values']['uc_continue_shopping_type']);
+  variable_set('uc_continue_shopping_use_last_url', $form_state['values']['uc_continue_shopping_use_last_url']);
+  variable_set('uc_continue_shopping_url', $form_state['values']['uc_continue_shopping_url']);
+  variable_set('uc_cart_breadcrumb_text', $form_state['values']['uc_cart_breadcrumb_text']);
+  variable_set('uc_cart_breadcrumb_url', $form_state['values']['uc_cart_breadcrumb_url']);
 }
 
 /**
