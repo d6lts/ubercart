@@ -442,7 +442,52 @@ function uc_cart_checkout_settings_form($form, &$form_state) {
     );
   }
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Submit handler for checkout settings.
+ *
+ * @see uc_cart_checkout_settings_form()
+ */
+function uc_cart_checkout_settings_form_submit($form, &$form_state) {
+  variable_set('uc_checkout_enabled', $form_state['values']['uc_checkout_enabled']);
+
+  if (!module_exists('rules')) {
+    variable_set('uc_checkout_email_customer', $form_state['values']['uc_checkout_email_customer']);
+    variable_set('uc_checkout_email_admin', $form_state['values']['uc_checkout_email_admin']);
+  }
+
+  variable_set('uc_checkout_anonymous', $form_state['values']['uc_checkout_anonymous']);
+  variable_set('uc_cart_mail_existing', $form_state['values']['uc_cart_mail_existing']);
+  variable_set('uc_cart_email_validation', $form_state['values']['uc_cart_email_validation']);
+  variable_set('uc_cart_new_account_name', $form_state['values']['uc_cart_new_account_name']);
+  variable_set('uc_cart_new_account_password', $form_state['values']['uc_cart_new_account_password']);
+  variable_set('uc_new_customer_email', $form_state['values']['uc_new_customer_email']);
+  variable_set('uc_new_customer_login', $form_state['values']['uc_new_customer_login']);
+  variable_set('uc_new_customer_status_active', $form_state['values']['uc_new_customer_status_active']);
+
+  $panes = _uc_checkout_pane_list();
+  foreach ($panes as $id => $pane) {
+    variable_set('uc_pane_' . $id . '_enabled', $form_state['values']['uc_pane_' . $id . '_enabled']);
+    variable_set('uc_pane_' . $id . '_weight', $form_state['values']['uc_pane_' . $id . '_weight']);
+
+    // TODO: handle (or remove) checkout pane settings
+  }
+
+  variable_set('uc_cart_default_same_address', $form_state['values']['uc_cart_default_same_address']);
+  variable_set('uc_cart_delivery_not_shippable', $form_state['values']['uc_cart_delivery_not_shippable']);
+  variable_set('uc_use_next_buttons', $form_state['values']['uc_use_next_buttons']);
+  variable_set('uc_collapse_current_pane', $form_state['values']['uc_collapse_current_pane']);
+  variable_set('uc_checkout_instructions', $form_state['values']['uc_checkout_instructions']);
+  variable_set('uc_checkout_review_instructions', $form_state['values']['uc_checkout_review_instructions']);
+  variable_set('uc_cart_checkout_complete_page', $form_state['values']['uc_cart_checkout_complete_page']);
+  variable_set('uc_msg_order_submit', $form_state['values']['uc_msg_order_submit']);
+  variable_set('uc_msg_order_logged_in', $form_state['values']['uc_msg_order_logged_in']);
+  variable_set('uc_msg_order_existing_user', $form_state['values']['uc_msg_order_existing_user']);
+  variable_set('uc_msg_order_new_user', $form_state['values']['uc_msg_order_new_user']);
+  variable_set('uc_msg_order_new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in']);
+  variable_set('uc_msg_continue_shopping', $form_state['values']['uc_msg_continue_shopping']);
 }
 
 /**
