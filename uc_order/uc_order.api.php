@@ -11,19 +11,6 @@
  */
 
 /**
- * Adds invoice templates to the list of suggested template files.
- *
- * Allows modules to declare new "types" of invoice templates (other than the
- * default 'admin' and 'customer').
- *
- * @return
- *   Array of template names that are available choices when mailing an invoice.
- */
-function hook_uc_invoice_templates() {
-  return array('admin', 'customer');
-}
-
-/**
  * Defines line items that are attached to orders.
  *
  * A line item is a representation of charges, fees, and totals for an order.
