@@ -44,7 +44,19 @@ function uc_stock_settings_form($form, &$form_state) {
     );
   }
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Submit handler for stock settings.
+ *
+ * @see uc_stock_settings_form()
+ */
+function uc_stock_settings_form_submit($form, &$form_state) {
+  variable_set('uc_stock_threshold_notification', $form_state['values']['uc_stock_threshold_notification']);
+  variable_set('uc_stock_threshold_notification_recipients', $form_state['values']['uc_stock_threshold_notification_recipients']);
+  variable_set('uc_stock_threshold_notification_subject', $form_state['values']['uc_stock_threshold_notification_subject']);
+  variable_set('uc_stock_threshold_notification_message', $form_state['values']['uc_stock_threshold_notification_message']);
 }
 
 /**
