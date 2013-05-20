@@ -1662,9 +1662,6 @@ function uc_product_add_default_image_field($type = NULL) {
     'entity_type' => 'node',
     'label' => $label,
     'weight' => -2,
-    'widget' => array(
-      'type' => 'image_image',
-    ),
   );
 
   if ($type) {
@@ -1689,6 +1686,12 @@ function uc_product_add_default_image_field($type = NULL) {
     if (!$instance) {
       field_create_instance($new_instance);
       variable_set('uc_image_' . $type, $field_name);
+
+      entity_get_form_display('node', $type, 'default')
+        ->setComponent($field_name, array(
+          'type' => 'image_image',
+        ))
+        ->save();
 
       entity_get_display('node', $type, 'default')
         ->setComponent($field_name, array(

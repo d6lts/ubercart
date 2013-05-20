@@ -887,6 +887,7 @@ function uc_order_edit_form($form, &$form_state, $order) {
     );
   }
 
+  $form_state['form_display'] = entity_get_form_display('uc_order', 'uc_order', 'default');
   field_attach_form($order, $form, $form_state);
 
   form_load_include($form_state, 'inc', 'uc_store', 'includes/uc_ajax_attach');

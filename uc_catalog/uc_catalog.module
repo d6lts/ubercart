@@ -599,12 +599,15 @@ function uc_catalog_add_image_field() {
       'entity_type' => 'taxonomy_term',
       'bundle' => 'catalog',
       'label' => $label,
-      'widget' => array(
-        'type' => 'image_image',
-      ),
     );
 
     field_create_instance($instance);
+
+    entity_get_form_display('taxonomy_term', 'catalog', 'default')
+      ->setComponent('uc_catalog_image', array(
+        'type' => 'image_image',
+      ))
+      ->save();
 
     entity_get_display('taxonomy_term', 'catalog', 'default')
       ->setComponent('uc_catalog_image', array(
