@@ -77,6 +77,8 @@ function uc_payment_methods_form_submit($form, &$form_state) {
     variable_set('uc_payment_method_' . $id . '_checkout', $form_state['values']['uc_payment_method_' . $id . '_checkout']);
     variable_set('uc_payment_method_' . $id . '_weight', $form_state['values']['uc_payment_method_' . $id . '_weight']);
   }
+
+  Drupal::service('plugin.manager.uc_payment.method')->clearCachedDefinitions();
 }
 
 /**

@@ -530,28 +530,8 @@ function uc_payment_load_payments($order_id) {
 /**
  * Builds a list of payment methods defined in the enabled modules.
  */
-function _uc_payment_method_list($action = NULL) {
-  static $methods = array();
-
-  if (count($methods) > 0 && $action !== 'rebuild') {
-    return $methods;
-  }
-
-  foreach (module_invoke_all('uc_payment_method') as $id => $method) {
-    // Preserve backward compatibility for methods with no key specified.
-    if (is_numeric($id)) {
-      $id = $method['id'];
-    }
-
-    $methods[$id] = array_merge($method, array(
-      'id' => $id,
-      'checkout' => variable_get('uc_payment_method_' . $id . '_checkout', $method['checkout']),
-      'weight' => variable_get('uc_payment_method_' . $id . '_weight', $method['weight']),
-    ));
-  }
-
-  // Allow other modules to alter the payment methods.
-  drupal_alter('uc_payment_method', $methods);
+function _uc_payment_method_list() {
+  $methods = Drupal::service('plugin.manager.uc_payment.method')->getDefinitions();
 
   uasort($methods, 'uc_weight_sort');
 
