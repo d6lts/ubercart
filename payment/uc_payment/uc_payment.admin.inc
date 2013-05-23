@@ -46,7 +46,7 @@ function uc_payment_methods_form($form, &$form_state) {
     $method_settings = $method['callback']('settings', $null, array(), $form_state);
     if (is_array($method_settings)) {
       $links['settings'] = array(
-        'title' => t('settings'),
+        'title' => t('Settings'),
         'href' => 'admin/store/settings/payment/method/' . $id,
       );
     }
@@ -57,9 +57,8 @@ function uc_payment_methods_form($form, &$form_state) {
     // );
 
     $form['pmtable'][$id]['settings'] = array(
-      '#theme' => 'links',
+      '#type' => 'operations',
       '#links' => $links,
-      '#attributes' => array('class' => array('links', 'inline')),
     );
   }
 
