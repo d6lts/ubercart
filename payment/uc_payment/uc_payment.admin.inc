@@ -63,7 +63,21 @@ function uc_payment_methods_form($form, &$form_state) {
     );
   }
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Submit handler for payment method settings form.
+ *
+ * @see uc_payment_methods_form()
+ */
+function uc_payment_methods_form_submit($form, &$form_state) {
+  $methods = _uc_payment_method_list();
+
+  foreach ($methods as $id => $method) {
+    variable_set('uc_payment_method_' . $id . '_checkout', $form_state['values']['uc_payment_method_' . $id . '_checkout']);
+    variable_set('uc_payment_method_' . $id . '_weight', $form_state['values']['uc_payment_method_' . $id . '_weight']);
+  }
 }
 
 /**
