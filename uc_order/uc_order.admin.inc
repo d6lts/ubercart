@@ -460,8 +460,12 @@ function uc_order_admin($sql = NULL, $args = NULL, $search = FALSE) {
         $where = 'WHERE o.order_status IN '. uc_order_status_list('general', TRUE);
       }
     }
-    $sql .= $where . tablesort_sql($header);
+    $sql .= $where;
   }
+
+  // Need to include tablesort_sql() when the SQL command is passed as an
+  // argument AND when we build the SQL command here in this function.
+  $sql .= tablesort_sql($header);
 
   $address = variable_get('uc_customer_list_address', 'billing');
   if ($address == 'shipping') {
@@ -761,7 +765,7 @@ function uc_order_usearch() {
     $sql = 'SELECT o.order_id, o.uid, o.billing_first_name, o.billing_last_name, o.order_total, '
           .'o.order_status, o.created, os.title FROM {uc_orders} o LEFT JOIN {uc_order_statuses} os '
           .'ON o.order_status = os.order_status_id WHERE o.order_status NOT IN '. uc_order_status_list('specific', TRUE)
-         . $where .' ORDER BY o.created DESC';
+         . $where;
 
     $output .= uc_order_admin($sql, $args, TRUE);
   }
