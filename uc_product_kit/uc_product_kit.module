@@ -501,14 +501,17 @@ function uc_product_kit_form(&$node, $form_state) {
   );
 
   // Create an array of products on the site for use in the product selector.
-  $product_types = uc_product_types();
   $products = array();
+  $result = Drupal::entityQuery('node')
+    ->condition('type', uc_product_types(), 'IN')
+    ->condition('type', 'product_kit', '<>')
+    ->sort('title')
+    ->execute();
 
-  // Disregard other product kits.
-  unset($product_types[array_search('product_kit', $product_types)]);
-
-  // Query the database and loop through the results.
-  $products = db_query("SELECT nid, title FROM {node} WHERE type IN (:types) ORDER BY title, nid", array(':types' => $product_types))->fetchAllKeyed();
+  foreach ($result as $nid) {
+    $product = node_load($nid);
+    $products[$nid] = $product->title;
+  }
 
   $form['base'] = array(
     '#type' => 'details',
