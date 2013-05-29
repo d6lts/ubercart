@@ -799,7 +799,7 @@ function uc_product_view(EntityInterface $node, EntityDisplay $display, $view_mo
  * @see MODULE_preprocess_HOOK()
  */
 function uc_product_preprocess_node(&$variables) {
-  if (uc_product_is_product($variables['type'])) {
+  if (uc_product_is_product($variables['node'])) {
     array_unshift($variables['theme_hook_suggestions'], 'node__product');
   }
 }
