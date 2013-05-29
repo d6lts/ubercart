@@ -11,6 +11,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Template\Attribute;
 use Drupal\uc_store\UcAddress;
 
 require_once dirname(__FILE__) . '/uc_order.order_pane.inc';
@@ -1456,26 +1458,32 @@ function template_preprocess_uc_order_invoice(&$variables) {
  * @see uc_order-invoice-page.tpl.php
  */
 function template_preprocess_uc_order_invoice_page(&$variables) {
-  $config = config('system.site');
+  $language_interface = language(Language::TYPE_INTERFACE);
 
+  // HTML element attributes.
+  $variables['html_attributes'] = new Attribute;
+  $variables['html_attributes']['lang'] = $language_interface->langcode;
+  $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
+
+  $site_config = config('system.site');
   // Construct page title.
   if (drupal_get_title()) {
     $head_title = array(
       'title' => strip_tags(drupal_get_title()),
-      'name' => $config->get('name'),
+      'name' => check_plain($site_config->get('name')),
     );
   }
   else {
-    $head_title = array('name' => $config->get('name'));
-    if ($config->get('slogan')) {
-      $head_title['slogan'] = $config->get('slogan');
+    $head_title = array('name' => check_plain($site_config->get('name')));
+    if ($site_config->get('slogan')) {
+      $head_title['slogan'] = strip_tags(filter_xss_admin($site_config->get('slogan')));
     }
   }
 
   // Add favicon.
-  if (theme_get_setting('toggle_favicon')) {
-    $favicon = theme_get_setting('favicon');
-    $type = theme_get_setting('favicon_mimetype');
+  if (theme_get_setting('features.favicon')) {
+    $favicon = theme_get_setting('favicon.url');
+    $type = theme_get_setting('favicon.mimetype');
     drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
   $variables['head'] = drupal_get_html_head();
@@ -1484,9 +1492,6 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : language_default();
 
   $variables['head_title'] = implode(' | ', $head_title);
-  $variables['base_path'] = base_path();
-  $variables['language']          = $language;
-  $variables['language']->dir     = $language->direction ? 'rtl' : 'ltr';
 }
 
 /**
