@@ -300,16 +300,6 @@ function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL)
       $output .= drupal_render($form['products']);
 
       return $output;
-
-    case 'edit-process':
-      if (isset($form_state['values']['products'])) {
-        foreach ($form_state['values']['products'] as $key => $product) {
-          $product['data'] = unserialize($product['data']);
-          uc_order_product_save($order->order_id, (object) $product);
-        }
-      }
-
-      break;
   }
 }
 

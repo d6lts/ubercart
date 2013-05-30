@@ -954,15 +954,15 @@ function uc_order_edit_form_submit($form, &$form_state) {
     }
   }
 
-  $order->products = array();
   if (isset($form_state['values']['products']) && is_array($form_state['values']['products'])) {
     foreach ($form_state['values']['products'] as $product) {
       if (!isset($product['remove']) && intval($product['qty']) > 0) {
-        $product['data'] = unserialize($product['data']);
-        $product = (object)$product;
-        $order->products[] = $product;
+        foreach (array('qty', 'title', 'model', 'weight', 'weight_units', 'cost', 'price') as $field) {
+          $order->products[$product['order_product_id']]->$field = $product[$field];
+        }
 
         if (module_exists('uc_stock')) {
+          $product = (object)$product;
           $temp = $product->qty;
           $product->qty = $product->qty - $qtys[$product->order_product_id];
           uc_stock_adjust_product_stock($product, 0, $order);
