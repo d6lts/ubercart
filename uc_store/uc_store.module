@@ -223,13 +223,6 @@ function uc_store_admin_access() {
 }
 
 /**
- * Implements hook_init().
- */
-function uc_store_init() {
-  module_load_include('inc', 'uc_store', 'includes/tapir');
-}
-
-/**
  * Implements hook_page_build().
  */
 function uc_store_page_build(&$page) {
@@ -242,16 +235,6 @@ function uc_store_page_build(&$page) {
  */
 function uc_store_element_info() {
   $types = array();
-
-  $types['tapir_table'] = array(
-    '#columns' => array(),
-    '#rows' => array(),
-    '#tree' => TRUE,
-    '#value' => NULL,
-    '#pre_render' => array('tapir_gather_rows'),
-    '#theme' => 'tapir_table',
-    '#process' => array('ajax_process_form'),
-  );
 
   $types['uc_address'] = array(
     '#input' => TRUE,
@@ -527,9 +510,6 @@ function uc_store_theme() {
     'uc_pane_sort_table' => array(
       'render element' => 'form',
       'file' => 'uc_store.theme.inc',
-    ),
-    'tapir_table' => array(
-      'render element' => 'element',
     ),
     'uc_price' => array(
       'variables' => array('price' => 0, 'suffixes' => array()),
