@@ -427,96 +427,94 @@ function uc_order_add_product_form($form, &$form_state, $order, $node) {
 
 /**
  * Form to allow ordered products' data to be changed.
- *
- * @see uc_op_products_edit_table()
- * @see theme_uc_order_edit_products_form()
  */
 function uc_order_edit_products_form($form, &$form_state, $products) {
-  if (($product_count = count($products)) > 0) {
-    $form['products'] = tapir_get_table('uc_op_products_edit_table');
-    for ($i=0, $product = reset($products); $i < $product_count; $i++, $product = next($products)) {
-      $form['products'][$i]['remove'] = array(
-        '#type' => 'image_button',
-        '#title' => t('Remove this product.'),
-        '#src' => drupal_get_path('module', 'uc_store') . '/images/error.gif',
-        '#button_type' => 'remove',
-        '#submit' => array('uc_order_edit_products_remove', 'uc_order_edit_form_submit'),
-        '#return_value' => $product->order_product_id,
-      );
-      $form['products'][$i]['order_product_id'] = array(
-        '#type' => 'hidden',
-        '#value' => $product->order_product_id,
-      );
-      $form['products'][$i]['nid'] = array(
-        '#type' => 'hidden',
-        '#value' => $product->nid,
-      );
-      $form['products'][$i]['qty'] = array(
-        '#type' => 'uc_quantity',
-        '#title' => theme('uc_qty_label'),
-        '#title_display' => 'invisible',
-        '#default_value' => $product->qty,
-      );
-      $form['products'][$i]['title'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Title'),
-        '#title_display' => 'invisible',
-        '#default_value' => $product->title,
-        '#size' => 30,
-        '#maxlength' => 255,
-      );
-      $form['products'][$i]['model'] = array(
-        '#type' => 'textfield',
-        '#title' => t('SKU'),
-        '#title_display' => 'invisible',
-        '#default_value' => $product->model,
-        '#size' => 6,
-      );
-      $form['products'][$i]['weight'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Weight'),
-        '#title_display' => 'invisible',
-        '#default_value' => $product->weight,
-        '#size' => 3,
-      );
-      $units = array(
-        'lb' => t('Pounds'),
-        'kg' => t('Kilograms'),
-        'oz' => t('Ounces'),
-        'g'  => t('Grams'),
-      );
-      $form['products'][$i]['weight_units'] = array(
-        '#type' => 'select',
-        '#title' => t('Units'),
-        '#title_display' => 'invisible',
-        '#default_value' => $product->weight_units,
-        '#options' => $units,
-      );
-      $form['products'][$i]['cost'] = array(
-        '#type' => 'uc_price',
-        '#title' => t('Cost'),
-        '#title_display' => 'invisible',
-        '#default_value' => $product->cost,
-        '#size' => 5,
-      );
-      $form['products'][$i]['price'] = array(
-        '#type' => 'uc_price',
-        '#title' => t('Price'),
-        '#title_display' => 'invisible',
-        '#default_value' => $product->price,
-        '#size' => 5,
-      );
-      $form['products'][$i]['data'] = array(
-        '#type' => 'hidden',
-        '#value' => serialize($product->data),
-      );
-    }
-  }
-  else {
-    $form['products'] = array(
-      '#markup' => t('This order contains no products.'),
-      '#prefix' => '<div id="order-edit-products">',
-      '#suffix' => '</div>',
+  $form['products'] = array(
+    '#type' => 'table',
+    '#tree' => TRUE,
+    '#header' => array(t('Remove'), theme('uc_qty_label'), t('Name'), t('SKU'), t('Weight'), t('Units'), t('Cost'), t('Price')),
+    '#attributes' => array('id' => 'order-edit-products', 'class' => array('order-pane-table')),
+    '#empty' => t('This order contains no products.'),
+  );
+  $form['data'] = array(
+    '#tree' => TRUE,
+    '#parents' => array('products'),
+  );
+  foreach ($products as $i => $product) {
+    $form['products'][$i]['remove'] = array(
+      '#type' => 'image_button',
+      '#title' => t('Remove this product.'),
+      '#src' => drupal_get_path('module', 'uc_store') . '/images/error.gif',
+      '#button_type' => 'remove',
+      '#submit' => array('uc_order_edit_products_remove', 'uc_order_edit_form_submit'),
+      '#return_value' => $product->order_product_id,
+    );
+    $form['data'][$i]['order_product_id'] = array(
+      '#type' => 'hidden',
+      '#value' => $product->order_product_id,
+    );
+    $form['data'][$i]['nid'] = array(
+      '#type' => 'hidden',
+      '#value' => $product->nid,
+    );
+    $form['products'][$i]['qty'] = array(
+      '#type' => 'uc_quantity',
+      '#title' => theme('uc_qty_label'),
+      '#title_display' => 'invisible',
+      '#default_value' => $product->qty,
+    );
+    $form['products'][$i]['title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Title'),
+      '#title_display' => 'invisible',
+      '#default_value' => $product->title,
+      '#size' => 30,
+      '#maxlength' => 255,
+    );
+    $form['products'][$i]['model'] = array(
+      '#type' => 'textfield',
+      '#title' => t('SKU'),
+      '#title_display' => 'invisible',
+      '#default_value' => $product->model,
+      '#size' => 6,
+    );
+    $form['products'][$i]['weight'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Weight'),
+      '#title_display' => 'invisible',
+      '#default_value' => $product->weight,
+      '#size' => 3,
+    );
+    $units = array(
+      'lb' => t('Pounds'),
+      'kg' => t('Kilograms'),
+      'oz' => t('Ounces'),
+      'g'  => t('Grams'),
+    );
+    $form['products'][$i]['weight_units'] = array(
+      '#type' => 'select',
+      '#title' => t('Units'),
+      '#title_display' => 'invisible',
+      '#default_value' => $product->weight_units,
+      '#options' => $units,
+    );
+    $form['products'][$i]['cost'] = array(
+      '#type' => 'uc_price',
+      '#title' => t('Cost'),
+      '#title_display' => 'invisible',
+      '#default_value' => $product->cost,
+      '#size' => 5,
+    );
+    $form['products'][$i]['price'] = array(
+      '#type' => 'uc_price',
+      '#title' => t('Price'),
+      '#title_display' => 'invisible',
+      '#default_value' => $product->price,
+      '#size' => 5,
+    );
+    $form['data'][$i]['data'] = array(
+      '#type' => 'hidden',
+      '#value' => serialize($product->data),
     );
   }
 
@@ -1134,52 +1132,6 @@ function uc_order_view_update_form_submit($form, &$form_state) {
   // }
 
   drupal_set_message(t('Order updated.'));
-}
-
-/**
- * TAPIr table for products pane on the order edit page.
- */
-function uc_op_products_edit_table() {
-  $table = array(
-    '#type' => 'tapir_table',
-    '#tree' => TRUE,
-    '#attributes' => array('id' => 'order-edit-products', 'class' => array('order-pane-table')),
-  );
-
-  $table['#columns']['remove'] = array(
-    'cell' => t('Remove'),
-    'weight' => 0,
-  );
-  $table['#columns']['qty'] = array(
-    'cell' => theme('uc_qty_label'),
-    'weight' => 1,
-  );
-  $table['#columns']['title'] = array(
-    'cell' => t('Name'),
-    'weight' => 2,
-  );
-  $table['#columns']['model'] = array(
-    'cell' => t('SKU'),
-    'weight' => 3,
-  );
-  $table['#columns']['weight'] = array(
-    'cell' => t('Weight'),
-    'weight' => 4,
-  );
-  $table['#columns']['weight_units'] = array(
-    'cell' => t('Units'),
-    'weight' => 5,
-  );
-  $table['#columns']['cost'] = array(
-    'cell' => t('Cost'),
-    'weight' => 6,
-  );
-  $table['#columns']['price'] = array(
-    'cell' => t('Price'),
-    'weight' => 7,
-  );
-
-  return $table;
 }
 
 /**
