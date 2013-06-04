@@ -81,7 +81,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
         case 'logo':
           // Use a logo; but only if we have one to use.
           $replacements[$original] = '';
-          if ($uri = theme_get_setting('logo')) {
+          if ($uri = theme_get_setting('logo.url')) {
             $replacements[$original] = theme('image', array('uri' => $uri));
           }
           break;
