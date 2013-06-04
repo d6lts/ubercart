@@ -15,7 +15,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 class UbercartCatalogTest extends UbercartTestBase {
 
   public static $modules = array('uc_catalog', 'field_ui');
-  public static $adminPermissions = array('administer catalog', 'administer content types');
+  public static $adminPermissions = array('administer catalog', 'administer node fields');
 
   public static function getInfo() {
     return array(
@@ -31,7 +31,7 @@ class UbercartCatalogTest extends UbercartTestBase {
     $this->drupalGet('admin/structure/types/manage/product/fields');
     $this->assertText('taxonomy_catalog', 'Catalog taxonomy term reference field exists.');
 
-    $this->drupalPost('admin/structure/types/manage/product/fields/taxonomy_catalog/delete', array(), t('Delete'));
+    $this->drupalPost('admin/structure/types/manage/product/fields/node.product.taxonomy_catalog/delete', array(), t('Delete'));
     $this->assertText('The field Catalog has been deleted from the Product content type.', 'Catalog taxonomy term reference field deleted.');
 
     $this->drupalGet('admin/structure/types/manage/product/fields');
