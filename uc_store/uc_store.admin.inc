@@ -11,7 +11,7 @@
 function uc_store_admin() {
   module_load_include('inc', 'system', 'system.admin');
   // Check for status report errors.
-  if (system_status(TRUE) && user_access('administer site configuration')) {
+  if (Drupal::service('system.manager')->checkRequirements() && user_access('administer site configuration')) {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
   }
   $blocks = array();
