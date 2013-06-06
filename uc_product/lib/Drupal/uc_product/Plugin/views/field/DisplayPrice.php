@@ -27,8 +27,8 @@ class DisplayPrice extends Price {
     return $options;
   }
 
-  function get_value($values, $field = NULL) {
-    $nid = parent::get_value($values, $field);
+  function getValue($values, $field = NULL) {
+    $nid = parent::getValue($values, $field);
     if (!is_null($nid)) {
       // !TODO Refactor so that all variants are loaded at once in the pre_render hook.
       $node = node_view(node_load($nid), 'teaser');

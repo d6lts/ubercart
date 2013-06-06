@@ -74,7 +74,7 @@ class FullName extends FieldPluginBase {
   function render_link($data, $values) {
     if (!empty($this->options['link_to_user']) && user_access('access user profiles')) {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'user/' . $this->get_value($values, 'uid');;
+      $this->options['alter']['path'] = 'user/' . $this->getValue($values, 'uid');;
     }
     return $data;
   }
@@ -83,8 +83,8 @@ class FullName extends FieldPluginBase {
    * Overrides FieldPluginBase::render().
    */
   function render($values) {
-    $first = $this->get_value($values);
-    $last = $this->get_value($values, 'last_name');
+    $first = $this->getValue($values);
+    $last = $this->getValue($values, 'last_name');
 
     switch ($this->options['format']) {
       case 'last_first':

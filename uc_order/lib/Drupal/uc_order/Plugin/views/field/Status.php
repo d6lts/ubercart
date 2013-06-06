@@ -24,7 +24,7 @@ class Status extends FieldPluginBase {
    * Overrides FieldPluginBase::render().
    */
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->sanitizeValue(uc_order_status_data($value, 'title'));
   }
 

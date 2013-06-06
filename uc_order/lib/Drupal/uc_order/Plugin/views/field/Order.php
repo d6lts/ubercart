@@ -66,10 +66,10 @@ class Order extends FieldPluginBase {
       $this->options['alter']['make_link'] = FALSE;
 
       if (user_access('view all orders')) {
-        $path = 'admin/store/orders/' . $this->get_value($values, 'order_id');
+        $path = 'admin/store/orders/' . $this->getValue($values, 'order_id');
       }
-      elseif (user_access('view own orders') && $this->get_value($values, 'uid') == $GLOBALS['user']->uid) {
-        $path = 'user/' . $GLOBALS['user']->uid . '/orders/' . $this->get_value($values, 'order_id');
+      elseif (user_access('view own orders') && $this->getValue($values, 'uid') == $GLOBALS['user']->uid) {
+        $path = 'user/' . $GLOBALS['user']->uid . '/orders/' . $this->getValue($values, 'order_id');
       }
       else {
         $path = FALSE;
@@ -87,7 +87,7 @@ class Order extends FieldPluginBase {
    * Overrides FieldPluginBase::render().
    */
   function render($values) {
-    $value = $this->get_value($values);
+    $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }
 

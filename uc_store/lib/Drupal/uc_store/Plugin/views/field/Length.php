@@ -48,7 +48,7 @@ class Length extends Numeric {
 
   function render($values) {
     if ($this->options['format'] == 'uc_length') {
-      $value = $this->get_value($values);
+      $value = $this->getValue($values);
 
       if (is_null($value) || ($value == 0 && $this->options['empty_zero'])) {
         return '';

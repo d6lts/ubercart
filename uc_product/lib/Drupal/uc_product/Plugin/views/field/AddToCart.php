@@ -23,7 +23,7 @@ class AddToCart extends FieldPluginBase {
    * Overrides FieldPluginBase::render().
    */
   function render($values) {
-    $nid = $this->get_value($values);
+    $nid = $this->getValue($values);
     $node = node_load($nid);
     if (uc_product_is_product($node)) {
       $form = drupal_get_form('uc_product_add_to_cart_form_' . $nid, $node);
