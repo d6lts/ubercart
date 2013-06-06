@@ -353,7 +353,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // 2 e-mails: new account, customer invoice
     $mails = $this->drupalGetMails();
     $this->assertEqual(count($mails), 2, '2 e-mails were sent.');
-    state()->set('system.test_email_collector', array());
+    \Drupal::state()->set('system.test_email_collector', array());
 
     $password = $mails[0]['params']['account']->password;
     $this->assertTrue(!empty($password), 'New password is not empty.');
@@ -369,7 +369,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // 2 e-mails: new account, customer invoice
     $mails = $this->drupalGetMails();
     $this->assertEqual(count($mails), 2, '2 e-mails were sent.');
-    state()->set('system.test_email_collector', array());
+    \Drupal::state()->set('system.test_email_collector', array());
 
     $password = $mails[0]['params']['account']->password;
     $this->assertTrue(!empty($password), 'New password is not empty.');
@@ -416,7 +416,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // 3 e-mails: new account, customer invoice, role assignment
     $mails = $this->drupalGetMails();
     $this->assertEqual(count($mails), 3, '3 e-mails were sent.');
-    state()->set('system.test_email_collector', array());
+    \Drupal::state()->set('system.test_email_collector', array());
 
     // Test again with an existing email address and a non-shippable order.
     $item->data = array('shippable' => FALSE);
@@ -433,7 +433,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // 2 e-mails: customer invoice, role assignment
     $mails = $this->drupalGetMails();
     $this->assertEqual(count($mails), 2, '2 e-mails were sent.');
-    state()->set('system.test_email_collector', array());
+    \Drupal::state()->set('system.test_email_collector', array());
   }
 
   /**
