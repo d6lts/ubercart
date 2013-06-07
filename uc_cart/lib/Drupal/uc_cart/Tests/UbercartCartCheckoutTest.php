@@ -151,7 +151,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
   function testDeletedCartItem() {
     // Add a product to the cart, then delete the node.
     $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
-    node_delete($this->product->nid);
+    $this->product->delete();
 
     // Test that the cart is empty.
     $this->drupalGet('cart');
