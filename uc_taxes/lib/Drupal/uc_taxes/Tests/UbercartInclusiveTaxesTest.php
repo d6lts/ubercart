@@ -87,7 +87,7 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
     // Set the kit total to $9 to automatically apply a discount.
     $kit = node_load($kit->nid);
     $kit->kit_total = 9;
-    node_save($kit);
+    $kit->save();
     $kit = node_load($kit->nid);
     $this->assertEqual($kit->products[$product->nid]->discount, -1, 'Product kit component has correct discount applied.');
 

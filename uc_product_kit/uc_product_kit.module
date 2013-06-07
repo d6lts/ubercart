@@ -434,7 +434,7 @@ function uc_product_kit_node_update($node) {
   $result = db_query("SELECT DISTINCT nid FROM {uc_product_kits} WHERE product_id = :nid", array(':nid' => $node->nid));
   while ($nid = $result->fetchField()) {
     $kit = node_load($nid, NULL, TRUE);
-    node_save($kit);
+    $kit->save();
   }
 }
 
@@ -455,7 +455,7 @@ function uc_product_kit_node_delete($node) {
       $empty[] = $kit->nid;
     }
     else {
-      node_save($kit);
+      $kit->save();
     }
   }
 
