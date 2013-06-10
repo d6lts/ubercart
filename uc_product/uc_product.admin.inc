@@ -73,6 +73,8 @@ function uc_product_settings_form($form, &$form_state) {
     );
   }
 
+  $form['#submit'][] = 'uc_product_settings_form_submit';
+
   foreach (module_invoke_all('uc_product_feature') as $feature) {
     if (isset($feature['settings']) &&
         function_exists($feature['settings'])) {
@@ -92,7 +94,17 @@ function uc_product_settings_form($form, &$form_state) {
     }
   }
 
-  return system_settings_form($form);
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Submit handler for product settings.
+ *
+ * @see uc_product_settings_form()
+ */
+function uc_product_settings_form_submit($form, &$form_state) {
+  variable_set('uc_product_add_to_cart_qty', $form_state['values']['uc_product_add_to_cart_qty']);
+  variable_set('uc_product_update_node_view', $form_state['values']['uc_product_update_node_view']);
 }
 
 /**
