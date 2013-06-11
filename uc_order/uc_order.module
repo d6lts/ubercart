@@ -270,26 +270,22 @@ function uc_order_admin_paths() {
 }
 
 /**
- * Implements hook_init().
- */
-function uc_order_init() {
-  // Load uc_order.js on all order and customer admin pages.
-  if (arg(0) == 'admin' && arg(1) == 'store' && (arg(2) == 'orders' || arg(2) == 'customers')) {
-    drupal_add_js(array(
-      'ucURL' => array(
-        'adminOrders' => url('admin/store/orders/'),
-      ),
-    ), 'setting');
-    drupal_add_js(drupal_get_path('module', 'uc_order') . '/uc_order.js');
-  }
-}
-
-/**
  * Implements hook_page_build().
  */
 function uc_order_page_build(&$page) {
   $path = drupal_get_path('module', 'uc_order');
   $page['#attached']['css'][$path . '/uc_order.css'] = array('every_page' => TRUE);
+
+  // Load uc_order.js on all order and customer admin pages.
+  if (arg(0) == 'admin' && arg(1) == 'store' && (arg(2) == 'orders' || arg(2) == 'customers')) {
+    $page['#attached']['js'][$path . '/uc_order.js'] = array('every_page' => TRUE);
+    $page['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array('ucURL' => array(
+        'adminOrders' => url('admin/store/orders/'),
+      )),
+    );
+  }
 }
 
 /**

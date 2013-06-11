@@ -177,11 +177,12 @@ function uc_reports_theme() {
 }
 
 /**
- * Implements hook_init().
+ * Implements hook_page_build().
  */
-function uc_reports_init() {
+function uc_reports_page_build(&$page) {
   if (arg(0) == 'admin' && arg(1) == 'store' && arg(2) == 'reports') {
-    drupal_add_css(drupal_get_path('module', 'uc_reports') . '/uc_reports.css');
+    $path = drupal_get_path('module', 'uc_reports');
+    $page['#attached']['css'][$path . '/uc_reports.css'] = array('every_page' => TRUE);
   }
 }
 
