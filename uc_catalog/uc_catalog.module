@@ -540,7 +540,7 @@ function uc_catalog_add_node_type($type) {
 
   $field = field_info_field('taxonomy_catalog');
   if (!$field) {
-    $field = array(
+    $field = entity_create('field_entity', array(
       'field_name' => 'taxonomy_catalog',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -552,21 +552,19 @@ function uc_catalog_add_node_type($type) {
           ),
         ),
       ),
-    );
-
-    field_create_field($field);
+    ));
+    $field->save();
   }
 
   $instance = field_info_instance('node', 'taxonomy_catalog', $type);
   if (!$instance) {
-    $instance = array(
+    $instance = entity_create('field_instance', array(
       'field_name' => 'taxonomy_catalog',
       'entity_type' => 'node',
       'bundle' => $type,
       'label' => t('Catalog'),
-    );
-
-    field_create_instance($instance);
+    ));
+    $instance->save();
 
     entity_get_display('node', $type, 'default')
       ->setComponent('taxonomy_catalog')
@@ -581,27 +579,24 @@ function uc_catalog_add_image_field() {
   $field = field_info_field('uc_catalog_image');
 
   if (!$field) {
-    $field = array(
+    $field = entity_create('field_entity', array(
       'field_name' => 'uc_catalog_image',
       'type' => 'image',
-    );
-
-    field_create_field($field);
+    ));
+    $field->save();
   }
 
   $instance = field_info_instance('taxonomy_term', 'uc_catalog_image', 'catalog');
 
   // Only add the instance if it doesn't exist. Don't overwrite any changes.
   if (!$instance) {
-    $label = t('Image');
-    $instance = array(
+    $instance = entity_create('field_instance', array(
       'field_name' => 'uc_catalog_image',
       'entity_type' => 'taxonomy_term',
       'bundle' => 'catalog',
-      'label' => $label,
-    );
-
-    field_create_instance($instance);
+      'label' => t('Image'),
+    ));
+    $instance->save();
 
     entity_get_form_display('taxonomy_term', 'catalog', 'default')
       ->setComponent('uc_catalog_image', array(
