@@ -944,6 +944,13 @@ function uc_file_feature_settings_submit($form, &$form_state) {
   else {
     uc_file_refresh();
   }
+
+  variable_set('uc_file_base_dir', $form_state['values']['uc_file_base_dir']);
+  variable_set('uc_file_duplicate_warning', $form_state['values']['uc_file_duplicate_warning']);
+  variable_set('uc_file_download_limit_number', $form_state['values']['uc_file_download_limit_number']);
+  variable_set('uc_file_download_limit_addresses', $form_state['values']['uc_file_download_limit_addresses']);
+  variable_set('uc_file_download_limit_duration_qty', $form_state['values']['uc_file_download_limit_duration_qty']);
+  variable_set('uc_file_download_limit_duration_granularity', $form_state['values']['uc_file_download_limit_duration_granularity']);
 }
 
 /**
