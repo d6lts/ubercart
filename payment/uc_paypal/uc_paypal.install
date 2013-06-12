@@ -108,7 +108,7 @@ function uc_paypal_install() {
   drupal_install_schema('uc_paypal');
 
   $t = get_t();
-  db_query("INSERT INTO {uc_order_statuses} (order_status_id, title, state, weight, locked) VALUES ('paypal_pending', '%s', 'payment_received', 7, 1);", $t('PayPal pending'));
+  db_query("INSERT INTO {uc_order_statuses} (order_status_id, title, state, weight, locked) VALUES ('paypal_pending', '%s', 'post_checkout', 7, 1);", $t('PayPal pending'));
 }
 
 /**
@@ -133,6 +133,14 @@ function uc_paypal_update_6000() {
   db_drop_index($ret, 'uc_payment_paypal_ipn', 'order_id');
   db_change_field($ret, 'uc_payment_paypal_ipn', 'order_id', 'order_id', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0), array('indexes' => array('order_id' => array('order_id'))));
   db_change_field($ret, 'uc_payment_paypal_ipn', 'received', 'received', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+
+  return $ret;
+}
+
+function uc_paypal_update_6200() {
+  $ret = array();
+
+  $ret[] = update_sql("UPDATE {uc_order_statuses} SET state = 'post_checkout' WHERE order_status_id = 'paypal_pending'");
 
   return $ret;
 }
