@@ -84,12 +84,10 @@ function uc_payment_schema() {
  * Implements hook_install().
  */
 function uc_payment_install() {
-  $t = get_t();
-
   db_insert('uc_order_statuses')
     ->fields(array(
       'order_status_id' => 'payment_received',
-      'title' => $t('Payment received'),
+      'title' => t('Payment received'),
       'state' => 'payment_received',
       'weight' => 10,
       'locked' => 1,

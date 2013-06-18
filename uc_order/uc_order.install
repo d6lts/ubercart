@@ -630,8 +630,6 @@ function uc_order_schema() {
  * Implements hook_install().
  */
 function uc_order_install() {
-  $t = get_t();
-
   $query = db_insert('uc_order_statuses')
     ->fields(array(
       'order_status_id',
@@ -644,42 +642,42 @@ function uc_order_install() {
   $values = array(
     array(
       'order_status_id' => 'abandoned',
-      'title' => $t('Abandoned'),
+      'title' => t('Abandoned'),
       'state' => 'canceled',
       'weight' => -30,
       'locked' => 1,
     ),
     array(
       'order_status_id' => 'canceled',
-      'title' => $t('Canceled'),
+      'title' => t('Canceled'),
       'state' => 'canceled',
       'weight' => -20,
       'locked' => 1,
     ),
     array(
       'order_status_id' => 'in_checkout',
-      'title' => $t('In checkout'),
+      'title' => t('In checkout'),
       'state' => 'in_checkout',
       'weight' => -10,
       'locked' => 1,
     ),
     array(
       'order_status_id' => 'pending',
-      'title' => $t('Pending'),
+      'title' => t('Pending'),
       'state' => 'post_checkout',
       'weight' => 0,
       'locked' => 1,
     ),
     array(
       'order_status_id' => 'processing',
-      'title' => $t('Processing'),
+      'title' => t('Processing'),
       'state' => 'post_checkout',
       'weight' => 5,
       'locked' => 1,
     ),
     array(
       'order_status_id' => 'completed',
-      'title' => $t('Completed'),
+      'title' => t('Completed'),
       'state' => 'completed',
       'weight' => 20,
       'locked' => 1,

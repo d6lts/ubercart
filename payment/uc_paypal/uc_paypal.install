@@ -10,19 +10,18 @@
  */
 function uc_paypal_requirements($phase) {
   $requirements = array();
-  $t = get_t();
 
   $has_curl = function_exists('curl_init');
 
   // PayPal WPP requires cURL.
   if (variable_get('uc_pg_paypal_wpp_enabled', TRUE)) {
     $requirements['uc_paypal_curl'] = array(
-      'title' => $t('cURL'),
-      'value' => $has_curl ? $t('Enabled') : $t('Not found'),
+      'title' => t('cURL'),
+      'value' => $has_curl ? t('Enabled') : t('Not found'),
     );
     if (!$has_curl) {
       $requirements['uc_paypal_curl']['severity'] = REQUIREMENT_ERROR;
-      $requirements['uc_paypal_curl']['description'] = $t("PayPal WPP requires the PHP <a href='!curl_url'>cURL</a> library.", array('!curl_url' => 'http://php.net/manual/en/curl.setup.php'));
+      $requirements['uc_paypal_curl']['description'] = t("PayPal WPP requires the PHP <a href='!curl_url'>cURL</a> library.", array('!curl_url' => 'http://php.net/manual/en/curl.setup.php'));
     }
   }
 
@@ -113,13 +112,11 @@ function uc_paypal_schema() {
  * Implements hook_install().
  */
 function uc_paypal_install() {
-  $t = get_t();
-
   db_merge('uc_order_statuses')
     ->key(array('order_status_id' => 'paypal_pending'))
     ->insertFields(array(
       'order_status_id' => 'paypal_pending',
-      'title' => $t('PayPal pending'),
+      'title' => t('PayPal pending'),
       'state' => 'post_checkout',
       'weight' => 7,
       'locked' => 1,
