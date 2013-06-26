@@ -144,12 +144,9 @@ function uc_store_menu() {
   $items['admin/store/settings/countries/fields'] = array(
     'title' => 'Address fields',
     'description' => 'Edit the address field settings.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_store_address_fields_form'),
-    'access arguments' => array('administer store'),
+    'route_name' => 'uc_store_address_fields',
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'uc_store.admin.inc',
   );
   $items['admin/store/settings/countries/formats'] = array(
     'title' => 'Address formats',
@@ -499,10 +496,6 @@ function uc_store_theme() {
     'uc_store_footer' => array(
       'variables' => array('message' => ''),
       'file' => 'uc_store.theme.inc',
-    ),
-    'uc_store_address_fields_form' => array(
-      'render element' => 'form',
-      'file' => 'uc_store.admin.inc',
     ),
     'uc_pane_sort_table' => array(
       'render element' => 'form',

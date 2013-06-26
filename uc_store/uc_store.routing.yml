@@ -4,3 +4,10 @@ uc_store_settings:
     _form: 'Drupal\uc_store\Form\StoreSettingsForm'
   requirements:
     _permission: 'administer store'
+
+uc_store_address_fields:
+  pattern: '/admin/store/settings/countries/fields'
+  defaults:
+    _form: 'Drupal\uc_store\Form\AddressFieldsForm'
+  requirements:
+    _permission: 'administer store'
