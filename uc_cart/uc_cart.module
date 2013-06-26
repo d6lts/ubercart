@@ -32,10 +32,7 @@ function uc_cart_menu() {
   $items['admin/store/settings/cart'] = array(
     'title' => 'Cart',
     'description' => 'Configure the cart page display and settings.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_cart_cart_settings_form'),
-    'access arguments' => array('administer store'),
-    'file' => 'uc_cart.admin.inc',
+    'route_name' => 'uc_cart_cart_settings',
   );
   $items['admin/store/settings/checkout'] = array(
     'title' => 'Checkout',

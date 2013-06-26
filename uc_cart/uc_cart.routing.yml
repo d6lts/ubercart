@@ -1,0 +1,6 @@
+uc_cart_cart_settings:
+  pattern: '/admin/store/settings/cart'
+  defaults:
+    _form: 'Drupal\uc_cart\Form\CartSettingsForm'
+  requirements:
+    _permission: 'administer store'
