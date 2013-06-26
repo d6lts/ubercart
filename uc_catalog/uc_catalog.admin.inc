@@ -81,7 +81,7 @@ function uc_catalog_settings_form_submit($form, &$form_state) {
 function uc_catalog_orphaned_products() {
   $build = array();
 
-  if (variable_get('taxonomy_maintain_index_table', TRUE)) {
+  if (config('taxonomy.settings')->get('maintain_index_table')) {
     $vid = config('uc_catalog.settings')->get('vocabulary');
     $product_types = uc_product_types();
     $field = field_info_field('taxonomy_catalog');
