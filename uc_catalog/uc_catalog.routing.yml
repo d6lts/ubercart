@@ -1,0 +1,6 @@
+uc_catalog_settings:
+  pattern: '/admin/store/settings/catalog'
+  defaults:
+    _form: 'Drupal\uc_catalog\Form\CatalogSettingsForm'
+  requirements:
+    _permission: 'administer catalog'
