@@ -40,10 +40,7 @@ function uc_product_menu() {
   $items['admin/store/settings/products'] = array(
     'title' => 'Products',
     'description' => 'Configure product settings.',
-    'access arguments' => array('administer products'),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_product_settings_form'),
-    'file' => 'uc_product.admin.inc',
+    'route_name' => 'uc_product_settings',
   );
 
   // Insert subitems into the edit node page for product types.

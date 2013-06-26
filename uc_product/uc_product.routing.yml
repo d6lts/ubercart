@@ -1,0 +1,6 @@
+uc_product_settings:
+  pattern: '/admin/store/settings/products'
+  defaults:
+    _form: 'Drupal\uc_product\Form\ProductSettingsForm'
+  requirements:
+    _permission: 'administer products'
