@@ -37,15 +37,11 @@ function uc_cart_menu() {
   $items['admin/store/settings/checkout'] = array(
     'title' => 'Checkout',
     'description' => 'Configure the checkout page display and completion rules.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_cart_checkout_settings_form'),
-    'access arguments' => array('administer store'),
-    'file' => 'uc_cart.admin.inc',
+    'route_name' => 'uc_cart_checkout_settings',
   );
   $items['admin/store/settings/checkout/settings'] = array(
     'title' => 'Settings',
     'description' => 'Edit the basic checkout settings.',
-    'access arguments' => array('administer store'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   // $items['admin/store/settings/checkout/rules'] = array(

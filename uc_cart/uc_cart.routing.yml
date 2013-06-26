@@ -4,3 +4,10 @@ uc_cart_cart_settings:
     _form: 'Drupal\uc_cart\Form\CartSettingsForm'
   requirements:
     _permission: 'administer store'
+
+uc_cart_checkout_settings:
+  pattern: '/admin/store/settings/checkout'
+  defaults:
+    _form: 'Drupal\uc_cart\Form\CheckoutSettingsForm'
+  requirements:
+    _permission: 'administer store'
