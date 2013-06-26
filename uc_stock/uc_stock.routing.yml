@@ -1,0 +1,6 @@
+uc_stock_settings:
+  pattern: '/admin/store/settings/stock'
+  defaults:
+    _form: 'Drupal\uc_stock\Form\StockSettingsForm'
+  requirements:
+    _permission: 'administer product stock'

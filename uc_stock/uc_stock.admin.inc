@@ -6,60 +6,6 @@
  */
 
 /**
- * Form builder for stock settings form.
- *
- * @ingroup forms
- */
-function uc_stock_settings_form($form, &$form_state) {
-  $form['uc_stock_threshold_notification'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Send email notification when stock level reaches its threshold value'),
-    '#default_value' => variable_get('uc_stock_threshold_notification', FALSE),
-  );
-
-  $form['uc_stock_threshold_notification_recipients'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Notification recipients'),
-    '#default_value' => variable_get('uc_stock_threshold_notification_recipients', uc_store_email()),
-    '#description' => t('The list of comma-separated email addresses that will receive the notification.'),
-  );
-
-  $form['uc_stock_threshold_notification_subject'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Message subject'),
-    '#default_value' => variable_get('uc_stock_threshold_notification_subject', uc_get_message('uc_stock_threshold_notification_subject')),
-  );
-
-  $form['uc_stock_threshold_notification_message'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Message text'),
-    '#default_value' => variable_get('uc_stock_threshold_notification_message', uc_get_message('uc_stock_threshold_notification_message')),
-    '#description' => t('The message the user receives when the stock level reaches its threshold value.'),
-    '#rows' => 10,
-  );
-
-  if (module_exists('token')) {
-    $form['token_tree'] = array(
-      '#markup' => theme('token_tree', array('token_types' => array('uc_order', 'uc_stock', 'node', 'site', 'store'))),
-    );
-  }
-
-  return system_config_form($form, $form_state);
-}
-
-/**
- * Submit handler for stock settings.
- *
- * @see uc_stock_settings_form()
- */
-function uc_stock_settings_form_submit($form, &$form_state) {
-  variable_set('uc_stock_threshold_notification', $form_state['values']['uc_stock_threshold_notification']);
-  variable_set('uc_stock_threshold_notification_recipients', $form_state['values']['uc_stock_threshold_notification_recipients']);
-  variable_set('uc_stock_threshold_notification_subject', $form_state['values']['uc_stock_threshold_notification_subject']);
-  variable_set('uc_stock_threshold_notification_message', $form_state['values']['uc_stock_threshold_notification_message']);
-}
-
-/**
  * Displays a stock report for products with stock tracking enabled.
  */
 function uc_stock_report() {
