@@ -7,41 +7,6 @@
 
 
 /**
- * Themes the table that displays available payment methods.
- *
- * @see uc_payment_methods_form()
- * @ingroup themeable
- */
-function theme_uc_payment_method_table($variables) {
-  $form = $variables['form'];
-
-  drupal_add_tabledrag('uc-payment-methods', 'order', 'sibling', 'uc-payment-method-weight');
-
-  $header = array(t('Payment method'), t('List position'), t('Operations'));
-
-  $rows = array();
-  foreach (element_children($form) as $method) {
-    $row = array(
-      drupal_render($form[$method]['uc_payment_method_' . $method . '_checkout']),
-      drupal_render($form[$method]['uc_payment_method_' . $method . '_weight']),
-      drupal_render($form[$method]['settings']),
-    );
-
-    $rows[] = array(
-      'data' => $row,
-      'class' => array('draggable'),
-    );
-  }
-
-  return theme('table', array(
-    'header' => $header,
-    'rows' => $rows,
-    'attributes' => array('id' => 'uc-payment-methods'),
-    'empty' => t('No payment methods are available. Modules providing payment methods must first be enabled on the !modules administration page under the "Ubercart - payment" fieldset.', array('!modules' => l(t('Modules'), 'admin/modules'))),
-  ));
-}
-
-/**
  * Displays settings for a single payment method.
  */
 function uc_payment_method_settings_form($form, &$form_state, $method_id) {

@@ -91,10 +91,6 @@ function uc_payment_theme() {
       'variables' => array('order' => NULL),
       'file' => 'uc_payment.theme.inc',
     ),
-    'uc_payment_method_table' => array(
-      'render element' => 'form',
-      'file' => 'uc_payment.admin.inc',
-    ),
   );
 }
 

@@ -35,20 +35,20 @@ class UbercartPaymentPaneTest extends UbercartTestBase {
    */
   public function testPaymentMethodOptions() {
     // No payment methods.
-    $edit = array('uc_payment_method_check_checkout' => FALSE);
+    $edit = array('methods[check][status]' => FALSE);
     $this->drupalPost('admin/store/settings/payment', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertText('Checkout cannot be completed without any payment methods enabled. Please contact an administrator to resolve the issue.');
 
     // Single payment method.
-    $edit = array('uc_payment_method_check_checkout' => TRUE);
+    $edit = array('methods[check][status]' => TRUE);
     $this->drupalPost('admin/store/settings/payment', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertNoText('Select a payment method from the following options.');
     $this->assertFieldByXPath("//input[@name='panes[payment][payment_method]' and @disabled='disabled']");
 
     // Multiple payment methods.
-    $edit = array('uc_payment_method_other_checkout' => TRUE);
+    $edit = array('methods[other][status]' => TRUE);
     $this->drupalPost('admin/store/settings/payment', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertText('Select a payment method from the following options.');
@@ -73,7 +73,7 @@ class UbercartPaymentPaneTest extends UbercartTestBase {
    */
   public function testFreeOrders() {
     $free_product = $this->createProduct(array('sell_price' => 0));
-    $edit = array('uc_payment_method_check_checkout' => TRUE);
+    $edit = array('methods[check][status]' => TRUE);
     $this->drupalPost('admin/store/settings/payment', $edit, 'Save configuration');
 
     // Check that paid products cannot be purchased for free.

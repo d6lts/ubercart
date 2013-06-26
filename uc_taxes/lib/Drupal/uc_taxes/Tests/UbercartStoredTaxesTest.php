@@ -47,7 +47,7 @@ class UbercartStoredTaxesTest extends UbercartTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Enable a payment method for the payment preview checkout pane.
-    $edit = array('uc_payment_method_check_checkout' => 1);
+    $edit = array('methods[check][status]' => 1);
     $this->drupalPost('admin/store/settings/payment', $edit, t('Save configuration'));
 
     // Create a 20% inclusive tax rate.

@@ -65,20 +65,29 @@ class PaymentMethodsForm extends SystemConfigFormBase {
   public function buildForm(array $form, array &$form_state) {
     $methods = _uc_payment_method_list();
 
-    $form['pmtable'] = array(
-      '#theme' => 'uc_payment_method_table',
+    $form['methods'] = array(
+      '#type' => 'table',
+      '#header' => array(t('Payment method'), t('List position'), t('Operations')),
+      '#tabledrag' => array(
+        array('order', 'sibling', 'uc-payment-method-weight'),
+      ),
     );
 
     foreach ($methods as $id => $method) {
-      $form['pmtable'][$id]['uc_payment_method_' . $id . '_checkout'] = array(
+      $form['methods'][$id]['#attributes']['class'][] = 'draggable';
+      $form['methods'][$id]['status'] = array(
         '#type' => 'checkbox',
         '#title' => check_plain($method['name']),
         '#default_value' => variable_get('uc_payment_method_' . $id . '_checkout', $method['checkout']),
       );
-      $form['pmtable'][$id]['uc_payment_method_' . $id . '_weight'] = array(
+      $form['methods'][$id]['weight'] = array(
         '#type' => 'weight',
+        '#title' => t('Weight for @title', array('@title' => $method['name'])),
+        '#title_display' => 'invisible',
         '#default_value' => variable_get('uc_payment_method_' . $id . '_weight', $method['weight']),
-        '#attributes' => array('class' => array('uc-payment-method-weight')),
+        '#attributes' => array(
+          'class' => array('uc-payment-method-weight'),
+        ),
       );
 
       if (empty($method['no_gateway'])) {
@@ -88,7 +97,7 @@ class PaymentMethodsForm extends SystemConfigFormBase {
           $options[$gateway_id] = $gateway['title'];
         }
         if ($options) {
-          $form['pmtable'][$id]['uc_payment_method_' . $id . '_checkout']['#title'] .= ' (' . t('includes %gateways', array('%gateways' => implode(', ', $options))) . ')';
+          $form['methods'][$id]['status']['#title'] .= ' (' . t('includes %gateways', array('%gateways' => implode(', ', $options))) . ')';
         }
       }
 
@@ -107,7 +116,7 @@ class PaymentMethodsForm extends SystemConfigFormBase {
       //   'href' => 'admin/store/settings/payment/manage/uc_payment_method_' . $id,
       // );
 
-      $form['pmtable'][$id]['settings'] = array(
+      $form['methods'][$id]['settings'] = array(
         '#type' => 'operations',
         '#links' => $links,
       );
@@ -123,8 +132,8 @@ class PaymentMethodsForm extends SystemConfigFormBase {
     $methods = _uc_payment_method_list();
 
     foreach ($methods as $id => $method) {
-      variable_set('uc_payment_method_' . $id . '_checkout', $form_state['values']['uc_payment_method_' . $id . '_checkout']);
-      variable_set('uc_payment_method_' . $id . '_weight', $form_state['values']['uc_payment_method_' . $id . '_weight']);
+      variable_set('uc_payment_method_' . $id . '_checkout', $form_state['values']['methods'][$id]['status']);
+      variable_set('uc_payment_method_' . $id . '_weight', $form_state['values']['methods'][$id]['weight']);
     }
 
     $this->paymentMethodManager->clearCachedDefinitions();

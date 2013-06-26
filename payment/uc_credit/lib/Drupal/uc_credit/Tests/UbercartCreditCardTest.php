@@ -79,11 +79,11 @@ class UbercartCreditCardTest extends UbercartTestBase {
   protected function configureCreditCard() {
     $this->drupalPost(
       'admin/store/settings/payment',
-      array('uc_payment_method_credit_checkout' => TRUE),
+      array('methods[credit][status]' => TRUE),
       t('Save configuration')
     );
     $this->assertFieldByName(
-      'uc_payment_method_credit_checkout',
+      'methods[credit][status]',
       TRUE,
       t('Credit card payment method is enabled')
     );
