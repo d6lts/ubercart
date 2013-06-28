@@ -15,6 +15,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\node\NodeTypeInterface;
 
 /**
  * Implements hook_help().
@@ -509,21 +510,16 @@ function uc_attribute_uc_order_product_alter(&$product, $order) {
 }
 
 /**
- * Implements hook_uc_product_class().
+ * Implements hook_node_type_delete().
  */
-function uc_attribute_uc_product_class($type, $op) {
-  switch ($op) {
-    case 'delete':
-      db_delete('uc_class_attributes')
-        ->condition('pcid', $type)
-        ->execute();
+function uc_attribute_node_type_delete(NodeTypeInterface $type) {
+  db_delete('uc_class_attributes')
+    ->condition('pcid', $type->id())
+    ->execute();
 
-      db_delete('uc_class_attribute_options')
-        ->condition('pcid', $type)
-        ->execute();
-
-      break;
-  }
+  db_delete('uc_class_attribute_options')
+    ->condition('pcid', $type->id())
+    ->execute();
 }
 
 /**

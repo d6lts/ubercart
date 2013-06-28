@@ -11,16 +11,19 @@ use Drupal\Core\Database\Query\Merge;
  * Displays a list of product classes.
  */
 function uc_product_class_default() {
-  $classes = uc_product_class_load();
+  $query = Drupal::entityQuery('node_type')
+    ->condition('settings.uc_product.product', TRUE);
+  $result = $query->execute();
+  $classes = entity_load_multiple('node_type', $result);
   $header = array(t('Class ID'), t('Name'), t('Description'), t('Operations'));
   $rows = array();
   foreach ($classes as $class) {
-    $ops = array(l(t('edit'), 'admin/store/products/classes/' . $class->pcid . '/edit'));
-    if (empty($class->locked)) {
-      $ops[] = l(t('delete'), 'admin/store/products/classes/' . $class->pcid . '/delete');
+    $ops = array(l(t('edit'), 'admin/structure/types/manage/' . $class->type));
+    if (!$class->isLocked()) {
+      $ops[] = l(t('delete'), 'admin/structure/types/manage/' . $class->type . '/delete');
     }
     $rows[] = array(
-      check_plain($class->pcid),
+      check_plain($class->type),
       check_plain($class->name),
       filter_xss_admin($class->description),
       implode(' ', $ops),
@@ -34,10 +37,6 @@ function uc_product_class_default() {
     '#rows' => $rows,
     '#empty' => t('No product classes have been defined yet.'),
   );
-  $build['header'] = array(
-    '#markup' => '<h2>' . t('Add a class') . '</h2>',
-  );
-  $build['form'] = drupal_get_form('uc_product_class_form');
 
   return $build;
 }
@@ -219,179 +218,4 @@ function uc_product_image_defaults() {
   drupal_set_message(t('Default image support configured for Ubercart products.'));
 
   drupal_goto('admin/store');
-}
-
-/**
- * Form builder for product classes.
- *
- * @see uc_product_class_form_validate()
- * @see uc_product_class_form_submit()
- * @ingroup forms
- */
-function uc_product_class_form($form, &$form_state, $class = NULL) {
-  if (!is_null($class)) {
-    $classname = $class->name;
-    $classdesc = $class->description;
-    drupal_set_title($classname);
-    $form['pcid'] = array(
-      '#type' => 'hidden',
-      '#value' => $class->pcid
-    );
-  }
-  else {
-    $classname = '';
-    $classdesc = '';
-    $form['pcid'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Class ID'),
-      '#required' => TRUE,
-      '#maxlength' => 32,
-      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. This name may consist only of lowercase letters, numbers, and underscores. Dashes are not allowed. Underscores will be converted into dashes when constructing the URL of the <em>create content</em> page. This name must be unique to this content type.'),
-    );
-  }
-
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Class name'),
-    '#description' => t('The human-readable name of this content type as it should appear on the !create_content page.  There are no character restrictions on this name.', array('!create_content' => l(t('Create content'), 'node/add'))),
-    '#default_value' => $classname,
-    '#required' => TRUE,
-  );
-  $form['description'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Description'),
-    '#description' => t('This text describes the content type to administrators.'),
-    '#default_value' => $classdesc,
-  );
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save'),
-  );
-
-  return $form;
-}
-
-/**
- * Ensures the new product class is unique.
- *
- * @see uc_product_class_form()
- * @see uc_product_class_form_submit()
- */
-function uc_product_class_form_validate($form, &$form_state) {
-  if ($form['pcid']['#type'] == 'textfield') {
-    $type = node_type_load($form_state['values']['pcid']);
-    if ($type) {
-      if ($type->base == 'uc_product') {
-        form_set_error('pcid', t('This product class already exists.'));
-      }
-      elseif ($type->custom == 0) {
-        form_set_error('pcid', t('This is a node type provided by another module. Only custom node types may become product classes.'));
-      }
-    }
-  }
-}
-
-/**
- * Form submission handler for uc_product_class_form().
- *
- * @see uc_product_class_form()
- * @see uc_product_class_form_validate()
- */
-function uc_product_class_form_submit($form, &$form_state) {
-  $is_new = $form['pcid']['#type'] == 'textfield';
-
-  $pcid = $form_state['values']['pcid'];
-
-  // Convert whitespace to underscores, and remove other non-alphanumeric characters.
-  $pcid = preg_replace(array('/\s+/', '/\W/'), array('_', ''), strtolower($pcid));
-
-  $result = db_merge('uc_product_classes')
-    ->key(array('pcid' => $pcid))
-    ->fields(array(
-      'name' => $form_state['values']['name'],
-      'description' => $form_state['values']['description'],
-    ))
-    ->execute();
-
-  db_update('node_type')
-    ->fields(array(
-      'name' => $form_state['values']['name'],
-      'description' => $form_state['values']['description'],
-    ))
-    ->condition('type', $pcid)
-    ->execute();
-
-  uc_product_node_info(TRUE);
-
-  if ($result == Merge::STATUS_INSERT) {
-    variable_set('node_options_' . $pcid, variable_get('node_options_product', array('status', 'promote')));
-
-    if (module_exists('comment')) {
-      variable_set('comment_' . $pcid, variable_get('comment_product', COMMENT_NODE_OPEN));
-    }
-
-    module_invoke_all('uc_product_class', $pcid, 'insert');
-  }
-  else {
-    module_invoke_all('uc_product_class', $pcid, 'update');
-  }
-
-  node_types_rebuild();
-  if ($is_new) {
-    $type = node_type_load($pcid);
-    node_add_body_field($type, t('Description'));
-    uc_product_add_default_image_field($pcid);
-  }
-  Drupal::state()->set('menu_rebuild_needed', TRUE);
-
-  drupal_set_message(t('Product class saved.'));
-}
-
-/**
- * Confirms the deletion of a product class.
- *
- * @see uc_product_class_delete_confirm_submit()
- */
-function uc_product_class_delete_confirm($form, &$form_state, $class) {
-  $form['pcid'] = array(
-    '#type' => 'value',
-    '#value' => $class->pcid,
-  );
-
-  $question = t('Are you sure you want to delete the %type product class?', array('%type' => $class->pcid));
-  $description = t('The node type associated with this product class will revert to a standard node type.');
-
-  // Find out how many nodes of this class exist and add to the description.
-  $count = db_query("SELECT COUNT(*) FROM {node} WHERE type = :pcid", array(':pcid' => $class->pcid))->fetchField();
-
-  if ($count > 0) {
-    $description .= '<br />' . format_plural($count, 'There is 1 node of this type.', 'There are @count nodes of this type.');
-  }
-
-  return confirm_form($form, $question, 'admin/store/products/classes', $description, t('Delete'), t('Cancel'));
-}
-
-/**
- * Form submission handler for uc_product_class_delete_confirm().
- *
- * @see uc_product_class_delete_confirm()
- */
-function uc_product_class_delete_confirm_submit($form, &$form_state) {
-  $type = node_type_load($form_state['values']['pcid']);
-  $type->base = 'node_content';
-  $type->custom = 1;
-  node_type_save($type);
-
-  db_delete('uc_product_classes')
-    ->condition('pcid', $form_state['values']['pcid'])
-    ->execute();
-  module_invoke_all('uc_product_class', $form_state['values']['pcid'], 'delete');
-  uc_product_node_info(TRUE);
-  node_types_rebuild();
-  Drupal::state()->set('menu_rebuild_needed', TRUE);
-
-  drupal_set_message(t('Product class %type deleted.', array('%type' => $form_state['values']['pcid'])));
-
-  $form_state['redirect'] = 'admin/store/products/classes';
 }

@@ -40,6 +40,7 @@ class UbercartProductTest extends UbercartTestBase {
     foreach (array('model', 'list_price', 'cost', 'sell_price', 'shippable', 'weight', 'weight_units', 'dim_length', 'dim_width', 'dim_height', 'length_units', 'pkg_qty', 'ordering') as $field) {
       $this->assertFieldByName($field, NULL);
     }
+    $this->assertFieldByName('files[uc_product_image_und_0][]', NULL);
 
     $body_key = 'body[und][0][value]';
 
@@ -133,67 +134,25 @@ class UbercartProductTest extends UbercartTestBase {
 
   public function testProductClassForm() {
     // Try making a new product class.
-    $class = $this->randomName(12);
-    $type = strtolower($class);
+    $class = strtolower($this->randomName(12));
     $edit = array(
-      'pcid' => $class,
+      'type' => $class,
       'name' => $class,
       'description' => $this->randomName(32),
+      'settings[uc_product][product]' => 1,
     );
-
-    $this->drupalPost(
-      'admin/store/products/classes',
-      $edit,
-      t('Save')
-    );
-    $this->assertText(
-      t('Product class saved.'),
-      t('Product class form submitted.')
-    );
-
-    $base = db_query('SELECT base FROM {node_type} WHERE type = :type', array(':type' => $type))->fetchField();
-    $this->assertEqual(
-      $base,
-      'uc_product',
-      t('The new content type has been created in the database.')
-    );
-
-    // Change the machine name of an existing class.
-    $new_type = strtolower($this->randomName(12));
-    $edit = array(
-      'type' => $new_type,
-    );
-    $this->drupalPost('admin/structure/types/manage/' . $type, $edit, 'Save content type');
-    $this->assertText('Machine name: ' . $new_type, 'Updated machine name found.');
-    $this->assertNoText('Machine name: ' . $type, 'Old machine name not found.');
+    $this->drupalPost('admin/structure/types/add', $edit, t('Save content type'));
+    $this->assertTrue(uc_product_is_product($class), 'The new content type is a product class.');
 
     // Make an existing node type a product class.
     $type = $this->drupalCreateContentType();
+    $class = $type->type;
     $edit = array(
-      'pcid' => $type->type,
-      'name' => $type->name,
-      'description' => $type->description,
-    );
-    $node = $this->drupalCreateNode(array('type' => $type->type));
-
-    $this->drupalPost(
-      'admin/store/products/classes',
-      $edit,
-      t('Save')
-    );
-    $this->assertText(
-      t('Product class saved.'),
-      t('Product class form submitted.')
+      'settings[uc_product][product]' => 1,
     );
 
-    $base = db_query('SELECT base FROM {node_type} WHERE type = :type', array(':type' => $type->type))->fetchField();
-    $this->assertEqual(
-      $base,
-      'uc_product',
-      t('The new content type has been taken over by uc_product.'));
-
-    $this->drupalPost('node/' . $node->nid, array('qty' => '1'), 'Add to cart');
-    $this->assertText($node->title . ' added to your shopping cart.');
+    $this->drupalPost('admin/structure/types/manage/' . $class, $edit, t('Save content type'));
+    $this->assertTrue(uc_product_is_product($class), 'The updated content type is a product class.');
   }
 
   public function testProductQuantity() {

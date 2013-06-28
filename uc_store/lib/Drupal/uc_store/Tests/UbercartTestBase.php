@@ -102,16 +102,16 @@ abstract class UbercartTestBase extends WebTestBase {
    * Fix this after adding a proper API call for saving a product class.
    */
   function createProductClass($data = array()) {
-    $product_class = $data + array(
-      'pcid' => $this->randomName(8),
-      'name' => $this->randomName(8),
-      'description' => $this->randomName(8),
+    $class = strtolower($this->randomName(12));
+    $edit = $data + array(
+      'type' => $class,
+      'name' => $class,
+      'description' => $this->randomName(32),
+      'settings[uc_product][product]' => 1,
     );
-    $product_class = (object) $product_class;
+    $this->drupalPost('admin/structure/types/add', $edit, t('Save content type'));
 
-    drupal_write_record('uc_product_classes', $product_class);
-
-    return $product_class;
+    return node_type_load($class);
   }
 
   /**

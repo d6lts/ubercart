@@ -11,31 +11,6 @@
 function uc_product_schema() {
   $schema = array();
 
-  $schema['uc_product_classes'] = array(
-    'description' => 'The list of product node types.',
-    'fields' => array(
-      'pcid' => array(
-        'description' => 'The node type identifier.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'name' => array(
-        'description' => 'The human-readable name.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'description' => array(
-        'description' => 'The description of the node type.',
-        'type' => 'text',
-      ),
-    ),
-    'primary key' => array('pcid'),
-  );
-
   $schema['uc_product_features'] = array(
     'description' => 'Stores information of features added to products.',
     'fields' => array(
@@ -213,26 +188,6 @@ function uc_product_schema() {
 }
 
 /**
- * Implements hook_enable().
- *
- * Sets up the body and a default image field for products.
- */
-function uc_product_enable() {
-  $body_label = t('Description');
-
-  node_types_rebuild();
-  $types = node_type_get_types();
-  foreach ($types as $type) {
-    if ($type->module == 'uc_product') {
-      node_add_body_field($type, $body_label);
-      uc_product_set_teaser_display($type->type);
-    }
-  }
-
-  uc_product_add_default_image_field();
-}
-
-/**
  * Implements hook_uninstall().
  */
 function uc_product_uninstall() {
@@ -251,26 +206,6 @@ function uc_product_uninstall() {
  */
 function uc_product_update_last_removed() {
   return 7004;
-}
-
-/**
- * Remove unused unique hash column.
- */
-function uc_product_update_7300() {
-  db_drop_field('uc_products', 'unique_hash');
-}
-
-/**
- * Sets default display settings for product teasers.
- */
-function uc_product_set_teaser_display($type) {
-  entity_get_display('node', $type, 'teaser')
-    ->removeComponent('model')
-    ->removeComponent('list_price')
-    ->removeComponent('cost')
-    ->removeComponent('weight')
-    ->removeComponent('dimensions')
-    ->save();
 }
 
 /**

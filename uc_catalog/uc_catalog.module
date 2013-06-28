@@ -12,7 +12,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityDisplay;
+use Drupal\node\NodeTypeInterface;
 use Drupal\uc_catalog\UcTreeNode;
 
 /**
@@ -370,13 +371,14 @@ function uc_catalog_uc_store_status() {
 }
 
 /**
- * Implements hook_uc_product_class().
+ * Implements hook_node_type_insert().
  *
  * Adds product node types to the catalog vocabulary as they are created.
  */
-function uc_catalog_uc_product_class($type, $op) {
-  if ($op == 'insert') {
-    uc_catalog_add_node_type($type);
+function uc_catalog_node_type_insert(NodeTypeInterface $type) {
+  $settings = $type->getModuleSettings('uc_product');
+  if (!empty($settings['product'])) {
+    uc_catalog_add_node_type($type->id());
   }
 }
 

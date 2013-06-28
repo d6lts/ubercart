@@ -45,52 +45,6 @@ function hook_uc_product_alter(&$node) {
 }
 
 /**
- * Performs actions on product classes.
- *
- * @param $type
- *   The node type of the product class.
- * @param $op
- *   The action being performed on the product class:
- *   - insert: A new node type is created, or an existing node type is being
- *     converted into a product type.
- *   - update: A product class has been updated.
- *   - delete: A product class has been deleted. Modules that have attached
- *     additional information to the node type because it is a product type
- *     should delete this information.
- */
-function hook_uc_product_class($type, $op) {
-  switch ($op) {
-    case 'delete':
-      db_delete('uc_class_attributes')
-        ->condition('pcid', $type)
-        ->execute();
-
-      db_delete('uc_class_attribute_options')
-        ->condition('pcid', $type)
-        ->execute();
-
-      break;
-  }
-}
-
-/**
- * Define default product classes.
- *
- * The results of this hook are eventually passed through hook_node_info(),
- * so you may include any keys that hook_node_info() uses. Defaults will
- * be provided where keys are not set. This hook can also be used to
- * override the default "product" product class name and description.
- */
-function hook_uc_product_default_classes() {
-  return array(
-    'my_class' => array(
-      'name' => t('My product class'),
-      'description' => t('Content type description for my product class.'),
-    ),
-  );
-}
-
-/**
  * Returns a structured array representing the given product's description.
  *
  * Modules that add data to cart items when they are selected should display it
