@@ -75,38 +75,3 @@ function theme_uc_uid($variables) {
 function theme_uc_store_footer($variables) {
   return '<div id="store-footer">' . $variables['message'] . '</div>';
 }
-
-/**
- * Themes a pane sorting form into a table.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_uc_pane_sort_table($variables) {
-  $form = $variables['form'];
-  $prefix = $form['#pane_prefix'];
-
-  $attributes = array();
-  if (isset($form['#draggable'])) {
-    $attributes['id'] = $form['#draggable'] . '-table';
-    drupal_add_tabledrag($form['#draggable'] . '-table', 'order', 'sibling', $form['#draggable']);
-  }
-
-  $header = array(t('Pane'), t('List position'));
-
-  foreach (element_children($form) as $pane_id) {
-    $rows[] = array(
-      'data' => array(
-        drupal_render($form[$pane_id][$prefix . '_' . $pane_id . '_enabled']),
-        drupal_render($form[$pane_id][$prefix . '_' . $pane_id . '_weight']),
-      ),
-      'class' => array('draggable'),
-    );
-  }
-
-  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => $attributes)) . '<br />';
-}
-

@@ -120,20 +120,27 @@ class CheckoutSettingsForm extends SystemConfigFormBase {
 
     $panes = _uc_checkout_pane_list();
     $form['checkout']['panes'] = array(
-      '#theme' => 'uc_pane_sort_table',
-      '#pane_prefix' => 'uc_pane',
-      '#draggable' => 'uc-checkout-pane-weight',
+      '#type' => 'table',
+      '#header' => array(t('Pane'), t('List position')),
+      '#tabledrag' => array(
+        array('order', 'sibling', 'uc-checkout-pane-weight'),
+      ),
     );
     foreach ($panes as $id => $pane) {
-      $form['checkout']['panes'][$id]['uc_pane_' . $id . '_enabled'] = array(
+      $form['checkout']['panes'][$id]['#attributes']['class'][] = 'draggable';
+      $form['checkout']['panes'][$id]['status'] = array(
         '#type' => 'checkbox',
         '#title' => check_plain($pane['title']),
         '#default_value' => variable_get('uc_pane_' . $id . '_enabled', $pane['enabled']),
       );
-      $form['checkout']['panes'][$id]['uc_pane_' . $id . '_weight'] = array(
+      $form['checkout']['panes'][$id]['weight'] = array(
         '#type' => 'weight',
+        '#title' => t('Weight for @title', array('@title' => $pane['title'])),
+        '#title_display' => 'invisible',
         '#default_value' => variable_get('uc_pane_' . $id . '_weight', $pane['weight']),
-        '#attributes' => array('class' => array('uc-checkout-pane-weight')),
+        '#attributes' => array(
+          'class' => array('uc-checkout-pane-weight'),
+        ),
       );
       $form['checkout']['panes'][$id]['#weight'] = variable_get('uc_pane_' . $id . '_weight', $pane['weight']);
 
@@ -283,10 +290,9 @@ class CheckoutSettingsForm extends SystemConfigFormBase {
     variable_set('uc_new_customer_login', $form_state['values']['uc_new_customer_login']);
     variable_set('uc_new_customer_status_active', $form_state['values']['uc_new_customer_status_active']);
 
-    $panes = _uc_checkout_pane_list();
-    foreach ($panes as $id => $pane) {
-      variable_set('uc_pane_' . $id . '_enabled', $form_state['values']['uc_pane_' . $id . '_enabled']);
-      variable_set('uc_pane_' . $id . '_weight', $form_state['values']['uc_pane_' . $id . '_weight']);
+    foreach (element_children($form['checkout']['panes']) as $id) {
+      variable_set('uc_pane_' . $id . '_enabled', $form_state['values']['panes'][$id]['status']);
+      variable_set('uc_pane_' . $id . '_weight', $form_state['values']['panes'][$id]['weight']);
 
       // TODO: handle (or remove) checkout pane settings
     }

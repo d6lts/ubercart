@@ -497,10 +497,6 @@ function uc_store_theme() {
       'variables' => array('message' => ''),
       'file' => 'uc_store.theme.inc',
     ),
-    'uc_pane_sort_table' => array(
-      'render element' => 'form',
-      'file' => 'uc_store.theme.inc',
-    ),
     'uc_price' => array(
       'variables' => array('price' => 0, 'suffixes' => array()),
       'file' => 'uc_store.theme.inc',
