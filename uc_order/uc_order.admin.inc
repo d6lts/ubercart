@@ -5,18 +5,20 @@
  * Order administration menu items.
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Redirects to the customers listing page.
  */
 function uc_order_customers() {
-  drupal_goto('admin/store/customers/view');
+  return new RedirectResponse(url('admin/store/customers/view', array('absolute' => TRUE)));
 }
 
 /**
  * Redirects to the orders listing page.
  */
 function uc_order_orders() {
-  drupal_goto('admin/store/orders/view');
+  return new RedirectResponse(url('admin/store/orders/view', array('absolute' => TRUE)));
 }
 
 /**

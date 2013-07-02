@@ -5,6 +5,7 @@
  * Cart menu items.
  */
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -62,7 +63,7 @@ function uc_cart_checkout() {
 
   $items = uc_cart_get_contents();
   if (count($items) == 0 || !variable_get('uc_checkout_enabled', TRUE)) {
-    drupal_goto('cart');
+    return new RedirectResponse(url('cart', array('absolute' => TRUE)));
   }
 
   if (($min = variable_get('uc_minimum_subtotal', 0)) > 0) {
@@ -78,7 +79,7 @@ function uc_cart_checkout() {
 
     if ($subtotal < $min) {
       drupal_set_message(t('The minimum order subtotal for checkout is @min.', array('@min' => uc_currency_format($min))), 'error');
-      drupal_goto('cart');
+      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
     }
   }
 
@@ -88,7 +89,7 @@ function uc_cart_checkout() {
     if (variable_get('user_register', 1) != 0) {
       drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => url('user/register', array('query' => drupal_get_destination())))));
     }
-    drupal_goto('user', array('query' => drupal_get_destination()));
+    return new RedirectResponse(url('cart', array('query' => drupal_get_destination(), 'absolute' => TRUE)));
   }
 
   // Load an order from the session, if available.
@@ -111,7 +112,7 @@ function uc_cart_checkout() {
       // Ghost session.
       unset($_SESSION['cart_order']);
       drupal_set_message(t('Your session has expired or is no longer valid.  Please review your order and try again.'));
-      drupal_goto('cart');
+      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
     }
   }
 
@@ -120,11 +121,11 @@ function uc_cart_checkout() {
     // If this is a form submission, make sure the cart order is still valid.
     if (!isset($order)) {
       drupal_set_message(t('Your session has expired or is no longer valid.  Please review your order and try again.'));
-      drupal_goto('cart');
+      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
     }
     elseif (!empty($_SESSION['uc_cart_order_rebuild'])) {
       drupal_set_message(t('Your shopping cart contents have changed. Please review your order and try again.'));
-      drupal_goto('cart');
+      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
     }
   }
   else {
@@ -159,7 +160,7 @@ function uc_cart_checkout() {
     }
     elseif (!uc_order_product_revive($order->products)) {
       drupal_set_message(t('Some of the products in this order are no longer available.'), 'error');
-      drupal_goto('cart');
+      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
     }
   }
 
@@ -395,18 +396,18 @@ function uc_cart_checkout_review() {
   drupal_add_js(drupal_get_path('module', 'uc_cart') . '/uc_cart.js');
 
   if (empty($_SESSION['cart_order']) || empty($_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_review'])) {
-    drupal_goto('cart/checkout');
+    return new RedirectResponse(url('cart/checkout', array('absolute' => TRUE)));
   }
 
   $order = uc_order_load($_SESSION['cart_order']);
 
   if ($order === FALSE || uc_order_status_data($order->order_status, 'state') != 'in_checkout') {
     unset($_SESSION['uc_checkout'][$order->order_id]['do_review']);
-    drupal_goto('cart/checkout');
+    return new RedirectResponse(url('cart/checkout', array('absolute' => TRUE)));
   }
   elseif (!uc_order_product_revive($order->products)) {
     drupal_set_message(t('Some of the products in this order are no longer available.'), 'error');
-    drupal_goto('cart');
+    return new RedirectResponse(url('cart', array('absolute' => TRUE)));
   }
 
   $panes = _uc_checkout_pane_list();
@@ -587,7 +588,7 @@ function uc_cart_checkout_review_form_submit($form, &$form_state) {
  */
 function uc_cart_checkout_complete() {
   if (empty($_SESSION['cart_order']) || empty($_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_complete'])) {
-    drupal_goto('cart');
+    return new RedirectResponse(url('cart', array('absolute' => TRUE)));
   }
 
   $order = uc_order_load(intval($_SESSION['cart_order']));
@@ -596,7 +597,7 @@ function uc_cart_checkout_complete() {
     // Display messages to customers and the administrator if the order was lost.
     drupal_set_message(t("We're sorry.  An error occurred while processing your order that prevents us from completing it at this time. Please contact us and we will resolve the issue as soon as possible."), 'error');
     watchdog('uc_cart', 'An empty order made it to checkout! Cart order ID: @cart_order', array('@cart_order' => $_SESSION['cart_order']), WATCHDOG_ERROR);
-    drupal_goto('cart');
+    return new RedirectResponse(url('cart', array('absolute' => TRUE)));
   }
 
   $build = uc_cart_complete_sale($order, variable_get('uc_new_customer_login', FALSE));
@@ -607,7 +608,7 @@ function uc_cart_checkout_complete() {
 
   $page = variable_get('uc_cart_checkout_complete_page', '');
   if (!empty($page)) {
-    drupal_goto($page);
+    return new RedirectResponse(url($page, array('absolute' => TRUE)));
   }
 
   return $build;
