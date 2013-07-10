@@ -55,6 +55,10 @@ function uc_cart_copy_address(checked, source, target) {
   if (!checked) {
     $('#' + target + '-pane div.address-pane-table').slideDown();
     copy_box_checked = false;
+
+    // Unblock refreshing of the zone data when the country changes
+    $('#edit-panes-' + target + '-' + target + '-country').data('block_zone_refresh', false);
+
     return false;
   }
 
@@ -89,6 +93,9 @@ function uc_cart_copy_address(checked, source, target) {
       }
     }
   );
+
+  // Block refreshing of the zone data when the country is copied
+  $('#edit-panes-' + target + '-' + target + '-country').data('block_zone_refresh', true);
 
   return false;
 }
@@ -142,7 +149,7 @@ function apply_address(type, address_str) {
   $('#edit-panes-' + temp + '-postal-code').val(address.postal_code).trigger('change');
 
   if ($('#edit-panes-' + temp + '-country').val() != address.country) {
-    $('#edit-panes-' + temp + '-country').val(address.country).trigger('change');
+    $('#edit-panes-' + temp + '-country').val(address.country).data('block_zone_refresh', true).trigger('change').data('block_zone_refresh', false);
     try {
       uc_update_zone_select('edit-panes-' + temp + '-country', address.zone);
     }

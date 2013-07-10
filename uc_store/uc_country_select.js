@@ -10,7 +10,9 @@
 Drupal.behaviors.ucCountrySelect = function(context) {
   $('select[id$=-country]:not(.ucCountrySelect-processed)', context).addClass('ucCountrySelect-processed').change(
     function() {
-      uc_update_zone_select(this.id, '');
+      if (!$(this).data('block_zone_refresh')) {
+        uc_update_zone_select(this.id, '');
+      }
     }
   );
 }
