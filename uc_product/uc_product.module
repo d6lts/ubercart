@@ -811,12 +811,13 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   );
 
   // Image field.
-  $instances = field_info_instances('node', $type->type);
-
   $options = array('' => t('None'));
-  foreach ($instances as $field_name => $instance) {
-    if (strpos($instance['widget']['type'], 'image') !== FALSE) {
-      $options[$field_name] = $instance['label'];
+  $instances = field_info_instances('node');
+  if (isset($instances[$type->type])) {
+    foreach ($instances[$type->type] as $field_name => $instance) {
+      if ($instance->getFieldType() == 'image') {
+        $options[$field_name] = $instance->label();
+      }
     }
   }
 
