@@ -69,6 +69,7 @@ class UbercartProductTest extends UbercartTestBase {
         'cm' => t('Centimeters'),
         'mm' => t('Millimeters'),
       )),
+      'pkg_qty' => 1,
     );
     $this->drupalPost('node/add/product', $edit, 'Save');
 
