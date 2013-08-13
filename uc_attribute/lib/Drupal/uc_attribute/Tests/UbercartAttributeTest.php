@@ -36,13 +36,13 @@ class UbercartAttributeTest extends UbercartTestBase {
   public function testAttributeAPI() {
 
     // Create an attribute.
-    $attribute = self::createAttribute();
+    $attribute = $this->createAttribute();
 
     // Test retrieval.
     $loaded_attribute = uc_attribute_load($attribute->aid);
 
     // Check the attribute integrity.
-    foreach (self::attributeFieldsToTest() as $field) {
+    foreach ($this->attributeFieldsToTest() as $field) {
       if ($loaded_attribute->$field != $attribute->$field) {
         $this->fail(t('Attribute integrity check failed.'));
         break;
@@ -63,7 +63,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $loaded_attribute = uc_attribute_load($attribute->aid, $product->nid, 'product');
 
     // Check the attribute integrity.
-    foreach (self::attributeFieldsToTest('product') as $field) {
+    foreach ($this->attributeFieldsToTest('product') as $field) {
       if ($loaded_attribute->$field != $attribute->$field) {
         $this->fail(t('Attribute integrity check failed.'));
         break;
@@ -91,7 +91,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $loaded_attribute = uc_attribute_load($attribute->aid, $product_class->id(), 'class');
 
     // Check the attribute integrity.
-    foreach (self::attributeFieldsToTest('class') as $field) {
+    foreach ($this->attributeFieldsToTest('class') as $field) {
       if ($loaded_attribute->$field != $attribute->$field) {
         $this->fail(t('Attribute integrity check failed.'));
         break;
@@ -107,7 +107,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     // Create a few more.
     for ($i = 0; $i < 5; $i++) {
-      $a = self::createAttribute();
+      $a = $this->createAttribute();
       $attributes[$a->aid] = $a;
     }
 
@@ -117,12 +117,12 @@ class UbercartAttributeTest extends UbercartTestBase {
     $all_options = array();
     foreach ($attribute_aids as $aid) {
       for ($i = 0; $i < 3; $i++) {
-        $option = self::createAttributeOption(array('aid' => $aid));
+        $option = $this->createAttributeOption(array('aid' => $aid));
         $all_options[$option->aid][$option->oid] = $option;
       }
     }
     for ($i = 0; $i < 3; $i++) {
-      $option = self::createAttributeOption(array('aid' => $aid));
+      $option = $this->createAttributeOption(array('aid' => $aid));
       $all_options[$option->aid][$option->oid] = $option;
     }
 
@@ -135,7 +135,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     // Make sure all the new options are on attributes correctly.
     foreach ($all_options as $aid => $options) {
       foreach ($options as $oid => $option) {
-        foreach (self::attributeOptionFieldsToTest() as $field) {
+        foreach ($this->attributeOptionFieldsToTest() as $field) {
           if ($option->$field != $attributes_with_options[$aid]->options[$oid]->$field) {
             $this->fail(t('Option integrity check failed.'));
             break;
@@ -156,7 +156,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     // Check the attributes' integrity.
     foreach ($loaded_attributes as $aid => $loaded_attribute) {
-      foreach (self::attributeFieldsToTest() as $field) {
+      foreach ($this->attributeFieldsToTest() as $field) {
         if ($attributes[$aid]->$field != $loaded_attributes[$aid]->$field) {
           $this->fail(t('Attribute integrity check failed.'));
           break;
@@ -182,7 +182,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     // Check the attributes' integrity.
     foreach ($loaded_product_attributes as $aid => $loaded_product_attribute) {
-      foreach (self::attributeFieldsToTest('product') as $field) {
+      foreach ($this->attributeFieldsToTest('product') as $field) {
         if ($loaded_product_attributes[$aid]->$field != $product_attributes[$aid]->$field) {
           $this->fail(t('Attribute integrity check failed.'));
           break;
@@ -195,7 +195,7 @@ class UbercartAttributeTest extends UbercartTestBase {
       foreach ($options as $oid => $option) {
         if (empty($loaded_product_attributes[$aid]) || empty($loaded_product_attributes[$aid]->options[$oid])) continue;
 
-        foreach (self::attributeOptionFieldsToTest() as $field) {
+        foreach ($this->attributeOptionFieldsToTest() as $field) {
           if ($option->$field != $loaded_product_attributes[$aid]->options[$oid]->$field) {
             $this->fail(t('Option integrity check failed.'));
             break;
@@ -222,7 +222,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     // Check the attributes' integrity.
     foreach ($loaded_class_attributes as $aid => $loaded_class_attribute) {
-      foreach (self::attributeFieldsToTest('class') as $field) {
+      foreach ($this->attributeFieldsToTest('class') as $field) {
         if ($loaded_class_attributes[$aid]->$field != $class_attributes[$aid]->$field) {
           $this->fail(t('Attribute integrity check failed.'));
           break;
@@ -235,7 +235,7 @@ class UbercartAttributeTest extends UbercartTestBase {
       foreach ($options as $oid => $option) {
         if (empty($loaded_class_attributes[$aid]) || empty($loaded_class_attributes[$aid]->options[$oid])) continue;
 
-        foreach (self::attributeOptionFieldsToTest() as $field) {
+        foreach ($this->attributeOptionFieldsToTest() as $field) {
           if ($option->$field != $loaded_class_attributes[$aid]->options[$oid]->$field) {
             $this->fail(t('Option integrity check failed.'));
             break;
@@ -282,15 +282,15 @@ class UbercartAttributeTest extends UbercartTestBase {
     $this->assertEqual(count($loaded_class_attributes), count(array_intersect_key($loaded_class_attributes, $class_attributes)), t('Verifying attribute result.'));
 
     // Add some adjustments.
-    self::createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"1";}', 'nid' => 1));
-    self::createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"2";}', 'nid' => 1));
-    self::createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"3";}', 'nid' => 1));
-    self::createProductAdjustment(array('combination' => 'a:1:{i:2;s:1:"1";}', 'nid' => 2));
-    self::createProductAdjustment(array('combination' => 'a:1:{i:3;s:1:"1";}', 'nid' => 2));
-    self::createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"2";}', 'nid' => 3));
-    self::createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"3";}', 'nid' => 3));
-    self::createProductAdjustment(array('combination' => 'a:1:{i:3;s:1:"2";}', 'nid' => 3));
-    self::createProductAdjustment(array('combination' => 'a:1:{i:3;s:1:"3";}', 'nid' => 4));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"1";}', 'nid' => 1));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"2";}', 'nid' => 1));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"3";}', 'nid' => 1));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:2;s:1:"1";}', 'nid' => 2));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:3;s:1:"1";}', 'nid' => 2));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"2";}', 'nid' => 3));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:1;s:1:"3";}', 'nid' => 3));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:3;s:1:"2";}', 'nid' => 3));
+    $this->createProductAdjustment(array('combination' => 'a:1:{i:3;s:1:"3";}', 'nid' => 4));
 
     // Test deletion by nid.
     uc_attribute_adjustments_delete(array('nid' => 1));
@@ -317,7 +317,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $this->assertText(t('The name of the attribute used in administrative forms'), t('Attribute add form working.'));
 
-    $edit = (array) self::createAttribute(array(), FALSE);
+    $edit = (array) $this->createAttribute(array(), FALSE);
 
     $this->drupalPost('admin/store/products/attributes/add', $edit, t('Submit'));
     $this->assertText('Options for ' . $edit['name']);
@@ -353,11 +353,11 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public function testAttributeUISettings() {
     $product = $this->createProduct();
-    $attribute = self::createAttribute(array(
+    $attribute = $this->createAttribute(array(
       'display' => 1,
     ));
 
-    $option = self::createAttributeOption(array(
+    $option = $this->createAttributeOption(array(
       'aid' => $attribute->aid,
       'price' => 30,
     ));
@@ -392,12 +392,12 @@ class UbercartAttributeTest extends UbercartTestBase {
    * Tests the "edit attribute" user interface.
    */
   public function testAttributeUIEditAttribute() {
-    $attribute = self::createAttribute();
+    $attribute = $this->createAttribute();
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/edit');
     $this->assertText(t('Edit attribute: @name', array('@name' => $attribute->name)), t('Attribute edit form working.'));
 
-    $edit = (array) self::createAttribute(array(), FALSE);
+    $edit = (array) $this->createAttribute(array(), FALSE);
     $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/edit', $edit, t('Submit'));
 
     $attribute = uc_attribute_load($attribute->aid);
@@ -419,13 +419,13 @@ class UbercartAttributeTest extends UbercartTestBase {
    * Tests the "delete attribute" user interface.
    */
   public function testAttributeUIDeleteAttribute() {
-    $attribute = self::createAttribute();
+    $attribute = $this->createAttribute();
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/delete');
 
     $this->assertText(t('Are you sure you want to delete the attribute @name?', array('@name' => $attribute->name)), t('Attribute delete form working.'));
 
-    $edit = (array) self::createAttribute();
+    $edit = (array) $this->createAttribute();
     unset($edit['aid']);
 
     $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/delete', array(), t('Delete'));
@@ -437,8 +437,8 @@ class UbercartAttributeTest extends UbercartTestBase {
    * Tests the attribute options user interface.
    */
   public function testAttributeUIAttributeOptions() {
-    $attribute = self::createAttribute();
-    $option = self::createAttributeOption(array('aid' => $attribute->aid));
+    $attribute = $this->createAttribute();
+    $option = $this->createAttributeOption(array('aid' => $attribute->aid));
 
     uc_attribute_option_save($option);
 
@@ -451,13 +451,13 @@ class UbercartAttributeTest extends UbercartTestBase {
    * Tests the "add attribute option" user interface.
    */
   public function testAttributeUIAttributeOptionsAdd() {
-    $attribute = self::createAttribute();
+    $attribute = $this->createAttribute();
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/options/add');
 
     $this->assertText(t('Options for @name', array('@name' => $attribute->name)), t('Attribute options add form working.'));
 
-    $edit = (array) self::createAttributeOption(array('aid' => $attribute->aid), FALSE);
+    $edit = (array) $this->createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($edit['aid']);
 
     $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/options/add', $edit, t('Submit'));
@@ -481,8 +481,8 @@ class UbercartAttributeTest extends UbercartTestBase {
    * Tests the "edit attribute options" user interface.
    */
   public function testAttributeUIAttributeOptionsEdit() {
-    $attribute = self::createAttribute();
-    $option = self::createAttributeOption(array('aid' => $attribute->aid));
+    $attribute = $this->createAttribute();
+    $option = $this->createAttributeOption(array('aid' => $attribute->aid));
 
     uc_attribute_option_save($option);
 
@@ -490,7 +490,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $this->assertText(t('Edit option: @name', array('@name' => $option->name)), t('Attribute options edit form working.'));
 
-    $edit = (array) self::createAttributeOption(array('aid' => $attribute->aid), FALSE);
+    $edit = (array) $this->createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($edit['aid']);
     $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/options/' . $option->oid . '/edit', $edit, t('Submit'));
 
@@ -513,8 +513,8 @@ class UbercartAttributeTest extends UbercartTestBase {
    * Tests the "delete attribute option" user interface.
    */
   public function testAttributeUIAttributeOptionsDelete() {
-    $attribute = self::createAttribute();
-    $option = self::createAttributeOption(array('aid' => $attribute->aid));
+    $attribute = $this->createAttribute();
+    $option = $this->createAttributeOption(array('aid' => $attribute->aid));
 
     uc_attribute_option_save($option);
 
@@ -534,7 +534,7 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public function testAttributeUIClassAttributeOverview() {
     $class = $this->createProductClass();
-    $attribute = self::createAttribute();
+    $attribute = $this->createAttribute();
 
     $this->drupalGet('admin/store/products/classes/' . $class->id() . '/attributes');
 
@@ -546,7 +546,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
 
-    $a = (array) self::createAttribute(array(), FALSE);
+    $a = (array) $this->createAttribute(array(), FALSE);
     unset($a['name'], $a['description']);
     foreach ($a as $field => $value) {
       $edit["attributes[{$attribute->aid}][$field]"] = $value;
@@ -580,7 +580,7 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public function testAttributeUIClassAttributeAdd() {
     $class = $this->createProductClass();
-    $attribute = self::createAttribute();
+    $attribute = $this->createAttribute();
 
     $this->drupalGet('admin/store/products/classes/' . $class->id() . '/attributes/add');
 
@@ -598,8 +598,8 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public function testAttributeUIClassAttributeOptionOverview() {
     $class = $this->createProductClass();
-    $attribute = self::createAttribute();
-    $option = self::createAttributeOption(array('aid' => $attribute->aid));
+    $attribute = $this->createAttribute();
+    $option = $this->createAttributeOption(array('aid' => $attribute->aid));
 
     uc_attribute_subject_save($attribute, 'class', $class->id());
 
@@ -607,7 +607,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $this->assertRaw(t('@option</label>', array('@option' => $option->name)), t('Class attribute option form working.'));
 
-    $o = (array) self::createAttributeOption(array('aid' => $attribute->aid), FALSE);
+    $o = (array) $this->createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($o['name'], $o['aid']);
     $o['select'] = TRUE;
     foreach ($o as $field => $value) {
@@ -639,8 +639,8 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public function testAttributeUIProductAttributes() {
     $product = $this->createProduct();
-    $attribute = self::createAttribute(array('display' => 1));
-    $option = self::createAttributeOption(array('aid' => $attribute->aid));
+    $attribute = $this->createAttribute(array('display' => 1));
+    $option = $this->createAttributeOption(array('aid' => $attribute->aid));
 
     $this->drupalGet('node/' . $product->nid . '/edit/attributes');
     $this->assertText('You must first add attributes to this product.');
@@ -670,9 +670,9 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public function testAttributeUIProductOptions() {
     $product = $this->createProduct();
-    $attribute = self::createAttribute(array('display' => 1));
+    $attribute = $this->createAttribute(array('display' => 1));
     for ($i = 0; $i < 3; $i++) {
-      $option = self::createAttributeOption(array('aid' => $attribute->aid));
+      $option = $this->createAttributeOption(array('aid' => $attribute->aid));
       $attribute->options[$option->oid] = $option;
     }
     uc_attribute_subject_save($attribute, 'product', $product->nid, TRUE);
@@ -692,10 +692,10 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public function testAttributeUIProductAdjustments() {
     $product = $this->createProduct();
-    $attribute = self::createAttribute(array('display' => 1));
+    $attribute = $this->createAttribute(array('display' => 1));
     for ($i = 0; $i < 3; $i++) {
-      $option = self::createAttributeOption(array('aid' => $attribute->aid));
-      $adjustment = self::createProductAdjustment(array('combination' => serialize(array($attribute->aid => $option->oid)), 'nid' => $product->nid));
+      $option = $this->createAttributeOption(array('aid' => $attribute->aid));
+      $adjustment = $this->createProductAdjustment(array('combination' => serialize(array($attribute->aid => $option->oid)), 'nid' => $product->nid));
       $option->model = $adjustment->model;
       $attribute->options[$option->oid] = $option;
     }
@@ -715,10 +715,10 @@ class UbercartAttributeTest extends UbercartTestBase {
    */
   public function testProductAttribute() {
     $product = $this->createProduct();
-    $attribute = self::createAttribute(array('display' => 2, 'required' => TRUE));
+    $attribute = $this->createAttribute(array('display' => 2, 'required' => TRUE));
     for ($i = 0; $i < 3; $i++) {
-      $option = self::createAttributeOption(array('aid' => $attribute->aid));
-      $adjustment = self::createProductAdjustment(array('combination' => serialize(array($attribute->aid => $option->oid)), 'nid' => $product->nid));
+      $option = $this->createAttributeOption(array('aid' => $attribute->aid));
+      $adjustment = $this->createProductAdjustment(array('combination' => serialize(array($attribute->aid => $option->oid)), 'nid' => $product->nid));
       $option->model = $adjustment->model;
       $attribute->options[$option->oid] = $option;
     }
@@ -770,7 +770,7 @@ class UbercartAttributeTest extends UbercartTestBase {
    *
    * @param $data
    */
-  public static function createProductAdjustment($data) {
+  public function createProductAdjustment($data) {
     $adjustment = $data + array(
       'model' => $this->randomName(8),
     );
@@ -785,7 +785,7 @@ class UbercartAttributeTest extends UbercartTestBase {
    *
    * @param $type
    */
-  protected static function attributeFieldsToTest($type = '') {
+  protected function attributeFieldsToTest($type = '') {
     $fields = array(
       'aid', 'name', 'ordering', 'required', 'display', 'description', 'label',
     );
@@ -805,7 +805,7 @@ class UbercartAttributeTest extends UbercartTestBase {
    *
    * @param $type
    */
-  protected static function attributeOptionFieldsToTest($type = '') {
+  protected function attributeOptionFieldsToTest($type = '') {
     $fields = array(
       'aid', 'oid', 'name', 'cost', 'price', 'weight', 'ordering',
     );
@@ -826,7 +826,7 @@ class UbercartAttributeTest extends UbercartTestBase {
    * @param $data
    * @param $save
    */
-  public static function createAttribute($data = array(), $save = TRUE) {
+  public function createAttribute($data = array(), $save = TRUE) {
     $attribute = $data + array(
       'name' => $this->randomName(8),
       'label' => $this->randomName(8),
@@ -849,7 +849,7 @@ class UbercartAttributeTest extends UbercartTestBase {
    * @param $data
    * @param $save
    */
-  public static function createAttributeOption($data = array(), $save = TRUE) {
+  public function createAttributeOption($data = array(), $save = TRUE) {
     $max_aid = db_select('uc_attributes', 'a')
       ->fields('a', array('aid'))
       ->orderBy('aid', 'DESC')
