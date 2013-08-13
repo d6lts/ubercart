@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\Component\Annotation\PluginID;
 
 /**
@@ -22,7 +23,7 @@ class Method extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render($values) {
+  function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->sanitizeValue(_uc_payment_method_data($value, 'name'));
   }

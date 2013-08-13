@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -23,7 +24,7 @@ class Status extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render($values) {
+  function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->sanitizeValue(uc_order_status_data($value, 'title'));
   }

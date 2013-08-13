@@ -8,6 +8,7 @@
 namespace Drupal\uc_store\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Numeric;
+use Drupal\views\ResultRow;
 use Drupal\Component\Annotation\PluginID;
 
 /**
@@ -46,7 +47,7 @@ class Price extends Numeric {
     }
   }
 
-  function render($values) {
+  function render(ResultRow $values) {
     if ($this->options['format'] == 'uc_price') {
       $value = $this->getValue($values);
 

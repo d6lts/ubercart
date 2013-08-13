@@ -8,6 +8,7 @@
 namespace Drupal\uc_product\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\Component\Annotation\PluginID;
 
 /**
@@ -22,7 +23,7 @@ class AddToCart extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render($values) {
+  function render(ResultRow $values) {
     $nid = $this->getValue($values);
     $node = node_load($nid);
     if (uc_product_is_product($node)) {

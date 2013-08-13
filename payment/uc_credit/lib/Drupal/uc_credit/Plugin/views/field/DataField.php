@@ -8,6 +8,7 @@
 namespace Drupal\uc_credit\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\Component\Annotation\PluginID;
 
 /**
@@ -22,7 +23,7 @@ class DataField extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render($values) {
+  function render(ResultRow $values) {
     // Initialize the encryption key and class.
     $key = uc_credit_encryption_key();
     $crypt = new UbercartEncryption();

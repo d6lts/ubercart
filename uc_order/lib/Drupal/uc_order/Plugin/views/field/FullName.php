@@ -10,6 +10,7 @@ namespace Drupal\uc_order\Plugin\views\field;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -82,7 +83,7 @@ class FullName extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render($values) {
+  function render(ResultRow $values) {
     $first = $this->getValue($values);
     $last = $this->getValue($values, 'last_name');
 
