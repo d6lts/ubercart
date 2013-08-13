@@ -766,6 +766,48 @@ class UbercartAttributeTest extends UbercartTestBase {
   }
 
   /**
+   * Tests that product in cart has the selected attribute option.
+   */
+  function testAttributeAddToCart() {
+    for ($display = 0; $display <= 3; ++$display) {
+      // Set up an attribute.
+      $data = array(
+        'display' => $display,
+      );
+      $attribute = $this->createAttribute($data);
+
+      if ($display) {
+        // Give the attribute an option.
+        $option = $this->createAttributeOption(array('aid' => $attribute->aid));
+      }
+
+      $attribute = uc_attribute_load($attribute->aid);
+
+      // Put the attribute on a product.
+      $product = $this->createProduct();
+      uc_attribute_subject_save($attribute, 'product', $product->nid, TRUE);
+
+      // Add the product to the cart.
+      if ($display == 3) {
+        $edit = array("attributes[$attribute->aid][$option->oid]" => $option->oid);
+      }
+      elseif (isset($option)) {
+        $edit = array("attributes[$attribute->aid]" => $option->oid);
+      }
+      else {
+        $option = new \stdClass();
+        $option->name = self::randomName();
+        $option->price = 0;
+        $edit = array("attributes[$attribute->aid]" => $option->name);
+      }
+
+      $this->drupalPost('node/' . $product->nid, $edit, t('Add to cart'));
+      $this->assertText("$attribute->label: $option->name", t('Option selected on cart item.'));
+      $this->assertText(uc_currency_format($product->sell_price + $option->price), t('Product has adjusted price.'));
+    }
+  }
+
+  /**
    * Creates a product adjustment SKU.
    *
    * @param $data
