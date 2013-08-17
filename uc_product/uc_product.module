@@ -1555,6 +1555,9 @@ function uc_product_add_default_image_field($type = NULL) {
       'field_name' => 'uc_product_image',
       'type' => 'image',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+        'display_field' => 0,
+      ),
     ));
     $field->save();
   }
