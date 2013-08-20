@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Plugin\Core\Entity\UcOrder.
+ * Definition of Drupal\uc_order\Entity\UcOrder.
  */
 
-namespace Drupal\uc_order\Plugin\Core\Entity;
+namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;

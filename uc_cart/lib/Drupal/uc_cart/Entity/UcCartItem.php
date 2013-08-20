@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\Plugin\Core\Entity\UcCartItem.
+ * Definition of Drupal\uc_cart\Entity\UcCartItem.
  */
 
-namespace Drupal\uc_cart\Plugin\Core\Entity;
+namespace Drupal\uc_cart\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;

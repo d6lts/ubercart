@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Plugin\Core\Entity\UcOrderProduct.
+ * Definition of Drupal\uc_order\Entity\UcOrderProduct.
  */
 
-namespace Drupal\uc_order\Plugin\Core\Entity;
+namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
