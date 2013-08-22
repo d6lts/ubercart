@@ -8,7 +8,6 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\DatabaseStorageController;
-use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for orders.
@@ -94,78 +93,6 @@ class UcOrderStorageController extends DatabaseStorageController {
     }
 
     parent::attachLoad($orders, $load_revision);
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preSave().
-   */
-  protected function preSave(EntityInterface $order) {
-    $order->order_total = uc_order_get_total($order);
-    $order->product_count = uc_order_get_product_count($order);
-    if (is_null($order->delivery_country) || $order->delivery_country == 0) {
-      $order->delivery_country = config('uc_store.settings')->get('address.country');
-    }
-    if (is_null($order->billing_country) || $order->billing_country == 0) {
-      $order->billing_country = config('uc_store.settings')->get('address.country');
-    }
-    $order->host = \Drupal::request()->getClientIp();
-    $order->modified = REQUEST_TIME;
-
-    uc_order_module_invoke('presave', $order, NULL);
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postSave().
-   */
-  protected function postSave(EntityInterface $order, $update) {
-    foreach ($order->products as $product) {
-      drupal_alter('uc_order_product', $product, $order);
-      uc_order_product_save($order->order_id, $product);
-    }
-
-    uc_order_module_invoke('save', $order, NULL);
-    $order->order_total = uc_order_get_total($order);
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::preDelete().
-   */
-  protected function preDelete($orders) {
-    foreach ($orders as $order_id => $order) {
-      uc_order_module_invoke('delete', $order, NULL);
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
-   */
-  protected function postDelete($orders) {
-    // Delete data from the appropriate Ubercart order tables.
-    $ids = array_keys($orders);
-    $result = \Drupal::entityQuery('uc_order_product')
-      ->condition('order_id', $ids, 'IN')
-      ->execute();
-    if (!empty($result)) {
-      $product_ids = array_keys($result);
-      uc_order_product_delete_multiple($product_ids);
-    }
-    db_delete('uc_order_comments')
-      ->condition('order_id', $ids, 'IN')
-      ->execute();
-    db_delete('uc_order_admin_comments')
-      ->condition('order_id', $ids, 'IN')
-      ->execute();
-    db_delete('uc_order_log')
-      ->condition('order_id', $ids, 'IN')
-      ->execute();
-
-    foreach ($orders as $order_id => $order) {
-      // Delete line items for the order.
-      uc_order_delete_line_item($order_id, TRUE);
-
-      // Log the action in the database.
-      watchdog('uc_order', 'Order @order_id deleted by user @uid.', array('@order_id' => $order_id, '@uid' => $GLOBALS['user']->uid));
-    }
   }
 
 }

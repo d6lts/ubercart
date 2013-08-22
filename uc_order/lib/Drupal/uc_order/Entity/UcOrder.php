@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
@@ -100,6 +101,78 @@ class UcOrder extends Entity implements ContentEntityInterface {
    */
   public function id() {
     return $this->order_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    $this->order_total = uc_order_get_total($this);
+    $this->product_count = uc_order_get_product_count($this);
+    if (is_null($this->delivery_country) || $this->delivery_country == 0) {
+      $this->delivery_country = config('uc_store.settings')->get('address.country');
+    }
+    if (is_null($this->billing_country) || $this->billing_country == 0) {
+      $this->billing_country = config('uc_store.settings')->get('address.country');
+    }
+    $this->host = \Drupal::request()->getClientIp();
+    $this->modified = REQUEST_TIME;
+
+    uc_order_module_invoke('presave', $this, NULL);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    foreach ($this->products as $product) {
+      drupal_alter('uc_order_product', $product, $this);
+      uc_order_product_save($this->order_id, $product);
+    }
+
+    uc_order_module_invoke('save', $this, NULL);
+    $this->order_total = uc_order_get_total($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  static public function preDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
+    foreach ($orders as $order_id => $order) {
+      uc_order_module_invoke('delete', $order, NULL);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  static public function postDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
+    // Delete data from the appropriate Ubercart order tables.
+    $ids = array_keys($orders);
+    $result = \Drupal::entityQuery('uc_order_product')
+      ->condition('order_id', $ids, 'IN')
+      ->execute();
+    if (!empty($result)) {
+      $product_ids = array_keys($result);
+      uc_order_product_delete_multiple($product_ids);
+    }
+    db_delete('uc_order_comments')
+      ->condition('order_id', $ids, 'IN')
+      ->execute();
+    db_delete('uc_order_admin_comments')
+      ->condition('order_id', $ids, 'IN')
+      ->execute();
+    db_delete('uc_order_log')
+      ->condition('order_id', $ids, 'IN')
+      ->execute();
+
+    foreach ($orders as $order_id => $order) {
+      // Delete line items for the order.
+      uc_order_delete_line_item($order_id, TRUE);
+
+      // Log the action in the database.
+      watchdog('uc_order', 'Order @order_id deleted by user @uid.', array('@order_id' => $order_id, '@uid' => $GLOBALS['user']->uid));
+    }
   }
 
 }
