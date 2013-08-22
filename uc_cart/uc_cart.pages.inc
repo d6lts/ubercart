@@ -84,7 +84,7 @@ function uc_cart_checkout() {
   }
 
   // Send anonymous users to login page when anonymous checkout is disabled.
-  if (!$user->uid && !variable_get('uc_checkout_anonymous', TRUE)) {
+  if ($user->isAnonymous() && !variable_get('uc_checkout_anonymous', TRUE)) {
     drupal_set_message(t('You must login before you can proceed to checkout.'));
     if (variable_get('user_register', 1) != 0) {
       drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => url('user/register', array('query' => drupal_get_destination())))));
@@ -99,7 +99,7 @@ function uc_cart_checkout() {
       // Don't use an existing order if it has changed status or owner, or if
       // there has been no activity for 10 minutes (to prevent identity theft).
       if (uc_order_status_data($order->order_status, 'state') != 'in_checkout' ||
-          ($user->uid > 0 && $user->uid != $order->uid) ||
+          ($user->isAuthenticated() && $user->id() != $order->uid) ||
           $order->modified < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
         if (uc_order_status_data($order->order_status, 'state') == 'in_checkout' && $order->modified < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
           // Mark expired orders as abandoned.
@@ -133,7 +133,7 @@ function uc_cart_checkout() {
     $rebuild = FALSE;
     if (!isset($order)) {
       // Create a new order if necessary.
-      $order = uc_order_new($user->uid);
+      $order = uc_order_new($user->id());
       $_SESSION['cart_order'] = $order->order_id;
       $rebuild = TRUE;
     }

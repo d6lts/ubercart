@@ -1525,12 +1525,11 @@ function uc_store_default_country() {
  *   account can not be found for $address, the default language code is
  *   returned.
  *
- * @see user_preferred_langcode()
  * @see language_default()
  */
 function uc_store_mail_recipient_langcode($address) {
   $account = user_load_by_mail(trim($address));
-  return $account ? user_preferred_langcode($account) : language_default()->langcode;
+  return $account ? $account->getPreferredLangcode() : language_default()->id;
 }
 
 /**

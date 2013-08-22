@@ -38,12 +38,12 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
 
   switch ($op) {
     case 'view':
-      if ($user->uid) {
-        $email = $user->mail;
+      if ($user->isAuthenticated()) {
+        $email = $user->getEmail();
         $description = t('Order information will be sent to your account e-mail listed below.');// . '<br />'
         $contents['primary_email'] = array('#type' => 'hidden', '#value' => $email);
         $contents['email_text'] = array(
-          '#markup' => '<div>' . t('<b>E-mail address:</b> @email (<a href="!url">edit</a>)', array('@email' => $email, '!url' => url('user/' . $user->uid . '/edit', array('query' => drupal_get_destination())))) . '</div>',
+          '#markup' => '<div>' . t('<b>E-mail address:</b> @email (<a href="!url">edit</a>)', array('@email' => $email, '!url' => url('user/' . $user->id() . '/edit', array('query' => drupal_get_destination())))) . '</div>',
         );
       }
       else {
@@ -57,7 +57,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
         );
       }
 
-      if (variable_get('uc_cart_email_validation', FALSE) && !$user->uid) {
+      if (variable_get('uc_cart_email_validation', FALSE) && $user->isAnonymous()) {
         $contents['primary_email_confirm'] = array(
           '#type' => 'textfield',
           '#title' => t('Confirm e-mail address'),
@@ -66,7 +66,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
         );
       }
 
-      if ($user->uid == 0) {
+      if ($user->isAnonymous()) {
         $contents['new_account'] = array();
 
         if (variable_get('uc_cart_new_account_name', FALSE)) {
@@ -116,13 +116,13 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
 
       $order->primary_email = $pane['primary_email'];
 
-      if (variable_get('uc_cart_email_validation', FALSE) && !$user->uid &&
+      if (variable_get('uc_cart_email_validation', FALSE) && $user->isAnonymous() &&
           $pane['primary_email'] !== $pane['primary_email_confirm']) {
         form_set_error('panes][customer][primary_email_confirm', t('The e-mail address did not match.'));
       }
 
       // Invalidate if an account already exists for this e-mail address, and the user is not logged into that account
-      if (!variable_get('uc_cart_mail_existing', TRUE) && $user->uid == 0 && !empty($pane['primary_email'])) {
+      if (!variable_get('uc_cart_mail_existing', TRUE) && $user->isAnonymous() && !empty($pane['primary_email'])) {
         if (db_query("SELECT uid FROM {users} WHERE mail LIKE :mail", array(':mail' => $pane['primary_email']))->fetchField() > 0) {
           form_set_error('panes][customer][primary_email', t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
         }
@@ -131,7 +131,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
       // If new users can specify names or passwords then...
       if ((variable_get('uc_cart_new_account_name', FALSE) ||
           variable_get('uc_cart_new_account_password', FALSE)) &&
-          $user->uid == 0) {
+          $user->isAnonymous()) {
         // Skip if an account already exists for this e-mail address.
         if (variable_get('uc_cart_mail_existing', TRUE) && db_query("SELECT uid FROM {users} WHERE mail LIKE :mail", array(':mail' => $pane['primary_email']))->fetchField() > 0) {
           drupal_set_message(t('An account already exists for your e-mail address. The new account details you entered will be disregarded.'));
@@ -162,8 +162,8 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
         }
       }
 
-      if ($user->uid) {
-        $order->uid = $user->uid;
+      if ($user->isAuthenticated()) {
+        $order->uid = $user->id();
       }
       return TRUE;
 
@@ -230,7 +230,7 @@ function uc_checkout_pane_address($pane, $op, $order, &$form_state, $description
         );
       }
 
-      if ($user->uid && $addresses = uc_select_addresses($user->uid, $pane)) {
+      if ($user->isAuthenticated() && $addresses = uc_select_addresses($user->id(), $pane)) {
         $contents['select_address'] = array(
           '#type' => 'select',
           '#title' => t('Saved addresses'),

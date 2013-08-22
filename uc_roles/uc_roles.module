@@ -341,14 +341,14 @@ function uc_roles_user_view($account, $view_mode) {
   global $user;
 
   // Kick out anonymous or other view modes.
-  if (!$user->uid || $view_mode != 'full') {
+  if ($user->isAnonymous() || $view_mode != 'full') {
     return;
   }
 
   // Only show if this user can access all role expirations, or if it's the same
   // user and the expirations are showing on the user pages.
   $show_expiration = variable_get('uc_roles_default_show_expiration', TRUE);
-  if (!user_access('view all role expirations') && ($user->uid != $account->uid || !$show_expiration)) {
+  if (!user_access('view all role expirations') && ($user->id() != $account->uid || !$show_expiration)) {
     return;
   }
 
@@ -1004,7 +1004,7 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
 
   // Echo the deletion only if something was actually deleted.
   if ($query->execute() && !$silent) {
-    if ($user->uid == $account->uid) {
+    if ($user->id() == $account->uid) {
       drupal_set_message(t('The expiration of your %role_name role has been deleted.', array('%role_name' => _uc_roles_get_name($rid))));
     }
     else {
@@ -1050,7 +1050,7 @@ function uc_roles_revoke(&$account, $rid, $silent = FALSE) {
   $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", array(':rid' => $rid))->fetchField();
 
   if (!$silent) {
-    if ($user->uid == $account->uid) {
+    if ($user->id() == $account->uid) {
       drupal_set_message(t('Your %role role has been revoked.', array('%role' => $role_name)));
     }
     else {
@@ -1119,7 +1119,7 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
   if (!$silent) {
     $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", array(':rid' => $rid))->fetchField();
 
-    if ($user->uid == $account->uid) {
+    if ($user->id() == $account->uid) {
       $message = t('You have been granted the %role role.', array('%role' => $role_name));
     }
     else {
@@ -1182,7 +1182,7 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
 
   if (!$silent) {
     $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", array(':rid' => $rid))->fetchField();
-    if ($user->uid == $account->uid) {
+    if ($user->id() == $account->uid) {
       $message = t('Your %role role has been renewed. It will expire on %date.', array('%role' => $role_name, '%date' => format_date($timestamp, 'short')));
     }
     else {

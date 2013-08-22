@@ -552,7 +552,7 @@ function uc_order_create_form_create_submit($form, &$form_state) {
       );
       $account = entity_create('user', $fields);
       $account->save();
-      $uid = $account->uid;
+      $uid = $account->id();
 
       if ($form_state['values']['customer']['sendmail']) {
         // Manually set the password so it appears in the e-mail.
@@ -567,7 +567,7 @@ function uc_order_create_form_create_submit($form, &$form_state) {
   }
 
   $order = uc_order_new($uid, 'post_checkout');
-  uc_order_comment_save($order->order_id, $user->uid, t('Order created by the administration.'), 'admin');
+  uc_order_comment_save($order->order_id, $user->id(), t('Order created by the administration.'), 'admin');
 
   $form_state['redirect'] = 'admin/store/orders/' . $order->order_id . '/edit';
 }
@@ -579,7 +579,7 @@ function uc_order_create_for_user($account) {
   global $user;
 
   $order = uc_order_new($account->uid, 'post_checkout');
-  uc_order_comment_save($order->order_id, $user->uid, t('Order created by the administration.'), 'admin');
+  uc_order_comment_save($order->order_id, $user->id(), t('Order created by the administration.'), 'admin');
 
   drupal_goto('admin/store/orders/' . $order->order_id . '/edit');
 }
@@ -726,9 +726,9 @@ function uc_order_select_customer($email = NULL) {
 
       $build['result'] = array(
         '#markup' => '<strong>' . t('Use this account now?') . '</strong><br />'
-          . t('User @uid - @mail', array('@uid' => $account->uid, '@mail' => $account->mail)) . ' <input type="button" '
-          . 'onclick="select_existing_customer(' . $account->uid . ', \''
-          . $account->mail . '\');" value="' . t('Apply') . '" /><br /><br /><hr /><br/>',
+          . t('User @uid - @mail', array('@uid' => $account->id(), '@mail' => $account->getEmail())) . ' <input type="button" '
+          . 'onclick="select_existing_customer(' . $account->id() . ', \''
+          . $account->getEmail() . '\');" value="' . t('Apply') . '" /><br /><br /><hr /><br/>',
       );
     }
   }

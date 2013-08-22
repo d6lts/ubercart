@@ -413,7 +413,7 @@ function uc_order_can_view_order($account, $order, $view_invoice = FALSE) {
   $access = user_access('view all orders');
 
   // If the user is the current user and is not anonymous, also allow the "own" permissions.
-  if ($user->uid && $user->uid == $account->uid) {
+  if ($user->isAuthenticated() && $user->id() == $account->id()) {
     if ($view_invoice) {
       $access = $access || user_access('view own invoices');
     }
@@ -423,7 +423,7 @@ function uc_order_can_view_order($account, $order, $view_invoice = FALSE) {
   }
 
   // The order must also be owned by the user specified in the URL.
-  $access = $access && $account->uid == $order->uid;
+  $access = $access && $account->id() == $order->uid;
 
   return $access;
 }
@@ -460,7 +460,7 @@ function uc_order_field_extra_fields() {
 function uc_order_user_view($account, $view_mode) {
   global $user;
 
-  if ($view_mode == 'full' && $user->uid && (($user->uid == $account->uid && user_access('view own orders')) || user_access('view all orders'))) {
+  if ($view_mode == 'full' && $user->isAuthenticated() && (($user->id() == $account->uid && user_access('view own orders')) || user_access('view all orders'))) {
     $account->content['orders'] = array(
       '#type' => 'item',
       '#title' => t('Orders'),
@@ -1205,7 +1205,7 @@ function uc_order_log_changes($order_id, $changes) {
   db_insert('uc_order_log')
     ->fields(array(
       'order_id' => $order_id,
-      'uid' => $user->uid,
+      'uid' => $user->id(),
       'changes' => theme('item_list', array('items' => $items)),
       'created' => REQUEST_TIME,
     ))
@@ -1689,16 +1689,16 @@ function uc_order_actions($order, $icon_html = FALSE) {
       'weight' => 5,
     );
   }
-  elseif (user_access('view own orders') && $order->uid == $user->uid) {
+  elseif (user_access('view own orders') && $order->uid == $user->id()) {
     $actions['view'] = array(
       'title' => t('View'),
-      'href' => 'user/' . $user->uid . '/orders/' . $order->order_id,
+      'href' => 'user/' . $user->id() . '/orders/' . $order->order_id,
       'weight' => 0,
     );
     if (user_access('view own invoices')) {
       $actions['print'] = array(
         'title' => t('Print'),
-        'href' => 'user/' . $user->uid . '/orders/' . $order->order_id . '/print',
+        'href' => 'user/' . $user->id() . '/orders/' . $order->order_id . '/print',
         'weight' => 5,
       );
     }
