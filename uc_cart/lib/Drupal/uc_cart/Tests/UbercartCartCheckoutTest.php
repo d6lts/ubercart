@@ -216,7 +216,11 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->assertFalse(strpos($mail['body'], $new_user->pass_raw) !== FALSE, 'Mail body does not contain password.');
 
     // Check that the password works.
-    $this->drupalLogin($new_user);
+    $edit = array(
+      'name' => $new_user->name,
+      'pass' => $new_user->pass_raw
+    );
+    $this->drupalPost('user', $edit, t('Log in'));
 
     // Test again as authenticated user.
     $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
@@ -251,8 +255,11 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->assertText($new_user->pass_raw, 'Password is shown on screen.');
 
     // Check that the password works.
-    $this->drupalLogout();
-    $this->drupalLogin($new_user);
+    $edit = array(
+      'name' => $new_user->name,
+      'pass' => $new_user->pass_raw
+    );
+    $this->drupalPost('user', $edit, t('Log in'));
 
     // Test again with an existing email address
     $this->drupalLogout();
