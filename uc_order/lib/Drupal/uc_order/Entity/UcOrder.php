@@ -7,11 +7,12 @@
 
 namespace Drupal\uc_order\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\uc_order\UcOrderBCDecorator;
+use Drupal\uc_order\UcOrderInterface;
 
 /**
  * Defines the order entity class.
@@ -33,7 +34,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class UcOrder extends Entity implements ContentEntityInterface {
+class UcOrder extends EntityNG implements UcOrderInterface {
 
   /**
    * The order ID.
@@ -97,41 +98,95 @@ class UcOrder extends Entity implements ContentEntityInterface {
   public $modified;
 
   /**
+   * Overrides Drupal\Core\Entity\EntityNG::init().
+   */
+  public function init() {
+    parent::init();
+
+    // We unset all defined properties, so magic getters apply.
+    unset($this->order_id);
+    unset($this->uid);
+    unset($this->currency);
+    unset($this->order_status);
+    unset($this->order_total);
+    unset($this->primary_email);
+    unset($this->delivery_first_name);
+    unset($this->delivery_last_name);
+    unset($this->delivery_phone);
+    unset($this->delivery_company);
+    unset($this->delivery_street1);
+    unset($this->delivery_street2);
+    unset($this->delivery_city);
+    unset($this->delivery_zone);
+    unset($this->delivery_postal_code);
+    unset($this->delivery_country);
+    unset($this->billing_first_name);
+    unset($this->billing_last_name);
+    unset($this->billing_phone);
+    unset($this->billing_company);
+    unset($this->billing_street1);
+    unset($this->billing_street2);
+    unset($this->billing_city);
+    unset($this->billing_zone);
+    unset($this->billing_postal_code);
+    unset($this->billing_country);
+    // unset($this->products);
+    // unset($this->line_items);
+    unset($this->payment_method);
+    unset($this->data);
+    unset($this->created);
+    unset($this->modified);
+  }
+
+  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
-    return $this->order_id;
+    return $this->get('order_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBCEntity() {
+    if (!isset($this->bcEntity)) {
+      $this->getPropertyDefinitions();
+      $this->bcEntity = new UcOrderBCDecorator($this, $this->fieldDefinitions);
+    }
+    return $this->bcEntity;
   }
 
   /**
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
-    $this->order_total = uc_order_get_total($this);
-    $this->product_count = uc_order_get_product_count($this);
-    if (is_null($this->delivery_country) || $this->delivery_country == 0) {
-      $this->delivery_country = config('uc_store.settings')->get('address.country');
+    $this->order_total->value = uc_order_get_total($this);
+    $this->product_count->value = uc_order_get_product_count($this);
+    if (is_null($this->delivery_country->value) || $this->delivery_country->value == 0) {
+      $this->delivery_country->value = config('uc_store.settings')->get('address.country');
     }
-    if (is_null($this->billing_country) || $this->billing_country == 0) {
-      $this->billing_country = config('uc_store.settings')->get('address.country');
+    if (is_null($this->billing_country->value) || $this->billing_country->value == 0) {
+      $this->billing_country->value = config('uc_store.settings')->get('address.country');
     }
-    $this->host = \Drupal::request()->getClientIp();
-    $this->modified = REQUEST_TIME;
+    $this->host->value = \Drupal::request()->getClientIp();
+    $this->modified->value = REQUEST_TIME;
 
-    uc_order_module_invoke('presave', $this, NULL);
+    $order = $this->getBCEntity();
+    uc_order_module_invoke('presave', $order, NULL);
   }
 
   /**
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    foreach ($this->products as $product) {
+    foreach ((array) $this->getBCEntity()->products as $product) {
       drupal_alter('uc_order_product', $product, $this);
-      uc_order_product_save($this->order_id, $product);
+      uc_order_product_save($this->order_id->value, $product);
     }
 
-    uc_order_module_invoke('save', $this, NULL);
-    $this->order_total = uc_order_get_total($this);
+    $order = $this->getBCEntity();
+    uc_order_module_invoke('save', $order, NULL);
+    $this->order_total->value = uc_order_get_total($this);
   }
 
   /**
@@ -139,6 +194,7 @@ class UcOrder extends Entity implements ContentEntityInterface {
    */
   static public function preDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
     foreach ($orders as $order_id => $order) {
+      $order = $order->getBCEntity();
       uc_order_module_invoke('delete', $order, NULL);
     }
   }

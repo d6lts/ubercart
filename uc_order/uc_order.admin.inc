@@ -940,7 +940,8 @@ function uc_order_edit_form_submit($form, &$form_state) {
   $order = uc_order_load($form_state['values']['order_id']);
   $log = array();
 
-  foreach (get_object_vars($form_state['order']) as $key => $value) {
+  foreach (array_keys($form_state['order']->getPropertyDefinitions()) as $key) {
+    $value = $form_state['order']->$key;
     if (!isset($order->$key) || $order->$key !== $value) {
       if (!is_array($value)) {
         $log[$key] = array('old' => $order->$key, 'new' => $value);

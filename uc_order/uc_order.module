@@ -720,14 +720,11 @@ function uc_order_new($uid = 0, $state = 'in_checkout') {
   $order = entity_create('uc_order', array(
     'uid' => $uid,
     'order_status' => uc_order_state_default($state),
-  ));
+  ))->getBCEntity();
 
-  module_invoke_all('entity_presave', $order, 'uc_order');
-
-  drupal_write_record('uc_orders', $order);
+  $order->save();
 
   uc_order_module_invoke('new', $order, NULL);
-  module_invoke_all('entity_insert', $order, 'uc_order');
 
   return $order;
 }
@@ -936,7 +933,8 @@ function uc_order_view_invoice($order, $print = FALSE) {
  *   A fully-populated order entity, or FALSE if the order is not found.
  */
 function uc_order_load($order_id, $reset = FALSE) {
-  return entity_load('uc_order', $order_id, $reset);
+  $entity = entity_load('uc_order', $order_id, $reset);
+  return $entity ? $entity->getBCEntity() : NULL;
 }
 
 /**
