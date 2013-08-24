@@ -305,7 +305,7 @@ function uc_store_process_address_field($element, $form_state) {
   }
   elseif (is_array($element['#value']) || is_object($element['#value'])) {
     // Use provided default value.
-    $value = (array) $element['#value'];
+    $value = $element['#value'];
   }
   else {
     $value = array();
@@ -316,11 +316,18 @@ function uc_store_process_address_field($element, $form_state) {
     $countries[$country_id] = t($country_name);
   }
   natcasesort($countries);
+  $country_keys = array_keys($countries);
 
   // Force the selected country to a valid one, so the zone dropdown matches.
-  if (isset($value[$prefix . 'country']) && !isset($countries[$value[$prefix . 'country']])) {
-    $country_keys = array_keys($countries);
-    $value[$prefix . 'country'] = $country_keys[0];
+  if (is_object($value)) {
+    if (isset($value->{$prefix . 'country'}) && !isset($countries[$value->{$prefix . 'country'}])) {
+      $value->{$prefix . 'country'} = $country_keys[0];
+    }
+  }
+  else {
+    if (isset($value[$prefix . 'country']) && !isset($countries[$value[$prefix . 'country']])) {
+      $value[$prefix . 'country'] = $country_keys[0];
+    }
   }
 
   // Iterating on the UcAddress object excludes non-public properties, which
@@ -328,7 +335,8 @@ function uc_store_process_address_field($element, $form_state) {
   $address = new UcAddress();
   foreach ($address as $base_field => $field_value) {
     $field = $prefix . $base_field;
-    if (!isset($value[$field])) {
+    if (is_object($value) ? !isset($value->$field) : !isset($value[$field])) {
+    // if (!isset($value[$field])) {
       continue;
     }
 
@@ -355,7 +363,8 @@ function uc_store_process_address_field($element, $form_state) {
           '#suffix' => '</div>',
         );
 
-        $zones = db_query("SELECT zone_id, zone_name FROM {uc_zones} WHERE zone_country_id = :country", array(':country' => $value[$prefix . 'country']))->fetchAllKeyed();
+        $country_id = is_object($value) ? $value->{$prefix . 'country'} : $value[$prefix . 'country'];
+        $zones = db_query("SELECT zone_id, zone_name FROM {uc_zones} WHERE zone_country_id = :country", array(':country' => $country_id))->fetchAllKeyed();
         if (!empty($zones)) {
           natcasesort($zones);
           $subelement += array(
@@ -404,7 +413,7 @@ function uc_store_process_address_field($element, $form_state) {
     // Set common values for all address fields.
     $element[$field] = $subelement + array(
       '#title' => $labels[$base_field] ? $labels[$base_field] : '&nbsp;',
-      '#default_value' => $value[$field],
+      '#default_value' => is_object($value) ? $value->$field : $value[$field],
       '#parents' => array_merge(array_slice($element['#parents'], 0, -1), array($field)),
       '#pre_render' => array_merge(array('uc_store_pre_render_address_field'), element_info_property('textfield', '#pre_render', array())),
       '#access' => $element['#hidden'] ? FALSE : uc_address_field_enabled($base_field),
