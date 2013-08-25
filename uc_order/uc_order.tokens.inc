@@ -146,8 +146,8 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
   if ($type == 'uc_order' && !empty($data['uc_order'])) {
 
     $order = $data['uc_order'];
-    $path = 'user/' . $order->uid . '/orders/' . $order->order_id;
-    $admin_path = 'admin/store/orders/' . $order->order_id;
+    $path = 'user/' . $order->uid . '/orders/' . $order->id();
+    $admin_path = 'admin/store/orders/' . $order->id();
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
@@ -162,7 +162,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'order-number':
-          $replacements[$original] = $order->order_id;
+          $replacements[$original] = $order->id();
           break;
 
         case 'url':
@@ -170,7 +170,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'link':
-          $replacements[$original] = l($order->order_id, url($path, array('absolute' => TRUE)));
+          $replacements[$original] = l($order->id(), url($path, array('absolute' => TRUE)));
           break;
 
         case 'admin-url':
@@ -178,7 +178,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'admin-link':
-          $replacements[$original] = l($order->order_id, url($admin_path, array('absolute' => TRUE)));
+          $replacements[$original] = l($order->id(), url($admin_path, array('absolute' => TRUE)));
           break;
 
         case 'subtotal':
@@ -268,7 +268,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'comments':
-          $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid = :uid ORDER BY created DESC", 0, 1, array(':order_id' => $order->order_id, ':uid' => 0))->fetchField();
+          $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid = :uid ORDER BY created DESC", 0, 1, array(':order_id' => $order->id(), ':uid' => 0))->fetchField();
           if ($sanitize) {
             $result = check_plain($result);
           }
@@ -276,7 +276,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'last-comment':
-          $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid > :uid ORDER BY created DESC", 0, 1, array(':order_id' => $order->order_id, ':uid' => 0))->fetchField();
+          $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid > :uid ORDER BY created DESC", 0, 1, array(':order_id' => $order->id(), ':uid' => 0))->fetchField();
           if ($sanitize) {
             $result = check_plain($result);
           }

@@ -399,7 +399,7 @@ function uc_cybersource_hop_complete($order) {
   // user tried to adjust the order on this side while at PayPal. If it was a
   // legitimate checkout, the CyberSource POST will still register, so the
   // gets processed correctly. We'll leave an ambiguous message just in case.
-  if (intval($_SESSION['cart_order']) != $order->order_id) {
+  if (intval($_SESSION['cart_order']) != $order->id()) {
     drupal_set_message(t('Thank you for your order! We will be notified by CyberSource that we have received your payment.'));
     drupal_goto('cart');
   }
@@ -473,7 +473,7 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
   $data['amount'] = $amount;
   $data['currency'] = $currency;
   $data['merchantID'] = $merchantID;
-  $data['orderNumber'] = $order->order_id;
+  $data['orderNumber'] = $order->id();
   $data['orderPage_timestamp'] = $timestamp;
   $data['orderPage_ignoreAVS'] = variable_get('uc_cybersource_hop_avs', 'true') == 'true' ? 'false' : 'true';
   $data['orderPage_signaturePublic'] = $pub_digest;
@@ -485,10 +485,10 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
   // CyberSource posts payment confirmation to this URL.
   $data['orderPage_merchantURLPostAddress']= url('cybersource/hop-post', array('absolute' => TRUE));
   $data['orderPage_buyButtonText'] = t('Checkout');
-  $receipt_url = url('cybersource/hop-complete/' . $order->order_id, array('absolute' => TRUE));
+  $receipt_url = url('cybersource/hop-complete/' . $order->id(), array('absolute' => TRUE));
   $data['orderPage_receiptResponseURL'] = $receipt_url;
   $data['orderPage_buyButtonText'] = variable_get('uc_cybersource_cs_hop_button_text', t('Process payment'));
-  $comments = t('Order @order-id at @store-name', array('@order-id' => $order->order_id, '@store-name' => uc_store_name()));
+  $comments = t('Order @order-id at @store-name', array('@order-id' => $order->id(), '@store-name' => uc_store_name()));
   $alter_data['order'] = $order;
   $alter_data['comments'] = $comments;
   $alter_data['merchant_fields'] = array();
@@ -634,7 +634,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
   $request['amount'] = $amount;
   $request['currency'] = $currency;
   $request['merchantID'] = $merchantID;
-  $request['orderNumber'] = $order->order_id;
+  $request['orderNumber'] = $order->id();
   $request['orderPage_timestamp'] = $timestamp;
   $request['orderPage_ignoreAVS'] = variable_get('uc_cybersource_avs', 'true') == 'true' ? 'false' : 'true';
   $request['orderPage_signaturePublic'] = $pub_digest;
@@ -687,7 +687,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
       $o_comment .= t('<br /><b>CVV:</b> !cvv', array('!cvv' => _uc_cybersoure_parse_cvv_code($nvp['ccAuthReply_cvCode'])));
       $p_comment .= t(', CVV: @cvv', array('@cvv' => $nvp['ccAuthReply_cvCode']));
     }
-    uc_order_comment_save($order->order_id, $user->uid, $o_comment, 'admin');
+    uc_order_comment_save($order->id(), $user->uid, $o_comment, 'admin');
 
     if ($nvp['decision'] == 'ACCEPT') {
       $result = array(
@@ -754,7 +754,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
     // Create the request with some meta data.
     $request = new stdClass();
     $request->merchantID = $login['merchant_id'];
-    $request->merchantReferenceCode = $order->order_id;
+    $request->merchantReferenceCode = $order->id();
     $request->clientLibrary = 'PHP';
     $request->clientLibraryVersion = phpversion();
     $request->clientEnvironment = php_uname();
@@ -919,7 +919,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
       $o_comment .= '<br />' . t('<b>CVV:</b> @cvv', array('@cvv' => _uc_cybersoure_parse_cvv_code($reply->ccAuthReply->cvCode)));
       $p_comment .= t(', CVV: @cvv', array('@cvv' => $reply->ccAuthReply->cvCode));
     }
-    uc_order_comment_save($order->order_id, $user->uid, $o_comment, 'admin');
+    uc_order_comment_save($order->id(), $user->uid, $o_comment, 'admin');
 
     // Store the subscription ID if one was created.
     if (isset($reply->paySubscriptionCreateReply)) {
@@ -928,12 +928,12 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
         $id = $reply->paySubscriptionCreateReply->subscriptionID;
 
         // Save the subscription ID to the order's data array.
-        $order->data = uc_credit_log_reference($order->order_id, $id, $order->payment_details['cc_number']);
+        $order->data = uc_credit_log_reference($order->id(), $id, $order->payment_details['cc_number']);
 
-        uc_order_comment_save($order->order_id, 0, t('<b>CyberSource profile created.</b><br /><b>Subscription ID:</b> @id', array('@id' => $id)), 'admin');
+        uc_order_comment_save($order->id(), 0, t('<b>CyberSource profile created.</b><br /><b>Subscription ID:</b> @id', array('@id' => $id)), 'admin');
       }
       else {
-        uc_order_comment_save($order->order_id, 0, t('<b>Attempt to create CyberSource profile failed.</b><br /><b>Reason:</b> @code', array('@code' => $reply->paySubscriptionCreateReply->reasonCode)), 'admin');
+        uc_order_comment_save($order->id(), 0, t('<b>Attempt to create CyberSource profile failed.</b><br /><b>Reason:</b> @code', array('@code' => $reply->paySubscriptionCreateReply->reasonCode)), 'admin');
       }
     }
 
@@ -949,7 +949,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
       // If this was an authorization only transaction...
       if ($data['txn_type'] == UC_CREDIT_AUTH_ONLY) {
         // Log the authorization to the order.
-        $order->data = uc_credit_log_authorization($order->order_id, $reply->requestID, $amount);
+        $order->data = uc_credit_log_authorization($order->id(), $reply->requestID, $amount);
 
         // Add the request token associated with the request ID.
         $order->data['cybersource'][$reply->requestID] = $reply->requestToken;
@@ -957,11 +957,11 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
         // Save the updated data array to the database.
         db_update('uc_orders')
           ->fields(array('data' => serialize($order->data)))
-          ->condition('order_id', $order->order_id)
+          ->condition('order_id', $order->id())
           ->execute();
       }
       elseif ($data['txn_type'] == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
-        uc_credit_log_prior_auth_capture($order->order_id, $data['auth_id']);
+        uc_credit_log_prior_auth_capture($order->id(), $data['auth_id']);
       }
     }
     else {
@@ -1060,7 +1060,7 @@ function uc_cybersource_uc_calculate_tax($order) {
     // Create the request with some meta data.
     $request = new stdClass();
     $request->merchantID = $login['merchant_id'];
-    $request->merchantReferenceCode = $order->order_id;
+    $request->merchantReferenceCode = $order->id();
     $request->clientLibrary = 'PHP';
     $request->clientLibraryVersion = phpversion();
     $request->clientEnvironment = php_uname();
@@ -1224,11 +1224,11 @@ function uc_cybersource_uc_calculate_tax($order) {
       }
     }
     else {
-      watchdog('uc_cybersource', 'Attempted to calculate taxes failed for order @order_id - reason @code', array('@order_id' => $order->order_id, '@code' => $reply->reasonCode), WATCHDOG_ERROR);
+      watchdog('uc_cybersource', 'Attempted to calculate taxes failed for order @order_id - reason @code', array('@order_id' => $order->id(), '@code' => $reply->reasonCode), WATCHDOG_ERROR);
     }
   }
   else {
-    watchdog('uc_cybersource', 'Attempted to calculate taxes failed for order @order_id. No response returned from CyberSource.', array('@order_id' => $order->order_id), WATCHDOG_ERROR);
+    watchdog('uc_cybersource', 'Attempted to calculate taxes failed for order @order_id. No response returned from CyberSource.', array('@order_id' => $order->id()), WATCHDOG_ERROR);
     $result = array();
   }
 

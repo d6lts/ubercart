@@ -34,7 +34,7 @@ function uc_shipping_tokens($type, $tokens, $data = array(), $options = array())
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'tracking-number':
-          $result = db_query('SELECT tracking_number FROM {uc_shipments} WHERE order_id = :order_id', array(':order_id' => $order->order_id));
+          $result = db_query('SELECT tracking_number FROM {uc_shipments} WHERE order_id = :order_id', array(':order_id' => $order->id()));
           $tracking_numbers = array();
           foreach ($result as $record) {
             if ((isset($record->tracking_number)) && (!empty($record->tracking_number))) {

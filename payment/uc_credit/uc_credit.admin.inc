@@ -370,7 +370,7 @@ function uc_credit_terminal_form($form, &$form_state, $order, $lock_amount = FAL
   // Put the order ID in the form.
   $form['order_id'] = array(
     '#type' => 'hidden',
-    '#value' => $order->order_id,
+    '#value' => $order->id(),
   );
 
   $balance = uc_payment_balance($order);
@@ -486,7 +486,7 @@ function uc_credit_terminal_form($form, &$form_state, $order, $lock_amount = FAL
   $options = array();
 
   // Log a reference to the order for testing.
-  // $order->data = uc_credit_log_reference($order->order_id, substr(md5(REQUEST_TIME), 0, 16), '4111111111111111');
+  // $order->data = uc_credit_log_reference($order->id(), substr(md5(REQUEST_TIME), 0, 16), '4111111111111111');
 
   if (isset($order->data['cc_txns']['references'])) {
     foreach ($order->data['cc_txns']['references'] as $ref_id => $data) {

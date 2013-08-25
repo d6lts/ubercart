@@ -168,7 +168,7 @@ function uc_shipping_order_access($order) {
  * Access callback for the new shipment page.
  */
 function uc_shipping_new_shipment_access($order) {
-  return uc_shipping_order_access($order) && db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", array(':id' => $order->order_id))->fetchField();
+  return uc_shipping_order_access($order) && db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", array(':id' => $order->id()))->fetchField();
 }
 
 /**
@@ -177,7 +177,7 @@ function uc_shipping_new_shipment_access($order) {
 function uc_shipping_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   if ($root_path == 'admin/store/orders/%/shipments') {
     $order = $router_item['page_arguments'][0];
-    $item = menu_get_item('admin/store/orders/' . $order->order_id . '/packages/new');
+    $item = menu_get_item('admin/store/orders/' . $order->id() . '/packages/new');
     if ($item['access']) {
       $data['actions']['output'][] = array(
         '#theme' => 'menu_local_action',
@@ -315,18 +315,18 @@ function uc_shipping_uc_order_pane() {
 function uc_shipping_uc_order_actions($order) {
   $actions = array();
   if (user_access('fulfill orders')) {
-    $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", array(':id' => $order->order_id, ':data' => '%s:9:\"shippable\";s:1:\"1\";%'));
+    $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", array(':id' => $order->id(), ':data' => '%s:9:\"shippable\";s:1:\"1\";%'));
     if ($result->fetchField()) {
       $actions['package'] = array(
         'title' => t('Package'),
-        'href' => 'admin/store/orders/' . $order->order_id . '/packages',
+        'href' => 'admin/store/orders/' . $order->id() . '/packages',
         'weight' => 12,
       );
-      $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->order_id));
+      $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->id()));
       if ($result->fetchField()) {
         $actions['ship'] = array(
           'title' => t('Ship'),
-          'href' => 'admin/store/orders/' . $order->order_id . '/shipments',
+          'href' => 'admin/store/orders/' . $order->id() . '/shipments',
           'weight' => 13,
         );
       }
@@ -649,7 +649,7 @@ function uc_shipping_order_pane_packages($op, $order) {
     case 'view':
     case 'customer':
       $tracking = array();
-      $result = db_query("SELECT sid FROM {uc_shipments} WHERE order_id = :id", array(':id' => $order->order_id));
+      $result = db_query("SELECT sid FROM {uc_shipments} WHERE order_id = :id", array(':id' => $order->id()));
       foreach ($result as $shipment) {
         $shipment = uc_shipping_shipment_load($shipment->sid);
         if ($shipment->tracking_number) {
@@ -832,7 +832,7 @@ function uc_shipping_uc_order($op, $order, $arg2) {
       // Find and check the shipments for tracking numbers.
       // {uc_shipments}.tracking_number is NOT NULL.
       $shipment_count = db_select('uc_shipments')
-        ->condition('order_id', $order->order_id)
+        ->condition('order_id', $order->id())
         ->condition('tracking_number', '', '<>')
         ->countQuery()
         ->execute()
@@ -843,7 +843,7 @@ function uc_shipping_uc_order($op, $order, $arg2) {
 
       // Find and check the packages.
       $package_count = db_select('uc_packages')
-        ->condition('order_id', $order->order_id)
+        ->condition('order_id', $order->id())
         ->isNotNull('tracking_number')
         ->condition('tracking_number', '', '<>')
         ->countQuery()
@@ -860,7 +860,7 @@ function uc_shipping_uc_order($op, $order, $arg2) {
       // Find and delete the shipments.
       $shipment_ids = db_select('uc_shipments')
         ->fields(NULL, array('sid'))
-        ->condition('order_id', $order->order_id)
+        ->condition('order_id', $order->id())
         ->execute()
         ->fetchCol();
       foreach ($shipment_ids as $sid) {
@@ -870,7 +870,7 @@ function uc_shipping_uc_order($op, $order, $arg2) {
       // Find and delete the packages.
       $package_ids = db_select('uc_packages')
         ->fields(NULL, array('package_id'))
-        ->condition('order_id', $order->order_id)
+        ->condition('order_id', $order->id())
         ->execute()
         ->fetchCol();
       foreach ($package_ids as $pid) {

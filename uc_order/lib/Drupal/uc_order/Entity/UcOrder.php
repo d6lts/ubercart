@@ -37,13 +37,6 @@ use Drupal\uc_order\UcOrderInterface;
 class UcOrder extends EntityNG implements UcOrderInterface {
 
   /**
-   * The order ID.
-   *
-   * @var integer
-   */
-  public $order_id;
-
-  /**
    * The order owner's user ID.
    *
    * @var integer
@@ -104,7 +97,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
     parent::init();
 
     // We unset all defined properties, so magic getters apply.
-    unset($this->order_id);
     unset($this->uid);
     unset($this->currency);
     unset($this->order_status);
@@ -181,7 +173,7 @@ class UcOrder extends EntityNG implements UcOrderInterface {
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
     foreach ((array) $this->getBCEntity()->products as $product) {
       drupal_alter('uc_order_product', $product, $this);
-      uc_order_product_save($this->order_id->value, $product);
+      uc_order_product_save($this->id(), $product);
     }
 
     $order = $this->getBCEntity();

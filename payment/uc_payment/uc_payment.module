@@ -155,14 +155,14 @@ function uc_payment_uc_order($op, $order) {
       break;
 
     case 'can_delete':
-      if (uc_payment_load_payments($order->order_id) !== FALSE) {
+      if (uc_payment_load_payments($order->id()) !== FALSE) {
         return FALSE;
       }
       break;
 
     case 'delete':
       db_delete('uc_payment_receipts')
-        ->condition('order_id', $order->order_id)
+        ->condition('order_id', $order->id())
         ->execute();
 
       // Call each payment method to delete method-specific data from the
@@ -278,7 +278,7 @@ function uc_payment_method_free_order($op, &$order) {
         ));
       }
 
-      uc_payment_enter($order->order_id, 'free_order', 0, 0, NULL, t('Checkout completed for a free order.'));
+      uc_payment_enter($order->id(), 'free_order', 0, 0, NULL, t('Checkout completed for a free order.'));
   }
 }
 
@@ -475,7 +475,7 @@ function uc_payment_delete($receipt_id) {
  */
 function uc_payment_balance($order) {
   $total = $order->order_total;
-  $payments = uc_payment_load_payments($order->order_id);
+  $payments = uc_payment_load_payments($order->id());
 
   if ($payments === FALSE) {
     return $total;

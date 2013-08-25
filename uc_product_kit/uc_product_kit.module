@@ -989,7 +989,7 @@ function uc_product_kit_uc_order_product_alter(&$product, $order) {
     drupal_alter('uc_order_product', $kit_product, $order);
 
     // Save the individual item to the order.
-    uc_order_product_save($order->order_id, $kit_product);
+    uc_order_product_save($order->id(), $kit_product);
   }
 
   // Don't save the base kit node, though.

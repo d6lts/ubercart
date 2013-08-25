@@ -195,18 +195,18 @@ function hook_uc_order($op, $order, $arg2) {
 function hook_uc_order_actions($order) {
   $actions = array();
   if (user_access('fulfill orders')) {
-    $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", array(':id' => $order->order_id, ':data' => '%s:9:\"shippable\";s:1:\"1\";%'));
+    $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", array(':id' => $order->id(), ':data' => '%s:9:\"shippable\";s:1:\"1\";%'));
     if ($result->fetchField()) {
       $actions['package'] = array(
         'title' => t('Package'),
-        'href' => 'admin/store/orders/' . $order->order_id . '/packages',
+        'href' => 'admin/store/orders/' . $order->id() . '/packages',
         'weight' => 12,
       );
-      $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->order_id));
+      $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->id()));
       if ($result->fetchField()) {
         $actions['ship'] = array(
           'title' => t('Ship'),
-          'href' => 'admin/store/orders/' . $order->order_id . '/shipments',
+          'href' => 'admin/store/orders/' . $order->id() . '/shipments',
           'weight' => 13,
         );
       }
@@ -331,7 +331,7 @@ function uc_order_pane_callback($op, $order, &$form = NULL, &$form_state = NULL)
 
   switch ($op) {
     case 'view':
-      $comments = uc_order_comments_load($order->order_id, TRUE);
+      $comments = uc_order_comments_load($order->id(), TRUE);
       return tapir_get_table('uc_op_admin_comments_view_table', $comments);
 
     case 'edit-form':

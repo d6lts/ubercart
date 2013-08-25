@@ -262,7 +262,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'DESC' => substr($desc, 0, 127),
       'INVNUM' => $order_id . '-' . REQUEST_TIME,
       'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
-      'NOTIFYURL' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
+      'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
       'EMAIL' => substr($order->primary_email, 0, 127),
       'PHONENUM' => substr($order->billing_phone, 0, 20),
     );
@@ -327,7 +327,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       // Log the IPN to the database.
       db_insert('uc_payment_paypal_ipn')
         ->fields(array(
-          'order_id' => $order->order_id,
+          'order_id' => $order->id(),
           'txn_id' => $nvp_response['TRANSACTIONID'],
           'txn_type' => 'web_accept',
           'mc_gross' => $amount,
@@ -387,7 +387,7 @@ function _uc_paypal_build_error_messages($nvp_response) {
 function uc_payment_method_paypal_wps($op, &$order) {
   switch ($op) {
     case 'order-view':
-      $txn_id = db_query("SELECT txn_id FROM {uc_payment_paypal_ipn} WHERE order_id = :id ORDER BY received ASC", array(':id' => $order->order_id))->fetchField();
+      $txn_id = db_query("SELECT txn_id FROM {uc_payment_paypal_ipn} WHERE order_id = :id ORDER BY received ASC", array(':id' => $order->id()))->fetchField();
       if (empty($txn_id)) {
         $txn_id = t('Unknown');
       }
@@ -493,7 +493,7 @@ function uc_payment_method_paypal_wps($op, &$order) {
 function uc_payment_method_paypal_ec($op, &$order) {
   switch ($op) {
     case 'order-view':
-      $txn_id = db_query("SELECT txn_id FROM {uc_payment_paypal_ipn} WHERE order_id = :id ORDER BY received ASC", array(':id' => $order->order_id))->fetchField();
+      $txn_id = db_query("SELECT txn_id FROM {uc_payment_paypal_ipn} WHERE order_id = :id ORDER BY received ASC", array(':id' => $order->id()))->fetchField();
       if (empty($txn_id)) {
         $txn_id = t('Unknown');
       }
@@ -635,11 +635,11 @@ function uc_paypal_ec_checkout($form, &$form_state) {
     'CURRENCYCODE' => variable_get('uc_paypal_wpp_currency', 'USD'),
     'PAYMENTACTION' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture') == 'authorize' ? 'Authorization' : 'Sale',
     'DESC' => substr($desc, 0, 127),
-    'INVNUM' => $order->order_id . '-' . REQUEST_TIME,
+    'INVNUM' => $order->id() . '-' . REQUEST_TIME,
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'ADDROVERRIDE' => 1,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
+    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
     'SHIPTONAME' => substr($order->delivery_first_name . ' ' . $order->delivery_last_name, 0, 32),
     'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
     'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
@@ -716,10 +716,10 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
     'CURRENCYCODE' => variable_get('uc_paypal_wpp_currency', 'USD'),
     'PAYMENTACTION' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture') == 'authorize' ? 'Authorization' : 'Sale',
     'DESC' => substr($desc, 0, 127),
-    'INVNUM' => $order->order_id . '-' . REQUEST_TIME,
+    'INVNUM' => $order->id() . '-' . REQUEST_TIME,
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
+    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
     'LANDINGPAGE' => variable_get('uc_paypal_ec_landingpage_style', 'Billing'),
   );
 
@@ -733,7 +733,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
     return;
   }
 
-  $_SESSION['cart_order'] = $order->order_id;
+  $_SESSION['cart_order'] = $order->id();
   $_SESSION['TOKEN'] = $nvp_response['TOKEN'];
 
   $sandbox = '';
@@ -785,9 +785,9 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
     'PAYERID' => $_SESSION['PAYERID'],
     'AMT' => uc_currency_format($order->order_total, FALSE, FALSE, '.'),
     'DESC' => substr($desc, 0, 127),
-    'INVNUM' => $order->order_id . '-' . REQUEST_TIME,
+    'INVNUM' => $order->id() . '-' . REQUEST_TIME,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
+    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
     'ITEMAMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
     'SHIPPINGAMT' => uc_currency_format($shipping, FALSE, FALSE, '.'),
     'TAXAMT' => uc_currency_format($tax, FALSE, FALSE, '.'),
@@ -861,19 +861,19 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
     'charset' => 'utf-8',
 
     // IPN control notify URL.
-    'notify_url' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
+    'notify_url' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
 
     // Display information.
     'cancel_return' => url('uc_paypal/wps/cancel', array('absolute' => TRUE)),
     'no_note' => 1,
     'no_shipping' => variable_get('uc_paypal_wps_no_shipping', 1),
-    'return' => url('uc_paypal/wps/complete/' . $order->order_id, array('absolute' => TRUE)),
+    'return' => url('uc_paypal/wps/complete/' . $order->id(), array('absolute' => TRUE)),
     'rm' => 1,
 
     // Transaction information.
     'currency_code' => variable_get('uc_paypal_wps_currency', 'USD'),
     'handling_cart' => uc_currency_format($shipping, FALSE, FALSE, '.'),
-    'invoice' => $order->order_id . '-' . uc_cart_get_id(),
+    'invoice' => $order->id() . '-' . uc_cart_get_id(),
     'tax_cart' => uc_currency_format($tax, FALSE, FALSE, '.'),
 
     // Shopping cart specific variables.
@@ -945,7 +945,7 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
   else {
     // List the whole cart as a single item to account for fees/discounts.
     $data['amount_1'] = uc_currency_format($order->order_total - $shipping - $tax, FALSE, FALSE, '.');
-    $data['item_name_1'] = t('Order @order_id at !store', array('@order_id' => $order->order_id, '!store' => uc_store_name()));
+    $data['item_name_1'] = t('Order @order_id at !store', array('@order_id' => $order->id(), '!store' => uc_store_name()));
     $data['on0_1'] = t('Product count');
     $data['os0_1'] = count($order->products);
   }

@@ -567,9 +567,9 @@ function uc_order_create_form_create_submit($form, &$form_state) {
   }
 
   $order = uc_order_new($uid, 'post_checkout');
-  uc_order_comment_save($order->order_id, $user->id(), t('Order created by the administration.'), 'admin');
+  uc_order_comment_save($order->id(), $user->id(), t('Order created by the administration.'), 'admin');
 
-  $form_state['redirect'] = 'admin/store/orders/' . $order->order_id . '/edit';
+  $form_state['redirect'] = 'admin/store/orders/' . $order->id() . '/edit';
 }
 
 /**
@@ -579,9 +579,9 @@ function uc_order_create_for_user($account) {
   global $user;
 
   $order = uc_order_new($account->uid, 'post_checkout');
-  uc_order_comment_save($order->order_id, $user->id(), t('Order created by the administration.'), 'admin');
+  uc_order_comment_save($order->id(), $user->id(), t('Order created by the administration.'), 'admin');
 
-  drupal_goto('admin/store/orders/' . $order->order_id . '/edit');
+  drupal_goto('admin/store/orders/' . $order->id() . '/edit');
 }
 
 /**
@@ -858,7 +858,7 @@ function uc_order_edit_form($form, &$form_state, $order) {
     $form_state['order'] = $order;
   }
   $form['#order'] = $order;
-  $form['order_id'] = array('#type' => 'hidden', '#value' => $order->order_id);
+  $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
   $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->uid);
 
   $modified = isset($form_state['values']['order_modified']) ? $form_state['values']['order_modified'] : $order->modified;
@@ -981,7 +981,7 @@ function uc_order_edit_form_submit($form, &$form_state) {
   // Load line items again, since some may have been updated by the form.
   $order->line_items = uc_order_load_line_items($order);
 
-  uc_order_log_changes($order->order_id, $log);
+  uc_order_log_changes($order->id(), $log);
 
   field_attach_extract_form_values($order, $form, $form_state);
 
@@ -1046,7 +1046,7 @@ function uc_order_edit_form_delete($form, &$form_state) {
 function uc_order_add_line_item_form($form, &$form_state, $order, $line_item_id) {
   $func = _uc_line_item_data($line_item_id, 'callback');
 
-  if (!function_exists($func) || ($form = $func('form', $order->order_id)) == NULL) {
+  if (!function_exists($func) || ($form = $func('form', $order->id())) == NULL) {
     $form['title'] = array(
       '#type' => 'textfield',
       '#title' => t('Line item title'),
@@ -1064,7 +1064,7 @@ function uc_order_add_line_item_form($form, &$form_state, $order, $line_item_id)
 
   $form['order_id'] = array(
     '#type' => 'hidden',
-    '#value' => $order->order_id,
+    '#value' => $order->id(),
   );
   $form['line_item_id'] = array(
     '#type' => 'hidden',
@@ -1074,7 +1074,7 @@ function uc_order_add_line_item_form($form, &$form_state, $order, $line_item_id)
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Add line item'),
-    '#suffix' => l(t('Cancel'), 'admin/store/orders/' . $order->order_id . '/edit'),
+    '#suffix' => l(t('Cancel'), 'admin/store/orders/' . $order->id() . '/edit'),
   );
 
   return $form;
@@ -1120,7 +1120,7 @@ function uc_order_add_line_item_form_submit($form, &$form_state) {
 function uc_order_mail_invoice_form($form, &$form_state, $order) {
   $form['order_id'] = array(
     '#type' => 'hidden',
-    '#value' => $order->order_id,
+    '#value' => $order->id(),
   );
   $form['email'] = array(
     '#type' => 'textfield',
@@ -1172,7 +1172,7 @@ function uc_order_mail_invoice_form_submit($form, &$form_state) {
   else {
     $message = t('Invoice e-mailed to @email.', array('@email' => $recipient));
     drupal_set_message($message);
-    uc_order_log_changes($order->order_id, array($message));
+    uc_order_log_changes($order->id(), array($message));
   }
 }
 
@@ -1180,7 +1180,7 @@ function uc_order_mail_invoice_form_submit($form, &$form_state) {
  * Displays a log of changes made to an order.
  */
 function uc_order_log($order) {
-  $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", array(':id' => $order->order_id));
+  $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", array(':id' => $order->id()));
 
   $header = array(t('Time'), t('User'), t('Changes'));
   $rows = array();
@@ -1210,16 +1210,16 @@ function uc_order_log($order) {
  */
 function uc_order_delete_confirm_form($form, &$form_state, $order) {
   if (!uc_order_can_delete($order)) {
-    drupal_set_message(t('It is not possible to delete order @id.', array('@id' => $order->order_id)));
+    drupal_set_message(t('It is not possible to delete order @id.', array('@id' => $order->id())));
     drupal_goto('admin/store/orders');
   }
 
   $form['order_id'] = array(
     '#type' => 'value',
-    '#value' => $order->order_id
+    '#value' => $order->id()
   );
 
-  return confirm_form($form, t('Are you sure you want to delete order @order_id?', array('@order_id' => $order->order_id)), 'admin/store/orders', NULL, t('Delete'));
+  return confirm_form($form, t('Are you sure you want to delete order @order_id?', array('@order_id' => $order->id())), 'admin/store/orders', NULL, t('Delete'));
 }
 
 /**

@@ -25,7 +25,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
 
       if (user_access('view payments')) {
         $build['view_payments'] = array(
-          '#markup' => ' (' . l(t('View'), 'admin/store/orders/' . $order->order_id . '/payments') . ')',
+          '#markup' => ' (' . l(t('View'), 'admin/store/orders/' . $order->id() . '/payments') . ')',
         );
       }
 

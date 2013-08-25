@@ -19,7 +19,7 @@ function uc_payment_pack_receive_check_form($form, &$form_state, $order) {
   );
   $form['order_id'] = array(
     '#type' => 'hidden',
-    '#value' => $order->order_id,
+    '#value' => $order->id(),
   );
   $form['amount'] = array(
     '#type' => 'uc_price',

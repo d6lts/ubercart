@@ -351,7 +351,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // Payment notification is received first.
     $order_data = array('primary_email' => 'simpletest@ubercart.org');
     $order = $this->createOrder($order_data);
-    uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
     $output = uc_cart_complete_sale($order);
 
     // Check that a new account was created.
@@ -371,7 +371,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $order_data = array('primary_email' => 'simpletest2@ubercart.org');
     $order = $this->createOrder($order_data);
     $output = uc_cart_complete_sale($order, TRUE);
-    uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
 
     // 2 e-mails: new account, customer invoice
     $mails = $this->drupalGetMails();
@@ -386,7 +386,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // Same user, new order.
     $order = $this->createOrder($order_data);
     $output = uc_cart_complete_sale($order, TRUE);
-    uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
 
     // Check that no new account was created.
     $this->assertTrue(strpos($output['#message'], 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
@@ -411,13 +411,13 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $order = $this->createOrder(array(
       'products' => array($item),
     ));
-    uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
 
     // Find the order uid.
     $uid = db_query("SELECT uid FROM {uc_orders} ORDER BY order_id DESC")->fetchField();
     $account = user_load($uid);
     $this->assertTrue(isset($account->roles[$rid]), 'New user was granted role.');
-    $order = uc_order_load($order->order_id);
+    $order = uc_order_load($order->id());
     $this->assertEqual($order->order_status, 'payment_received', 'Shippable order was set to payment received.');
 
     // 3 e-mails: new account, customer invoice, role assignment
@@ -431,10 +431,10 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
       'primary_email' => $this->customer->getEmail(),
       'products' => array($item),
     ));
-    uc_payment_enter($order->order_id, 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
     $account = user_load($this->customer->uid);
     $this->assertTrue(isset($account->roles[$rid]), 'Existing user was granted role.');
-    $order = uc_order_load($order->order_id);
+    $order = uc_order_load($order->id());
     $this->assertEqual($order->order_status, 'completed', 'Non-shippable order was set to completed.');
 
     // 2 e-mails: customer invoice, role assignment

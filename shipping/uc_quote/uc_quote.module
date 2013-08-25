@@ -302,7 +302,7 @@ function uc_quote_uc_order($op, $order, $arg2) {
     case 'save':
       if (isset($order->quote['method'])) {
         db_merge('uc_order_quotes')
-          ->key(array('order_id' => $order->order_id))
+          ->key(array('order_id' => $order->id()))
           ->fields(array(
             'method' => $order->quote['method'],
             'accessorials' => $order->quote['accessorials'],
@@ -313,14 +313,14 @@ function uc_quote_uc_order($op, $order, $arg2) {
       break;
 
     case 'load':
-      $quote = db_query("SELECT method, accessorials, rate FROM {uc_order_quotes} WHERE order_id = :id", array(':id' => $order->order_id))->fetchAssoc();
+      $quote = db_query("SELECT method, accessorials, rate FROM {uc_order_quotes} WHERE order_id = :id", array(':id' => $order->id()))->fetchAssoc();
       $order->quote = $quote;
       $order->quote['accessorials'] = strval($quote['accessorials']);
       break;
 
     case 'delete':
       db_delete('uc_order_quotes')
-        ->condition('order_id', $order->order_id)
+        ->condition('order_id', $order->id())
         ->execute();
       break;
   }
@@ -609,7 +609,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL
 
         $label = $method['quote']['accessorials'][$quote_option[1]];
 
-        $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->order_id, ':type' => 'shipping'));
+        $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
         if ($lid = $result->fetchField()) {
           uc_order_update_line_item($lid,
             $label,
@@ -617,7 +617,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL
           );
         }
         else {
-          uc_order_line_item_add($order->order_id, 'shipping',
+          uc_order_line_item_add($order->id(), 'shipping',
             $label,
             $order->quote['rate']
           );
@@ -639,7 +639,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL
     case 'review':
       $review = array();
 
-      $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->order_id, ':type' => 'shipping'));
+      $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
       if ($line_item = $result->fetchAssoc()) {
         $review[] = array('title' => $line_item['title'], 'data' => theme('uc_price', array('price' => $line_item['amount'])));
       }
@@ -753,7 +753,7 @@ function uc_quote_apply_quote_to_order($form, &$form_state) {
       $quote_option = $form_state['values']['quotes']['quote_option'];
       $order->quote['rate'] = $form_state['values']['quotes'][$quote_option]['rate'];
 
-      $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->order_id, ':type' => 'shipping'));
+      $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
       if ($lid = $result->fetchField()) {
         uc_order_update_line_item($lid,
           $label,
@@ -766,7 +766,7 @@ function uc_quote_apply_quote_to_order($form, &$form_state) {
         );
       }
       else {
-        uc_order_line_item_add($order->order_id, 'shipping',
+        uc_order_line_item_add($order->id(), 'shipping',
           $label,
           $order->quote['rate']
         );

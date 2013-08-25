@@ -117,7 +117,7 @@ function uc_paypal_ipn() {
 
       case 'Completed':
         if (abs($payment_amount - $order->order_total) > 0.01) {
-          watchdog('uc_paypal', 'Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->order_id), WATCHDOG_WARNING, l(t('view'), 'admin/store/orders/' . $order->order_id));
+          watchdog('uc_paypal', 'Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->id()), WATCHDOG_WARNING, l(t('view'), 'admin/store/orders/' . $order->id()));
         }
         $comment = t('PayPal transaction ID: @txn_id', array('@txn_id' => $txn_id));
         uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->uid, NULL, $comment);
@@ -204,7 +204,7 @@ function uc_paypal_ec_review() {
     drupal_goto('cart');
   }
 
-  if (!isset($_SESSION['have_details'][$order->order_id])) {
+  if (!isset($_SESSION['have_details'][$order->id()])) {
     $nvp_request = array(
       'METHOD' => 'GetExpressCheckoutDetails',
       'TOKEN' => $_SESSION['TOKEN'],
@@ -250,7 +250,7 @@ function uc_paypal_ec_review() {
 
     uc_order_save($order);
 
-    $_SESSION['have_details'][$order->order_id] = TRUE;
+    $_SESSION['have_details'][$order->id()] = TRUE;
   }
 
   $build['instructions'] = array('#markup' => t("Your order is almost complete!  Please fill in the following details and click 'Continue checkout' to finalize the purchase."));
@@ -341,12 +341,12 @@ function uc_paypal_ec_review_form_submit($form, &$form_state) {
     $quote_option = $form_state['values']['quotes']['quote_option'];
     $order->quote['rate'] = $form_state['values']['quotes'][$quote_option]['rate'];
 
-    $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->order_id, ':type' => 'shipping'));
+    $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
     if ($lid = $result->fetchField()) {
       uc_order_update_line_item($lid, $label, $order->quote['rate']);
     }
     else {
-      uc_order_line_item_add($order->order_id, 'shipping', $label, $order->quote['rate']);
+      uc_order_line_item_add($order->id(), 'shipping', $label, $order->quote['rate']);
     }
   }
 
@@ -360,9 +360,9 @@ function uc_paypal_ec_review_form_submit($form, &$form_state) {
 
   if (variable_get('uc_paypal_ec_review_comment', TRUE)) {
     db_delete('uc_order_comments')
-      ->condition('order_id', $order->order_id)
+      ->condition('order_id', $order->id())
       ->execute();
-    uc_order_comment_save($order->order_id, 0, $form_state['values']['order_comments'], 'order');
+    uc_order_comment_save($order->id(), 0, $form_state['values']['order_comments'], 'order');
   }
 
   uc_order_save($order);
@@ -420,7 +420,7 @@ function uc_paypal_complete($order) {
   // user tried to adjust the order on this side while at PayPal. If it was a
   // legitimate checkout, the IPN will still come in from PayPal so the order
   // gets processed correctly. We'll leave an ambiguous message just in case.
-  if (!isset($_SESSION['cart_order']) || intval($_SESSION['cart_order']) != $order->order_id) {
+  if (!isset($_SESSION['cart_order']) || intval($_SESSION['cart_order']) != $order->id()) {
     drupal_set_message(t('Thank you for your order! PayPal will notify us once your payment has been processed.'));
     drupal_goto('cart');
   }

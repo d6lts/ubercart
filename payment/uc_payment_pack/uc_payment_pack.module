@@ -65,7 +65,7 @@ function uc_payment_method_other($op, &$order) {
     case 'order-view':
     case 'customer-view':
       // Fetch the description for the payment entered by the administrator.
-      if ($description = db_query('SELECT description FROM {uc_payment_other} WHERE order_id = :id', array(':id' => $order->order_id))->fetchField()) {
+      if ($description = db_query('SELECT description FROM {uc_payment_other} WHERE order_id = :id', array(':id' => $order->id()))->fetchField()) {
         return array('#markup' => t('Description: @desc', array('@desc' => $description)));
       }
       break;
@@ -81,7 +81,7 @@ function uc_payment_method_other($op, &$order) {
       return $form;
 
     case 'order-load':
-      $description = db_query('SELECT description FROM {uc_payment_other} WHERE order_id = :id', array(':id' => $order->order_id))->fetchField();
+      $description = db_query('SELECT description FROM {uc_payment_other} WHERE order_id = :id', array(':id' => $order->id()))->fetchField();
       if (isset($description)) {
         $order->payment_details['description'] = $description;
       }
@@ -90,13 +90,13 @@ function uc_payment_method_other($op, &$order) {
     case 'order-save':
       if (empty($order->payment_details['pm_other_description'])) {
         db_delete('uc_payment_other')
-          ->condition('order_id', $order->order_id)
+          ->condition('order_id', $order->id())
           ->execute();
       }
       else {
         db_merge('uc_payment_other')
           ->key(array(
-            'order_id' => $order->order_id,
+            'order_id' => $order->id(),
           ))
           ->fields(array(
             'description' => $order->payment_details['pm_other_description'],
@@ -170,7 +170,7 @@ function uc_payment_method_cod($op, &$order, $form = NULL, $form_state = NULL) {
       return $build;
 
     case 'order-load':
-      $result = db_query('SELECT * FROM {uc_payment_cod} WHERE order_id = :id', array(':id' => $order->order_id));
+      $result = db_query('SELECT * FROM {uc_payment_cod} WHERE order_id = :id', array(':id' => $order->id()));
       if ($row = $result->fetchObject()) {
         $order->payment_details = array(
           'delivery_month' => $row->delivery_month,
@@ -200,7 +200,7 @@ function uc_payment_method_cod($op, &$order, $form = NULL, $form_state = NULL) {
           isset($order->payment_details['delivery_day'])   &&
           isset($order->payment_details['delivery_year'])    ) {
         db_merge('uc_payment_cod')
-          ->key(array('order_id' => $order->order_id))
+          ->key(array('order_id' => $order->id()))
           ->fields(array(
             'delivery_month' => $order->payment_details['delivery_month'],
             'delivery_day'   => $order->payment_details['delivery_day'],
@@ -212,7 +212,7 @@ function uc_payment_method_cod($op, &$order, $form = NULL, $form_state = NULL) {
 
     case 'order-delete':
       db_delete('uc_payment_cod')
-        ->condition('order_id', $order->order_id)
+        ->condition('order_id', $order->id())
         ->execute();
       break;
 
@@ -326,18 +326,18 @@ function uc_payment_method_check($op, &$order, $form = NULL, &$form_state = NULL
     case 'order-view':
       $build = array('#suffix' => '<br />');
 
-      $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->order_id));
+      $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->id()));
       if ($clear_date = $result->fetchField()) {
         $build['#markup'] = t('Clear Date:') . ' ' . format_date($clear_date, 'uc_store');
       }
       else {
-        $build['#markup'] = l(t('Receive Check'), 'admin/store/orders/' . $order->order_id . '/receive_check');
+        $build['#markup'] = l(t('Receive Check'), 'admin/store/orders/' . $order->id() . '/receive_check');
       }
       return $build;
 
     case 'customer-view':
       $build = array();
-      $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->order_id));
+      $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->id()));
       if ($clear_date = $result->fetchField()) {
         $build['#markup'] = t('Check received') . '<br />' .
           t('Expected clear date:') . '<br />' . format_date($clear_date, 'uc_store');

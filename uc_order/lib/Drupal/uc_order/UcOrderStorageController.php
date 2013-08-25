@@ -65,7 +65,7 @@ class UcOrderStorageController extends DatabaseStorageControllerNG {
 
       $order->data = unserialize($order->data);
 
-      $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $order->order_id));
+      $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $order->id()));
       foreach ($order->products as $product) {
         $product->order = $order;
       }
@@ -91,7 +91,7 @@ class UcOrderStorageController extends DatabaseStorageControllerNG {
       if (count($fields)) {
         $query = db_update('uc_orders')
           ->fields($fields)
-          ->condition('order_id', $order->order_id)
+          ->condition('order_id', $order->id())
           ->execute();
       }
     }

@@ -256,7 +256,7 @@ function uc_order_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  * Title callback for admin/store/orders/%uc_order.
  */
 function uc_order_page_title($order) {
-  return t('Order @order_id', array('@order_id' => $order->order_id));
+  return t('Order @order_id', array('@order_id' => $order->id()));
 }
 
 /**
@@ -704,7 +704,7 @@ function uc_order_uc_message() {
  */
 function uc_order_uri($order) {
   return array(
-    'path' => 'admin/store/orders/' . $order->order_id,
+    'path' => 'admin/store/orders/' . $order->id(),
   );
 }
 
@@ -1023,7 +1023,7 @@ function uc_order_comment_save($order_id, $uid, $message, $type = 'admin', $stat
 function uc_order_load_line_items($order) {
   $items = array();
 
-  $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id", array(':id' => $order->order_id));
+  $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id", array(':id' => $order->id()));
   foreach ($result as $row) {
     $item = array(
       'line_item_id' => $row->line_item_id,
@@ -1155,7 +1155,7 @@ function uc_order_update_status($order_id, $status) {
     uc_order_module_invoke('update', $order, $status);
 
     $change = array(t('Order status') => array('old' => uc_order_status_data($order->order_status, 'title'), 'new' => uc_order_status_data($status, 'title')));
-    uc_order_log_changes($order->order_id, $change);
+    uc_order_log_changes($order->id(), $change);
 
     $updated = uc_order_load($order_id, TRUE);
     // rules_invoke_event('uc_order_status_update', $order, $updated);
@@ -1678,25 +1678,25 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if (user_access('view all orders')) {
     $actions['view'] = array(
       'title' => t('View'),
-      'href' => 'admin/store/orders/' . $order->order_id,
+      'href' => 'admin/store/orders/' . $order->id(),
       'weight' => 0,
     );
     $actions['print'] = array(
       'title' => t('Print'),
-      'href' => 'admin/store/orders/' . $order->order_id . '/invoice/print',
+      'href' => 'admin/store/orders/' . $order->id() . '/invoice/print',
       'weight' => 5,
     );
   }
   elseif (user_access('view own orders') && $order->uid == $user->id()) {
     $actions['view'] = array(
       'title' => t('View'),
-      'href' => 'user/' . $user->id() . '/orders/' . $order->order_id,
+      'href' => 'user/' . $user->id() . '/orders/' . $order->id(),
       'weight' => 0,
     );
     if (user_access('view own invoices')) {
       $actions['print'] = array(
         'title' => t('Print'),
-        'href' => 'user/' . $user->id() . '/orders/' . $order->order_id . '/print',
+        'href' => 'user/' . $user->id() . '/orders/' . $order->id() . '/print',
         'weight' => 5,
       );
     }
@@ -1705,7 +1705,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if (user_access('edit orders')) {
     $actions['edit'] = array(
       'title' => t('Edit'),
-      'href' => 'admin/store/orders/' . $order->order_id . '/edit',
+      'href' => 'admin/store/orders/' . $order->id() . '/edit',
       'weight' => 10,
     );
   }
@@ -1713,7 +1713,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if (uc_order_can_delete($order)) {
     $actions['delete'] = array(
       'title' => t('Delete'),
-      'href' => 'admin/store/orders/' . $order->order_id . '/delete',
+      'href' => 'admin/store/orders/' . $order->id() . '/delete',
       'weight' => 20,
     );
   }
@@ -1926,7 +1926,7 @@ function uc_order_action_info() {
  * Action implementation: sets the status of an order.
  */
 function uc_order_action_set_status($order, $context = array()) {
-  $update = uc_order_update_status($order->order_id, $context['status']);
+  $update = uc_order_update_status($order->id(), $context['status']);
 
   if ($update && $context['notify']) {
     // Update order object, as uc_order_update_status() cannot.
@@ -1990,5 +1990,5 @@ function uc_order_action_print($orders, $context = array()) {
  * Action implementation: delete an order.
  */
 function uc_order_action_delete($order) {
-  uc_order_delete($order->order_id);
+  uc_order_delete($order->id());
 }

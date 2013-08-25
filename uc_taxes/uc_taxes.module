@@ -222,14 +222,14 @@ function uc_taxes_uc_order($op, $order, $arg2) {
       // Now add line items for any remaining new taxes.
       if (is_array($line_items)) {
         foreach ($line_items as $line) {
-          $order->line_items[] = uc_order_line_item_add($order->order_id, 'tax', $line['title'], $line['amount'], $line['weight'], $line['data']);
+          $order->line_items[] = uc_order_line_item_add($order->id(), 'tax', $line['title'], $line['amount'], $line['weight'], $line['data']);
           $changes[] = t('Added %amount for %title.', array('%amount' => uc_currency_format($line['amount']), '%title' => $line['title']));
         }
       }
 
       // And log the changes to the order.
       if (count($changes)) {
-        uc_order_log_changes($order->order_id, $changes);
+        uc_order_log_changes($order->id(), $changes);
         usort($order->line_items, 'uc_weight_sort');
       }
     break;

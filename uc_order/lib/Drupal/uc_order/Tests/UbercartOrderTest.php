@@ -33,8 +33,8 @@ class UbercartOrderTest extends UbercartTestBase {
     $this->assertEqual($order->order_status, 'completed', 'New order is marked completed.');
 
     // Test deletion.
-    uc_order_delete($order->order_id);
-    $deleted_order = uc_order_load($order->order_id, TRUE);
+    uc_order_delete($order->id());
+    $deleted_order = uc_order_load($order->id(), TRUE);
     $this->assertFalse($deleted_order, 'Order was successfully deleted');
   }
 
@@ -57,8 +57,8 @@ class UbercartOrderTest extends UbercartTestBase {
 
     // Test deletion.
     $order->save();
-    entity_delete_multiple('uc_order', array($order->order_id));
-    $deleted_order = entity_load('uc_order', $order->order_id, TRUE);
+    entity_delete_multiple('uc_order', array($order->id()));
+    $deleted_order = entity_load('uc_order', $order->id(), TRUE);
     $this->assertFalse($deleted_order, 'Order was successfully deleted');
   }
 
@@ -72,7 +72,7 @@ class UbercartOrderTest extends UbercartTestBase {
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type uc_order');
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $order = uc_order_load($order->order_id);
+    $order = uc_order_load($order->id());
 
     $this->assertHookMessage('entity_crud_hook_test_entity_load called for type uc_order');
 
@@ -83,7 +83,7 @@ class UbercartOrderTest extends UbercartTestBase {
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type uc_order');
 
     $_SESSION['entity_crud_hook_test'] = array();
-    uc_order_delete($order->order_id);
+    uc_order_delete($order->id());
 
     $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type uc_order');
   }
@@ -117,21 +117,21 @@ class UbercartOrderTest extends UbercartTestBase {
     $this->drupalGet('user/' . $this->customer->uid->value . '/orders');
     $this->assertText(t('My order history'));
 
-    $this->drupalGet('user/' . $this->customer->uid->value . '/orders/' . $order->order_id);
+    $this->drupalGet('user/' . $this->customer->uid->value . '/orders/' . $order->id());
     $this->assertResponse(200, 'Customer can view their own order.');
 
-    $this->drupalGet('admin/store/orders/' . $order->order_id);
+    $this->drupalGet('admin/store/orders/' . $order->id());
     $this->assertResponse(403, 'Customer may not edit orders.');
 
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('user/' . $this->customer->uid->value . '/orders/' . $order->order_id);
+    $this->drupalGet('user/' . $this->customer->uid->value . '/orders/' . $order->id());
     $this->assertText(drupal_strtoupper($order->billing_first_name . ' ' . $order->billing_last_name), 'Found customer name.');
 
     $edit = array(
       'billing_first_name' => $this->randomName(8),
       'billing_last_name' => $this->randomName(15),
     );
-    $this->drupalPost('admin/store/orders/' . $order->order_id . '/edit', $edit, t('Submit changes'));
+    $this->drupalPost('admin/store/orders/' . $order->id() . '/edit', $edit, t('Submit changes'));
     $this->assertText(t('Order changes saved.'));
     $this->assertFieldByName('billing_first_name', $edit['billing_first_name'], 'Billing first name changed.');
     $this->assertFieldByName('billing_last_name', $edit['billing_last_name'], 'Billing last name changed.');
@@ -139,10 +139,10 @@ class UbercartOrderTest extends UbercartTestBase {
 
   protected function ucCreateOrder($customer) {
     $order = uc_order_new($customer->uid->value);
-    uc_order_comment_save($order->order_id, 0, t('Order created programmatically.'), 'admin');
+    uc_order_comment_save($order->id(), 0, t('Order created programmatically.'), 'admin');
 
-    $order_exists = db_query("SELECT 1 FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->order_id))->fetchField();
-    $this->assertTrue($order_exists, t('Found order ID @order_id', array('@order_id' => $order->order_id)));
+    $order_exists = db_query("SELECT 1 FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField();
+    $this->assertTrue($order_exists, t('Found order ID @order_id', array('@order_id' => $order->id())));
 
     $countries = uc_country_option_list();
     $country = array_rand($countries);
@@ -168,7 +168,7 @@ class UbercartOrderTest extends UbercartTestBase {
 
     uc_order_save($order);
 
-    $db_order = db_query("SELECT * FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->order_id))->fetchObject();
+    $db_order = db_query("SELECT * FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchObject();
     $this->assertEqual($order->delivery_first_name, $db_order->delivery_first_name);
     $this->assertEqual($order->delivery_last_name, $db_order->delivery_last_name);
     $this->assertEqual($order->delivery_street1, $db_order->delivery_street1);

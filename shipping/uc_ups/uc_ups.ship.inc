@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
   $pkg_types = _uc_ups_pkg_types();
-  $form['order_id'] = array('#type' => 'value', '#value' => $order->order_id);
+  $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
   $packages = array();
   $addresses = array();
 

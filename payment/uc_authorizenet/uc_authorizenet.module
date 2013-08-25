@@ -279,15 +279,15 @@ function _uc_authorizenet_cim_profile_create($order) {
   // Parse the response.
   $response = _uc_authorizenet_cim_parse_response(uc_authorizenet_xml_api($server, $xml));
   if ($response['resultCode'] == 'Error') {
-    uc_order_comment_save($order->order_id, 0, t('Authorize.Net: Creating CIM profile failed.<br />@error - @text', array('@error' => $response['code'], '@text' => $response['text'])), 'admin');
+    uc_order_comment_save($order->id(), 0, t('Authorize.Net: Creating CIM profile failed.<br />@error - @text', array('@error' => $response['code'], '@text' => $response['text'])), 'admin');
     return $response['text'];
   }
   else {
-    uc_order_comment_save($order->order_id, 0, t('Authorize.Net: CIM profile created - @id', array('@id' => $response['customerProfileId'])));
+    uc_order_comment_save($order->id(), 0, t('Authorize.Net: CIM profile created - @id', array('@id' => $response['customerProfileId'])));
   }
 
   // Save the new credit reference to the db.
-  $order->data = uc_credit_log_reference($order->order_id, $response['customerProfileId'], $order->payment_details['cc_number']);
+  $order->data = uc_credit_log_reference($order->id(), $response['customerProfileId'], $order->payment_details['cc_number']);
 
   return '';
 }
@@ -297,10 +297,10 @@ function _uc_authorizenet_cim_profile_create($order) {
  */
 function _uc_authorizenet_cim_profile_create_request($order) {
   return array(
-    'refId' => substr($order->order_id . '-' . REQUEST_TIME, 0, 20),
+    'refId' => substr($order->id() . '-' . REQUEST_TIME, 0, 20),
     'profile' => array(
       'merchantCustomerId' => substr($order->uid, 0, 20),
-      'description' => substr(t('Order @order taking place at @date', array('@order' => $order->order_id, '@date' => format_date(REQUEST_TIME))), 0, 255),
+      'description' => substr(t('Order @order taking place at @date', array('@order' => $order->id(), '@date' => format_date(REQUEST_TIME))), 0, 255),
       'email' => substr($order->primary_email, 0, 255),
       'paymentProfiles' => array(
         'billTo' => _uc_authorize_cim_xml_billto($order),
@@ -363,7 +363,7 @@ function _uc_authorizenet_cim_profile_charge($order, $amount, $data) {
     }
 
     // Save a comment to the order.
-    uc_order_comment_save($order->order_id, $user->uid, implode('<br />', $comment), 'admin');
+    uc_order_comment_save($order->id(), $user->uid, implode('<br />', $comment), 'admin');
   }
 
   // Build the response to the payment gateway API.
@@ -384,7 +384,7 @@ function _uc_authorizenet_cim_profile_charge_request($order, $amount, $data) {
   }
   else {
     return array(
-      'refId' => substr($order->order_id . '-' . REQUEST_TIME, 0, 20),
+      'refId' => substr($order->id() . '-' . REQUEST_TIME, 0, 20),
       'transaction' => array(
         'profileTransAuthCapture' => array(
           'amount' => uc_currency_format($amount, FALSE, FALSE, '.'),
@@ -392,7 +392,7 @@ function _uc_authorizenet_cim_profile_charge_request($order, $amount, $data) {
           'customerPaymentProfileId' => $profile['customerPaymentProfileId'],
           'customerShippingAddressId' => $profile['customerAddressId'],
           'order' => array(
-            'invoiceNumber' => $order->order_id,
+            'invoiceNumber' => $order->id(),
           ),
         ),
       ),
@@ -480,7 +480,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     'x_duplicate_window' => variable_get('uc_authnet_duplicate_window', 120),
 
     // Order information.
-    'x_invoice_num' => $order->order_id,
+    'x_invoice_num' => $order->id(),
     'x_description' => substr(implode(', ', $description), 0, 255),
 
     // Customer information.
@@ -605,10 +605,10 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     // If this was an authorization only transaction...
     if ($data['txn_type'] == UC_CREDIT_AUTH_ONLY) {
       // Log the authorization to the order.
-      uc_credit_log_authorization($order->order_id, $response[6], $amount);
+      uc_credit_log_authorization($order->id(), $response[6], $amount);
     }
     elseif ($data['txn_type'] == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
-      uc_credit_log_prior_auth_capture($order->order_id, $data['auth_id']);
+      uc_credit_log_prior_auth_capture($order->id(), $data['auth_id']);
     }
 
     // Create a transaction reference if specified in the payment gateway
@@ -634,7 +634,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   }
 
   // Save the comment to the order.
-  uc_order_comment_save($order->order_id, $user->uid, $comment, 'admin');
+  uc_order_comment_save($order->id(), $user->uid, $comment, 'admin');
 
   return $result;
 }
@@ -767,9 +767,9 @@ function uc_authorizenet_arb_create($order, $fee) {
 
   // Build the data array for the request.
   $data = array(
-    'refId' => substr($order->order_id . '-' . REQUEST_TIME, 0, 20),
+    'refId' => substr($order->id() . '-' . REQUEST_TIME, 0, 20),
     'subscription' => array(
-      'name' => substr(t('Order @order_id', array('@order_id' => $order->order_id)), 0, 50),
+      'name' => substr(t('Order @order_id', array('@order_id' => $order->id())), 0, 50),
       'paymentSchedule' => array(
         'interval' => array(
           'length' => $length,
@@ -783,8 +783,8 @@ function uc_authorizenet_arb_create($order, $fee) {
       'trialAmount' => 0,
       'payment' => array(), // Data inserted below based on payment method.
       'order' => array(
-        'invoiceNumber' => substr($order->order_id, 0, 20),
-        'description' => substr(t('Order @order_id - @sku', array('@order_id' => $order->order_id, '@sku' => $fee->model)), 0, 255),
+        'invoiceNumber' => substr($order->id(), 0, 20),
+        'description' => substr(t('Order @order_id - @sku', array('@order_id' => $order->id(), '@sku' => $fee->model)), 0, 255),
       ),
       'customer' => array(
         'id' => substr($order->uid, 0, 20),
@@ -849,7 +849,7 @@ function uc_authorizenet_arb_create($order, $fee) {
   $data = _uc_authorizenet_arb_parse_response($response);
 
   if ($data['resultCode'] == 'Error') {
-    uc_order_comment_save($order->order_id, 0, t('Authorize.Net: Recurring fee for @model failed.<br />@error - @text', array('@model' => $fee->model, '@error' => $data['code'], '@text' => $data['text'])), 'admin');
+    uc_order_comment_save($order->id(), 0, t('Authorize.Net: Recurring fee for @model failed.<br />@error - @text', array('@model' => $fee->model, '@error' => $data['code'], '@text' => $data['text'])), 'admin');
     return FALSE;
   }
 
@@ -862,13 +862,13 @@ function uc_authorizenet_arb_create($order, $fee) {
     'regular_interval' => $fee->regular_interval,
     'remaining_intervals' => $fee->number_intervals,
     'charged_intervals' => 0,
-    'order_id' => $order->order_id,
+    'order_id' => $order->id(),
     'data' => $data['subscriptionId'],
   );
 
   uc_recurring_fee_save('user', $user_fee);
 
-  uc_order_comment_save($order->order_id, 0, t('Authorize.Net: Recurring fee setup for @model.<br />Subscription ID: @subscription_id', array('@model' => $fee->model, '@subscription_id' => $data['subscriptionId'])), 'admin');
+  uc_order_comment_save($order->id(), 0, t('Authorize.Net: Recurring fee setup for @model.<br />Subscription ID: @subscription_id', array('@model' => $fee->model, '@subscription_id' => $data['subscriptionId'])), 'admin');
 
   return TRUE;
 }
@@ -894,7 +894,7 @@ function uc_authorizenet_arb_update($subscription_id, $updates, $order_id = NULL
 
   // Build the data array for the request.
   $data = array(
-    'refId' => substr($order->order_id . '-' . REQUEST_TIME, 0, 20),
+    'refId' => substr($order->id() . '-' . REQUEST_TIME, 0, 20),
     'subscriptionId' => $subscription_id,
     'subscription' => $updates
   );
@@ -943,7 +943,7 @@ function uc_authorizenet_arb_cancel($subscription_id, $order_id = NULL, $fee = a
 
   // Build the data array for the request.
   $data = array(
-    'refId' => substr($order->order_id . '-' . REQUEST_TIME, 0, 20),
+    'refId' => substr($order->id() . '-' . REQUEST_TIME, 0, 20),
     'subscriptionId' => $subscription_id,
   );
 

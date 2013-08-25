@@ -248,7 +248,7 @@ function uc_file_action_order_email($order, $file_expiration, $from, $addresses,
     $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $settings['from']);
 
     if (!$sent['result']) {
-      watchdog('uc_file', 'Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->order_id), WATCHDOG_ERROR);
+      watchdog('uc_file', 'Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()), WATCHDOG_ERROR);
     }
   }
 }
@@ -312,7 +312,7 @@ function uc_file_action_order_renew($order) {
       else {
         $comment = t('User can now download the file %file.', array('%file' => drupal_basename($file->filename)));
       }
-      uc_order_comment_save($order->order_id, $order_user->uid, $comment);
+      uc_order_comment_save($order->id(), $order_user->uid, $comment);
     }
   }
 

@@ -647,7 +647,7 @@ function uc_order_condition_is_shippable($order, $settings) {
  * @see uc_order_action_update_status_form()
  */
 function uc_order_action_update_status($order, $status) {
-  if (uc_order_update_status($order->order_id, $status)) {
+  if (uc_order_update_status($order->id(), $status)) {
     $order->order_status = $status;
   }
 }
@@ -674,7 +674,7 @@ function uc_order_action_update_status_options() {
  * @see uc_order_action_add_comment_form()
  */
 function uc_order_action_add_comment($order, $comment, $comment_type) {
-  uc_order_comment_save($order->order_id, 0,
+  uc_order_comment_save($order->id(), 0,
     Drupal::token()->replace($comment, array('uc_order' => $order)),
     $comment_type == 'admin' ? 'admin' : 'order',
     $order->order_status, $comment_type == 'notified');
@@ -737,7 +737,7 @@ function uc_order_action_email($order, $from, $addresses, $subject, $message, $f
     $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
 
     if (!$sent['result']) {
-      watchdog('uc_order', 'Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->order_id), WATCHDOG_ERROR);
+      watchdog('uc_order', 'Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()), WATCHDOG_ERROR);
     }
   }
 }
@@ -801,7 +801,7 @@ function uc_order_action_email_invoice($order, $from, $addresses, $subject, $tem
     $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
 
     if (!$sent['result']) {
-      watchdog('uc_order', 'Attempt to e-mail invoice for order @order_id to @email failed.', array('@email' => $email, '@order_id' => $order->order_id), WATCHDOG_ERROR);
+      watchdog('uc_order', 'Attempt to e-mail invoice for order @order_id to @email failed.', array('@email' => $email, '@order_id' => $order->id()), WATCHDOG_ERROR);
     }
   }
 }

@@ -604,7 +604,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   global $user;
 
   // Ensure we have the latest order data.
-  $order->data = unserialize(db_query("SELECT data FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->order_id))->fetchField());
+  $order->data = unserialize(db_query("SELECT data FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField());
 
   // Ensure that user creation and triggers are only run once.
   if (empty($order->data['complete_sale'])) {
@@ -616,14 +616,14 @@ function uc_cart_complete_sale($order, $login = FALSE) {
         'uid' => $order->uid,
         'data' => serialize($order->data),
       ))
-      ->condition('order_id', $order->order_id)
+      ->condition('order_id', $order->id())
       ->execute();
 
     // Move an order's status from "In checkout" to "Pending".
-    $status = db_query("SELECT order_status FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->order_id))->fetchField();
+    $status = db_query("SELECT order_status FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField();
     if (uc_order_status_data($status, 'state') == 'in_checkout') {
       $status = uc_order_state_default('post_checkout');
-      if (uc_order_update_status($order->order_id, $status)) {
+      if (uc_order_update_status($order->id(), $status)) {
         $order->order_status = $status;
       }
     }

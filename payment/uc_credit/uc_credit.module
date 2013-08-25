@@ -229,7 +229,7 @@ function uc_credit_uc_order($op, $order, $arg2) {
 
         // Attempt to process the CC payment.
         $order->payment_details = uc_credit_cache('load');
-        $pass = uc_payment_process_payment('credit', $order->order_id, $order->order_total, $data, TRUE, NULL, FALSE);
+        $pass = uc_payment_process_payment('credit', $order->id(), $order->order_total, $data, TRUE, NULL, FALSE);
 
         // If the payment failed, store the data back in the session and
         // halt the checkout process.
@@ -242,7 +242,7 @@ function uc_credit_uc_order($op, $order, $arg2) {
 
     case 'save':
       if (isset($order->payment_method) && $order->payment_method == 'credit' && !empty($order->payment_details)) {
-        _uc_credit_save_cc_data_to_order($order->payment_details, $order->order_id);
+        _uc_credit_save_cc_data_to_order($order->payment_details, $order->id());
       }
       break;
 
@@ -484,7 +484,7 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
 
         // Add the form to process the card if applicable.
         if (user_access('process credit cards')) {
-          $build['terminal'] = drupal_get_form('uc_credit_order_view_form', $order->order_id);
+          $build['terminal'] = drupal_get_form('uc_credit_order_view_form', $order->id());
         }
       }
 
@@ -1107,5 +1107,5 @@ function uc_credit_gateway_txn_types($gateway) {
  * Title callback for admin/store/orders/%uc_order/credit.
  */
 function uc_credit_terminal_title($order) {
-  return t('Credit card terminal: Order @order_id', array('@order_id' => $order->order_id));
+  return t('Credit card terminal: Order @order_id', array('@order_id' => $order->id()));
 }

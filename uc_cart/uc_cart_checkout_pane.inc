@@ -334,8 +334,8 @@ function uc_checkout_pane_comments($op, $order, $form = NULL, &$form_state = NUL
     case 'view':
       $description = t('Use this area for special instructions or questions regarding your order.');
 
-      if (!empty($order->order_id)) {
-        $default = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->order_id))->fetchField();
+      if ($order->id()) {
+        $default = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()))->fetchField();
       }
       else {
         $default = NULL;
@@ -350,16 +350,16 @@ function uc_checkout_pane_comments($op, $order, $form = NULL, &$form_state = NUL
 
     case 'process':
       db_delete('uc_order_comments')
-        ->condition('order_id', $order->order_id)
+        ->condition('order_id', $order->id())
         ->execute();
       if (strlen($form_state['values']['panes']['comments']['comments']) > 0) {
-        uc_order_comment_save($order->order_id, 0, $form_state['values']['panes']['comments']['comments'], 'order', uc_order_state_default('post_checkout'), TRUE);
+        uc_order_comment_save($order->id(), 0, $form_state['values']['panes']['comments']['comments'], 'order', uc_order_state_default('post_checkout'), TRUE);
       }
       return TRUE;
 
     case 'review':
       $review = NULL;
-      $result = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->order_id));
+      $result = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()));
       if ($comment = $result->fetchObject()) {
         $review[] = array('title' => t('Comment'), 'data' => check_plain($comment->message));
       }

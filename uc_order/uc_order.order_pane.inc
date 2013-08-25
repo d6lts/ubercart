@@ -23,7 +23,7 @@ function uc_order_pane_print_button($op, $order, &$form = NULL, &$form_state = N
       if (user_access('view own invoices')) {
         $link = t('Click to open a window with a printable invoice.');
         $build = array(
-          '#markup' => l($link, 'user/' . $order->uid . '/orders/' . $order->order_id . '/print', array(
+          '#markup' => l($link, 'user/' . $order->uid . '/orders/' . $order->id() . '/print', array(
             'html' => TRUE,
             'attributes' => array(
               'onclick' => "window.open(this.href, '" . t('Invoice') . "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=600,height=480,left=50,top=50'); return false;",
@@ -589,12 +589,12 @@ function uc_order_edit_products_add_blank($form, &$form_state) {
 
   $product = new stdClass();
   $product->qty = 1;
-  $product->order_id = $order->order_id;
-  uc_order_product_save($order->order_id, $product);
+  $product->order_id = $order->id();
+  uc_order_product_save($order->id(), $product);
 
   $order->products[] = $product;
 
-  uc_order_log_changes($order->order_id, array('add' => t('Added new product line to order.')));
+  uc_order_log_changes($order->id(), array('add' => t('Added new product line to order.')));
 }
 
 /**
@@ -611,10 +611,10 @@ function uc_order_edit_products_add($form, &$form_state) {
   $product->qty = isset($form_state['values']['product_controls']['qty']) ? $form_state['values']['product_controls']['qty'] : $product->default_qty;
 
   drupal_alter('uc_order_product', $product, $order);
-  uc_order_product_save($order->order_id, $product);
+  uc_order_product_save($order->id(), $product);
   $order->products[] = $product;
 
-  uc_order_log_changes($order->order_id, array('add' => t('Added (@qty) @title to order.', array('@qty' => $product->qty, '@title' => $product->title))));
+  uc_order_log_changes($order->id(), array('add' => t('Added (@qty) @title to order.', array('@qty' => $product->qty, '@title' => $product->title))));
 
   // Decrement stock.
   if (module_exists('uc_stock')) {
@@ -869,7 +869,7 @@ function uc_order_pane_line_items_add($form, &$form_state) {
   $order = &$form_state['order'];
   $type = $form_state['values']['li_type_select'];
 
-  uc_order_line_item_add($order->order_id, $type, _uc_line_item_data($type, 'title'), 0);
+  uc_order_line_item_add($order->id(), $type, _uc_line_item_data($type, 'title'), 0);
   $order->line_items = uc_order_load_line_items($order);
 
   $form_state['rebuild'] = TRUE;
@@ -918,7 +918,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
         '#attributes' => array('class' => array('order-pane-table uc-order-comments')),
         '#empty' => t('This order has no comments associated with it.'),
       );
-      $comments = uc_order_comments_load($order->order_id);
+      $comments = uc_order_comments_load($order->id());
       foreach ($comments as $comment) {
         $icon = $comment->notified ? 'true-icon.gif' : 'false-icon.gif';
         $build['#rows'][] = array(
@@ -932,7 +932,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
       return $build;
 
     case 'customer':
-      $comments = uc_order_comments_load($order->order_id);
+      $comments = uc_order_comments_load($order->id());
       $header = array(t('Date'), t('Status'), t('Message'));
       $rows[] = array(
         array('data' => format_date($order->created, 'uc_store'), 'class' => array('date')),
@@ -978,7 +978,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
         '#attributes' => array('class' => array('order-pane-table uc-order-comments')),
         '#empty' => t('This order has no admin comments associated with it.'),
       );
-      $comments = uc_order_comments_load($order->order_id, TRUE);
+      $comments = uc_order_comments_load($order->id(), TRUE);
       foreach ($comments as $comment) {
         $build['#rows'][] = array(
           array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
@@ -1068,7 +1068,7 @@ function uc_order_view_update_form($form, &$form_state, $order) {
 
   $form['order_id'] = array(
     '#type' => 'hidden',
-    '#value' => $order->order_id,
+    '#value' => $order->id(),
   );
 
   $form['controls'] = array(

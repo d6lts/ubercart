@@ -23,14 +23,14 @@ function uc_2checkout_complete($cart_id = 0) {
   $order_number = variable_get('uc_2checkout_demo', TRUE) ? 1 : $_REQUEST['order_number'];
   $valid = md5(variable_get('uc_2checkout_secret_word', 'tango') . $_REQUEST['sid'] . $order_number . $_REQUEST['total']);
   if (drupal_strtolower($key) != drupal_strtolower($valid)) {
-    uc_order_comment_save($order->order_id, 0, t('Attempted unverified 2Checkout completion for this order.'), 'admin');
+    uc_order_comment_save($order->id(), 0, t('Attempted unverified 2Checkout completion for this order.'), 'admin');
     throw new AccessDeniedHttpException();
   }
 
   if ($_REQUEST['demo'] == 'Y' xor variable_get('uc_2checkout_demo', TRUE)) {
     watchdog('uc_2checkout', 'The 2checkout payment for order <a href="@order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
-      '@order_url' => url('admin/store/orders/' . $order->order_id),
-      '@order_id' => $order->order_id,
+      '@order_url' => url('admin/store/orders/' . $order->id()),
+      '@order_id' => $order->id(),
       '%flag' => $_REQUEST['demo'] == 'Y' ? 'Y' : 'N',
       '%mode' => variable_get('uc_2checkout_demo', TRUE) ? 'Y' : 'N',
     ), WATCHDOG_ERROR);
@@ -60,23 +60,23 @@ function uc_2checkout_complete($cart_id = 0) {
   uc_order_save($order);
 
   if (drupal_strtolower($_REQUEST['email']) !== drupal_strtolower($order->primary_email)) {
-    uc_order_comment_save($order->order_id, 0, t('Customer used a different e-mail address during payment: !email', array('!email' => check_plain($_REQUEST['email']))), 'admin');
+    uc_order_comment_save($order->id(), 0, t('Customer used a different e-mail address during payment: !email', array('!email' => check_plain($_REQUEST['email']))), 'admin');
   }
 
   if ($_REQUEST['credit_card_processed'] == 'Y' && is_numeric($_REQUEST['total'])) {
     $comment = t('Paid by !type, 2Checkout.com order #!order.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('credit card') : t('echeck'), '!order' => check_plain($_REQUEST['order_number'])));
-    uc_payment_enter($order->order_id, '2checkout', $_REQUEST['total'], 0, NULL, $comment);
+    uc_payment_enter($order->id(), '2checkout', $_REQUEST['total'], 0, NULL, $comment);
   }
   else {
     drupal_set_message(t('Your order will be processed as soon as your payment clears at 2Checkout.com.'));
-    uc_order_comment_save($order->order_id, 0, t('!type payment is pending approval at 2Checkout.com.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('Credit card') : t('eCheck'))), 'admin');
+    uc_order_comment_save($order->id(), 0, t('!type payment is pending approval at 2Checkout.com.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('Credit card') : t('eCheck'))), 'admin');
   }
 
   // Empty that cart...
   uc_cart_empty($cart_id);
 
   // Add a comment to let sales team know this came in through the site.
-  uc_order_comment_save($order->order_id, 0, t('Order created through website.'), 'admin');
+  uc_order_comment_save($order->id(), 0, t('Order created through website.'), 'admin');
 
   $build = uc_cart_complete_sale($order, variable_get('uc_new_customer_login', FALSE));
 

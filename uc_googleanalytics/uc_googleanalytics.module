@@ -54,7 +54,7 @@ function uc_googleanalytics_uc_order($op, $order, $arg2) {
   // If a new order is created during the checkout process...
   if ($op == 'new') {
     // Store the order ID for later use.
-    $_SESSION['ucga_order_id'] = $order->order_id;
+    $_SESSION['ucga_order_id'] = $order->id();
   }
 }
 
@@ -127,7 +127,7 @@ function uc_googleanalytics_ecommerce_js($order) {
 
   // Build the transaction arguments.
   $trans = array(
-    'order_id' => $order->order_id,
+    'order_id' => $order->id(),
     'store' => uc_store_name(),
     'total' => $order->order_total,
     'tax' => $order->tax_total,
@@ -175,7 +175,7 @@ function uc_googleanalytics_ecommerce_js($order) {
 
     // Build the item arguments.
     $item = array(
-      'order_id' => $order->order_id,
+      'order_id' => $order->id(),
       'sku' => $product->model,
       'name' => $product->title,
       'category' => $product->category,
