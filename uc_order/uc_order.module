@@ -1343,13 +1343,6 @@ function uc_order_product_is_shippable($product) {
 }
 
 /**
- * Entity API getter for the list of order products.
- */
-function uc_order_get_product_list($order) {
-  return array_keys($order->products);
-}
-
-/**
  * Determines if an order is shippable.
  *
  * An order can be shipped if any of its products can be shipped.
@@ -1763,95 +1756,6 @@ function uc_order_can_delete($order, $account = NULL) {
   else {
     return FALSE;
   }
-}
-
-/**
- * Entity metadata callback for getting order properties.
- *
- * @see uc_order_entity_property_info()
- */
-function uc_order_uc_order_get_properties($order, array $options, $name, $entity_type) {
-  switch ($name) {
-    case 'customer':
-      return $order->uid;
-  }
-}
-
-/**
- * Entity metadata callback for setting order properties.
- *
- * @see uc_order_entity_property_info()
- */
-function uc_order_uc_order_set_properties($order, $name, $value) {
-  if ($name == 'customer') {
-    $order->uid = $value;
-  }
-}
-
-/**
- * Entity metadata callback: get the delivery or billing address of an order.
- */
-function uc_order_address_property_get($order, array $options, $name, $entity_type) {
-  switch ($name) {
-    case 'delivery_address':
-      $type = 'delivery_';
-      break;
-
-    case 'billing_address':
-      $type = 'billing_';
-      break;
-
-    default:
-      return NULL;
-  }
-
-  $address = new UcAddress();
-
-  foreach ($address as $field => $value) {
-    if ($field != 'email') {
-      $address->{$field} = $order->{$type . $field};
-    }
-  }
-
-  return $address;
-}
-
-/**
- * Entity metadata callback: set the delivery or billing address of an order.
- */
-function uc_order_address_property_set($order, $name, $address) {
-  switch ($name) {
-    case 'delivery_address':
-      $type = 'delivery_';
-      break;
-
-    case 'billing_address':
-      $type = 'billing_';
-      break;
-
-    default:
-      return;
-  }
-
-  foreach ($address as $field => $value) {
-    if ($field != 'email') {
-      $order->{$type . $field} = $value;
-    }
-  }
-}
-
-/**
- * Entity metadata callback: get the full product node for an order product.
- */
-function uc_order_product_node_property_get($product, array $options, $name, $entity_type) {
-  return node_load($product->nid);
-}
-
-/**
- * Entity metadata callback: set the nid for an order product.
- */
-function uc_order_product_node_property_set($product, $name, $node) {
-  $product->nid = $node->nid;
 }
 
 /**
