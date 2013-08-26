@@ -216,7 +216,7 @@ function uc_stock_is_active($sku) {
 function _uc_stock_send_mail($order, $node, $stock) {
   $token_service = Drupal::token();
 
-  $account = user_load($order->uid);
+  $account = $order->getUser();
   $token_filters = array('uc_order' => $order, 'user' => $account, 'uc_stock' => $stock, 'node' => $node);
 
   $to = variable_get('uc_stock_threshold_notification_recipients', uc_store_email());

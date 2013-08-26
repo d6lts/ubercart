@@ -88,8 +88,7 @@ function hook_uc_line_item() {
  *   The order object containing the line item.
  */
 function hook_uc_line_item_alter(&$item, $order) {
-  $account = user_load($order->uid);
-  rules_invoke_event('calculate_line_item_discounts', $item, $account);
+  rules_invoke_event('calculate_line_item_discounts', $item, $order->getUser());
 }
 
 /**
@@ -362,7 +361,7 @@ function uc_order_pane_callback($op, $order, &$form = NULL, &$form_state = NULL)
 
     case 'edit-process':
       if (!empty($order['admin_comment'])) {
-        uc_order_comment_save($order['order_id'], $user->uid, $order['admin_comment']);
+        uc_order_comment_save($order['order_id'], $user->id(), $order['admin_comment']);
       }
       return;
   }

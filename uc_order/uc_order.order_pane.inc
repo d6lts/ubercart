@@ -23,7 +23,7 @@ function uc_order_pane_print_button($op, $order, &$form = NULL, &$form_state = N
       if (user_access('view own invoices')) {
         $link = t('Click to open a window with a printable invoice.');
         $build = array(
-          '#markup' => l($link, 'user/' . $order->uid . '/orders/' . $order->id() . '/print', array(
+          '#markup' => l($link, 'user/' . $order->getUserId() . '/orders/' . $order->id() . '/print', array(
             'html' => TRUE,
             'attributes' => array(
               'onclick' => "window.open(this.href, '" . t('Invoice') . "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=600,height=480,left=50,top=50'); return false;",
@@ -132,7 +132,7 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) 
 function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL) {
   switch ($op) {
     case 'view':
-      $build['uid'] = array('#markup' => t('Customer number: !user_link', array('!user_link' => $order->uid ? l($order->uid, 'user/' . $order->uid) : '0')));
+      $build['uid'] = array('#markup' => t('Customer number: !user_link', array('!user_link' => $order->getUserId() ? l($order->getUserId(), 'user/' . $order->getUserId()) : '0')));
       $build['primary_email'] = array('#markup' => '<br />' . t('Primary e-mail:') . '<br />' . check_plain($order->primary_email));
 
       return $build;
@@ -142,12 +142,12 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
 
       $form['customer']['uid'] = array(
         '#type' => 'hidden',
-        '#default_value' => $order->uid,
+        '#default_value' => $order->getUserId(),
       );
       $form['customer']['text']['uid_text'] = array(
         '#type' => 'textfield',
         '#title' => t('Customer number'),
-        '#default_value' => $order->uid,
+        '#default_value' => $order->getUserId(),
         '#maxlength' => 10,
         '#size' => 10,
         '#disabled' => TRUE,
@@ -1016,7 +1016,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
 
     case 'edit-process':
       if (!empty($form_state['values']['admin_comment'])) {
-        uc_order_comment_save($form_state['values']['order_id'], $user->uid, $form_state['values']['admin_comment']);
+        uc_order_comment_save($form_state['values']['order_id'], $user->id(), $form_state['values']['admin_comment']);
       }
       return;
   }
@@ -1110,17 +1110,17 @@ function uc_order_view_update_form_submit($form, &$form_state) {
   global $user;
 
   if (!empty($form_state['values']['order_comment'])) {
-    uc_order_comment_save($form_state['values']['order_id'], $user->uid, $form_state['values']['order_comment'], 'order', $form_state['values']['status'], $form_state['values']['notify']);
+    uc_order_comment_save($form_state['values']['order_id'], $user->id(), $form_state['values']['order_comment'], 'order', $form_state['values']['status'], $form_state['values']['notify']);
   }
 
   if (!empty($form_state['values']['admin_comment'])) {
-    uc_order_comment_save($form_state['values']['order_id'], $user->uid, $form_state['values']['admin_comment']);
+    uc_order_comment_save($form_state['values']['order_id'], $user->id(), $form_state['values']['admin_comment']);
   }
 
   if ($form_state['values']['status'] != $form_state['values']['current_status']) {
     if (uc_order_update_status($form_state['values']['order_id'], $form_state['values']['status'])) {
       if (empty($form_state['values']['order_comment'])) {
-        uc_order_comment_save($form_state['values']['order_id'], $user->uid, '-', 'order', $form_state['values']['status'], $form_state['values']['notify']);
+        uc_order_comment_save($form_state['values']['order_id'], $user->id(), '-', 'order', $form_state['values']['status'], $form_state['values']['notify']);
       }
     }
   }

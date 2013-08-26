@@ -99,7 +99,7 @@ function uc_cart_checkout() {
       // Don't use an existing order if it has changed status or owner, or if
       // there has been no activity for 10 minutes (to prevent identity theft).
       if (uc_order_status_data($order->order_status, 'state') != 'in_checkout' ||
-          ($user->isAuthenticated() && $user->id() != $order->uid) ||
+          ($user->isAuthenticated() && $user->id() != $order->getUserId()) ||
           $order->modified < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
         if (uc_order_status_data($order->order_status, 'state') == 'in_checkout' && $order->modified < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
           // Mark expired orders as abandoned.

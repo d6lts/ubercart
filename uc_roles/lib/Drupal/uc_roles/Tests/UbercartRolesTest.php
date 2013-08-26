@@ -43,14 +43,14 @@ class UbercartRolesTest extends UbercartTestBase {
     uc_payment_enter($order->id(), 'other', $order->order_total);
 
     // Test that the role was granted.
-    $account = user_load($order->uid);
+    $account = $order->getUser();
     $this->assertTrue(isset($account->roles[$rid]), 'Existing user was granted role.');
 
     // Test that the email is correct.
     $mail = $this->findMail('/Ubercart: ' . preg_quote($account->roles[$rid]) . ' role granted/');
 
     // Delete the user.
-    user_delete($order->uid);
+    user_delete($order->getUserId());
 
     // Run cron to ensure deleted users are handled correctly.
     $this->drupalLogout();

@@ -146,7 +146,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
   if ($type == 'uc_order' && !empty($data['uc_order'])) {
 
     $order = $data['uc_order'];
-    $path = 'user/' . $order->uid . '/orders/' . $order->id();
+    $path = 'user/' . $order->getUserId() . '/orders/' . $order->id();
     $admin_path = 'admin/store/orders/' . $order->id();
 
     foreach ($tokens as $name => $original) {
@@ -288,7 +288,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'customer':
-          $replacements[$original] = $order->uid;
+          $replacements[$original] = $order->getUserId();
           break;
 
         case 'created':
@@ -322,8 +322,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
     }
 
     if ($customer_tokens = $token_service->findWithPrefix($tokens, 'customer')) {
-      $customer = user_load($order->uid);
-      $replacements += $token_service->generate('user', $customer_tokens, array('user' => $customer), $options);
+      $replacements += $token_service->generate('user', $customer_tokens, array('user' => $order->getUser()), $options);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {

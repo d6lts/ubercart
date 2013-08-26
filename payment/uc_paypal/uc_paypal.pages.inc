@@ -120,7 +120,7 @@ function uc_paypal_ipn() {
           watchdog('uc_paypal', 'Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->id()), WATCHDOG_WARNING, l(t('view'), 'admin/store/orders/' . $order->id()));
         }
         $comment = t('PayPal transaction ID: @txn_id', array('@txn_id' => $txn_id));
-        uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->uid, NULL, $comment);
+        uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->getUserId(), NULL, $comment);
         uc_cart_complete_sale($order);
         uc_order_comment_save($order_id, 0, t('PayPal IPN reported a payment of @amount @currency.', array('@amount' => uc_currency_format($payment_amount, FALSE), '@currency' => $payment_currency)));
         break;
@@ -145,7 +145,7 @@ function uc_paypal_ipn() {
       // You, the merchant, refunded the payment.
       case 'Refunded':
         $comment = t('PayPal transaction ID: @txn_id', array('@txn_id' => $txn_id));
-        uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->uid, NULL, $comment);
+        uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->getUserId(), NULL, $comment);
         break;
 
       case 'Reversed':

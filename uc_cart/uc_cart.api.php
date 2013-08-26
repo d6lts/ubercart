@@ -227,8 +227,7 @@ function hook_uc_checkout_complete($order, $account) {
  *   The order object to check out.
  */
 function hook_uc_cart_checkout_start($order) {
-  $account = user_load($order->uid);
-  if (is_array($account->roles) && in_array('administrator', $account->roles)) {
+  if (in_array('administrator', $order->getUser()->roles)) {
     drupal_set_message(t('Administrators may not purchase products.', 'error'));
     drupal_goto('cart');
   }

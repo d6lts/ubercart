@@ -859,7 +859,7 @@ function uc_order_edit_form($form, &$form_state, $order) {
   }
   $form['#order'] = $order;
   $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
-  $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->uid);
+  $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->getUserId());
 
   $modified = isset($form_state['values']['order_modified']) ? $form_state['values']['order_modified'] : $order->modified;
   $form['order_modified'] = array('#type' => 'hidden', '#value' => $modified);

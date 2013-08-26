@@ -36,13 +36,6 @@ use Drupal\uc_order\UcOrderInterface;
  */
 class UcOrder extends EntityNG implements UcOrderInterface {
 
-  /**
-   * The order owner's user ID.
-   *
-   * @var integer
-   */
-  public $uid;
-
   public $currency = '';
   public $order_status = '';
   public $order_total = 0;
@@ -97,7 +90,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
     parent::init();
 
     // We unset all defined properties, so magic getters apply.
-    unset($this->uid);
     unset($this->currency);
     unset($this->order_status);
     unset($this->order_total);
@@ -221,6 +213,28 @@ class UcOrder extends EntityNG implements UcOrderInterface {
       // Log the action in the database.
       watchdog('uc_order', 'Order @order_id deleted by user @uid.', array('@order_id' => $order_id, '@uid' => $GLOBALS['user']->uid));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUser() {
+    return $this->get('uid')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUserId() {
+    return $this->get('uid')->target_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUserId($uid) {
+    $this->set('uid', $uid);
+    return $this;
   }
 
 }

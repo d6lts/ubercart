@@ -175,7 +175,7 @@ function uc_cybersource_hop_post() {
         ->execute();
 
       $comment = t('CyberSource request ID: @txn_id', array('@txn_id' => $request_id));
-      uc_payment_enter($order_id, 'cybersource_hop', $payment_amount, $order->uid, NULL, $comment);
+      uc_payment_enter($order_id, 'cybersource_hop', $payment_amount, $order->getUserId(), NULL, $comment);
       uc_cart_complete_sale($order);
       uc_order_comment_save($order_id, 0, t('Payment of @amount @currency submitted through CyberSource with request ID @rid.', array('@amount' => $payment_amount, '@currency' => $payment_currency, '@rid' => $request_id)), 'order', 'payment_received');
       break;
@@ -820,7 +820,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
       $billTo->phoneNumber = $order->billing_phone;
     }
     $billTo->email = $order->primary_email;
-    $billTo->customerID = $order->uid;
+    $billTo->customerID = $order->getUserId();
     $request->billTo = $billTo;
 
     // Add the credit card details if needed.
@@ -1081,7 +1081,7 @@ function uc_cybersource_uc_calculate_tax($order) {
       $billTo->phoneNumber = $order->billing_phone;
     }
     $billTo->email = $order->primary_email;
-    $billTo->customerID = $order->uid;
+    $billTo->customerID = $order->getUserId();
     $request->billTo = $billTo;
 
     // Add the shipping information.

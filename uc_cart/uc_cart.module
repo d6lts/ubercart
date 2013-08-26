@@ -613,7 +613,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     // Store account data.
     db_update('uc_orders')
       ->fields(array(
-        'uid' => $order->uid,
+        'uid' => $order->getUserId(),
         'data' => serialize($order->data),
       ))
       ->condition('order_id', $order->id())
@@ -629,7 +629,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     }
 
     // Invoke the checkout complete trigger and hook.
-    $account = user_load($order->uid);
+    $account = $order->getUser();
     module_invoke_all('uc_checkout_complete', $order, $account);
     // rules_invoke_event('uc_checkout_complete', $order);
   }
@@ -639,7 +639,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   // Log in new users, if requested.
   if ($type == 'new_user' && $login && !$user->uid) {
     $type = 'new_user_logged_in';
-    $user = user_load($order->uid);
+    $user = $order->getUser();
   }
 
   $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';
@@ -676,7 +676,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
  */
 function uc_cart_complete_sale_account($order) {
   // Order already has a user ID, so the user was logged in during checkout.
-  if ($order->uid) {
+  if ($order->getUserId()) {
     $order->data['complete_sale'] = 'logged_in';
     return;
   }
@@ -685,7 +685,7 @@ function uc_cart_complete_sale_account($order) {
 
   // Email address matches an existing account.
   if ($account = $result->fetchObject()) {
-    $order->uid = $account->uid;
+    $order->setUserId($account->uid);
     $order->data['complete_sale'] = 'existing_user';
     return;
   }
@@ -725,7 +725,7 @@ function uc_cart_complete_sale_account($order) {
     drupal_mail('user', $type, $order->primary_email, uc_store_mail_recipient_langcode($order->primary_email), array('account' => $account), uc_store_email_from());
   }
 
-  $order->uid = $account->uid;
+  $order->setUserId($account->uid);
   $order->data['new_user']['name'] = $fields['name'];
   $order->data['complete_sale'] =  'new_user';
 }

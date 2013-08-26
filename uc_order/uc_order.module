@@ -423,7 +423,7 @@ function uc_order_can_view_order($account, $order, $view_invoice = FALSE) {
   }
 
   // The order must also be owned by the user specified in the URL.
-  $access = $access && $account->id() == $order->uid;
+  $access = $access && $account->id() == $order->getUserId();
 
   return $access;
 }
@@ -460,11 +460,11 @@ function uc_order_field_extra_fields() {
 function uc_order_user_view($account, $view_mode) {
   global $user;
 
-  if ($view_mode == 'full' && $user->isAuthenticated() && (($user->id() == $account->uid && user_access('view own orders')) || user_access('view all orders'))) {
+  if ($view_mode == 'full' && $user->isAuthenticated() && (($user->id() == $account->id() && user_access('view own orders')) || user_access('view all orders'))) {
     $account->content['orders'] = array(
       '#type' => 'item',
       '#title' => t('Orders'),
-      '#markup' => l(t('Click here to view your order history.'), 'user/' . $account->uid . '/orders'),
+      '#markup' => l(t('Click here to view your order history.'), 'user/' . $account->id() . '/orders'),
     );
   }
 }
@@ -1687,7 +1687,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
       'weight' => 5,
     );
   }
-  elseif (user_access('view own orders') && $order->uid == $user->id()) {
+  elseif (user_access('view own orders') && $order->getUserId() == $user->id()) {
     $actions['view'] = array(
       'title' => t('View'),
       'href' => 'user/' . $user->id() . '/orders/' . $order->id(),

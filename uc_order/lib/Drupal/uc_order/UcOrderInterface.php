@@ -14,4 +14,31 @@ use Drupal\Core\Entity\ContentEntityInterface;
  */
 interface UcOrderInterface extends ContentEntityInterface {
 
+  /**
+   * Returns the order user entity.
+   *
+   * @return \Drupal\user\UserInterface
+   *   The user entity.
+   */
+  public function getUser();
+
+  /**
+   * Returns the order user ID.
+   *
+   * @return int
+   *   The user ID.
+   */
+  public function getUserId();
+
+  /**
+   * Sets the order user ID.
+   *
+   * @param int $uid
+   *   The user ID.
+   *
+   * @return \Drupal\uc_order\UcOrderInterface
+   *   The called owner entity.
+   */
+  public function setUserId($uid);
+
 }

@@ -110,14 +110,10 @@ class UcOrderStorageController extends DatabaseStorageControllerNG {
       'read-only' => TRUE,
     );
     $properties['uid'] = array(
-      'label' => t('User ID'),
-      'description' => 'The {user}.uid of the customer that placed the order.',
-      'type' => 'integer_field',
-      // 'type' => 'entity_reference_field',
-      // 'settings' => array(
-      //   'target_type' => 'user',
-      //   'default_value' => 0,
-      // ),
+      'label' => t('Customer'),
+      'description' => 'The user that placed the order.',
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'user'),
     );
     $properties['order_status'] = array(
       'label' => t('Order status'),

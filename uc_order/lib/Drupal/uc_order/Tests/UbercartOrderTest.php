@@ -25,11 +25,11 @@ class UbercartOrderTest extends UbercartTestBase {
   public function testOrderAPI() {
     // Test defaults.
     $order = uc_order_new();
-    $this->assertEqual($order->uid, 0, 'New order is anonymous.');
+    $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->order_status, 'in_checkout', 'New order is in checkout.');
 
-    $order = uc_order_new($this->customer->uid->value, 'completed');
-    $this->assertEqual($order->uid, $this->customer->uid->value, 'New order has correct uid.');
+    $order = uc_order_new($this->customer->id(), 'completed');
+    $this->assertEqual($order->getUserId(), $this->customer->id(), 'New order has correct uid.');
     $this->assertEqual($order->order_status, 'completed', 'New order is marked completed.');
 
     // Test deletion.
@@ -40,17 +40,17 @@ class UbercartOrderTest extends UbercartTestBase {
 
   public function testOrderEntity() {
     $order = entity_create('uc_order', array());
-    $this->assertEqual($order->uid, 0, 'New order is anonymous.');
+    $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->order_status, 'in_checkout', 'New order is in checkout.');
 
     $name = $this->randomName();
     $order = entity_create('uc_order', array(
-      'uid' => $this->customer->uid->value,
+      'uid' => $this->customer->id(),
       'order_status' => 'completed',
       'billing_first_name' => $name,
       'billing_last_name' => $name,
     ));
-    $this->assertEqual($order->uid, $this->customer->uid->value, 'New order has correct uid.');
+    $this->assertEqual($order->getUserId(), $this->customer->id(), 'New order has correct uid.');
     $this->assertEqual($order->order_status, 'completed', 'New order is marked completed.');
     $this->assertEqual($order->billing_first_name, $name, 'New order has correct name.');
     $this->assertEqual($order->billing_last_name, $name, 'New order has correct name.');
@@ -97,12 +97,12 @@ class UbercartOrderTest extends UbercartTestBase {
     );
     $this->drupalPost('admin/store/orders/create', $edit, t('Search'));
 
-    $edit['customer[uid]'] = $this->customer->uid->value;
+    $edit['customer[uid]'] = $this->customer->id();
     $this->drupalPost(NULL, $edit, t('Create order'));
     $this->assertText(t('Order created by the administration.'), 'Order created by the administration.');
-    $this->assertFieldByName('uid_text', $this->customer->uid->value, 'The customer UID appears on the page.');
+    $this->assertFieldByName('uid_text', $this->customer->id(), 'The customer UID appears on the page.');
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE uid = :uid", array(':uid' => $this->customer->uid->value))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE uid = :uid", array(':uid' => $this->customer->id()))->fetchField();
     $this->assertTrue($order_id, t('Found order ID @order_id', array('@order_id' => $order_id)));
 
     $this->drupalGet('admin/store/orders');
@@ -114,17 +114,17 @@ class UbercartOrderTest extends UbercartTestBase {
     $order = $this->ucCreateOrder($this->customer);
 
     $this->drupalLogin($this->customer);
-    $this->drupalGet('user/' . $this->customer->uid->value . '/orders');
+    $this->drupalGet('user/' . $this->customer->id() . '/orders');
     $this->assertText(t('My order history'));
 
-    $this->drupalGet('user/' . $this->customer->uid->value . '/orders/' . $order->id());
+    $this->drupalGet('user/' . $this->customer->id() . '/orders/' . $order->id());
     $this->assertResponse(200, 'Customer can view their own order.');
 
     $this->drupalGet('admin/store/orders/' . $order->id());
     $this->assertResponse(403, 'Customer may not edit orders.');
 
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('user/' . $this->customer->uid->value . '/orders/' . $order->id());
+    $this->drupalGet('user/' . $this->customer->id() . '/orders/' . $order->id());
     $this->assertText(drupal_strtoupper($order->billing_first_name . ' ' . $order->billing_last_name), 'Found customer name.');
 
     $edit = array(
@@ -138,7 +138,7 @@ class UbercartOrderTest extends UbercartTestBase {
   }
 
   protected function ucCreateOrder($customer) {
-    $order = uc_order_new($customer->uid->value);
+    $order = uc_order_new($customer->id());
     uc_order_comment_save($order->id(), 0, t('Order created programmatically.'), 'admin');
 
     $order_exists = db_query("SELECT 1 FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField();

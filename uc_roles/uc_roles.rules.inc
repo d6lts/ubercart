@@ -329,7 +329,7 @@ function uc_roles_action_user_email($account, $role_expiration, $from, $addresse
  */
 function uc_roles_action_order_renew($order, $message) {
   // Load the order's user and exit if not available.
-  if (!($account = user_load($order->uid))) {
+  if (!($account = $order->getUser())) {
     return;
   }
 

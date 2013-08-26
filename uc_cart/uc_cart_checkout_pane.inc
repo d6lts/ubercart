@@ -163,7 +163,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
       }
 
       if ($user->isAuthenticated()) {
-        $order->uid = $user->id();
+        $order->setUserId($user->id());
       }
       return TRUE;
 

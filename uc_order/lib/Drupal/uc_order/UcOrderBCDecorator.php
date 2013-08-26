@@ -14,4 +14,25 @@ use Drupal\Core\Entity\EntityBCDecorator;
  */
 class UcOrderBCDecorator extends EntityBCDecorator implements UcOrderInterface {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getUser() {
+    return $this->decorated->getUser();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUserId() {
+    return $this->decorated->getUserId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUserId($uid) {
+    $this->decorated->setUserId($uid);
+  }
+
 }
