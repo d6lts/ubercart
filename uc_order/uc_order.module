@@ -1735,8 +1735,7 @@ function uc_order_can_delete($order, $account = NULL) {
   }
   elseif (user_access('delete orders', $account)) {
     // Only users with unconditional deletion perms can delete completed orders.
-    $state = uc_order_status_data($order->getStatusId(), 'state');
-    if ($state == 'completed') {
+    if ($order->getStateId() == 'completed') {
       return FALSE;
     }
     else {

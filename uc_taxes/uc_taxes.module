@@ -413,7 +413,7 @@ function uc_taxes_filter_rates($order) {
     $taxes = uc_taxes_rate_load();
   }
   // For orders no longer in checkout, only the saved tax rates can apply.
-  elseif (isset($order->order_status) && uc_order_status_data($order->order_status, 'state') != 'in_checkout') {
+  elseif ($order->getStateId() != 'in_checkout') {
     if (isset($order->line_items)) {
       foreach ($order->line_items as $item) {
         if ($item['type'] == 'tax') {

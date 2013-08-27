@@ -614,7 +614,7 @@ function uc_paypal_ec_checkout($form, &$form_state) {
   $order_id = intval($_SESSION['cart_order']);
 
   $order = uc_order_load($order_id);
-  if ($order === FALSE || uc_order_status_data($order->order_status, 'state') != 'in_checkout') {
+  if (!$order || $order->getStateId() != 'in_checkout') {
     $_SESSION['cart_order'] = NULL;
     unset($_SESSION['cart_order']);
     drupal_goto('cart');

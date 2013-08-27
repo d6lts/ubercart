@@ -15,7 +15,7 @@ function uc_2checkout_complete($cart_id = 0) {
 
   $order = uc_order_load($_REQUEST['merchant_order_id']);
 
-  if ($order === FALSE || uc_order_status_data($order->order_status, 'state') != 'in_checkout') {
+  if (!$order || $order->getStateId() != 'in_checkout') {
     return t('An error has occurred during payment.  Please contact us to ensure your order has submitted.');
   }
 

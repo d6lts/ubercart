@@ -60,4 +60,12 @@ interface UcOrderInterface extends ContentEntityInterface {
    */
   public function setStatusId($status);
 
+  /**
+   * Returns the order state ID.
+   *
+   * @return string
+   *   The order state ID.
+   */
+  public function getStateId();
+
 }

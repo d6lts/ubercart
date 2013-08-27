@@ -250,4 +250,11 @@ class UcOrder extends EntityNG implements UcOrderInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getStateId() {
+    return uc_order_status_data($this->get('order_status')->value, 'state');
+  }
+
 }

@@ -376,7 +376,7 @@ function uc_order_rules_action_info() {
  * Checks the current order state.
  */
 function uc_order_condition_order_state($order, $order_state) {
-  return uc_order_status_data($order->order_status, 'state') == $order_state;
+  return $order->getStateId() == $order_state;
 }
 
 /**

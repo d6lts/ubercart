@@ -98,10 +98,10 @@ function uc_cart_checkout() {
     if ($order) {
       // Don't use an existing order if it has changed status or owner, or if
       // there has been no activity for 10 minutes (to prevent identity theft).
-      if (uc_order_status_data($order->order_status, 'state') != 'in_checkout' ||
+      if ($order->getStateId() != 'in_checkout' ||
           ($user->isAuthenticated() && $user->id() != $order->getUserId()) ||
           $order->modified < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
-        if (uc_order_status_data($order->order_status, 'state') == 'in_checkout' && $order->modified < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
+        if ($order->getStateId() == 'in_checkout' && $order->modified < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
           // Mark expired orders as abandoned.
           uc_order_update_status($order->id(), 'abandoned');
         }
@@ -401,7 +401,7 @@ function uc_cart_checkout_review() {
 
   $order = uc_order_load($_SESSION['cart_order']);
 
-  if ($order === FALSE || uc_order_status_data($order->order_status, 'state') != 'in_checkout') {
+  if (!$order || $order->getStateId() != 'in_checkout') {
     unset($_SESSION['uc_checkout'][$order->id()]['do_review']);
     return new RedirectResponse(url('cart/checkout', array('absolute' => TRUE)));
   }
