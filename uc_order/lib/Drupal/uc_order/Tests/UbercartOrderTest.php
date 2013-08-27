@@ -26,11 +26,11 @@ class UbercartOrderTest extends UbercartTestBase {
     // Test defaults.
     $order = uc_order_new();
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
-    $this->assertEqual($order->order_status, 'in_checkout', 'New order is in checkout.');
+    $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
     $order = uc_order_new($this->customer->id(), 'completed');
     $this->assertEqual($order->getUserId(), $this->customer->id(), 'New order has correct uid.');
-    $this->assertEqual($order->order_status, 'completed', 'New order is marked completed.');
+    $this->assertEqual($order->getStatusId(), 'completed', 'New order is marked completed.');
 
     // Test deletion.
     uc_order_delete($order->id());
@@ -41,7 +41,7 @@ class UbercartOrderTest extends UbercartTestBase {
   public function testOrderEntity() {
     $order = entity_create('uc_order', array());
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
-    $this->assertEqual($order->order_status, 'in_checkout', 'New order is in checkout.');
+    $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
     $name = $this->randomName();
     $order = entity_create('uc_order', array(
@@ -51,7 +51,7 @@ class UbercartOrderTest extends UbercartTestBase {
       'billing_last_name' => $name,
     ));
     $this->assertEqual($order->getUserId(), $this->customer->id(), 'New order has correct uid.');
-    $this->assertEqual($order->order_status, 'completed', 'New order is marked completed.');
+    $this->assertEqual($order->getStatusId(), 'completed', 'New order is marked completed.');
     $this->assertEqual($order->billing_first_name, $name, 'New order has correct name.');
     $this->assertEqual($order->billing_last_name, $name, 'New order has correct name.');
 

@@ -35,4 +35,18 @@ class UcOrderBCDecorator extends EntityBCDecorator implements UcOrderInterface {
     $this->decorated->setUserId($uid);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusId() {
+    return $this->decorated->getStatusId();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStatusId($status) {
+    $this->decorated->setStatusId($status);
+  }
+
 }

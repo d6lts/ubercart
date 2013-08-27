@@ -37,7 +37,6 @@ use Drupal\uc_order\UcOrderInterface;
 class UcOrder extends EntityNG implements UcOrderInterface {
 
   public $currency = '';
-  public $order_status = '';
   public $order_total = 0;
   public $primary_email = '';
 
@@ -91,7 +90,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
 
     // We unset all defined properties, so magic getters apply.
     unset($this->currency);
-    unset($this->order_status);
     unset($this->order_total);
     unset($this->primary_email);
     unset($this->delivery_first_name);
@@ -234,6 +232,21 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    */
   public function setUserId($uid) {
     $this->set('uid', $uid);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusId() {
+    return $this->get('order_status')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setStatusId($status) {
+    $this->set('order_status', $status);
     return $this;
   }
 

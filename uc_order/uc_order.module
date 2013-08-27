@@ -1131,7 +1131,7 @@ function uc_order_update_status($order_id, $status) {
   // Attempt the update if the order exists.
   if ($order !== FALSE) {
     // Return TRUE if the order status is already set.
-    if ($order->order_status == $status) {
+    if ($order->getStatusId() == $status) {
       return TRUE;
     }
 
@@ -1735,7 +1735,7 @@ function uc_order_can_delete($order, $account = NULL) {
   }
   elseif (user_access('delete orders', $account)) {
     // Only users with unconditional deletion perms can delete completed orders.
-    $state = uc_order_status_data($order->order_status, 'state');
+    $state = uc_order_status_data($order->getStatusId(), 'state');
     if ($state == 'completed') {
       return FALSE;
     }
@@ -1834,7 +1834,7 @@ function uc_order_action_set_status($order, $context = array()) {
 
   if ($update && $context['notify']) {
     // Update order object, as uc_order_update_status() cannot.
-    $order->order_status = $context['status'];
+    $order->setStatusId($context['status']);
 
     // rules_invoke_event('uc_order_status_email_update', $order);
   }

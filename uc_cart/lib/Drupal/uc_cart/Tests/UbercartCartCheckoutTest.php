@@ -418,7 +418,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $account = user_load($uid);
     $this->assertTrue(isset($account->roles[$rid]), 'New user was granted role.');
     $order = uc_order_load($order->id());
-    $this->assertEqual($order->order_status, 'payment_received', 'Shippable order was set to payment received.');
+    $this->assertEqual($order->getStatusId(), 'payment_received', 'Shippable order was set to payment received.');
 
     // 3 e-mails: new account, customer invoice, role assignment
     $mails = $this->drupalGetMails();
@@ -435,7 +435,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $account = user_load($this->customer->uid);
     $this->assertTrue(isset($account->roles[$rid]), 'Existing user was granted role.');
     $order = uc_order_load($order->id());
-    $this->assertEqual($order->order_status, 'completed', 'Non-shippable order was set to completed.');
+    $this->assertEqual($order->getStatusId(), 'completed', 'Non-shippable order was set to completed.');
 
     // 2 e-mails: customer invoice, role assignment
     $mails = $this->drupalGetMails();
@@ -514,7 +514,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
 
       // Verify that the status of old order is abandoned.
       $old_order = uc_order_load($order_id, TRUE);
-      $this->assertEqual($old_order->order_status, 'abandoned', 'Original order was marked abandoned.');
+      $this->assertEqual($old_order->getStatusId(), 'abandoned', 'Original order was marked abandoned.');
     }
     else {
       $this->fail('No order was created.');

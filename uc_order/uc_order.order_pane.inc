@@ -1063,7 +1063,7 @@ function uc_order_view_update_form($form, &$form_state, $order) {
 
   $form['current_status'] = array(
     '#type' => 'hidden',
-    '#value' => $order->order_status,
+    '#value' => $order->getStatusId(),
   );
 
   $form['order_id'] = array(
@@ -1083,7 +1083,7 @@ function uc_order_view_update_form($form, &$form_state, $order) {
   $form['controls']['status'] = array(
     '#type' => 'select',
     '#title' => t('Order status'),
-    '#default_value' => $order->order_status,
+    '#default_value' => $order->getStatusId(),
     '#options' => $options,
   );
 

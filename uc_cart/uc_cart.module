@@ -624,7 +624,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     if (uc_order_status_data($status, 'state') == 'in_checkout') {
       $status = uc_order_state_default('post_checkout');
       if (uc_order_update_status($order->id(), $status)) {
-        $order->order_status = $status;
+        $order->setStatusId($status);
       }
     }
 

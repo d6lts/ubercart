@@ -648,7 +648,7 @@ function uc_order_condition_is_shippable($order, $settings) {
  */
 function uc_order_action_update_status($order, $status) {
   if (uc_order_update_status($order->id(), $status)) {
-    $order->order_status = $status;
+    $order->setStatusId($status);
   }
 }
 
@@ -677,7 +677,7 @@ function uc_order_action_add_comment($order, $comment, $comment_type) {
   uc_order_comment_save($order->id(), 0,
     Drupal::token()->replace($comment, array('uc_order' => $order)),
     $comment_type == 'admin' ? 'admin' : 'order',
-    $order->order_status, $comment_type == 'notified');
+    $order->getStatusId(), $comment_type == 'notified');
 }
 
 /**

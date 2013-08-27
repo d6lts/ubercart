@@ -41,4 +41,23 @@ interface UcOrderInterface extends ContentEntityInterface {
    */
   public function setUserId($uid);
 
+  /**
+   * Returns the order status ID.
+   *
+   * @return string
+   *   The order status ID.
+   */
+  public function getStatusId();
+
+  /**
+   * Sets the order status ID.
+   *
+   * @param string $status
+   *   The order status ID.
+   *
+   * @return \Drupal\uc_order\UcOrderInterface
+   *   The called owner entity.
+   */
+  public function setStatusId($status);
+
 }
