@@ -301,7 +301,7 @@ function _uc_authorizenet_cim_profile_create_request($order) {
     'profile' => array(
       'merchantCustomerId' => substr($order->getUserId(), 0, 20),
       'description' => substr(t('Order @order taking place at @date', array('@order' => $order->id(), '@date' => format_date(REQUEST_TIME))), 0, 255),
-      'email' => substr($order->primary_email, 0, 255),
+      'email' => substr($order->getEmail(), 0, 255),
       'paymentProfiles' => array(
         'billTo' => _uc_authorize_cim_xml_billto($order),
         'payment' => array(
@@ -494,7 +494,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     'x_country' => !$billing_country ? '' : $billing_country[0]['country_iso_code_2'],
     'x_phone' => substr($order->billing_phone, 0, 25),
     // 'x_fax' => substr('', 0, 25),
-    'x_email' => substr($order->primary_email, 0, 255),
+    'x_email' => substr($order->getEmail(), 0, 255),
     'x_cust_id' => $order->getUserId(),
     'x_customer_ip' => substr(Drupal::request()->getClientIp(), 0, 15),
 
@@ -788,7 +788,7 @@ function uc_authorizenet_arb_create($order, $fee) {
       ),
       'customer' => array(
         'id' => substr($order->getUserId(), 0, 20),
-        'email' => substr($order->primary_email, 0, 255),
+        'email' => substr($order->getEmail(), 0, 255),
         'phoneNumber' => substr($order->billing_phone, 0, 25),
         // 'faxNumber' => '',
       ),

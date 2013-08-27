@@ -133,7 +133,7 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
   switch ($op) {
     case 'view':
       $build['uid'] = array('#markup' => t('Customer number: !user_link', array('!user_link' => $order->getUserId() ? l($order->getUserId(), 'user/' . $order->getUserId()) : '0')));
-      $build['primary_email'] = array('#markup' => '<br />' . t('Primary e-mail:') . '<br />' . check_plain($order->primary_email));
+      $build['primary_email'] = array('#markup' => '<br />' . t('Primary e-mail:') . '<br />' . check_plain($order->getEmail()));
 
       return $build;
 
@@ -154,12 +154,12 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
       );
       $form['customer']['primary_email'] = array(
         '#type' => 'hidden',
-        '#default_value' => $order->primary_email,
+        '#default_value' => $order->getEmail(),
       );
       $form['customer']['text']['primary_email_text'] = array(
         '#type' => 'textfield',
         '#title' => t('Primary e-mail'),
-        '#default_value' => $order->primary_email,
+        '#default_value' => $order->getEmail(),
         '#maxlength' => 64,
         '#size' => 32,
         '#disabled' => TRUE,

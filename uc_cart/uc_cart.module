@@ -681,7 +681,7 @@ function uc_cart_complete_sale_account($order) {
     return;
   }
 
-  $result = db_query("SELECT uid FROM {users} WHERE mail LIKE :email", array(':email' => $order->primary_email));
+  $result = db_query("SELECT uid FROM {users} WHERE mail LIKE :email", array(':email' => $order->getEmail()));
 
   // Email address matches an existing account.
   if ($account = $result->fetchObject()) {
@@ -692,9 +692,9 @@ function uc_cart_complete_sale_account($order) {
 
   // Set up a new user.
   $fields = array(
-    'name' => uc_store_email_to_username($order->primary_email),
-    'mail' => $order->primary_email,
-    'init' => $order->primary_email,
+    'name' => uc_store_email_to_username($order->getEmail()),
+    'mail' => $order->getEmail(),
+    'init' => $order->getEmail(),
     'pass' => user_password(),
     'roles' => array(),
     'status' => variable_get('uc_new_customer_status_active', TRUE) ? 1 : 0,
@@ -722,7 +722,7 @@ function uc_cart_complete_sale_account($order) {
   // Send the customer their account details if enabled.
   if (variable_get('uc_new_customer_email', TRUE)) {
     $type = variable_get('uc_new_customer_status_active', TRUE) ? 'register_no_approval_required' : 'register_pending_approval';
-    drupal_mail('user', $type, $order->primary_email, uc_store_mail_recipient_langcode($order->primary_email), array('account' => $account), uc_store_email_from());
+    drupal_mail('user', $type, $order->getEmail(), uc_store_mail_recipient_langcode($order->getEmail()), array('account' => $account), uc_store_email_from());
   }
 
   $order->setUserId($account->uid);
@@ -741,7 +741,7 @@ function uc_cart_uc_checkout_complete($order) {
 
     if (variable_get('uc_checkout_email_customer', TRUE)) {
       $subject = t('Your Order at !store', array('!store' => uc_store_name()));
-      uc_order_action_email_invoice($order, uc_store_email_from(), $order->primary_email, $subject, 'customer', 'checkout-mail');
+      uc_order_action_email_invoice($order, uc_store_email_from(), $order->getEmail(), $subject, 'customer', 'checkout-mail');
     }
 
     if (variable_get('uc_checkout_email_admin', TRUE)) {

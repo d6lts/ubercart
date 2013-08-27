@@ -263,7 +263,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'INVNUM' => $order_id . '-' . REQUEST_TIME,
       'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
       'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
-      'EMAIL' => substr($order->primary_email, 0, 127),
+      'EMAIL' => substr($order->getEmail(), 0, 127),
       'PHONENUM' => substr($order->billing_phone, 0, 20),
     );
 
@@ -332,7 +332,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
           'txn_type' => 'web_accept',
           'mc_gross' => $amount,
           'status' => 'Completed',
-          'payer_email' => $order->primary_email,
+          'payer_email' => $order->getEmail(),
           'received' => REQUEST_TIME,
         ))
         ->execute();
@@ -887,7 +887,7 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
     'address2' => substr($order->{$address . '_street2'}, 0, 100),
     'city' => substr($order->{$address . '_city'}, 0, 40),
     'country' => $country[0]['country_iso_code_2'],
-    'email' => $order->primary_email,
+    'email' => $order->getEmail(),
     'first_name' => substr($order->{$address . '_first_name'}, 0, 32),
     'last_name' => substr($order->{$address . '_last_name'}, 0, 64),
     'state' => uc_get_zone_code($order->{$address . '_zone'}),

@@ -38,7 +38,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
 
   public $currency = '';
   public $order_total = 0;
-  public $primary_email = '';
 
   public $delivery_first_name = '';
   public $delivery_last_name = '';
@@ -91,7 +90,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
     // We unset all defined properties, so magic getters apply.
     unset($this->currency);
     unset($this->order_total);
-    unset($this->primary_email);
     unset($this->delivery_first_name);
     unset($this->delivery_last_name);
     unset($this->delivery_phone);
@@ -255,6 +253,21 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    */
   public function getStateId() {
     return uc_order_status_data($this->get('order_status')->value, 'state');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEmail() {
+    return $this->get('primary_email')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setEmail($email) {
+    $this->set('primary_email', $email);
+    return $this;
   }
 
 }

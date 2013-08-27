@@ -214,7 +214,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
 
         case 'email':
         case 'mail':
-          $replacements[$original] = $sanitize ? check_plain($order->primary_email) : $order->primary_email;
+          $replacements[$original] = $sanitize ? check_plain($order->getEmail()) : $order->getEmail();
           break;
 
         case 'shipping-method':

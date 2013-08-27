@@ -185,7 +185,7 @@ function uc_2checkout_form($form, &$form_state, $order) {
     'state' => uc_get_zone_code($order->billing_zone),
     'zip' => drupal_substr($order->billing_postal_code, 0, 16),
     'country' => $country[0]['country_iso_code_3'],
-    'email' => drupal_substr($order->primary_email, 0, 64),
+    'email' => drupal_substr($order->getEmail(), 0, 64),
     'phone' => drupal_substr($order->billing_phone, 0, 16),
     'id_type' => 1,
   );

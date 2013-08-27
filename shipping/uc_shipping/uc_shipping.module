@@ -259,7 +259,7 @@ function template_preprocess_uc_packing_slip(&$variables) {
 
   $order = $variables['order'];
   $variables['order_link'] = l($order->id(), url('user/' . $order->getUserId() . '/orders/' . $order->id(), array('absolute' => TRUE)));
-  $variables['order_email'] = check_plain($order->primary_email);
+  $variables['order_email'] = check_plain($order->getEmail());
   $variables['billing_address'] = uc_order_address($order, 'billing');
   $variables['billing_phone'] = check_plain($order->billing_phone);
   $variables['shipping_address'] = uc_order_address($order, 'delivery');
@@ -763,7 +763,7 @@ function uc_shipping_address_form($form, &$form_state, $addresses, $order) {
   $form['destination']['delivery_email'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail'),
-    '#default_value' => $order->primary_email,
+    '#default_value' => $order->getEmail(),
     '#weight' => -1,
   );
   $form['destination']['delivery_email']['#weight'] = -1;

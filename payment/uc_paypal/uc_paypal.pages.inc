@@ -243,8 +243,8 @@ function uc_paypal_ec_review() {
     $order->billing_last_name = check_plain($nvp_response['LASTNAME']);
     $order->billing_street1 = check_plain($nvp_response['EMAIL']);
 
-    if (empty($order->primary_email)) {
-      $order->primary_email = $nvp_response['EMAIL'];
+    if (empty($order->getEmail())) {
+      $order->setEmail($nvp_response['EMAIL']);
     }
     $order->payment_method = 'paypal_ec';
 

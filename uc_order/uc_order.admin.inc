@@ -1125,7 +1125,7 @@ function uc_order_mail_invoice_form($form, &$form_state, $order) {
   $form['email'] = array(
     '#type' => 'textfield',
     '#title' => t('Recipient e-mail address'),
-    '#default_value' => $order->primary_email,
+    '#default_value' => $order->getEmail(),
   );
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit' ] = array(

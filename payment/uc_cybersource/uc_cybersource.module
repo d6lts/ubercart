@@ -431,7 +431,7 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
     'billTo_country' => $billing_country[0]['country_iso_code_2'],
     'billTo_state' => uc_get_zone_code($order->billing_zone),
     'billTo_postalCode' => $order->billing_postal_code,
-    'billTo_email' => $order->primary_email,
+    'billTo_email' => $order->getEmail(),
     'billTo_phoneNumber' => $order->billing_phone,
   );
   if (uc_order_is_shippable($order)) {
@@ -612,7 +612,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
     'billTo_country' => $country[0]['country_iso_code_2'],
     'billTo_state' => uc_get_zone_code($order->billing_zone),
     'billTo_postalCode' => $order->billing_postal_code,
-    'billTo_email' => $order->primary_email,
+    'billTo_email' => $order->getEmail(),
     'card_accountNumber' => $order->payment_details['cc_number'],
     'card_cardType' => $cc_type,
     'card_expirationMonth' => $order->payment_details['cc_exp_month'],
@@ -819,7 +819,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
     if ($order->billing_phone) {
       $billTo->phoneNumber = $order->billing_phone;
     }
-    $billTo->email = $order->primary_email;
+    $billTo->email = $order->getEmail();
     $billTo->customerID = $order->getUserId();
     $request->billTo = $billTo;
 
@@ -1080,7 +1080,7 @@ function uc_cybersource_uc_calculate_tax($order) {
     if ($order->billing_phone) {
       $billTo->phoneNumber = $order->billing_phone;
     }
-    $billTo->email = $order->primary_email;
+    $billTo->email = $order->getEmail();
     $billTo->customerID = $order->getUserId();
     $request->billTo = $billTo;
 
@@ -1096,7 +1096,7 @@ function uc_cybersource_uc_calculate_tax($order) {
     $shipTo->state = uc_get_zone_code($order->delivery_zone);
     $shipTo->postalCode = $order->delivery_postal_code;
     $shipTo->country = $delivery_country[0]['country_iso_code_2'];
-    $shipTo->email = $order->primary_email;
+    $shipTo->email = $order->getEmail();
     $request->shipTo = $shipTo;
 
     // Add the company's ship from information.

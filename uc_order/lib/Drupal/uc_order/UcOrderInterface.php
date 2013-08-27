@@ -68,4 +68,23 @@ interface UcOrderInterface extends ContentEntityInterface {
    */
   public function getStateId();
 
+  /**
+   * Returns the order e-mail address.
+   *
+   * @return string
+   *   The e-mail address.
+   */
+  public function getEmail();
+
+  /**
+   * Sets the order e-mail address.
+   *
+   * @param string $email
+   *   The e-mail address.
+   *
+   * @return \Drupal\uc_order\UcOrderInterface
+   *   The called owner entity.
+   */
+  public function setEmail($email);
+
 }
