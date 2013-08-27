@@ -536,7 +536,7 @@ function _uc_payment_method_list() {
  */
 function _uc_payment_method_data($method_id, $key) {
   $methods = _uc_payment_method_list();
-  return isset($methods[$method_id][$key]) ? $methods[$method_id][$key] : NULL;
+  return ($method_id && isset($methods[$method_id][$key])) ? $methods[$method_id][$key] : NULL;
 }
 
 /**

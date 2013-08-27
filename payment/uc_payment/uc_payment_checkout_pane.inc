@@ -52,7 +52,7 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
         $description = t('Select a payment method from the following options.');
       }
 
-      if (!isset($options[$order->payment_method])) {
+      if (!$order->payment_method || !isset($options[$order->payment_method])) {
         $order->payment_method = key($options);
       }
 
