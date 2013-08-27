@@ -7,9 +7,11 @@
 
 namespace Drupal\uc_order\Entity;
 
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\uc_order\UcOrderProductBCDecorator;
+use Drupal\uc_order\UcOrderProductInterface;
 
 /**
  * Defines the order product entity class.
@@ -30,7 +32,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class UcOrderProduct extends Entity {
+class UcOrderProduct extends EntityNG implements UcOrderProductInterface {
 
   /**
    * The order product ID.
@@ -110,10 +112,41 @@ class UcOrderProduct extends Entity {
   public $data;
 
   /**
+   * Overrides Drupal\Core\Entity\EntityNG::init().
+   */
+  public function init() {
+    parent::init();
+
+    // We unset all defined properties, so magic getters apply.
+    unset($this->order_product_id);
+    unset($this->order_id);
+    unset($this->nid);
+    unset($this->title);
+    unset($this->model);
+    unset($this->qty);
+    unset($this->cost);
+    unset($this->price);
+    unset($this->weight);
+    unset($this->weight_units);
+    unset($this->data);
+  }
+
+  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
-    return $this->order_product_id;
+    return $this->get('order_product_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBCEntity() {
+    if (!isset($this->bcEntity)) {
+      $this->getPropertyDefinitions();
+      $this->bcEntity = new UcOrderProductBCDecorator($this, $this->fieldDefinitions);
+    }
+    return $this->bcEntity;
   }
 
 }
