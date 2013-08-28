@@ -1081,7 +1081,7 @@ function uc_order_load_line_items($order) {
 function uc_order_load_line_items_display($order) {
   $temp = clone $order;
   $line_items = uc_order_load_line_items($order);
-  $temp->line_items = &$line_items;
+//  $temp->line_items = &$line_items;
 
   $items = _uc_line_item_list();
   foreach ($items as $item) {
