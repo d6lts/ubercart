@@ -80,18 +80,18 @@ function test_gateway_charge($order_id, $amount, $data) {
 
   if ($success) {
     $message = t('Credit card charged: !amount', array('!amount' => uc_currency_format($amount)));
-    uc_order_comment_save($order_id, $user->uid, $message, 'admin');
+    uc_order_comment_save($order_id, $user->id(), $message, 'admin');
   }
   else {
     $message = t('Credit card charge failed.');
-    uc_order_comment_save($order_id, $user->uid, $message, 'admin');
+    uc_order_comment_save($order_id, $user->id(), $message, 'admin');
   }
 
   $result = array(
     'success' => $success,
     'comment' => t('Card charged, resolution code: 0022548315'),
     'message' => $success ? t('Credit card payment processed successfully.') : t('Credit card charge failed.'),
-    'uid' => $user->uid,
+    'uid' => $user->id(),
     // 'data' => $data,
   );
 

@@ -344,7 +344,7 @@ function uc_roles_action_order_renew($order, $message) {
         continue;
       }
 
-      $existing_role = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", array(':uid' => $account->uid, ':rid' => $role->rid))->fetchObject();
+      $existing_role = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", array(':uid' => $account->id(), ':rid' => $role->rid))->fetchObject();
 
       // Determine the expiration timestamp for the role.
       $expiration = _uc_roles_product_get_expiration($role, $product->qty, isset($existing_role->expiration) ? $existing_role->expiration : NULL);
@@ -366,7 +366,7 @@ function uc_roles_action_order_renew($order, $message) {
       }
 
       // Get the new expiration (if applicable)
-      $new_expiration = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", array(':uid' => $account->uid, ':rid' => $role->rid))->fetchObject();
+      $new_expiration = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", array(':uid' => $account->id(), ':rid' => $role->rid))->fetchObject();
       if (!$new_expiration) {
         $new_expiration = new stdClass();
         $new_expiration->uid = $account->uid;
@@ -374,7 +374,7 @@ function uc_roles_action_order_renew($order, $message) {
         $new_expiration->expiration = NULL;
       }
 
-      uc_order_comment_save($order->id(), $account->uid, $comment);
+      uc_order_comment_save($order->id(), $account->id(), $comment);
 
       // Trigger role email.
       rules_invoke_event('uc_roles_notify_' . $op, $order, $new_expiration);

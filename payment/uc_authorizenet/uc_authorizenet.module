@@ -363,14 +363,14 @@ function _uc_authorizenet_cim_profile_charge($order, $amount, $data) {
     }
 
     // Save a comment to the order.
-    uc_order_comment_save($order->id(), $user->uid, implode('<br />', $comment), 'admin');
+    uc_order_comment_save($order->id(), $user->id(), implode('<br />', $comment), 'admin');
   }
 
   // Build the response to the payment gateway API.
   return $result + array(
     'comment' => implode(', ', $comment),
     'message' => implode('<br />', $comment),
-    'uid' => $user->uid,
+    'uid' => $user->id(),
   );
 }
 
@@ -588,7 +588,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     $result = array(
       'success' => FALSE,
       'message' => t('Credit card payment declined: @message', array('@message' => $response[3])),
-      'uid' => $user->uid,
+      'uid' => $user->id(),
     );
   }
   else {
@@ -599,7 +599,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
       'comment' => $message,
       'message' => $message,
       'data' => array('module' => 'uc_authorizenet', 'txn_type' => $response[11], 'txn_id' => $response[6], 'txn_authcode' => $response[4]),
-      'uid' => $user->uid,
+      'uid' => $user->id(),
     );
 
     // If this was an authorization only transaction...
@@ -634,7 +634,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   }
 
   // Save the comment to the order.
-  uc_order_comment_save($order->id(), $user->uid, $comment, 'admin');
+  uc_order_comment_save($order->id(), $user->id(), $comment, 'admin');
 
   return $result;
 }

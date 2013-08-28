@@ -142,7 +142,7 @@ function uc_product_permission() {
 function uc_product_feature_access($node) {
   global $user;
   return uc_product_is_product($node) && $node->type != 'product_kit' &&
-    ((user_access('administer product features') || (user_access('administer own product features') && ($user->uid == $node->uid))));
+    ((user_access('administer product features') || (user_access('administer own product features') && ($user->id() == $node->uid))));
 }
 
 /**

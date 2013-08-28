@@ -1285,7 +1285,7 @@ function uc_reports_sales_custom_form_submit($form, &$form_state) {
 function uc_reports_store_csv($report_id, $rows) {
   global $user;
   $csv_output = '';
-  $user_id = empty($user->uid) ? session_id() : $user->uid;
+  $user_id = $user->isAnonymous() ? session_id() : $user->id();
   foreach ($rows as $row) {
     foreach ($row as $index => $column) {
       $row[$index] = '"' . str_replace('"', '""', $column) . '"';
@@ -1308,7 +1308,7 @@ function uc_reports_store_csv($report_id, $rows) {
  */
 function uc_reports_get_csv($report_id, $user_id) {
   global $user;
-  $user_check = empty($user->uid) ? session_id() : $user->uid;
+  $user_check = $user->isAnonymous() ? session_id() : $user->id();
   $csv_data = cache_get('uc_reports_' . $report_id . '_' . $user_id, 'cache');
 
   if (!$csv_data || $user_id != $user_check) {

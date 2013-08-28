@@ -31,7 +31,7 @@
 function hook_uc_payment_entered($order, $method, $amount, $account, $data, $comment) {
   drupal_set_message(t('User @uid entered a @method payment of @amount for order @order_id.',
     array(
-      '@uid' => $account->uid,
+      '@uid' => $account->id(),
       '@method' => $method,
       '@amount' => uc_currency_format($amount),
       '@order_id' => $order->id(),

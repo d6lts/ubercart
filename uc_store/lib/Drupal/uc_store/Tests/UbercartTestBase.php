@@ -65,7 +65,7 @@ abstract class UbercartTestBase extends WebTestBase {
     $this->customer = $this->drupalCreateUser(array('view own orders'));
 
     // Create a test product.
-    $this->product = $this->createProduct(array('uid' => $this->adminUser->uid));
+    $this->product = $this->createProduct(array('uid' => $this->adminUser->id()));
   }
 
   /**

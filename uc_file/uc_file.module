@@ -74,7 +74,7 @@ function uc_file_menu() {
  */
 function uc_file_user_access($account) {
   global $user;
-  return $user->uid && (user_access('view all downloads') || $user->uid == $account->uid);
+  return $user->id() && (user_access('view all downloads') || $user->id() == $account->id());
 }
 
 /**
@@ -143,7 +143,7 @@ function uc_file_user_form($form, &$form_state, $account) {
     $form['file']['file_message'] = array(
       '#markup' => '<p>' . t(
         'You must add files at the <a href="!url">Ubercart file download administration page</a> in order to attach them to a user.',
-        array('!url' => url('admin/store/products/files', array('query' => array('destination' => 'user/' . $account->uid . '/edit'))))
+        array('!url' => url('admin/store/products/files', array('query' => array('destination' => 'user/' . $account->id() . '/edit'))))
       ) . '</p>',
     );
 
@@ -155,7 +155,7 @@ function uc_file_user_form($form, &$form_state, $account) {
   $form['file']['download']['file_download']['#tree'] = TRUE;
 
   $downloadable_files = array();
-  $file_downloads = db_query("SELECT * FROM {uc_file_users} ufu INNER JOIN {uc_files} uf ON ufu.fid = uf.fid WHERE ufu.uid = :uid ORDER BY uf.filename ASC", array(':uid' => $account->uid));
+  $file_downloads = db_query("SELECT * FROM {uc_file_users} ufu INNER JOIN {uc_files} uf ON ufu.fid = uf.fid WHERE ufu.uid = :uid ORDER BY uf.filename ASC", array(':uid' => $account->id()));
   $behavior = 0;
   foreach ($file_downloads as $file_download) {
 
@@ -366,15 +366,15 @@ function uc_file_user_view($account, $view_mode) {
 
   // If user has files and permission to view them, put a link
   // on the user's profile.
-  $existing_download = db_query("SELECT fid FROM {uc_file_users} WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
-  if ($view_mode != 'full' || !$existing_download || (!user_access('view all downloads') && $user->uid != $account->uid)) {
+  $existing_download = db_query("SELECT fid FROM {uc_file_users} WHERE uid = :uid", array(':uid' => $account->id()))->fetchField();
+  if ($view_mode != 'full' || !$existing_download || (!user_access('view all downloads') && $user->id() != $account->id())) {
     return;
   }
 
   $account->content['uc_file_download'] = array(
     '#type' => 'item',
     '#title' => t('File downloads'),
-    '#markup' => l(t('Click here to view your file downloads.'), 'user/' . $account->uid . '/purchased-files'),
+    '#markup' => l(t('Click here to view your file downloads.'), 'user/' . $account->id() . '/purchased-files'),
   );
 }
 
@@ -448,7 +448,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
         // But still show the message if it does.
         drupal_set_message(t('You already have privileges to <a href="!url">download %file</a>. If you complete the purchase of this item, your new download limit will be %download_limit, your access location limit will be %address_limit, and your new expiration time will be %expiration.',
           array(
-            '!url' => $user->uid ? url('user/' . $user->uid . '/purchased-files') : url('user/login'),
+            '!url' => $user->id() ? url('user/' . $user->id() . '/purchased-files') : url('user/login'),
             '%file' => $product_feature->filename,
             '%download_limit' => $file_user['download_limit'] ? $file_user['download_limit'] : t('unlimited'),
             '%address_limit'  => $file_user['address_limit' ] ? $file_user['address_limit' ] : t('unlimited'),
@@ -459,7 +459,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
         return array(array(
           'success' => FALSE,
           'message' => t('You already have privileges to <a href="!url">download %file</a>.', array(
-            '!url' => $user->uid ? url('user/' . $user->uid . '/purchased-files') : url('user/login'),
+            '!url' => $user->id() ? url('user/' . $user->id() . '/purchased-files') : url('user/login'),
             '%file' => $product_feature->filename,
           )),
         ));
@@ -1431,7 +1431,7 @@ function uc_file_qualify_file($filename) {
  */
 function uc_file_remove_user($user) {
   $query = db_delete('uc_file_users')
-    ->condition('uid', $user->uid);
+    ->condition('uid', $user->id());
 
   // Echo the deletion only if something was actually deleted.
   if ($query->execute()) {
@@ -1439,7 +1439,7 @@ function uc_file_remove_user($user) {
       '!user' => theme('username', array(
         'account' => $user,
         'name' => check_plain($user->name),
-        'link_path' => 'user/' . $user->uid,
+        'link_path' => 'user/' . $user->id(),
       )),
     )));
   }
@@ -1456,7 +1456,7 @@ function uc_file_remove_user($user) {
 function uc_file_remove_user_file_by_id($user, $fid) {
   $file = uc_file_get_by_id($fid);
   $query = db_delete('uc_file_users')
-    ->condition('uid', $user->uid)
+    ->condition('uid', $user->id())
     ->condition('fid', $fid);
 
   // Echo the deletion only if something was actually deleted.
@@ -1465,7 +1465,7 @@ function uc_file_remove_user_file_by_id($user, $fid) {
       '!user' => theme('username', array(
         'account' => $user,
         'name' => check_plain($user->name),
-        'link_path' => 'user/' . $user->uid,
+        'link_path' => 'user/' . $user->id(),
       )),
       '%file' => $file->filename,
     )));
@@ -1607,7 +1607,7 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
 
   // Data shared between all files passed.
   $user_file_global = array(
-    'uid' => $user->uid,
+    'uid' => $user->id(),
     'pfid' => $pfid,
   );
 
@@ -1668,7 +1668,7 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
  * Retrieves a file_user object by user and fid.
  */
 function _uc_file_user_get($user, $fid) {
-  $file_user = db_query("SELECT * FROM {uc_file_users} WHERE uid = :uid AND fid = :fid", array(':uid' => $user->uid, ':fid' => $fid))->fetchObject();
+  $file_user = db_query("SELECT * FROM {uc_file_users} WHERE uid = :uid AND fid = :fid", array(':uid' => $user->id(), ':fid' => $fid))->fetchObject();
 
   if ($file_user) {
     $file_user->addresses = unserialize($file_user->addresses);

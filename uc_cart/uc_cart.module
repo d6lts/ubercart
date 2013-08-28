@@ -229,9 +229,9 @@ function uc_cart_node_delete($node) {
 function uc_cart_user_load($users) {
   if (request_uri() == '/user/register?destination=cart/checkout') {
     foreach ($users as $account) {
-      if ($account->uid != 0) {
+      if ($account->id() != 0) {
         // Add items from an anonymous cart to a user's permanent cart on login.
-        uc_cart_login_update($account->uid);
+        uc_cart_login_update($account->id());
       }
     }
   }
@@ -242,7 +242,7 @@ function uc_cart_user_load($users) {
  */
 function uc_cart_user_login($account) {
   // Add items from an anonymous cart to a user's permanent cart on login.
-  uc_cart_login_update($account->uid);
+  uc_cart_login_update($account->id());
 }
 
 /**
@@ -637,7 +637,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   $type = $order->data['complete_sale'];
 
   // Log in new users, if requested.
-  if ($type == 'new_user' && $login && !$user->uid) {
+  if ($type == 'new_user' && $login && $user->isAnonymous()) {
     $type = 'new_user_logged_in';
     $user = $order->getUser();
   }
@@ -711,7 +711,7 @@ function uc_cart_complete_sale_account($order) {
 
   // Override the password, if specified.
   if (isset($order->data['new_user']['hash'])) {
-    db_query("UPDATE {users} SET pass = :hash WHERE uid = :uid", array(':hash' => $order->data['new_user']['hash'], ':uid' => $account->uid));
+    db_query("UPDATE {users} SET pass = :hash WHERE uid = :uid", array(':hash' => $order->data['new_user']['hash'], ':uid' => $account->id()));
     $account->password = t('Your password');
   }
   else {
@@ -725,7 +725,7 @@ function uc_cart_complete_sale_account($order) {
     drupal_mail('user', $type, $order->getEmail(), uc_store_mail_recipient_langcode($order->getEmail()), array('account' => $account), uc_store_email_from());
   }
 
-  $order->setUserId($account->uid);
+  $order->setUserId($account->id());
   $order->data['new_user']['name'] = $fields['name'];
   $order->data['complete_sale'] =  'new_user';
 }

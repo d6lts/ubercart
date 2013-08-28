@@ -204,7 +204,7 @@ class UcOrder extends EntityNG implements UcOrderInterface {
       uc_order_delete_line_item($order_id, TRUE);
 
       // Log the action in the database.
-      watchdog('uc_order', 'Order @order_id deleted by user @uid.', array('@order_id' => $order_id, '@uid' => $GLOBALS['user']->uid));
+      watchdog('uc_order', 'Order @order_id deleted by user @uid.', array('@order_id' => $order_id, '@uid' => $GLOBALS['user']->id()));
     }
   }
 

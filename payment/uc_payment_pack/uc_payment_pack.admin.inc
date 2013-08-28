@@ -59,7 +59,7 @@ function uc_payment_pack_receive_check_form($form, &$form_state, $order) {
 function uc_payment_pack_receive_check_form_submit($form, &$form_state) {
   global $user;
 
-  uc_payment_enter($form_state['values']['order_id'], 'check', $form_state['values']['amount'], $user->uid, '', $form_state['values']['comment']);
+  uc_payment_enter($form_state['values']['order_id'], 'check', $form_state['values']['amount'], $user->id(), '', $form_state['values']['comment']);
 
   db_insert('uc_payment_check')
     ->fields(array(

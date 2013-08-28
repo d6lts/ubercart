@@ -312,7 +312,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
         'comment' => t('PayPal transaction ID: @transactionid', array('@transactionid' => $nvp_response['TRANSACTIONID'])),
         'message' => $message,
         'data' => check_plain($nvp_response['TRANSACTIONID']),
-        'uid' => $user->uid,
+        'uid' => $user->id(),
       );
 
       // If this was an authorization only transaction...
@@ -345,7 +345,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       $result = array(
         'success' => FALSE,
         'message' => $message,
-        'uid' => $user->uid,
+        'uid' => $user->id(),
       );
       break;
     default:
@@ -353,12 +353,12 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       $result = array(
         'success' => NULL,
         'message' => $message,
-        'uid' => $user->uid,
+        'uid' => $user->id(),
       );
       break;
   }
 
-  uc_order_comment_save($order_id, $user->uid, $message, 'admin');
+  uc_order_comment_save($order_id, $user->id(), $message, 'admin');
 
   // Don't log this as a payment money wasn't actually captured.
   if (in_array($data['txn_type'], array(UC_CREDIT_AUTH_ONLY))) {
@@ -706,7 +706,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
 
   list($desc, $subtotal) = _uc_paypal_product_details($items);
 
-  $order = uc_order_new($user->uid);
+  $order = uc_order_new($user->id());
 
   $nvp_request = array(
     'METHOD' => 'SetExpressCheckout',

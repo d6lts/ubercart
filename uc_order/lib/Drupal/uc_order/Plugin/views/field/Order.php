@@ -69,8 +69,8 @@ class Order extends FieldPluginBase {
       if (user_access('view all orders')) {
         $path = 'admin/store/orders/' . $this->getValue($values, 'order_id');
       }
-      elseif (user_access('view own orders') && $this->getValue($values, 'uid') == $GLOBALS['user']->uid) {
-        $path = 'user/' . $GLOBALS['user']->uid . '/orders/' . $this->getValue($values, 'order_id');
+      elseif (user_access('view own orders') && $this->getValue($values, 'uid') == $GLOBALS['user']->id()) {
+        $path = 'user/' . $GLOBALS['user']->id() . '/orders/' . $this->getValue($values, 'order_id');
       }
       else {
         $path = FALSE;

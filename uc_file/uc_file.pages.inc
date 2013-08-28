@@ -98,7 +98,7 @@ function uc_file_user_downloads($account) {
   $query = db_select('uc_file_users', 'u')
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('Drupal\Core\Database\Query\TableSortExtender')
-    ->condition('uid', $account->uid)
+    ->condition('uid', $account->id())
     ->orderByHeader($header)
     ->limit(UC_FILE_PAGER_SIZE);
   $query->leftJoin('uc_files', 'f', 'u.fid = f.fid');
@@ -119,7 +119,7 @@ function uc_file_user_downloads($account) {
     ->fields('p', array('description'));
 
   $count_query = db_select('uc_file_users')
-    ->condition('uid', $account->uid);
+    ->condition('uid', $account->id());
   $count_query->addExpression('COUNT(*)');
 
   $query->setCountQuery($count_query);
@@ -208,7 +208,7 @@ function _uc_file_download($fid) {
     $file_download = uc_file_get_by_id($fid);
   }
   else {
-    $file_download = uc_file_get_by_uid($user->uid, $fid);
+    $file_download = uc_file_get_by_uid($user->id(), $fid);
   }
 
   if (isset($file_download->filename)) {
@@ -232,7 +232,7 @@ function _uc_file_download($fid) {
     drupal_set_message($error_messages[$status] . $admin_message, 'error');
 
     // Kick 'em to the curb. >:)
-    _uc_file_download_redirect($user->uid);
+    _uc_file_download_redirect($user->id());
   }
 
   drupal_exit();
@@ -255,7 +255,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
   $request_cache = cache_get('uc_file_' . $ip);
   $requests = ($request_cache) ? $request_cache->data + 1 : 1;
 
-  $message_user = ($user->uid) ? t('The user %username', array('%username' => user_format_name($user))) : t('The IP address %ip', array('%ip' => $ip));
+  $message_user = ($user->id()) ? t('The user %username', array('%username' => user_format_name($user))) : t('The IP address %ip', array('%ip' => $ip));
 
   if ($requests > UC_FILE_REQUEST_LIMIT) {
     return UC_FILE_ERROR_TOO_MANY_BOGUS_REQUESTS;

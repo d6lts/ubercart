@@ -59,7 +59,7 @@ function uc_authorizenet_arb_user_update_form($form, &$form_state, $user, $rfid)
 
   $form['uid'] = array(
     '#type' => 'value',
-    '#value' => $user->uid,
+    '#value' => $user->id(),
   );
   $form['rfid'] = array(
     '#type' => 'value',
@@ -82,7 +82,7 @@ function uc_authorizenet_arb_user_update_form($form, &$form_state, $user, $rfid)
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
-    '#suffix' => l(t('Cancel'), 'user/' . $user->uid),
+    '#suffix' => l(t('Cancel'), 'user/' . $user->id()),
   );
 
   return $form;
@@ -127,14 +127,14 @@ function uc_authorizenet_arb_user_update_form_submit($form, &$form_state) {
 function uc_authorizenet_arb_user_cancel_form($form, &$form_state, $user, $rfid) {
   $form['uid'] = array(
     '#type' => 'value',
-    '#value' => $user->uid,
+    '#value' => $user->id(),
   );
   $form['rfid'] = array(
     '#type' => 'value',
     '#value' => $rfid,
   );
 
-  return confirm_form($form, t('Are you sure you wish to cancel this fee?'), 'user/' . $user->uid, t('This action cannot be undone and may result in the termination of subscription services.'), t('Confirm'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you wish to cancel this fee?'), 'user/' . $user->id(), t('This action cannot be undone and may result in the termination of subscription services.'), t('Confirm'), t('Cancel'));
 }
 
 /**

@@ -100,13 +100,13 @@ function theme_uc_roles_expiration($variables) {
  * @ingroup forms
  */
 function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
-  $expiration = db_query("SELECT expiration FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", array(':uid' => $account->uid, ':rid' => $rid))->fetchField();
+  $expiration = db_query("SELECT expiration FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", array(':uid' => $account->id(), ':rid' => $rid))->fetchField();
   if ($expiration) {
 
     $role_name = _uc_roles_get_name($rid);
 
     $form['user'] = array('#type' => 'value', '#value' => user_format_name($account));
-    $form['uid'] = array('#type' => 'value', '#value' => $account->uid);
+    $form['uid'] = array('#type' => 'value', '#value' => $account->id());
     $form['role'] = array('#type' => 'value', '#value' => $role_name);
     $form['rid'] = array('#type' => 'value', '#value' => $rid);
 
@@ -116,7 +116,7 @@ function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
         '!user' => theme('username', array(
           'account' => $account,
           'name' => check_plain(user_format_name($account)),
-          'link_path' => 'user/' . $account->uid,
+          'link_path' => 'user/' . $account->id(),
         )),
         '%role_name' => $role_name,
       )),
@@ -125,7 +125,7 @@ function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
         '!user' => theme('username', array(
           'account' => $account,
           'name' => check_plain(user_format_name($account)),
-          'link_path' => 'user/' . $account->uid,
+          'link_path' => 'user/' . $account->id(),
         )),
         '%role_name' => $role_name,
       )),

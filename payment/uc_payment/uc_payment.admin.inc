@@ -169,7 +169,7 @@ function uc_payment_by_order_form_submit($form, &$form_state) {
     $received = REQUEST_TIME;
   }
 
-  uc_payment_enter($form_state['values']['order_id'], $payment['method'], $payment['amount'], $user->uid, '', $payment['comment'], $received);
+  uc_payment_enter($form_state['values']['order_id'], $payment['method'], $payment['amount'], $user->id(), '', $payment['comment'], $received);
 
   drupal_set_message(t('Payment entered.'));
 }
