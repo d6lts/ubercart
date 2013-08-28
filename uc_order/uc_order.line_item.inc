@@ -20,7 +20,7 @@ function uc_line_item_subtotal($op, $order) {
       $lines[] = array(
         'id' => 'subtotal',
         'title' => t('Subtotal'),
-        'amount' => uc_order_get_total($order, TRUE),
+        'amount' => $order->getSubtotal(),
       );
       return $lines;
   }
@@ -35,7 +35,7 @@ function uc_line_item_total($op, $order) {
       $lines[] = array(
         'id' => 'total',
         'title' => t('Order total'),
-        'amount' => uc_order_get_total($order),
+        'amount' => $order->getTotal(),
       );
       return $lines;
   }

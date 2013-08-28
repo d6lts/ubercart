@@ -229,7 +229,7 @@ function uc_credit_uc_order($op, $order, $arg2) {
 
         // Attempt to process the CC payment.
         $order->payment_details = uc_credit_cache('load');
-        $pass = uc_payment_process_payment('credit', $order->id(), $order->order_total, $data, TRUE, NULL, FALSE);
+        $pass = uc_payment_process_payment('credit', $order->id(), $order->getTotal(), $data, TRUE, NULL, FALSE);
 
         // If the payment failed, store the data back in the session and
         // halt the checkout process.

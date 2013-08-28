@@ -129,7 +129,7 @@ function uc_googleanalytics_ecommerce_js($order) {
   $trans = array(
     'order_id' => $order->id(),
     'store' => uc_store_name(),
-    'total' => $order->order_total,
+    'total' => $order->getTotal(),
     'tax' => $order->tax_total,
     'shipping' => $order->shipping_total,
     'city' => $order->billing_city,

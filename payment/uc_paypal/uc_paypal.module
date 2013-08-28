@@ -631,7 +631,7 @@ function uc_paypal_ec_checkout($form, &$form_state) {
     'METHOD' => 'SetExpressCheckout',
     'RETURNURL' => url('cart/echeckout/selected', array('absolute' => TRUE)),
     'CANCELURL' => url('uc_paypal/wps/cancel', array('absolute' => TRUE)),
-    'AMT' => uc_currency_format($order->order_total, FALSE, FALSE, '.'),
+    'AMT' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
     'CURRENCYCODE' => variable_get('uc_paypal_wpp_currency', 'USD'),
     'PAYMENTACTION' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture') == 'authorize' ? 'Authorization' : 'Sale',
     'DESC' => substr($desc, 0, 127),
@@ -771,7 +771,7 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
     }
   }
 
-  $subtotal = $order->order_total - $tax - $shipping;
+  $subtotal = $order->getTotal() - $tax - $shipping;
 
   $country = uc_get_country_data(array('country_id' => $order->billing_country));
   if ($country === FALSE) {
@@ -783,7 +783,7 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
     'TOKEN' => $_SESSION['TOKEN'],
     'PAYMENTACTION' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture') == 'authorize' ? 'Authorization' : 'Sale',
     'PAYERID' => $_SESSION['PAYERID'],
-    'AMT' => uc_currency_format($order->order_total, FALSE, FALSE, '.'),
+    'AMT' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
     'DESC' => substr($desc, 0, 127),
     'INVNUM' => $order->id() . '-' . REQUEST_TIME,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
@@ -944,7 +944,7 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
   }
   else {
     // List the whole cart as a single item to account for fees/discounts.
-    $data['amount_1'] = uc_currency_format($order->order_total - $shipping - $tax, FALSE, FALSE, '.');
+    $data['amount_1'] = uc_currency_format($order->getTotal() - $shipping - $tax, FALSE, FALSE, '.');
     $data['item_name_1'] = t('Order @order_id at !store', array('@order_id' => $order->id(), '!store' => uc_store_name()));
     $data['on0_1'] = t('Product count');
     $data['os0_1'] = count($order->products);

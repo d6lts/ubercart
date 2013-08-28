@@ -243,7 +243,7 @@ function uc_payment_uc_payment_method() {
  */
 function uc_payment_uc_payment_method_checkout_alter(&$methods, $order) {
   if (isset($methods['free_order'])) {
-    if ($order->order_total < 0.01) {
+    if ($order->getTotal() < 0.01) {
       // Unset all other payment methods if this is a free order.
       foreach (array_keys($methods) as $key) {
         if ($key != 'free_order') {
@@ -271,7 +271,7 @@ function uc_payment_method_free_order($op, &$order) {
       );
 
     case 'order-submit':
-      if ($order->order_total >= 0.01) {
+      if ($order->getTotal() >= 0.01) {
         return array(array(
           'pass' => FALSE,
           'message' => t('We cannot process your order without payment.'),
@@ -474,7 +474,7 @@ function uc_payment_delete($receipt_id) {
  * Returns the balance of payments on an order.
  */
 function uc_payment_balance($order) {
-  $total = $order->order_total;
+  $total = $order->getTotal();
   $payments = uc_payment_load_payments($order->id());
 
   if ($payments === FALSE) {

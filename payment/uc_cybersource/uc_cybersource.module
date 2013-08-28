@@ -462,7 +462,7 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
     }
   }
 
-  $amount = $order->order_total - $shipping - $tax;
+  $amount = $order->getTotal() - $shipping - $tax;
   $currency = variable_get('uc_cybersource_hop_currency', 'USD');
   $merchantID = getMerchantID();
   $timestamp = getmicrotime();
@@ -844,7 +844,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
 
     // Separately add products and line item into the request items object if
     // we're charging the full order total.
-    if (round($amount, 2) == round($order->order_total, 2)) {
+    if (round($amount, 2) == round($order->getTotal(), 2)) {
       $request->item = array();
       $counter = 0;
 

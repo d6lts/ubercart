@@ -70,4 +70,18 @@ class UcOrderBCDecorator extends EntityBCDecorator implements UcOrderInterface {
     $this->decorated->setEmail($email);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSubtotal() {
+    return $this->decorated->getSubtotal();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTotal() {
+    return $this->decorated->getTotal();
+  }
+
 }

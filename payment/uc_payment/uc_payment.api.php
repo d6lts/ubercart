@@ -233,7 +233,7 @@ function hook_uc_payment_method_alter(&$methods) {
  */
 function hook_uc_payment_method_checkout_alter(&$methods, $order) {
   // Remove the Check payment method for orders under $100.
-  if ($order->order_total < 100) {
+  if ($order->getTotal() < 100) {
     unset($methods['check']);
   }
 }

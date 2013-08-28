@@ -37,7 +37,6 @@ use Drupal\uc_order\UcOrderInterface;
 class UcOrder extends EntityNG implements UcOrderInterface {
 
   public $currency = '';
-  public $order_total = 0;
 
   public $delivery_first_name = '';
   public $delivery_last_name = '';
@@ -89,7 +88,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
 
     // We unset all defined properties, so magic getters apply.
     unset($this->currency);
-    unset($this->order_total);
     unset($this->delivery_first_name);
     unset($this->delivery_last_name);
     unset($this->delivery_phone);
@@ -140,7 +138,7 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
-    $this->order_total->value = uc_order_get_total($this);
+    $this->order_total->value = $this->getTotal();
     $this->product_count->value = uc_order_get_product_count($this);
     if (is_null($this->delivery_country->value) || $this->delivery_country->value == 0) {
       $this->delivery_country->value = config('uc_store.settings')->get('address.country');
@@ -166,7 +164,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
 
     $order = $this->getBCEntity();
     uc_order_module_invoke('save', $order, NULL);
-    $this->order_total->value = uc_order_get_total($this);
   }
 
   /**
@@ -268,6 +265,20 @@ class UcOrder extends EntityNG implements UcOrderInterface {
   public function setEmail($email) {
     $this->set('primary_email', $email);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSubtotal() {
+    return uc_order_get_total($this->getBCEntity(), TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTotal() {
+    return uc_order_get_total($this->getBCEntity());
   }
 
 }

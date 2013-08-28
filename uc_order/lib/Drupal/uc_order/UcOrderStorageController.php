@@ -77,12 +77,6 @@ class UcOrderStorageController extends DatabaseStorageControllerNG {
 
       $fields = array();
 
-      // Make sure the total still matches up...
-      if (($total = uc_order_get_total($order)) !== $order->order_total) {
-        $fields['order_total'] = $total;
-        $order->order_total = $total;
-      }
-
       if (($count = uc_order_get_product_count($order)) !== $order->product_count) {
         $fields['product_count'] = $count;
         $order->product_count = $count;

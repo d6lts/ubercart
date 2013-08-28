@@ -87,4 +87,20 @@ interface UcOrderInterface extends ContentEntityInterface {
    */
   public function setEmail($email);
 
+  /**
+   * Returns the order subtotal amount (products only).
+   *
+   * @return float
+   *   The order subtotal.
+   */
+  public function getSubtotal();
+
+  /**
+   * Returns the order total amount (including all line items).
+   *
+   * @return float
+   *   The order total.
+   */
+  public function getTotal();
+
 }

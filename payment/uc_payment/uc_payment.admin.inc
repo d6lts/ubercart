@@ -26,7 +26,7 @@ function uc_payment_method_settings_form($form, &$form_state, $method_id) {
 function uc_payment_by_order_form($form, &$form_state, $order) {
   $form['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . '/uc_payment.css';
 
-  $total = $order->order_total;
+  $total = $order->getTotal();
   $payments = uc_payment_load_payments($order->id());
 
   $form['order_total'] = array(

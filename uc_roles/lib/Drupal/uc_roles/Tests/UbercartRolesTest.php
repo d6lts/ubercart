@@ -40,7 +40,7 @@ class UbercartRolesTest extends UbercartTestBase {
     // Check out with the test product.
     $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
     $order = $this->checkout();
-    uc_payment_enter($order->id(), 'other', $order->order_total);
+    uc_payment_enter($order->id(), 'other', $order->getTotal());
 
     // Test that the role was granted.
     $account = $order->getUser();

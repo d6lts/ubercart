@@ -351,7 +351,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // Payment notification is received first.
     $order_data = array('primary_email' => 'simpletest@ubercart.org');
     $order = $this->createOrder($order_data);
-    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
     $output = uc_cart_complete_sale($order);
 
     // Check that a new account was created.
@@ -371,7 +371,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $order_data = array('primary_email' => 'simpletest2@ubercart.org');
     $order = $this->createOrder($order_data);
     $output = uc_cart_complete_sale($order, TRUE);
-    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // 2 e-mails: new account, customer invoice
     $mails = $this->drupalGetMails();
@@ -386,7 +386,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     // Same user, new order.
     $order = $this->createOrder($order_data);
     $output = uc_cart_complete_sale($order, TRUE);
-    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // Check that no new account was created.
     $this->assertTrue(strpos($output['#message'], 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
@@ -411,7 +411,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $order = $this->createOrder(array(
       'products' => array($item),
     ));
-    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // Find the order uid.
     $uid = db_query("SELECT uid FROM {uc_orders} ORDER BY order_id DESC")->fetchField();
@@ -431,7 +431,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
       'primary_email' => $this->customer->getEmail(),
       'products' => array($item),
     ));
-    uc_payment_enter($order->id(), 'SimpleTest', $order->order_total);
+    uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
     $account = user_load($this->customer->uid);
     $this->assertTrue(isset($account->roles[$rid]), 'Existing user was granted role.');
     $order = uc_order_load($order->id());

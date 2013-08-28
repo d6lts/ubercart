@@ -205,11 +205,11 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'total':
-          $replacements[$original] = uc_currency_format($order->order_total);
+          $replacements[$original] = uc_currency_format($order->getTotal());
           break;
 
         case 'total-value':
-          $replacements[$original] = $order->order_total;
+          $replacements[$original] = $order->getTotal();
           break;
 
         case 'email':

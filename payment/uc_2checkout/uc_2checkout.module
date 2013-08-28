@@ -170,7 +170,7 @@ function uc_2checkout_form($form, &$form_state, $order) {
 
   $data = array(
     'sid' => variable_get('uc_2checkout_sid', ''),
-    'total' => uc_currency_format($order->order_total, FALSE, FALSE, '.'),
+    'total' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
     'cart_order_id' => $order->id(),
     'demo' => variable_get('uc_2checkout_demo', TRUE) ? 'Y' : 'N',
     'fixed' => 'Y',
