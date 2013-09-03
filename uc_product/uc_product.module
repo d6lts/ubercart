@@ -1547,12 +1547,13 @@ function uc_product_node_type_update(NodeTypeInterface $type) {
  *   types get an instance of the field.
  */
 function uc_product_add_default_image_field($type = NULL) {
-  $field = field_info_field('uc_product_image');
+  $field = field_info_field('node', 'uc_product_image');
 
   // Set up field if it doesn't exist.
   if (!$field) {
     $field = entity_create('field_entity', array(
-      'field_name' => 'uc_product_image',
+      'entity_type' => 'node',
+      'name' => 'uc_product_image',
       'type' => 'image',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(

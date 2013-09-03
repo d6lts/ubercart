@@ -318,7 +318,7 @@ function uc_catalog_preprocess_block(&$variables) {
  * listed in the catalog.
  */
 function uc_catalog_uc_store_status() {
-  $field = field_info_field('taxonomy_catalog');
+  $field = field_info_field('node', 'taxonomy_catalog');
   if (!$field) {
     return array(array(
       'status' => 'error',
@@ -537,10 +537,11 @@ function uc_catalog_add_node_type($type) {
     $config->set('vocabulary', $vid)->save();
   }
 
-  $field = field_info_field('taxonomy_catalog');
+  $field = field_info_field('node', 'taxonomy_catalog');
   if (!$field) {
     $field = entity_create('field_entity', array(
-      'field_name' => 'taxonomy_catalog',
+      'entity_type' => 'node',
+      'name' => 'taxonomy_catalog',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(
@@ -575,11 +576,12 @@ function uc_catalog_add_node_type($type) {
  * Sets up a default image field on the Catalog vocabulary.
  */
 function uc_catalog_add_image_field() {
-  $field = field_info_field('uc_catalog_image');
+  $field = field_info_field('taxonomy_term', 'uc_catalog_image');
 
   if (!$field) {
     $field = entity_create('field_entity', array(
-      'field_name' => 'uc_catalog_image',
+      'entity_type' => 'taxonomy_term',
+      'name' => 'uc_catalog_image',
       'type' => 'image',
     ));
     $field->save();
