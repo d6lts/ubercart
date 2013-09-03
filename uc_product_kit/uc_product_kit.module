@@ -9,6 +9,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Entity\EntityDisplay;
+use Drupal\node\NodeInterface;
 
 define('UC_PRODUCT_KIT_UNMUTABLE_NO_LIST', -1);
 define('UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST', 0);
@@ -106,9 +107,9 @@ function uc_product_kit_node_info() {
 }
 
 /**
- * Implements hook_node_prepare().
+ * Implements hook_node_prepare_form().
  */
-function uc_product_kit_node_prepare($node) {
+function uc_product_kit_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   if ($node->type != 'product_kit') {
     return;
   }
