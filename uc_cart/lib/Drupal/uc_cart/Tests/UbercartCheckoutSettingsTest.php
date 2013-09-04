@@ -37,7 +37,7 @@ class UbercartCheckoutSettingsTest extends UbercartTestBase {
     );
 
     $this->drupalPost(
-      'node/' . $this->product->nid,
+      'node/' . $this->product->id(),
       array(),
       t('Add to cart')
     );
@@ -65,7 +65,7 @@ class UbercartCheckoutSettingsTest extends UbercartTestBase {
 
     $this->drupalLogout();
     $this->drupalPost(
-      'node/' . $this->product->nid,
+      'node/' . $this->product->id(),
       array(),
       t('Add to cart')
     );

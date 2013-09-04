@@ -27,7 +27,7 @@ class UbercartPaymentPaneTest extends UbercartTestBase {
   public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
-    $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
+    $this->drupalPost('node/' . $this->product->id(), array(), t('Add to cart'));
   }
 
   /**
@@ -83,7 +83,7 @@ class UbercartPaymentPaneTest extends UbercartTestBase {
     $this->assertNoText('Subtotal: $0.00');
 
     // Check that a mixture of free and paid products cannot be purchased for free.
-    $this->drupalPost('node/' . $free_product->nid, array(), t('Add to cart'));
+    $this->drupalPost('node/' . $free_product->id(), array(), t('Add to cart'));
     $this->drupalGet('cart/checkout');
     $this->assertText('Check or money order');
     $this->assertNoText('No payment required');
@@ -92,7 +92,7 @@ class UbercartPaymentPaneTest extends UbercartTestBase {
     // Check that free products can be purchased successfully with no payment.
     $this->drupalPost('cart', array(), t('Remove'));
     $this->drupalPost('cart', array(), t('Remove'));
-    $this->drupalPost('node/' . $free_product->nid, array(), t('Add to cart'));
+    $this->drupalPost('node/' . $free_product->id(), array(), t('Add to cart'));
     $this->drupalGet('cart/checkout');
     $this->assertNoText('Check or money order');
     $this->assertText('No payment required');

@@ -73,7 +73,7 @@ function uc_product_kit_uc_form_alter(&$form, &$form_state, $form_id) {
     if (!isset($form['sub_products'])) {
       // We only want product kits.
       $kit = $form['node']['#value'];
-      if ($kit->type !== 'product_kit') {
+      if ($kit->getType() !== 'product_kit') {
         return;
       }
 
@@ -896,7 +896,7 @@ function uc_product_kit_uc_store_status() {
  */
 function uc_product_kit_uc_add_to_cart($nid, $qty, $kit_data) {
   $node = node_load($nid);
-  if ($node->type == 'product_kit') {
+  if ($node->getType() == 'product_kit') {
     $cart = uc_cart_get_contents();
     $unique = uniqid('', TRUE);
     $update = array();

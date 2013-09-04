@@ -24,7 +24,7 @@ class UcCartItemStorageController extends DatabaseStorageController {
 
       $item->product = uc_product_load_variant($item->nid, $item->data);
       if ($item->product) {
-        $item->title = $item->product->title;
+        $item->title = $item->product->label();
         $item->model = $item->product->model;
         $item->cost = $item->product->cost;
         $item->price = $item->product->price;

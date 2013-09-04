@@ -75,7 +75,7 @@ function uc_stock_admin_paths() {
  * Access callback for node/%node/edit/stock.
  */
 function uc_stock_product_access($node) {
-  if ($node->type == 'product_kit') {
+  if ($node->getType() == 'product_kit') {
     return FALSE;
   }
 

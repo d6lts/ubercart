@@ -91,11 +91,11 @@ function uc_weightquote_node_insert($node) {
  * Implements hook_node_update().
  */
 function uc_weightquote_node_update($node) {
-  if (uc_product_is_product($node->type)) {
+  if (uc_product_is_product($node)) {
     if (isset($node->weightquote) && is_array($node->weightquote)) {
       if (empty($node->revision)) {
         db_delete('uc_weightquote_products')
-          ->condition('vid', $node->vid)
+          ->condition('vid', $node->getRevisionId())
           ->execute();
       }
 
@@ -105,8 +105,8 @@ function uc_weightquote_node_update($node) {
       foreach ($node->weightquote as $mid => $rate) {
         if (is_numeric($rate) && $rate >= 0) {
           $query->values(array(
-              'vid' => $node->vid,
-              'nid' => $node->nid,
+              'vid' => $node->getRevisionId(),
+              'nid' => $node->id(),
               'mid' => $mid,
               'rate' => $rate,
             ));
@@ -126,8 +126,8 @@ function uc_weightquote_node_load($nodes, $types) {
   $product_types = uc_product_types();
 
   foreach ($nodes as &$node) {
-    if (in_array($node->type, $product_types)) {
-      $vids[$node->nid] = $node->vid;
+    if (in_array($node->getType(), $product_types)) {
+      $vids[$node->id()] = $node->getRevisionId();
     }
   }
 
@@ -144,7 +144,7 @@ function uc_weightquote_node_load($nodes, $types) {
  */
 function uc_weightquote_node_delete($node) {
   db_delete('uc_weightquote_products')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 
@@ -153,7 +153,7 @@ function uc_weightquote_node_delete($node) {
  */
 function uc_weightquote_node_revision_delete($node) {
   db_delete('uc_weightquote_products')
-    ->condition('vid', $node->vid)
+    ->condition('vid', $node->getRevisionId())
     ->execute();
 }
 

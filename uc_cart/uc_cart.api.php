@@ -120,12 +120,12 @@ function hook_uc_add_to_cart_data($form_values) {
 function hook_uc_cart_display($item) {
   $node = node_load($item->nid);
   $element = array();
-  $element['nid'] = array('#type' => 'value', '#value' => $node->nid);
+  $element['nid'] = array('#type' => 'value', '#value' => $node->id());
   $element['module'] = array('#type' => 'value', '#value' => 'uc_product');
   $element['remove'] = array('#type' => 'checkbox');
 
   $element['title'] = array(
-    '#markup' => node_access('view', $node) ? l($item->title, 'node/' . $node->nid) : check_plain($item->title),
+    '#markup' => node_access('view', $node) ? l($item->title, 'node/' . $item->nid) : check_plain($item->title),
   );
 
 

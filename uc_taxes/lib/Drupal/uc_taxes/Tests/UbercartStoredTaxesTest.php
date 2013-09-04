@@ -70,7 +70,7 @@ class UbercartStoredTaxesTest extends UbercartTestBase {
     // $this->drupalGet("admin/store/settings/taxes/manage/uc_taxes_$rate->id");
     // $this->assertText(t('Conditions'), t('Rules configuration linked to tax.'));
 
-    $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
+    $this->drupalPost('node/' . $this->product->id(), array(), t('Add to cart'));
 
     // Manually step through checkout. $this->checkout() doesn't know about taxes.
     $this->drupalPost('cart', array(), 'Checkout');

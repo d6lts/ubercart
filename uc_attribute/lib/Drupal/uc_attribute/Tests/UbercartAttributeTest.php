@@ -53,14 +53,14 @@ class UbercartAttributeTest extends UbercartTestBase {
     $product = $this->createProduct();
 
     // Attach the attribute to a product.
-    uc_attribute_subject_save($attribute, 'product', $product->nid);
+    uc_attribute_subject_save($attribute, 'product', $product->id());
 
     // Confirm the database is correct.
-    $this->assertEqual($attribute->aid, db_query("SELECT aid FROM {uc_product_attributes} WHERE nid = :nid", array(':nid' => $product->nid))->fetchField(), t('Attribute was attached to a product properly.'));
-    $this->assertTrue(uc_attribute_subject_exists($attribute->aid, 'product', $product->nid));
+    $this->assertEqual($attribute->aid, db_query("SELECT aid FROM {uc_product_attributes} WHERE nid = :nid", array(':nid' => $product->id()))->fetchField(), t('Attribute was attached to a product properly.'));
+    $this->assertTrue(uc_attribute_subject_exists($attribute->aid, 'product', $product->id()));
 
     // Test retrieval.
-    $loaded_attribute = uc_attribute_load($attribute->aid, $product->nid, 'product');
+    $loaded_attribute = uc_attribute_load($attribute->aid, $product->id(), 'product');
 
     // Check the attribute integrity.
     foreach ($this->attributeFieldsToTest('product') as $field) {
@@ -71,11 +71,11 @@ class UbercartAttributeTest extends UbercartTestBase {
     }
 
     // Delete it.
-    uc_attribute_subject_delete($attribute->aid, 'product', $product->nid);
+    uc_attribute_subject_delete($attribute->aid, 'product', $product->id());
 
     // Confirm again.
-    $this->assertFalse(db_query("SELECT aid FROM {uc_product_attributes} WHERE nid = :nid", array(':nid' => $product->nid))->fetchField(), t('Attribute was detached from a product properly.'));
-    $this->assertFalse(uc_attribute_subject_exists($attribute->aid, 'product', $product->nid));
+    $this->assertFalse(db_query("SELECT aid FROM {uc_product_attributes} WHERE nid = :nid", array(':nid' => $product->id()))->fetchField(), t('Attribute was detached from a product properly.'));
+    $this->assertFalse(uc_attribute_subject_exists($attribute->aid, 'product', $product->id()));
 
     // Add a product class.
     $product_class = $this->createProductClass();
@@ -166,12 +166,12 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     // Add the selected attributes to the product.
     foreach ($loaded_attributes as $loaded_attribute) {
-      uc_attribute_subject_save($loaded_attribute, 'product', $product->nid, TRUE);
+      uc_attribute_subject_save($loaded_attribute, 'product', $product->id(), TRUE);
     }
 
     // Test loading all product attributes. (This covers uc_attribute_load_product_attributes(),
     // as the semantics are the same -cha0s)
-    $loaded_product_attributes = uc_attribute_load_multiple(array(), 'product', $product->nid);
+    $loaded_product_attributes = uc_attribute_load_multiple(array(), 'product', $product->id());
 
     // We'll get all in $loaded_attributes above, plus the original.
     $product_attributes = $loaded_attributes;
@@ -260,7 +260,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     }
 
     // Test the deletion applied to products too.
-    $loaded_product_attributes = uc_attribute_load_multiple(array(), 'product', $product->nid);
+    $loaded_product_attributes = uc_attribute_load_multiple(array(), 'product', $product->id());
 
     // We'll get all in $loaded_attributes above, without the original. (Which
     // has been deleted.)
@@ -363,7 +363,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     ));
 
     $attribute->options[$option->oid] = $option;
-    uc_attribute_subject_save($attribute, 'product', $product->nid, TRUE);
+    uc_attribute_subject_save($attribute, 'product', $product->id(), TRUE);
 
     $qty = $product->default_qty;
     if (!$qty) {
@@ -383,7 +383,7 @@ class UbercartAttributeTest extends UbercartTestBase {
       $edit['uc_attribute_option_price_format'] = $type;
       $this->drupalPost('admin/store/settings/products', $edit, t('Save configuration'));
 
-      $this->drupalGet('node/' . $product->nid);
+      $this->drupalGet('node/' . $product->id());
       $this->assertRaw($raw[$type], t('Attribute option pricing is correct.'));
     }
   }
@@ -642,7 +642,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $attribute = $this->createAttribute(array('display' => 1));
     $option = $this->createAttributeOption(array('aid' => $attribute->aid));
 
-    $this->drupalGet('node/' . $product->nid . '/edit/attributes');
+    $this->drupalGet('node/' . $product->id() . '/edit/attributes');
     $this->assertText('You must first add attributes to this product.');
 
     $this->clickLink('Add an attribute');
@@ -656,12 +656,12 @@ class UbercartAttributeTest extends UbercartTestBase {
     $this->assertText(uc_currency_format($option->price), 'Default option price found');
     $this->assertFieldByName('attributes[' . $attribute->aid . '][display]', $attribute->display, 'Attribute display setting found');
 
-    $this->drupalGet('node/' . $product->nid . '/edit/attributes/add');
+    $this->drupalGet('node/' . $product->id() . '/edit/attributes/add');
     $this->assertNoText($attribute->name);
     $this->assertText('No attributes left to add.');
 
     $edit = array('attributes[' . $attribute->aid. '][remove]' => 1);
-    $this->drupalPost('node/' . $product->nid . '/edit/attributes', $edit, t('Save changes'));
+    $this->drupalPost('node/' . $product->id() . '/edit/attributes', $edit, t('Save changes'));
     $this->assertText('You must first add attributes to this product.');
   }
 
@@ -675,9 +675,9 @@ class UbercartAttributeTest extends UbercartTestBase {
       $option = $this->createAttributeOption(array('aid' => $attribute->aid));
       $attribute->options[$option->oid] = $option;
     }
-    uc_attribute_subject_save($attribute, 'product', $product->nid, TRUE);
+    uc_attribute_subject_save($attribute, 'product', $product->id(), TRUE);
 
-    $this->drupalGet('node/' . $product->nid . '/edit/options');
+    $this->drupalGet('node/' . $product->id() . '/edit/options');
     $this->assertText($attribute->name, 'Attribute name found');
     foreach ($attribute->options as $option) {
       $this->assertText($option->name, 'Option name found');
@@ -695,13 +695,13 @@ class UbercartAttributeTest extends UbercartTestBase {
     $attribute = $this->createAttribute(array('display' => 1));
     for ($i = 0; $i < 3; $i++) {
       $option = $this->createAttributeOption(array('aid' => $attribute->aid));
-      $adjustment = $this->createProductAdjustment(array('combination' => serialize(array($attribute->aid => $option->oid)), 'nid' => $product->nid));
+      $adjustment = $this->createProductAdjustment(array('combination' => serialize(array($attribute->aid => $option->oid)), 'nid' => $product->id()));
       $option->model = $adjustment->model;
       $attribute->options[$option->oid] = $option;
     }
-    uc_attribute_subject_save($attribute, 'product', $product->nid, TRUE);
+    uc_attribute_subject_save($attribute, 'product', $product->id(), TRUE);
 
-    $this->drupalGet('node/' . $product->nid . '/edit/adjustments');
+    $this->drupalGet('node/' . $product->id() . '/edit/adjustments');
     $this->assertText('Default product SKU: ' . $product->model, 'Default product SKU found');
     $this->assertRaw('<th>' . $attribute->name . '</th>', 'Attribute name found');
     foreach ($attribute->options as $option) {
@@ -718,14 +718,14 @@ class UbercartAttributeTest extends UbercartTestBase {
     $attribute = $this->createAttribute(array('display' => 2, 'required' => TRUE));
     for ($i = 0; $i < 3; $i++) {
       $option = $this->createAttributeOption(array('aid' => $attribute->aid));
-      $adjustment = $this->createProductAdjustment(array('combination' => serialize(array($attribute->aid => $option->oid)), 'nid' => $product->nid));
+      $adjustment = $this->createProductAdjustment(array('combination' => serialize(array($attribute->aid => $option->oid)), 'nid' => $product->id()));
       $option->model = $adjustment->model;
       $attribute->options[$option->oid] = $option;
     }
-    uc_attribute_subject_save($attribute, 'product', $product->nid, TRUE);
+    uc_attribute_subject_save($attribute, 'product', $product->id(), TRUE);
 
     // Product node display.
-    $this->drupalGet('node/' . $product->nid);
+    $this->drupalGet('node/' . $product->id());
     $this->assertText($attribute->label, 'Attribute label found for product');
     $this->assertText($attribute->description, 'Attribute description found for product');
     foreach ($attribute->options as $option) {
@@ -785,7 +785,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
       // Put the attribute on a product.
       $product = $this->createProduct();
-      uc_attribute_subject_save($attribute, 'product', $product->nid, TRUE);
+      uc_attribute_subject_save($attribute, 'product', $product->id(), TRUE);
 
       // Add the product to the cart.
       if ($display == 3) {
@@ -801,7 +801,7 @@ class UbercartAttributeTest extends UbercartTestBase {
         $edit = array("attributes[$attribute->aid]" => $option->name);
       }
 
-      $this->drupalPost('node/' . $product->nid, $edit, t('Add to cart'));
+      $this->drupalPost('node/' . $product->id(), $edit, t('Add to cart'));
       $this->assertText("$attribute->label: $option->name", t('Option selected on cart item.'));
       $this->assertText(uc_currency_format($product->sell_price + $option->price), t('Product has adjusted price.'));
     }

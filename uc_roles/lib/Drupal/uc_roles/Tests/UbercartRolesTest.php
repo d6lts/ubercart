@@ -28,7 +28,7 @@ class UbercartRolesTest extends UbercartTestBase {
     // Add role assignment to the test product.
     $rid = $this->drupalCreateRole(array('access content'));
     $this->drupalLogin($this->adminUser);
-    $this->drupalPost('node/' . $this->product->nid . '/edit/features', array('feature' => 'role'), t('Add'));
+    $this->drupalPost('node/' . $this->product->id() . '/edit/features', array('feature' => 'role'), t('Add'));
     $edit = array(
       'uc_roles_role' => $rid,
       'end_override' => TRUE,
@@ -38,7 +38,7 @@ class UbercartRolesTest extends UbercartTestBase {
     $this->drupalPost(NULL, $edit, t('Save feature'));
 
     // Check out with the test product.
-    $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
+    $this->drupalPost('node/' . $this->product->id(), array(), t('Add to cart'));
     $order = $this->checkout();
     uc_payment_enter($order->id(), 'other', $order->getTotal());
 

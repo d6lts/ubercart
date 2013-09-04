@@ -38,7 +38,7 @@ class UbercartCartSettingsTest extends UbercartTestBase {
     );
 
     $this->drupalPost(
-      'node/' . $this->product->nid,
+      'node/' . $this->product->id(),
       array(),
       t('Add to cart')
     );
@@ -54,8 +54,8 @@ class UbercartCartSettingsTest extends UbercartTestBase {
       t('Save configuration')
     );
 
-    $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'), array('query' => array('test' => 'querystring')));
-    $url = url('node/' . $this->product->nid, array('absolute' => TRUE, 'query' => array('test' => 'querystring')));
+    $this->drupalPost('node/' . $this->product->id(), array(), t('Add to cart'), array('query' => array('test' => 'querystring')));
+    $url = url('node/' . $this->product->id(), array('absolute' => TRUE, 'query' => array('test' => 'querystring')));
     $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect works with a query string.');
   }
 
@@ -81,7 +81,7 @@ class UbercartCartSettingsTest extends UbercartTestBase {
 
     // Check to see if the lower priced product triggers the minimum price logic.
     $this->drupalPost(
-      'node/' . $product_below_limit->nid,
+      'node/' . $product_below_limit->id(),
       array(),
       t('Add to cart')
     );
@@ -96,7 +96,7 @@ class UbercartCartSettingsTest extends UbercartTestBase {
 
     // Add another product to the cart, and verify that we land on the checkout page.
     $this->drupalPost(
-      'node/' . $product_above_limit->nid,
+      'node/' . $product_above_limit->id(),
       array(),
       t('Add to cart')
     );
@@ -111,7 +111,7 @@ class UbercartCartSettingsTest extends UbercartTestBase {
   function testContinueShopping() {
     // Continue shopping link should take you back to the product page.
     $this->drupalPost(
-      'node/' . $this->product->nid,
+      'node/' . $this->product->id(),
       array(),
       t('Add to cart')
     );
@@ -120,7 +120,7 @@ class UbercartCartSettingsTest extends UbercartTestBase {
       0,
       t('Continue shopping link appears on the page.')
     );
-    $links = $this->xpath('//a[@href="' . url('node/' . $this->product->nid, array('absolute' => FALSE)) . '"]');
+    $links = $this->xpath('//a[@href="' . url('node/' . $this->product->id(), array('absolute' => FALSE)) . '"]');
     $this->assertTrue(
       isset($links[0]),
       t('Continue shopping link returns to the product page.')
@@ -185,7 +185,7 @@ class UbercartCartSettingsTest extends UbercartTestBase {
     );
 
     $this->drupalPost(
-      'node/' . $this->product->nid,
+      'node/' . $this->product->id(),
       array(),
       t('Add to cart')
     );

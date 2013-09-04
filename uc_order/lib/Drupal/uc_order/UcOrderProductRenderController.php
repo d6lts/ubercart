@@ -27,7 +27,7 @@ class UcOrderProductRenderController extends EntityRenderController {
         '#cell_attributes' => array('class' => array('qty')),
       );
       $node = node_load($product->nid);
-      $title = node_access('view', $node) ? l($product->title, 'node/' . $node->nid) : check_plain($product->title);
+      $title = node_access('view', $node) ? l($product->title, 'node/' . $product->nid) : check_plain($product->title);
       $product->content['product'] = array(
         '#markup' => $title . uc_product_get_description($product),
         '#cell_attributes' => array('class' => array('product')),

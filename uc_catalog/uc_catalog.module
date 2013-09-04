@@ -123,7 +123,7 @@ function uc_catalog_theme() {
 function uc_catalog_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   static $parents = array();
 
-  if (uc_product_is_product($node->type) && isset($node->taxonomy_catalog)) {
+  if (uc_product_is_product($node) && isset($node->taxonomy_catalog)) {
     if ($view_mode == 'full' && config('uc_catalog.settings')->get('breadcrumb')) {
       $crumbs = array();
       if (config('system.site')->get('page.front') != 'catalog') {

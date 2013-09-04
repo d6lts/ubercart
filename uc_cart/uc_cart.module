@@ -212,9 +212,9 @@ function uc_cart_cron() {
  * Implements hook_node_delete().
  */
 function uc_cart_node_delete($node) {
-  if (uc_product_is_product($node->type)) {
+  if (uc_product_is_product($node)) {
     $result = Drupal::entityQuery('uc_cart_item')
-      ->condition('nid', $node->nid)
+      ->condition('nid', $node->id())
       ->execute();
 
     if (!empty($result)) {
@@ -906,7 +906,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     $data['module'] = 'uc_product';
   }
 
-  if (!uc_product_is_product($node->type)) {
+  if (!uc_product_is_product($node)) {
     drupal_set_message(t('@title is not a product. Unable to add to cart.', array('@title' => $node->label())), 'error');
     return;
   }
@@ -946,7 +946,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
 
   $result = Drupal::entityQuery('uc_cart_item')
     ->condition('cart_id', $cid)
-    ->condition('nid', $node->nid)
+    ->condition('nid', $nid)
     ->condition('data', serialize($data))
     ->execute();
 
@@ -954,7 +954,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
   if (empty($result)) {
     $item_entity = entity_create('uc_cart_item', array(
       'cart_id' => $cid,
-      'nid' => $node->nid,
+      'nid' => $nid,
       'qty' => $qty,
       'data' => $data,
     ));
@@ -970,7 +970,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     }
     $item_entity = entity_load('uc_cart_item', current(array_keys($result)));
     $qty += $item_entity->qty;
-    module_invoke($data['module'], 'uc_update_cart_item', $node->nid, $data, min($qty, 999999), $cid);
+    module_invoke($data['module'], 'uc_update_cart_item', $nid, $data, min($qty, 999999), $cid);
   }
 
   // If specified, rebuild the cached cart items array.

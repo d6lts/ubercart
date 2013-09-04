@@ -571,7 +571,7 @@ function uc_taxes_apply_item_tax($item, $tax) {
     $type = 'blank-line';
   }
   elseif ($node = node_load($item->nid)) { // Use type of current node, if it exists.
-    $type = $node->type;
+    $type = $node->getType();
   }
   else { // Default to generic product.
     $type = 'product';

@@ -74,31 +74,31 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
 
     // Attach the attribute to the product.
     $attribute = uc_attribute_load($attribute->aid);
-    uc_attribute_subject_save($attribute, 'product', $product->nid, TRUE);
+    uc_attribute_subject_save($attribute, 'product', $product->id(), TRUE);
 
     // Create a product kit containing the product.
     $kit = $this->drupalCreateNode(array(
       'type' => 'product_kit',
-      'products' => array($product->nid),
+      'products' => array($product->id()),
       'ordering' => 0,
       'mutable' => UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST,
     ));
 
     // Set the kit total to $9 to automatically apply a discount.
-    $kit = node_load($kit->nid);
+    $kit = node_load($kit->id());
     $kit->kit_total = 9;
     $kit->save();
-    $kit = node_load($kit->nid);
-    $this->assertEqual($kit->products[$product->nid]->discount, -1, 'Product kit component has correct discount applied.');
+    $kit = node_load($kit->id());
+    $this->assertEqual($kit->products[$product->id()]->discount, -1, 'Product kit component has correct discount applied.');
 
     // Ensure the price is displayed tax-inclusively on the add-to-cart form.
-    $this->drupalGet('node/' . $kit->nid);
+    $this->drupalGet('node/' . $kit->id());
     $this->assertText('$10.80' . $rate->inclusion_text, 'Tax inclusive price on node-view form is accurate.'); // $10.80 = $9.00 + 20%
     $this->assertRaw($option->name . ', +$6.00</option>', 'Tax inclusive option price on node view form is accurate.'); // $6.00 = $5.00 + 20%
 
     // Add the product kit to the cart, selecting the option.
-    $attribute_key = 'products[' . $product->nid . '][attributes][' . $attribute->aid . ']';
-    $this->drupalPost('node/' . $kit->nid, array($attribute_key => $option->oid), t('Add to cart'));
+    $attribute_key = 'products[' . $product->id() . '][attributes][' . $attribute->aid . ']';
+    $this->drupalPost('node/' . $kit->id(), array($attribute_key => $option->oid), t('Add to cart'));
 
     // Check that the subtotal is $16.80 ($10 base + $5 option - $1 discount, with 20% tax)
     $this->drupalGet('cart');

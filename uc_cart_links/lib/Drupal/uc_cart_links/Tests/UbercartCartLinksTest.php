@@ -103,7 +103,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     //
 
     foreach ($cart_links as $key => $test_link) {
-      $this->drupalGet('node/' . $page->nid);
+      $this->drupalGet('node/' . $page->id());
       // Look for link on page
       $this->assertLink(
         t('Cart Link #@link', array('@link' => $key)),
@@ -195,7 +195,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     // Turn on display of product action message
     $this->setCartLinksUIProductActionMessage(TRUE);
     // Go to page with Cart Links
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
     // Pick one of the links at random
     $test_link = array_rand($cart_links);
     $this->clickLink(t('Cart Link #@link', array('@link' => $test_link)));
@@ -211,7 +211,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     // Turn off display of product action message
     $this->setCartLinksUIProductActionMessage(FALSE);
     // Go to page with Cart Links
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
     // Pick one of the links at random
     $test_link = array_rand($cart_links);
     $this->clickLink(t('Cart Link #@link', array('@link' => $test_link)));
@@ -250,7 +250,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     // Allow links to empty cart
     $this->setCartLinksUIAllowEmptying(TRUE);
     // Go to page with Cart Links
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
     // Pick one of the links at random and add it to the cart
     $test_link_0 = array_rand($cart_links);
     $this->clickLink(t('Cart Link #@link', array('@link' => $test_link_0)));
@@ -324,14 +324,14 @@ class UbercartCartLinksTest extends UbercartTestBase {
     //
 
     // Go to page with Cart Links
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
     // Pick one of the links at random and restrict it
     $test_link_0 = array_rand($cart_links);
     // Only this link is allowed - strip '/cart/add/' from beginning
     $this->setCartLinksUIRestrictions(substr($cart_links[$test_link_0], 10));
 
     // Attempt to click link - should pass
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
     $this->clickLink(t('Cart Link #@link', array('@link' => $test_link_0)));
 
     // Check for notice that item was added (this notice is set ON
@@ -348,7 +348,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
 
     // Attempt to click it
     // It should fail and redirect to the home page (default)
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
     $this->clickLink(t('Cart Link #@link', array('@link' => $test_link)));
     $this->assertText(
       t('Welcome to Drupal')
@@ -370,11 +370,11 @@ class UbercartCartLinksTest extends UbercartTestBase {
     );
 
     // Set redirect link
-    $this->setCartLinksUIRedirect('node/' . $redirect_page->nid);
+    $this->setCartLinksUIRedirect('node/' . $redirect_page->id());
 
     // Attempt to click same restricted link as above.
     // It should fail again but this time redirect to $redirect_page.
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
     $this->clickLink(t('Cart Link #@link', array('@link' => $test_link)));
     $this->assertText(
       t('ERROR: Invalid Cart Link!'),
@@ -383,7 +383,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
 
     // Remove restrictions, try to add again - it should pass
     $this->setCartLinksUIRestrictions('');
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
     $this->clickLink(t('Cart Link #@link', array('@link' => $test_link)));
     $this->assertText(
       t('@title added to your shopping cart.', array('@title' => $link_data[$test_link]['title'])),
@@ -445,7 +445,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     //
 
     // Go to page with Cart Links
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
 
     // Pick one link at random and append an '-m<#>' to display a message
     $test_link = array_rand($cart_links);
@@ -490,7 +490,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     //
 
     // Go to page with Cart Links
-    $this->drupalGet('node/' . $page->nid);
+    $this->drupalGet('node/' . $page->id());
 
     // Create three tracking IDs
     $tracking = array();
@@ -744,7 +744,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
 
     // Add the selected attributes to the product.
     foreach ($loaded_attributes as $loaded_attribute) {
-      uc_attribute_subject_save($loaded_attribute, 'product', $product->nid, TRUE);
+      uc_attribute_subject_save($loaded_attribute, 'product', $product->id(), TRUE);
     }
 
     return $product;
@@ -772,8 +772,8 @@ class UbercartCartLinksTest extends UbercartTestBase {
    */
   function createValidCartLinks($products = array()) {
     foreach ($products as $key => $product) {
-      $nid   = $product->nid;
-      $title = $product->title;
+      $nid   = $product->id();
+      $title = $product->label();
       $qty   = mt_rand(1, 19);
       // $link_data will hold meta information about the Cart Links
       // so we won't have to try to re-construct this information by

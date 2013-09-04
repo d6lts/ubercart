@@ -28,7 +28,7 @@ function hook_uc_product_alter(&$node) {
     $combination = array();
     foreach ($node->data['attributes'] as $aid => $value) {
       if (is_numeric($value)) {
-        $attribute = uc_attribute_load($aid, $node->nid, 'product');
+        $attribute = uc_attribute_load($aid, $node->id(), 'product');
         if ($attribute && ($attribute->display == 1 || $attribute->display == 2)) {
           $combination[$aid] = $value;
         }
@@ -36,7 +36,7 @@ function hook_uc_product_alter(&$node) {
     }
     ksort($combination);
 
-    $model = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid AND combination LIKE :combo", array(':nid' => $node->nid, ':combo' => serialize($combination)))->fetchField();
+    $model = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid AND combination LIKE :combo", array(':nid' => $node->id(), ':combo' => serialize($combination)))->fetchField();
 
     if (!empty($model)) {
       $node->model = $model;

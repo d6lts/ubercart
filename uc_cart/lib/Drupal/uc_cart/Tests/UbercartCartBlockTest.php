@@ -43,14 +43,14 @@ class UbercartCartBlockTest extends UbercartTestBase {
     $this->assertNoLink('Checkout');
 
     // Test the cart block with an item.
-    $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
+    $this->drupalPost('node/' . $this->product->id(), array(), t('Add to cart'));
     $this->drupalGet('');
 
     $this->assertNoRaw('cart-block-icon-empty');
     $this->assertRaw('cart-block-icon-full');
     $this->assertNoText('There are no products in your shopping cart.');
     $this->assertText('1 ×');
-    $this->assertText($this->product->title);
+    $this->assertText($this->product->label());
     $this->assertNoUniqueText(uc_currency_format($this->product->sell_price));
     $this->assertText('1 Item');
     $this->assertText('Total: ' . uc_currency_format($this->product->sell_price));
@@ -68,7 +68,7 @@ class UbercartCartBlockTest extends UbercartTestBase {
     $this->assertNoText($block->label());
 
     // Test the cart block with an item.
-    $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
+    $this->drupalPost('node/' . $this->product->id(), array(), t('Add to cart'));
     $this->drupalGet('');
     $this->assertText($block->label());
   }

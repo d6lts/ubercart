@@ -93,14 +93,14 @@ function uc_quote_node_insert($node) {
  * Implements hook_node_update().
  */
 function uc_quote_node_update($node) {
-  if (uc_product_is_product($node->type)) {
+  if (uc_product_is_product($node)) {
     if (isset($node->shipping_type)) {
-      uc_quote_set_shipping_type('product', $node->nid, $node->shipping_type);
+      uc_quote_set_shipping_type('product', $node->id(), $node->shipping_type);
     }
 
     if (!empty($node->shipping_address['street1'])) {
       db_merge('uc_quote_product_locations')
-        ->key(array('nid' => $node->nid))
+        ->key(array('nid' => $node->id()))
         ->fields(array(
           'first_name' => $node->shipping_address['first_name'],
           'last_name' => $node->shipping_address['last_name'],
@@ -117,7 +117,7 @@ function uc_quote_node_update($node) {
     }
     else {
       db_delete('uc_quote_product_locations')
-        ->condition('nid', $node->nid)
+        ->condition('nid', $node->id())
         ->execute();
     }
   }
@@ -139,7 +139,7 @@ function uc_quote_node_load($nodes, $types) {
   $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids)", array(':nids' => array_keys($nodes)), array('fetch' => 'UcAddress'))->fetchAllAssoc('nid');
 
   foreach ($nodes as $nid => &$node) {
-    if (!in_array($node->type, $product_types)) {
+    if (!in_array($node->getType(), $product_types)) {
       continue;
     }
 
@@ -166,11 +166,11 @@ function uc_quote_node_load($nodes, $types) {
 function uc_quote_node_delete($node) {
   db_delete('uc_quote_shipping_types')
     ->condition('id_type', 'product')
-    ->condition('id', $node->nid)
+    ->condition('id', $node->id())
     ->execute();
 
   db_delete('uc_quote_product_locations')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 
@@ -212,7 +212,7 @@ function uc_quote_form_node_form_alter(&$form, &$form_state, $form_id) {
       '#title' => t('Default product shipping type'),
       '#empty_value' => '',
       '#empty_option' => t('- Store default -'),
-      '#default_value' => isset($form['#node']->nid) ? uc_quote_get_shipping_type('product', $form['#node']->nid) : '',
+      '#default_value' => $form['#node']->id() ? uc_quote_get_shipping_type('product', $form['#node']->id()) : '',
       '#options' => uc_quote_shipping_type_options(),
       '#weight' => -7,
     );
@@ -423,8 +423,8 @@ function uc_quote_get_shipping_type($id_type, $id) {
  */
 function uc_product_get_shipping_type($product) {
   $shipping_type = variable_get('uc_store_shipping_type', 'small_package');
-  if (isset($product->nid) &&
-      $type = uc_quote_get_shipping_type('product', $product->nid)) {
+  if ($product->id() &&
+      $type = uc_quote_get_shipping_type('product', $product->id())) {
     $shipping_type = $type;
   }
   return $shipping_type;

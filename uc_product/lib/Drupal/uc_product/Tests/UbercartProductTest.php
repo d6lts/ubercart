@@ -29,7 +29,7 @@ class UbercartProductTest extends UbercartTestBase {
   public function testProductAdmin() {
     $this->drupalGet('admin/store/products/view');
     $this->assertText('Title');
-    $this->assertText($this->product->title);
+    $this->assertText($this->product->getTitle());
     $this->assertText('Price');
     $this->assertText(uc_currency_format($this->product->sell_price));
   }
@@ -160,22 +160,22 @@ class UbercartProductTest extends UbercartTestBase {
     variable_set('uc_product_add_to_cart_qty', TRUE);
 
     // Check zero quantity message.
-    $this->drupalPost('node/' . $this->product->nid, array('qty' => '0'), 'Add to cart');
+    $this->drupalPost('node/' . $this->product->id(), array('qty' => '0'), 'Add to cart');
     $this->assertText('The quantity cannot be zero.');
 
     // Check invalid quantity messages.
-    $this->drupalPost('node/' . $this->product->nid, array('qty' => 'x'), 'Add to cart');
+    $this->drupalPost('node/' . $this->product->id(), array('qty' => 'x'), 'Add to cart');
     $this->assertText('The quantity must be a number.');
 
-    $this->drupalPost('node/' . $this->product->nid, array('qty' => '1a'), 'Add to cart');
+    $this->drupalPost('node/' . $this->product->id(), array('qty' => '1a'), 'Add to cart');
     $this->assertText('The quantity must be a number.');
 
     // Check cart add message.
-    $this->drupalPost('node/' . $this->product->nid, array('qty' => '1'), 'Add to cart');
-    $this->assertText($this->product->title . ' added to your shopping cart.');
+    $this->drupalPost('node/' . $this->product->id(), array('qty' => '1'), 'Add to cart');
+    $this->assertText($this->product->getTitle() . ' added to your shopping cart.');
 
     // Check cart update message.
-    $this->drupalPost('node/' . $this->product->nid, array('qty' => '1'), 'Add to cart');
+    $this->drupalPost('node/' . $this->product->id(), array('qty' => '1'), 'Add to cart');
     $this->assertText('Your item(s) have been updated.');
   }
 }

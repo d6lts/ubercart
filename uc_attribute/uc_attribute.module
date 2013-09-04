@@ -211,7 +211,7 @@ function uc_attribute_product_class_access() {
  * Access callback for editing a product's attributes.
  */
 function uc_attribute_product_access($node) {
-  if ($node->type == 'product_kit') {
+  if ($node->getType() == 'product_kit') {
     return FALSE;
   }
 
@@ -222,7 +222,7 @@ function uc_attribute_product_access($node) {
  * Access callback for editing a product's options.
  */
 function uc_attribute_product_option_access($node) {
-  if ($node->type == 'product_kit') {
+  if ($node->getType() == 'product_kit') {
     return FALSE;
   }
 
@@ -336,7 +336,7 @@ function uc_attribute_uc_form_alter(&$form, &$form_state, $form_id) {
   if (strpos($form_id, 'add_to_cart_form') || $form_id == 'uc_order_add_product_form') {
     $use_ajax = strpos($form_id, 'add_to_cart_form') && variable_get('uc_product_update_node_view', FALSE);
     $node =& $form['node']['#value'];
-    $id = $form_id . '-' . $node->nid . '-attributes';
+    $id = $form_id . '-' . $node->id() . '-attributes';
     // If the node has a product list, add attributes to them.
     if (isset($form['products']) || isset($form['sub_products'])) {
       if (isset($form['products'])) {
@@ -377,8 +377,8 @@ function uc_attribute_node_load($nodes, $types) {
   }
 
   foreach ($nodes as &$node) {
-    if (uc_product_is_product($node->type)) {
-      $attributes = uc_product_get_attributes($node->nid);
+    if (uc_product_is_product($node->getType())) {
+      $attributes = uc_product_get_attributes($node->id());
       if (is_array($attributes) && !empty($attributes)) {
         $node->attributes = $attributes;
       }
@@ -400,9 +400,9 @@ function uc_attribute_node_insert($node) {
       'display',
       'default_option',
     ))
-    ->condition('pcid', $node->type);
+    ->condition('pcid', $node->getType());
   // SELECT $node->nid AS nid
-  $select->addExpression(':nid', 'nid', array(':nid' => $node->nid));
+  $select->addExpression(':nid', 'nid', array(':nid' => $node->id()));
 
   db_insert('uc_product_attributes')
     ->from($select)
@@ -417,8 +417,8 @@ function uc_attribute_node_insert($node) {
       'weight',
       'ordering',
     ))
-    ->condition('pcid', $node->type);
-  $select->addExpression(':nid', 'nid', array(':nid' => $node->nid));
+    ->condition('pcid', $node->getType());
+  $select->addExpression(':nid', 'nid', array(':nid' => $node->id()));
 
   db_insert('uc_product_options')
     ->from($select)
@@ -430,15 +430,15 @@ function uc_attribute_node_insert($node) {
  */
 function uc_attribute_node_delete($node) {
   db_delete('uc_product_options')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 
   db_delete('uc_product_adjustments')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 
   db_delete('uc_product_attributes')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 
@@ -448,7 +448,7 @@ function uc_attribute_node_delete($node) {
 function uc_attribute_node_update_index($node) {
   $output = '';
 
-  $attributes = uc_product_get_attributes($node->nid);
+  $attributes = uc_product_get_attributes($node->id());
   foreach ($attributes as $attribute) {
     $output .= '<h3>' . _uc_attribute_get_name($attribute) . '</h3>';
 
@@ -459,7 +459,7 @@ function uc_attribute_node_update_index($node) {
     $output .= "\n";
   }
 
-  $result = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid", array(':nid' => $node->nid));
+  $result = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid", array(':nid' => $node->id()));
   while ($model = $result->fetchField()) {
     $output .= '<h2>' . $model . "</h2>\n";
   }
@@ -537,7 +537,7 @@ function uc_attribute_uc_product_alter(&$node) {
     $combination = array();
     foreach ($node->data['attributes'] as $aid => $value) {
       if (is_numeric($value)) {
-        $attribute = uc_attribute_load($aid, $node->nid, 'product');
+        $attribute = uc_attribute_load($aid, $node->id(), 'product');
         if ($attribute && ($attribute->display == 1 || $attribute->display == 2)) {
           $combination[$aid] = $value;
         }
@@ -545,7 +545,7 @@ function uc_attribute_uc_product_alter(&$node) {
     }
     ksort($combination);
 
-    $model = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid AND combination LIKE :combo", array(':nid' => $node->nid, ':combo' => serialize($combination)))->fetchField();
+    $model = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid AND combination LIKE :combo", array(':nid' => $node->id(), ':combo' => serialize($combination)))->fetchField();
 
     if (!empty($model)) {
       $node->model = $model;
@@ -1203,7 +1203,7 @@ function _uc_cart_product_get_options($item) {
     return $options;
   }
   $data = $item->data;
-  $node = node_load($item->nid);
+  $node = node_load(is_object($item->nid) ? $item->id() : $item->nid);
 
   $index = 0;
   if (!empty($data['attributes']) && is_array($data['attributes'])) {
@@ -1288,7 +1288,7 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
     return NULL;
   }
 
-  $nid = $product->nid;
+  $nid = $product->id();
   $attributes = $product->attributes;
   $priced_attributes = uc_attribute_priced_attributes($nid);
 
@@ -1307,7 +1307,7 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
         // Preserve the quantity (for product-kit sub-products).
         $qty = $product->qty;
       }
-      $product = uc_product_load_variant($product->nid, $data);
+      $product = uc_product_load_variant($product->id(), $data);
       if (isset($qty)) {
         $product->qty = $qty;
       }
@@ -1344,7 +1344,7 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
             if ($attribute->display != 3 && !isset($product->data['kit_id'])) {
               $use_ajax = $use_ajax || (count($priced_attributes) > 1);
               $data['attributes'] = array($attribute->aid => $option->oid) + $data['attributes'];
-              $variant = node_view(uc_product_load_variant($product->nid, $data), 'teaser');
+              $variant = node_view(uc_product_load_variant($product->id(), $data), 'teaser');
               $display_price = uc_currency_format($variant['display_price']['#value']);
               break;
             }
@@ -1354,19 +1354,19 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
               // we compare this attribute against base price.
               if (empty($base)) { // only build the base once.
                 unset($data['attributes']);
-                $base = node_view(uc_product_load_variant($product->nid, $data), 'teaser');
+                $base = node_view(uc_product_load_variant($product->id(), $data), 'teaser');
               }
               $data['attributes'] = array($attribute->aid => $option->oid);
-              $variant = node_view(uc_product_load_variant($product->nid, $data), 'teaser');
+              $variant = node_view(uc_product_load_variant($product->id(), $data), 'teaser');
               $adjustment = $variant['display_price']['#value'] - $base['display_price']['#value'];
             }
             else {
               // Otherwise we compare against current total price.
               if (empty($selected)) {
-                $selected = node_view(uc_product_load_variant($product->nid, $data), 'teaser');
+                $selected = node_view(uc_product_load_variant($product->id(), $data), 'teaser');
               }
               $data['attributes'] = array($attribute->aid => $option->oid) + $data['attributes'];
-              $variant = node_view(uc_product_load_variant($product->nid, $data), 'teaser');
+              $variant = node_view(uc_product_load_variant($product->id(), $data), 'teaser');
               $adjustment = $variant['display_price']['#value'] - $selected['display_price']['#value'];
             }
             if ($adjustment != 0) {

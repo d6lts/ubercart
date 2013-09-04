@@ -548,11 +548,8 @@ function uc_object_attributes_form($form, &$form_state, $object, $type, $view = 
     case 'product':
     default:
       $product = $object;
-      $id = $product->nid;
-      if (empty($product->title)) {
-        drupal_goto('node/' . $id);
-      }
-      drupal_set_title($product->title);
+      $id = $product->id();
+      drupal_set_title($product->label());
       $attributes = uc_product_get_attributes($id);
   }
 
@@ -847,8 +844,8 @@ function uc_object_attributes_form_submit($form, &$form_state) {
 function uc_object_options_form($form, &$form_state, $object, $type) {
   if ($type == 'product') {
     $product = $object;
-    $id = $product->nid;
-    drupal_set_title($product->title);
+    $id = $product->id();
+    drupal_set_title($product->label());
     $attributes = uc_product_get_attributes($id);
     $table = 'uc_product_options';
     $id_type = 'nid';
@@ -1197,7 +1194,7 @@ function uc_object_options_form_submit($form, &$form_state) {
  */
 function uc_product_adjustments_form($form, &$form_state, $node) {
   drupal_set_title($node->label());
-  $nid = $node->nid;
+  $nid = $node->id();
 
   // Populate table and such.
   $model = $node->model;

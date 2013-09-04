@@ -388,7 +388,7 @@ function uc_order_add_product_form($form, &$form_state, $order, $node) {
   );
   $form['nid'] = array(
     '#type' => 'hidden',
-    '#value' => $node->nid,
+    '#value' => $node->id(),
   );
   $form['qty'] = array(
     '#type' => 'uc_quantity',

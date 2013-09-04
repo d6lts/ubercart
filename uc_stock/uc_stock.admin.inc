@@ -155,7 +155,7 @@ function uc_stock_edit_form($form, &$form_state, $node) {
 
   $form['stock'] = array('#tree' => TRUE);
 
-  $skus = uc_product_get_models($node->nid);
+  $skus = uc_product_get_models($node->id());
 
   // Remove 'Any'.
   unset($skus[NULL]);
@@ -203,7 +203,7 @@ function uc_stock_edit_form($form, &$form_state, $node) {
 
   $form['nid'] = array(
     '#type' => 'value',
-    '#value' => $node->nid,
+    '#value' => $node->id(),
   );
 
   $form['actions'] = array('#type' => 'actions');

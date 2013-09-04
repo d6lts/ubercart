@@ -870,7 +870,7 @@ function uc_order_product_revive($products, $published = TRUE) {
   // product fields that are already set).
   $return = TRUE;
   foreach ($products as &$product) {
-    if (!empty($nodes[$product->nid]) && (!$published || $nodes[$product->nid]->status == NODE_PUBLISHED)) {
+    if (!empty($nodes[$product->nid]) && (!$published || $nodes[$product->nid]->isPublished())) {
       foreach (get_object_vars($nodes[$product->nid]) as $key => $value) {
         if (!property_exists($product, $key)) {
           $product->$key = $value;

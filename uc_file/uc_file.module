@@ -555,7 +555,7 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
     $form['file']['file_message'] = array(
       '#markup' => t(
         'You must add files at the <a href="@url">Ubercart file download administration page</a> in order to attach them to a model.',
-        array('@url' => url('admin/store/products/files', array('query' => array('destination' => 'node/' . $node->nid . '/edit/features/file/add'))))
+        array('@url' => url('admin/store/products/files', array('query' => array('destination' => 'node/' . $node->id() . '/edit/features/file/add'))))
       ),
     );
 
@@ -567,7 +567,7 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
   uc_file_refresh();
 
   // Grab all the models on this product.
-  $models = uc_product_get_models($node->nid);
+  $models = uc_product_get_models($node->id());
 
   // Use the feature's values to fill the form, if they exist.
   if (!empty($feature)) {
@@ -613,7 +613,7 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
 
   $form['nid'] = array(
     '#type' => 'value',
-    '#value' => $node->nid,
+    '#value' => $node->id(),
   );
   $form['pfid'] = array(
     '#type' => 'value',
@@ -650,7 +650,7 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
 
   $form['uc_file_limits'] = array(
     '#type' => 'details',
-    '#description' => t('Use these options to override any global download limits set at the !url.', array('!url' => l(t('Ubercart product settings page'), 'admin/store/settings/products', array('query' => array('destination' => 'node/' . $node->nid . '/edit/features/file/add'))))),
+    '#description' => t('Use these options to override any global download limits set at the !url.', array('!url' => l(t('Ubercart product settings page'), 'admin/store/settings/products', array('query' => array('destination' => 'node/' . $node->id() . '/edit/features/file/add'))))),
     '#collapsed' => FALSE,
     '#collapsible' => FALSE,
     '#title' => t('File limitations'),

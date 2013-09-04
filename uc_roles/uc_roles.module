@@ -463,7 +463,7 @@ function uc_roles_uc_message() {
  * @ingroup forms
  */
 function uc_roles_feature_form($form, &$form_state, $node, $feature) {
-  $models = uc_product_get_models($node->nid);
+  $models = uc_product_get_models($node->id());
 
   // Check if editing or adding to set default values.
   if (!empty($feature)) {
@@ -536,7 +536,7 @@ function uc_roles_feature_form($form, &$form_state, $node, $feature) {
 
   $form['nid'] = array(
     '#type' => 'value',
-    '#value' => $node->nid,
+    '#value' => $node->id(),
   );
   $form['uc_roles_model'] = array(
     '#type' => 'select',

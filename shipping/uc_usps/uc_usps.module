@@ -85,19 +85,19 @@ function uc_usps_node_insert($node) {
  * Implements hook_node_update().
  */
 function uc_usps_node_update($node) {
-  if (uc_product_is_product($node->type)) {
+  if (uc_product_is_product($node)) {
     if (isset($node->usps)) {
       $usps_values = $node->usps;
       if (empty($node->revision)) {
         db_delete('uc_usps_products')
-          ->condition('vid', $node->vid)
+          ->condition('vid', $node->getRevisionId())
           ->execute();
       }
 
       db_insert('uc_usps_products')
         ->fields(array(
-          'vid' => $node->vid,
-          'nid' => $node->nid,
+          'vid' => $node->getRevisionId(),
+          'nid' => $node->id(),
           'container' => $usps_values['container'],
         ))
         ->execute();
@@ -120,7 +120,7 @@ function uc_usps_node_load($nodes, $types) {
   $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => array_keys($nodes)))->fetchAllKeyed();
 
   foreach ($nodes as $nid => $node) {
-    if (!in_array($node->type, $product_types)) {
+    if (!in_array($node->getType(), $product_types)) {
       continue;
     }
 
@@ -132,7 +132,7 @@ function uc_usps_node_load($nodes, $types) {
     }
 
     if ($node->shipping_type == 'small_package') {
-      $vids[$nid] = $node->vid;
+      $vids[$nid] = $node->getRevisionId();
     }
   }
 
@@ -149,7 +149,7 @@ function uc_usps_node_load($nodes, $types) {
  */
 function uc_usps_node_delete($node) {
   db_delete('uc_usps_products')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 
@@ -158,7 +158,7 @@ function uc_usps_node_delete($node) {
  */
 function uc_usps_node_revision_delete($node) {
   db_delete('uc_usps_products')
-    ->condition('vid', $node->vid)
+    ->condition('vid', $node->getRevisionId())
     ->execute();
 }
 

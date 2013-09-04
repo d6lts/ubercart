@@ -250,7 +250,7 @@ class UbercartCreditCardTest extends UbercartTestBase {
    * Tests that an order can be placed using the test gateway.
    */
   public function testCheckout() {
-    $this->drupalPost('node/' . $this->product->nid, array(), t('Add to cart'));
+    $this->drupalPost('node/' . $this->product->id(), array(), t('Add to cart'));
     $this->checkout(array(
       'panes[payment][details][cc_number]' => array_rand(array_flip(self::$test_cards)),
       'panes[payment][details][cc_cvv]' => mt_rand(100, 999),

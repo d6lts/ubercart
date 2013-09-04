@@ -183,7 +183,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * Creates a new order.
    */
   function createOrder($edit = array()) {
-    $this->drupalPost('node/' . $this->product->nid, array(), 'Add to cart');
+    $this->drupalPost('node/' . $this->product->id(), array(), 'Add to cart');
 
     $order = $this->checkout();
     if ($order && !empty($edit)) {

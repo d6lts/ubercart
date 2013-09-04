@@ -31,8 +31,8 @@ class UbercartStockTest extends UbercartTestBase {
   }
 
   public function testProductStock() {
-    $this->drupalGet('node/' . $this->product->nid . '/edit/stock');
-    $this->assertText($this->product->title);
+    $this->drupalGet('node/' . $this->product->id() . '/edit/stock');
+    $this->assertText($this->product->label());
     $this->assertText($this->product->model, 'Product SKU found.');
 
     $this->assertNoFieldChecked('edit-stock-0-active', 'Stock tracking is not active.');
@@ -52,7 +52,7 @@ class UbercartStockTest extends UbercartTestBase {
 
     $stock = rand(1, 1000);
     uc_stock_set($this->product->model, $stock);
-    $this->drupalGet('node/' . $this->product->nid . '/edit/stock');
+    $this->drupalGet('node/' . $this->product->id() . '/edit/stock');
     $this->assertFieldByName('stock[0][stock]', (string)$stock, 'Set stock level found.');
   }
 
@@ -62,7 +62,7 @@ class UbercartStockTest extends UbercartTestBase {
       'stock[0][active]' => 1,
       'stock[0][stock]' => $stock,
     );
-    $this->drupalPost('node/' . $this->product->nid . '/edit/stock', $edit, t('Save changes'));
+    $this->drupalPost('node/' . $this->product->id() . '/edit/stock', $edit, t('Save changes'));
     $this->assertText('Stock settings saved.');
 
     // Enable product quantity field.
@@ -70,7 +70,7 @@ class UbercartStockTest extends UbercartTestBase {
 
     $qty = rand(1, 100);
     $edit = array('qty' => $qty);
-    $this->drupalPost('node/' . $this->product->nid, $edit, t('Add to cart'));
+    $this->drupalPost('node/' . $this->product->id(), $edit, t('Add to cart'));
 
     $this->checkout();
 
@@ -87,15 +87,15 @@ class UbercartStockTest extends UbercartTestBase {
       'stock[0][stock]' => $qty + 1,
       'stock[0][threshold]' => $qty,
     );
-    $this->drupalPost('node/' . $this->product->nid . '/edit/stock', $edit, 'Save changes');
+    $this->drupalPost('node/' . $this->product->id() . '/edit/stock', $edit, 'Save changes');
 
-    $this->drupalPost('node/' . $this->product->nid, array(), 'Add to cart');
+    $this->drupalPost('node/' . $this->product->id(), array(), 'Add to cart');
     $this->checkout();
 
     $mail = $this->drupalGetMails(array('id' => 'uc_stock_threshold'));
     $mail = array_pop($mail);
     $this->assertTrue(strpos($mail['subject'], 'Stock threshold limit reached') !== FALSE, 'Threshold mail subject is correct.');
-    $this->assertTrue(strpos($mail['body'], $this->product->title) !== FALSE, 'Mail body contains product title.');
+    $this->assertTrue(strpos($mail['body'], $this->product->label()) !== FALSE, 'Mail body contains product title.');
     $this->assertTrue(strpos($mail['body'], $this->product->model) !== FALSE, 'Mail body contains SKU.');
     $this->assertTrue(strpos($mail['body'], 'has reached ' . $qty) !== FALSE, 'Mail body contains quantity.');
   }
