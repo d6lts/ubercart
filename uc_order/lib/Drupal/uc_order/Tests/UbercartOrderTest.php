@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order\Tests;
 
+use Drupal\uc_store\UcAddress;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -52,8 +53,8 @@ class UbercartOrderTest extends UbercartTestBase {
     ));
     $this->assertEqual($order->getUserId(), $this->customer->id(), 'New order has correct uid.');
     $this->assertEqual($order->getStatusId(), 'completed', 'New order is marked completed.');
-    $this->assertEqual($order->billing_first_name, $name, 'New order has correct name.');
-    $this->assertEqual($order->billing_last_name, $name, 'New order has correct name.');
+    $this->assertEqual($order->getAddress('billing')->first_name, $name, 'New order has correct name.');
+    $this->assertEqual($order->getAddress('billing')->last_name, $name, 'New order has correct name.');
 
     // Test deletion.
     $order->save();
@@ -125,7 +126,8 @@ class UbercartOrderTest extends UbercartTestBase {
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('user/' . $this->customer->id() . '/orders/' . $order->id());
-    $this->assertText(drupal_strtoupper($order->billing_first_name . ' ' . $order->billing_last_name), 'Found customer name.');
+    $address = $order->getAddress('billing');
+    $this->assertText(drupal_strtoupper($address->first_name . ' ' . $address->last_name), 'Found customer name.');
 
     $edit = array(
       'billing_first_name' => $this->randomName(8),
@@ -148,44 +150,48 @@ class UbercartOrderTest extends UbercartTestBase {
     $country = array_rand($countries);
     $zones = uc_zone_option_list();
 
-    $order->delivery_first_name = $this->randomName(12);
-    $order->delivery_last_name = $this->randomName(12);
-    $order->delivery_street1 = $this->randomName(12);
-    $order->delivery_street2 = $this->randomName(12);
-    $order->delivery_city = $this->randomName(12);
-    $order->delivery_zone = array_rand($zones[$countries[$country]]);
-    $order->delivery_postal_code = mt_rand(10000, 99999);
-    $order->delivery_country = $country;
+    $delivery_address = new UcAddress();
+    $delivery_address->first_name = $this->randomName(12);
+    $delivery_address->last_name = $this->randomName(12);
+    $delivery_address->street1 = $this->randomName(12);
+    $delivery_address->street2 = $this->randomName(12);
+    $delivery_address->city = $this->randomName(12);
+    $delivery_address->zone = array_rand($zones[$countries[$country]]);
+    $delivery_address->postal_code = mt_rand(10000, 99999);
+    $delivery_address->country = $country;
 
-    $order->billing_first_name = $this->randomName(12);
-    $order->billing_last_name = $this->randomName(12);
-    $order->billing_street1 = $this->randomName(12);
-    $order->billing_street2 = $this->randomName(12);
-    $order->billing_city = $this->randomName(12);
-    $order->billing_zone = array_rand($zones[$countries[$country]]);
-    $order->billing_postal_code = mt_rand(10000, 99999);
-    $order->billing_country = $country;
+    $billing_address = new UcAddress();
+    $billing_address->first_name = $this->randomName(12);
+    $billing_address->last_name = $this->randomName(12);
+    $billing_address->street1 = $this->randomName(12);
+    $billing_address->street2 = $this->randomName(12);
+    $billing_address->city = $this->randomName(12);
+    $billing_address->zone = array_rand($zones[$countries[$country]]);
+    $billing_address->postal_code = mt_rand(10000, 99999);
+    $billing_address->country = $country;
 
-    uc_order_save($order);
+    $order->setAddress('delivery', $delivery_address)
+      ->setAddress('billing', $billing_address)
+      ->save();
 
     $db_order = db_query("SELECT * FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchObject();
-    $this->assertEqual($order->delivery_first_name, $db_order->delivery_first_name);
-    $this->assertEqual($order->delivery_last_name, $db_order->delivery_last_name);
-    $this->assertEqual($order->delivery_street1, $db_order->delivery_street1);
-    $this->assertEqual($order->delivery_street2, $db_order->delivery_street2);
-    $this->assertEqual($order->delivery_city, $db_order->delivery_city);
-    $this->assertEqual($order->delivery_zone, $db_order->delivery_zone);
-    $this->assertEqual($order->delivery_postal_code, $db_order->delivery_postal_code);
-    $this->assertEqual($order->delivery_country, $db_order->delivery_country);
+    $this->assertEqual($delivery_address->first_name, $db_order->delivery_first_name);
+    $this->assertEqual($delivery_address->last_name, $db_order->delivery_last_name);
+    $this->assertEqual($delivery_address->street1, $db_order->delivery_street1);
+    $this->assertEqual($delivery_address->street2, $db_order->delivery_street2);
+    $this->assertEqual($delivery_address->city, $db_order->delivery_city);
+    $this->assertEqual($delivery_address->zone, $db_order->delivery_zone);
+    $this->assertEqual($delivery_address->postal_code, $db_order->delivery_postal_code);
+    $this->assertEqual($delivery_address->country, $db_order->delivery_country);
 
-    $this->assertEqual($order->billing_first_name, $db_order->billing_first_name);
-    $this->assertEqual($order->billing_last_name, $db_order->billing_last_name);
-    $this->assertEqual($order->billing_street1, $db_order->billing_street1);
-    $this->assertEqual($order->billing_street2, $db_order->billing_street2);
-    $this->assertEqual($order->billing_city, $db_order->billing_city);
-    $this->assertEqual($order->billing_zone, $db_order->billing_zone);
-    $this->assertEqual($order->billing_postal_code, $db_order->billing_postal_code);
-    $this->assertEqual($order->billing_country, $db_order->billing_country);
+    $this->assertEqual($billing_address->first_name, $db_order->billing_first_name);
+    $this->assertEqual($billing_address->last_name, $db_order->billing_last_name);
+    $this->assertEqual($billing_address->street1, $db_order->billing_street1);
+    $this->assertEqual($billing_address->street2, $db_order->billing_street2);
+    $this->assertEqual($billing_address->city, $db_order->billing_city);
+    $this->assertEqual($billing_address->zone, $db_order->billing_zone);
+    $this->assertEqual($billing_address->postal_code, $db_order->billing_postal_code);
+    $this->assertEqual($billing_address->country, $db_order->billing_country);
 
     return $order;
   }

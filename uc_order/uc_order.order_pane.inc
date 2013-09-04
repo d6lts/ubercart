@@ -45,7 +45,8 @@ function uc_order_pane_ship_to($op, $order, &$form = NULL, &$form_state = NULL) 
         return;
       }
     case 'view':
-      $build = array('#markup' => uc_order_address($order, 'delivery') . '<br />' . check_plain($order->delivery_phone));
+      $address = $order->getAddress('delivery');
+      $build = array('#markup' => $address . '<br />' . check_plain($address->phone));
       return $build;
 
     case 'edit-form':
@@ -89,7 +90,8 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) 
   switch ($op) {
     case 'view':
     case 'customer':
-      $build = array('#markup' => uc_order_address($order, 'billing') . '<br />' . check_plain($order->billing_phone));
+      $address = $order->getAddress('billing');
+      $build = array('#markup' => $address . '<br />' . check_plain($address->phone));
       return $build;
 
     case 'edit-form':

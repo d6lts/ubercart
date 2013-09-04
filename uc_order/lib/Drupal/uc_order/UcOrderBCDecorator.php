@@ -8,6 +8,7 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\EntityBCDecorator;
+use Drupal\uc_store\UcAddress;
 
 /**
  * Defines the Ubercart order specific entity BC decorator.
@@ -82,6 +83,20 @@ class UcOrderBCDecorator extends EntityBCDecorator implements UcOrderInterface {
    */
   public function getTotal() {
     return $this->decorated->getTotal();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAddress($type) {
+    return $this->decorated->getAddress($type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAddress($type, UcAddress $address) {
+    return $this->decorated->setAddress($type, $address);
   }
 
 }

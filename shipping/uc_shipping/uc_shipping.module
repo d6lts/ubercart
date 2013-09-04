@@ -260,10 +260,10 @@ function template_preprocess_uc_packing_slip(&$variables) {
   $order = $variables['order'];
   $variables['order_link'] = l($order->id(), url('user/' . $order->getUserId() . '/orders/' . $order->id(), array('absolute' => TRUE)));
   $variables['order_email'] = check_plain($order->getEmail());
-  $variables['billing_address'] = uc_order_address($order, 'billing');
-  $variables['billing_phone'] = check_plain($order->billing_phone);
-  $variables['shipping_address'] = uc_order_address($order, 'delivery');
-  $variables['shipping_phone'] = check_plain($order->delivery_phone);
+  $variables['billing_address'] = $order->getAddress('billing');
+  $variables['billing_phone'] = check_plain($order->getAddress('billing')->phone);
+  $variables['shipping_address'] = $order->getAddress('delivery');
+  $variables['shipping_phone'] = check_plain($order->getAddress('delivery')->phone);
 
   if (module_exists('uc_payment')) {
     $payment_method = _uc_payment_method_data($order->payment_method, 'review');

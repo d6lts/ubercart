@@ -230,40 +230,40 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'shipping-address':
-          $address = uc_order_address($order, 'delivery');
+          $address = $order->getAddress('delivery');
           $address = str_replace(array('<br />', '<BR />'), "<br />\n", $address);
           $replacements[$original] = $address;
           break;
 
         case 'shipping-phone':
-          $replacements[$original] = check_plain($order->delivery_phone);
+          $replacements[$original] = check_plain($order->getAddress('delivery')->phone);
           break;
 
         case 'billing-address':
-          $address = uc_order_address($order, 'billing');
+          $address = $order->getAddress('billing');
           $address = str_replace(array('<br />', '<BR />'), "<br />\n", $address);
           $replacements[$original] = $address;
           break;
 
         case 'billing-phone':
-          $replacements[$original] = check_plain($order->billing_phone);
+          $replacements[$original] = check_plain($order->getAddress('billing')->phone);
           break;
 
         case 'first-name':
           if (config('uc_store.settings')->get('customer_address') == 'shipping') {
-            $replacements[$original] = $sanitize ? check_plain($order->delivery_first_name) : $order->delivery_first_name;
+            $replacements[$original] = $sanitize ? check_plain($order->getAddress('delivery')->first_name) : $order->getAddress('delivery')->first_name;
           }
           else {
-            $replacements[$original] = $sanitize ? check_plain($order->billing_first_name) : $order->billing_first_name;
+            $replacements[$original] = $sanitize ? check_plain($order->getAddress('billing')->first_name) : $order->getAddress('billing')->first_name;
           }
           break;
 
         case 'last-name':
           if (config('uc_store.settings')->get('customer_address') == 'shipping') {
-            $replacements[$original] = $sanitize ? check_plain($order->delivery_last_name) : $order->delivery_last_name;
+            $replacements[$original] = $sanitize ? check_plain($order->getAddress('delivery')->last_name) : $order->getAddress('delivery')->last_name;
           }
           else {
-            $replacements[$original] = $sanitize ? check_plain($order->billing_last_name) : $order->billing_last_name;
+            $replacements[$original] = $sanitize ? check_plain($order->getAddress('billing')->last_name) : $order->getAddress('billing')->last_name;
           }
           break;
 

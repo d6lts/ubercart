@@ -13,6 +13,7 @@ use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\uc_order\UcOrderBCDecorator;
 use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_store\UcAddress;
 
 /**
  * Defines the order entity class.
@@ -37,28 +38,6 @@ use Drupal\uc_order\UcOrderInterface;
 class UcOrder extends EntityNG implements UcOrderInterface {
 
   public $currency = '';
-
-  public $delivery_first_name = '';
-  public $delivery_last_name = '';
-  public $delivery_phone = '';
-  public $delivery_company = '';
-  public $delivery_street1 = '';
-  public $delivery_street2 = '';
-  public $delivery_city = '';
-  public $delivery_zone = 0;
-  public $delivery_postal_code = '';
-  public $delivery_country = 0;
-
-  public $billing_first_name = '';
-  public $billing_last_name = '';
-  public $billing_phone = '';
-  public $billing_company = '';
-  public $billing_street1 = '';
-  public $billing_street2 = '';
-  public $billing_city = '';
-  public $billing_zone = 0;
-  public $billing_postal_code = '';
-  public $billing_country = 0;
 
   public $products = array();
   public $line_items = array();
@@ -88,26 +67,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
 
     // We unset all defined properties, so magic getters apply.
     unset($this->currency);
-    unset($this->delivery_first_name);
-    unset($this->delivery_last_name);
-    unset($this->delivery_phone);
-    unset($this->delivery_company);
-    unset($this->delivery_street1);
-    unset($this->delivery_street2);
-    unset($this->delivery_city);
-    unset($this->delivery_zone);
-    unset($this->delivery_postal_code);
-    unset($this->delivery_country);
-    unset($this->billing_first_name);
-    unset($this->billing_last_name);
-    unset($this->billing_phone);
-    unset($this->billing_company);
-    unset($this->billing_street1);
-    unset($this->billing_street2);
-    unset($this->billing_city);
-    unset($this->billing_zone);
-    unset($this->billing_postal_code);
-    unset($this->billing_country);
     // unset($this->products);
     // unset($this->line_items);
     unset($this->payment_method);
@@ -279,6 +238,41 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    */
   public function getTotal() {
     return uc_order_get_total($this->getBCEntity());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAddress($type) {
+    $address = new UcAddress();
+    $address->first_name = $this->get($type . '_first_name')->value;
+    $address->last_name = $this->get($type . '_last_name')->value;
+    $address->company = $this->get($type . '_company')->value;
+    $address->street1 = $this->get($type . '_street1')->value;
+    $address->street2 = $this->get($type . '_street2')->value;
+    $address->city = $this->get($type . '_city')->value;
+    $address->zone = $this->get($type . '_zone')->value;
+    $address->country = $this->get($type . '_country')->value;
+    $address->postal_code = $this->get($type . '_postal_code')->value;
+    $address->phone = $this->get($type . '_phone')->value;
+    return $address;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAddress($type, UcAddress $address) {
+    $this->set($type . '_first_name', $address->first_name);
+    $this->set($type . '_last_name', $address->last_name);
+    $this->set($type . '_company', $address->company);
+    $this->set($type . '_street1', $address->street1);
+    $this->set($type . '_street2', $address->street2);
+    $this->set($type . '_city', $address->city);
+    $this->set($type . '_zone', $address->zone);
+    $this->set($type . '_country', $address->country);
+    $this->set($type . '_postal_code', $address->postal_code);
+    $this->set($type . '_phone', $address->phone);
+    return $this;
   }
 
   /**

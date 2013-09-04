@@ -10,6 +10,8 @@
  * uc_cart.module.
  */
 
+use Drupal\uc_store\UcAddress;
+
 /**
  * Displays the cart contents for review during checkout.
  */
@@ -294,6 +296,7 @@ function uc_checkout_pane_address($pane, $op, $order, &$form_state, $description
       return array('description' => $description, 'contents' => $contents);
 
     case 'process':
+      $address = new UcAddress;
       $panes = &$form_state['values']['panes'];
       foreach ($panes[$pane] as $field => $value) {
         if (substr($field, 0, strlen($pane)) == $pane) {
@@ -301,15 +304,18 @@ function uc_checkout_pane_address($pane, $op, $order, &$form_state, $description
             $value = $panes[$source][str_replace($pane, $source, $field)];
           }
 
-          $order->$field = $value;
+          $field = substr($field, strlen($pane) + 1);
+          $address->$field = $value;
         }
       }
+      $order->setAddress($pane, $address);
       return TRUE;
 
     case 'review':
-      $review[] = array('title' => t('Address'), 'data' => uc_order_address($order, $pane, FALSE));
-      if (uc_address_field_enabled('phone') && !empty($order->{$pane . '_phone'})) {
-        $review[] = array('title' => t('Phone'), 'data' => check_plain($order->{$pane . '_phone'}));
+      $address = $order->getAddress($pane);
+      $review[] = array('title' => t('Address'), 'data' => $address);
+      if (uc_address_field_enabled('phone') && !empty($address->phone)) {
+        $review[] = array('title' => t('Phone'), 'data' => check_plain($address->phone));
       }
       return $review;
   }
