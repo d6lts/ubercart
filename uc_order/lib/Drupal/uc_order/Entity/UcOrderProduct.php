@@ -149,4 +149,69 @@ class UcOrderProduct extends EntityNG implements UcOrderProductInterface {
     return $this->bcEntity;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    $properties['order_product_id'] = array(
+      'label' => t('Order product ID'),
+      'description' => t('The order ID.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    $properties['order_id'] = array(
+      'label' => t('Order ID'),
+      'description' => t('The order ID.'),
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'uc_order'),
+    );
+    $properties['nid'] = array(
+      'label' => t('Node ID'),
+      'description' => 'The user that placed the order.',
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'node'),
+    );
+    $properties['title'] = array(
+      'label' => t('Title'),
+      'description' => 'The product title.',
+      'type' => 'string_field',
+    );
+    $properties['model'] = array(
+      'label' => t('SKU'),
+      'description' => 'The product model/SKU.',
+      'type' => 'string_field',
+    );
+    $properties['qty'] = array(
+      'label' => t('Quantity'),
+      'description' => 'The number of the product ordered.',
+      'type' => 'integer_field',
+    );
+    $properties['cost'] = array(
+      'label' => t('Cost'),
+      'description' => 'The cost to the store for the product.',
+      'type' => 'integer_field',
+    );
+    $properties['price'] = array(
+      'label' => t('Price'),
+      'description' => 'The price paid for the ordered product.',
+      'type' => 'integer_field',
+    );
+    $properties['weight'] = array(
+      'label' => t('Weight'),
+      'description' => 'The physical weight.',
+      'type' => 'integer_field',
+    );
+    $properties['weight_units'] = array(
+      'label' => t('Weight units'),
+      'description' => 'Unit of measure for the weight field.',
+      'type' => 'string_field',
+    );
+    $properties['data'] = array(
+      'label' => t('Data'),
+      'description' => 'A serialized array of extra data.',
+      'type' => 'string_field',
+    );
+    return $properties;
+  }
+
 }
