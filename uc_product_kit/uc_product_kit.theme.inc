@@ -52,12 +52,12 @@ function theme_uc_product_kit_items_form($variables) {
 function theme_uc_product_kit_list_item($variables) {
   $product = $variables['product'];
 
-  $node = node_load($product->nid);
+  $node = node_load($product->id());
   if (node_access('view', $node)) {
-    $title = l($product->title, 'node/' . $product->nid);
+    $title = l($product->label(), 'node/' . $product->id());
   }
   else {
-    $title = check_plain($product->title);
+    $title = check_plain($product->label());
   }
 
   return theme('uc_qty', array('qty' => $product->qty)) . ' ' . $title;

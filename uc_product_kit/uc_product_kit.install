@@ -89,6 +89,16 @@ function uc_product_kit_schema() {
 }
 
 /**
+ * Implements hook_install().
+ */
+function uc_product_kit_install() {
+  // Do not allow the product kit content type to be deleted.
+  $locked = Drupal::state()->get('node.type.locked');
+  $locked['product_kit'] = 'product_kit';
+  Drupal::state()->set('node.type.locked', $locked);
+}
+
+/**
  * Implements hook_enable().
  */
 function uc_product_kit_enable() {
@@ -101,13 +111,6 @@ function uc_product_kit_enable() {
     }
   }
 
-  // Add the body field.
-  node_types_rebuild();
-  $types = node_type_get_types();
-  node_add_body_field($types['product_kit'], t('Description'));
-
-  uc_product_set_teaser_display('product_kit');
-
   // Add a default image field to product kits.
   uc_product_add_default_image_field('product_kit');
 }
@@ -117,6 +120,11 @@ function uc_product_kit_enable() {
  */
 function uc_product_kit_uninstall() {
   variable_del('uc_product_kit_mutable');
+
+  // Allow the product kit content type to be deleted.
+  $locked = Drupal::state()->get('node.type.locked');
+  unset($locked['product_kit']);
+  Drupal::state()->set('node.type.locked', $locked);
 }
 
 /**

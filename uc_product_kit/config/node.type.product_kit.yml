@@ -1,0 +1,18 @@
+type: product_kit
+uuid: 0edd4144-9bc7-4292-9a2a-4206b284f6bf
+name: 'Product kit'
+description: 'Use <em>product kits</em> to list two or more products together, presenting a logical and convenient grouping of items to the customer.'
+help: ''
+has_title: '1'
+title_label: Name
+settings:
+  node:
+    preview: '1'
+    options:
+      status: status
+      promote: promote
+      sticky: '0'
+      revision: '0'
+    submitted: '1'
+status: '1'
+langcode: und
