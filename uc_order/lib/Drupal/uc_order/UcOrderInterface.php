@@ -105,6 +105,14 @@ interface UcOrderInterface extends ContentEntityInterface {
   public function getTotal();
 
   /**
+   * Returns the order currency code.
+   *
+   * @return string
+   *   The order currency code.
+   */
+  public function getCurrency();
+
+  /**
    * Returns an address attached to the order.
    *
    * @param string $type

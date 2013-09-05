@@ -88,6 +88,13 @@ class UcOrderBCDecorator extends EntityBCDecorator implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
+  public function getCurrency() {
+    return $this->decorated->getCurrency();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getAddress($type) {
     return $this->decorated->getAddress($type);
   }

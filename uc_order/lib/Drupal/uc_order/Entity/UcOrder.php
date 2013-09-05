@@ -37,8 +37,6 @@ use Drupal\uc_store\UcAddress;
  */
 class UcOrder extends EntityNG implements UcOrderInterface {
 
-  public $currency = '';
-
   public $products = array();
   public $line_items = array();
 
@@ -66,7 +64,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
     parent::init();
 
     // We unset all defined properties, so magic getters apply.
-    unset($this->currency);
     // unset($this->products);
     // unset($this->line_items);
     unset($this->payment_method);
@@ -238,6 +235,13 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    */
   public function getTotal() {
     return uc_order_get_total($this->getBCEntity());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCurrency() {
+    return $this->get('currency')->value;
   }
 
   /**
