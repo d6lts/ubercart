@@ -7,8 +7,8 @@
 
 namespace Drupal\uc_order\Plugin\views\argument_validator;
 
-use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\views\Annotation\ViewsArgumentValidator;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  * converts either one into the user's UID.  This validator also sets the
  * argument's title to the username.
  *
- * @Plugin(
+ * @ViewsArgumentValidator(
  *   id = "user_or_permission",
  *   module = "uc_order",
  *   title = @Translation("Current user or user has permission")
