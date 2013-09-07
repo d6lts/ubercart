@@ -230,7 +230,7 @@ function uc_product_field_settings_form() {
     );
     $form['fields'][$label]['weight'] = array(
       '#type' => 'weight',
-      '#delta' => 10,
+      '#delta' => 50,
       '#default_value' => $field['weight'],
     );
   }
