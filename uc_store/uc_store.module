@@ -103,27 +103,21 @@ function uc_store_menu() {
   $items['admin/store'] = array(
     'title' => 'Store',
     'description' => 'Administer orders, products, customers, store settings, etc.',
-    'page callback' => 'uc_store_admin',
-    'access callback' => 'uc_store_admin_access',
+    'route_name' => 'uc_store_admin',
     'weight' => -12,
-    'file' => 'uc_store.admin.inc',
   );
   $items['admin/store/reports'] = array(
     'title' => 'Reports',
     'description' => 'Browse various store reports.',
-    'page callback' => 'uc_store_reports',
-    'access arguments' => array('view reports'),
+    'route_name' => 'uc_store_reports',
     'weight' => 2,
-    'file' => 'uc_store.admin.inc',
     'position' => 'right',
   );
   $items['admin/store/settings'] = array(
     'title' => 'Configuration',
     'description' => 'Adjust configuration settings for Ubercart.',
-    'page callback' => 'uc_store_configuration_page',
-    'access arguments' => array('administer store'),
+    'route_name' => 'uc_store_settings',
     'weight' => 6,
-    'file' => 'uc_store.admin.inc',
     'position' => 'right',
   );
   $items['admin/store/settings/countries'] = array(
@@ -162,7 +156,7 @@ function uc_store_menu() {
   $items['admin/store/settings/store'] = array(
     'title' => 'Store',
     'description' => 'Configure basic store settings.',
-    'route_name' => 'uc_store_settings',
+    'route_name' => 'uc_store_settings_form',
     'weight' => -1,
   );
 
