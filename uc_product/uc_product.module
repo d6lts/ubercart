@@ -34,10 +34,8 @@ function uc_product_menu() {
   $items['admin/store/products/classes'] = array(
     'title' => 'Manage classes',
     'description' => 'Create and edit product node types.',
-    'access arguments' => array('administer product classes'),
-    'page callback' => 'uc_product_class_default',
+    'route_name' => 'uc_product_classes',
     'weight' => -2,
-    'file' => 'uc_product.admin.inc',
   );
   $items['admin/store/settings/products'] = array(
     'title' => 'Products',
