@@ -212,8 +212,6 @@ function uc_product_edit_access($node) {
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
- *
- * @see uc_product_save_continue_submit()
  */
 function uc_product_form_node_form_alter(&$form, &$form_state) {
   $node = $form_state['controller']->getEntity();
@@ -378,13 +376,6 @@ function uc_product_form_node_form_alter(&$form, &$form_state) {
       '#delta' => 25,
       '#default_value' => $node->ordering,
       '#weight' => 30,
-    );
-
-    $form['actions']['save_continue'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save and continue'),
-      '#weight' => 7,
-      '#submit' => array('node_form_submit', 'uc_product_save_continue_submit'),
     );
 
     $form['#entity_builders'][] = 'uc_product_node_builder';
@@ -760,17 +751,6 @@ function uc_product_preprocess_html(&$variables) {
       $variables['attributes']['class'][] = 'uc-product-node';
     }
   }
-}
-
-/**
- * After the node is saved, redirects to the node edit page.
- *
- * Some modules add local tasks to product edit forms, but only after it has an
- * nid. Redirecting facilitates the common workflow of continuing to those
- * tasks.
- */
-function uc_product_save_continue_submit($form, &$form_state) {
-  $form_state['redirect'] = 'node/' . $form_state['nid'] . '/edit';
 }
 
 /**
