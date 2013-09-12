@@ -98,14 +98,14 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
 
     // Add the product kit to the cart, selecting the option.
     $attribute_key = 'products[' . $product->id() . '][attributes][' . $attribute->aid . ']';
-    $this->drupalPost('node/' . $kit->id(), array($attribute_key => $option->oid), t('Add to cart'));
+    $this->drupalPostForm('node/' . $kit->id(), array($attribute_key => $option->oid), t('Add to cart'));
 
     // Check that the subtotal is $16.80 ($10 base + $5 option - $1 discount, with 20% tax)
     $this->drupalGet('cart');
     $this->assertText('Subtotal: $16.80', 'Order subtotal is correct on cart page.');
 
     // Make sure that the subtotal is also correct on the checkout page.
-    $this->drupalPost('cart', array(), 'Checkout');
+    $this->drupalPostForm('cart', array(), 'Checkout');
     $this->assertText('Subtotal: $16.80', 'Order subtotal is correct on checkout page.');
 
     // Manually proceed to checkout review.
@@ -125,7 +125,7 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
       'panes[billing][billing_zone]' => $zone_id,
       'panes[billing][billing_postal_code]' => mt_rand(10000, 99999),
     );
-    $this->drupalPost('cart/checkout', $edit, t('Review order'));
+    $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
     $this->assertRaw(t('Your order is almost complete.'));
 
     // Make sure the price is still listed tax-inclusively.

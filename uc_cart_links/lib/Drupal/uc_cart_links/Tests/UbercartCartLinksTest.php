@@ -162,7 +162,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
       );
 
       // Empty cart (press remove button)
-      $this->drupalPost('cart', array(), t('Remove'));
+      $this->drupalPostForm('cart', array(), t('Remove'));
       $this->assertText('There are no products in your shopping cart.');
     }
 
@@ -205,7 +205,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     );
 
     // Empty cart (press remove button)
-    $this->drupalPost('cart', array(), t('Remove'));
+    $this->drupalPostForm('cart', array(), t('Remove'));
     $this->assertText('There are no products in your shopping cart.');
 
     // Turn off display of product action message
@@ -266,7 +266,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
       t('Empty cart confirmation page found.')
     );
     // Allow
-    $this->drupalPost(NULL, array(), t('Confirm'));
+    $this->drupalPostForm(NULL, array(), t('Confirm'));
 
     // Verify the cart doesn't have the first item and does have the second item
     $this->drupalGet('cart');
@@ -458,7 +458,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     );
 
     // Empty cart (press remove button)
-    $this->drupalPost('cart', array(), t('Remove'));
+    $this->drupalPostForm('cart', array(), t('Remove'));
     $this->assertText('There are no products in your shopping cart.');
 
     $this->drupalLogout();
@@ -539,7 +539,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
    *   Defaults to FALSE.
    */
   function setCartLinksUIProductActionMessage($state = FALSE) {
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_add_show' => $state),
       t('Save configuration')
@@ -561,7 +561,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
    *   Defaults to TRUE.
    */
   function setCartLinksUITrackClicks($state = TRUE) {
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_track' => 0),
       t('Save configuration')
@@ -583,7 +583,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
    *   Defaults to TRUE.
    */
   function setCartLinksUIAllowEmptying($state = TRUE) {
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_empty' => $state),
       t('Save configuration')
@@ -606,7 +606,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
    */
   function setCartLinksUIMessages($messages = '') {
     $message_string = implode("\n", $messages);
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_messages' => $message_string),
       t('Save configuration')
@@ -628,7 +628,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
    *   Restrictions are valid Cart Links - i.e. relative URLs.
    */
   function setCartLinksUIRestrictions($restrictions = '') {
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_restrictions' => $restrictions),
       t('Save configuration')
@@ -649,7 +649,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
    *   Relative URL of the destination page for the redirect.  Omit leading '/'.
    */
   function setCartLinksUIRedirect($url = '') {
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_invalid_page' => $url),
       t('Save configuration')

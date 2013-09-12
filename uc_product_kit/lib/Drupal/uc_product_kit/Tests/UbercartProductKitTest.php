@@ -52,7 +52,7 @@ class UbercartProductKitTest extends UbercartTestBase {
       ),
       'default_qty' => mt_rand(2, 100),
     );
-    $this->drupalPost('node/add/product_kit', $edit, 'Save');
+    $this->drupalPostForm('node/add/product_kit', $edit, 'Save');
     $this->assertText(t('Product kit @title has been created.', array('@title' => $edit['title'])));
     $this->assertText($edit[$body_key], 'Product kit body found.');
     $this->assertText('1 × ' . $products[0]->label(), 'Product 1 title found.');
@@ -104,7 +104,7 @@ class UbercartProductKitTest extends UbercartTestBase {
       'items[' . $products[1]->id() . '][discount]' => $discounts[1],
       'items[' . $products[2]->id() . '][discount]' => $discounts[2],
     );
-    $this->drupalPost('node/' . $kit->id() . '/edit', $edit, 'Save');
+    $this->drupalPostForm('node/' . $kit->id() . '/edit', $edit, 'Save');
 
     // Check the discounted total.
     $total = $products[0]->sell_price + $products[1]->sell_price + $products[2]->sell_price;
@@ -120,7 +120,7 @@ class UbercartProductKitTest extends UbercartTestBase {
 
     // Set the kit total.
     $total = 2 * ($products[0]->sell_price + $products[1]->sell_price + $products[2]->sell_price);
-    $this->drupalPost('node/' . $kit->id() . '/edit', array('kit_total' => $total), 'Save');
+    $this->drupalPostForm('node/' . $kit->id() . '/edit', array('kit_total' => $total), 'Save');
 
     // Check the fixed total.
     $this->assertText(uc_currency_format($total), 'Fixed product kit total found.');
@@ -162,7 +162,7 @@ class UbercartProductKitTest extends UbercartTestBase {
     $this->assertNoText($products[1]->label(), 'Product 2 title not shown.');
     $this->assertNoText($products[2]->label(), 'Product 3 title not shown.');
 
-    $this->drupalPost('node/' . $kit->id(), array(), 'Add to cart');
+    $this->drupalPostForm('node/' . $kit->id(), array(), 'Add to cart');
     $this->drupalGet('cart');
     $this->assertText($kit->label(), 'Product kit title found.');
     $this->assertNoText($products[0]->label(), 'Product 1 title not shown.');
@@ -173,10 +173,10 @@ class UbercartProductKitTest extends UbercartTestBase {
     $this->assertText('Subtotal: ' . uc_currency_format($total), 'Product kit total found.');
 
     $qty = mt_rand(2, 10);
-    $this->drupalPost(NULL, array('items[2][qty]' => $qty), 'Update cart');
+    $this->drupalPostForm(NULL, array('items[2][qty]' => $qty), 'Update cart');
     $this->assertText('Subtotal: ' . uc_currency_format($total * $qty), 'Updated product kit total found.');
 
-    $this->drupalPost(NULL, array(), 'Remove');
+    $this->drupalPostForm(NULL, array(), 'Remove');
     $this->assertText('There are no products in your shopping cart.');
 
     // Test kits with listing.
@@ -188,7 +188,7 @@ class UbercartProductKitTest extends UbercartTestBase {
     $this->assertText($products[1]->label(), 'Product 2 title shown.');
     $this->assertText($products[2]->label(), 'Product 3 title shown.');
 
-    $this->drupalPost('node/' . $kit->id(), array(), 'Add to cart');
+    $this->drupalPostForm('node/' . $kit->id(), array(), 'Add to cart');
     $this->drupalGet('cart');
     $this->assertText($kit->label(), 'Product kit title found.');
     $this->assertText($products[0]->label(), 'Product 1 title shown.');
@@ -199,10 +199,10 @@ class UbercartProductKitTest extends UbercartTestBase {
     $this->assertText('Subtotal: ' . uc_currency_format($total), 'Product kit total found.');
 
     $qty = mt_rand(2, 10);
-    $this->drupalPost(NULL, array('items[2][qty]' => $qty), 'Update cart');
+    $this->drupalPostForm(NULL, array('items[2][qty]' => $qty), 'Update cart');
     $this->assertText('Subtotal: ' . uc_currency_format($total * $qty), 'Updated product kit total found.');
 
-    $this->drupalPost(NULL, array(), 'Remove');
+    $this->drupalPostForm(NULL, array(), 'Remove');
     $this->assertText('There are no products in your shopping cart.');
 
     // Test mutable kits.
@@ -214,7 +214,7 @@ class UbercartProductKitTest extends UbercartTestBase {
     $this->assertText($products[1]->label(), 'Product 2 title shown.');
     $this->assertText($products[2]->label(), 'Product 3 title shown.');
 
-    $this->drupalPost('node/' . $kit->id(), array(), 'Add to cart');
+    $this->drupalPostForm('node/' . $kit->id(), array(), 'Add to cart');
     $this->drupalGet('cart');
     $this->assertNoText($kit->label(), 'Product kit title not shown.');
     $this->assertText($products[0]->label(), 'Product 1 title shown.');
@@ -230,15 +230,15 @@ class UbercartProductKitTest extends UbercartTestBase {
       'items[1][qty]' => $qty[1],
       'items[2][qty]' => $qty[2],
     );
-    $this->drupalPost(NULL, $edit, 'Update cart');
+    $this->drupalPostForm(NULL, $edit, 'Update cart');
     $total = $products[0]->sell_price * $qty[0];
     $total += $products[1]->sell_price * $qty[1];
     $total += $products[2]->sell_price * $qty[2];
     $this->assertText('Subtotal: ' . uc_currency_format($total), 'Updated product kit total found.');
 
-    $this->drupalPost(NULL, array(), 'Remove');
-    $this->drupalPost(NULL, array(), 'Remove');
-    $this->drupalPost(NULL, array(), 'Remove');
+    $this->drupalPostForm(NULL, array(), 'Remove');
+    $this->drupalPostForm(NULL, array(), 'Remove');
+    $this->drupalPostForm(NULL, array(), 'Remove');
     $this->assertText('There are no products in your shopping cart.');
   }
 

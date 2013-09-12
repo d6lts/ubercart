@@ -31,7 +31,7 @@ class UbercartCatalogTest extends UbercartTestBase {
     $this->drupalGet('admin/structure/types/manage/product/fields');
     $this->assertText('taxonomy_catalog', 'Catalog taxonomy term reference field exists.');
 
-    $this->drupalPost('admin/structure/types/manage/product/fields/node.product.taxonomy_catalog/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/product/fields/node.product.taxonomy_catalog/delete', array(), t('Delete'));
     $this->assertText('The field Catalog has been deleted from the Product content type.', 'Catalog taxonomy term reference field deleted.');
 
     $this->drupalGet('admin/structure/types/manage/product/fields');

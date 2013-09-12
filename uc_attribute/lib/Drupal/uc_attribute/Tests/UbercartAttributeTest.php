@@ -319,7 +319,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $edit = (array) $this->createAttribute(array(), FALSE);
 
-    $this->drupalPost('admin/store/products/attributes/add', $edit, t('Submit'));
+    $this->drupalPostForm('admin/store/products/attributes/add', $edit, t('Submit'));
     $this->assertText('Options for ' . $edit['name']);
     $this->assertText('No options for this attribute have been added yet.');
 
@@ -381,7 +381,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     foreach (array('none', 'adjustment', 'total') as $type) {
       $edit['uc_attribute_option_price_format'] = $type;
-      $this->drupalPost('admin/store/settings/products', $edit, t('Save configuration'));
+      $this->drupalPostForm('admin/store/settings/products', $edit, t('Save configuration'));
 
       $this->drupalGet('node/' . $product->id());
       $this->assertRaw($raw[$type], t('Attribute option pricing is correct.'));
@@ -398,7 +398,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $this->assertText(t('Edit attribute: @name', array('@name' => $attribute->name)), t('Attribute edit form working.'));
 
     $edit = (array) $this->createAttribute(array(), FALSE);
-    $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/edit', $edit, t('Submit'));
+    $this->drupalPostForm('admin/store/products/attributes/' . $attribute->aid . '/edit', $edit, t('Submit'));
 
     $attribute = uc_attribute_load($attribute->aid);
 
@@ -428,7 +428,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $edit = (array) $this->createAttribute();
     unset($edit['aid']);
 
-    $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/store/products/attributes/' . $attribute->aid . '/delete', array(), t('Delete'));
 
     $this->assertText(t('Product attribute deleted.'), t('Attribute deleted properly.'));
   }
@@ -460,7 +460,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $edit = (array) $this->createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($edit['aid']);
 
-    $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/options/add', $edit, t('Submit'));
+    $this->drupalPostForm('admin/store/products/attributes/' . $attribute->aid . '/options/add', $edit, t('Submit'));
 
     $option = db_query("SELECT * FROM {uc_attribute_options} WHERE aid = :aid", array(':aid' => $attribute->aid))->fetchObject();
 
@@ -492,7 +492,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $edit = (array) $this->createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($edit['aid']);
-    $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/options/' . $option->oid . '/edit', $edit, t('Submit'));
+    $this->drupalPostForm('admin/store/products/attributes/' . $attribute->aid . '/options/' . $option->oid . '/edit', $edit, t('Submit'));
 
     $option = uc_attribute_option_load($option->oid);
 
@@ -522,7 +522,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $this->assertText(t('Are you sure you want to delete the option @name?', array('@name' => $option->name)), t('Attribute options delete form working.'));
 
-    $this->drupalPost('admin/store/products/attributes/' . $attribute->aid . '/options/' . $option->oid . '/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/store/products/attributes/' . $attribute->aid . '/options/' . $option->oid . '/delete', array(), t('Delete'));
 
     $option = uc_attribute_option_load($option->oid);
 
@@ -552,7 +552,7 @@ class UbercartAttributeTest extends UbercartTestBase {
       $edit["attributes[{$attribute->aid}][$field]"] = $value;
     }
     $this->showVar($edit);
-    $this->drupalPost('admin/store/products/classes/' . $class->id() . '/attributes', $edit, t('Save changes'));
+    $this->drupalPostForm('admin/store/products/classes/' . $class->id() . '/attributes', $edit, t('Save changes'));
 
     $attribute = uc_attribute_load($attribute->aid, $class->id(), 'class');
 
@@ -570,7 +570,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $edit = array();
     $edit["attributes[{$attribute->aid}][remove]"] = TRUE;
-    $this->drupalPost('admin/store/products/classes/' . $class->id() . '/attributes', $edit, t('Save changes'));
+    $this->drupalPostForm('admin/store/products/classes/' . $class->id() . '/attributes', $edit, t('Save changes'));
 
     $this->assertText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
   }
@@ -588,7 +588,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $edit['add_attributes[' . $attribute->aid . ']'] = 1;
 
-    $this->drupalPost('admin/store/products/classes/' . $class->id() . '/attributes/add', $edit, t('Add attributes'));
+    $this->drupalPostForm('admin/store/products/classes/' . $class->id() . '/attributes/add', $edit, t('Add attributes'));
 
     $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
   }
@@ -616,7 +616,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     unset($o['select']);
     $edit["attributes[$attribute->aid][default]"] = $option->oid;
     $this->showVar($edit);
-    $this->drupalPost('admin/store/products/classes/' . $class->id() . '/options', $edit, t('Submit'));
+    $this->drupalPostForm('admin/store/products/classes/' . $class->id() . '/options', $edit, t('Submit'));
     $this->assertText('The product class options have been saved.', t('Class attribute option saved.'));
     $this->showVar($option);
 
@@ -648,7 +648,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $this->clickLink('Add an attribute');
     $this->assertText($attribute->name);
 
-    $this->drupalPost(NULL, array('add_attributes[' . $attribute->aid. ']' => 1), t('Add attributes'));
+    $this->drupalPostForm(NULL, array('add_attributes[' . $attribute->aid. ']' => 1), t('Add attributes'));
     $this->assertText('1 attribute has been added.');
     $this->assertText($attribute->name, 'Attribute name found');
     $this->assertFieldByName('attributes[' . $attribute->aid . '][label]', $attribute->label, 'Attribute label found');
@@ -661,7 +661,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $this->assertText('No attributes left to add.');
 
     $edit = array('attributes[' . $attribute->aid. '][remove]' => 1);
-    $this->drupalPost('node/' . $product->id() . '/edit/attributes', $edit, t('Save changes'));
+    $this->drupalPostForm('node/' . $product->id() . '/edit/attributes', $edit, t('Save changes'));
     $this->assertText('You must first add attributes to this product.');
   }
 
@@ -734,18 +734,18 @@ class UbercartAttributeTest extends UbercartTestBase {
     }
 
     // Test required attribute.
-    $this->drupalPost(NULL, array(), 'Add to cart');
+    $this->drupalPostForm(NULL, array(), 'Add to cart');
     $this->assertText($attribute->label . ' field is required', 'Required attribute message found.');
 
     // Cart display.
     $price = uc_currency_format($product->sell_price + $option->price);
     $edit = array('attributes[' . $attribute->aid . ']' => $option->oid);
-    $this->drupalPost(NULL, $edit, 'Add to cart');
+    $this->drupalPostForm(NULL, $edit, 'Add to cart');
     $this->assertText($attribute->label . ': ' . $option->name, 'Attribute and selected option found in cart');
     $this->assertText($price, 'Adjusted price found in cart');
 
     // Checkout display.
-    $this->drupalPost(NULL, array(), 'Checkout');
+    $this->drupalPostForm(NULL, array(), 'Checkout');
     $this->assertText($attribute->label . ': ' . $option->name, 'Attribute and selected option found at checkout');
     $this->assertText($price, 'Adjusted price found at checkout');
     $this->checkout();
@@ -801,7 +801,7 @@ class UbercartAttributeTest extends UbercartTestBase {
         $edit = array("attributes[$attribute->aid]" => $option->name);
       }
 
-      $this->drupalPost('node/' . $product->id(), $edit, t('Add to cart'));
+      $this->drupalPostForm('node/' . $product->id(), $edit, t('Add to cart'));
       $this->assertText("$attribute->label: $option->name", t('Option selected on cart item.'));
       $this->assertText(uc_currency_format($product->sell_price + $option->price), t('Product has adjusted price.'));
     }

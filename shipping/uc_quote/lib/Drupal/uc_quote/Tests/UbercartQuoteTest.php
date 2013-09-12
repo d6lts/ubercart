@@ -87,7 +87,7 @@ class UbercartQuoteTest extends UbercartTestBase {
       }
     }
     $this->drupalSetContent($dom->saveHTML());
-    return $this->drupalPostAjax(NULL, array(), 'panes[delivery][delivery_country]');
+    return $this->drupalPostAjaxForm(NULL, array(), 'panes[delivery][delivery_country]');
   }
 
   /**
@@ -124,7 +124,7 @@ class UbercartQuoteTest extends UbercartTestBase {
 
     // Post the selection via Ajax.
     $option = array('panes[quotes][quotes][quote_option]' => $selected);
-    return $this->drupalPostAjax(NULL, array(), $option);
+    return $this->drupalPostAjaxForm(NULL, array(), $option);
   }
 
   /**
@@ -133,8 +133,8 @@ class UbercartQuoteTest extends UbercartTestBase {
   public function testNoQuote() {
     $product = $this->createProduct(array('shippable' => FALSE));
     $quote = $this->createQuote();
-    $this->drupalPost('node/' . $product->id(), array(), t('Add to cart'));
-    $this->drupalPost('cart', array('items[0][qty]' => 1), t('Checkout'));
+    $this->drupalPostForm('node/' . $product->id(), array(), t('Add to cart'));
+    $this->drupalPostForm('cart', array('items[0][qty]' => 1), t('Checkout'));
     $this->assertNoText('Calculate shipping cost', 'Shipping pane is not present with no shippable item.');
   }
 
@@ -171,14 +171,14 @@ class UbercartQuoteTest extends UbercartTestBase {
     }
 
     // Add product to cart, update qty, and go to checkout page.
-    $this->drupalPost('node/' . $product->id(), array(), t('Add to cart'));
-    $this->drupalPost('cart', array('items[0][qty]' => $qty), t('Checkout'));
+    $this->drupalPostForm('node/' . $product->id(), array(), t('Add to cart'));
+    $this->drupalPostForm('cart', array('items[0][qty]' => $qty), t('Checkout'));
     $this->assertText($quote1->option_text, 'The default quote option is available');
     $this->assertText($quote2->option_text, 'The second quote option is available');
     $this->assertText($quote1->total, 'Order total includes the default quote.');
 
     // Select a different quote and ensure the total updates correctly.  Currently, we have to do this
-    // by examining the ajax return value directly (rather than the page contents) because drupalPostAjax() can
+    // by examining the ajax return value directly (rather than the page contents) because drupalPostAjaxForm() can
     // only handle replacements via the 'wrapper' property, and the ajax callback may use a command with a selector.
     $edit = array('panes[quotes][quotes][quote_option]' => 'flatrate_2---0');
     $result = $this->ucPostAjax(NULL, $edit, $edit);
@@ -194,12 +194,12 @@ class UbercartQuoteTest extends UbercartTestBase {
     // Proceed to review page and ensure the correct quote is present.
     $edit['panes[quotes][quotes][quote_option]'] = 'flatrate_1---0';
     $edit = $this->populateCheckoutForm($edit);
-    $this->drupalPost(NULL, $edit, t('Review order'));
+    $this->drupalPostForm(NULL, $edit, t('Review order'));
     $this->assertRaw(t('Your order is almost complete.'));
     $this->assertText($quote1->total, 'The total is correct on the order review page.');
 
     // Submit the review.
-    $this->drupalPost(NULL, array(), t('Submit order'));
+    $this->drupalPostForm(NULL, array(), t('Submit order'));
     $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][delivery_first_name]']))->fetchField();
     if ($order_id) {
       $order = uc_order_load($order_id);

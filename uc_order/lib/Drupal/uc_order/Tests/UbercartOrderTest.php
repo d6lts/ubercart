@@ -96,10 +96,10 @@ class UbercartOrderTest extends UbercartTestBase {
       'customer_type' => 'search',
       'customer[email]' => $this->customer->mail->value,
     );
-    $this->drupalPost('admin/store/orders/create', $edit, t('Search'));
+    $this->drupalPostForm('admin/store/orders/create', $edit, t('Search'));
 
     $edit['customer[uid]'] = $this->customer->id();
-    $this->drupalPost(NULL, $edit, t('Create order'));
+    $this->drupalPostForm(NULL, $edit, t('Create order'));
     $this->assertText(t('Order created by the administration.'), 'Order created by the administration.');
     $this->assertFieldByName('uid_text', $this->customer->id(), 'The customer UID appears on the page.');
 
@@ -133,7 +133,7 @@ class UbercartOrderTest extends UbercartTestBase {
       'billing_first_name' => $this->randomName(8),
       'billing_last_name' => $this->randomName(15),
     );
-    $this->drupalPost('admin/store/orders/' . $order->id() . '/edit', $edit, t('Submit changes'));
+    $this->drupalPostForm('admin/store/orders/' . $order->id() . '/edit', $edit, t('Submit changes'));
     $this->assertText(t('Order changes saved.'));
     $this->assertFieldByName('billing_first_name', $edit['billing_first_name'], 'Billing first name changed.');
     $this->assertFieldByName('billing_last_name', $edit['billing_last_name'], 'Billing last name changed.');

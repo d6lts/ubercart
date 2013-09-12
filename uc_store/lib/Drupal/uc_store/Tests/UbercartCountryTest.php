@@ -38,7 +38,7 @@ class UbercartCountryTest extends UbercartTestBase {
     $edit = array(
       'import_file[]' => array($import_file => $import_file),
     );
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/countries',
       $edit,
       t('Import')
@@ -75,7 +75,7 @@ class UbercartCountryTest extends UbercartTestBase {
       t('Confirm form is displayed.')
     );
 
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/countries/56/remove',
       array(),
       t('Remove')

@@ -45,7 +45,7 @@ class UbercartStockTest extends UbercartTestBase {
       'stock[0][stock]' => $stock,
       'stock[0][threshold]' => rand(1, 100),
     );
-    $this->drupalPost(NULL, $edit, t('Save changes'));
+    $this->drupalPostForm(NULL, $edit, t('Save changes'));
     $this->assertText('Stock settings saved.');
     $this->assertTrue(uc_stock_is_active($this->product->model));
     $this->assertEqual($stock, uc_stock_level($this->product->model));
@@ -62,7 +62,7 @@ class UbercartStockTest extends UbercartTestBase {
       'stock[0][active]' => 1,
       'stock[0][stock]' => $stock,
     );
-    $this->drupalPost('node/' . $this->product->id() . '/edit/stock', $edit, t('Save changes'));
+    $this->drupalPostForm('node/' . $this->product->id() . '/edit/stock', $edit, t('Save changes'));
     $this->assertText('Stock settings saved.');
 
     // Enable product quantity field.
@@ -70,7 +70,7 @@ class UbercartStockTest extends UbercartTestBase {
 
     $qty = rand(1, 100);
     $edit = array('qty' => $qty);
-    $this->drupalPost('node/' . $this->product->id(), $edit, t('Add to cart'));
+    $this->drupalPostForm('node/' . $this->product->id(), $edit, t('Add to cart'));
 
     $this->checkout();
 
@@ -79,7 +79,7 @@ class UbercartStockTest extends UbercartTestBase {
 
   public function testStockThresholdMail() {
     $edit = array('uc_stock_threshold_notification' => 1);
-    $this->drupalPost('admin/store/settings/stock', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/settings/stock', $edit, 'Save configuration');
 
     $qty = rand(10, 100);
     $edit = array(
@@ -87,9 +87,9 @@ class UbercartStockTest extends UbercartTestBase {
       'stock[0][stock]' => $qty + 1,
       'stock[0][threshold]' => $qty,
     );
-    $this->drupalPost('node/' . $this->product->id() . '/edit/stock', $edit, 'Save changes');
+    $this->drupalPostForm('node/' . $this->product->id() . '/edit/stock', $edit, 'Save changes');
 
-    $this->drupalPost('node/' . $this->product->id(), array(), 'Add to cart');
+    $this->drupalPostForm('node/' . $this->product->id(), array(), 'Add to cart');
     $this->checkout();
 
     $mail = $this->drupalGetMails(array('id' => 'uc_stock_threshold'));

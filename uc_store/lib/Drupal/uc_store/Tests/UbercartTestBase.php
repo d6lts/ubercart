@@ -109,7 +109,7 @@ abstract class UbercartTestBase extends WebTestBase {
       'description' => $this->randomName(32),
       'settings[uc_product][product]' => 1,
     );
-    $this->drupalPost('admin/structure/types/add', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
 
     return node_type_load($class);
   }
@@ -149,7 +149,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * Executes the checkout process.
    */
   function checkout($edit = array()) {
-    $this->drupalPost('cart', array(), 'Checkout');
+    $this->drupalPostForm('cart', array(), 'Checkout');
     $this->assertText(
       t('Enter your billing address and information here.'),
       t('Viewed cart page: Billing pane has been displayed.')
@@ -158,11 +158,11 @@ abstract class UbercartTestBase extends WebTestBase {
     $edit = $this->populateCheckoutForm($edit);
 
     // Submit the checkout page.
-    $this->drupalPost('cart/checkout', $edit, t('Review order'));
+    $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
     $this->assertRaw(t('Your order is almost complete.'));
 
     // Complete the review page.
-    $this->drupalPost(NULL, array(), t('Submit order'));
+    $this->drupalPostForm(NULL, array(), t('Submit order'));
 
     $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE billing_first_name = :name", array(':name' => $edit['panes[billing][billing_first_name]']))->fetchField();
     if ($order_id) {
@@ -183,7 +183,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * Creates a new order.
    */
   function createOrder($edit = array()) {
-    $this->drupalPost('node/' . $this->product->id(), array(), 'Add to cart');
+    $this->drupalPostForm('node/' . $this->product->id(), array(), 'Add to cart');
 
     $order = $this->checkout();
     if ($order && !empty($edit)) {
@@ -222,7 +222,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * Helper function to test for text in a drupal ajax response.
    *
    * @param $ajax
-   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjax().
+   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjaxForm().
    * @param $text
    *   The text to search for.
    * @param $message
@@ -257,7 +257,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * be inserted into the page if this ajax response were executed.
    *
    * @param $ajax
-   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjax().
+   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjaxForm().
    * @param $text
    *   The text to search for.
    * @param $message
@@ -272,7 +272,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * be inserted into the page if this ajax response were executed.
    *
    * @param $ajax
-   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjax().
+   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjaxForm().
    * @param $text
    *   The text to search for.
    * @param $message
@@ -286,7 +286,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * Assert that the specified text is present in the raw drupal ajax response.
    *
    * @param $ajax
-   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjax().
+   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjaxForm().
    * @param $text
    *   The text to search for.
    * @param $message
@@ -300,7 +300,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * Assert that the specified text is not present in the raw drupal ajax response.
    *
    * @param $ajax
-   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjax().
+   *   The ajax response to test.  Must be an array of ajax commands as returned by drupalPostAjaxForm().
    * @param $text
    *   The text to search for.
    * @param $message
@@ -311,17 +311,17 @@ abstract class UbercartTestBase extends WebTestBase {
   }
 
   /**
-   * Extends drupalPostAjax() to replace additional content on the page after an ajax submission.
+   * Extends drupalPostAjaxForm() to replace additional content on the page after an ajax submission.
    *
-   * DrupalWebTestCase::drupalPostAjax() will only process ajax insertions which don't have a 'selector' attribute,
+   * DrupalWebTestCase::drupalPostAjaxForm() will only process ajax insertions which don't have a 'selector' attribute,
    * because it's not easy to convert from a jQuery selector to an XPath.  However, ubercart uses many simple,
    * id-based selectors, and these can be converted easily (eg: '#my-identifier' => '//*[@id="my-identifier"]').
-   * This helper method post-processes the command array returned by drupalPostAjax() to perform these insertions.
+   * This helper method post-processes the command array returned by drupalPostAjaxForm() to perform these insertions.
    *
-   * @see DrupalWebTestCase::drupalPostAjax()
+   * @see DrupalWebTestCase::drupalPostAjaxForm()
    */
   protected function ucPostAJAX($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
-    $commands = parent::drupalPostAJAX($path, $edit, $triggering_element, $ajax_path, $options, $headers, $form_html_id, $ajax_settings);
+    $commands = parent::drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path, $options, $headers, $form_html_id, $ajax_settings);
     $dom = new DOMDocument();
     @$dom->loadHTML($this->drupalGetContent());
     foreach ($commands as $command) {

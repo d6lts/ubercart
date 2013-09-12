@@ -71,7 +71,7 @@ class UbercartProductTest extends UbercartTestBase {
       )),
       'pkg_qty' => 1,
     );
-    $this->drupalPost('node/add/product', $edit, 'Save');
+    $this->drupalPostForm('node/add/product', $edit, 'Save');
 
     $this->assertText(t('Product @title has been created.', array('@title' => $edit['title'])), 'Product created.');
     $this->assertText($edit[$body_key], 'Product body found.');
@@ -114,7 +114,7 @@ class UbercartProductTest extends UbercartTestBase {
       )),
     );
     $this->clickLink('Edit');
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     $this->assertText(t('Product @title has been updated.', array('@title' => $edit['title'])), 'Product updated.');
     $this->assertText($edit[$body_key], 'Updated product body found.');
@@ -128,8 +128,8 @@ class UbercartProductTest extends UbercartTestBase {
     $this->assertText(uc_length_format($edit['dim_height'], $edit['length_units']), 'Product height found.');
 
     $this->clickLink('Edit');
-    $this->drupalPost(NULL, array(), 'Delete');
-    $this->drupalPost(NULL, array(), 'Delete');
+    $this->drupalPostForm(NULL, array(), 'Delete');
+    $this->drupalPostForm(NULL, array(), 'Delete');
     $this->assertText(t('Product @title has been deleted.', array('@title' => $edit['title'])), 'Product deleted.');
   }
 
@@ -142,7 +142,7 @@ class UbercartProductTest extends UbercartTestBase {
       'description' => $this->randomName(32),
       'settings[uc_product][product]' => 1,
     );
-    $this->drupalPost('admin/structure/types/add', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
     $this->assertTrue(uc_product_is_product($class), 'The new content type is a product class.');
 
     // Make an existing node type a product class.
@@ -152,7 +152,7 @@ class UbercartProductTest extends UbercartTestBase {
       'settings[uc_product][product]' => 1,
     );
 
-    $this->drupalPost('admin/structure/types/manage/' . $class, $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $class, $edit, t('Save content type'));
     $this->assertTrue(uc_product_is_product($class), 'The updated content type is a product class.');
   }
 
@@ -160,22 +160,22 @@ class UbercartProductTest extends UbercartTestBase {
     variable_set('uc_product_add_to_cart_qty', TRUE);
 
     // Check zero quantity message.
-    $this->drupalPost('node/' . $this->product->id(), array('qty' => '0'), 'Add to cart');
+    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => '0'), 'Add to cart');
     $this->assertText('The quantity cannot be zero.');
 
     // Check invalid quantity messages.
-    $this->drupalPost('node/' . $this->product->id(), array('qty' => 'x'), 'Add to cart');
+    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => 'x'), 'Add to cart');
     $this->assertText('The quantity must be a number.');
 
-    $this->drupalPost('node/' . $this->product->id(), array('qty' => '1a'), 'Add to cart');
+    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => '1a'), 'Add to cart');
     $this->assertText('The quantity must be a number.');
 
     // Check cart add message.
-    $this->drupalPost('node/' . $this->product->id(), array('qty' => '1'), 'Add to cart');
+    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => '1'), 'Add to cart');
     $this->assertText($this->product->getTitle() . ' added to your shopping cart.');
 
     // Check cart update message.
-    $this->drupalPost('node/' . $this->product->id(), array('qty' => '1'), 'Add to cart');
+    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => '1'), 'Add to cart');
     $this->assertText('Your item(s) have been updated.');
   }
 }

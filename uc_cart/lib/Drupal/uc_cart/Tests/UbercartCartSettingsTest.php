@@ -31,13 +31,13 @@ class UbercartCartSettingsTest extends UbercartTestBase {
     );
 
     $redirect = $this->randomName(8);
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/cart',
       array('uc_add_item_redirect' => $redirect),
       t('Save configuration')
     );
 
-    $this->drupalPost(
+    $this->drupalPostForm(
       'node/' . $this->product->id(),
       array(),
       t('Add to cart')
@@ -48,13 +48,13 @@ class UbercartCartSettingsTest extends UbercartTestBase {
       t('Add to cart redirect takes user to the correct URL.')
     );
 
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/cart',
       array('uc_add_item_redirect' => '<none>'),
       t('Save configuration')
     );
 
-    $this->drupalPost('node/' . $this->product->id(), array(), t('Add to cart'), array('query' => array('test' => 'querystring')));
+    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'), array('query' => array('test' => 'querystring')));
     $url = url('node/' . $this->product->id(), array('absolute' => TRUE, 'query' => array('test' => 'querystring')));
     $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect works with a query string.');
   }
@@ -68,7 +68,7 @@ class UbercartCartSettingsTest extends UbercartTestBase {
     );
 
     $minimum_subtotal = mt_rand(2, 9999);
-    $this->drupalPost(
+    $this->drupalPostForm(
       NULL,
       array('uc_minimum_subtotal' => $minimum_subtotal),
       t('Save configuration')
@@ -80,12 +80,12 @@ class UbercartCartSettingsTest extends UbercartTestBase {
     $this->drupalLogout();
 
     // Check to see if the lower priced product triggers the minimum price logic.
-    $this->drupalPost(
+    $this->drupalPostForm(
       'node/' . $product_below_limit->id(),
       array(),
       t('Add to cart')
     );
-    $this->drupalPost('cart',
+    $this->drupalPostForm('cart',
       array(),
       t('Checkout')
     );
@@ -95,12 +95,12 @@ class UbercartCartSettingsTest extends UbercartTestBase {
     );
 
     // Add another product to the cart, and verify that we land on the checkout page.
-    $this->drupalPost(
+    $this->drupalPostForm(
       'node/' . $product_above_limit->id(),
       array(),
       t('Add to cart')
     );
-    $this->drupalPost(
+    $this->drupalPostForm(
       'cart',
       array(),
       t('Checkout')
@@ -110,7 +110,7 @@ class UbercartCartSettingsTest extends UbercartTestBase {
 
   function testContinueShopping() {
     // Continue shopping link should take you back to the product page.
-    $this->drupalPost(
+    $this->drupalPostForm(
       'node/' . $this->product->id(),
       array(),
       t('Add to cart')
@@ -143,13 +143,13 @@ class UbercartCartSettingsTest extends UbercartTestBase {
       'uc_continue_shopping_use_last_url' => FALSE,
       'uc_continue_shopping_url' => $this->randomName(8),
     );
-    $this->drupalPost(
+    $this->drupalPostForm(
       NULL,
       $settings,
       t('Save configuration')
     );
 
-    $this->drupalPost(
+    $this->drupalPostForm(
       'cart',
       array(),
       t('Continue shopping')
@@ -178,13 +178,13 @@ class UbercartCartSettingsTest extends UbercartTestBase {
       'uc_cart_breadcrumb_text' => $this->randomName(8),
       'uc_cart_breadcrumb_url' => $this->randomName(7),
     );
-    $this->drupalPost(
+    $this->drupalPostForm(
       NULL,
       $settings,
       t('Save configuration')
     );
 
-    $this->drupalPost(
+    $this->drupalPostForm(
       'node/' . $this->product->id(),
       array(),
       t('Add to cart')

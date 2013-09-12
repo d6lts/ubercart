@@ -30,13 +30,13 @@ class UbercartCheckoutSettingsTest extends UbercartTestBase {
       t('Enable checkout field exists')
     );
 
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/checkout',
       array('uc_checkout_enabled' => FALSE),
       t('Save configuration')
     );
 
-    $this->drupalPost(
+    $this->drupalPostForm(
       'node/' . $this->product->id(),
       array(),
       t('Add to cart')
@@ -57,19 +57,19 @@ class UbercartCheckoutSettingsTest extends UbercartTestBase {
       t('Anonymous checkout field exists')
     );
 
-    $this->drupalPost(
+    $this->drupalPostForm(
       'admin/store/settings/checkout',
       array('uc_checkout_anonymous' => FALSE),
       t('Save configuration')
     );
 
     $this->drupalLogout();
-    $this->drupalPost(
+    $this->drupalPostForm(
       'node/' . $this->product->id(),
       array(),
       t('Add to cart')
     );
-    $this->drupalPost(
+    $this->drupalPostForm(
       'cart',
       array(), 'Checkout');
     $this->assertNoText(
