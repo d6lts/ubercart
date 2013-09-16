@@ -22,9 +22,9 @@ use Drupal\Core\Annotation\Translation;
 class CartBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::settings().
+   * {@inheritdoc}
    */
-  public function settings() {
+  public function defaultConfiguration() {
     return array(
       'hide_empty' => FALSE,
       'show_image' => TRUE,
