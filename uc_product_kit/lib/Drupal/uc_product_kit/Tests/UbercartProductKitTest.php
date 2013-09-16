@@ -41,7 +41,7 @@ class UbercartProductKitTest extends UbercartTestBase {
     }
 
     // Test creation of a basic kit.
-    $body_key = 'body[und][0][value]';
+    $body_key = 'body[0][value]';
     $edit = array(
       'title' => $this->randomName(32),
       $body_key => $this->randomName(64),

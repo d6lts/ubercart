@@ -40,9 +40,9 @@ class UbercartProductTest extends UbercartTestBase {
     foreach (array('model', 'list_price', 'cost', 'sell_price', 'shippable', 'weight', 'weight_units', 'dim_length', 'dim_width', 'dim_height', 'length_units', 'pkg_qty', 'ordering') as $field) {
       $this->assertFieldByName($field, NULL);
     }
-    $this->assertFieldByName('files[uc_product_image_und_0][]', NULL);
+    $this->assertFieldByName('files[uc_product_image_0][]', NULL);
 
-    $body_key = 'body[und][0][value]';
+    $body_key = 'body[0][value]';
 
     // Make a node with those fields.
     $edit = array(
