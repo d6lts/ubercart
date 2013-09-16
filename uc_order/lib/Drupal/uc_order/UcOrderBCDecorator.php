@@ -95,6 +95,20 @@ class UcOrderBCDecorator extends EntityBCDecorator implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
+  public function getPaymentMethod() {
+    return $this->decorated->getPaymentMethod();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPaymentMethod($payment_method) {
+    return $this->decorated->setPaymentMethod($payment_method);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getAddress($type) {
     return $this->decorated->getAddress($type);
   }

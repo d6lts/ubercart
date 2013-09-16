@@ -208,7 +208,7 @@ function uc_credit_uc_store_status() {
  */
 function uc_credit_uc_order($op, $order, $arg2) {
   // Set up the encryption key and object for saving and loading.
-  if (isset($order->payment_method) && $order->payment_method == 'credit' && ($op == 'save' || $op == 'load')) {
+  if ($order->getPaymentMethod() == 'credit' && ($op == 'save' || $op == 'load')) {
     // Log an error if encryption isn't configured properly.
     if (!uc_credit_encryption_key()) {
       watchdog('uc_credit', 'Credit card encryption must be set up to process credit cards.');
@@ -217,7 +217,7 @@ function uc_credit_uc_order($op, $order, $arg2) {
 
   switch ($op) {
     case 'submit':
-      if (isset($order->payment_method) && $order->payment_method == 'credit') {
+      if ($order->getPaymentMethod() == 'credit') {
         // Clear out that session variable denoting this as a CC paid order.
         unset($_SESSION['cc_pay']);
 
@@ -241,13 +241,13 @@ function uc_credit_uc_order($op, $order, $arg2) {
       break;
 
     case 'save':
-      if (isset($order->payment_method) && $order->payment_method == 'credit' && !empty($order->payment_details)) {
+      if ($order->getPaymentMethod() == 'credit' && !empty($order->payment_details)) {
         _uc_credit_save_cc_data_to_order($order->payment_details, $order->id());
       }
       break;
 
     case 'load':
-      if (isset($order->payment_method) && $order->payment_method == 'credit') {
+      if ($order->getPaymentMethod() == 'credit') {
         // Load the CC details from the credit cache if available.
         $order->payment_details = uc_credit_cache('load');
 

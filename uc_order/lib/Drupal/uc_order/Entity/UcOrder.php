@@ -40,7 +40,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
   public $products = array();
   public $line_items = array();
 
-  public $payment_method = '';
   public $data = array();
 
   /**
@@ -66,7 +65,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
     // We unset all defined properties, so magic getters apply.
     // unset($this->products);
     // unset($this->line_items);
-    unset($this->payment_method);
     unset($this->data);
     unset($this->created);
     unset($this->modified);
@@ -242,6 +240,21 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    */
   public function getCurrency() {
     return $this->get('currency')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPaymentMethod() {
+    return $this->get('payment_method')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPaymentMethod($payment_method) {
+    $this->set('payment_method', $payment_method);
+    return $this;
   }
 
   /**
