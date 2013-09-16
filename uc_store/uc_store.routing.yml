@@ -1,33 +1,33 @@
 uc_store_admin:
-  pattern: '/admin/store'
+  path: '/admin/store'
   defaults:
     _content: '\Drupal\uc_store\Controller\StoreController::overview'
   requirements:
     _permission: 'access administration pages'
 
 uc_store_reports:
-  pattern: '/admin/store/reports'
+  path: '/admin/store/reports'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'view reports'
 
 uc_store_settings:
-  pattern: '/admin/store/settings'
+  path: '/admin/store/settings'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'administer store'
 
 uc_store_settings_form:
-  pattern: '/admin/store/settings/store'
+  path: '/admin/store/settings/store'
   defaults:
     _form: 'Drupal\uc_store\Form\StoreSettingsForm'
   requirements:
     _permission: 'administer store'
 
 uc_store_address_fields:
-  pattern: '/admin/store/settings/countries/fields'
+  path: '/admin/store/settings/countries/fields'
   defaults:
     _form: 'Drupal\uc_store\Form\AddressFieldsForm'
   requirements:
