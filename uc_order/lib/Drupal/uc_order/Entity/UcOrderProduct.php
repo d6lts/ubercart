@@ -10,7 +10,6 @@ namespace Drupal\uc_order\Entity;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
-use Drupal\uc_order\UcOrderProductBCDecorator;
 use Drupal\uc_order\UcOrderProductInterface;
 
 /**
@@ -136,17 +135,6 @@ class UcOrderProduct extends EntityNG implements UcOrderProductInterface {
    */
   public function id() {
     return $this->get('order_product_id')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBCEntity() {
-    if (!isset($this->bcEntity)) {
-      $this->getPropertyDefinitions();
-      $this->bcEntity = new UcOrderProductBCDecorator($this, $this->fieldDefinitions);
-    }
-    return $this->bcEntity;
   }
 
   /**

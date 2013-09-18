@@ -130,13 +130,13 @@ class UbercartOrderTest extends UbercartTestBase {
     $this->assertText(drupal_strtoupper($address->first_name . ' ' . $address->last_name), 'Found customer name.');
 
     $edit = array(
-      'billing_first_name' => $this->randomName(8),
-      'billing_last_name' => $this->randomName(15),
+      'bill_to[first_name]' => $this->randomName(8),
+      'bill_to[last_name]' => $this->randomName(15),
     );
     $this->drupalPostForm('admin/store/orders/' . $order->id() . '/edit', $edit, t('Submit changes'));
     $this->assertText(t('Order changes saved.'));
-    $this->assertFieldByName('billing_first_name', $edit['billing_first_name'], 'Billing first name changed.');
-    $this->assertFieldByName('billing_last_name', $edit['billing_last_name'], 'Billing last name changed.');
+    $this->assertFieldByName('bill_to[first_name]', $edit['bill_to[first_name]'], 'Billing first name changed.');
+    $this->assertFieldByName('bill_to[last_name]', $edit['bill_to[last_name]'], 'Billing last name changed.');
   }
 
   protected function ucCreateOrder($customer) {

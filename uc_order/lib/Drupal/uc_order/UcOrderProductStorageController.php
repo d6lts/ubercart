@@ -16,23 +16,13 @@ use Drupal\Core\Entity\EntityInterface;
 class UcOrderProductStorageController extends DatabaseStorageControllerNG {
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::create().
-   */
-  public function create(array $values) {
-    return parent::create($values)->getBCEntity();
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    $products = $this->mapFromStorageRecords($queried_entities, $load_revision);
+    $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
 
-    foreach ($products as $id => $product) {
-      $product = $product->getBCEntity();
-      $queried_entities[$id] = $product;
-
-      $product->data = unserialize($product->data);
+    foreach ($queried_entities as $id => $product) {
+      $product->data->value = unserialize($product->data->value);
     }
   }
 
@@ -46,13 +36,13 @@ class UcOrderProductStorageController extends DatabaseStorageControllerNG {
       return;
     }
 
-    if (empty($product->weight_units)) {
-      if (empty($product->nid)) {
-        $product->weight_units = variable_get('uc_weight_unit', 'lb');
+    if (empty($product->weight_units->value)) {
+      if (empty($product->nid->value)) {
+        $product->weight_units->value = config('uc_store.settings')->get('units.weight');
       }
       else {
-        $units = db_query("SELECT weight_units FROM {node} n JOIN {uc_products} p ON n.vid = p.vid WHERE n.nid = :nid", array(':nid' => $product->nid))->fetchField();
-        $product->weight_units = empty($units) ? variable_get('uc_weight_unit', 'lb') : $units;
+        $units = db_query("SELECT weight_units FROM {node} n JOIN {uc_products} p ON n.vid = p.vid WHERE n.nid = :nid", array(':nid' => $product->nid->value))->fetchField();
+        $product->weight_units->value = empty($units) ? config('uc_store.settings')->get('units.weight') : $units;
       }
     }
     return parent::save($product);

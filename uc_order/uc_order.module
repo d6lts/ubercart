@@ -13,7 +13,6 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
-use Drupal\uc_store\UcAddress;
 
 require_once dirname(__FILE__) . '/uc_order.order_pane.inc';
 require_once dirname(__FILE__) . '/uc_order.line_item.inc';
@@ -720,7 +719,7 @@ function uc_order_new($uid = 0, $state = 'in_checkout') {
   $order = entity_create('uc_order', array(
     'uid' => $uid,
     'order_status' => uc_order_state_default($state),
-  ))->getBCEntity();
+  ));
 
   $order->save();
 
@@ -862,7 +861,7 @@ function uc_order_product_revive($products, $published = TRUE) {
   // Load the nodes associated with each order product.
   $nids = array();
   foreach ($products as $product) {
-    $nids[] = $product->nid;
+    $nids[] = $product->nid->value;
   }
   $nodes = node_load_multiple($nids);
 
@@ -870,8 +869,8 @@ function uc_order_product_revive($products, $published = TRUE) {
   // product fields that are already set).
   $return = TRUE;
   foreach ($products as &$product) {
-    if (!empty($nodes[$product->nid]) && (!$published || $nodes[$product->nid]->isPublished())) {
-      foreach (get_object_vars($nodes[$product->nid]) as $key => $value) {
+    if (!empty($nodes[$product->nid->value]) && (!$published || $nodes[$product->nid->value]->isPublished())) {
+      foreach (get_object_vars($nodes[$product->nid->value]) as $key => $value) {
         if (!property_exists($product, $key)) {
           $product->$key = $value;
         }
@@ -933,8 +932,7 @@ function uc_order_view_invoice($order, $print = FALSE) {
  *   A fully-populated order entity, or FALSE if the order is not found.
  */
 function uc_order_load($order_id, $reset = FALSE) {
-  $entity = entity_load('uc_order', $order_id, $reset);
-  return $entity ? $entity->getBCEntity() : NULL;
+  return entity_load('uc_order', $order_id, $reset);
 }
 
 /**
@@ -1154,7 +1152,7 @@ function uc_order_update_status($order_id, $status) {
       ->execute();
     uc_order_module_invoke('update', $order, $status);
 
-    $change = array(t('Order status') => array('old' => uc_order_status_data($order->order_status, 'title'), 'new' => uc_order_status_data($status, 'title')));
+    $change = array(t('Order status') => array('old' => uc_order_status_data($order->getStatusId(), 'title'), 'new' => uc_order_status_data($status, 'title')));
     uc_order_log_changes($order->id(), $change);
 
     $updated = uc_order_load($order_id, TRUE);
@@ -1285,8 +1283,8 @@ function uc_order_get_total($order, $products_only = FALSE) {
 
   if (is_array($order->products)) {
     foreach ($order->products as $product) {
-      $qty = $product->qty ? $product->qty : 1;
-      $total += $product->price * $qty;
+      $qty = $product->qty->value ? $product->qty->value : 1;
+      $total += $product->price->value * $qty;
     }
   }
 
@@ -1315,7 +1313,7 @@ function uc_order_get_product_count($order) {
 
   if (is_array($order->products)) {
     foreach ($order->products as $product) {
-      $count += $product->qty;
+      $count += $product->qty->value;
     }
   }
 
@@ -1386,25 +1384,29 @@ function template_preprocess_uc_order_invoice(&$variables) {
 
   $variables['shippable'] = uc_order_is_shippable($order);
 
-  $variables['products'] = $order->products;
+  $variables['products'] = array();
   if (!empty($order->products)) {
     $display = entity_view_multiple($order->products, 'full');
-    foreach ($variables['products'] as &$product) {
-      $product->total_price = render($display[$product->order_product_id]['total']);
-      if ($product->qty > 1) {
-        $product->individual_price = t('(!price each)', array('!price' => uc_currency_format($display[$product->order_product_id]['price']['#price'])));
+    foreach ($order->products as $id => $product) {
+      $variables['products'][$id] = new stdClass;
+      $variables['products'][$id]->title = $product->title->value;
+      $variables['products'][$id]->qty = $product->qty->value;
+      $variables['products'][$id]->model = $product->model->value;
+      $variables['products'][$id]->total_price = render($display[$product->order_product_id->value]['total']);
+      if ($product->qty->value > 1) {
+        $variables['products'][$id]->individual_price = t('(!price each)', array('!price' => uc_currency_format($display[$product->order_product_id->value]['price']['#price'])));
       }
       else {
-        $product->individual_price = '';
+        $variables['products'][$id]->individual_price = '';
       }
 
-      $product->details = '';
+      $variables['products'][$id]->details = '';
       if (!empty($product->data['attributes'])) {
         $attributes = array();
         foreach ($product->data['attributes'] as $attribute => $option) {
           $attributes[] = t('@attribute: @options', array('@attribute' => $attribute, '@options' => implode(', ', (array)$option)));
         }
-        $product->details .= theme('item_list', array('items' => $attributes));
+        $variables['products'][$id]->details .= theme('item_list', array('items' => $attributes));
       }
     }
   }

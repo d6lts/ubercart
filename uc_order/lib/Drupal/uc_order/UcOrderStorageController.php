@@ -8,6 +8,7 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for orders.
@@ -50,25 +51,19 @@ class UcOrderStorageController extends DatabaseStorageControllerNG {
       $values['created'] = REQUEST_TIME;
     }
 
-    return parent::create($values)->getBCEntity();
+    return parent::create($values);
   }
 
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    $orders = $this->mapFromStorageRecords($queried_entities, $load_revision);
+    $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
 
-    foreach ($orders as $id => $order) {
-      $order = $order->getBCEntity();
-      $queried_entities[$id] = $order;
-
+    foreach ($queried_entities as $id => $order) {
       $order->data = unserialize($order->data);
 
-      $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $order->id()));
-      foreach ($order->products as $product) {
-        $product->order = $order;
-      }
+      $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $id));
 
       uc_order_module_invoke('load', $order, NULL);
 
@@ -91,6 +86,22 @@ class UcOrderStorageController extends DatabaseStorageControllerNG {
     }
 
 //    parent::attachLoad($queried_entities, $load_revision);
+  }
+
+  /**
+   * Overrides Drupal\Core\Entity\DatabaseStorageControllerNG::mapToStorageRecord().
+   */
+  protected function mapToStorageRecord(EntityInterface $entity) {
+    $record = new \stdClass();
+    foreach (drupal_schema_fields_sql($this->entityInfo['base_table']) as $name) {
+      if ($name == 'data') {
+        $record->$name = $entity->$name;
+      }
+      else {
+        $record->$name = $entity->$name->value;
+      }
+    }
+    return $record;
   }
 
 }

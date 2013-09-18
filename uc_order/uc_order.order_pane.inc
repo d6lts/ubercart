@@ -13,6 +13,7 @@
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\uc_store\UcAddress;
 
 /**
  * Handles the "Print button" order pane.
@@ -50,12 +51,11 @@ function uc_order_pane_ship_to($op, $order, &$form = NULL, &$form_state = NULL) 
       return $build;
 
     case 'edit-form':
-      $form['ship_to'] = array(
+      $form['ship_to']['#tree'] = TRUE;
+      $form['ship_to']['address'] = array(
         '#type' => 'uc_address',
-        '#default_value' => $order,
+        '#default_value' => $order->getAddress('delivery'),
         '#required' => FALSE,
-        '#attributes' => array('class' => array('uc-store-address-field')),
-        '#key_prefix' => 'delivery',
       );
       return $form;
 
@@ -72,14 +72,13 @@ function uc_order_pane_ship_to($op, $order, &$form = NULL, &$form_state = NULL) 
       return $output . drupal_render($form['ship_to']);
 
     case 'edit-process':
-      foreach ($form_state['values'] as $key => $value) {
-        if (substr($key, 0, 9) == 'delivery_') {
-          if (uc_address_field_enabled(substr($key, 9))) {
-            $changes[$key] = $value;
-          }
+      $address = $order->getAddress('delivery');
+      foreach ($form_state['values']['ship_to'] as $key => $value) {
+        if (uc_address_field_enabled($key)) {
+          $address->$key = $value;
         }
       }
-      return $changes;
+      $order->setAddress('delivery', $address);
   }
 }
 
@@ -95,12 +94,11 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) 
       return $build;
 
     case 'edit-form':
-      $form['bill_to'] = array(
+      $form['bill_to']['#tree'] = TRUE;
+      $form['bill_to']['address'] = array(
         '#type' => 'uc_address',
-        '#default_value' => $order,
+        '#default_value' => $order->getAddress('billing'),
         '#required' => FALSE,
-        '#attributes' => array('class' => array('uc-store-address-field')),
-        '#key_prefix' => 'billing',
       );
       return $form;
 
@@ -117,14 +115,13 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) 
       return $output . drupal_render($form['bill_to']);
 
     case 'edit-process':
-      foreach ($form_state['values'] as $key => $value) {
-        if (substr($key, 0, 8) == 'billing_') {
-          if (uc_address_field_enabled(substr($key, 8))) {
-            $changes[$key] = $value;
-          }
+      $address = $order->getAddress('billing');
+      foreach ($form_state['values']['bill_to'] as $key => $value) {
+        if (uc_address_field_enabled($key)) {
+          $address->$key = $value;
         }
       }
-      return $changes;
+      $order->setAddress('billing', $address);
   }
 }
 
@@ -449,27 +446,27 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
       '#src' => drupal_get_path('module', 'uc_store') . '/images/error.gif',
       '#button_type' => 'remove',
       '#submit' => array('uc_order_edit_products_remove', 'uc_order_edit_form_submit'),
-      '#return_value' => $product->order_product_id,
+      '#return_value' => $product->order_product_id->value,
     );
     $form['data'][$i]['order_product_id'] = array(
       '#type' => 'hidden',
-      '#value' => $product->order_product_id,
+      '#value' => $product->order_product_id->value,
     );
     $form['data'][$i]['nid'] = array(
       '#type' => 'hidden',
-      '#value' => $product->nid,
+      '#value' => $product->nid->value,
     );
     $form['products'][$i]['qty'] = array(
       '#type' => 'uc_quantity',
       '#title' => theme('uc_qty_label'),
       '#title_display' => 'invisible',
-      '#default_value' => $product->qty,
+      '#default_value' => $product->qty->value,
     );
     $form['products'][$i]['title'] = array(
       '#type' => 'textfield',
       '#title' => t('Title'),
       '#title_display' => 'invisible',
-      '#default_value' => $product->title,
+      '#default_value' => $product->title->value,
       '#size' => 30,
       '#maxlength' => 255,
     );
@@ -477,14 +474,14 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
       '#type' => 'textfield',
       '#title' => t('SKU'),
       '#title_display' => 'invisible',
-      '#default_value' => $product->model,
+      '#default_value' => $product->model->value,
       '#size' => 6,
     );
     $form['products'][$i]['weight'] = array(
       '#type' => 'textfield',
       '#title' => t('Weight'),
       '#title_display' => 'invisible',
-      '#default_value' => $product->weight,
+      '#default_value' => $product->weight->value,
       '#size' => 3,
     );
     $units = array(
@@ -497,21 +494,21 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
       '#type' => 'select',
       '#title' => t('Units'),
       '#title_display' => 'invisible',
-      '#default_value' => $product->weight_units,
+      '#default_value' => $product->weight_units->value,
       '#options' => $units,
     );
     $form['products'][$i]['cost'] = array(
       '#type' => 'uc_price',
       '#title' => t('Cost'),
       '#title_display' => 'invisible',
-      '#default_value' => $product->cost,
+      '#default_value' => $product->cost->value,
       '#size' => 5,
     );
     $form['products'][$i]['price'] = array(
       '#type' => 'uc_price',
       '#title' => t('Price'),
       '#title_display' => 'invisible',
-      '#default_value' => $product->price,
+      '#default_value' => $product->price->value,
       '#size' => 5,
     );
     $form['data'][$i]['data'] = array(
@@ -937,7 +934,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
       $comments = uc_order_comments_load($order->id());
       $header = array(t('Date'), t('Status'), t('Message'));
       $rows[] = array(
-        array('data' => format_date($order->created, 'uc_store'), 'class' => array('date')),
+        array('data' => format_date($order->created->value, 'uc_store'), 'class' => array('date')),
         array('data' => '-', 'class' => array('status')),
         array('data' => t('Order created.'), 'class' => array('message')),
       );

@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
-use Drupal\uc_order\UcOrderBCDecorator;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_store\UcAddress;
 
@@ -65,7 +64,7 @@ class UcOrder extends EntityNG implements UcOrderInterface {
     // We unset all defined properties, so magic getters apply.
     // unset($this->products);
     // unset($this->line_items);
-    unset($this->data);
+    // unset($this->data);
     unset($this->created);
     unset($this->modified);
   }
@@ -75,17 +74,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    */
   public function id() {
     return $this->get('order_id')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBCEntity() {
-    if (!isset($this->bcEntity)) {
-      $this->getPropertyDefinitions();
-      $this->bcEntity = new UcOrderBCDecorator($this, $this->fieldDefinitions);
-    }
-    return $this->bcEntity;
   }
 
   /**
@@ -103,21 +91,19 @@ class UcOrder extends EntityNG implements UcOrderInterface {
     $this->host->value = \Drupal::request()->getClientIp();
     $this->modified->value = REQUEST_TIME;
 
-    $order = $this->getBCEntity();
-    uc_order_module_invoke('presave', $order, NULL);
+    uc_order_module_invoke('presave', $this, NULL);
   }
 
   /**
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    foreach ((array) $this->getBCEntity()->products as $product) {
+    foreach ($this->products as $product) {
       drupal_alter('uc_order_product', $product, $this);
       uc_order_product_save($this->id(), $product);
     }
 
-    $order = $this->getBCEntity();
-    uc_order_module_invoke('save', $order, NULL);
+    uc_order_module_invoke('save', $this, NULL);
   }
 
   /**
@@ -125,7 +111,6 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    */
   static public function preDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
     foreach ($orders as $order_id => $order) {
-      $order = $order->getBCEntity();
       uc_order_module_invoke('delete', $order, NULL);
     }
   }
@@ -225,14 +210,14 @@ class UcOrder extends EntityNG implements UcOrderInterface {
    * {@inheritdoc}
    */
   public function getSubtotal() {
-    return uc_order_get_total($this->getBCEntity(), TRUE);
+    return uc_order_get_total($this, TRUE);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getTotal() {
-    return uc_order_get_total($this->getBCEntity());
+    return uc_order_get_total($this);
   }
 
   /**
@@ -434,11 +419,11 @@ class UcOrder extends EntityNG implements UcOrderInterface {
       'description' => 'The method of payment.',
       'type' => 'string_field',
     );
-    $properties['data'] = array(
-      'label' => t('Data'),
-      'description' => 'A serialized array of extra data.',
-      'type' => 'string_field',
-    );
+    // $properties['data'] = array(
+    //   'label' => t('Data'),
+    //   'description' => 'A serialized array of extra data.',
+    //   'type' => 'string_field',
+    // );
     $properties['created'] = array(
       'label' => t('Created'),
       'description' => 'The Unix timestamp indicating when the order was created.',

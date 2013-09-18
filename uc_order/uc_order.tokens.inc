@@ -284,7 +284,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'order-status':
-          $replacements[$original] = uc_order_status_data($order->order_status, 'title');
+          $replacements[$original] = uc_order_status_data($order->getStatusId(), 'title');
           break;
 
         case 'customer':
@@ -292,17 +292,17 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'created':
-          $replacements[$original] = format_date($order->created, 'short');
+          $replacements[$original] = format_date($order->created->value, 'short');
           break;
 
         case 'modified':
-          $replacements[$original] = format_date($order->modified, 'short');
+          $replacements[$original] = format_date($order->modified->value, 'short');
           break;
 
         case 'products':
           $products = array();
           foreach ($order->products as $product) {
-            $products[] = theme('uc_qty', array('qty' => $product->qty)) . ' ' . $product->title;
+            $products[] = theme('uc_qty', array('qty' => $product->qty->value)) . ' ' . $product->title->value;
           }
           if ($sanitize) {
             $products = array_map('check_plain', $products);
@@ -326,11 +326,11 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $created_tokens, array('date' => $order->created), $options);
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $order->created->value), $options);
     }
 
     if ($changed_tokens = $token_service->findWithPrefix($tokens, 'modified')) {
-      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $order->modified), $options);
+      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $order->modified->value), $options);
     }
   }
 

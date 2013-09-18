@@ -254,8 +254,7 @@ function uc_checkout_pane_address($pane, $op, $order, &$form_state, $description
 
       $contents['address'] = array(
         '#type' => 'uc_address',
-        '#default_value' => $order,
-        '#key_prefix' => $pane,
+        '#default_value' => $order->getAddress($pane),
         '#prefix' => '<div id="' . $pane . '-address-pane">',
         '#suffix' => '</div>',
       );
@@ -299,13 +298,13 @@ function uc_checkout_pane_address($pane, $op, $order, &$form_state, $description
       $address = new UcAddress;
       $panes = &$form_state['values']['panes'];
       foreach ($panes[$pane] as $field => $value) {
-        if (substr($field, 0, strlen($pane)) == $pane) {
+        if (isset($address->$field)) {
           if (!empty($panes[$pane]['copy_address'])) {
-            $value = $panes[$source][str_replace($pane, $source, $field)];
+            $address->$field = $panes[$source][$field];
           }
-
-          $field = substr($field, strlen($pane) + 1);
-          $address->$field = $value;
+          else {
+            $address->$field = $value;
+          }
         }
       }
       $order->setAddress($pane, $address);

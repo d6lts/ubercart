@@ -861,7 +861,7 @@ function uc_order_edit_form($form, &$form_state, $order) {
   $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
   $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->getUserId());
 
-  $modified = isset($form_state['values']['order_modified']) ? $form_state['values']['order_modified'] : $order->modified;
+  $modified = isset($form_state['values']['order_modified']) ? $form_state['values']['order_modified'] : $order->modified->value;
   $form['order_modified'] = array('#type' => 'hidden', '#value' => $modified);
 
   $panes = _uc_order_pane_list('edit');
@@ -907,7 +907,7 @@ function uc_order_edit_form($form, &$form_state, $order) {
  */
 function uc_order_edit_form_validate($form, &$form_state) {
   $order = uc_order_load($form_state['values']['order_id']);
-  if ($form_state['values']['order_modified'] != $order->modified) {
+  if ($form_state['values']['order_modified'] != $order->modified->value) {
     form_set_error('order_modified', t('This order has been modified by another user, changes cannot be saved.'));
   }
 
@@ -919,9 +919,9 @@ function uc_order_edit_form_validate($form, &$form_state) {
     if (in_array('edit', $pane['show'])) {
       $func = $pane['callback'];
       if (function_exists($func)) {
-        if (($changes = $func('edit-process', $order, $form, $form_state)) != NULL) {
+        if (($changes = $func('edit-process', $form_state['order'], $form, $form_state)) != NULL) {
           foreach ($changes as $key => $value) {
-            $form_state['order']->$key = $value;
+            //$form_state['order']->$key->value = $value;
           }
         }
       }
@@ -941,12 +941,12 @@ function uc_order_edit_form_submit($form, &$form_state) {
   $log = array();
 
   foreach (array_keys($form_state['order']->getPropertyDefinitions()) as $key) {
-    $value = $form_state['order']->$key;
-    if (!isset($order->$key) || $order->$key !== $value) {
+    $value = $form_state['order']->$key->value;
+    if ($order->$key->value !== $value) {
       if (!is_array($value)) {
-        $log[$key] = array('old' => $order->$key, 'new' => $value);
+        $log[$key] = array('old' => $order->$key->value, 'new' => $value);
       }
-      $order->$key = $value;
+      $order->$key->value = $value;
     }
   }
 

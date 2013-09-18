@@ -122,17 +122,17 @@ abstract class UbercartTestBase extends WebTestBase {
    */
   function populateCheckoutForm($edit = array()) {
     foreach (array('billing', 'delivery') as $pane) {
-      $prefix = 'panes[' . $pane . '][' . $pane;
-      $key =  $prefix . '_country]';
+      $prefix = 'panes[' . $pane . ']';
+      $key =  $prefix . '[country]';
       $country = empty($edit[$key]) ? config('uc_store.settings')->get('address.country') : $edit[$key];
       $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => $country))->fetchField();
       $edit += array(
-        $prefix . '_first_name]' => $this->randomName(10),
-        $prefix . '_last_name]' => $this->randomName(10),
-        $prefix . '_street1]' => $this->randomName(10),
-        $prefix . '_city]' => $this->randomName(10),
-        $prefix . '_zone]' => $zone_id,
-        $prefix . '_postal_code]' => mt_rand(10000, 99999),
+        $prefix . '[first_name]' => $this->randomName(10),
+        $prefix . '[last_name]' => $this->randomName(10),
+        $prefix . '[street1]' => $this->randomName(10),
+        $prefix . '[city]' => $this->randomName(10),
+        $prefix . '[zone]' => $zone_id,
+        $prefix . '[postal_code]' => mt_rand(10000, 99999),
       );
     }
 
@@ -164,7 +164,7 @@ abstract class UbercartTestBase extends WebTestBase {
     // Complete the review page.
     $this->drupalPostForm(NULL, array(), t('Submit order'));
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE billing_first_name = :name", array(':name' => $edit['panes[billing][billing_first_name]']))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE billing_first_name = :name", array(':name' => $edit['panes[billing][first_name]']))->fetchField();
     if ($order_id) {
       $this->pass(
         t('Order %order_id has been created', array('%order_id' => $order_id))

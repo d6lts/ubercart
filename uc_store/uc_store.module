@@ -329,7 +329,7 @@ function uc_store_process_address_field($element, $form_state) {
   $address = new UcAddress();
   foreach ($address as $base_field => $field_value) {
     $field = $prefix . $base_field;
-    if (is_object($value) ? !isset($value->$field) : !isset($value[$field])) {
+    if (is_object($value) ? !property_exists($value, $field) : !isset($value[$field])) {
     // if (!isset($value[$field])) {
       continue;
     }

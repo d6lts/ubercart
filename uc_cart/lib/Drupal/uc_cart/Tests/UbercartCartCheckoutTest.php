@@ -174,6 +174,12 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
   //   $this->assertFieldByName('items[0][qty]', 10);
   // }
 
+  function testBasicCheckout() {
+    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->checkout();
+    $this->assertRaw('Your order is complete!');
+  }
+
   function testCheckout() {
     // Allow customer to specify username and password, but don't log in after checkout.
     $settings = array(
