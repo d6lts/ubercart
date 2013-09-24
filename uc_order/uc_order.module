@@ -594,14 +594,18 @@ function uc_order_user($op, &$edit, &$account, $category = NULL) {
  * Implements hook_mail().
  */
 function uc_order_mail($key, &$message, $params) {
-  $langcode = isset($message['language']) ? $message['language']->language : NULL;
+  global $language;
+  if (isset($message['language'])) {
+    $original_global_language = drupal_clone($language);
+    $language = $message['language'];
+  }
 
   // Build the appropriate message paramaters based on the e-mail key.
   switch ($key) {
     // Setup an e-mailed invoice.
     case 'invoice':
       $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
-      $message['subject'] = t('Your Order Invoice', array(), $langcode);
+      $message['subject'] = t('Your Order Invoice');
       $message['from'] = uc_store_email_from();
       $message['body'][] = theme('uc_order', $params['order'], 'admin-mail', variable_get('uc_cust_order_invoice_template', 'customer'));
       break;
@@ -628,6 +632,10 @@ function uc_order_mail($key, &$message, $params) {
       }
 
       break;
+  }
+
+  if (isset($message['language'])) {
+    $language = $original_global_language;
   }
 }
 
