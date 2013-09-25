@@ -64,7 +64,7 @@ class UbercartOrderTest extends UbercartTestBase {
   }
 
   public function testEntityHooks() {
-    module_enable(array('entity_crud_hook_test'));
+    \Drupal::moduleHandler()->install(array('entity_crud_hook_test'));
 
     $_SESSION['entity_crud_hook_test'] = array();
     $order = uc_order_new();

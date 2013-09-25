@@ -84,7 +84,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
   }
 
   function testCart() {
-    module_enable(array('uc_cart_entity_test'));
+    \Drupal::moduleHandler()->install(array('uc_cart_entity_test'));
 
     // Test the empty cart.
     $this->drupalGet('cart');
