@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_cart\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure general shopping cart settings for this site.
  */
-class CartSettingsForm extends SystemConfigFormBase {
+class CartSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

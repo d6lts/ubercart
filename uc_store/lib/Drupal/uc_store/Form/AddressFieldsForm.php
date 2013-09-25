@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_store\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure address field settings for this store.
  */
-class AddressFieldsForm extends SystemConfigFormBase {
+class AddressFieldsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

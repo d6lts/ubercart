@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_product\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure product settings for this site.
  */
-class ProductSettingsForm extends SystemConfigFormBase {
+class ProductSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

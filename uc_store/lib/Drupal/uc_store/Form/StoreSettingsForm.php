@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_store\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure store settings for this site.
  */
-class StoreSettingsForm extends SystemConfigFormBase {
+class StoreSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

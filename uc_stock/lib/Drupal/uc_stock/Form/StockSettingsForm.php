@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_stock\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure stock settings for this site.
  */
-class StockSettingsForm extends SystemConfigFormBase {
+class StockSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

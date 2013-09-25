@@ -9,14 +9,14 @@ namespace Drupal\uc_payment\Form;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure available payment methods for the store.
  */
-class PaymentMethodsForm extends SystemConfigFormBase {
+class PaymentMethodsForm extends ConfigFormBase {
 
   /**
    * The payment method manager.

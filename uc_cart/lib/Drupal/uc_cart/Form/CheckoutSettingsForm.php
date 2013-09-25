@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_cart\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure general checkout settings for this site.
  */
-class CheckoutSettingsForm extends SystemConfigFormBase {
+class CheckoutSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

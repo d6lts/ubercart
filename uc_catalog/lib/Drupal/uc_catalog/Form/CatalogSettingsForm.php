@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_catalog\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure catalog settings for this site.
  */
-class CatalogSettingsForm extends SystemConfigFormBase {
+class CatalogSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
