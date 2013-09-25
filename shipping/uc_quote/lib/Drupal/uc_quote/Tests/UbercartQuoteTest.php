@@ -133,7 +133,7 @@ class UbercartQuoteTest extends UbercartTestBase {
   public function testNoQuote() {
     $product = $this->createProduct(array('shippable' => FALSE));
     $quote = $this->createQuote();
-    $this->drupalPostForm('node/' . $product->id(), array(), t('Add to cart'));
+    $this->addToCart($product);
     $this->drupalPostForm('cart', array('items[0][qty]' => 1), t('Checkout'));
     $this->assertNoText('Calculate shipping cost', 'Shipping pane is not present with no shippable item.');
   }
@@ -171,7 +171,7 @@ class UbercartQuoteTest extends UbercartTestBase {
     }
 
     // Add product to cart, update qty, and go to checkout page.
-    $this->drupalPostForm('node/' . $product->id(), array(), t('Add to cart'));
+    $this->addToCart($product);
     $this->drupalPostForm('cart', array('items[0][qty]' => $qty), t('Checkout'));
     $this->assertText($quote1->option_text, 'The default quote option is available');
     $this->assertText($quote2->option_text, 'The second quote option is available');

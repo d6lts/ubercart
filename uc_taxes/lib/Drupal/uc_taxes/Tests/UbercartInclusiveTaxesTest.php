@@ -98,7 +98,7 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
 
     // Add the product kit to the cart, selecting the option.
     $attribute_key = 'products[' . $product->id() . '][attributes][' . $attribute->aid . ']';
-    $this->drupalPostForm('node/' . $kit->id(), array($attribute_key => $option->oid), t('Add to cart'));
+    $this->addToCart($kit, array($attribute_key => $option->oid));
 
     // Check that the subtotal is $16.80 ($10 base + $5 option - $1 discount, with 20% tax)
     $this->drupalGet('cart');

@@ -38,7 +38,7 @@ class UbercartRolesTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save feature'));
 
     // Check out with the test product.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $order = $this->checkout();
     uc_payment_enter($order->id(), 'other', $order->getTotal());
 

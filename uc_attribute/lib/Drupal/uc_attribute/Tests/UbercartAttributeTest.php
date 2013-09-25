@@ -734,13 +734,12 @@ class UbercartAttributeTest extends UbercartTestBase {
     }
 
     // Test required attribute.
-    $this->drupalPostForm(NULL, array(), 'Add to cart');
+    $this->addToCart($product);
     $this->assertText($attribute->label . ' field is required', 'Required attribute message found.');
 
     // Cart display.
     $price = uc_currency_format($product->sell_price + $option->price);
-    $edit = array('attributes[' . $attribute->aid . ']' => $option->oid);
-    $this->drupalPostForm(NULL, $edit, 'Add to cart');
+    $this->addToCart($product, array('attributes[' . $attribute->aid . ']' => $option->oid));
     $this->assertText($attribute->label . ': ' . $option->name, 'Attribute and selected option found in cart');
     $this->assertText($price, 'Adjusted price found in cart');
 
@@ -801,7 +800,7 @@ class UbercartAttributeTest extends UbercartTestBase {
         $edit = array("attributes[$attribute->aid]" => $option->name);
       }
 
-      $this->drupalPostForm('node/' . $product->id(), $edit, t('Add to cart'));
+      $this->addToCart($product, $edit);
       $this->assertText("$attribute->label: $option->name", t('Option selected on cart item.'));
       $this->assertText(uc_currency_format($product->sell_price + $option->price), t('Product has adjusted price.'));
     }

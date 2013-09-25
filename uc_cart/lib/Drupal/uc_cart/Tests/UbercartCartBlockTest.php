@@ -43,7 +43,7 @@ class UbercartCartBlockTest extends UbercartTestBase {
     $this->assertNoLink('Checkout');
 
     // Test the cart block with an item.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->drupalGet('');
 
     $this->assertNoRaw('cart-block-icon-empty');
@@ -68,7 +68,7 @@ class UbercartCartBlockTest extends UbercartTestBase {
     $this->assertNoText($block->label());
 
     // Test the cart block with an item.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->drupalGet('');
     $this->assertText($block->label());
   }

@@ -97,6 +97,13 @@ abstract class UbercartTestBase extends WebTestBase {
   }
 
   /**
+   * Adds a product to the cart.
+   */
+  function addToCart($product, $options = array()) {
+    $this->drupalPostForm('node/' . $product->id(), $options, 'Add to cart');
+  }
+
+  /**
    * Creates a new product class.
    *
    * Fix this after adding a proper API call for saving a product class.
@@ -183,7 +190,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * Creates a new order.
    */
   function createOrder($edit = array()) {
-    $this->drupalPostForm('node/' . $this->product->id(), array(), 'Add to cart');
+    $this->addToCart($this->product);
 
     $order = $this->checkout();
     if ($order && !empty($edit)) {

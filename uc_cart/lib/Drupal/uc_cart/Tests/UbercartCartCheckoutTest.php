@@ -90,7 +90,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->assertText('There are no products in your shopping cart.');
 
     // Add an item to the cart.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->assertText($this->product->label() . ' added to your shopping cart.');
     $this->assertText('hook_uc_cart_item_insert fired');
 
@@ -100,7 +100,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->assertFieldByName('items[0][qty]', 1, t('The product quantity is 1.'));
 
     // Add the item again.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->assertText('Your item(s) have been updated.');
     $this->assertText('hook_uc_cart_item_update fired');
 
@@ -122,7 +122,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->assertText('hook_uc_cart_item_delete fired');
 
     // Test the remove item button.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->drupalPostForm('cart', array(), t('Remove'));
     $this->assertText($this->product->label() . ' removed from your shopping cart.');
     $this->assertText('There are no products in your shopping cart.');
@@ -132,12 +132,12 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
   function testCartMerge() {
     // Add an item to the cart as an anonymous user.
     $this->drupalLogin($this->customer);
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->assertText($this->product->label() . ' added to your shopping cart.');
     $this->drupalLogout();
 
     // Add an item to the cart as an anonymous user.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->assertText($this->product->label() . ' added to your shopping cart.');
 
     // Log in and check the items are merged.
@@ -149,7 +149,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
 
   function testDeletedCartItem() {
     // Add a product to the cart, then delete the node.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->product->delete();
 
     // Test that the cart is empty.
@@ -165,7 +165,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
   //   $rule->save();
 
   //   // Try to add more items than allowed to the cart.
-  //   $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+  //   $this->addToCart($this->product);
   //   $this->drupalPostForm('cart', array('items[0][qty]' => 11), t('Update cart'));
 
   //   // Test the restriction was applied.
@@ -175,7 +175,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
 
   function testAuthenticatedCheckout() {
     $this->drupalLogin($this->customer);
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->checkout();
     $this->assertRaw('Your order is complete!');
     $this->assertRaw('While logged in');
@@ -186,7 +186,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
   }
 
   function testAnonymousCheckoutAccountGenerated() {
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->checkout();
     $this->assertRaw('Your order is complete!');
 
@@ -233,7 +233,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $username = $this->randomName(20);
     $password = $this->randomName(20);
 
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->checkout(array(
       'panes[customer][new_account][name]' => $username,
       'panes[customer][new_account][pass]' => $password,
@@ -267,7 +267,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
   }
 
   function testAnonymousCheckoutAccountExists() {
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->checkout(array('panes[customer][primary_email]' => $this->customer->getEmail()));
     $this->assertRaw('Your order is complete!');
     $this->assertRaw('order has been attached to the account we found');
@@ -291,7 +291,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->drupalLogout();
 
     // Test with an account that already exists.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $edit = array(
       'panes[customer][primary_email]' => $this->randomName(8) . '@example.com',
       'panes[customer][new_account][name]' => $this->adminUser->name->value,
@@ -320,7 +320,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->drupalLogout();
 
     // Test as anonymous user.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->checkout();
     $this->assertRaw('Your order is complete!');
 
@@ -341,7 +341,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->drupalLogout();
 
     // Test checkout.
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->checkout();
     $this->assertRaw('Your order is complete!');
     $this->assertRaw('you are already logged in');
@@ -455,7 +455,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
    * Tests that cart orders are marked abandoned after a timeout.
    */
   function testCartOrderTimeout() {
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->drupalPostForm('cart', array(), 'Checkout');
     $this->assertText(
       t('Enter your billing address and information here.'),
@@ -494,7 +494,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     if ($order_id) {
       // Go to a different page, then back to order - make sure order_id is the same.
       $this->drupalGet('<front>');
-      $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+      $this->addToCart($this->product);
       $this->drupalPostForm('cart', array(), 'Checkout');
       $this->assertRaw($oldname, 'Customer name was unchanged.');
       $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
@@ -532,7 +532,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
   function testCustomerInformationCheckoutPane() {
     // Log in as a customer and add an item to the cart.
     $this->drupalLogin($this->customer);
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'));
+    $this->addToCart($this->product);
     $this->drupalPostForm('cart', array(), 'Checkout');
 
     // Test the customer information pane.

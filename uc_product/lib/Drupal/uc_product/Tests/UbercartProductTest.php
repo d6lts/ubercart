@@ -160,22 +160,22 @@ class UbercartProductTest extends UbercartTestBase {
     variable_set('uc_product_add_to_cart_qty', TRUE);
 
     // Check zero quantity message.
-    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => '0'), 'Add to cart');
+    $this->addToCart($this->product, array('qty' => 0));
     $this->assertText('The quantity cannot be zero.');
 
     // Check invalid quantity messages.
-    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => 'x'), 'Add to cart');
+    $this->addToCart($this->product, array('qty' => 'x'));
     $this->assertText('The quantity must be a number.');
 
-    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => '1a'), 'Add to cart');
+    $this->addToCart($this->product, array('qty' => '1a'));
     $this->assertText('The quantity must be a number.');
 
     // Check cart add message.
-    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => '1'), 'Add to cart');
+    $this->addToCart($this->product, array('qty' => 1));
     $this->assertText($this->product->getTitle() . ' added to your shopping cart.');
 
     // Check cart update message.
-    $this->drupalPostForm('node/' . $this->product->id(), array('qty' => '1'), 'Add to cart');
+    $this->addToCart($this->product, array('qty' => 1));
     $this->assertText('Your item(s) have been updated.');
   }
 }

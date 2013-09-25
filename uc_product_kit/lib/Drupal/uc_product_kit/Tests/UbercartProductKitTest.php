@@ -162,7 +162,7 @@ class UbercartProductKitTest extends UbercartTestBase {
     $this->assertNoText($products[1]->label(), 'Product 2 title not shown.');
     $this->assertNoText($products[2]->label(), 'Product 3 title not shown.');
 
-    $this->drupalPostForm('node/' . $kit->id(), array(), 'Add to cart');
+    $this->addToCart($kit);
     $this->drupalGet('cart');
     $this->assertText($kit->label(), 'Product kit title found.');
     $this->assertNoText($products[0]->label(), 'Product 1 title not shown.');
@@ -188,7 +188,7 @@ class UbercartProductKitTest extends UbercartTestBase {
     $this->assertText($products[1]->label(), 'Product 2 title shown.');
     $this->assertText($products[2]->label(), 'Product 3 title shown.');
 
-    $this->drupalPostForm('node/' . $kit->id(), array(), 'Add to cart');
+    $this->addToCart($kit);
     $this->drupalGet('cart');
     $this->assertText($kit->label(), 'Product kit title found.');
     $this->assertText($products[0]->label(), 'Product 1 title shown.');
@@ -214,7 +214,7 @@ class UbercartProductKitTest extends UbercartTestBase {
     $this->assertText($products[1]->label(), 'Product 2 title shown.');
     $this->assertText($products[2]->label(), 'Product 3 title shown.');
 
-    $this->drupalPostForm('node/' . $kit->id(), array(), 'Add to cart');
+    $this->addToCart($kit);
     $this->drupalGet('cart');
     $this->assertNoText($kit->label(), 'Product kit title not shown.');
     $this->assertText($products[0]->label(), 'Product 1 title shown.');

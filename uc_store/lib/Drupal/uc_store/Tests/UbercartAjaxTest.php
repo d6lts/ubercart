@@ -87,7 +87,7 @@ class UbercartAjaxTest extends UbercartTestBase {
     // Go to the checkout page, veriy that the conditional payment method is
     // not available.
     $product = $this->createProduct(array('shippable' => FALSE));
-    $this->drupalPostForm('node/' . $product->id(), array(), t('Add to cart'));
+    $this->addToCart($product);
     $this->drupalPostForm('cart', array('items[0][qty]' => 1), t('Checkout'));
     $this->assertNoText('Other');
 

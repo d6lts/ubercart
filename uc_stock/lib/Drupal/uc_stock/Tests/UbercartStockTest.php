@@ -70,8 +70,7 @@ class UbercartStockTest extends UbercartTestBase {
 
     $qty = rand(1, 100);
     $edit = array('qty' => $qty);
-    $this->drupalPostForm('node/' . $this->product->id(), $edit, t('Add to cart'));
-
+    $this->addToCart($this->product, $edit);
     $this->checkout();
 
     $this->assertEqual($stock - $qty, uc_stock_level($this->product->model));
@@ -89,7 +88,7 @@ class UbercartStockTest extends UbercartTestBase {
     );
     $this->drupalPostForm('node/' . $this->product->id() . '/edit/stock', $edit, 'Save changes');
 
-    $this->drupalPostForm('node/' . $this->product->id(), array(), 'Add to cart');
+    $this->addToCart($this->product);
     $this->checkout();
 
     $mail = $this->drupalGetMails(array('id' => 'uc_stock_threshold'));
