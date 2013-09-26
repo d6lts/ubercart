@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Utility class definition.
+ * Definition of Drupal\uc_store\UbercartEncryption.
  */
+
+namespace Drupal\uc_store;
 
 /**
  * Handles encryption of credit-card information.

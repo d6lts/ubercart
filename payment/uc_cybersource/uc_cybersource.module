@@ -13,6 +13,7 @@
  * http://growingventuresolutions.com
  */
 
+use Drupal\uc_store\UbercartEncryption;
 
 /**
  * Implements hook_menu().
