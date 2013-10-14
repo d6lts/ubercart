@@ -1,4 +1,4 @@
-uc_catalog_settings:
+uc_catalog.settings:
   path: '/admin/store/settings/catalog'
   defaults:
     _form: 'Drupal\uc_catalog\Form\CatalogSettingsForm'

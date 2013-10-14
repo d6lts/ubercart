@@ -1,11 +1,11 @@
-uc_product_classes:
+uc_product.classes:
   path: '/admin/store/products/classes'
   defaults:
     _content: '\Drupal\uc_product\Controller\ProductController::classOverview'
   requirements:
     _permission: 'administer product classes'
 
-uc_product_settings:
+uc_product.settings:
   path: '/admin/store/settings/products'
   defaults:
     _form: 'Drupal\uc_product\Form\ProductSettingsForm'

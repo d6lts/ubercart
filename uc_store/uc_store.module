@@ -103,20 +103,20 @@ function uc_store_menu() {
   $items['admin/store'] = array(
     'title' => 'Store',
     'description' => 'Administer orders, products, customers, store settings, etc.',
-    'route_name' => 'uc_store_admin',
+    'route_name' => 'uc_store.admin',
     'weight' => -12,
   );
   $items['admin/store/reports'] = array(
     'title' => 'Reports',
     'description' => 'Browse various store reports.',
-    'route_name' => 'uc_store_reports',
+    'route_name' => 'uc_store.reports',
     'weight' => 2,
     'position' => 'right',
   );
   $items['admin/store/settings'] = array(
     'title' => 'Configuration',
     'description' => 'Adjust configuration settings for Ubercart.',
-    'route_name' => 'uc_store_settings',
+    'route_name' => 'uc_store.settings',
     'weight' => 6,
     'position' => 'right',
   );
@@ -138,7 +138,7 @@ function uc_store_menu() {
   $items['admin/store/settings/countries/fields'] = array(
     'title' => 'Address fields',
     'description' => 'Edit the address field settings.',
-    'route_name' => 'uc_store_address_fields',
+    'route_name' => 'uc_store.address_fields',
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
@@ -156,7 +156,7 @@ function uc_store_menu() {
   $items['admin/store/settings/store'] = array(
     'title' => 'Store',
     'description' => 'Configure basic store settings.',
-    'route_name' => 'uc_store_settings_form',
+    'route_name' => 'uc_store.settings_form',
     'weight' => -1,
   );
 

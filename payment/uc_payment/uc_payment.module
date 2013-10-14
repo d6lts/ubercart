@@ -21,7 +21,7 @@ function uc_payment_menu() {
   $items['admin/store/settings/payment'] = array(
     'title' => 'Payment methods',
     'description' => 'Choose and configure available payment methods.',
-    'route_name' => 'uc_payment_methods',
+    'route_name' => 'uc_payment.methods',
   );
   $items['admin/store/settings/payment/method/%'] = array(
     'title callback' => 'uc_payment_method_title',

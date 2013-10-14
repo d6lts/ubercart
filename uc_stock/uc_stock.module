@@ -36,7 +36,7 @@ function uc_stock_menu() {
   $items['admin/store/settings/stock'] = array(
     'title' => 'Stock notifications',
     'description' => 'Enable or disable stock level notifications.',
-    'route_name' => 'uc_stock_settings',
+    'route_name' => 'uc_stock.settings',
   );
   if (module_exists('uc_reports')) {
     $items['admin/store/reports/stock'] = array(

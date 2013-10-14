@@ -48,7 +48,7 @@ function uc_catalog_menu() {
   $items['admin/store/settings/catalog'] = array(
     'title' => 'Catalog',
     'description' => 'Configure the product catalog pages.',
-    'route_name' => 'uc_catalog_settings',
+    'route_name' => 'uc_catalog.settings',
   );
   if (module_exists('views_ui')) {
     $items['admin/store/settings/catalog/edit'] = array(

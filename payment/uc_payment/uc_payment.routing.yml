@@ -1,4 +1,4 @@
-uc_payment_methods:
+uc_payment.methods:
   path: '/admin/store/settings/payment'
   defaults:
     _form: 'Drupal\uc_payment\Form\PaymentMethodsForm'

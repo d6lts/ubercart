@@ -1,4 +1,4 @@
-uc_stock_settings:
+uc_stock.settings:
   path: '/admin/store/settings/stock'
   defaults:
     _form: 'Drupal\uc_stock\Form\StockSettingsForm'

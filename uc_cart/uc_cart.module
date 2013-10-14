@@ -32,12 +32,12 @@ function uc_cart_menu() {
   $items['admin/store/settings/cart'] = array(
     'title' => 'Cart',
     'description' => 'Configure the cart page display and settings.',
-    'route_name' => 'uc_cart_cart_settings',
+    'route_name' => 'uc_cart.cart_settings',
   );
   $items['admin/store/settings/checkout'] = array(
     'title' => 'Checkout',
     'description' => 'Configure the checkout page display and completion rules.',
-    'route_name' => 'uc_cart_checkout_settings',
+    'route_name' => 'uc_cart.checkout_settings',
   );
   $items['admin/store/settings/checkout/settings'] = array(
     'title' => 'Settings',
