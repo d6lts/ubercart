@@ -6,39 +6,6 @@
  */
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-/**
- * Displays the cart view page.
- *
- * Show the products in the cart with a form to adjust cart contents or go to
- * checkout.
- */
-function uc_cart_view() {
-  // Failsafe so that this function only works when called with no arguments.
-  // This prevents the accidental wiping of the cart_order session variable.
-  if (func_num_args() > 0) {
-    throw new NotFoundHttpException();
-  }
-
-  // Load the array of shopping cart items.
-  $items = uc_cart_get_contents();
-
-  // Display the empty cart page if there are no items in the cart.
-  if (empty($items)) {
-    return array(
-      '#theme' => 'uc_empty_cart',
-    );
-  }
-
-  // Add a custom cart breadcrumb if specified.
-  if (($text = variable_get('uc_cart_breadcrumb_text', '')) !== '') {
-    $link = l($text, variable_get('uc_cart_breadcrumb_url', '<front>'));
-    drupal_set_breadcrumb(array($link));
-  }
-
-  return drupal_get_form('uc_cart_view_form', $items);
-}
 
 /**
  * Confirm that the customer wants to empty their cart.

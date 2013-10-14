@@ -57,10 +57,7 @@ function uc_cart_menu() {
 
   $items['cart'] = array(
     'title' => 'Shopping cart',
-    'description' => 'View/modify the contents of your shopping cart or proceed to checkout.',
-    'page callback' => 'uc_cart_view',
-    'access arguments' => array('access content'),
-    'file' => 'uc_cart.pages.inc',
+    'route_name' => 'uc_cart.cart',
     'menu_name' => 'account',
   );
   $items['cart/empty'] = array(
