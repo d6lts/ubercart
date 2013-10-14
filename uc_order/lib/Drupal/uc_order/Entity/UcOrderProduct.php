@@ -7,9 +7,7 @@
 
 namespace Drupal\uc_order\Entity;
 
-use Drupal\Core\Entity\EntityNG;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\uc_order\UcOrderProductInterface;
 
 /**
@@ -31,7 +29,7 @@ use Drupal\uc_order\UcOrderProductInterface;
  *   }
  * )
  */
-class UcOrderProduct extends EntityNG implements UcOrderProductInterface {
+class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterface {
 
   /**
    * The order product ID.
@@ -111,7 +109,7 @@ class UcOrderProduct extends EntityNG implements UcOrderProductInterface {
   public $data;
 
   /**
-   * Overrides Drupal\Core\Entity\EntityNG::init().
+   * {@inheritdoc}
    */
   public function init() {
     parent::init();

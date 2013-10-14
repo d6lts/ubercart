@@ -7,16 +7,16 @@
 
 namespace Drupal\uc_order;
 
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for orders.
  */
-class UcOrderStorageController extends DatabaseStorageControllerNG {
+class UcOrderStorageController extends FieldableDatabaseStorageController {
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::create().
+   * {@inheritdoc}
    */
   public function create(array $values) {
     $store_config = config('uc_store.settings');
@@ -89,11 +89,11 @@ class UcOrderStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageControllerNG::mapToStorageRecord().
+   * {@inheritdoc}
    */
-  protected function mapToStorageRecord(EntityInterface $entity) {
+  protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
     $record = new \stdClass();
-    foreach (drupal_schema_fields_sql($this->entityInfo['base_table']) as $name) {
+    foreach (drupal_schema_fields_sql($this->entityInfo[$table_key]) as $name) {
       if ($name == 'data') {
         $record->$name = $entity->$name;
       }

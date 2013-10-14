@@ -7,16 +7,16 @@
 
 namespace Drupal\uc_order;
 
-use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for ordered products.
  */
-class UcOrderProductStorageController extends DatabaseStorageControllerNG {
+class UcOrderProductStorageController extends FieldableDatabaseStorageController {
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
+   * {@inheritdoc}
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
@@ -27,7 +27,7 @@ class UcOrderProductStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::save().
+   * {@inheritdoc}
    */
   public function save(EntityInterface $product) {
     // Product kits, particularly, shouldn't actually be added to an order,

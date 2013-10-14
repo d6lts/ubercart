@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_cart\Entity;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
@@ -29,7 +28,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class UcCartItem extends Entity implements ContentEntityInterface {
+class UcCartItem extends Entity {
 
   /**
    * The cart item ID.

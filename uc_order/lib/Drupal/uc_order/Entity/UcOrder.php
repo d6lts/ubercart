@@ -7,10 +7,8 @@
 
 namespace Drupal\uc_order\Entity;
 
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_store\UcAddress;
 
@@ -34,7 +32,7 @@ use Drupal\uc_store\UcAddress;
  *   }
  * )
  */
-class UcOrder extends EntityNG implements UcOrderInterface {
+class UcOrder extends ContentEntityBase implements UcOrderInterface {
 
   public $products = array();
   public $line_items = array();
@@ -56,7 +54,7 @@ class UcOrder extends EntityNG implements UcOrderInterface {
   public $modified;
 
   /**
-   * Overrides Drupal\Core\Entity\EntityNG::init().
+   * {@inheritdoc}
    */
   public function init() {
     parent::init();
