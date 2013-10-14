@@ -69,30 +69,6 @@ function uc_cart_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'uc_cart.pages.inc',
   );
-  $items['cart/checkout'] = array(
-    'title' => 'Checkout',
-    'description' => 'Purchase the items in your shopping cart.',
-    'page callback' => 'uc_cart_checkout',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_cart.pages.inc',
-  );
-  $items['cart/checkout/review'] = array(
-    'title' => 'Review order',
-    'description' => 'Review an order before final submission.',
-    'page callback' => 'uc_cart_checkout_review',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_cart.pages.inc',
-  );
-  $items['cart/checkout/complete'] = array(
-    'title' => 'Order complete',
-    'description' => 'Display information upon completion of an order.',
-    'page callback' => 'uc_cart_checkout_complete',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_cart.pages.inc',
-  );
 
   return $items;
 }
