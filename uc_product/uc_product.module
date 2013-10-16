@@ -724,17 +724,14 @@ function uc_product_node_view(EntityInterface $node, EntityDisplay $display, $vi
 }
 
 /**
- * Implements hook_preprocess_node().
+ * Implements hook_theme_suggestions_HOOK_alter().
  *
- * Product classes default to using node--product.tpl.php if they don't have
+ * Product classes default to using node--product.html.twig if they don't have
  * their own template.
- *
- * @see theme()
- * @see MODULE_preprocess_HOOK()
  */
-function uc_product_preprocess_node(&$variables) {
-  if (uc_product_is_product($variables['node'])) {
-    array_unshift($variables['theme_hook_suggestions'], 'node__product');
+function uc_product_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+  if (uc_product_is_product($variables['elements']['#node'])) {
+    $suggestions[] = 'node__product';
   }
 }
 
@@ -743,7 +740,7 @@ function uc_product_preprocess_node(&$variables) {
  *
  * Adds a body class to product node pages.
  *
- * @see html.tpl.php
+ * @see html.html.twig
  */
 function uc_product_preprocess_html(&$variables) {
   if ($node = menu_get_object()) {
