@@ -118,8 +118,6 @@ function uc_order_menu() {
   );
   // user/%/orders is provided by Views.
   $items['user/%user/orders/%uc_order'] = array(
-    'title callback' => 'uc_order_page_title',
-    'title arguments' => array(3),
     'route_name' => 'uc_order.user_view',
   );
   $items['user/%user/orders/%uc_order/invoice'] = array(
@@ -140,8 +138,6 @@ function uc_order_menu() {
   );
 
   $items['admin/store/orders/%uc_order'] = array(
-    'title callback' => 'uc_order_page_title',
-    'title arguments' => array(3),
     'route_name' => 'uc_order.admin_view',
   );
   $items['admin/store/orders/%uc_order/view'] = array(
@@ -241,13 +237,6 @@ function uc_order_menu_local_tasks_alter(&$data, $router_item, $root_path) {
       );
     }
   }
-}
-
-/**
- * Title callback for admin/store/orders/%uc_order.
- */
-function uc_order_page_title($order) {
-  return t('Order @order_id', array('@order_id' => $order->id()));
 }
 
 /**

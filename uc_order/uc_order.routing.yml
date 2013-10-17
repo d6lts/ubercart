@@ -2,6 +2,7 @@ uc_order.admin_view:
   path: '/admin/store/orders/{uc_order}'
   defaults:
     _entity_view: 'uc_order.view'
+    _title_callback: '\Drupal\uc_order\Controller\UcOrderView::pageTitle'
   requirements:
     _permission: 'view all orders'
 
@@ -9,6 +10,7 @@ uc_order.user_view:
   path: '/user/{user}/orders/{uc_order}'
   defaults:
     _entity_view: 'uc_order.customer'
+    _title_callback: '\Drupal\uc_order\Controller\UcOrderView::pageTitle'
   requirements:
     _entity_access: 'uc_order.view'
 

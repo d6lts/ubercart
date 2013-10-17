@@ -76,6 +76,13 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   }
 
   /**
+   * Implements Drupal\Core\Entity\EntityInterface::label().
+   */
+  public function label($langcode = NULL) {
+    return t('Order @order_id', array('@order_id' => $this->id()));
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function uuid() {
