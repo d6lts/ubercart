@@ -22,6 +22,7 @@ use Drupal\uc_store\UcAddress;
  *   controllers = {
  *     "storage" = "Drupal\uc_order\UcOrderStorageController",
  *     "render" = "Drupal\uc_order\UcOrderRenderController",
+ *     "access" = "Drupal\uc_order\UcOrderAccessController",
  *   },
  *   base_table = "uc_orders",
  *   uri_callback = "uc_order_uri",
@@ -72,6 +73,13 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    */
   public function id() {
     return $this->get('order_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uuid() {
+    return NULL;
   }
 
   /**

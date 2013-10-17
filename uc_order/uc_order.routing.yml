@@ -1,0 +1,22 @@
+uc_order.admin_view:
+  path: '/admin/store/orders/{uc_order}'
+  defaults:
+    _entity_view: 'uc_order.view'
+  requirements:
+    _permission: 'view all orders'
+
+uc_order.user_view:
+  path: '/user/{user}/orders/{uc_order}'
+  defaults:
+    _entity_view: 'uc_order.customer'
+  requirements:
+    _entity_access: 'uc_order.view'
+
+uc_order.user_invoice_print:
+  path: '/user/{user}/orders/{uc_order}/print'
+  defaults:
+    _content: '\Drupal\uc_order\Controller\OrderController::invoice'
+    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
+    print: TRUE
+  requirements:
+    _entity_access: 'uc_order.invoice'

@@ -120,11 +120,7 @@ function uc_order_menu() {
   $items['user/%user/orders/%uc_order'] = array(
     'title callback' => 'uc_order_page_title',
     'title arguments' => array(3),
-    'description' => 'View order.',
-    'page callback' => 'uc_order_view',
-    'page arguments' => array(3, 'customer'),
-    'access callback' => 'uc_order_can_view_order',
-    'access arguments' => array(1, 3),
+    'route_name' => 'uc_order.user_view',
   );
   $items['user/%user/orders/%uc_order/invoice'] = array(
     'title' => 'View invoice',
@@ -146,11 +142,7 @@ function uc_order_menu() {
   $items['admin/store/orders/%uc_order'] = array(
     'title callback' => 'uc_order_page_title',
     'title arguments' => array(3),
-    'description' => 'View order',
-    'page callback' => 'uc_order_view',
-    'page arguments' => array(3, 'view'),
-    'access arguments' => array('view all orders'),
-    'file' => 'uc_order.admin.inc',
+    'route_name' => 'uc_order.admin_view',
   );
   $items['admin/store/orders/%uc_order/view'] = array(
     'title' => 'View',
@@ -884,21 +876,6 @@ function uc_order_product_revive($products, $published = TRUE) {
   }
 
   return $return;
-}
-
-/**
- * Generates an array for rendering the given order.
- *
- * @param \Drupal\Core\Entity\EntityInterface $order
- *   A node entity.
- * @param $view_mode
- *   (optional) View mode, e.g., 'full', 'teaser'... Defaults to 'full.'
- *
- * @return
- *   An array as expected by drupal_render().
- */
-function uc_order_view(EntityInterface $order, $view_mode = 'full') {
-  return entity_view($order, $view_mode);
 }
 
 /**
