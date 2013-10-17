@@ -8,4 +8,4 @@ dependencies:
   - views
 package: Ubercart - core (optional)
 core: 8.x
-configure: admin/store/settings/catalog
+configure: uc_catalog.settings

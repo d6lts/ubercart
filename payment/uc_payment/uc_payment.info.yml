@@ -5,4 +5,4 @@ dependencies:
   - uc_order
 package: Ubercart - core (optional)
 core: 8.x
-configure: admin/store/settings/payment
+configure: uc_payment.methods

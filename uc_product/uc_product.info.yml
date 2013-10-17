@@ -6,4 +6,4 @@ dependencies:
   - uc_store
 package: Ubercart - core
 core: 8.x
-configure: admin/store/settings/products
+configure: uc_product.settings
