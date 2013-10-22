@@ -46,40 +46,16 @@ function uc_product_menu() {
   // Insert subitems into the edit node page for product types.
   $items['node/%node/edit/product'] = array(
     'title' => 'Product',
-    'access callback' => 'uc_product_edit_access',
-    'access arguments' => array(1),
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'uc_product.admin.inc',
   );
   $features = module_invoke_all('uc_product_feature');
   if (!empty($features)) {
     $items['node/%node/edit/features'] = array(
       'title' => 'Features',
-      'page callback' => 'uc_product_features',
-      'page arguments' => array(1),
-      'access callback' => 'uc_product_feature_access',
-      'access arguments' => array(1),
+      'route_name' => 'uc_product.features',
       'weight' => 10,
       'type' => MENU_LOCAL_TASK,
-      'file' => 'uc_product.admin.inc',
-    );
-
-    $items['node/%node/edit/features/%/%'] = array(
-      'page callback' => 'uc_product_feature_edit',
-      'page arguments' => array(1, 4, 5),
-      'access callback' => 'uc_product_feature_access',
-      'access arguments' => array(1),
-      'file' => 'uc_product.admin.inc',
-    );
-
-    $items['node/%node/edit/features/%/%uc_product_feature/delete'] = array(
-      'title' => 'Delete feature',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('uc_product_feature_confirm_delete', 1, 4, 5),
-      'access callback' => 'uc_product_feature_access',
-      'access arguments' => array(1),
-      'file' => 'uc_product.admin.inc',
     );
   }
 
@@ -133,15 +109,6 @@ function uc_product_permission() {
   );
 
   return $perms;
-}
-
-/**
- * Menu access callback for 'node/%node/edit/features'.
- */
-function uc_product_feature_access($node) {
-  global $user;
-  return uc_product_is_product($node) && $node->getType() != 'product_kit' &&
-    ((user_access('administer product features') || (user_access('administer own product features') && ($user->id() == $node->uid))));
 }
 
 /**

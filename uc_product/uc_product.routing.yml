@@ -11,3 +11,33 @@ uc_product.settings:
     _form: 'Drupal\uc_product\Form\ProductSettingsForm'
   requirements:
     _permission: 'administer products'
+
+uc_product.features:
+  path: '/node/{node}/edit/features'
+  defaults:
+    _content: '\Drupal\uc_product\Controller\ProductFeaturesController::featuresOverview'
+  requirements:
+    _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
+
+uc_product.feature_add:
+  path: '/node/{node}/edit/features/{fid}/add'
+  defaults:
+    _content: '\Drupal\uc_product\Controller\ProductFeaturesController::featureAdd'
+  requirements:
+    _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
+
+uc_product.feature_edit:
+  path: '/node/{node}/edit/features/{fid}/{pfid}'
+  defaults:
+    _content: '\Drupal\uc_product\Controller\ProductFeaturesController::featureEdit'
+  requirements:
+    pfid: \d+
+    _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
+
+uc_product.feature_delete:
+  path: '/node/{node}/edit/features/{fid}/{pfid}/delete'
+  defaults:
+    _form: '\Drupal\uc_product\Form\ProductFeatureDeleteForm'
+  requirements:
+    pfid: \d+
+    _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
