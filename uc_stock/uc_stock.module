@@ -49,13 +49,9 @@ function uc_stock_menu() {
   }
   $items['node/%node/edit/stock'] = array(
     'title' => 'Stock',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_stock_edit_form', 1),
-    'access callback' => 'uc_stock_product_access',
-    'access arguments' => array(1),
+    'route_name' => 'uc_stock.edit',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_stock.admin.inc',
   );
   return $items;
 }
@@ -69,17 +65,6 @@ function uc_stock_admin_paths() {
   );
 
   return $paths;
-}
-
-/**
- * Access callback for node/%node/edit/stock.
- */
-function uc_stock_product_access($node) {
-  if ($node->getType() == 'product_kit') {
-    return FALSE;
-  }
-
-  return uc_product_is_product($node) && node_access('update', $node) && user_access('administer product stock');
 }
 
 /**
