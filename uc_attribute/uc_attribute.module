@@ -51,35 +51,13 @@ function uc_attribute_menu() {
   $items['admin/store/products/attributes'] = array(
     'title' => 'Attributes',
     'description' => 'Create and edit product attributes and options.',
-    'page callback' => 'uc_attribute_admin',
-    'access arguments' => array('administer attributes'),
+    'route_name' => 'uc_attribute.overview',
     'weight' => -8,
-    'file' => 'uc_attribute.admin.inc',
   );
   $items['admin/store/products/attributes/add'] = array(
     'title' => 'Add an attribute',
-    'description' => 'Add a product attribute.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_attribute_form'),
-    'access arguments' => array('administer attributes'),
+    'route_name' => 'uc_attribute.add',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'uc_attribute.admin.inc',
-  );
-  $items['admin/store/products/attributes/%uc_attribute/edit'] = array(
-    'title' => 'Edit attribute',
-    'description' => 'Edit a product attribute.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_attribute_form', 4),
-    'access arguments' => array('administer attributes'),
-    'file' => 'uc_attribute.admin.inc',
-  );
-  $items['admin/store/products/attributes/%uc_attribute/delete'] = array(
-    'title' => 'Delete attribute',
-    'description' => 'Delete a product attribute.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_attribute_delete_confirm', 4),
-    'access arguments' => array('administer attributes'),
-    'file' => 'uc_attribute.admin.inc',
   );
   $items['admin/store/products/attributes/%uc_attribute/options'] = array(
     'title' => 'Options',

@@ -1,0 +1,27 @@
+uc_attribute.overview:
+  path: '/admin/store/products/attributes'
+  defaults:
+    _content: 'Drupal\uc_attribute\Controller\AttributeController::overview'
+  requirements:
+    _permission: 'administer attributes'
+
+uc_attribute.add:
+  path: '/admin/store/products/attributes/add'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\AttributeAddForm'
+  requirements:
+    _permission: 'administer attributes'
+
+uc_attribute.edit:
+  path: '/admin/store/products/attributes/{aid}/edit'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\AttributeEditForm'
+  requirements:
+    _permission: 'administer attributes'
+
+uc_attribute.delete:
+  path: '/admin/store/products/attributes/{aid}/delete'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\AttributeDeleteForm'
+  requirements:
+    _permission: 'administer attributes'
