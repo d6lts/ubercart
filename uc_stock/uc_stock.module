@@ -248,29 +248,29 @@ function uc_stock_uc_checkout_complete($order) {
  */
 function uc_stock_adjust_product_stock($product, $key, $order) {
   // Product has an active stock?
-  if (!uc_stock_is_active($product->model)) {
+  if (!uc_stock_is_active($product->model->value)) {
     return;
   }
 
   // Do nothing if decrement quantity is 0.
-  if ($product->qty == 0) {
+  if ($product->qty->value == 0) {
     return;
   }
 
   // Adjust the product's stock.
-  uc_stock_adjust($product->model, -$product->qty);
+  uc_stock_adjust($product->model->value, -$product->qty->value);
 
   // Load the new stock record.
-  $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $product->model))->fetchObject();
+  $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $product->model->value))->fetchObject();
 
   // Should we notify?
   if (variable_get('uc_stock_threshold_notification', FALSE) && $stock->stock <= $stock->threshold) {
-    $node = node_load($product->nid);
+    $node = node_load($product->nid->value);
     _uc_stock_send_mail($order, $node, $stock);
   }
 
   // Save a comment about the stock level.
-  uc_order_comment_save($order->id(), 0, t('The stock level for %model_name has been !action to !qty.', array('%model_name' => $product->model, '!qty' => $stock->stock, '!action' => (-$product->qty <= 0) ? t('decreased') : t('increased') )));
+  uc_order_comment_save($order->id(), 0, t('The stock level for %model_name has been !action to !qty.', array('%model_name' => $product->model->value, '!qty' => $stock->stock, '!action' => (-$product->qty->value <= 0) ? t('decreased') : t('increased') )));
 }
 
 /**
