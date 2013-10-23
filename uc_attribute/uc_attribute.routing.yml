@@ -25,3 +25,31 @@ uc_attribute.delete:
     _form: 'Drupal\uc_attribute\Form\AttributeDeleteForm'
   requirements:
     _permission: 'administer attributes'
+
+uc_attribute.options:
+  path: '/admin/store/products/attributes/{aid}/options'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\AttributeOptionsForm'
+  requirements:
+    _permission: 'administer attributes'
+
+uc_attribute.option_add:
+  path: '/admin/store/products/attributes/{aid}/options/add'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\OptionAddForm'
+  requirements:
+    _permission: 'administer attributes'
+
+uc_attribute.option_edit:
+  path: '/admin/store/products/attributes/{aid}/options/{oid}/edit'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\OptionEditForm'
+  requirements:
+    _permission: 'administer attributes'
+
+uc_attribute.option_delete:
+  path: '/admin/store/products/attributes/{aid}/options/{oid}/delete'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\OptionDeleteForm'
+  requirements:
+    _permission: 'administer attributes'

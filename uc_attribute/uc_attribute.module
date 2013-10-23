@@ -59,39 +59,11 @@ function uc_attribute_menu() {
     'route_name' => 'uc_attribute.add',
     'type' => MENU_LOCAL_ACTION,
   );
-  $items['admin/store/products/attributes/%uc_attribute/options'] = array(
-    'title' => 'Options',
-    'description' => "Edit a product attribute's options.",
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_attribute_options_form', 4),
-    'access arguments' => array('administer attributes'),
-    'file' => 'uc_attribute.admin.inc',
-  );
-  $items['admin/store/products/attributes/%uc_attribute/options/add'] = array(
-    'title' => 'Add an option',
-    'description' => 'Add a product attribute option.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_attribute_option_form', 4, NULL),
-    'access arguments' => array('administer attributes'),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'uc_attribute.admin.inc',
-  );
-  $items['admin/store/products/attributes/%uc_attribute/options/%uc_attribute_option/edit'] = array(
-    'title' => 'Edit option',
-    'description' => 'Edit a product attribute option.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_attribute_option_form', 4, 6),
-    'access arguments' => array('administer attributes'),
-    'file' => 'uc_attribute.admin.inc',
-  );
-  $items['admin/store/products/attributes/%uc_attribute/options/%uc_attribute_option/delete'] = array(
-    'title' => 'Delete option',
-    'description' => 'Delete a product attribute option.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_attribute_option_delete_confirm', 4, 6),
-    'access arguments' => array('administer attributes'),
-    'file' => 'uc_attribute.admin.inc',
-  );
+  // $items['admin/store/products/attributes/%uc_attribute_option/options/add'] = array(
+  //   'title' => 'Add an option',
+  //   'route_name' => 'uc_attribute.option_add',
+  //   'type' => MENU_LOCAL_ACTION,
+  // );
 
   // Menu items for default product class attributes and options.
   $items['admin/store/products/classes/%uc_product_class/attributes'] = array(
