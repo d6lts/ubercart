@@ -24,9 +24,7 @@ function uc_product_menu() {
   $items['admin/store/products'] = array(
     'title' => 'Products',
     'description' => 'Administer products, classes, and more.',
-    'page callback' => 'drupal_goto',
-    'page arguments' => array('admin/store/products/view'),
-    'access arguments' => array('administer products'),
+    'route_name' => 'uc_product.admin',
     'weight' => -2,
     'position' => 'left',
   );

@@ -100,7 +100,7 @@ class StoreController extends ControllerBase implements ContainerInjectionInterf
             '#content' => $this->systemManager->getAdminBlock($item),
           );
 
-          if (!empty($block['content'])) {
+          if (!empty($block['content']['#content'])) {
             $block['show'] = TRUE;
           }
 

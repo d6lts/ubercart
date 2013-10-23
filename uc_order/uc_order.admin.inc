@@ -5,22 +5,6 @@
  * Order administration menu items.
  */
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
-/**
- * Redirects to the customers listing page.
- */
-function uc_order_customers() {
-  return new RedirectResponse(url('admin/store/customers/view', array('absolute' => TRUE)));
-}
-
-/**
- * Redirects to the orders listing page.
- */
-function uc_order_orders() {
-  return new RedirectResponse(url('admin/store/orders/view', array('absolute' => TRUE)));
-}
-
 /**
  * Displays the order workflow form for order state and status customization.
  *

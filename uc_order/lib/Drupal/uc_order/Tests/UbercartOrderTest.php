@@ -106,7 +106,7 @@ class UbercartOrderTest extends UbercartTestBase {
     $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE uid = :uid", array(':uid' => $this->customer->id()))->fetchField();
     $this->assertTrue($order_id, t('Found order ID @order_id', array('@order_id' => $order_id)));
 
-    $this->drupalGet('admin/store/orders');
+    $this->drupalGet('admin/store/orders/view');
     $this->assertLinkByHref('admin/store/orders/' . $order_id, 0, 'View link appears on order list.');
     $this->assertText('Pending', 'New order is "Pending".');
   }

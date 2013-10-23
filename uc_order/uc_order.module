@@ -40,11 +40,9 @@ function uc_order_menu() {
   $items['admin/store/customers'] = array(
     'title' => 'Customers',
     'description' => 'View and search customer information.',
-    'page callback' => 'uc_order_customers',
-    'access arguments' => array('view customers'),
+    'route_name' => 'uc_order.customer_admin',
     'weight' => -6,
     'position' => 'left',
-    'file' => 'uc_order.admin.inc',
   );
   // admin/store/customers/view is provided by Views.
   // admin/store/customers/orders/% is provided by Views.
@@ -76,11 +74,9 @@ function uc_order_menu() {
   $items['admin/store/orders'] = array(
     'title' => 'Orders',
     'description' => 'View and process orders.',
-    'page callback' => 'uc_order_orders',
-    'access arguments' => array('view all orders'),
+    'route_name' => 'uc_order.order_admin',
     'weight' => -10,
     'position' => 'left',
-    'file' => 'uc_order.admin.inc',
   );
   // admin/store/orders/view is provided by Views.
   $items['admin/store/orders/create'] = array(
