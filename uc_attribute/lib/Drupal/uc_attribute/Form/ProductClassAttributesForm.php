@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\uc_attribute\Form\ProductClassAttributesForm.
+ */
+
+namespace Drupal\uc_attribute\Form;
+
+use Drupal\node\NodeTypeInterface;
+
+/**
+ * Defines the product class attributes overview form.
+ */
+class ProductClassAttributesForm extends ObjectAttributesFormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, array &$form_state, NodeTypeInterface $node_type = NULL) {
+    $this->attributeTable = 'uc_class_attributes';
+    $this->optionTable = 'uc_class_attribute_options';
+    $this->idField = 'pcid';
+    $this->idValue = $node_type->id();
+
+    $attributes = uc_class_get_attributes($node_type->id());
+    return parent::buildForm($form, $form_state, $attributes);
+  }
+
+}

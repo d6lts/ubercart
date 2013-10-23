@@ -53,3 +53,37 @@ uc_attribute.option_delete:
     _form: 'Drupal\uc_attribute\Form\OptionDeleteForm'
   requirements:
     _permission: 'administer attributes'
+
+uc_attribute.product_class_attributes:
+  path: '/admin/structure/types/manage/{node_type}/attributes'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\ProductClassAttributesForm'
+  requirements:
+    _entity_access: 'node_type.update'
+    _permission: 'administer attributes'
+
+uc_attribute.product_class_attributes_add:
+  path: '/admin/structure/types/manage/{node_type}/attributes/add'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\ProductClassAttributesAddForm'
+  requirements:
+    _entity_access: 'node_type.update'
+    _permission: 'administer attributes'
+
+uc_attribute.product_attributes:
+  path: '/node/{node}/edit/attributes'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\ProductAttributesForm'
+  requirements:
+    _uc_product_is_product: 'TRUE'
+    _entity_access: 'node.update'
+    _permission: 'administer product attributes'
+
+uc_attribute.product_attributes_add:
+  path: '/node/{node}/edit/attributes/add'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\ProductAttributesAddForm'
+  requirements:
+    _uc_product_is_product: 'TRUE'
+    _entity_access: 'node.update'
+    _permission: 'administer product attributes'

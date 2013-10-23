@@ -66,17 +66,19 @@ function uc_attribute_menu() {
   // );
 
   // Menu items for default product class attributes and options.
-  $items['admin/store/products/classes/%uc_product_class/attributes'] = array(
+  $items['admin/structure/types/manage/%uc_product_class/attributes'] = array(
     'title' => 'Attributes',
-    'description' => 'Administer product class attributes.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_object_attributes_form', 4, 'class'),
-    'access callback' => 'uc_attribute_product_class_access',
+    'route_name' => 'uc_attribute.product_class_attributes',
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'uc_attribute.admin.inc',
   );
-  $items['admin/store/products/classes/%uc_product_class/options'] = array(
+  $items['admin/structure/types/manage/%uc_product_class/attributes/add'] = array(
+    'title' => 'Add an attribute',
+    'route_name' => 'uc_attribute.product_class_attributes_add',
+    'type' => MENU_LOCAL_ACTION,
+    'weight' => 1,
+  );
+  $items['admin/structure/types/manage/%uc_product_class/options'] = array(
     'title' => 'Options',
     'description' => 'Administer product class options.',
     'page callback' => 'drupal_get_form',
@@ -90,25 +92,15 @@ function uc_attribute_menu() {
   // Insert subitems into the edit node page for product types.
   $items['node/%node/edit/attributes'] = array(
     'title' => 'Attributes',
-    'description' => 'Edit product attributes.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_object_attributes_form', 1, 'product', 'overview'),
-    'access callback' => 'uc_attribute_product_access',
-    'access arguments' => array(1),
+    'route_name' => 'uc_attribute.product_attributes',
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'uc_attribute.admin.inc',
   );
   $items['node/%node/edit/attributes/add'] = array(
     'title' => 'Add an attribute',
-    'description' => 'Add an attribute to this product.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_object_attributes_form', 1, 'product', 'add'),
-    'access callback' => 'uc_attribute_product_access',
-    'access arguments' => array(1),
+    'route_name' => 'uc_attribute.product_attributes_add',
     'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
-    'file' => 'uc_attribute.admin.inc',
   );
   $items['node/%node/edit/options'] = array(
     'title' => 'Options',
