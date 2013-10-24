@@ -70,6 +70,14 @@ uc_attribute.product_class_attributes_add:
     _entity_access: 'node_type.update'
     _permission: 'administer attributes'
 
+uc_attribute.product_class_options:
+  path: '/admin/structure/types/manage/{node_type}/options'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\ProductClassOptionsForm'
+  requirements:
+    _entity_access: 'node_type.update'
+    _permission: 'administer attributes'
+
 uc_attribute.product_attributes:
   path: '/node/{node}/edit/attributes'
   defaults:
@@ -83,6 +91,15 @@ uc_attribute.product_attributes_add:
   path: '/node/{node}/edit/attributes/add'
   defaults:
     _form: 'Drupal\uc_attribute\Form\ProductAttributesAddForm'
+  requirements:
+    _uc_product_is_product: 'TRUE'
+    _entity_access: 'node.update'
+    _permission: 'administer product attributes'
+
+uc_attribute.product_options:
+  path: '/node/{node}/edit/options'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\ProductOptionsForm'
   requirements:
     _uc_product_is_product: 'TRUE'
     _entity_access: 'node.update'

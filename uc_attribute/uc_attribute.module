@@ -80,13 +80,9 @@ function uc_attribute_menu() {
   );
   $items['admin/structure/types/manage/%uc_product_class/options'] = array(
     'title' => 'Options',
-    'description' => 'Administer product class options.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_object_options_form', 4, 'class'),
-    'access callback' => 'uc_attribute_product_class_access',
+    'route_name' => 'uc_attribute.product_class_options',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
-    'file' => 'uc_attribute.admin.inc',
   );
 
   // Insert subitems into the edit node page for product types.
@@ -104,14 +100,9 @@ function uc_attribute_menu() {
   );
   $items['node/%node/edit/options'] = array(
     'title' => 'Options',
-    'description' => 'Administer product attribute options.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_object_options_form', 1, 'product'),
-    'access callback' => 'uc_attribute_product_option_access',
-    'access arguments' => array(1),
+    'route_name' => 'uc_attribute.product_options',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
-    'file' => 'uc_attribute.admin.inc',
   );
   $items['node/%node/edit/adjustments'] = array(
     'title' => 'Adjustments',
@@ -140,13 +131,6 @@ function uc_attribute_admin_paths() {
   );
 
   return $paths;
-}
-
-/**
- * Access callback for editing a product class's attributes and options.
- */
-function uc_attribute_product_class_access() {
-  return user_access('administer product classes') && user_access('administer attributes');
 }
 
 /**
