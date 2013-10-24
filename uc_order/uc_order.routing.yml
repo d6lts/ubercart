@@ -43,6 +43,13 @@ uc_order.admin_view:
   requirements:
     _permission: 'view all orders'
 
+uc_order.admin_edit:
+  path: '/admin/store/orders/{uc_order}/edit'
+  defaults:
+    _form: '\Drupal\uc_order\Form\OrderEditForm'
+  requirements:
+    _permission: 'edit orders'
+
 uc_order.user_view:
   path: '/user/{user}/orders/{uc_order}'
   defaults:

@@ -129,15 +129,12 @@ function uc_order_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10
   );
-  $items['admin/store/orders/%uc_order/edit'] = array(
-    'title' => 'Edit',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_order_edit_form', 3),
-    'access arguments' => array('edit orders'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-    'file' => 'uc_order.admin.inc',
-  );
+  // $items['admin/store/orders/%uc_order/edit'] = array(
+  //   'title' => 'Edit',
+  //   'route_name' => 'uc_order.admin_edit',
+  //   'type' => MENU_LOCAL_TASK,
+  //   'weight' => 1,
+  // );
   $items['admin/store/orders/%uc_order/add_line_item/%'] = array(
     'title' => 'Add a line item',
     'page callback' => 'drupal_get_form',
