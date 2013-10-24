@@ -73,11 +73,8 @@ function uc_order_menu() {
   $items['admin/store/orders/create'] = array(
     'title' => 'Create order',
     'description' => 'Create an empty new order.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_order_create_form'),
-    'access arguments' => array('create orders'),
+    'route_name' => 'uc_order.create',
     'weight' => -5,
-    'file' => 'uc_order.admin.inc',
   );
   $items['admin/store/orders/create/%user'] = array(
     'title' => 'Create order for this customer',

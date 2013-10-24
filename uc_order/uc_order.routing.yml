@@ -28,6 +28,13 @@ uc_order.status_add:
   requirements:
     _permission: 'administer order workflow'
 
+uc_order.create:
+  path: '/admin/store/orders/create'
+  defaults:
+    _form: '\Drupal\uc_order\Form\OrderCreateForm'
+  requirements:
+    _permission: 'create orders'
+
 uc_order.admin_view:
   path: '/admin/store/orders/{uc_order}'
   defaults:
