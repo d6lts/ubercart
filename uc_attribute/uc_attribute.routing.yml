@@ -103,4 +103,13 @@ uc_attribute.product_options:
   requirements:
     _uc_product_is_product: 'TRUE'
     _entity_access: 'node.update'
-    _permission: 'administer product attributes'
+    _permission: 'administer product options'
+
+uc_attribute.product_adjustments:
+  path: '/node/{node}/edit/adjustments'
+  defaults:
+    _form: 'Drupal\uc_attribute\Form\ProductAdjustmentsForm'
+  requirements:
+    _uc_product_is_product: 'TRUE'
+    _entity_access: 'node.update'
+    _permission: 'administer product options'

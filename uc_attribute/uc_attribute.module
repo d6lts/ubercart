@@ -106,14 +106,9 @@ function uc_attribute_menu() {
   );
   $items['node/%node/edit/adjustments'] = array(
     'title' => 'Adjustments',
-    'description' => 'Administer SKU adjustments for different variants of this product.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_product_adjustments_form', 1),
-    'access callback' => 'uc_attribute_product_option_access',
-    'access arguments' => array(1),
+    'route_name' => 'uc_attribute.product_adjustments',
     'type' => MENU_LOCAL_TASK,
     'weight' => 3,
-    'file' => 'uc_attribute.admin.inc',
   );
 
   return $items;
@@ -131,28 +126,6 @@ function uc_attribute_admin_paths() {
   );
 
   return $paths;
-}
-
-/**
- * Access callback for editing a product's attributes.
- */
-function uc_attribute_product_access($node) {
-  if ($node->getType() == 'product_kit') {
-    return FALSE;
-  }
-
-  return uc_product_is_product($node) && node_access('update', $node) && (user_access('administer attributes') || user_access('administer product attributes'));
-}
-
-/**
- * Access callback for editing a product's options.
- */
-function uc_attribute_product_option_access($node) {
-  if ($node->getType() == 'product_kit') {
-    return FALSE;
-  }
-
-  return uc_product_is_product($node) && isset($node->attributes) && node_access('update', $node) && (user_access('administer attributes') || user_access('administer product attributes') || user_access('administer product options'));
 }
 
 /**
