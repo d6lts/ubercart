@@ -536,15 +536,15 @@ class UbercartAttributeTest extends UbercartTestBase {
     $class = $this->createProductClass();
     $attribute = $this->createAttribute();
 
-    $this->drupalGet('admin/store/products/classes/' . $class->id() . '/attributes');
+    $this->drupalGet('admin/structure/types/manage/' . $class->id() . '/attributes');
 
-    $this->assertText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
+    $this->assertText(t('No attributes available.'), t('Class attribute form working.'));
 
     uc_attribute_subject_save($attribute, 'class', $class->id());
 
-    $this->drupalGet('admin/store/products/classes/' . $class->id() . '/attributes');
+    $this->drupalGet('admin/structure/types/manage/' . $class->id() . '/attributes');
 
-    $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
+    $this->assertNoText(t('No attributes available.'), t('Class attribute form working.'));
 
     $a = (array) $this->createAttribute(array(), FALSE);
     unset($a['name'], $a['description']);
@@ -552,7 +552,7 @@ class UbercartAttributeTest extends UbercartTestBase {
       $edit["attributes[{$attribute->aid}][$field]"] = $value;
     }
     $this->showVar($edit);
-    $this->drupalPostForm('admin/store/products/classes/' . $class->id() . '/attributes', $edit, t('Save changes'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $class->id() . '/attributes', $edit, t('Save changes'));
 
     $attribute = uc_attribute_load($attribute->aid, $class->id(), 'class');
 
@@ -570,9 +570,9 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $edit = array();
     $edit["attributes[{$attribute->aid}][remove]"] = TRUE;
-    $this->drupalPostForm('admin/store/products/classes/' . $class->id() . '/attributes', $edit, t('Save changes'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $class->id() . '/attributes', $edit, t('Save changes'));
 
-    $this->assertText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
+    $this->assertText(t('No attributes available.'), t('Class attribute form working.'));
   }
 
   /**
@@ -582,15 +582,15 @@ class UbercartAttributeTest extends UbercartTestBase {
     $class = $this->createProductClass();
     $attribute = $this->createAttribute();
 
-    $this->drupalGet('admin/store/products/classes/' . $class->id() . '/attributes/add');
+    $this->drupalGet('admin/structure/types/manage/' . $class->id() . '/attributes/add');
 
     $this->assertRaw(t('@attribute</label>', array('@attribute' => $attribute->name)), t('Class attribute add form working.'));
 
     $edit['add_attributes[' . $attribute->aid . ']'] = 1;
 
-    $this->drupalPostForm('admin/store/products/classes/' . $class->id() . '/attributes/add', $edit, t('Add attributes'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $class->id() . '/attributes/add', $edit, t('Add attributes'));
 
-    $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'));
+    $this->assertNoText(t('No attributes available.'), t('Class attribute form working.'));
   }
 
   /**
@@ -603,7 +603,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     uc_attribute_subject_save($attribute, 'class', $class->id());
 
-    $this->drupalGet('admin/store/products/classes/' . $class->id() . '/options');
+    $this->drupalGet('admin/structure/types/manage/' . $class->id() . '/options');
 
     $this->assertRaw(t('@option</label>', array('@option' => $option->name)), t('Class attribute option form working.'));
 
@@ -616,8 +616,8 @@ class UbercartAttributeTest extends UbercartTestBase {
     unset($o['select']);
     $edit["attributes[$attribute->aid][default]"] = $option->oid;
     $this->showVar($edit);
-    $this->drupalPostForm('admin/store/products/classes/' . $class->id() . '/options', $edit, t('Submit'));
-    $this->assertText('The product class options have been saved.', t('Class attribute option saved.'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $class->id() . '/options', $edit, t('Submit'));
+    $this->assertText('The changes have been saved.', t('Class attribute option saved.'));
     $this->showVar($option);
 
     $option = uc_attribute_subject_option_load($option->oid, 'class', $class->id());
@@ -643,7 +643,7 @@ class UbercartAttributeTest extends UbercartTestBase {
     $option = $this->createAttributeOption(array('aid' => $attribute->aid));
 
     $this->drupalGet('node/' . $product->id() . '/edit/attributes');
-    $this->assertText('You must first add attributes to this product.');
+    $this->assertText('No attributes available.');
 
     $this->clickLink('Add an attribute');
     $this->assertText($attribute->name);
@@ -662,7 +662,7 @@ class UbercartAttributeTest extends UbercartTestBase {
 
     $edit = array('attributes[' . $attribute->aid. '][remove]' => 1);
     $this->drupalPostForm('node/' . $product->id() . '/edit/attributes', $edit, t('Save changes'));
-    $this->assertText('You must first add attributes to this product.');
+    $this->assertText('No attributes available.');
   }
 
   /**
