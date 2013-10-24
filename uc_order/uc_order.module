@@ -58,12 +58,8 @@ function uc_order_menu() {
   );
   $items['admin/store/settings/orders/workflow/create'] = array(
     'title' => 'Create custom order status',
-    'description' => 'Create a custom order status for your store.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_order_status_create_form'),
-    'access arguments' => array('administer order workflow'),
+    'route_name' => 'uc_order.status_add',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'uc_order.admin.inc',
   );
 
   $items['admin/store/orders'] = array(
