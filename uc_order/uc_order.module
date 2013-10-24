@@ -50,16 +50,11 @@ function uc_order_menu() {
   $items['admin/store/settings/orders'] = array(
     'title' => 'Orders',
     'description' => 'Configure the workflow and fields for orders.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_order_workflow_form'),
-    'access arguments' => array('administer order workflow'),
-    'file' => 'uc_order.admin.inc',
+    'route_name' => 'uc_order.workflow',
   );
   $items['admin/store/settings/orders/workflow'] = array(
     'title' => 'Workflow',
-    'description' => 'Modify and configure order states and statuses.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -8,
   );
   $items['admin/store/settings/orders/workflow/create'] = array(
     'title' => 'Create custom order status',
@@ -286,10 +281,6 @@ function uc_order_theme($existing, $type, $theme, $path) {
     'uc_order_invoice_page' => array(
       'variables' => array('content' => NULL),
       'template' => 'uc-order-invoice-page',
-    ),
-    'uc_order_state_table' => array(
-      'render element' => 'form',
-      'file' => 'uc_order.admin.inc',
     ),
     'uc_order_status_table' => array(
       'render element' => 'form',

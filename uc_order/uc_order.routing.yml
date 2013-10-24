@@ -14,6 +14,13 @@ uc_order.order_admin:
   requirements:
     _permission: 'access administration pages'
 
+uc_order.workflow:
+  path: '/admin/store/settings/orders'
+  defaults:
+    _form: '\Drupal\uc_order\Form\OrderWorkflowForm'
+  requirements:
+    _permission: 'administer order workflow'
+
 uc_order.admin_view:
   path: '/admin/store/orders/{uc_order}'
   defaults:
