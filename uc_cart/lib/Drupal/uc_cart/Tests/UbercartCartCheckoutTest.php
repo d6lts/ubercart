@@ -127,6 +127,16 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->assertText($this->product->label() . ' removed from your shopping cart.');
     $this->assertText('There are no products in your shopping cart.');
     $this->assertText('hook_uc_cart_item_delete fired');
+
+    // Test the empty cart button.
+    $this->addToCart($this->product);
+    $this->drupalGet('cart');
+    $this->assertNoText('Empty cart');
+    variable_set('uc_cart_empty_button', TRUE);
+    $this->drupalPostForm('cart', array(), t('Empty cart'));
+    $this->drupalPostForm(NULL, array(), t('Confirm'));
+    $this->assertText('There are no products in your shopping cart.');
+    $this->assertText('hook_uc_cart_item_delete fired');
   }
 
   function testCartMerge() {

@@ -42,3 +42,10 @@ uc_cart.checkout_complete:
     _content: '\Drupal\uc_cart\Controller\CheckoutController::complete'
   requirements:
     _permission: 'access content'
+
+uc_cart.empty:
+  path: '/cart/empty'
+  defaults:
+    _form: '\Drupal\uc_cart\Form\EmptyCartForm'
+  requirements:
+    _permission: 'access content'

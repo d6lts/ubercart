@@ -60,15 +60,6 @@ function uc_cart_menu() {
     'route_name' => 'uc_cart.cart',
     'menu_name' => 'account',
   );
-  $items['cart/empty'] = array(
-    'title' => 'Empty cart',
-    'description' => 'Confirm that the cart should be emptied.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_cart_empty_confirm'),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_cart.pages.inc',
-  );
 
   return $items;
 }
