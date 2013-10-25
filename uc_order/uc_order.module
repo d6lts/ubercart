@@ -338,31 +338,6 @@ function uc_order_permission() {
 }
 
 /**
- * Access callback for user/%user/orders*.
- */
-function uc_order_can_view_order($account, $order, $view_invoice = FALSE) {
-  global $user;
-
-  // Users with 'view all orders' are straightforward.
-  $access = user_access('view all orders');
-
-  // If the user is the current user and is not anonymous, also allow the "own" permissions.
-  if ($user->isAuthenticated() && $user->id() == $account->id()) {
-    if ($view_invoice) {
-      $access = $access || user_access('view own invoices');
-    }
-    else {
-      $access = $access || user_access('view own orders');
-    }
-  }
-
-  // The order must also be owned by the user specified in the URL.
-  $access = $access && $account->id() == $order->getUserId();
-
-  return $access;
-}
-
-/**
  * Implements hook_field_extra_fields().
  */
 function uc_order_field_extra_fields() {
