@@ -34,16 +34,6 @@ function uc_payment_menu() {
   );
   // $items += rules_ui()->config_menu('admin/store/settings/payment');
 
-  $items['admin/store/orders/%uc_order/payments'] = array(
-    'title' => 'Payments',
-    'description' => 'Show payments made against an order.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_payment_by_order_form', 3),
-    'access arguments' => array('view payments'),
-    'weight' => 5,
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_payment.admin.inc',
-  );
   $items['admin/store/orders/%uc_order/payments/%uc_payment/delete'] = array(
     'title' => 'Delete payment?',
     'description' => 'Delete payment?',

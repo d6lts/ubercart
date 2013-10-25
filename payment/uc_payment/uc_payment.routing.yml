@@ -4,3 +4,11 @@ uc_payment.methods:
     _form: 'Drupal\uc_payment\Form\PaymentMethodsForm'
   requirements:
     _permission: 'administer store'
+
+uc_payments.order_payments:
+  path: '/admin/store/orders/{uc_order}/payments'
+  defaults:
+    _form: '\Drupal\uc_payment\Form\OrderPaymentsForm'
+    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
+  requirements:
+    _permission: 'view payments'

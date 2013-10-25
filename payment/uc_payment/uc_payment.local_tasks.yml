@@ -1,0 +1,5 @@
+uc_payments.order_payments:
+  route_name: uc_payments.order_payments
+  tab_root_id: uc_order.admin_view
+  title: Payments
+  weight: 5
