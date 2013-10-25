@@ -54,28 +54,11 @@ function uc_attribute_menu() {
     'route_name' => 'uc_attribute.overview',
     'weight' => -8,
   );
-  $items['admin/store/products/attributes/add'] = array(
-    'title' => 'Add an attribute',
-    'route_name' => 'uc_attribute.add',
-    'type' => MENU_LOCAL_ACTION,
-  );
-  // $items['admin/store/products/attributes/%uc_attribute_option/options/add'] = array(
-  //   'title' => 'Add an option',
-  //   'route_name' => 'uc_attribute.option_add',
-  //   'type' => MENU_LOCAL_ACTION,
-  // );
 
-  // Menu items for default product class attributes and options.
   $items['admin/structure/types/manage/%uc_product_class/attributes'] = array(
     'title' => 'Attributes',
     'route_name' => 'uc_attribute.product_class_attributes',
     'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-  );
-  $items['admin/structure/types/manage/%uc_product_class/attributes/add'] = array(
-    'title' => 'Add an attribute',
-    'route_name' => 'uc_attribute.product_class_attributes_add',
-    'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
   );
   $items['admin/structure/types/manage/%uc_product_class/options'] = array(
@@ -83,13 +66,6 @@ function uc_attribute_menu() {
     'route_name' => 'uc_attribute.product_class_options',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
-  );
-
-  $items['node/%node/edit/attributes/add'] = array(
-    'title' => 'Add an attribute',
-    'route_name' => 'uc_attribute.product_attributes_add',
-    'type' => MENU_LOCAL_ACTION,
-    'weight' => 1,
   );
 
   return $items;
