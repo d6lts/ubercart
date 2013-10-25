@@ -1,0 +1,5 @@
+uc_order_status_add:
+  route_name: uc_order.status_add
+  title: 'Create custom order status'
+  appears_on:
+    - uc_order.workflow

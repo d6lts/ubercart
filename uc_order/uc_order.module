@@ -56,11 +56,6 @@ function uc_order_menu() {
     'title' => 'Workflow',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/store/settings/orders/workflow/create'] = array(
-    'title' => 'Create custom order status',
-    'route_name' => 'uc_order.status_add',
-    'type' => MENU_LOCAL_ACTION,
-  );
 
   $items['admin/store/orders'] = array(
     'title' => 'Orders',
