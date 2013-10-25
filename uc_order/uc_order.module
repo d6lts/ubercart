@@ -100,21 +100,6 @@ function uc_order_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'uc_order.admin.inc',
   );
-
-  $items['admin/store/orders/%uc_order'] = array(
-    'route_name' => 'uc_order.admin_view',
-  );
-  $items['admin/store/orders/%uc_order/view'] = array(
-    'title' => 'View',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10
-  );
-  // $items['admin/store/orders/%uc_order/edit'] = array(
-  //   'title' => 'Edit',
-  //   'route_name' => 'uc_order.admin_edit',
-  //   'type' => MENU_LOCAL_TASK,
-  //   'weight' => 1,
-  // );
   $items['admin/store/orders/%uc_order/add_line_item/%'] = array(
     'title' => 'Add a line item',
     'page callback' => 'drupal_get_form',
@@ -122,35 +107,6 @@ function uc_order_menu() {
     'access arguments' => array('edit orders'),
     'type' => MENU_CALLBACK,
     'file' => 'uc_order.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/invoice'] = array(
-    'title' => 'Invoice',
-    'route_name' => 'uc_order.admin_invoice',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3,
-  );
-  $items['admin/store/orders/%uc_order/invoice/view'] = array(
-    'title' => 'View invoice',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
-  $items['admin/store/orders/%uc_order/invoice/print'] = array(
-    'title' => 'Printable invoice',
-    'route_name' => 'uc_order.admin_invoice_print',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -5,
-  );
-  $items['admin/store/orders/%uc_order/invoice/mail'] = array(
-    'title' => 'Mail invoice',
-    'route_name' => 'uc_order.admin_invoice_mail',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 0,
-  );
-  $items['admin/store/orders/%uc_order/log'] = array(
-    'title' => 'Log',
-    'route_name' => 'uc_order.admin_log',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
   );
   $items['admin/store/orders/%uc_order/delete'] = array(
     'title' => 'Delete an order',

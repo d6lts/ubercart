@@ -1,0 +1,39 @@
+uc_order.admin_view:
+  route_name: uc_order.admin_view
+  tab_root_id: uc_order.admin_view
+  title: View
+
+uc_order.admin_edit:
+  route_name: uc_order.admin_edit
+  tab_root_id: uc_order.admin_view
+  title: Edit
+  weight: 1
+
+uc_order.admin_invoice:
+  route_name: uc_order.admin_invoice
+  tab_root_id: uc_order.admin_view
+  title: Invoice
+  weight: 3
+uc_order.admin_invoice_view:
+  route_name: uc_order.admin_invoice
+  tab_root_id: uc_order.admin_view
+  tab_parent_id: uc_order.admin_invoice
+  title: View invoice
+uc_order.admin_invoice_print:
+  route_name: uc_order.admin_invoice_print
+  tab_root_id: uc_order.admin_view
+  tab_parent_id: uc_order.admin_invoice
+  title: Print invoice
+  weight: 1
+uc_order.admin_invoice_mail:
+  route_name: uc_order.admin_invoice_mail
+  tab_root_id: uc_order.admin_view
+  tab_parent_id: uc_order.admin_invoice
+  title: Mail invoice
+  weight: 2
+
+uc_order.admin_log:
+  route_name: uc_order.admin_log
+  tab_root_id: uc_order.admin_view
+  title: Log
+  weight: 10
