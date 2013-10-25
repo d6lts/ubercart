@@ -1,0 +1,12 @@
+uc_product.edit:
+  route_name: node.page_edit
+  tab_root_id: node.view
+  tab_parent_id: node.page_edit
+  title: Product
+  weight: -10
+uc_product.features:
+  route_name: uc_product.features
+  tab_root_id: node.view
+  tab_parent_id: node.page_edit
+  title: Features
+  weight: 10

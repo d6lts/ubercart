@@ -47,12 +47,6 @@ function uc_stock_menu() {
       'file' => 'uc_stock.admin.inc',
     );
   }
-  $items['node/%node/edit/stock'] = array(
-    'title' => 'Stock',
-    'route_name' => 'uc_stock.edit',
-    'weight' => 10,
-    'type' => MENU_LOCAL_TASK,
-  );
   return $items;
 }
 

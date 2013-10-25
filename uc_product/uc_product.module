@@ -40,23 +40,6 @@ function uc_product_menu() {
     'description' => 'Configure product settings.',
     'route_name' => 'uc_product.settings',
   );
-
-  // Insert subitems into the edit node page for product types.
-  $items['node/%node/edit/product'] = array(
-    'title' => 'Product',
-    'weight' => -10,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $features = module_invoke_all('uc_product_feature');
-  if (!empty($features)) {
-    $items['node/%node/edit/features'] = array(
-      'title' => 'Features',
-      'route_name' => 'uc_product.features',
-      'weight' => 10,
-      'type' => MENU_LOCAL_TASK,
-    );
-  }
-
   $items['admin/store/settings/products/defaults'] = array(
     'access arguments' => array('administer products'),
     'page callback' => 'uc_product_image_defaults',

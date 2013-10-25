@@ -1,0 +1,6 @@
+uc_stock.edit:
+  route_name: uc_stock.edit
+  tab_root_id: node.view
+  tab_parent_id: node.page_edit
+  title: Stock
+  weight: 10
