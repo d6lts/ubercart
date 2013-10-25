@@ -75,6 +75,14 @@ uc_order.admin_edit:
   requirements:
     _permission: 'edit orders'
 
+uc_order.admin_log:
+  path: '/admin/store/orders/{uc_order}/log'
+  defaults:
+    _content: '\Drupal\uc_order\Controller\OrderController::log'
+    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
+  requirements:
+    _permission: 'view all orders'
+
 uc_order.user_view:
   path: '/user/{user}/orders/{uc_order}'
   defaults:

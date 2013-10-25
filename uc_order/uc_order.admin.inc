@@ -419,32 +419,6 @@ function uc_order_add_line_item_form_submit($form, &$form_state) {
 }
 
 /**
- * Displays a log of changes made to an order.
- */
-function uc_order_log($order) {
-  $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", array(':id' => $order->id()));
-
-  $header = array(t('Time'), t('User'), t('Changes'));
-  $rows = array();
-  foreach ($result as $change) {
-    $rows[] = array(
-      format_date($change->created, 'short'),
-      theme('uc_uid', array('uid' => $change->uid)),
-      $change->changes,
-    );
-  }
-
-  $build['log'] = array(
-    '#theme' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
-    '#empty' => t('No changes have been logged for this order.'),
-  );
-
-  return $build;
-}
-
-/**
  * Confirmation form to delete an order.
  *
  * @see uc_order_delete_confirm_form_submit()

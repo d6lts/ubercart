@@ -148,12 +148,9 @@ function uc_order_menu() {
   );
   $items['admin/store/orders/%uc_order/log'] = array(
     'title' => 'Log',
-    'page callback' => 'uc_order_log',
-    'page arguments' => array(3),
-    'access arguments' => array('view all orders'),
+    'route_name' => 'uc_order.admin_log',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
-    'file' => 'uc_order.admin.inc',
   );
   $items['admin/store/orders/%uc_order/delete'] = array(
     'title' => 'Delete an order',
