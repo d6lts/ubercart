@@ -60,6 +60,14 @@ uc_order.admin_invoice_print:
   requirements:
     _permission: 'view all orders'
 
+uc_order.admin_invoice_mail:
+  path: '/admin/store/orders/{uc_order}/invoice/mail'
+  defaults:
+    _form: '\Drupal\uc_order\Form\OrderMailInvoiceForm'
+    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
+  requirements:
+    _permission: 'view all orders'
+
 uc_order.admin_edit:
   path: '/admin/store/orders/{uc_order}/edit'
   defaults:

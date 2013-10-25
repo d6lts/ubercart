@@ -142,12 +142,9 @@ function uc_order_menu() {
   );
   $items['admin/store/orders/%uc_order/invoice/mail'] = array(
     'title' => 'Mail invoice',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_order_mail_invoice_form', 3),
-    'access arguments' => array('view all orders'),
+    'route_name' => 'uc_order.admin_invoice_mail',
     'type' => MENU_LOCAL_TASK,
     'weight' => 0,
-    'file' => 'uc_order.admin.inc',
   );
   $items['admin/store/orders/%uc_order/log'] = array(
     'title' => 'Log',
