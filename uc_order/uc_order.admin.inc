@@ -417,38 +417,3 @@ function uc_order_add_line_item_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/edit';
 }
-
-/**
- * Confirmation form to delete an order.
- *
- * @see uc_order_delete_confirm_form_submit()
- * @ingroup forms
- */
-function uc_order_delete_confirm_form($form, &$form_state, $order) {
-  if (!uc_order_can_delete($order)) {
-    drupal_set_message(t('It is not possible to delete order @id.', array('@id' => $order->id())));
-    drupal_goto('admin/store/orders');
-  }
-
-  $form['order_id'] = array(
-    '#type' => 'value',
-    '#value' => $order->id()
-  );
-
-  return confirm_form($form, t('Are you sure you want to delete order @order_id?', array('@order_id' => $order->id())), 'admin/store/orders', NULL, t('Delete'));
-}
-
-/**
- * Form submission handler for uc_order_delete_confirm_form().
- *
- * @see uc_order_delete_confirm_form()
- */
-function uc_order_delete_confirm_form_submit($form, &$form_state) {
-  // Delete the specified order.
-  uc_order_delete($form_state['values']['order_id']);
-
-  // Display a message to the user and return to the order admin page.
-  drupal_set_message(t('Order @order_id completely removed from the database.', array('@order_id' => $form_state['values']['order_id'])));
-
-  $form_state['redirect'] = 'admin/store/orders';
-}

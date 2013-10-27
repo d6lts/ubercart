@@ -78,6 +78,13 @@ uc_order.admin_edit:
   requirements:
     _permission: 'edit orders'
 
+uc_order.admin_delete:
+  path: '/admin/store/orders/{uc_order}/delete'
+  defaults:
+    _entity_form: 'uc_order.delete'
+  requirements:
+    _entity_access: 'uc_order.delete'
+
 uc_order.admin_log:
   path: '/admin/store/orders/{uc_order}/log'
   defaults:

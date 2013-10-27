@@ -103,14 +103,6 @@ function uc_order_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'uc_order.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/delete'] = array(
-    'title' => 'Delete an order',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_order_delete_confirm_form', 3),
-    'access callback' => 'uc_order_can_delete',
-    'access arguments' => array(3),
-    'file' => 'uc_order.admin.inc',
-  );
 
   return $items;
 }
