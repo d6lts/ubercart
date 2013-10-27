@@ -12,6 +12,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity\Entity\EntityDisplay;
 use Drupal\node\NodeTypeInterface;
 use Drupal\uc_catalog\UcTreeNode;
@@ -543,7 +544,7 @@ function uc_catalog_add_node_type($type) {
       'entity_type' => 'node',
       'name' => 'taxonomy_catalog',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
         'allowed_values' => array(
           array(
