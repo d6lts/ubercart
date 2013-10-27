@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\UcOrderRenderController.
+ * Definition of Drupal\uc_order\UcOrderViewBuilder.
  */
 
 namespace Drupal\uc_order;
 
-use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Entity\EntityViewBuilder;
 
 /**
- * Render controller for orders.
+ * View builder for orders.
  */
-class UcOrderRenderController extends EntityRenderController {
+class UcOrderViewBuilder extends EntityViewBuilder {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
+   * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     parent::buildContent($entities, $displays, $view_mode, $langcode);

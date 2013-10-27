@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\UcCartItemRenderController.
+ * Definition of Drupal\uc_cart\UcCartItemViewBuilder.
  */
 
 namespace Drupal\uc_cart;
 
-use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Entity\EntityViewBuilder;
 
 /**
- * Render controller for cart items.
+ * View builder for cart items.
  */
-class UcCartItemRenderController extends EntityRenderController {
+class UcCartItemViewBuilder extends EntityViewBuilder {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
+   * {@inheritdoc}
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     parent::buildContent($entities, $displays, $view_mode, $langcode);

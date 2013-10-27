@@ -21,7 +21,7 @@ use Drupal\uc_store\UcAddress;
  *   module = "uc_order",
  *   controllers = {
  *     "storage" = "Drupal\uc_order\UcOrderStorageController",
- *     "render" = "Drupal\uc_order\UcOrderRenderController",
+ *     "view_builder" = "Drupal\uc_order\UcOrderViewBuilder",
  *     "access" = "Drupal\uc_order\UcOrderAccessController",
  *   },
  *   base_table = "uc_orders",

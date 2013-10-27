@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   module = "uc_cart",
  *   controllers = {
  *     "storage" = "Drupal\uc_cart\UcCartItemStorageController",
- *     "render" = "Drupal\uc_cart\UcCartItemRenderController",
+ *     "view_builder" = "Drupal\uc_cart\UcCartItemViewBuilder",
  *   },
  *   base_table = "uc_cart_products",
  *   entity_keys = {

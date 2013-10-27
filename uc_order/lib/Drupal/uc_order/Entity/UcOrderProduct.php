@@ -18,7 +18,7 @@ use Drupal\uc_order\UcOrderProductInterface;
  *   label = @Translation("Order product"),
  *   module = "uc_order",
  *   controllers = {
- *     "render" = "Drupal\uc_order\UcOrderProductRenderController",
+ *     "view_builder" = "Drupal\uc_order\UcOrderProductViewBuilder",
  *     "storage" = "Drupal\uc_order\UcOrderProductStorageController"
  *   },
  *   base_table = "uc_order_products",
