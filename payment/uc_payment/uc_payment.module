@@ -34,16 +34,6 @@ function uc_payment_menu() {
   );
   // $items += rules_ui()->config_menu('admin/store/settings/payment');
 
-  $items['admin/store/orders/%uc_order/payments/%uc_payment/delete'] = array(
-    'title' => 'Delete payment?',
-    'description' => 'Delete payment?',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_payment_delete_confirm_form', 3, 5),
-    'access arguments' => array('delete payments'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_payment.admin.inc',
-  );
-
   return $items;
 }
 

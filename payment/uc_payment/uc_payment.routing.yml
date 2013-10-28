@@ -9,6 +9,13 @@ uc_payments.order_payments:
   path: '/admin/store/orders/{uc_order}/payments'
   defaults:
     _form: '\Drupal\uc_payment\Form\OrderPaymentsForm'
-    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
+    _title: 'Payments'
   requirements:
     _permission: 'view payments'
+
+uc_payments.delete:
+  path: '/admin/store/orders/{uc_order}/payments/{payment}/delete'
+  defaults:
+    _form: '\Drupal\uc_payment\Form\PaymentDeleteForm'
+  requirements:
+    _permission: 'delete payments'
