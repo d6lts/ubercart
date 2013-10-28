@@ -33,10 +33,7 @@ function uc_cart_links_menu() {
   $items['admin/store/settings/cart-links'] = array(
     'title' => 'Cart links',
     'description' => 'Configure and craft special links to add products directly to the cart.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_cart_links_settings_form'),
-    'access arguments' => array('administer cart links'),
-    'file' => 'uc_cart_links.admin.inc',
+    'route_name' => 'uc_cart_links.settings',
   );
   $items['admin/store/reports/cart-links'] = array(
     'title' => 'Cart links',
@@ -44,14 +41,6 @@ function uc_cart_links_menu() {
     'page callback' => 'uc_cart_links_report',
     'access arguments' => array('view cart links report'),
     'file' => 'uc_cart_links.admin.inc',
-  );
-  $items['cart/add/%'] = array(
-    'title' => 'Add to cart',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_cart_links_form', 2),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_cart_links.pages.inc',
   );
 
   return $items;
