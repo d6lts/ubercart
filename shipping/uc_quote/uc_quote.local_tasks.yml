@@ -1,0 +1,14 @@
+uc_quote.methods:
+  route_name: uc_quote.methods
+  tab_root_id: uc_quote.methods
+  title: Methods
+uc_quote.settings:
+  route_name: uc_quote.settings
+  tab_root_id: uc_quote.methods
+  title: Settings
+  weight: 1
+uc_quote.basic_settings:
+  route_name: uc_quote.settings
+  tab_root_id: uc_quote.methods
+  tab_parent_id: uc_quote.settings
+  title: Basic settings
