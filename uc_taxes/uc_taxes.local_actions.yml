@@ -1,0 +1,5 @@
+uc_taxes_rate_add:
+  route_name: uc_taxes.rate_add
+  title: 'Add a tax rate'
+  appears_on:
+    - uc_taxes.overview
