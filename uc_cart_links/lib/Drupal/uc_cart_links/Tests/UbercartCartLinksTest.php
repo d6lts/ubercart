@@ -17,6 +17,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart_links', 'uc_attribute');
   public static $adminPermissions = array('administer cart links', 'view cart links report', 'access administration pages');
+  protected $profile = 'standard';
 
   public static function getInfo() {
     return array(
