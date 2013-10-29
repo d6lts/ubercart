@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_cart_links\Tests;
 
-use Drupal\uc_attribute\Tests\UbercartAttributeTest;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -709,7 +708,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
 
     // Create some attributes
     for ($i = 0; $i < 5; $i++) {
-      $attribute = UbercartAttributeTest::createAttribute();
+      $attribute = $this->createAttribute();
       $attributes[$attribute->aid] = $attribute;
     }
 
@@ -719,7 +718,7 @@ class UbercartCartLinksTest extends UbercartTestBase {
     $all_options = array();
     foreach ($attribute_aids as $aid) {
       for ($i = 0; $i < 3; $i++) {
-        $option = UbercartAttributeTest::createAttributeOption(array('aid' => $aid));
+        $option = $this->createAttributeOption(array('aid' => $aid));
         $all_options[$option->aid][$option->oid] = $option;
       }
     }

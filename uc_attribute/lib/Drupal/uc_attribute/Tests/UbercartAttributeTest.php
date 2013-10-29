@@ -862,58 +862,6 @@ class UbercartAttributeTest extends UbercartTestBase {
   }
 
   /**
-   * Creates an attribute.
-   *
-   * @param $data
-   * @param $save
-   */
-  public function createAttribute($data = array(), $save = TRUE) {
-    $attribute = $data + array(
-      'name' => $this->randomName(8),
-      'label' => $this->randomName(8),
-      'description' => $this->randomName(8),
-      'required' => mt_rand(0, 1) ? TRUE : FALSE,
-      'display' => mt_rand(0, 3),
-      'ordering' => mt_rand(-10, 10),
-    );
-    $attribute = (object) $attribute;
-
-    if ($save) {
-      uc_attribute_save($attribute);
-    }
-    return $attribute;
-  }
-
-  /**
-   * Creates an attribute option.
-   *
-   * @param $data
-   * @param $save
-   */
-  public function createAttributeOption($data = array(), $save = TRUE) {
-    $max_aid = db_select('uc_attributes', 'a')
-      ->fields('a', array('aid'))
-      ->orderBy('aid', 'DESC')
-      ->range(0, 1)
-      ->execute()
-      ->fetchField();
-    $option = $data + array(
-      'aid' => $max_aid,
-      'name' => $this->randomName(8),
-      'cost' => mt_rand(-500, 500),
-      'price' => mt_rand(-500, 500),
-      'weight' => mt_rand(-500, 500),
-      'ordering' => mt_rand(-10, 10),
-    );
-    $option = (object) $option;
-
-    if ($save) {
-      uc_attribute_option_save($option);
-    }
-    return $option;
-  }
-
-  /**
    * Debug helper function.
    *
    * @param $var
