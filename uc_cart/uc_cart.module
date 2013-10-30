@@ -870,11 +870,6 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     $data['module'] = 'uc_product';
   }
 
-  if (!uc_product_is_product($node)) {
-    drupal_set_message(t('@title is not a product. Unable to add to cart.', array('@title' => $node->label())), 'error');
-    return;
-  }
-
   $result = module_invoke_all('uc_add_to_cart', $nid, $qty, $data);
   if (is_array($result) && !empty($result)) {
     foreach ($result as $row) {

@@ -5,6 +5,8 @@
  * Theme functions for the uc_product_kit module.
  */
 
+use Drupal\node\NodeInterface;
+
 /**
  * Renders the list of kit components on the product kit edit form.
  *
@@ -52,12 +54,23 @@ function theme_uc_product_kit_items_form($variables) {
 function theme_uc_product_kit_list_item($variables) {
   $product = $variables['product'];
 
-  $node = node_load($product->id());
-  if (node_access('view', $node)) {
-    $title = l($product->label(), 'node/' . $product->id());
+  if ($product instanceof NodeInterface) {
+    $node = node_load($product->id());
+    if (node_access('view', $node)) {
+      $title = l($product->label(), 'node/' . $product->id());
+    }
+    else {
+      $title = check_plain($product->label());
+    }
   }
   else {
-    $title = check_plain($product->label());
+    $node = node_load($product->nid);
+    if (node_access('view', $node)) {
+      $title = l($product->title, 'node/' . $product->nid);
+    }
+    else {
+      $title = check_plain($product->title);
+    }
   }
 
   return theme('uc_qty', array('qty' => $product->qty)) . ' ' . $title;

@@ -576,6 +576,13 @@ function uc_product_node_view(EntityInterface $node, EntityDisplay $display, $vi
     return;
   }
 
+  uc_product_view_product($node, $display, $view_mode);
+}
+
+/**
+ * Renders product related content for product-type modules.
+ */
+function uc_product_view_product(EntityInterface $node, EntityDisplay $display, $view_mode) {
   // Give modules a chance to alter this product.  If it is a variant, this will
   // have been done already by uc_product_load_variant(), so we check a flag to
   // be sure not to alter twice -- cf. entity_prepare_view().
@@ -1139,7 +1146,7 @@ function uc_product_is_product($node) {
  *   TRUE or FALSE indicating whether or not the form is a product node form.
  */
 function uc_product_is_product_form($form) {
-  return !empty($form['type']['#value']) && uc_product_is_product($form['type']['#value']);
+  return !empty($form['#bundle']) && uc_product_is_product($form['#bundle']);
 }
 
 /**

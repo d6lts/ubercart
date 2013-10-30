@@ -172,6 +172,7 @@ function uc_product_kit_node_insert($node) {
   db_merge('uc_products')
     ->key(array('vid' => $obj->vid))
     ->fields(array(
+      'nid' => $obj->nid,
       'model' => $obj->model,
       'list_price' => $obj->list_price,
       'cost' => $obj->cost,
@@ -201,13 +202,18 @@ function uc_product_kit_node_insert($node) {
  * @see uc_product_node_update()
  */
 function uc_product_kit_node_update($node) {
-  if ($node->getType() != 'product_kit') {
+  // Recalculate kit discounts that include the updated node.
+  if (uc_product_is_product($node)) {
     $result = db_query("SELECT DISTINCT nid FROM {uc_product_kits} WHERE product_id = :nid", array(':nid' => $node->nid));
     while ($nid = $result->fetchField()) {
       $kit = node_load($nid, NULL, TRUE);
       $kit->save();
     }
 
+    return;
+  }
+
+  if ($node->getType() != 'product_kit') {
     return;
   }
 
@@ -420,7 +426,6 @@ function uc_product_kit_node_load($nodes) {
   }
 
   if (!empty($vids)) {
-    $all_products = array();
     $result = db_query("SELECT nid, product_id, mutable, qty, discount, ordering, synchronized FROM {uc_product_kits} WHERE vid IN (:vids) ORDER BY nid, ordering", array(':vids' => $vids));
     while ($prod = $result->fetchObject()) {
       $nodes[$prod->nid]->mutable = $prod->mutable;
@@ -441,7 +446,13 @@ function uc_product_kit_node_load($nodes) {
     }
 
     // Add product data to kits.
-    uc_product_node_load($nodes);
+    $result = db_query('SELECT nid, model, list_price, cost, sell_price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, ordering, shippable FROM {uc_products} WHERE vid IN (:vids)', array(':vids' => $vids));
+    foreach ($result as $node) {
+      foreach ($node as $field => $value) {
+        $nodes[$node->nid]->$field = $value;
+      }
+      $nodes[$node->nid]->price = $nodes[$node->nid]->sell_price;
+    }
   }
 }
 
@@ -512,7 +523,6 @@ function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
   $products = array();
   $result = Drupal::entityQuery('node')
     ->condition('type', uc_product_types(), 'IN')
-    ->condition('type', 'product_kit', '<>')
     ->sort('title')
     ->execute();
 
@@ -559,7 +569,7 @@ function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
       );
       $form['base']['items'][$i]['link'] = array(
         '#type' => 'item',
-        '#markup' => l($product->title, 'node/' . $i),
+        '#markup' => l($product->label(), 'node/' . $i),
       );
       $form['base']['items'][$i]['qty'] = array(
         '#type' => 'uc_quantity',
@@ -666,6 +676,7 @@ function uc_product_kit_node_view(EntityInterface $node, EntityDisplay $display,
     return;
   }
 
+  uc_product_view_product($node, $display, $view_mode);
   $variant = $node->content['#node'];
 
   // Calculate the display price.
@@ -760,10 +771,10 @@ function uc_product_kit_add_to_cart_form($form, &$form_state, $node) {
 function uc_product_kit_add_to_cart_form_validate($form, &$form_state) {
   uc_product_add_to_cart_form_validate($form, $form_state);
   foreach ($form_state['storage']['variant']->products as &$product) {
-    $data = module_invoke_all('uc_add_to_cart_data', $form_state['values']['products'][$product->nid]);
+    $data = module_invoke_all('uc_add_to_cart_data', $form_state['values']['products'][$product->id()]);
     $data += $product->data;
     $qty = $product->qty;
-    $product = uc_product_load_variant($product->nid, $data);
+    $product = uc_product_load_variant($product->id(), $data);
     $product->qty = $qty;
   }
 }
@@ -866,13 +877,6 @@ function uc_product_kit_buy_it_now_form_submit($form, &$form_state) {
 }
 
 /**
- * Implements hook_uc_product_types().
- */
-function uc_product_kit_uc_product_types() {
-  return array('product_kit');
-}
-
-/**
  * Implements hook_uc_store_status().
  */
 function uc_product_kit_uc_store_status() {
@@ -905,18 +909,18 @@ function uc_product_kit_uc_add_to_cart($nid, $qty, $kit_data) {
     $product_data = array();
 
     foreach ($node->products as $product) {
-      $data = array('kit_id' => $node->nid, 'module' => 'uc_product_kit') + module_invoke_all('uc_add_to_cart_data', $kit_data['products'][$product->nid]);
-      $product_data[$product->nid] = $data;
+      $data = array('kit_id' => $node->id(), 'module' => 'uc_product_kit') + module_invoke_all('uc_add_to_cart_data', $kit_data['products'][$product->id()]);
+      $product_data[$product->id()] = $data;
       foreach ($cart as $item) {
-        if ($item->nid == $product->nid && isset($item->data['kit_id']) && $item->data['kit_id'] == $node->nid) {
+        if ($item->nid == $product->id() && isset($item->data['kit_id']) && $item->data['kit_id'] == $node->id()) {
           // There is something in the cart like the product kit. Update
           // by default, but check that it's possible.
           $data['unique_id'] = $item->data['unique_id'];
           if ($item->data == $data) {
             // This product is a candidate for updating the cart quantity.
             // Make sure the data arrays will compare as equal when serialized.
-            $product_data[$product->nid] = $item->data;
-            $update[$product->nid] = TRUE;
+            $product_data[$product->id()] = $item->data;
+            $update[$product->id()] = TRUE;
           }
         }
       }
@@ -926,15 +930,15 @@ function uc_product_kit_uc_add_to_cart($nid, $qty, $kit_data) {
     // The product kit can update its items only if they all can be updated.
     if (count($update) != count($node->products)) {
       foreach ($node->products as $product) {
-        $data = $product_data[$product->nid];
+        $data = $product_data[$product->id()];
         $data['unique_id'] = $unique;
-        uc_cart_add_item($product->nid, $product->qty * $qty, $data, NULL, FALSE, FALSE, FALSE);
+        uc_cart_add_item($product->id(), $product->qty * $qty, $data, NULL, FALSE, FALSE, FALSE);
       }
     }
     else {
       foreach ($node->products as $product) {
-        $data = $product_data[$product->nid];
-        uc_cart_add_item($product->nid, $product->qty * $qty, $data, NULL, FALSE, FALSE, FALSE);
+        $data = $product_data[$product->id()];
+        uc_cart_add_item($product->id(), $product->qty * $qty, $data, NULL, FALSE, FALSE, FALSE);
       }
     }
 
@@ -956,7 +960,7 @@ function uc_product_kit_uc_product_alter(&$variant) {
       $discount = $variant->data['kit_discount'];
     }
     elseif (($kit = node_load($variant->data['kit_id'])) && $kit->mutable != UC_PRODUCT_KIT_MUTABLE) {
-      $discount = $kit->products[$variant->nid]->discount;
+      $discount = $kit->products[$variant->id()]->discount;
     }
     else {
       $discount = 0;
@@ -1028,10 +1032,10 @@ function uc_product_kit_uc_cart_display($item) {
       // Initialize table row.
       $kit_qty = $item->qty / $kit->products[$item->nid]->qty;
       $element = array();
-      $element['nid'] = array('#type' => 'value', '#value' => $kit->nid);
+      $element['nid'] = array('#type' => 'value', '#value' => $kit->id());
       $element['module'] = array('#type' => 'value', '#value' => 'uc_product_kit');
       $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
-      $element['title'] = array('#markup' => l($kit->title, 'node/' . $kit->nid));
+      $element['title'] = array('#markup' => l($kit->label(), 'node/' . $kit->id()));
       $element['qty'] = array(
         '#type' => 'uc_quantity',
         '#title' => t('Quantity'),
@@ -1044,7 +1048,6 @@ function uc_product_kit_uc_cart_display($item) {
       $element['#extra'] = array();
       $element['#entity'] = $kit; // Override the entity associated with this
                                   // render-array to be the kit itself.
-
       $elements[$unique_id] = $element;
     }
     // Add product specific information.
@@ -1071,7 +1074,7 @@ function uc_product_kit_uc_cart_display($item) {
     // Check if all products in this kit have been accounted for.
     $done = TRUE;
     foreach ($kit->products as $product) {
-      if (!in_array($product->nid, $products[$unique_id])) {
+      if (!in_array($product->id(), $products[$unique_id])) {
         $done = FALSE;
         break;
       }
