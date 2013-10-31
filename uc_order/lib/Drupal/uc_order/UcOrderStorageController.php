@@ -90,15 +90,8 @@ class UcOrderStorageController extends FieldableDatabaseStorageController {
    * {@inheritdoc}
    */
   protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
-    $record = new \stdClass();
-    foreach (drupal_schema_fields_sql($this->entityInfo[$table_key]) as $name) {
-      if ($name == 'data') {
-        $record->$name = $entity->$name;
-      }
-      else {
-        $record->$name = $entity->$name->value;
-      }
-    }
+    $record = parent::mapToStorageRecord($entity, $table_key);
+    $record->data = $entity->data;
     return $record;
   }
 
