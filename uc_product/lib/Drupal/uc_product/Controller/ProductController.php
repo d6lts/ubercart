@@ -8,6 +8,7 @@
 namespace Drupal\uc_product\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller routines for product routes.
@@ -43,6 +44,17 @@ class ProductController extends ControllerBase {
       '#rows' => $rows,
       '#empty' => t('No product classes have been defined yet.'),
     );
+  }
+
+  /**
+   * Sets up the default image field for products.
+   */
+  function setImageDefaults() {
+    uc_product_add_default_image_field();
+
+    drupal_set_message(t('Default image support configured for Ubercart products.'));
+
+    return new RedirectResponse(url('admin/store', array('absolute' => TRUE)));
   }
 
 }

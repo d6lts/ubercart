@@ -20,6 +20,13 @@ uc_product.settings:
   requirements:
     _permission: 'administer products'
 
+uc_product.image_defaults:
+  path: '/admin/store/settings/products/defaults'
+  defaults:
+    _content: '\Drupal\uc_product\Controller\ProductController::setImageDefaults'
+  requirements:
+    _permission: 'administer products'
+
 uc_product.features:
   path: '/node/{node}/edit/features'
   defaults:

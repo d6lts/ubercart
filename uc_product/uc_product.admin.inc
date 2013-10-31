@@ -59,16 +59,3 @@ function uc_product_feature_add_form_submit($form, &$form_state) {
 
   $form_state['redirect'] = 'node/' . $node->id() . '/edit/features/' . $form_state['values']['feature'] . '/add';
 }
-
-/**
- * Sets up image field for products.
- *
- * @see uc_product_uc_store_status()
- */
-function uc_product_image_defaults() {
-  uc_product_add_default_image_field();
-
-  drupal_set_message(t('Default image support configured for Ubercart products.'));
-
-  drupal_goto('admin/store');
-}
