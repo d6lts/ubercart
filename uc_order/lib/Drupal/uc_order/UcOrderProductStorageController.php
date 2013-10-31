@@ -19,7 +19,7 @@ class UcOrderProductStorageController extends FieldableDatabaseStorageController
    * {@inheritdoc}
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
+    parent::attachLoad($queried_entities, $load_revision);
 
     foreach ($queried_entities as $id => $product) {
       $product->data = unserialize($product->data);

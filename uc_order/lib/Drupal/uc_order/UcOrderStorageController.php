@@ -55,10 +55,10 @@ class UcOrderStorageController extends FieldableDatabaseStorageController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
+   * {@inheritdoc}
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
+    parent::attachLoad($queried_entities, $load_revision);
 
     foreach ($queried_entities as $id => $order) {
       $order->data = unserialize($order->data);
@@ -84,8 +84,6 @@ class UcOrderStorageController extends FieldableDatabaseStorageController {
           ->execute();
       }
     }
-
-//    parent::attachLoad($queried_entities, $load_revision);
   }
 
   /**
