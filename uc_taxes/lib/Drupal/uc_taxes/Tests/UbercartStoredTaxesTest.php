@@ -84,19 +84,19 @@ class UbercartStoredTaxesTest extends UbercartTestBase {
     // Build the panes.
     $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => config('uc_store.settings')->get('address.country')))->fetchField();
     $edit = array(
-      'panes[delivery][delivery_first_name]' => $this->randomName(10),
-      'panes[delivery][delivery_last_name]' => $this->randomName(10),
-      'panes[delivery][delivery_street1]' => $this->randomName(10),
-      'panes[delivery][delivery_city]' => $this->randomName(10),
-      'panes[delivery][delivery_zone]' => $zone_id,
-      'panes[delivery][delivery_postal_code]' => mt_rand(10000, 99999),
+      'panes[delivery][first_name]' => $this->randomName(10),
+      'panes[delivery][last_name]' => $this->randomName(10),
+      'panes[delivery][street1]' => $this->randomName(10),
+      'panes[delivery][city]' => $this->randomName(10),
+      'panes[delivery][zone]' => $zone_id,
+      'panes[delivery][postal_code]' => mt_rand(10000, 99999),
 
-      'panes[billing][billing_first_name]' => $this->randomName(10),
-      'panes[billing][billing_last_name]' => $this->randomName(10),
-      'panes[billing][billing_street1]' => $this->randomName(10),
-      'panes[billing][billing_city]' => $this->randomName(10),
-      'panes[billing][billing_zone]' => $zone_id,
-      'panes[billing][billing_postal_code]' => mt_rand(10000, 99999),
+      'panes[billing][first_name]' => $this->randomName(10),
+      'panes[billing][last_name]' => $this->randomName(10),
+      'panes[billing][street1]' => $this->randomName(10),
+      'panes[billing][city]' => $this->randomName(10),
+      'panes[billing][zone]' => $zone_id,
+      'panes[billing][postal_code]' => mt_rand(10000, 99999),
     );
 
     // Submit the checkout page.
@@ -108,7 +108,7 @@ class UbercartStoredTaxesTest extends UbercartTestBase {
     // Complete the review page.
     $this->drupalPostForm(NULL, array(), t('Submit order'));
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][delivery_first_name]']))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][first_name]']))->fetchField();
     if ($order_id) {
       $this->pass(
         t('Order %order_id has been created', array('%order_id' => $order_id))

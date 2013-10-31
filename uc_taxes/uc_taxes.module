@@ -106,7 +106,7 @@ function uc_taxes_entity_view_alter(&$build, EntityInterface $entity, EntityDisp
       list($amount, $suffixes) = uc_taxes_get_included_tax($entity, isset($entity->order) ? $entity->order : NULL);
 
       $build['price']['#price'] += $amount;
-      $build['total']['#price'] += $amount * $entity->qty;
+      $build['total']['#price'] += $amount * $entity->qty->value;
       $build['price']['#suffixes'] += $suffixes;
       $build['total']['#suffixes'] += $suffixes;
       break;
@@ -271,7 +271,7 @@ function uc_line_item_tax_subtotal($op, $order) {
 
       if (is_array($order->products)) {
         foreach ($order->products as $item) {
-          $amount += $item->price * $item->qty;
+          $amount += $item->price->value * $item->qty->value;
         }
       }
       if (is_array($order->line_items)) {
@@ -534,10 +534,10 @@ function uc_taxes_apply_item_tax($item, $tax) {
   if (is_array($item->data) && isset($item->data['type'])) { // Saved in the order product data array.
     $type = $item->data['type'];
   }
-  elseif (empty($item->nid)) { // "Blank-line" product.
+  elseif (empty($item->nid->value)) { // "Blank-line" product.
     $type = 'blank-line';
   }
-  elseif ($node = node_load($item->nid)) { // Use type of current node, if it exists.
+  elseif ($node = node_load($item->nid->value)) { // Use type of current node, if it exists.
     $type = $node->getType();
   }
   else { // Default to generic product.
@@ -548,10 +548,10 @@ function uc_taxes_apply_item_tax($item, $tax) {
   if (is_array($item->data) && isset($item->data['shippable'])) { // Saved in the order product data array.
     $shippable = $item->data['shippable'];
   }
-  elseif (empty($item->nid)) { // "Blank line" product.
+  elseif (empty($item->nid->value)) { // "Blank line" product.
     $shippable = $item->weight > 0;
   }
-  elseif ($node = node_load($item->nid)) { // Use current node.
+  elseif ($node = node_load($item->nid->value)) { // Use current node.
     $shippable = $node->shippable;
   }
   else {
@@ -561,7 +561,7 @@ function uc_taxes_apply_item_tax($item, $tax) {
   // Tax products if they are of a taxed type and if it is shippable if
   // the tax only applies to shippable products.
   if (in_array($type, $tax->taxed_product_types) && ($tax->shippable == 0 || $shippable == 1)) {
-    return $item->price;
+    return is_object($item->price) ? $item->price->value : $item->price;
   }
   else {
     return FALSE;
@@ -584,7 +584,7 @@ function uc_taxes_apply_tax($order, $tax) {
   $taxable_amount = 0;
   if (is_array($order->products)) {
     foreach ($order->products as $item) {
-      $taxable_amount += $item->qty * uc_taxes_apply_item_tax($item, $tax);
+      $taxable_amount += $item->qty->value * uc_taxes_apply_item_tax($item, $tax);
     }
   }
   $taxed_line_items = $tax->taxed_line_items;
