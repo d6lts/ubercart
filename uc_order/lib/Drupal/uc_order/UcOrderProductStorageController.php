@@ -22,7 +22,7 @@ class UcOrderProductStorageController extends FieldableDatabaseStorageController
     $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
 
     foreach ($queried_entities as $id => $product) {
-      $product->data->value = unserialize($product->data->value);
+      $product->data = unserialize($product->data);
     }
   }
 
@@ -46,6 +46,22 @@ class UcOrderProductStorageController extends FieldableDatabaseStorageController
       }
     }
     return parent::save($product);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
+    $record = new \stdClass();
+    foreach (drupal_schema_fields_sql($this->entityInfo[$table_key]) as $name) {
+      if ($name == 'data') {
+        $record->$name = $entity->$name;
+      }
+      else {
+        $record->$name = $entity->$name->value;
+      }
+    }
+    return $record;
   }
 
 }

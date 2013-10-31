@@ -125,7 +125,7 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
     unset($this->price);
     unset($this->weight);
     unset($this->weight_units);
-    unset($this->data);
+    // unset($this->data);
   }
 
   /**

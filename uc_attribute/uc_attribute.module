@@ -1059,7 +1059,7 @@ function _uc_cart_product_get_options($item) {
     return $options;
   }
   $data = $item->data;
-  $node = node_load(is_object($item->nid) ? $item->id() : $item->nid);
+  $node = node_load(is_object($item->nid) ? $item->nid->value : $item->nid);
 
   $index = 0;
   if (!empty($data['attributes']) && is_array($data['attributes'])) {
