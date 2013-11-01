@@ -77,6 +77,7 @@ class UbercartAjaxTest extends UbercartTestBase {
     // Enable two payment methods and set a condition on one.
     variable_set('uc_payment_method_check_checkout', TRUE);
     variable_set('uc_payment_method_other_checkout', TRUE);
+    $this->container->get('plugin.manager.uc_payment.method')->clearCachedDefinitions();
     // $this->addPaymentZoneCondition('other', '26');
 
     // Speciy that the billing zone should update the payment pane.
@@ -93,11 +94,11 @@ class UbercartAjaxTest extends UbercartTestBase {
 
     // Change the billing zone and veriy that payment pane updates.
     $edit = array();
-    $edit['panes[billing][billing_zone]'] = '26';
-    $result = $this->ucPostAjax(NULL, $edit, 'panes[billing][billing_zone]');
+    $edit['panes[billing][zone]'] = '26';
+    $result = $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
     $this->assertText("Other");
-    $edit['panes[billing][billing_zone]'] = '1';
-    $result = $this->ucPostAjax(NULL, $edit, 'panes[billing][billing_zone]');
+    $edit['panes[billing][zone]'] = '1';
+    $result = $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
     // Not in Kansas any more...
     $this->assertNoText("Other");
   }

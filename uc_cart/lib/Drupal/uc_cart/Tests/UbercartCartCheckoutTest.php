@@ -294,10 +294,10 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
       // Allow customer to specify username.
       'uc_cart_new_account_name' => TRUE,
       // Disable address panes.
-      'uc_pane_delivery_enabled' => FALSE,
-      'uc_pane_billing_enabled' => FALSE,
+      'panes[delivery][status]' => FALSE,
+      'panes[billing][status]' => FALSE,
     );
-    $this->drupalPostForm('admin/store/settings/checkout/panes', $settings, t('Save configuration'));
+    $this->drupalPostForm('admin/store/settings/checkout', $settings, t('Save configuration'));
     $this->drupalLogout();
 
     // Test with an account that already exists.
@@ -422,13 +422,9 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, array('uc_roles_role' => $rid), t('Save feature'));
 
     // Process an anonymous, shippable order.
-    $item = clone $this->product;
-    $item->qty = 1;
-    $item->price = $item->sell_price;
-    $item->data = array('shippable' => TRUE);
-    $order = $this->createOrder(array(
-      'products' => array($item),
-    ));
+    $order = $this->createOrder();
+    $order->products[1]->data['shippable'] = TRUE;
+    $order->save();
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // Find the order uid.
@@ -444,13 +440,13 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     \Drupal::state()->set('system.test_email_collector', array());
 
     // Test again with an existing email address and a non-shippable order.
-    $item->data = array('shippable' => FALSE);
     $order = $this->createOrder(array(
       'primary_email' => $this->customer->getEmail(),
-      'products' => array($item),
     ));
+    $order->products[2]->data['shippable'] = FALSE;
+    $order->save();
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
-    $account = user_load($this->customer->uid);
+    $account = user_load($this->customer->id());
     $this->assertTrue(isset($account->roles[$rid]), 'Existing user was granted role.');
     $order = uc_order_load($order->id());
     $this->assertEqual($order->getStatusId(), 'completed', 'Non-shippable order was set to completed.');
@@ -476,19 +472,19 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
     $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => config('uc_store.settings')->get('address.country')))->fetchField();
     $oldname = $this->randomName(10);
     $edit = array(
-      'panes[delivery][delivery_first_name]' => $oldname,
-      'panes[delivery][delivery_last_name]' => $this->randomName(10),
-      'panes[delivery][delivery_street1]' => $this->randomName(10),
-      'panes[delivery][delivery_city]' => $this->randomName(10),
-      'panes[delivery][delivery_zone]' => $zone_id,
-      'panes[delivery][delivery_postal_code]' => mt_rand(10000, 99999),
+      'panes[delivery][first_name]' => $oldname,
+      'panes[delivery][last_name]' => $this->randomName(10),
+      'panes[delivery][street1]' => $this->randomName(10),
+      'panes[delivery][city]' => $this->randomName(10),
+      'panes[delivery][zone]' => $zone_id,
+      'panes[delivery][postal_code]' => mt_rand(10000, 99999),
 
-      'panes[billing][billing_first_name]' => $this->randomName(10),
-      'panes[billing][billing_last_name]' => $this->randomName(10),
-      'panes[billing][billing_street1]' => $this->randomName(10),
-      'panes[billing][billing_city]' => $this->randomName(10),
-      'panes[billing][billing_zone]' => $zone_id,
-      'panes[billing][billing_postal_code]' => mt_rand(10000, 99999),
+      'panes[billing][first_name]' => $this->randomName(10),
+      'panes[billing][last_name]' => $this->randomName(10),
+      'panes[billing][street1]' => $this->randomName(10),
+      'panes[billing][city]' => $this->randomName(10),
+      'panes[billing][zone]' => $zone_id,
+      'panes[billing][postal_code]' => mt_rand(10000, 99999),
     );
 
     // If the email address has not been set, and the user has not logged in,
@@ -508,7 +504,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
       $this->drupalPostForm('cart', array(), 'Checkout');
       $this->assertRaw($oldname, 'Customer name was unchanged.');
       $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
-      $new_order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][delivery_first_name]']))->fetchField();
+      $new_order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][first_name]']))->fetchField();
       $this->assertEqual($order_id, $new_order_id, 'Original order_id was reused.');
 
       // Jump 10 minutes into the future.
@@ -525,7 +521,7 @@ class UbercartCartCheckoutTest extends UbercartTestBase {
       $this->drupalPostForm('cart', array(), 'Checkout');
       $this->assertNoRaw($oldname, 'Customer name was cleared after timeout.');
       $newname = $this->randomName(10);
-      $edit['panes[delivery][delivery_first_name]'] = $newname;
+      $edit['panes[delivery][first_name]'] = $newname;
       $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
       $new_order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $newname))->fetchField();
       $this->assertNotEqual($order_id, $new_order_id, 'New order was created after timeout.');

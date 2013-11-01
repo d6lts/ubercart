@@ -80,6 +80,7 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
     $kit = $this->drupalCreateNode(array(
       'type' => 'product_kit',
       'products' => array($product->id()),
+      'default_qty' => 1,
       'ordering' => 0,
       'mutable' => UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST,
     ));
@@ -111,19 +112,19 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
     // Manually proceed to checkout review.
     $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => config('uc_store.settings')->get('address.country')))->fetchField();
     $edit = array(
-      'panes[delivery][delivery_first_name]' => $this->randomName(10),
-      'panes[delivery][delivery_last_name]' => $this->randomName(10),
-      'panes[delivery][delivery_street1]' => $this->randomName(10),
-      'panes[delivery][delivery_city]' => $this->randomName(10),
-      'panes[delivery][delivery_zone]' => $zone_id,
-      'panes[delivery][delivery_postal_code]' => mt_rand(10000, 99999),
+      'panes[delivery][first_name]' => $this->randomName(10),
+      'panes[delivery][last_name]' => $this->randomName(10),
+      'panes[delivery][street1]' => $this->randomName(10),
+      'panes[delivery][city]' => $this->randomName(10),
+      'panes[delivery][zone]' => $zone_id,
+      'panes[delivery][postal_code]' => mt_rand(10000, 99999),
 
-      'panes[billing][billing_first_name]' => $this->randomName(10),
-      'panes[billing][billing_last_name]' => $this->randomName(10),
-      'panes[billing][billing_street1]' => $this->randomName(10),
-      'panes[billing][billing_city]' => $this->randomName(10),
-      'panes[billing][billing_zone]' => $zone_id,
-      'panes[billing][billing_postal_code]' => mt_rand(10000, 99999),
+      'panes[billing][first_name]' => $this->randomName(10),
+      'panes[billing][last_name]' => $this->randomName(10),
+      'panes[billing][street1]' => $this->randomName(10),
+      'panes[billing][city]' => $this->randomName(10),
+      'panes[billing][zone]' => $zone_id,
+      'panes[billing][postal_code]' => mt_rand(10000, 99999),
     );
     $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
     $this->assertRaw(t('Your order is almost complete.'));
@@ -133,7 +134,7 @@ class UbercartInclusiveTaxesTest extends UbercartTestBase {
     $this->assertText('$16.80' . $rate->inclusion_text, 'Tax inclusive price appears in cart pane on checkout review page');
 
     // Ensure the tax-inclusive price is listed on the order admin page.
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][delivery_first_name]']))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][first_name]']))->fetchField();
     $this->assertTrue($order_id, 'Order was created successfully');
     $this->drupalGet('admin/store/orders/' . $order_id);
     $this->assertText('$16.80' . $rate->inclusion_text, 'Tax inclusive price appears on the order view page.');

@@ -381,15 +381,15 @@ abstract class UbercartTestBase extends WebTestBase {
    */
   protected function ucPostAJAX($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
     $commands = parent::drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path, $options, $headers, $form_html_id, $ajax_settings);
-    $dom = new DOMDocument();
+    $dom = new \DOMDocument();
     @$dom->loadHTML($this->drupalGetContent());
     foreach ($commands as $command) {
       if ($command['command'] == 'insert' && isset($command['selector']) && preg_match('/^\#-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/', $command['selector'])) {
-        $xpath = new DOMXPath($dom);
+        $xpath = new \DOMXPath($dom);
         $wrapperNode = $xpath->query('//*[@id="' . substr($command['selector'], 1) . '"]')->item(0);
         if ($wrapperNode) {
           // ajax.js adds an enclosing DIV to work around a Safari bug.
-          $newDom = new DOMDocument();
+          $newDom = new \DOMDocument();
           $newDom->loadHTML('<div>' . $command['data'] . '</div>');
           $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
           $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];

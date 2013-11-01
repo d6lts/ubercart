@@ -15,7 +15,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 class UbercartQuoteTest extends UbercartTestBase {
 
   public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack', 'uc_quote', 'uc_flatrate');
-  public static $adminPermissions = array(/*'administer rules', 'bypass rules access'*/);
+  public static $adminPermissions = array('configure quotes'/*, 'administer rules', 'bypass rules access'*/);
 
   public static function getInfo() {
     return array(
@@ -48,9 +48,8 @@ class UbercartQuoteTest extends UbercartTestBase {
       'base_rate' => mt_rand(1, 10),
       'product_rate' => mt_rand(1, 10),
     );
-    $form_state = array('values' => $edit);
-    drupal_form_submit('uc_flatrate_admin_method_edit_form', $form_state);
-    $method = db_query("SELECT * FROM {uc_flatrate_methods} WHERE mid = :mid", array(':mid' => $form_state['values']['mid']))->fetchObject();
+    $this->drupalPostForm('admin/store/settings/quotes/methods/flatrate/add', $edit, 'Submit');
+    $method = db_query("SELECT * FROM {uc_flatrate_methods} ORDER BY mid DESC LIMIT 1")->fetchObject();
     // if ($condition) {
     //   $name = 'get_quote_from_flatrate_' . $method->mid;
     //   $condition['LABEL'] = $edit['label'] . ' conditions';
@@ -87,7 +86,7 @@ class UbercartQuoteTest extends UbercartTestBase {
       }
     }
     $this->drupalSetContent($dom->saveHTML());
-    return $this->drupalPostAjaxForm(NULL, array(), 'panes[delivery][delivery_country]');
+    return $this->drupalPostAjaxForm(NULL, array(), 'panes[delivery][country]');
   }
 
   /**
@@ -185,8 +184,8 @@ class UbercartQuoteTest extends UbercartTestBase {
     $this->assertText($quote2->total, 'The order total includes the selected quote.');
 
     // Switch to a different country and ensure the ajax updates the page correctly.
-    $edit['panes[delivery][delivery_country]'] = 124;
-    $result = $this->ucPostAjax(NULL, $edit, 'panes[delivery][delivery_country]');
+    $edit['panes[delivery][country]'] = 124;
+    $result = $this->ucPostAjax(NULL, $edit, 'panes[delivery][country]');
     $this->assertText($quote1->option_text, 'The default quote is still available after changing the country.');
     $this->assertNoText($quote2->option_text, 'The second quote is no longer available after changing the country.');
     $this->assertText($quote1->total, 'The total includes the default quote.');
@@ -200,7 +199,7 @@ class UbercartQuoteTest extends UbercartTestBase {
 
     // Submit the review.
     $this->drupalPostForm(NULL, array(), t('Submit order'));
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][delivery_first_name]']))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][first_name]']))->fetchField();
     if ($order_id) {
       $order = uc_order_load($order_id);
       foreach ($order->line_items as $line) {

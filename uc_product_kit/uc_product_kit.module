@@ -258,7 +258,9 @@ function uc_product_kit_node_update($node) {
       else {
         $product = $nid;
         $nid = $product->id();
-        $node->items[$nid] = (array)$product;
+        $node->items[$nid]['qty'] = $product->qty;
+        $node->items[$nid]['discount'] = $product->discount;
+        $node->items[$nid]['ordering'] = $product->ordering;
       }
       $base_price += $product->sell_price * $node->items[$nid]['qty'];
     }
