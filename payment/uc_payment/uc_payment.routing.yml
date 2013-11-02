@@ -1,7 +1,15 @@
 uc_payment.methods:
   path: '/admin/store/settings/payment'
   defaults:
-    _form: 'Drupal\uc_payment\Form\PaymentMethodsForm'
+    _form: '\Drupal\uc_payment\Form\PaymentMethodsForm'
+    _title: 'Payment methods'
+  requirements:
+    _permission: 'administer store'
+
+uc_payment.method_settings:
+  path: '/admin/store/settings/payment/method/{method}'
+  defaults:
+    _form: '\Drupal\uc_payment\Form\PaymentMethodSettingsForm'
   requirements:
     _permission: 'administer store'
 

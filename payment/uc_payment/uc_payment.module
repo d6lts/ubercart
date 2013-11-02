@@ -23,25 +23,8 @@ function uc_payment_menu() {
     'description' => 'Choose and configure available payment methods.',
     'route_name' => 'uc_payment.methods',
   );
-  $items['admin/store/settings/payment/method/%'] = array(
-    'title callback' => 'uc_payment_method_title',
-    'title arguments' => array(5),
-    'description' => 'Configures a specific payment method.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_payment_method_settings_form', 5),
-    'access arguments' => array('administer store'),
-    'file' => 'uc_payment.admin.inc',
-  );
-  // $items += rules_ui()->config_menu('admin/store/settings/payment');
 
   return $items;
-}
-
-/**
- * Title callback for payment method settings.
- */
-function uc_payment_method_title($method_id) {
-  return t('!method settings', array('!method' => _uc_payment_method_data($method_id, 'name')));
 }
 
 /**
