@@ -60,15 +60,6 @@ function uc_credit_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'uc_credit.pages.inc',
   );
-  $items['admin/store/orders/%uc_order/credit'] = array(
-    'title callback' => 'uc_credit_terminal_title',
-    'title arguments' => array(3),
-    'description' => 'Displays a form to process a credit card payment.',
-    'page callback' => 'uc_credit_terminal',
-    'page arguments' => array(3),
-    'access arguments' => array('process credit cards'),
-    'file' => 'uc_credit.admin.inc',
-  );
 
   return $items;
 }
@@ -1102,11 +1093,4 @@ function uc_credit_gateway_txn_types($gateway) {
   }
 
   return $types;
-}
-
-/**
- * Title callback for admin/store/orders/%uc_order/credit.
- */
-function uc_credit_terminal_title($order) {
-  return t('Credit card terminal: Order @order_id', array('@order_id' => $order->id()));
 }
