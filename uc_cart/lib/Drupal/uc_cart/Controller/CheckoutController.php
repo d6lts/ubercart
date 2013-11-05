@@ -129,7 +129,7 @@ class CheckoutController extends ControllerBase {
     // rules_invoke_event('uc_cart_checkout_start', $order);
 
     module_load_include('inc', 'uc_cart', 'uc_cart.pages');
-    return drupal_get_form('uc_cart_checkout_form', $order);
+    return drupal_get_form('Drupal\uc_cart\Form\CheckoutForm', $order);
   }
 
   /**
