@@ -215,11 +215,11 @@ function uc_flatrate_quote($products, $details, $method) {
     foreach ($products as $product) {
       if (!isset($product->flatrate[$mid])) {
         // Add the method's default product rate.
-        $rate += $method->product_rate * $product->qty;
+        $rate += $method->product_rate * $product->qty->value;
       }
       else {
         // Add the product-specific rate.
-        $rate += $product->flatrate[$mid] * $product->qty;
+        $rate += $product->flatrate[$mid] * $product->qty->value;
       }
     }
 

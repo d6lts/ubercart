@@ -218,13 +218,13 @@ function uc_weightquote_quote($products, $details, $method) {
     foreach ($products as $product) {
       if (empty($product->weightquote) || is_null($product->weightquote[$mid])) {
         // Add the method's default product rate.
-        $product_rate = $method->product_rate * $product->qty;
+        $product_rate = $method->product_rate * $product->qty->value;
       }
       else {
         // Add the product-specific rate.
-        $product_rate = $product->weightquote[$mid] * $product->qty;
+        $product_rate = $product->weightquote[$mid] * $product->qty->value;
       }
-      $rate += $product_rate  * $product->weight * uc_weight_conversion($product->weight_units, config('uc_store.settings')->get('units.weight'));
+      $rate += $product_rate  * $product->weight->value * uc_weight_conversion($product->weight_units->value, config('uc_store.settings')->get('units.weight'));
     }
 
     $quotes[] = array(
