@@ -37,7 +37,7 @@ class CartController extends ControllerBase {
       drupal_set_breadcrumb(array($link));
     }
 
-    return drupal_get_form('uc_cart_view_form', $items);
+    return drupal_get_form('Drupal\uc_cart\Form\CartForm', $items);
   }
 
 }

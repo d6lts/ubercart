@@ -1019,7 +1019,7 @@ function uc_product_kit_uc_order_product_alter(&$product, $order) {
  *   An item in the shopping cart.
  *
  * @return
- *   A form element array to be processed by uc_cart_view_form().
+ *   A form element array to be processed by the cart form().
  */
 function uc_product_kit_uc_cart_display($item) {
   static $elements = array();

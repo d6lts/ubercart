@@ -203,7 +203,7 @@ function theme_uc_cart_block_summary($variables) {
 }
 
 /**
- * Themes the uc_cart_view_form().
+ * Themes the cart form.
  *
  * Outputs a hidden copy of the update cart button first, so pressing Enter
  * updates the cart instead of removing an item.
@@ -212,7 +212,7 @@ function theme_uc_cart_block_summary($variables) {
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
- * @see uc_cart_view_form()
+ * @see \Drupal\uc_cart\Form\CartForm
  * @ingroup themeable
  */
 function theme_uc_cart_view_form($variables) {
@@ -235,7 +235,7 @@ function theme_uc_cart_view_form($variables) {
  *   An associative array containing:
  *   - buttons: A render element representing the form buttons.
  *
- * @see uc_cart_view_form()
+ * @see \Drupal\uc_cart\Form\CartForm
  * @ingroup themeable
  */
 function theme_uc_cart_checkout_buttons($variables) {
