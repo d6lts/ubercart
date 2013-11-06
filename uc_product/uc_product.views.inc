@@ -200,14 +200,14 @@ function uc_product_views_data() {
     'title' => t('Shippable'),
     'help' => t('Is the product shippable?'),
     'field' => array(
-      'handler' => 'boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'sort' => array(
       'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'boolean',
+      'id' => 'boolean',
     ),
   );
 

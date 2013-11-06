@@ -23,7 +23,7 @@ function uc_shipping_views_data() {
     'relationship' => array(
       'title' => t('Shipments'),
       'help' => t('Relate shipments to an order. This relationship will create one record for each shipment.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_shipments',
       'base field' => 'order_id',
       'relationship field' => 'order_id',
@@ -36,7 +36,7 @@ function uc_shipping_views_data() {
     'relationship' => array(
       'title' => t('Order'),
       'help' => t('Relate an order to a shipment. Use this relationship to get order information for a shipment.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_orders',
       'base field' => 'order_id',
       'relationship field' => 'order_id',
@@ -49,7 +49,7 @@ function uc_shipping_views_data() {
     'relationship' => array(
       'title' => t('Packages'),
       'help' => t('Relate packages to a shipment. This relationship will create one record for each shipped package.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_packages',
       'base field' => 'sid',
       'relationship field' => 'sid',
@@ -66,13 +66,13 @@ function uc_shipping_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'id' => 'numeric',
       'name field' => 'title',
       'numeric' => TRUE,
       'validate type' => 'sid',
@@ -84,17 +84,17 @@ function uc_shipping_views_data() {
     'title' => t('Order ID'),
     'help' => t('The order ID.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_order_id',
+      'id' => 'uc_order',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'id' => 'numeric',
       'name field' => 'title',
       'numeric' => TRUE,
       'validate type' => 'order_id',
@@ -106,14 +106,14 @@ function uc_shipping_views_data() {
     'title' => t('Carrier'),
     'help' => t('The company making the delivery.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'id' => 'string',
     ),
   );
 
@@ -122,17 +122,17 @@ function uc_shipping_views_data() {
     'title' => t('Transaction ID'),
     'help' => t("The carrier's shipment identifier."),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'id' => 'string',
     ),
   );
 
@@ -141,17 +141,17 @@ function uc_shipping_views_data() {
     'title' => t('Tracking number'),
     'help' => t('The number used by the carrier to locate the shipment while it is in transit.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'id' => 'string',
     ),
   );
 
@@ -159,14 +159,14 @@ function uc_shipping_views_data() {
     'title' => t('Ship date'),
     'help' => t('The date when the shipment left the origin address.'),
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'id' => 'date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'id' => 'date',
     ),
   );
 
@@ -174,14 +174,14 @@ function uc_shipping_views_data() {
     'title' => t('Expected delivery date'),
     'help' => t('The expected date of delivery.'),
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'id' => 'date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'id' => 'date',
     ),
   );
 
@@ -189,14 +189,14 @@ function uc_shipping_views_data() {
     'title' => t('Last modified'),
     'help' => t('The time the shipment was last modified.'),
     'field' => array(
-      'handler' => 'views_handler_field_date',
+      'id' => 'date',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort_date',
+      'id' => 'date',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_date',
+      'id' => 'date',
     ),
   );
 
@@ -204,15 +204,14 @@ function uc_shipping_views_data() {
     'title' => t('Cost'),
     'help' => t('The cost of the shipment.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_money_amount',
+      'id' => 'uc_price',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -240,14 +239,14 @@ function uc_shipping_views_data() {
         'title' => $label,
         'help' => t('The !field of the !address of the shipment.', array('!field' => drupal_strtolower($label), '!address' => drupal_strtolower($address))),
         'field' => array(
-          'handler' => 'views_handler_field',
+          'id' => 'standard',
           'click sortable' => TRUE,
         ),
         'sort' => array(
-          'handler' => 'views_handler_sort',
+          'id' => 'standard',
         ),
         'filter' => array(
-          'handler' => 'views_handler_filter_string',
+          'id' => 'string',
         ),
       );
     }
@@ -276,55 +275,55 @@ function uc_shipping_views_data() {
       'title' => t('ISO country code (numeric)'),
       'help' => t('The !field of the !address of the shipment.', array('!field' => t('numeric ISO country code'), '!address' => drupal_strtolower($address))),
       'argument' => array(
-        'handler' => 'views_handler_argument_numeric',
+        'id' => 'numeric',
         'name field' => 'country_iso_code_2',
         'numeric' => TRUE,
         'validate type' => 'country_id',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_numeric',
+        'id' => 'numeric',
       ),
     );
     $data['uc_shipments_' . $prefix . '_countries']['country_name'] = array(
       'title' => t('Country'),
       'help' => t('The !field of the !address of the shipment.', array('!field' => t('country name'), '!address' => drupal_strtolower($address))),
       'field' => array(
-        'handler' => 'views_handler_field',
+        'id' => 'standard',
         'click sortable' => TRUE,
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'id' => 'standard',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_string',
+        'id' => 'string',
       ),
     );
     $data['uc_shipments_' . $prefix . '_countries']['country_iso_code_2'] = array(
       'title' => t('ISO country code (2 characters)'),
       'help' => t('The !field of the !address of the shipment.', array('!field' => t('ISO country code'), '!address' => drupal_strtolower($address))),
       'field' => array(
-        'handler' => 'views_handler_field',
+        'id' => 'standard',
         'click sortable' => TRUE,
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'id' => 'standard',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_string',
+        'id' => 'string',
       ),
     );
     $data['uc_shipments_' . $prefix . '_countries']['country_iso_code_3'] = array(
       'title' => t('ISO country code (3 characters)'),
       'help' => t('The !field of the !address of the shipment.', array('!field' => t('ISO country code'), '!address' => drupal_strtolower($address))),
       'field' => array(
-        'handler' => 'views_handler_field',
+        'id' => 'standard',
         'click sortable' => TRUE,
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'id' => 'standard',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_string',
+        'id' => 'string',
       ),
     );
 
@@ -338,28 +337,28 @@ function uc_shipping_views_data() {
       'title' => t('State/Province'),
       'help' => t('The !field of the !address of the shipment.', array('!field' => t('state or province'), '!address' => drupal_strtolower($address))),
       'field' => array(
-        'handler' => 'views_handler_field',
+        'id' => 'standard',
         'click sortable' => TRUE,
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'id' => 'standard',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_string',
+        'id' => 'string',
       ),
     );
     $data['uc_shipments_' . $prefix . '_zones']['zone_code'] = array(
       'title' => t('State/Province code'),
       'help' => t('The !field of the !address of the shipment.', array('!field' => t('state or province code'), '!address' => drupal_strtolower($address))),
       'field' => array(
-        'handler' => 'views_handler_field',
+        'id' => 'standard',
         'click sortable' => TRUE,
       ),
       'sort' => array(
-        'handler' => 'views_handler_sort',
+        'id' => 'standard',
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_string',
+        'id' => 'string',
       ),
     );
   }
@@ -380,7 +379,7 @@ function uc_shipping_views_data() {
     'relationship' => array(
       'title' => t('Packages'),
       'help' => t('Relate packages to an order. This relationship will create one record for each package of an order.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_packages',
       'base field' => 'order_id',
       'relationship field' => 'order_id',
@@ -393,7 +392,7 @@ function uc_shipping_views_data() {
     'relationship' => array(
       'title' => t('Order'),
       'help' => t('Relate an order to a package. Use this relationship to get order information for a package.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_orders',
       'base field' => 'order_id',
       'relationship field' => 'order_id',
@@ -406,7 +405,7 @@ function uc_shipping_views_data() {
     'relationship' => array(
       'title' => t('Products'),
       'help' => t('Relate packaged products to a package. This relationship will create one record for each packaged product.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_packaged_products',
       'base field' => 'package_id',
       'relationship field' => 'package_id',
@@ -419,7 +418,7 @@ function uc_shipping_views_data() {
     'relationship' => array(
       'title' => t('Shipment'),
       'help' => t('Relate shipment to package.  Use this relationship to get shipping information for the package.  Note that this relationship might not exist.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_shipments',
       'base field' => 'sid',
       'relationship field' => 'sid',
@@ -433,17 +432,17 @@ function uc_shipping_views_data() {
     'title' => t('Package ID'),
     'help' => t('The package ID.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'id' => 'numeric',
       'name field' => 'title',
       'numeric' => TRUE,
       'validate type' => 'sid',
@@ -459,13 +458,13 @@ function uc_shipping_views_data() {
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'id' => 'numeric',
       'name field' => 'title',
       'numeric' => TRUE,
       'validate type' => 'sid',
@@ -477,17 +476,17 @@ function uc_shipping_views_data() {
     'title' => t('Order ID'),
     'help' => t('The order ID.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_order_id',
+      'id' => 'uc_order',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'id' => 'numeric',
       'name field' => 'title',
       'numeric' => TRUE,
       'validate type' => 'order_id',
@@ -499,14 +498,14 @@ function uc_shipping_views_data() {
     'title' => t('Shipment type'),
     'help' => t('The basic type of shipment, e.g.: small package, freight, etc.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'id' => 'string',
     ),
   );
 
@@ -515,14 +514,14 @@ function uc_shipping_views_data() {
     'title' => t('Package type'),
     'help' => t('The type of packaging.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'id' => 'string',
     ),
   );
 
@@ -531,15 +530,14 @@ function uc_shipping_views_data() {
     'title' => t('Value'),
     'help' => t('The monetary value of the package contents.'),
     'field' => array(
-      'handler' => 'uc_order_handler_field_money_amount',
+      'id' => 'uc_price',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
   );
 
@@ -548,17 +546,17 @@ function uc_shipping_views_data() {
     'title' => t('Tracking number'),
     'help' => t('The number used by the carrier to locate the package while it is in transit.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'id' => 'string',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'id' => 'string',
     ),
   );
 
@@ -570,15 +568,14 @@ function uc_shipping_views_data() {
       'additional fields' => array(
         'field' => 'length_units',
       ),
-      'handler' => 'uc_product_handler_field_length',
+      'id' => 'uc_length',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_float',
+      'id' => 'numeric',
     ),
   );
 
@@ -590,15 +587,14 @@ function uc_shipping_views_data() {
       'additional fields' => array(
         'field' => 'length_units',
       ),
-      'handler' => 'uc_product_handler_field_length',
+      'id' => 'uc_length',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_float',
+      'id' => 'numeric',
     ),
   );
 
@@ -610,15 +606,14 @@ function uc_shipping_views_data() {
       'additional fields' => array(
         'field' => 'length_units',
       ),
-      'handler' => 'uc_product_handler_field_length',
+      'id' => 'uc_length',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_float',
+      'id' => 'numeric',
     ),
   );
 
@@ -632,7 +627,6 @@ function uc_shipping_views_data() {
       ),
       'handler' => 'uc_shipping_handler_field_package_weight',
       'click sortable' => FALSE,
-      'float' => TRUE,
     ),
   );
 
@@ -647,7 +641,7 @@ function uc_shipping_views_data() {
     'relationship' => array(
       'title' => t('Ordered product'),
       'help' => t('Relate packaged product to the ordered product.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_order_products',
       'base field' => 'order_product_id',
       'relationship field' => 'order_product_id',
@@ -660,14 +654,14 @@ function uc_shipping_views_data() {
     'title' => t('Quantity'),
     'help' => t('The quantity packaged.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
   );
 

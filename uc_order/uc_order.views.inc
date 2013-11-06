@@ -345,7 +345,6 @@ function uc_order_views_data() {
       'additional fields' => array(
         'order_id' => 'order_id',
       ),
-      'float' => TRUE,
     ),
   );
 
@@ -482,7 +481,6 @@ function uc_order_views_data() {
     'field' => array(
       'handler' => 'uc_order_handler_field_money_total',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'handler' => 'uc_order_handler_sort_total',
@@ -514,7 +512,6 @@ function uc_order_views_data() {
     'field' => array(
       'handler' => 'uc_order_handler_field_money_total',
       'click sortable' => TRUE,
-      'float' => TRUE,
     ),
     'sort' => array(
       'handler' => 'uc_order_handler_sort_total',
@@ -548,7 +545,6 @@ function uc_order_views_data() {
         ),
       ),
       'handler' => 'uc_order_handler_field_weight_total',
-      'float' => TRUE,
     ),
   );
 
@@ -629,7 +625,7 @@ function uc_order_views_data() {
         'click sortable' => TRUE,
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_string',
+        'id' => 'string',
       ),
     );
 
@@ -641,7 +637,7 @@ function uc_order_views_data() {
         'click sortable' => TRUE,
       ),
       'filter' => array(
-        'handler' => 'views_handler_filter_numeric',
+        'id' => 'numeric',
       ),
     );
   }

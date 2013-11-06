@@ -27,7 +27,7 @@ function uc_product_kit_views_data() {
     'relationship' => array(
       'title' => t('Parent'),
       'help' => t('Relate product kit components to their parent kits.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'uc_product_kits',
       'base field' => 'product_id',
       'relationship field' => 'nid',
@@ -48,7 +48,7 @@ function uc_product_kit_views_data() {
     'relationship' => array(
       'title' => t('Component'),
       'help' => t('Relate product kits to their components. This relationship will create one record for each component of the kit.'),
-      'handler' => 'views_handler_relationship',
+      'id' => 'standard',
       'base' => 'node',
       'base field' => 'nid',
       'relationship table' => 'uc_product_kit_parents',
@@ -61,15 +61,15 @@ function uc_product_kit_views_data() {
     'title' => t('Mutable'),
     'help' => t('A flag indicating whether the contents of the kit can be changed by the customer.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'id' => 'boolean',
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
   );
 
@@ -77,18 +77,18 @@ function uc_product_kit_views_data() {
     'title' => t('Quantity'),
     'help' => t('The number of this product contained in the kit.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
       'allow empty' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
   );
 
@@ -96,18 +96,18 @@ function uc_product_kit_views_data() {
     'title' => t('Discount'),
     'help' => t('The adjustment to the {uc_products}.sell_price of the product.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
       'allow empty' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'id' => 'numeric',
     ),
-      'sort' => array(
-      'handler' => 'views_handler_sort',
+    'sort' => array(
+      'id' => 'standard',
     ),
   );
 
@@ -115,18 +115,18 @@ function uc_product_kit_views_data() {
     'title' => t('Weight'),
     'help' => ('The weight of this product in relation to other products in the kit.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
       'allow empty' => TRUE,
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
   );
 
@@ -134,15 +134,15 @@ function uc_product_kit_views_data() {
     'title' => t('Synchronized'),
     'help' => t('A flag indicating that changes to the sell price of this product will change the total price of the kit. 1 => Yes. 0 => No.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'id' => 'boolean',
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
   );
 

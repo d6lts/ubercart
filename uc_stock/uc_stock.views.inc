@@ -24,13 +24,13 @@ function uc_stock_views_data() {
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_string',
+      'id' => 'string',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
     'argument' => array(
-      'handler' => 'views_handler_argument_string',
+      'id' => 'string',
     ),
   );
 
@@ -38,16 +38,16 @@ function uc_stock_views_data() {
     'title' => t('Active'),
     'help' => t('Whether or not stock is currently being tracked.'),
     'field' => array(
-      'handler' => 'views_handler_field_boolean',
+      'id' => 'boolean',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_boolean_operator',
+      'id' => 'boolean',
       'label' => t('Active'),
       'type' => 'yes-no',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
   );
 
@@ -55,14 +55,14 @@ function uc_stock_views_data() {
     'title' => t('Level'),
     'help' => t('The current stock level.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
   );
 
@@ -70,14 +70,14 @@ function uc_stock_views_data() {
     'title' => t('Threshold'),
     'help' => t('The level at which a stock warning can be sent.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'id' => 'numeric',
       'click sortable' => TRUE,
     ),
     'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
+      'id' => 'numeric',
     ),
     'sort' => array(
-      'handler' => 'views_handler_sort',
+      'id' => 'standard',
     ),
   );
 
