@@ -26,7 +26,12 @@ class ShippingQuoteMethodsForm extends FormBase {
    */
   public function buildForm(array $form, array &$form_state) {
     $form['methods'] = array(
-      '#tree' => TRUE,
+      '#type' => 'table',
+      '#header' => array(t('Shipping method'), t('Details'), t('List position'), t('Operations')),
+      '#tabledrag' => array(
+        array('order', 'sibling', 'uc-quote-method-weight'),
+      ),
+      '#empty' => t('No shipping quotes have been configured yet.'),
     );
 
     foreach (uc_quote_methods(TRUE) as $method) {
@@ -35,11 +40,11 @@ class ShippingQuoteMethodsForm extends FormBase {
 
         // Build a list of operations links.
         $operations = isset($method['operations']) ? $method['operations'] : array();
-        $operations += array('conditions' => array(
-          'title' => t('conditions'),
-          'href' => 'admin/store/settings/quotes/manage/get_quote_from_' . $id,
-          'weight' => 5,
-        ));
+//        $operations += array('conditions' => array(
+//          'title' => t('conditions'),
+//          'href' => 'admin/store/settings/quotes/manage/get_quote_from_' . $id,
+//          'weight' => 5,
+//        ));
 
         // Ensure "delete" comes towards the end of the list.
         if (isset($operations['delete'])) {
@@ -47,7 +52,7 @@ class ShippingQuoteMethodsForm extends FormBase {
         }
         uasort($operations, 'drupal_sort_weight');
 
-        $form['methods'][$id]['uc_quote_enabled'] = array(
+        $form['methods'][$id]['status'] = array(
           '#type' => 'checkbox',
           '#title' => check_plain($method['title']),
           '#default_value' => $method['enabled'],
@@ -55,15 +60,14 @@ class ShippingQuoteMethodsForm extends FormBase {
         $form['methods'][$id]['description'] = array(
           '#markup' => isset($method['description']) ? $method['description'] : '',
         );
-        $form['methods'][$id]['uc_quote_method_weight'] = array(
+        $form['methods'][$id]['weight'] = array(
           '#type' => 'weight',
           '#default_value' => $method['weight'],
           '#attributes' => array('class' => array('uc-quote-method-weight')),
         );
         $form['methods'][$id]['operations'] = array(
-          '#theme' => 'links',
+          '#type' => 'operations',
           '#links' => $operations,
-          '#attributes' => array('class' => array('links', 'inline')),
         );
       }
     }
@@ -119,8 +123,8 @@ class ShippingQuoteMethodsForm extends FormBase {
     $enabled = array();
     $method_weight = array();
     foreach ($form_state['values']['methods'] as $id => $method) {
-      $enabled[$id] = $method['uc_quote_enabled'];
-      $method_weight[$id] = $method['uc_quote_method_weight'];
+      $enabled[$id] = $method['status'];
+      $method_weight[$id] = $method['weight'];
     }
 
     variable_set('uc_quote_enabled', $enabled);

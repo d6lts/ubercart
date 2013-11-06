@@ -46,10 +46,6 @@ function uc_quote_menu() {
  */
 function uc_quote_theme() {
   return array(
-    'uc_quote_method_settings' => array(
-      'render element' => 'form',
-      'file' => 'uc_quote.admin.inc',
-    ),
     'uc_cart_pane_quotes' => array(
       'render element' => 'form',
       'file' => 'uc_quote.theme.inc',
