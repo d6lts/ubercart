@@ -199,6 +199,7 @@ function uc_store_update_8000() {
     'uc_weight_unit' => 'units.weight',
     'uc_length_unit' => 'units.length',
     'uc_customer_list_address' => 'customer_address',
+    'uc_order_capitalize_addresses' => 'capitalize_address',
     'uc_footer_message' => 'footer_message',
   ));
   update_variable_del('uc_store_owner');

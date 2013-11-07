@@ -63,4 +63,5 @@ units:
   weight: lb
   length: in
 customer_address: billing
+capitalize_address: 1
 footer_message: '0'

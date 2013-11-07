@@ -169,7 +169,7 @@ class UcAddress {
     $replace = array('', '', '<br />', '<br />', '', '');
     $address = preg_replace($match, $replace, $address);
 
-    if (variable_get('uc_order_capitalize_addresses', TRUE)) {
+    if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
       $address = drupal_strtoupper($address);
     }
 

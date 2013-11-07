@@ -158,6 +158,11 @@ class StoreSettingsForm extends ConfigFormBase {
       ),
       '#default_value' => $config->get('customer_address'),
     );
+    $form['display']['uc_order_capitalize_addresses'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Capitalize address on order screens'),
+      '#default_value' => $config->get('capitalize_address'),
+    );
     $form['display']['uc_footer_message'] = array(
       '#type' => 'radios',
       '#title' => t('Footer message for store pages'),
@@ -211,6 +216,7 @@ class StoreSettingsForm extends ConfigFormBase {
       ->set('units.weight', $form_state['values']['uc_weight_unit'])
       ->set('units.length', $form_state['values']['uc_length_unit'])
       ->set('customer_address', $form_state['values']['uc_customer_list_address'])
+      ->set('capitalize_address', $form_state['values']['uc_order_capitalize_addresses'])
       ->set('footer_message', $form_state['values']['uc_footer_message'])
       ->save();
 

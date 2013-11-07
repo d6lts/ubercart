@@ -697,8 +697,6 @@ function uc_order_uninstall() {
   db_delete('variable')
     ->condition('name', 'uc_state_%', 'LIKE')
     ->execute();
-
-  variable_del('uc_order_capitalize_addresses');
 }
 
 /**
