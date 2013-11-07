@@ -148,6 +148,28 @@ class StoreSettingsForm extends ConfigFormBase {
       '#title' => t('Display settings'),
       '#group' => 'store',
     );
+    $form['display']['uc_weight_unit'] = array(
+      '#type' => 'select',
+      '#title' => t('Default weight units'),
+      '#default_value' => $config->get('units.weight'),
+      '#options' => array(
+        'lb' => t('Pounds'),
+        'oz' => t('Ounces'),
+        'kg' => t('Kilograms'),
+        'g' => t('Grams'),
+      ),
+    );
+    $form['display']['uc_length_unit'] = array(
+      '#type' => 'select',
+      '#title' => t('Default length units'),
+      '#default_value' => $config->get('units.length'),
+      '#options' => array(
+        'in' => t('Inches'),
+        'ft' => t('Feet'),
+        'cm' => t('Centimeters'),
+        'mm' => t('Millimeters'),
+      ),
+    );
     $form['display']['uc_customer_list_address'] = array(
       '#type' => 'radios',
       '#title' => t('Primary customer address'),
