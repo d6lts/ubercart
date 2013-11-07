@@ -133,19 +133,14 @@ function uc_store_schema() {
  */
 function uc_store_install() {
   // Set mail handler for all Ubercart modules
-  variable_set('mail_system',
-    array_merge(
-      variable_get('mail_system', array('default-system' => 'Drupal\Core\Mail\PhpMail')),
-      array(
-        'uc_cart'  => 'Drupal\uc_store\Mail\UbercartMail',
-        'uc_order' => 'Drupal\uc_store\Mail\UbercartMail',
-        'uc_file'  => 'Drupal\uc_store\Mail\UbercartMail',
-        'uc_roles' => 'Drupal\uc_store\Mail\UbercartMail',
-        'uc_stock' => 'Drupal\uc_store\Mail\UbercartMail',
-        'uc_store' => 'Drupal\uc_store\Mail\UbercartMail',
-      )
-    )
-  );
+  config('system.mail')
+    ->set('interface.uc_cart',  'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_order', 'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_file',  'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_roles', 'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_stock', 'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_store', 'Drupal\uc_store\Mail\UbercartMail')
+    ->save();
 
   // Set the default store date format.
   config('system.date')
@@ -169,16 +164,6 @@ function uc_store_uninstall() {
   db_delete('variable')
     ->condition('name', 'uc_address_format_%', 'LIKE')
     ->execute();
-
-  // Unset mail Ubercart hander in variable mail_system
-  $mail_system = variable_get('mail_system', array('default-system' => 'Drupal\Core\Mail\PhpMail'));
-  unset($mail_system['uc_cart']);
-  unset($mail_system['uc_order']);
-  unset($mail_system['uc_file']);
-  unset($mail_system['uc_roles']);
-  unset($mail_system['uc_stock']);
-  unset($mail_system['uc_store']);
-  variable_set('mail_system', $mail_system);
 }
 
 /**
@@ -259,4 +244,18 @@ function uc_store_update_8002() {
   update_variable_del('uc_address_fields');
   update_variable_del('uc_address_fields_required');
   update_variable_del('uc_address_fields_weight');
+}
+
+/**
+ * Reset mail handler for Ubercart modules.
+ */
+function uc_store_update_8003() {
+  config('system.mail')
+    ->set('interface.uc_cart',  'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_order', 'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_file',  'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_roles', 'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_stock', 'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_store', 'Drupal\uc_store\Mail\UbercartMail')
+    ->save();
 }
