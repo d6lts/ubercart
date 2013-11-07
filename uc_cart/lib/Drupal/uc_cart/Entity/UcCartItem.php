@@ -96,4 +96,14 @@ class UcCartItem extends Entity {
     ));
   }
 
+  /**
+   * Dummy implementation of getPropertyDefinitions().
+   *
+   * UcCartItem is not a true content entity, but we implement this to
+   * avoid errors when this entity is rendered.
+   */
+  public function getPropertyDefinitions() {
+    return array();
+  }
+
 }
