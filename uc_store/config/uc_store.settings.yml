@@ -11,6 +11,47 @@ address:
   zone: '0'
   country: '840'
   postal_code: ''
+address_fields:
+  first_name:
+    required: 1
+    status: 1
+    weight: 0
+  last_name:
+    required: 1
+    status: 1
+    weight: 1
+  company:
+    required: 0
+    status: 1
+    weight: 2
+  street1:
+    required: 1
+    status: 1
+    weight: 3
+  street2:
+    required: 0
+    status: 1
+    weight: 4
+  city:
+    required: 1
+    status: 1
+    weight: 5
+  zone:
+    required: 1
+    status: 1
+    weight: 6
+  country:
+    required: 1
+    status: 1
+    weight: 7
+  postal_code:
+    required: 1
+    status: 1
+    weight: 8
+  phone:
+    required: 0
+    status: 0
+    weight: 9
 currency:
   code: USD
   symbol: $

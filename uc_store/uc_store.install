@@ -170,10 +170,6 @@ function uc_store_uninstall() {
     ->condition('name', 'uc_address_format_%', 'LIKE')
     ->execute();
 
-  variable_del('uc_address_fields');
-  variable_del('uc_address_fields_required');
-  variable_del('uc_address_fields_weight');
-
   // Unset mail Ubercart hander in variable mail_system
   $mail_system = variable_get('mail_system', array('default-system' => 'Drupal\Core\Mail\PhpMail'));
   unset($mail_system['uc_cart']);
@@ -239,4 +235,28 @@ function uc_store_update_8001() {
   update_variable_del('uc_length_format_ft');
   update_variable_del('uc_length_format_cm');
   update_variable_del('uc_length_format_mm');
+}
+
+/**
+ * Upgrades address field settings.
+ */
+function uc_store_update_8002() {
+  $status = update_variable_get('uc_address_fields', drupal_map_assoc(array('first_name', 'last_name', 'phone', 'company', 'street1', 'street2', 'city', 'zone', 'postal_code', 'country')));
+  $required = update_variable_get('uc_address_fields_required', drupal_map_assoc(array('first_name', 'last_name', 'street1', 'city', 'zone', 'postal_code', 'country')));
+  $weights = update_variable_get('uc_address_fields_weight', array('first_name' => 0, 'last_name' => 1, 'company' => 2, 'street1' => 3, 'street2' => 4, 'city' => 5, 'zone' => 6, 'country' => 7, 'postal_code' => 8, 'phone' => 9));
+
+  $address_fields = array();
+  foreach ($weights as $field => $weight) {
+    $address_fields[$field]['status'] = !empty($status[$field]);
+    $address_fields[$field]['required'] = !empty($required[$field]);
+    $address_fields[$field]['weight'] = $weight;
+  }
+
+  \Drupal::config('uc_store.settings')
+    ->set('address_fields', $address_fields)
+    ->save();
+
+  update_variable_del('uc_address_fields');
+  update_variable_del('uc_address_fields_required');
+  update_variable_del('uc_address_fields_weight');
 }
