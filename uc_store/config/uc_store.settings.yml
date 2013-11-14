@@ -1,6 +1,6 @@
 name: Ubercart
 mail: ''
-mail_include_name: '1'
+mail_include_name: 1
 phone: ''
 fax: ''
 help_page: ''
@@ -8,8 +8,8 @@ address:
   street1: ''
   street2: ''
   city: ''
-  zone: '0'
-  country: '840'
+  zone: 0
+  country: 840
   postal_code: ''
 address_fields:
   first_name:
@@ -55,13 +55,13 @@ address_fields:
 currency:
   code: USD
   symbol: $
-  symbol_after: '0'
+  symbol_after: 0
   thousands_marker: ','
   decimal_marker: .
-  precision: '2'
+  precision: 2
 units:
   weight: lb
   length: in
 customer_address: billing
 capitalize_address: 1
-footer_message: '0'
+footer_message: 0
