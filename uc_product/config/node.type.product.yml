@@ -16,5 +16,7 @@ settings:
     submitted: '1'
   uc_product:
     product: '1'
+    shippable: '1'
+    image_field: uc_product_image
 status: '1'
 langcode: und

@@ -554,8 +554,9 @@ function uc_taxes_apply_item_tax($item, $tax) {
   elseif ($node = node_load($item->nid->value)) { // Use current node.
     $shippable = $node->shippable;
   }
-  else {
-    $shippable = variable_get('uc_product_shippable_' . $type); // Use default for this node type.
+  else { // Use default for this node type.
+    $settings = entity_load('node_type', $type)->getModuleSettings('uc_product');
+    $shippable = isset($settings['shippable']) ? $settings['shippable'] : TRUE;
   }
 
   // Tax products if they are of a taxed type and if it is shippable if

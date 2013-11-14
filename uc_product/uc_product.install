@@ -191,13 +191,6 @@ function uc_product_schema() {
  * Implements hook_uninstall().
  */
 function uc_product_uninstall() {
-  db_delete('variable')
-    ->condition(db_or()
-      ->condition('name', 'uc_product_shippable_%', 'LIKE')
-      ->condition('name', 'uc_image_%', 'LIKE'))
-    ->execute();
-
-  variable_del('uc_product_nodes_per_page');
   variable_del('uc_product_add_to_cart_qty');
 }
 
@@ -213,4 +206,40 @@ function uc_product_update_last_removed() {
  */
 function uc_product_update_8000() {
   update_variable_del('uc_product_image_widget');
+}
+
+/**
+ * Convert product node settings into configuration.
+ */
+function uc_product_update_8001() {
+  $result = db_query('SELECT * FROM {node_type}')
+    ->fetchAllAssoc('type', PDO::FETCH_ASSOC);
+  foreach ($result as $id => $node_type) {
+    $config = \Drupal::config('node.type.' . $id);
+
+    // Read D7 variables.
+    $variables = db_query('SELECT name, value FROM {variable} WHERE name IN (:names)', array(
+      ':names' => array(
+        'uc_product_shippable_' . $id,
+        'uc_image_' . $id,
+      ),
+    ))->fetchAllKeyed();
+    $variables = array_map('unserialize', $variables);
+
+    // Set defaults.
+    $variables += array(
+      'uc_product_shippable_' . $id => TRUE,
+      'uc_image_' . $id => 'uc_product_image',
+    );
+
+    // Save D8 config.
+    $config->set('settings.uc_product.shippable', $variables['uc_product_shippable_' . $id]);
+    $config->set('settings.uc_product.image_field', $variables['uc_image_' . $id]);
+    $config->save();
+
+    // Delete D7 variables.
+    foreach ($variables as $name => $value) {
+      update_variable_del($name);
+    }
+  }
 }
