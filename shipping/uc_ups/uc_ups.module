@@ -154,7 +154,7 @@ function uc_ups_node_update($node) {
   if (uc_product_is_product($node)) {
     if (isset($node->ups)) {
       $ups_values = $node->ups;
-      if (empty($node->revision)) {
+      if (!$node->isNewRevision()) {
         db_delete('uc_ups_products')
           ->condition('vid', $node->getRevisionId())
           ->execute();

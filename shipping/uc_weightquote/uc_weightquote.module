@@ -93,7 +93,7 @@ function uc_weightquote_node_insert($node) {
 function uc_weightquote_node_update($node) {
   if (uc_product_is_product($node)) {
     if (isset($node->weightquote) && is_array($node->weightquote)) {
-      if (empty($node->revision)) {
+      if (!$node->isNewRevision()) {
         db_delete('uc_weightquote_products')
           ->condition('vid', $node->getRevisionId())
           ->execute();

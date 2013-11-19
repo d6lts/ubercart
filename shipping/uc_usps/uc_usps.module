@@ -88,7 +88,7 @@ function uc_usps_node_update($node) {
   if (uc_product_is_product($node)) {
     if (isset($node->usps)) {
       $usps_values = $node->usps;
-      if (empty($node->revision)) {
+      if (!$node->isNewRevision()) {
         db_delete('uc_usps_products')
           ->condition('vid', $node->getRevisionId())
           ->execute();

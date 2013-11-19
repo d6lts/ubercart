@@ -266,7 +266,7 @@ function uc_product_kit_node_update($node) {
     }
   }
 
-  if (empty($node->revision)) {
+  if (!$node->isNewRevision()) {
     db_delete('uc_product_kits')
       ->condition('vid', $node->getRevisionId())
       ->execute();
@@ -346,7 +346,7 @@ function uc_product_kit_node_update($node) {
     drupal_set_message(t('Product kit discounts are not applied because the customer can remove components from their cart.'));
   }
 
-  if (!empty($node->revision)) {
+  if ($node->isNewRevision()) {
     drupal_write_record('uc_products', $obj);
   }
   else {

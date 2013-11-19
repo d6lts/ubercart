@@ -55,7 +55,7 @@ function uc_flatrate_node_insert($node) {
 function uc_flatrate_node_update($node) {
   if (uc_product_is_product($node)) {
     if (isset($node->flatrate) && is_array($node->flatrate)) {
-      if (empty($node->revision)) {
+      if (!$node->isNewRevision()) {
         db_delete('uc_flatrate_products')
           ->condition('vid', $node->getRevisionId())
           ->execute();

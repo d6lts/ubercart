@@ -414,7 +414,7 @@ function uc_product_node_update($node) {
   foreach ($fields as $name) {
     $record->$name = $node->$name;
   }
-  if (!empty($node->revision)) {
+  if ($node->isNewRevision()) {
     drupal_write_record('uc_products', $record);
   }
   else {
