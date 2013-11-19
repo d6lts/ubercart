@@ -8,8 +8,6 @@
 namespace Drupal\uc_cart\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\block\Annotation\Block;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides the shopping cart block.

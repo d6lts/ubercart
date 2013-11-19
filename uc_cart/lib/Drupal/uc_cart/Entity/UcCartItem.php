@@ -8,8 +8,6 @@
 namespace Drupal\uc_cart\Entity;
 
 use Drupal\Core\Entity\Entity;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the cart item entity class.

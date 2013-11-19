@@ -7,10 +7,8 @@
 
 namespace Drupal\uc_product\Plugin\field\formatter;
 
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\field\Annotation\FieldFormatter;
 use Drupal\image\Plugin\field\formatter\ImageFormatterBase;
 
 /**

@@ -8,7 +8,6 @@
 namespace Drupal\uc_product\Plugin\views\field;
 
 use Drupal\uc_store\Plugin\views\field\Price;
-use Drupal\Component\Annotation\PluginID;
 use Drupal\views\ResultRow;
 
 /**

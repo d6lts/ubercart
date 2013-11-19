@@ -9,7 +9,6 @@ namespace Drupal\uc_store\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Numeric;
 use Drupal\views\ResultRow;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to provide formatted weights.

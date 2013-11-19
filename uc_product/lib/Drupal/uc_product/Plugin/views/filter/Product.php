@@ -8,7 +8,6 @@
 namespace Drupal\uc_product\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\BooleanOperator;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler for "is a product".

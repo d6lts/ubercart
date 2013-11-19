@@ -8,7 +8,6 @@
 namespace Drupal\uc_order\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\InOperator;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Filter handler for order statuses.

@@ -10,7 +10,6 @@ namespace Drupal\uc_credit\Plugin\views\field;
 use Drupal\uc_store\UbercartEncryption;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
-use Drupal\Component\Annotation\PluginID;
 
 /**
  * Field handler to display encrypted credit card data.
