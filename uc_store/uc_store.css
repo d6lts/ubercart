@@ -32,25 +32,16 @@
  * CSS rules for address fields.
  */
 .uc-store-address-field .form-item {
-  clear: left;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  padding: 2px;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .uc-store-address-field .form-item label {
   float: left;
-  padding-right: 4px;
+  margin-top: 6px;
+  padding-right: 0.75em;
   text-align: right;
-  width: 15em;
-}
-
-.vertical-tabs .uc-store-address-field .form-item input {
-  width: auto;
-}
-
-.vertical-tabs .form-type-textfield input {
-  width: auto;
+  width: 10em;
 }
 
 .ubercart-throbber {
