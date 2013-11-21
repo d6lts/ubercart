@@ -35,7 +35,7 @@ function hook_uc_calculate_tax($order) {
 
   $order->taxes = array();
 
-  if (isset($order->getStatusId())) {
+  if ($order->getStatusId()) {
     $use_same_rates = in_array($order->getStateId(), array('payment_received', 'completed'));
   }
   else {

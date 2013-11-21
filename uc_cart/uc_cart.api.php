@@ -329,7 +329,7 @@ function uc_checkout_pane_callback($op, $order, $form = NULL, &$form_state = NUL
     case 'view':
       $description = t('Use this area for special instructions or questions regarding your order.');
 
-      if (!empty($order->id())) {
+      if ($order->id()) {
         $default = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()))->fetchField();
       }
       else {
