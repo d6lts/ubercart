@@ -5,7 +5,7 @@
  * UPS shipping quote module.
  */
 
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /******************************************************************************
  * Drupal Hooks                                                               *
@@ -550,7 +550,7 @@ function uc_ups_quote($products, $details, $method) {
 
   $quotes = array();
 
-  $addresses = array(variable_get('uc_quote_store_default_address', new UcAddress()));
+  $addresses = array(variable_get('uc_quote_store_default_address', new Address()));
   $key = 0;
   $last_key = 0;
   $packages = array();

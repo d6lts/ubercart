@@ -8,7 +8,7 @@
 namespace Drupal\uc_quote\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /**
  * Default shipping settings form.
@@ -31,7 +31,7 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $address = variable_get('uc_quote_store_default_address', new UcAddress());
+    $address = variable_get('uc_quote_store_default_address', new Address());
 
     $form['uc_quote_log_errors'] = array(
       '#type' => 'checkbox',
@@ -95,7 +95,7 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $address = new UcAddress();
+    $address = new Address();
     $address->first_name = $form_state['values']['first_name'];
     $address->last_name = $form_state['values']['last_name'];
     $address->company = $form_state['values']['company'];

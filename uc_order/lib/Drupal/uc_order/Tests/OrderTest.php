@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_order\Tests;
 
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -150,7 +150,7 @@ class UbercartOrderTest extends UbercartTestBase {
     $country = array_rand($countries);
     $zones = uc_zone_option_list();
 
-    $delivery_address = new UcAddress();
+    $delivery_address = new Address();
     $delivery_address->first_name = $this->randomName(12);
     $delivery_address->last_name = $this->randomName(12);
     $delivery_address->street1 = $this->randomName(12);
@@ -160,7 +160,7 @@ class UbercartOrderTest extends UbercartTestBase {
     $delivery_address->postal_code = mt_rand(10000, 99999);
     $delivery_address->country = $country;
 
-    $billing_address = new UcAddress();
+    $billing_address = new Address();
     $billing_address->first_name = $this->randomName(12);
     $billing_address->last_name = $this->randomName(12);
     $billing_address->street1 = $this->randomName(12);

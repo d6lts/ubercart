@@ -7,7 +7,7 @@
  * and tracking numbers.
  */
 
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /**
  * Implements hook_help().
@@ -686,7 +686,7 @@ function uc_shipping_select_address($addresses, $onchange = '', $title = NULL) {
   if (!is_array($addresses) || count($addresses) == 0) {
     $addresses = array();
   }
-  $store_address = variable_get('uc_quote_store_default_address', new UcAddress());
+  $store_address = variable_get('uc_quote_store_default_address', new Address());
   if (!in_array($store_address, $addresses)) {
     $addresses[] = $store_address;
   }

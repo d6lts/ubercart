@@ -10,7 +10,7 @@ namespace Drupal\uc_order\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\uc_order\UcOrderInterface;
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /**
  * Defines the order entity class.
@@ -277,7 +277,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    * {@inheritdoc}
    */
   public function getAddress($type) {
-    $address = new UcAddress();
+    $address = new Address();
     $address->first_name = $this->get($type . '_first_name')->value;
     $address->last_name = $this->get($type . '_last_name')->value;
     $address->company = $this->get($type . '_company')->value;
@@ -294,7 +294,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  public function setAddress($type, UcAddress $address) {
+  public function setAddress($type, Address $address) {
     $this->set($type . '_first_name', $address->first_name);
     $this->set($type . '_last_name', $address->last_name);
     $this->set($type . '_company', $address->company);

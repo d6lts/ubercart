@@ -10,7 +10,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /**
  * Weight unit conversion constants, used by uc_weight_conversion().
@@ -324,9 +324,9 @@ function uc_store_process_address_field($element, $form_state) {
     }
   }
 
-  // Iterating on the UcAddress object excludes non-public properties, which
+  // Iterating on the Address object excludes non-public properties, which
   // is exactly what we want to do.
-  $address = new UcAddress();
+  $address = new Address();
   foreach ($address as $base_field => $field_value) {
     $field = $prefix . $base_field;
     if (is_object($value) ? !property_exists($value, $field) : !isset($value[$field])) {

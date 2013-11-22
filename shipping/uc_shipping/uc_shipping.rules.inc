@@ -5,7 +5,7 @@
  * Rules hooks for uc_shipping.module.
  */
 
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /**
  * Implements hook_rules_data_info().
@@ -173,7 +173,7 @@ function uc_shipping_address_property_get($shipment, array $options, $name, $ent
       return NULL;
   }
 
-  $address = new UcAddress();
+  $address = new Address();
 
   foreach ($address as $field => $value) {
     $address->{$field} = $shipment->{$type . $field};

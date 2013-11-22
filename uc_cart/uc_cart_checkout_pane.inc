@@ -10,7 +10,7 @@
  * uc_cart.module.
  */
 
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /**
  * Displays the cart contents for review during checkout.
@@ -295,7 +295,7 @@ function uc_checkout_pane_address($pane, $op, $order, &$form_state, $description
       return array('description' => $description, 'contents' => $contents);
 
     case 'process':
-      $address = new UcAddress;
+      $address = new Address;
       $panes = &$form_state['values']['panes'];
       foreach ($panes[$pane] as $field => $value) {
         if (isset($address->$field)) {

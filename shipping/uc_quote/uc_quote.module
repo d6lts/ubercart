@@ -12,7 +12,7 @@
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /**
  * Implements hook_permission().
@@ -111,7 +111,7 @@ function uc_quote_node_load($nodes, $types) {
   $shipping_type = variable_get('uc_store_shipping_type', 'small_package');
   $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => array_keys($nodes)))->fetchAllKeyed();
 
-  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids)", array(':nids' => array_keys($nodes)), array('fetch' => 'UcAddress'))->fetchAllAssoc('nid');
+  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids)", array(':nids' => array_keys($nodes)), array('fetch' => 'Address'))->fetchAllAssoc('nid');
 
   foreach ($nodes as $nid => &$node) {
     if (!in_array($node->getType(), $product_types)) {
@@ -130,7 +130,7 @@ function uc_quote_node_load($nodes, $types) {
       unset($node->shipping_address['nid']);
     }
     else {
-      $node->shipping_address = (array) variable_get('uc_quote_store_default_address', new UcAddress());
+      $node->shipping_address = (array) variable_get('uc_quote_store_default_address', new Address());
     }
   }
 }
@@ -165,7 +165,7 @@ function uc_quote_form_node_form_alter(&$form, &$form_state, $form_id) {
 
     // Use the store default if the product does not have an address set.
     if (empty($address)) {
-      $address = variable_get('uc_quote_store_default_address', new UcAddress());
+      $address = variable_get('uc_quote_store_default_address', new Address());
     }
 
     // Initialize the shipping fieldset array.
@@ -416,10 +416,10 @@ function uc_product_get_shipping_type($product) {
  *   the store's shipping address if the product's is not set.
  */
 function uc_quote_get_default_shipping_address($nid) {
-  $address = db_query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", array(':nid' => $nid))->fetchObject('Drupal\uc_store\UcAddress');
+  $address = db_query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", array(':nid' => $nid))->fetchObject('Drupal\uc_store\Address');
 
   if (empty($address)) {
-    $address = variable_get('uc_quote_store_default_address', new UcAddress());
+    $address = variable_get('uc_quote_store_default_address', new Address());
   }
 
   return $address;

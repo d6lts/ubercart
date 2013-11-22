@@ -8,11 +8,11 @@
 namespace Drupal\uc_store\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 class AddressTest extends UbercartTestBase {
 
-  /** Array of UcAddress objects */
+  /** Array of Address objects */
   protected $test_address = array();
 
   public static function getInfo() {
@@ -91,7 +91,7 @@ class AddressTest extends UbercartTestBase {
    *   address properties. For example, 'city' => 'London'.
    *
    * @return
-   *   UcAddress object.
+   *   Address object.
    */
   public function createAddress($settings = array()) {
     $street = array_flip(array(
@@ -105,7 +105,7 @@ class AddressTest extends UbercartTestBase {
     ));
 
     // Populate object with defaults.
-    $address = new UcAddress();
+    $address = new Address();
     $address->first_name  = $this->randomName(6);
     $address->last_name   = $this->randomName(12);
     $address->company     = $this->randomName(10) . ', Inc.';

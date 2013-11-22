@@ -8,7 +8,7 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\uc_store\UcAddress;
+use Drupal\uc_store\Address;
 
 /**
  * Provides an interface defining an Ubercart order entity.
@@ -145,7 +145,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    * @param string $type
    *   The address type, usually 'billing' or 'delivery'.
    *
-   * @return \Drupal\uc_store\UcAddress
+   * @return \Drupal\uc_store\Address
    *   The address object.
    */
   public function getAddress($type);
@@ -155,12 +155,12 @@ interface UcOrderInterface extends ContentEntityInterface {
    *
    * @param string $type
    *   The address type, usually 'billing' or 'delivery'.
-   * @param \Drupal\uc_store\UcAddress $address
+   * @param \Drupal\uc_store\Address $address
    *   The address object.
    *
    * @return \Drupal\uc_order\UcOrderInterface
    *   The called owner entity.
    */
-  public function setAddress($type, UcAddress $address);
+  public function setAddress($type, Address $address);
 
 }
