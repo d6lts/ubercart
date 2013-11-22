@@ -1,0 +1,5 @@
+uc_weightquote_add:
+  route_name: uc_weightquote.add
+  title: 'Add weight quote'
+  appears_on:
+    - uc_quote.methods

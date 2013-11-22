@@ -8,41 +8,6 @@
 
 
 /**
- * Implements hook_menu().
- */
-function uc_weightquote_menu() {
-  $items = array();
-
-  $items['admin/store/settings/quotes/methods/weightquote/add'] = array(
-    'title' => 'Add weight quote',
-    'description' => 'Create a new weight based shipping quote.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_weightquote_admin_method_edit_form'),
-    'access arguments' => array('configure quotes'),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'uc_weightquote.admin.inc',
-  );
-  $items['admin/store/settings/quotes/methods/weightquote/%'] = array(
-    'title' => 'Edit weight quote method',
-    'description' => 'Edit an existing weight based shipping quote.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_weightquote_admin_method_edit_form', 6),
-    'access arguments' => array('configure quotes'),
-    'file' => 'uc_weightquote.admin.inc',
-  );
-  $items['admin/store/settings/quotes/weightquote/%/delete'] = array(
-    'title' => 'Delete weight quote method',
-    'description' => 'Delete a weight based shipping quote.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_weightquote_admin_method_confirm_delete', 5),
-    'access arguments' => array('configure quotes'),
-    'file' => 'uc_weightquote.admin.inc',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter().
  *
  * Adds a form element for the shipping rate of a product.

@@ -1,0 +1,20 @@
+uc_weightquote.add:
+  path: '/admin/store/settings/quotes/methods/weightquote/add'
+  defaults:
+    _form: 'Drupal\uc_weightquote\Form\WeightquoteEditForm'
+  requirements:
+    _permission: 'configure quotes'
+
+uc_weightquote.edit:
+  path: '/admin/store/settings/quotes/methods/weightquote/{mid}'
+  defaults:
+    _form: 'Drupal\uc_weightquote\Form\WeightquoteEditForm'
+  requirements:
+    _permission: 'configure quotes'
+
+uc_weightquote.delete:
+  path: '/admin/store/settings/quotes/methods/weightquote/{mid}/delete'
+  defaults:
+    _form: 'Drupal\uc_weightquote\Form\WeightquoteDeleteForm'
+  requirements:
+    _permission: 'configure quotes'
