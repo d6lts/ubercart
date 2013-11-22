@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Tests\UbercartAddressTest.
+ * Definition of Drupal\uc_store\Tests\AddressTest.
  */
 
 namespace Drupal\uc_store\Tests;
@@ -10,7 +10,7 @@ namespace Drupal\uc_store\Tests;
 use Drupal\uc_store\Tests\UbercartTestBase;
 use Drupal\uc_store\UcAddress;
 
-class UbercartAddressTest extends UbercartTestBase {
+class AddressTest extends UbercartTestBase {
 
   /** Array of UcAddress objects */
   protected $test_address = array();

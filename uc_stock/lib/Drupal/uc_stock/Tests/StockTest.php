@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_stock\Tests\UbercartStockTest.
+ * Definition of Drupal\uc_stock\Tests\StockTest.
  */
 
 namespace Drupal\uc_stock\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Ubercart stock related tests
  */
-class UbercartStockTest extends UbercartTestBase {
+class StockTest extends UbercartTestBase {
 
   public static $modules = array('uc_stock');
   public static $adminPermissions = array('administer product stock');

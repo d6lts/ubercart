@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\Tests\UbercartCartBlockTest.
+ * Definition of Drupal\uc_cart\Tests\CartBlockTest.
  */
 
 namespace Drupal\uc_cart\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Tests the cart block functionality.
  */
-class UbercartCartBlockTest extends UbercartTestBase {
+class CartBlockTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart', 'block');
 

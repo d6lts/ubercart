@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Tests\UbercartAjaxTest.
+ * Definition of Drupal\uc_store\Tests\AjaxTest.
  */
 
 namespace Drupal\uc_store\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
-class UbercartAjaxTest extends UbercartTestBase {
+class AjaxTest extends UbercartTestBase {
 
   public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack');
   public static $adminPermissions = array(/*'administer rules', 'bypass rules access'*/);

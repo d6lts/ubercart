@@ -13,7 +13,7 @@
  * http://growingventuresolutions.com
  */
 
-use Drupal\uc_store\UbercartEncryption;
+use Drupal\uc_store\Encryption;
 
 /**
  * Implements hook_menu().
@@ -76,7 +76,7 @@ function uc_cybersource_payment_gateway_settings_submit($form, &$form_state) {
   // If CC encryption has been configured properly.
   if ($key = uc_credit_encryption_key()) {
     // Setup our encryption object.
-    $crypt = new UbercartEncryption();
+    $crypt = new Encryption();
 
     // Encrypt the Merchant ID and Transaction key.
     if (!empty($form_state['values']['uc_cybersource_soap_merchant_id'])) {
@@ -1274,7 +1274,7 @@ function _uc_cybersource_soap_login_data() {
   // If CC encryption has been configured properly.
   if ($key = uc_credit_encryption_key()) {
     // Setup our encryption object.
-    $crypt = new UbercartEncryption();
+    $crypt = new Encryption();
 
     // Decrypt the Merchant ID and Transaction key.
     if (!empty($merchant_id)) {

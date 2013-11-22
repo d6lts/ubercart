@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity\Entity\EntityDisplay;
 use Drupal\node\NodeTypeInterface;
-use Drupal\uc_catalog\UcTreeNode;
+use Drupal\uc_catalog\TreeNode;
 
 /**
  * Implements hook_help().
@@ -240,14 +240,14 @@ function uc_catalog_block_view($delta = '') {
 
       // Then convert it into an actual tree structure.
       $seq = 0;
-      $menu_tree = new UcTreeNode();
+      $menu_tree = new TreeNode();
       $level = array();
       $curr_depth = -1;
 
       foreach ($tree as $knot) {
         $seq++;
         $knot->sequence = $seq;
-        $knothole = new UcTreeNode($knot);
+        $knothole = new TreeNode($knot);
         // Begin at the root of the tree and find the proper place.
         $menu_tree->add_child($knothole);
       }

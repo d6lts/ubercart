@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Tests\UbercartCountryTest.
+ * Definition of Drupal\uc_store\Tests\CountryTest.
  */
 
 namespace Drupal\uc_store\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
-class UbercartCountryTest extends UbercartTestBase {
+class CountryTest extends UbercartTestBase {
 
   public static function getInfo() {
     return array(

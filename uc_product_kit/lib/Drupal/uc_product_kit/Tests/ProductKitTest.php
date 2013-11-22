@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Definition of Drupal\uc_product_kit\Tests\UbercartKitProductTest.
+ * Definition of Drupal\uc_product_kit\Tests\KitProductTest.
  */
 
 namespace Drupal\uc_product_kit\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
-class UbercartProductKitTest extends UbercartTestBase {
+class ProductKitTest extends UbercartTestBase {
 
   public static $modules = array('uc_product_kit');
   public static $adminPermissions = array('create product_kit content', 'edit any product_kit content');

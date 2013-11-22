@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\Tests\UbercartCartSettingsTest.
+ * Definition of Drupal\uc_cart\Tests\CartSettingsTest.
  */
 
 namespace Drupal\uc_cart\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Tests the cart settings page.
  */
-class UbercartCartSettingsTest extends UbercartTestBase {
+class CartSettingsTest extends UbercartTestBase {
 
   public static function getInfo() {
     return array(

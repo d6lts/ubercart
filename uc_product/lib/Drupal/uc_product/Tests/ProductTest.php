@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Definition of Drupal\uc_product\Tests\UbercartProductTest.
+ * Definition of Drupal\uc_product\Tests\ProductTest.
  */
 
 namespace Drupal\uc_product\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
-class UbercartProductTest extends UbercartTestBase {
+class ProductTest extends UbercartTestBase {
 
   public static $adminPermissions = array('administer content types');
 

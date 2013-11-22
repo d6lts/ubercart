@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\UbercartEncryption.
+ * Definition of Drupal\uc_store\Encryption.
  */
 
 namespace Drupal\uc_store;
@@ -15,7 +15,7 @@ namespace Drupal\uc_store;
  *
  * Usage:
  * 1) Create an encryption object.
- *    ex: $crypt = new UbercartEncryption();
+ *    ex: $crypt = new Encryption();
  * 2) To encrypt string data, use the encrypt method with the key.
  *    ex: $encrypted = $crypt->encrypt($key, $string);
  * 3) To decrypt string data, use the decrypt method with the original key.
@@ -23,7 +23,7 @@ namespace Drupal\uc_store;
  * 4) To check for errors, use the errors method to return an array of errors.
  *    ex: $errors = $crypt->getErrors();
  */
-class UbercartEncryption {
+class Encryption {
 
   protected static $scramble1 = '! #$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`"abcdefghijklmnopqrstuvwxyz{|}~';
   protected static $scramble2 = 'f^jAE]okIOzU[2&q1{3`h5w_794p@6s8?BgP>dFV=m" D<TcS%Ze|r:lGK/uCy.Jx)HiQ!#$~(;Lt-R}Ma,NvW+Ynb*0X';

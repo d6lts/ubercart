@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_taxes\Tests\UbercartInclusiveTaxesTest.
+ * Definition of Drupal\uc_taxes\Tests\InclusiveTaxesTest.
  */
 
 namespace Drupal\uc_taxes\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Tests the inclusive taxes functionality.
  */
-class UbercartInclusiveTaxesTest extends UbercartTestBase {
+class InclusiveTaxesTest extends UbercartTestBase {
 
   public static $modules = array('uc_product_kit', 'uc_attribute', 'uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_taxes');
   public static $adminPermissions = array(/*'administer rules', */'configure taxes');

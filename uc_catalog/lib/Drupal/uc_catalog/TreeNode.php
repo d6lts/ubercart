@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_catalog\UcTreeNode.
+ * Definition of Drupal\uc_catalog\TreeNode.
  */
 
 namespace Drupal\uc_catalog;
@@ -10,7 +10,7 @@ namespace Drupal\uc_catalog;
 /**
  * Data structure to mimic Drupal's menu system.
  */
-class UcTreeNode {
+class TreeNode {
   public $tid = 0;
   public $name = 'Catalog';
   public $children = array();

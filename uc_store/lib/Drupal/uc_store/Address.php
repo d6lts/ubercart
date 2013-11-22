@@ -2,7 +2,7 @@
 
 /**
  * @file
- * UcAddress utility class definition.
+ * Address utility class definition.
  */
 
 namespace Drupal\uc_store;
@@ -10,7 +10,7 @@ namespace Drupal\uc_store;
 /**
  * Defines an object to hold Ubercart mailing address information.
  */
-class UcAddress {
+class Address {
 
   /** Given name. */
   public $first_name = '';
@@ -59,7 +59,7 @@ class UcAddress {
   }
 
   /**
-   * Compares two UcAddress objects to determine if they represent the same
+   * Compares two Address objects to determine if they represent the same
    * physical address.
    *
    * Address properties such as first_name, phone, and email aren't considered
@@ -67,20 +67,20 @@ class UcAddress {
    * physical location.
    *
    * @param $address
-   *   An object of type UcAddress.
+   *   An object of type Address.
    *
    * @return
    *   TRUE if the two addresses are the same physical location, else FALSE.
    */
-  public function isSamePhysicalLocation(UcAddress $address) {
+  public function isSamePhysicalLocation(Address $address) {
     $physicalProperty = array(
       'street1', 'street2', 'city', 'zone', 'country', 'postal_code'
     );
 
     foreach ($physicalProperty as $property) {
       // Canonicalize properties before comparing.
-      if (UcAddress::makeCanonical($this->$property)   !=
-          UcAddress::makeCanonical($address->$property)  ) {
+      if (Address::makeCanonical($this->$property)   !=
+          Address::makeCanonical($address->$property)  ) {
         return FALSE;
       }
     }

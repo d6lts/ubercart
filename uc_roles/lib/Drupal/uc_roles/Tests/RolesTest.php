@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_roles\Tests\UbercartRolesTest.
+ * Definition of Drupal\uc_roles\Tests\RolesTest.
  */
 
 namespace Drupal\uc_roles\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Tests the role purchase functionality.
  */
-class UbercartRolesTest extends UbercartTestBase {
+class RolesTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack', 'uc_roles');
 

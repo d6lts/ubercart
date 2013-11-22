@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart_links\Tests\UbercartCartLinksTest.
+ * Definition of Drupal\uc_cart_links\Tests\CartLinksTest.
  */
 
 namespace Drupal\uc_cart_links\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * SimpleTests for Ubercart Cart Links.
  */
-class UbercartCartLinksTest extends UbercartTestBase {
+class CartLinksTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart_links', 'uc_attribute');
   public static $adminPermissions = array('administer cart links', 'view cart links report', 'access administration pages');

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_taxes\Tests\UbercartStoredTaxesTest.
+ * Definition of Drupal\uc_taxes\Tests\StoredTaxesTest.
  */
 
 namespace Drupal\uc_taxes\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Tests stored tax data.
  */
-class UbercartStoredTaxesTest extends UbercartTestBase {
+class StoredTaxesTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_taxes');
   public static $adminPermissions = array(/*'administer rules', */'configure taxes');

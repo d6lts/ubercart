@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\Tests\UbercartCartCheckoutTest.
+ * Definition of Drupal\uc_cart\Tests\CartCheckoutTest.
  */
 
 namespace Drupal\uc_cart\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Tests the cart and checkout functionality.
  */
-class UbercartCartCheckoutTest extends UbercartTestBase {
+class CartCheckoutTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack', 'uc_roles');
 
