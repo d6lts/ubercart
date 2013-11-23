@@ -113,10 +113,6 @@ function uc_product_theme() {
       'variables' => array('length' => 0, 'width' => 0, 'height' => 0, 'units' => NULL, 'view_mode' => 'full', 'attributes' => array()),
       'file' => 'uc_product.theme.inc',
     ),
-    'uc_product_feature_add_form' => array(
-      'render element' => 'form',
-      'file' => 'uc_product.admin.inc',
-    ),
   );
 }
 

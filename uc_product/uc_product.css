@@ -32,15 +32,6 @@
   vertical-align: top;
 }
 
-.add-feature div {
-  padding-right: 1em;
-}
-
-.add-feature div,
-.add-feature label {
-  display: inline;
-}
-
 /**
  * Styles for uc_attribute.
  */

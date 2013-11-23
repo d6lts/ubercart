@@ -36,20 +36,6 @@ function uc_product_feature_add_form($form, &$form_state, $node) {
 }
 
 /**
- * Theme function for uc_product_feature_add_form().
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @see uc_product_feature_add_form()
- * @ingroup themeable
- */
-function theme_uc_product_feature_add_form($variables) {
-  return '<table class="add-feature"><tr><td>' . drupal_render_children($variables['form']) . '</td></tr></table>';
-}
-
-/**
  * Form submission handler for uc_product_feature_add_form().
  *
  * @see uc_product_feature_add_form()
