@@ -41,16 +41,6 @@ function uc_cart_links_schema() {
 }
 
 /**
- * Implements hook_uninstall().
- */
-function uc_cart_links_uninstall() {
-  db_delete('variable')
-    ->condition('name', 'uc_cart_links_%', 'LIKE')
-    ->execute();
-  cache_clear_all('variables', 'cache');
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function uc_cart_links_update_last_removed() {

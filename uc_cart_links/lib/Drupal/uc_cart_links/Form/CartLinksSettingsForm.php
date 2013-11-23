@@ -25,40 +25,40 @@ class CartLinksSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    //$config = $this->configFactory->get('uc_cart_links.settings');
+    $cart_links_config = $this->configFactory->get('uc_cart_links.settings');
 
     $form['uc_cart_links_add_show'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display the cart link product action when you add a product to your cart.'),
-      '#default_value' => variable_get('uc_cart_links_add_show', FALSE),
+      '#default_value' => $cart_links_config->get('add_show'),
     );
     $form['uc_cart_links_track'] = array(
       '#type' => 'checkbox',
       '#title' => t('Track clicks through Cart Links that specify tracking IDs.'),
-      '#default_value' => variable_get('uc_cart_links_track', TRUE),
+      '#default_value' => $cart_links_config->get('track'),
     );
     $form['uc_cart_links_empty'] = array(
       '#type' => 'checkbox',
       '#title' => t('Allow Cart Links to empty customer carts.'),
-      '#default_value' => variable_get('uc_cart_links_empty', TRUE),
+      '#default_value' => $cart_links_config->get('empty'),
     );
     $form['uc_cart_links_messages'] = array(
       '#type' => 'textarea',
       '#title' => t('Cart Links messages'),
       '#description' => t('Enter messages available to the Cart Links API for display through a link. Separate messages with a line break. Each message should have a numeric key and text value, separated by "|". For example: 1337|Message text.'),
-      '#default_value' => variable_get('uc_cart_links_messages', ''),
+      '#default_value' => $cart_links_config->get('messages'),
     );
     $form['uc_cart_links_restrictions'] = array(
       '#type' => 'textarea',
       '#title' => t('Cart Links restrictions'),
       '#description' => t('To restrict what Cart Links may be used on your site, enter all valid Cart Links in this textbox.  Separate links with a line break. Leave blank to permit any cart link.'),
-      '#default_value' => variable_get('uc_cart_links_restrictions', ''),
+      '#default_value' => $cart_links_config->get('restrictions'),
     );
     $form['uc_cart_links_invalid_page'] = array(
       '#type' => 'textfield',
       '#title' => t('Invalid link redirect page'),
       '#description' => t('Enter the URL to redirect to when an invalid cart link is used.'),
-      '#default_value' => variable_get('uc_cart_links_invalid_page', ''),
+      '#default_value' => $cart_links_config->get('invalid_page'),
       '#size' => 32,
       '#field_prefix' => url(NULL, array('absolute' => TRUE)),
     );
@@ -70,12 +70,20 @@ class CartLinksSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    variable_set('uc_cart_links_add_show', $form_state['values']['uc_cart_links_add_show']);
-    variable_set('uc_cart_links_track', $form_state['values']['uc_cart_links_track']);
-    variable_set('uc_cart_links_empty', $form_state['values']['uc_cart_links_empty']);
-    variable_set('uc_cart_links_messages', $form_state['values']['uc_cart_links_messages']);
-    variable_set('uc_cart_links_restrictions', $form_state['values']['uc_cart_links_restrictions']);
-    variable_set('uc_cart_links_invalid_page', $form_state['values']['uc_cart_links_invalid_page']);
+    $values = $form_state['values'];
+
+    $cart_links_config = $this->configFactory->get('uc_cart_links.settings');
+
+    $cart_links_config
+      ->setData(array(
+        'add_show' => (boolean) $values['uc_cart_links_add_show'],
+        'track' => (boolean) $values['uc_cart_links_track'],
+        'empty' => (boolean) $values['uc_cart_links_empty'],
+        'messages' => (string) $values['uc_cart_links_messages'],
+        'restrictions' => (string) $values['uc_cart_links_restrictions'],
+        'invalid_page' => (string) $values['uc_cart_links_invalid_page'],
+      ))
+      ->save();
 
     parent::submitForm($form, $form_state);
   }

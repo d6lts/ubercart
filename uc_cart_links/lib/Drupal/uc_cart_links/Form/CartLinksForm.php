@@ -46,16 +46,18 @@ class CartLinksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $actions = NULL) {
+    $cart_links_config = $this->configFactory->get('uc_cart_links.settings');
+
     $this->actions = $actions;
 
     // Fail if the link is restricted.
-    $data = variable_get('uc_cart_links_restrictions', '');
+    $data = $cart_links_config->get('uc_cart_links_restrictions');
     if (!empty($data)) {
-      $restrictions = explode("\n", variable_get('uc_cart_links_restrictions', ''));
+      $restrictions = explode("\n", $cart_links_config->get('uc_cart_links_restrictions'));
       $restrictions = array_map('trim', $restrictions);
 
       if (!empty($restrictions) && !in_array($this->actions, $restrictions)) {
-        $url = variable_get('uc_cart_links_invalid_page', '');
+        $url = $cart_links_config->get('uc_cart_links_invalid_page');
         if (empty($url)) {
           $url = '<front>';
         }
@@ -66,13 +68,13 @@ class CartLinksForm extends ConfirmFormBase {
 
     // Confirm with the user if the form contains a destructive action.
     $items = uc_cart_get_contents();
-    if (variable_get('uc_cart_links_empty', TRUE) && !empty($items)) {
+    if ($cart_links_config->get('uc_cart_links_empty') && !empty($items)) {
       $actions = explode('-', urldecode($this->actions));
       foreach ($actions as $action) {
         $action = drupal_substr($action, 0, 1);
         if ($action == 'e' || $action == 'E') {
           $form = parent::buildForm($form, $form_state);
-          $form['actions']['cancel']['#href'] = variable_get('uc_cart_links_invalid_page', '');
+          $form['actions']['cancel']['#href'] = $cart_links_config->get('uc_cart_links_invalid_page');
           return $form;
         }
       }
@@ -179,7 +181,7 @@ class CartLinksForm extends ConfirmFormBase {
         // Empty the shopping cart.
         case 'e':
         case 'E':
-          if (variable_get('uc_cart_links_empty', TRUE)) {
+          if ($cart_links_config->get('uc_cart_links_empty')) {
             uc_cart_empty();
           }
           break;
@@ -189,7 +191,7 @@ class CartLinksForm extends ConfirmFormBase {
         case 'M':
           // Load the messages if they haven't been loaded yet.
           if (empty($messages)) {
-            $data = explode("\n", variable_get('uc_cart_links_messages', ''));
+            $data = explode("\n", $cart_links_config->get('uc_cart_links_messages'));
             foreach ($data as $message) {
               list($mkey, $mdata) = explode('|', $message, 2);
               $messages[trim($mkey)] = trim($mdata);
@@ -210,7 +212,7 @@ class CartLinksForm extends ConfirmFormBase {
       }
     }
 
-    if (variable_get('uc_cart_links_track', TRUE)) {
+    if ($cart_links_config->get('uc_cart_links_track')) {
       db_merge('uc_cart_link_clicks')
         ->key(array('cart_link_id' => (string) $id))
         ->fields(array(

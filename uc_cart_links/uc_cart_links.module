@@ -38,9 +38,7 @@ function uc_cart_links_menu() {
   $items['admin/store/reports/cart-links'] = array(
     'title' => 'Cart links',
     'description' => 'Track clicks through Cart Links.',
-    'page callback' => 'uc_cart_links_report',
-    'access arguments' => array('view cart links report'),
-    'file' => 'uc_cart_links.admin.inc',
+    'route_name' => 'uc_cart_links.reports',
   );
 
   return $items;
@@ -65,7 +63,7 @@ function uc_cart_links_permission() {
  */
 function uc_cart_links_uc_add_to_cart($nid, $qty, $data) {
   if (user_access('administer cart links') &&
-      variable_get('uc_cart_links_add_show', FALSE)) {
+      \Drupal::config('ip2country.settings')->get('add_show')) {
     $cart_link = 'p' . $nid . '_q' . $qty;
     if (!empty($data['attributes'])) {
       foreach ($data['attributes'] as $attribute => $option) {
