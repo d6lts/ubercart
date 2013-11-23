@@ -49,7 +49,7 @@ class ProductFeaturesController extends ControllerBase {
     );
 
     module_load_include('inc', 'uc_product', 'uc_product.admin');
-    $build['add_form'] = drupal_get_form('uc_product_feature_add_form', $node);
+    $build['add_form'] = drupal_get_form('Drupal\uc_product\Form\ProductFeatureAddForm', $node);
 
     return $build;
   }
