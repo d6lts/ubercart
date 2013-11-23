@@ -5,4 +5,4 @@ dependencies:
   - uc_cart
 package: Ubercart - extra
 core: 8.x
-configure: admin/store/settings/cart-links
+configure: uc_cart_links.settings
