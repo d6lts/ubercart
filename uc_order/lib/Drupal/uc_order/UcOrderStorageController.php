@@ -69,20 +69,6 @@ class UcOrderStorageController extends FieldableDatabaseStorageController {
 
       // Load line items... has to be last after everything has been loaded.
       $order->line_items = uc_order_load_line_items($order);
-
-      $fields = array();
-
-      if (($count = uc_order_get_product_count($order)) !== $order->product_count) {
-        $fields['product_count'] = $count;
-        $order->product_count = $count;
-      }
-
-      if (count($fields)) {
-        $query = db_update('uc_orders')
-          ->fields($fields)
-          ->condition('order_id', $order->id())
-          ->execute();
-      }
     }
   }
 

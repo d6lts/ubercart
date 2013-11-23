@@ -97,7 +97,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     $this->order_total->value = $this->getTotal();
-    $this->product_count->value = uc_order_get_product_count($this);
+    $this->product_count->value = $this->getProductCount();
     if (is_null($this->delivery_country->value) || $this->delivery_country->value == 0) {
       $this->delivery_country->value = config('uc_store.settings')->get('address.country');
     }
@@ -238,6 +238,17 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    */
   public function getTotal() {
     return $this->getSubtotal() + uc_line_items_calculate($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProductCount() {
+    $count = 0;
+    foreach ($this->products as $product) {
+      $count += $product->qty->value;
+    }
+    return $count;
   }
 
   /**

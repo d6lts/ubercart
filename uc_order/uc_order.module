@@ -1057,21 +1057,6 @@ function uc_order_module_invoke($op, &$order, $edit) {
 }
 
 /**
- * Calculates an order's product count.
- */
-function uc_order_get_product_count($order) {
-  $count = 0;
-
-  if (is_array($order->products)) {
-    foreach ($order->products as $product) {
-      $count += $product->qty->value;
-    }
-  }
-
-  return $count;
-}
-
-/**
  * Determines whether a product is shippable or not.
  */
 function uc_order_product_is_shippable($product) {

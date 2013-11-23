@@ -105,6 +105,14 @@ interface UcOrderInterface extends ContentEntityInterface {
   public function getTotal();
 
   /**
+   * Returns the number of products in an order.
+   *
+   * @return int
+   *   The number of products.
+   */
+  public function getProductCount();
+
+  /**
    * Returns the order currency code.
    *
    * @return string
