@@ -375,7 +375,7 @@ function uc_order_form_views_exposed_form_alter(&$form, &$form_state) {
  * Redirects if an order ID was entered in the exposed field.
  */
 function uc_order_form_views_exposed_form_submit($form, &$form_state) {
-  if (!empty($form_state['values']['order_id']) && uc_order_exists($form_state['values']['order_id'])) {
+  if (!empty($form_state['values']['order_id']) && entity_load('uc_order', $form_state['values']['order_id'])) {
     $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'];
     $form_state['no_redirect'] = FALSE;
   }
@@ -1054,23 +1054,6 @@ function uc_order_module_invoke($op, &$order, $edit) {
       $function($op, $order, $edit);
     }
   }
-}
-
-/**
- * Returns TRUE if an order exists.
- */
-function uc_order_exists($order_id) {
-  if (intval($order_id) <= 0) {
-    return FALSE;
-  }
-
-  $order = db_query("SELECT order_id FROM {uc_orders} WHERE order_id = :id", array(':id' => $order_id))->fetchField();
-
-  if ($order) {
-    return TRUE;
-  }
-
-  return FALSE;
 }
 
 /**
