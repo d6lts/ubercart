@@ -1456,7 +1456,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     );
   }
 
-  if (uc_order_can_delete($order)) {
+  if ($order->access('delete')) {
     $actions['delete'] = array(
       'title' => t('Delete'),
       'href' => 'admin/store/orders/' . $order->id() . '/delete',
@@ -1474,40 +1474,6 @@ function uc_order_actions($order, $icon_html = FALSE) {
     '#type' => 'operations',
     '#links' => $actions,
   );
-}
-
-/**
- * Access callback for admin/store/orders/%uc_order/delete.
- *
- * Returns TRUE if an order can be deleted by the current user.
- */
-function uc_order_can_delete($order, $account = NULL) {
-  if (user_access('unconditionally delete orders', $account)) {
-    // Unconditional deletion perms are always TRUE.
-    return TRUE;
-  }
-  elseif (user_access('delete orders', $account)) {
-    // Only users with unconditional deletion perms can delete completed orders.
-    if ($order->getStateId() == 'completed') {
-      return FALSE;
-    }
-    else {
-      $can_delete = TRUE;
-      // See if any modules have a say in this order's eligibility for deletion.
-      foreach (module_implements('uc_order') as $module) {
-        $function = $module . '_uc_order';
-        if (function_exists($function) && $function('can_delete', $order, NULL) === FALSE) {
-          $can_delete = FALSE;
-          break;
-        }
-      }
-
-      return $can_delete;
-    }
-  }
-  else {
-    return FALSE;
-  }
 }
 
 /**

@@ -53,16 +53,13 @@ class OrderEditForm extends FormBase {
     $form['actions']['submit-changes'] = array(
       '#type' => 'submit',
       '#value' => t('Submit changes'),
-      '#attributes' => array('class' => array('save-button')),
     );
-
-    if (uc_order_can_delete($order)) {
-      $form['actions']['delete'] = array(
-        '#type' => 'submit',
-        '#value' => t('Delete'),
-        '#submit' => array('uc_order_edit_form_delete'),
-      );
-    }
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#submit' => array('uc_order_edit_form_delete'),
+      '#access' => $order->access('delete'),
+    );
 
     $form_state['form_display'] = entity_get_form_display('uc_order', 'uc_order', 'default');
     field_attach_form($order, $form, $form_state);
