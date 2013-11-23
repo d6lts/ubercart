@@ -23,7 +23,7 @@ function uc_checkout_pane_cart($op, $order, $form = NULL, &$form_state = NULL) {
         '#items' => $order->products,
         '#weight' => variable_get('uc_pane_cart_field_cart_weight', 2),
       );
-      return array('contents' => $contents, 'next-button' => FALSE);
+      return array('contents' => $contents);
 
     case 'review':
       //$review[] = theme('uc_checkout_pane_cart_review', array('items' => $order->products));
@@ -370,50 +370,6 @@ function uc_checkout_pane_comments($op, $order, $form = NULL, &$form_state = NUL
       }
       return $review;
   }
-}
-
-/**
- * Finds the collapsible pane displayed above the pane with an ID of $pane_id.
- */
-function _uc_cart_checkout_prev_pane($panes, $pane_id = NULL) {
-  if (is_null($pane_id)) {
-    return FALSE;
-  }
-
-  $prev = FALSE;
-  foreach ($panes as $target) {
-    if ($target['id'] == $pane_id) {
-      return $prev;
-    }
-    if ($target['collapsible'] && $target['enabled']) {
-      $prev = $target['id'];
-    }
-  }
-
-  return FALSE;
-}
-
-/**
- * Finds the pane that displays below the pane with an ID of $pane_id.
- */
-function _uc_cart_checkout_next_pane($panes, $pane_id = NULL) {
-  if (is_null($pane_id)) {
-    return FALSE;
-  }
-
-  $next = FALSE;
-  foreach ($panes as $target) {
-    if ($next) {
-      if ($target['collapsible'] && $target['enabled']) {
-        return $target['id'];
-      }
-    }
-    if ($target['id'] == $pane_id) {
-      $next = TRUE;
-    }
-  }
-
-  return FALSE;
 }
 
 /**

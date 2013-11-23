@@ -73,16 +73,6 @@ class CheckoutForm extends FormBase {
 
     foreach ($panes as $id => $pane) {
       if ($pane['enabled']) {
-        $pane['prev'] = _uc_cart_checkout_prev_pane($panes, $id);
-        $pane['next'] = _uc_cart_checkout_next_pane($panes, $id);
-
-        if (!isset($pane['collapsed'])) {
-          $collapsed = ($pane['prev'] === FALSE || empty($displayed[$pane['prev']])) ? FALSE : TRUE;
-        }
-        if (isset($form_state['expanded_panes']) && in_array($id, $form_state['expanded_panes'])) {
-          $collapsed = FALSE;
-        }
-
         $return = $pane['callback']('view', $order, $form, $form_state);
 
         // Add the pane if any display data is returned from the callback.
@@ -92,8 +82,6 @@ class CheckoutForm extends FormBase {
             '#type' => 'details',
             '#title' => check_plain($pane['title']),
             '#description' => !empty($return['description']) ? $return['description'] : '',
-            '#collapsible' => $pane['collapsible'] && variable_get('uc_use_next_buttons', FALSE),
-            '#collapsed' => variable_get('uc_use_next_buttons', FALSE) ? $collapsed : FALSE,
             '#id' => $id . '-pane',
             '#theme' => isset($return['theme']) ? $return['theme'] : NULL,
           );
@@ -102,27 +90,9 @@ class CheckoutForm extends FormBase {
           if (!empty($return['contents'])) {
             $form['panes'][$id] = array_merge($form['panes'][$id], $return['contents']);
           }
-
-          // Add the 'Next' button if necessary.
-          if ((!isset($return['next-button']) || $return['next-button'] !== FALSE) && $pane['next'] !== FALSE &&
-            variable_get('uc_use_next_buttons', FALSE) != FALSE) {
-            $opt = variable_get('uc_collapse_current_pane', FALSE) ? $id : 'false';
-            $form['panes'][$id]['next'] = array(
-              '#type' => 'button',
-              '#value' => t('Next'),
-              '#weight' => 20,
-              '#attributes' => array('onclick' => "return uc_cart_next_button_click(this, '" . $pane['next'] . "', '" . $opt . "');"),
-              '#prefix' => '<div class="next-button">',
-              '#suffix' => '</div>',
-            );
-          }
-
-          // Log that this pane was actually displayed.
-          $displayed[$id] = TRUE;
         }
       }
     }
-    unset($form_state['expanded_panes']);
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['cancel'] = array(
@@ -161,7 +131,6 @@ class CheckoutForm extends FormBase {
       if (is_string($func) && function_exists($func)) {
         $isvalid = $func('process', $order, $form, $form_state);
         if ($isvalid === FALSE) {
-          $form_state['expanded_panes'][] = $pane_id;
           $form_state['checkout_valid'] = FALSE;
         }
       }

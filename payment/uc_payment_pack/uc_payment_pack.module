@@ -189,7 +189,6 @@ function uc_payment_method_cod($op, &$order, $form = NULL, $form_state = NULL) {
           'pass' => FALSE,
           'message' => t('Your final order total exceeds the maximum for COD payment.  Please go back and select a different method of payment.')
         );
-        $_SESSION['expanded_panes'][] = 'payment';
         return $result;
       }
       // TODO: This falls through to the order-save case - is this deliberate?

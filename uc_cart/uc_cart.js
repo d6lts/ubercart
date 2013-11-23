@@ -12,24 +12,3 @@ Drupal.behaviors.ucCart = {
     });
   }
 }
-
-/**
- * Behaviors for the Next buttons.
- *
- * When a customer clicks a Next button, expand the next pane, remove the
- * button, and don't let it collapse again.
- */
-function uc_cart_next_button_click(button, pane_id, current) {
-  if (current !== 'false') {
-    jQuery('#' + current + '-pane legend a').click();
-  }
-  else {
-    button.disabled = true;
-  }
-
-  if (jQuery('#' + pane_id + '-pane').attr('class').indexOf('collapsed') > -1 && jQuery('#' + pane_id + '-pane').html() !== null) {
-    jQuery('#' + pane_id + '-pane legend a').click();
-  }
-
-  return false;
-}

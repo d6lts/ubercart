@@ -165,22 +165,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#title' => t('Hide delivery information when carts have no shippable items.'),
       '#default_value' => variable_get('uc_cart_delivery_not_shippable', TRUE),
     );
-    $form['checkout']['uc_use_next_buttons'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Use collapsing checkout panes with <em>Next</em> buttons.'),
-      '#default_value' => variable_get('uc_use_next_buttons', FALSE),
-    );
-    $form['checkout']['uc_collapse_current_pane'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Collapse pane after its <em>Next</em> button is clicked.'),
-      '#default_value' => variable_get('uc_collapse_current_pane', TRUE),
-      '#states' => array(
-        'visible' => array(
-          'input[name="uc_checkout_enabled"]' => array('checked' => TRUE),
-          'input[name="uc_use_next_buttons"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
 
     $form['instructions'] = array(
       '#type' => 'details',
@@ -299,8 +283,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
 
     variable_set('uc_cart_default_same_address', $form_state['values']['uc_cart_default_same_address']);
     variable_set('uc_cart_delivery_not_shippable', $form_state['values']['uc_cart_delivery_not_shippable']);
-    variable_set('uc_use_next_buttons', $form_state['values']['uc_use_next_buttons']);
-    variable_set('uc_collapse_current_pane', $form_state['values']['uc_collapse_current_pane']);
     variable_set('uc_checkout_instructions', $form_state['values']['uc_checkout_instructions']);
     variable_set('uc_checkout_review_instructions', $form_state['values']['uc_checkout_review_instructions']);
     variable_set('uc_cart_checkout_complete_page', $form_state['values']['uc_cart_checkout_complete_page']);
