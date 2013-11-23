@@ -21,7 +21,7 @@ use Drupal\uc_store\UcAddress;
 function uc_order_pane_print_button($op, $order, &$form = NULL, &$form_state = NULL) {
   switch ($op) {
     case 'customer':
-      if (user_access('view own invoices')) {
+      if ($order->access('invoice')) {
         $link = t('Click to open a window with a printable invoice.');
         $build = array(
           '#markup' => l($link, 'user/' . $order->getUserId() . '/orders/' . $order->id() . '/print', array(

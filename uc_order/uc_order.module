@@ -1408,13 +1408,15 @@ function uc_order_actions($order, $icon_html = FALSE) {
       'weight' => 5,
     );
   }
-  elseif (user_access('view own orders') && $order->getUserId() == $user->id()) {
-    $actions['view'] = array(
-      'title' => t('View'),
-      'href' => 'user/' . $user->id() . '/orders/' . $order->id(),
-      'weight' => 0,
-    );
-    if (user_access('view own invoices')) {
+  else {
+    if ($order->access('view')) {
+      $actions['view'] = array(
+        'title' => t('View'),
+        'href' => 'user/' . $user->id() . '/orders/' . $order->id(),
+        'weight' => 0,
+      );
+    }
+    if ($order->access('invoice')) {
       $actions['print'] = array(
         'title' => t('Print'),
         'href' => 'user/' . $user->id() . '/orders/' . $order->id() . '/print',
@@ -1423,7 +1425,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     }
   }
 
-  if (user_access('edit orders')) {
+  if ($order->access('edit')) {
     $actions['edit'] = array(
       'title' => t('Edit'),
       'href' => 'admin/store/orders/' . $order->id() . '/edit',
