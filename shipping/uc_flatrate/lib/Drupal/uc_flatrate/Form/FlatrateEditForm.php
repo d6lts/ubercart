@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_flatrate\Form\FlatrateForm.
+ * Contains \Drupal\uc_flatrate\Form\FlatrateEditForm.
  */
 
 namespace Drupal\uc_flatrate\Form;
@@ -32,35 +32,40 @@ class FlatrateEditForm extends FormBase {
       );
     }
     else {
-      $mid = 0;
+      $method = (object) array(
+        'title' => '',
+        'label' => '',
+        'base_rate' => '',
+        'product_rate' => '',
+      );
     }
 
     $form['title'] = array(
       '#type' => 'textfield',
       '#title' => t('Shipping method title'),
       '#description' => t('The name shown to administrators distinguish this method from other flatrate methods.'),
-      '#default_value' => $mid ? $method->title : '',
+      '#default_value' => $method->title,
       '#required' => TRUE,
     );
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Line item label'),
       '#description' => t('The name shown to the customer when they choose a shipping method at checkout.'),
-      '#default_value' => $mid ? $method->label : '',
+      '#default_value' => $method->label,
       '#required' => TRUE,
     );
     $form['base_rate'] = array(
       '#type' => 'uc_price',
       '#title' => t('Base price'),
       '#description' => t('The starting price for shipping costs.'),
-      '#default_value' => $mid ? $method->base_rate : '',
+      '#default_value' => $method->base_rate,
       '#required' => TRUE,
     );
     $form['product_rate'] = array(
       '#type' => 'uc_price',
       '#title' => t('Default product shipping rate'),
       '#description' => t('Additional shipping cost per product in cart.'),
-      '#default_value' => $mid ? $method->product_rate : '',
+      '#default_value' => $method->product_rate,
       '#required' => TRUE,
     );
 
@@ -71,7 +76,7 @@ class FlatrateEditForm extends FormBase {
       '#button_type' => 'primary',
     );
 
-    if ($mid) {
+    if (isset($form['mid'])) {
       $form['actions']['delete'] = array(
         '#type' => 'submit',
         '#value' => t('Delete'),

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_weightquote\Form\WeightquoteForm.
+ * Contains \Drupal\uc_weightquote\Form\WeightquoteEditForm.
  */
 
 namespace Drupal\uc_weightquote\Form;
@@ -32,35 +32,42 @@ class WeightquoteEditForm extends FormBase {
       );
     }
     else {
-      $mid = 0;
+      $method = (object) array(
+        'title' => '',
+        'label' => '',
+        'base_rate' => '',
+        'product_rate' => '',
+      );
     }
 
     $form['title'] = array(
       '#type' => 'textfield',
       '#title' => t('Shipping method title'),
       '#description' => t('The name shown to administrators distinguish this method from other weight quote methods.'),
-      '#default_value' => $mid ? $method->title : '',
+      '#default_value' => $method->title,
       '#required' => TRUE,
     );
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Line item label'),
       '#description' => t('The name shown to the customer when they choose a shipping method at checkout.'),
-      '#default_value' => $mid ? $method->label : '',
+      '#default_value' => $method->label,
       '#required' => TRUE,
     );
     $form['base_rate'] = array(
       '#type' => 'uc_price',
       '#title' => t('Base price'),
-      '#description' => t('The starting price for shipping costs.'),
-      '#default_value' => $mid ? $method->base_rate : '',
+      '#description' => t('The starting price for weight-based shipping costs.'),
+      '#default_value' => $method->base_rate,
       '#required' => TRUE,
     );
+    $unit = \Drupal::config('uc_store.settings')->get('units.weight');
     $form['product_rate'] = array(
       '#type' => 'uc_price',
-      '#title' => t('Default product shipping rate'),
-      '#description' => t('Additional shipping cost per product in cart.'),
-      '#default_value' => $mid ? $method->product_rate : '',
+      '#title' => t('Default cost adjustment per !unit', array('!unit' => $unit)),
+      '#description' => t('The amount per weight unit to add to the shipping cost for an item.'),
+      '#default_value' => $method->product_rate,
+      '#field_suffix' => t('per @unit', array('@unit' => $unit)),
       '#required' => TRUE,
     );
 
@@ -71,7 +78,7 @@ class WeightquoteEditForm extends FormBase {
       '#button_type' => 'primary',
     );
 
-    if ($mid) {
+    if (isset($form['mid'])) {
       $form['actions']['delete'] = array(
         '#type' => 'submit',
         '#value' => t('Delete'),
