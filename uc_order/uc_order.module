@@ -572,16 +572,6 @@ function uc_order_save($order) {
 }
 
 /**
- * Deletes an order and tells other modules to do the same.
- *
- * @param $order_id
- *   The ID of the order you wish to delete.
- */
-function uc_order_delete($order_id) {
-  entity_delete_multiple('uc_order', array($order_id));
-}
-
-/**
  * Save a product to an order.
  */
 function uc_order_product_save($order_id, $product) {
@@ -1597,5 +1587,5 @@ function uc_order_action_print($orders, $context = array()) {
  * Action implementation: delete an order.
  */
 function uc_order_action_delete($order) {
-  uc_order_delete($order->id());
+  $order->delete();
 }

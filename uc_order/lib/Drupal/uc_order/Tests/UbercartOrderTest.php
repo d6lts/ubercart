@@ -34,7 +34,7 @@ class UbercartOrderTest extends UbercartTestBase {
     $this->assertEqual($order->getStatusId(), 'completed', 'New order is marked completed.');
 
     // Test deletion.
-    uc_order_delete($order->id());
+    $order->delete();
     $deleted_order = uc_order_load($order->id(), TRUE);
     $this->assertFalse($deleted_order, 'Order was successfully deleted');
   }
@@ -84,7 +84,7 @@ class UbercartOrderTest extends UbercartTestBase {
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type uc_order');
 
     $_SESSION['entity_crud_hook_test'] = array();
-    uc_order_delete($order->id());
+    $order->delete();
 
     $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type uc_order');
   }
