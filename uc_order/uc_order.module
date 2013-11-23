@@ -1074,40 +1074,6 @@ function uc_order_exists($order_id) {
 }
 
 /**
- * Calculates an order's total.
- */
-function uc_order_get_total($order, $products_only = FALSE) {
-  $total = 0;
-
-  if ($order === FALSE) {
-    return $total;
-  }
-
-  if (is_array($order->products)) {
-    foreach ($order->products as $product) {
-      $qty = $product->qty->value ? $product->qty->value : 1;
-      $total += $product->price->value * $qty;
-    }
-  }
-
-  if ($products_only) {
-    return $total;
-  }
-
-  $total += uc_line_items_calculate($order);
-
-  foreach (module_implements('uc_order') as $module) {
-    $function = $module . '_uc_order';
-    // $order must be passed by reference.
-    if (function_exists($function) && ($value = $function('total', $order, NULL)) && is_numeric($value)) {
-      $total += $value;
-    }
-  }
-
-  return $total;
-}
-
-/**
  * Calculates an order's product count.
  */
 function uc_order_get_product_count($order) {

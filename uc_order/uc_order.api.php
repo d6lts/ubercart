@@ -166,10 +166,6 @@ function hook_uc_line_item_data_alter(&$items) {
  *   - delete: Called when an order is deleted and before the rest of the order
  *     information is removed from the database. Passes $order as the order
  *     object to let your module clean up it's tables.
- *   - total: Called when the total for an order is being calculated after the
- *     total of the products has been added. Passes $order as the order object.
- *     Expects in return a value (positive or negative) by which to modify the
- *     order total.
  */
 function hook_uc_order($op, $order, $arg2) {
   switch ($op) {
