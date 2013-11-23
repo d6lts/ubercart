@@ -422,13 +422,6 @@ function uc_attribute_schema() {
 }
 
 /**
- * Implements hook_uninstall().
- */
-function uc_attribute_uninstall() {
-  variable_del('uc_attribute_option_price_format');
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function uc_attribute_update_last_removed() {

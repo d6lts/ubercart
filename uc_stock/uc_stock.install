@@ -67,20 +67,6 @@ function uc_stock_schema() {
 }
 
 /**
- * Implements hook_uninstall().
- */
-function uc_stock_uninstall() {
-  db_delete('variable')
-    ->condition('name', 'uc_stock_%', 'LIKE')
-    ->execute();
-
-  variable_del('uc_stock_threshold_notification');
-  variable_del('uc_stock_threshold_notification_recipients');
-  variable_del('uc_stock_threshold_notification_subject');
-  variable_del('uc_stock_threshold_notification_message');
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function uc_stock_update_last_removed() {

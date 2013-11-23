@@ -96,17 +96,6 @@ function uc_payment_install() {
 }
 
 /**
- * Implements hook_uninstall().
- */
-function uc_payment_uninstall() {
-  db_delete('variable')
-    ->condition(db_or()
-      ->condition('name', 'uc_pg_%', 'LIKE')
-      ->condition('name', 'uc_payment_%', 'LIKE'))
-    ->execute();
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function uc_payment_update_last_removed() {

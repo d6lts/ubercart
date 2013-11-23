@@ -177,17 +177,6 @@ function uc_quote_schema() {
 }
 
 /**
- * Implements hook_uninstall().
- */
-function uc_quote_uninstall() {
-  db_delete('variable')
-    ->condition('name', 'uc_quote_%', 'LIKE')
-    ->execute();
-
-  variable_del('uc_store_shipping_type');
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function uc_quote_update_last_removed() {

@@ -138,10 +138,6 @@ function uc_paypal_uninstall() {
     ))
     ->condition('order_status_id', 'paypal_pending')
     ->execute();
-
-  db_delete('variable')
-    ->condition('name', 'uc_paypal_%', 'LIKE')
-    ->execute();
 }
 
 /**
