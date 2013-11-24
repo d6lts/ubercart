@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Tests\UbercartOrderTest.
+ * Contains Drupal\uc_order\Tests\UbercartOrderTest.
  */
 
 namespace Drupal\uc_order\Tests;

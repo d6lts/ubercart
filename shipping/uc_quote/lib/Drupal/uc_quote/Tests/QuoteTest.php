@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_quote\Tests\UbercartQuoteTest.
+ * Contains Drupal\uc_quote\Tests\UbercartQuoteTest.
  */
 
 namespace Drupal\uc_quote\Tests;
@@ -25,6 +25,9 @@ class UbercartQuoteTest extends UbercartTestBase {
     );
   }
 
+  /**
+   * Overrides WebTestBase::setUp().
+   */
   function setUp() {
     parent::setUp();
     module_load_include('inc', 'uc_flatrate', 'uc_flatrate.admin');

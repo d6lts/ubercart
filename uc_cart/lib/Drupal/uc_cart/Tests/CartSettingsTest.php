@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\Tests\CartSettingsTest.
+ * Contains Drupal\uc_cart\Tests\CartSettingsTest.
  */
 
 namespace Drupal\uc_cart\Tests;

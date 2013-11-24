@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart_links\Tests\CartLinksTest.
+ * Contains Drupal\uc_cart_links\Tests\CartLinksTest.
  */
 
 namespace Drupal\uc_cart_links\Tests;

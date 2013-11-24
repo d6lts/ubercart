@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Tests\UbercartTestBase.
+ * Contains Drupal\uc_store\Tests\UbercartTestBase.
  */
 
 namespace Drupal\uc_store\Tests;
@@ -46,6 +46,9 @@ abstract class UbercartTestBase extends WebTestBase {
   /** Test product. */
   protected $product;
 
+  /**
+   * Overrides WebTestBase::setUp().
+   */
   function setUp() {
     parent::setUp();
 
@@ -371,14 +374,19 @@ abstract class UbercartTestBase extends WebTestBase {
   }
 
   /**
-   * Extends drupalPostAjaxForm() to replace additional content on the page after an ajax submission.
+   * Extends WebTestBase::drupalPostAjaxForm() to replace additional content
+   * on the page after an ajax submission.
    *
-   * DrupalWebTestCase::drupalPostAjaxForm() will only process ajax insertions which don't have a 'selector' attribute,
-   * because it's not easy to convert from a jQuery selector to an XPath.  However, ubercart uses many simple,
-   * id-based selectors, and these can be converted easily (eg: '#my-identifier' => '//*[@id="my-identifier"]').
-   * This helper method post-processes the command array returned by drupalPostAjaxForm() to perform these insertions.
+   * WebTestBase::drupalPostAjaxForm() will only process ajax insertions which
+   * don't have a 'selector' attribute, because it's not easy to convert from a
+   * jQuery selector to an XPath.  However, Ubercart uses many simple, id-based
+   * selectors, and these can be converted easily
+   * (eg: '#my-identifier' => '//*[@id="my-identifier"]').
    *
-   * @see DrupalWebTestCase::drupalPostAjaxForm()
+   * This helper method post-processes the command array returned by
+   * drupalPostAjaxForm() to perform these insertions.
+   *
+   * @see WebTestBase::drupalPostAjaxForm()
    */
   protected function ucPostAJAX($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
     $commands = parent::drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path, $options, $headers, $form_html_id, $ajax_settings);

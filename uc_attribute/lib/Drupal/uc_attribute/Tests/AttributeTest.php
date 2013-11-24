@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_attribute\Tests\UbercartAttributeTest.
+ * Contains Drupal\uc_attribute\Tests\UbercartAttributeTest.
  */
 
 namespace Drupal\uc_attribute\Tests;
@@ -25,6 +25,9 @@ class UbercartAttributeTest extends UbercartTestBase {
     );
   }
 
+  /**
+   * Overrides WebTestBase::setUp().
+   */
   public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);

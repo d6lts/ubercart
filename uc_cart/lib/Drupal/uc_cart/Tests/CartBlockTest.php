@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\Tests\CartBlockTest.
+ * Contains Drupal\uc_cart\Tests\CartBlockTest.
  */
 
 namespace Drupal\uc_cart\Tests;
@@ -24,10 +24,9 @@ class CartBlockTest extends UbercartTestBase {
     );
   }
 
-  function setUp() {
-    parent::setUp();
-  }
-
+  /**
+   * Test cart block functionality.
+   */
   function testCartBlock() {
     $block = $this->drupalPlaceBlock('uc_cart');
 
@@ -58,6 +57,9 @@ class CartBlockTest extends UbercartTestBase {
     $this->assertLink('Checkout');
   }
 
+  /**
+   * Test hide cart when empty functionality.
+   */
   function testHiddenCartBlock() {
     $block = $this->drupalPlaceBlock('uc_cart');
     $block->getPlugin()->setConfigurationValue('hide_empty', TRUE);
@@ -73,6 +75,9 @@ class CartBlockTest extends UbercartTestBase {
     $this->assertText($block->label());
   }
 
+  /**
+   * Test show cart icon functionality.
+   */
   function testCartIcon() {
     $block = $this->drupalPlaceBlock('uc_cart');
 

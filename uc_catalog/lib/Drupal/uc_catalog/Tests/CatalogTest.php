@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_catalog\Tests\UbercartCatalogTest.
+ * Contains Drupal\uc_catalog\Tests\UbercartCatalogTest.
  */
 
 namespace Drupal\uc_catalog\Tests;

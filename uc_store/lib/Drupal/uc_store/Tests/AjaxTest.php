@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Tests\AjaxTest.
+ * Contains Drupal\uc_store\Tests\AjaxTest.
  */
 
 namespace Drupal\uc_store\Tests;
@@ -22,6 +22,9 @@ class AjaxTest extends UbercartTestBase {
     );
   }
 
+  /**
+   * Overrides WebTestBase::setUp().
+   */
   public function setUp() {
     module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
     parent::setUp();

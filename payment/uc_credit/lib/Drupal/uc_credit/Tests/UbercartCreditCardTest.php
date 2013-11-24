@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_credit\Tests\UbercartCreditCardTest.
+ * Contains Drupal\uc_credit\Tests\UbercartCreditCardTest.
  */
 
 namespace Drupal\uc_credit\Tests;
@@ -62,6 +62,9 @@ class UbercartCreditCardTest extends UbercartTestBase {
     );
   }
 
+  /**
+   * Overrides WebTestBase::setUp().
+   */
   public function setUp() {
     parent::setUp();
 
@@ -137,7 +140,7 @@ class UbercartCreditCardTest extends UbercartTestBase {
   }
 
   /**
-   * Implements DrupalWebTestCase::tearDown().
+   * Implements WebTestBase::tearDown().
    */
   public function tearDown() {
     // Cleanup keys directory after test.

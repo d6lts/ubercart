@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_payment\Tests\UbercartPaymentPaneTest.
+ * Contains Drupal\uc_payment\Tests\UbercartPaymentPaneTest.
  */
 
 namespace Drupal\uc_payment\Tests;
@@ -10,7 +10,7 @@ namespace Drupal\uc_payment\Tests;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
- * Ubercart payment related tests
+ * Ubercart payment related tests.
  */
 class UbercartPaymentPaneTest extends UbercartTestBase {
 
@@ -24,6 +24,9 @@ class UbercartPaymentPaneTest extends UbercartTestBase {
     );
   }
 
+  /**
+   * Overrides WebTestBase::setUp().
+   */
   public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);

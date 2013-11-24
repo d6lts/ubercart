@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_taxes\Tests\InclusiveTaxesTest.
+ * Contains Drupal\uc_taxes\Tests\InclusiveTaxesTest.
  */
 
 namespace Drupal\uc_taxes\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_roles\Tests\RolesTest.
+ * Contains Drupal\uc_roles\Tests\RolesTest.
  */
 
 namespace Drupal\uc_roles\Tests;

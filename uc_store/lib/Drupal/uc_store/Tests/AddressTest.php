@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Tests\AddressTest.
+ * Contains Drupal\uc_store\Tests\AddressTest.
  */
 
 namespace Drupal\uc_store\Tests;
@@ -23,6 +23,9 @@ class AddressTest extends UbercartTestBase {
     );
   }
 
+  /**
+   * Overrides WebTestBase::setUp().
+   */
   public function setUp() {
     parent::setUp();
 

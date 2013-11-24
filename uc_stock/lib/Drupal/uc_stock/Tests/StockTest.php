@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_stock\Tests\StockTest.
+ * Contains Drupal\uc_stock\Tests\StockTest.
  */
 
 namespace Drupal\uc_stock\Tests;
@@ -25,6 +25,9 @@ class StockTest extends UbercartTestBase {
     );
   }
 
+  /**
+   * Overrides WebTestBase::setUp().
+   */
   public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);

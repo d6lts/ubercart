@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Tests\StoreTest.
+ * Contains Drupal\uc_store\Tests\StoreTest.
  */
 
 namespace Drupal\uc_store\Tests;
