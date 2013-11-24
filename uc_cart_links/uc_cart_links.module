@@ -20,8 +20,7 @@ function uc_cart_links_help($section = 'admin/help#uc_cart_links', $arg = NULL) 
 
     case 'admin/help#uc_cart_links':
     case 'admin/help/cart-links':
-      module_load_include('inc', 'uc_cart_links', 'uc_cart_links.admin');
-      $build = uc_cart_links_creation_help();
+      $build = \Drupal\uc_cart_links\Controller\CartLinksHelp::creationHelp();
       return drupal_render($build);
   }
 }
