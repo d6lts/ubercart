@@ -63,7 +63,7 @@ function uc_cart_links_permission() {
  */
 function uc_cart_links_uc_add_to_cart($nid, $qty, $data) {
   if (user_access('administer cart links') &&
-      \Drupal::config('ip2country.settings')->get('add_show')) {
+      \Drupal::config('uc_cart_links.settings')->get('add_show')) {
     $cart_link = 'p' . $nid . '_q' . $qty;
     if (!empty($data['attributes'])) {
       foreach ($data['attributes'] as $attribute => $option) {
