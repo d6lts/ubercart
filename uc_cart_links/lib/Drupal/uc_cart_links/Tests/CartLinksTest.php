@@ -14,7 +14,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class CartLinksTest extends UbercartTestBase {
 
-  public static $modules = array('uc_cart_links', 'uc_attribute', 'help', 'block');
+  public static $modules = array('uc_cart_links', 'uc_attribute', 'filter', 'help', 'block');
   public static $adminPermissions = array('administer cart links', 'view cart links report', 'access administration pages');
 
   public static function getInfo() {
