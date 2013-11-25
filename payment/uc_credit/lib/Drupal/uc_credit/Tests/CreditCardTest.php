@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_credit\Tests\UbercartCreditCardTest.
+ * Contains Drupal\uc_credit\Tests\CreditCardTest.
  */
 
 namespace Drupal\uc_credit\Tests;
@@ -21,7 +21,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  * No other overrides are necessary, although a subclass may want to add
  * additional test functions to cover cases not included in this base class.
  */
-class UbercartCreditCardTest extends UbercartTestBase {
+class CreditCardTest extends UbercartTestBase {
 
   /**
    * A selection of "test" numbers to use for testing credit card payemnts.
