@@ -14,15 +14,52 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class CartLinksTest extends UbercartTestBase {
 
-  public static $modules = array('uc_cart_links', 'uc_attribute');
+  public static $modules = array('uc_cart_links', 'uc_attribute', 'help', 'block');
   public static $adminPermissions = array('administer cart links', 'view cart links report', 'access administration pages');
-  protected $profile = 'standard';
 
   public static function getInfo() {
     return array(
       'name' => 'Cart Links',
       'description' => 'Test Cart Links.',
       'group' => 'Ubercart',
+    );
+  }
+
+  /**
+   * Overrides WebTestBase::setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    // Set front page we have someplace to redirect to for invalid Cart Links.
+    \Drupal::config('system.site')->set('page.front', 'node')->save();
+
+    // System help block is needed to see output from hook_help().
+    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
+
+    // Testing profile doesn't include a 'page' content type.
+    // We will need this to create pages with links on them.
+    $this->drupalCreateContentType(
+      array(
+        'type' => 'page',
+        'name' => 'Basic page'
+      )
+    );
+
+    // Create Full HTML text format, needed because we want links
+    // to appear on pages.
+    $full_html_format = entity_create('filter_format', array(
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+    ));
+    $full_html_format->save();
+    $this->checkPermissions(array(), TRUE);
+
+    // Create an administrative user having access to the Full HTML
+    // text format. This overrides adminUser created in UbercartTestBase.
+    $this->adminUser = $this->drupalCreateUser(
+      self::$adminPermissions +
+      array($full_html_format->getPermissionName())
     );
   }
 
@@ -38,6 +75,7 @@ class CartLinksTest extends UbercartTestBase {
     // Access settings page by privileged user
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/store/settings/cart-links');
+    $this->assertResponse(200);
     $this->assertText(
       t('View the help page to learn how to create Cart Links.'),
       t('Settings page found.')
@@ -165,7 +203,6 @@ class CartLinksTest extends UbercartTestBase {
       $this->drupalPostForm('cart', array(), t('Remove'));
       $this->assertText('There are no products in your shopping cart.');
     }
-
   }
 
   /**
@@ -514,7 +551,7 @@ class CartLinksTest extends UbercartTestBase {
     foreach ($tracking as $id => $clicks) {
       $total += $clicks;
       $this->assertRaw(
-        t('<td>@id</td><td>@clicks</td>', array('@id' => $id, '@clicks' => $clicks)),
+        t('<td>@id</td><td class="active">@clicks</td>', array('@id' => $id, '@clicks' => $clicks)),
         t('Tracking ID @id received @clicks clicks.', array('@id' => $id, '@clicks' => $clicks))
       );
     }
