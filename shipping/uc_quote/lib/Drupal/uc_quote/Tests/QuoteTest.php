@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_quote\Tests\UbercartQuoteTest.
+ * Contains Drupal\uc_quote\Tests\QuoteTest.
  */
 
 namespace Drupal\uc_quote\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Ubercart Shipping Quote Tests.
  */
-class UbercartQuoteTest extends UbercartTestBase {
+class QuoteTest extends UbercartTestBase {
 
   public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack', 'uc_quote', 'uc_flatrate');
   public static $adminPermissions = array('configure quotes'/*, 'administer rules', 'bypass rules access'*/);

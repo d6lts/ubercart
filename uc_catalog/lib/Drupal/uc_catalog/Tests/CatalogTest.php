@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_catalog\Tests\UbercartCatalogTest.
+ * Contains Drupal\uc_catalog\Tests\CatalogTest.
  */
 
 namespace Drupal\uc_catalog\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Tests for the Ubercart catalog.
  */
-class UbercartCatalogTest extends UbercartTestBase {
+class CatalogTest extends UbercartTestBase {
 
   public static $modules = array('uc_catalog', 'field_ui');
   public static $adminPermissions = array('administer catalog', 'administer node fields');

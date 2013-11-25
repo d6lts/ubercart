@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_attribute\Tests\UbercartAttributeTest.
+ * Contains Drupal\uc_attribute\Tests\AttributeTest.
  */
 
 namespace Drupal\uc_attribute\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * SimpleTests for the Ubercart Attributes API.
  */
-class UbercartAttributeTest extends UbercartTestBase {
+class AttributeTest extends UbercartTestBase {
 
   public static $modules = array('uc_attribute');
   public static $adminPermissions = array('administer attributes', 'administer product attributes', 'administer product options');

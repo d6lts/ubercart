@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_payment\Tests\UbercartPaymentPaneTest.
+ * Contains Drupal\uc_payment\Tests\PaymentPaneTest.
  */
 
 namespace Drupal\uc_payment\Tests;
@@ -12,7 +12,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Ubercart payment related tests.
  */
-class UbercartPaymentPaneTest extends UbercartTestBase {
+class PaymentPaneTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack');
 

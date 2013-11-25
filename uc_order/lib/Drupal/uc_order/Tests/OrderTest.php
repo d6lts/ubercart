@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_order\Tests\UbercartOrderTest.
+ * Contains Drupal\uc_order\Tests\OrderTest.
  */
 
 namespace Drupal\uc_order\Tests;
@@ -13,7 +13,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 /**
  * Tests for Ubercart orders.
  */
-class UbercartOrderTest extends UbercartTestBase {
+class OrderTest extends UbercartTestBase {
 
   public static function getInfo() {
     return array(
