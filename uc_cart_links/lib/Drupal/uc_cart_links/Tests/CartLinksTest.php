@@ -31,9 +31,6 @@ class CartLinksTest extends UbercartTestBase {
   function setUp() {
     parent::setUp();
 
-    // Need system and filter configs.
-    $this->installConfig(array('system', 'filter'));
-
     // Set front page we have someplace to redirect to for invalid Cart Links.
     \Drupal::config('system.site')->set('page.front', 'node')->save();
 
