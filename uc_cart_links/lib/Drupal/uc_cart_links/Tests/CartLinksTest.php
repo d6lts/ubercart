@@ -14,7 +14,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class CartLinksTest extends UbercartTestBase {
 
-  public static $modules = array('uc_cart_links', 'uc_attribute', 'filter', 'help', 'block');
+  public static $modules = array('uc_cart_links', 'uc_attribute', 'system', 'filter', 'help', 'block');
   public static $adminPermissions = array('administer cart links', 'view cart links report', 'access administration pages');
 
   public static function getInfo() {
@@ -30,6 +30,9 @@ class CartLinksTest extends UbercartTestBase {
    */
   function setUp() {
     parent::setUp();
+
+    // Need system and filter configs.
+    $this->installConfig(array('system', 'filter'));
 
     // Set front page we have someplace to redirect to for invalid Cart Links.
     \Drupal::config('system.site')->set('page.front', 'node')->save();
