@@ -561,7 +561,7 @@ function uc_reports_products_custom_form($form, &$form_state, $values) {
  */
 function uc_reports_products_custom_form_validate($form, &$form_state) {
   if (empty($form_state['values']['status'])) {
-    form_set_error('status', t('You must select at least one order status.'));
+    form_set_error('status', $form_state, t('You must select at least one order status.'));
   }
 }
 
@@ -1244,7 +1244,7 @@ function uc_reports_sales_custom_form($form, &$form_state, $values, $statuses) {
  */
 function uc_reports_sales_custom_form_validate($form, &$form_state) {
   if (empty($form_state['values']['status'])) {
-    form_set_error('status', t('You must select at least one order status.'));
+    form_set_error('status', $form_state, t('You must select at least one order status.'));
   }
 }
 

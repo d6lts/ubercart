@@ -471,10 +471,10 @@ function uc_store_validate_number(&$element, &$form_state) {
   $value = $element['#value'];
   if ($value != '') {
     if (!is_numeric($value)) {
-      form_error($element, t('%name must be a number.', array('%name' => $element['#title'])));
+      form_error($element, $form_state, t('%name must be a number.', array('%name' => $element['#title'])));
     }
     elseif (empty($element['#allow_negative']) && $value < 0) {
-      form_error($element, t('%name must not be negative.', array('%name' => $element['#title'])));
+      form_error($element, $form_state, t('%name must not be negative.', array('%name' => $element['#title'])));
     }
   }
 }
@@ -484,10 +484,10 @@ function uc_store_validate_number(&$element, &$form_state) {
  */
 function uc_store_validate_uc_quantity(&$element, &$form_state) {
   if (!preg_match('/^\d+$/', $element['#value'])) {
-    form_error($element, t('The quantity must be a number.'));
+    form_error($element, $form_state, t('The quantity must be a number.'));
   }
   elseif (empty($element['#allow_zero']) && !$element['#value']) {
-    form_error($element, t('The quantity cannot be zero.'));
+    form_error($element, $form_state, t('The quantity cannot be zero.'));
   }
 }
 

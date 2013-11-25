@@ -113,20 +113,20 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
       $pane = $form_state['values']['panes']['customer'];
 
       if (!empty($pane['primary_email']) && !valid_email_address($pane['primary_email'])) {
-        form_set_error('panes][customer][primary_email', t('You must enter a valid e-mail address.'));
+        form_set_error('panes][customer][primary_email', $form_state, t('You must enter a valid e-mail address.'));
       }
 
       $order->setEmail($pane['primary_email']);
 
       if (variable_get('uc_cart_email_validation', FALSE) && $user->isAnonymous() &&
           $pane['primary_email'] !== $pane['primary_email_confirm']) {
-        form_set_error('panes][customer][primary_email_confirm', t('The e-mail address did not match.'));
+        form_set_error('panes][customer][primary_email_confirm', $form_state, t('The e-mail address did not match.'));
       }
 
       // Invalidate if an account already exists for this e-mail address, and the user is not logged into that account
       if (!variable_get('uc_cart_mail_existing', TRUE) && $user->isAnonymous() && !empty($pane['primary_email'])) {
         if (db_query("SELECT uid FROM {users} WHERE mail LIKE :mail", array(':mail' => $pane['primary_email']))->fetchField() > 0) {
-          form_set_error('panes][customer][primary_email', t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
+          form_set_error('panes][customer][primary_email', $form_state, t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
         }
       }
 
@@ -143,10 +143,10 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
           if (variable_get('uc_cart_new_account_name', FALSE) && !empty($pane['new_account']['name'])) {
             $message = user_validate_name($pane['new_account']['name']);
             if (!empty($message)) {
-              form_set_error('panes][customer][new_account][name', $message);
+              form_set_error('panes][customer][new_account][name', $form_state, $message);
             }
             elseif (db_query("SELECT uid FROM {users} WHERE name LIKE :name", array(':name' => $pane['new_account']['name']))->fetchField()) {
-              form_set_error('panes][customer][new_account][name', t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
+              form_set_error('panes][customer][new_account][name', $form_state, t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
             }
             else {
               $order->data['new_user']['name'] = $pane['new_account']['name'];
@@ -155,7 +155,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
           // Validate the password.
           if (variable_get('uc_cart_new_account_password', FALSE)) {
             if (strcmp($pane['new_account']['pass'], $pane['new_account']['pass_confirm'])) {
-              form_set_error('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
+              form_set_error('panes][customer][new_account][pass_confirm', $form_state, t('The passwords you entered did not match. Please try again.'));
             }
             if (!empty($pane['new_account']['pass'])) {
               $order->data['new_user']['hash'] = Drupal::service('password')->hash(trim($pane['new_account']['pass']));

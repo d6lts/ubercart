@@ -89,7 +89,7 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
 
     case 'process':
       if (empty($form_state['values']['panes']['payment']['payment_method'])) {
-        form_set_error('panes][payment][payment_method', t('You cannot check out without selecting a payment method.'));
+        form_set_error('panes][payment][payment_method', $form_state, t('You cannot check out without selecting a payment method.'));
         return FALSE;
       }
       $order->setPaymentMethod($form_state['values']['panes']['payment']['payment_method']);

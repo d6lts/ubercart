@@ -76,7 +76,7 @@ class OrderEditForm extends FormBase {
   public function validateForm(array &$form, array &$form_state) {
     $order = uc_order_load($form_state['values']['order_id']);
     if ($form_state['values']['order_modified'] != $order->modified->value) {
-      form_set_error('order_modified', t('This order has been modified by another user, changes cannot be saved.'));
+      form_set_error('order_modified', $form_state, t('This order has been modified by another user, changes cannot be saved.'));
     }
 
     field_attach_form_validate($order, $form, $form_state);

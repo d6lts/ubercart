@@ -290,15 +290,15 @@ function uc_ups_admin_settings_validate($form, &$form_state) {
       form_set_value($form['uc_ups_credentials']['uc_ups_password'], $old_password, $form_state);
     }
     else {
-      form_set_error('uc_ups_password', t('Password field is required.'));
+      form_set_error('uc_ups_password', $form_state, t('Password field is required.'));
     }
   }
 
   if (!is_numeric($form_state['values']['uc_ups_rate_markup'])) {
-    form_set_error('uc_ups_rate_markup', t('Rate markup must be a numeric value.'));
+    form_set_error('uc_ups_rate_markup', $form_state, t('Rate markup must be a numeric value.'));
   }
   if (!is_numeric($form_state['values']['uc_ups_weight_markup'])) {
-    form_set_error('uc_ups_weight_markup', t('Weight markup must be a numeric value.'));
+    form_set_error('uc_ups_weight_markup', $form_state, t('Weight markup must be a numeric value.'));
   }
 }
 

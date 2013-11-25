@@ -223,10 +223,10 @@ function uc_usps_admin_settings($form, &$form_state) {
  */
 function uc_usps_admin_settings_validate($form, &$form_state) {
   if (!is_numeric($form_state['values']['uc_usps_rate_markup'])) {
-    form_set_error('uc_usps_rate_markup', t('Rate markup must be a numeric value.'));
+    form_set_error('uc_usps_rate_markup', $form_state, t('Rate markup must be a numeric value.'));
   }
   if (!is_numeric($form_state['values']['uc_usps_weight_markup'])) {
-    form_set_error('uc_usps_weight_markup', t('Weight markup must be a numeric value.'));
+    form_set_error('uc_usps_weight_markup', $form_state, t('Weight markup must be a numeric value.'));
   }
 }
 

@@ -81,13 +81,13 @@ class OrderStatusAddForm extends FormBase {
   public function validateForm(array &$form, array &$form_state) {
     $new_status = strtolower(trim($form_state['values']['status_id']));
     if (strpos($new_status, ' ') !== FALSE || $new_status == 'all') {
-      form_set_error('status_id', t('You have entered an invalid status ID.'));
+      form_set_error('status_id', $form_state, t('You have entered an invalid status ID.'));
     }
 
     $statuses = uc_order_status_list();
     foreach ($statuses as $status) {
       if ($new_status == $status['id']) {
-        form_set_error('status_id', t('This ID is already in use.  Please specify a unique ID.'));
+        form_set_error('status_id', $form_state, t('This ID is already in use.  Please specify a unique ID.'));
       }
     }
   }

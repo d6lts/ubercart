@@ -240,7 +240,7 @@ function uc_shipping_new_package_validate($form, &$form_state) {
     }
 
     if ($empty) {
-      form_set_error($shipping_type, t('Packages should have at least one product in them.'));
+      form_set_error($shipping_type, $form_state, t('Packages should have at least one product in them.'));
     }
   }
 }
@@ -1004,7 +1004,7 @@ function uc_shipping_shipment_edit_validate($form, &$form_state) {
   foreach ($form_state['values']['packages'] as $key => $package) {
     foreach (array('length', 'width', 'height') as $property) {
       if (!empty($package['dimensions'][$property]) && (!is_numeric($package['dimensions'][$property]) || $package['dimensions'][$property] < 0)) {
-        form_set_error('packages][' . $key . '][dimensions][' . $property, t('@property must be a positive number. No commas and only one decimal point.', array('@property' => drupal_ucfirst($property))));
+        form_set_error('packages][' . $key . '][dimensions][' . $property, $form_state, t('@property must be a positive number. No commas and only one decimal point.', array('@property' => drupal_ucfirst($property))));
       }
     }
   }

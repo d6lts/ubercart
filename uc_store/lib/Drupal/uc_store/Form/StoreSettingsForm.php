@@ -206,7 +206,7 @@ class StoreSettingsForm extends ConfigFormBase {
   public function validateForm(array &$form, array &$form_state) {
     $mail = trim($form_state['values']['uc_store_email']);
     if (!valid_email_address($mail)) {
-      form_set_error('uc_store_email', t('The e-mail address %mail is not valid.', array('%mail' => $mail)));
+      form_set_error('uc_store_email', $form_state, t('The e-mail address %mail is not valid.', array('%mail' => $mail)));
     }
 
     parent::validateForm($form, $form_state);

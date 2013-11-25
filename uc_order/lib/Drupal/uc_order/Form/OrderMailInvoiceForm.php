@@ -53,7 +53,7 @@ class OrderMailInvoiceForm extends FormBase {
   public function validateForm(array &$form, array &$form_state) {
     $recipient = $form_state['values']['email'];
     if (empty($recipient) || !valid_email_address($recipient)) {
-      form_set_error('email', t('Invalid e-mail address.'));
+      form_set_error('email', $form_state, t('Invalid e-mail address.'));
     }
   }
 

@@ -322,7 +322,7 @@ function uc_paypal_ec_review_form($form, &$form_state, $order) {
 
 function uc_paypal_ec_review_form_validate($form, &$form_state) {
   if (!empty($form_state['values']['shippable']) && empty($form_state['values']['quotes']['quote_option'])) {
-    form_set_error('shipping', t('You must calculate and select a shipping option.'));
+    form_set_error('shipping', $form_state, t('You must calculate and select a shipping option.'));
   }
 }
 

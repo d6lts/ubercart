@@ -164,7 +164,7 @@ function uc_file_admin_files_form_show_validate($form, &$form_state) {
       }
 
       if (count($file_ids) == 0) {
-        form_set_error('', t('You must select at least one file to delete.'));
+        form_set_error('', $form_state, t('You must select at least one file to delete.'));
       }
 
       break;
@@ -372,7 +372,7 @@ function uc_file_admin_files_form_action_validate($form, &$form_state) {
         $form_state['storage']['temp_file'] = $temp_file;
       }
       else {
-        form_set_error('', t('An error occurred while uploading the file'));
+        form_set_error('', $form_state, t('An error occurred while uploading the file'));
       }
 
       break;

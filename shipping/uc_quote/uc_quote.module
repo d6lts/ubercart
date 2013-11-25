@@ -604,7 +604,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL
       }
 
       if (!isset($order->quote) && $op == 'process' && variable_get('uc_quote_require_quote', TRUE)) {
-        form_set_error('panes][quotes][quotes][quote_option', t('You must select a shipping option before continuing.'));
+        form_set_error('panes][quotes][quotes][quote_option', $form_state, t('You must select a shipping option before continuing.'));
         return FALSE;
       }
       else {

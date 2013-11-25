@@ -303,7 +303,7 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
     $error = $response->Response->Error;
     $error_msg = (string) $error->ErrorSeverity . ' Error ' . (string) $error->ErrorCode . ': ' . (string) $error->ErrorDescription;
     if (strpos((string) $error->ErrorSeverity, 'Hard') !== FALSE) {
-      form_set_error('', $error_msg);
+      form_set_error('', $form_state, $error_msg);
       return FALSE;
     }
     else {

@@ -345,47 +345,47 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
 
       // Make sure an owner value was entered.
       if (variable_get('uc_credit_owner_enabled', FALSE) && empty($cc_data['cc_owner'])) {
-        form_set_error('panes][payment][details][cc_owner', t('Enter the owner name as it appears on the card.'));
+        form_set_error('panes][payment][details][cc_owner', $form_state, t('Enter the owner name as it appears on the card.'));
         $return = FALSE;
       }
 
       // Validate the CC number if that's turned on/check for non-digits.
       if ((variable_get('uc_credit_validate_numbers', TRUE) && !_uc_credit_valid_card_number($cc_data['cc_number']))
         || !ctype_digit($cc_data['cc_number'])) {
-        form_set_error('panes][payment][details][cc_number', t('You have entered an invalid credit card number.'));
+        form_set_error('panes][payment][details][cc_number', $form_state, t('You have entered an invalid credit card number.'));
         $return = FALSE;
       }
 
       // Validate the start date (if entered).
       if (variable_get('uc_credit_start_enabled', FALSE) && !_uc_credit_valid_card_start($cc_data['cc_start_month'], $cc_data['cc_start_year'])) {
-        form_set_error('panes][payment][details][cc_start_month', t('The start date you entered is invalid.'));
-        form_set_error('panes][payment][details][cc_start_year');
+        form_set_error('panes][payment][details][cc_start_month', $form_state, t('The start date you entered is invalid.'));
+        form_set_error('panes][payment][details][cc_start_year', $form_state);
         $return = FALSE;
       }
 
       // Validate the card expiration date.
       if (!_uc_credit_valid_card_expiration($cc_data['cc_exp_month'], $cc_data['cc_exp_year'])) {
-        form_set_error('panes][payment][details][cc_exp_month', t('The credit card you entered has expired.'));
-        form_set_error('panes][payment][details][cc_exp_year');
+        form_set_error('panes][payment][details][cc_exp_month', $form_state, t('The credit card you entered has expired.'));
+        form_set_error('panes][payment][details][cc_exp_year', $form_state);
         $return = FALSE;
       }
 
       // Validate the issue number (if entered).  With issue numbers, '01' is
       // different from '1', but is_numeric() is still appropriate.
       if (variable_get('uc_credit_issue_enabled', FALSE) && !_uc_credit_valid_card_issue($cc_data['cc_issue'])) {
-        form_set_error('panes][payment][details][cc_issue', t('The issue number you entered is invalid.'));
+        form_set_error('panes][payment][details][cc_issue', $form_state, t('The issue number you entered is invalid.'));
         $return = FALSE;
       }
 
       // Validate the CVV number if enabled.
       if (variable_get('uc_credit_cvv_enabled', TRUE) && !_uc_credit_valid_cvv($cc_data['cc_cvv'])) {
-        form_set_error('panes][payment][details][cc_cvv', t('You have entered an invalid CVV number.'));
+        form_set_error('panes][payment][details][cc_cvv', $form_state, t('You have entered an invalid CVV number.'));
         $return = FALSE;
       }
 
       // Validate the bank name if enabled.
       if (variable_get('uc_credit_bank_enabled', FALSE) && empty($cc_data['cc_bank'])) {
-        form_set_error('panes][payment][details][cc_bank', t('You must enter the issuing bank for that card.'));
+        form_set_error('panes][payment][details][cc_bank', $form_state, t('You must enter the issuing bank for that card.'));
         $return = FALSE;
       }
 
