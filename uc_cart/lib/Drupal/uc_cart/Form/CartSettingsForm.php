@@ -31,7 +31,7 @@ class CartSettingsForm extends ConfigFormBase {
       '#type' => 'vertical_tabs',
       '#attached' => array(
         'js' => array(
-          'vertical-tabs' => drupal_get_path('module', 'uc_cart') . '/uc_cart.admin.js',
+          'vertical-tabs' => drupal_get_path('module', 'uc_cart') . 'js/uc_cart.admin.js',
         ),
       ),
     );

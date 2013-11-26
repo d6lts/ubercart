@@ -232,7 +232,7 @@ function uc_catalog_block_view($delta = '') {
     $block = array();
 
     if (user_access('view catalog')) {
-      drupal_add_css(drupal_get_path('module', 'uc_catalog') . '/uc_catalog.css');
+      drupal_add_css(drupal_get_path('module', 'uc_catalog') . 'css/uc_catalog.css');
 
       // Get the vocabulary tree information.
       $vid = config('uc_catalog.settings')->get('vocabulary');

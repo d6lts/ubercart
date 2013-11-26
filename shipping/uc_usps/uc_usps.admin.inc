@@ -19,7 +19,7 @@ function uc_usps_admin_settings($form, &$form_state) {
     '#type' => 'vertical_tabs',
     '#attached' => array(
       'js' => array(
-        'vertical-tabs' => drupal_get_path('module', 'uc_usps') . '/uc_usps.admin.js',
+        'vertical-tabs' => drupal_get_path('module', 'uc_usps') . 'js/uc_usps.admin.js',
       ),
     ),
   );

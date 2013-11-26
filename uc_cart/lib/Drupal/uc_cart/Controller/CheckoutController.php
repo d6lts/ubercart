@@ -136,7 +136,7 @@ class CheckoutController extends ControllerBase {
    * Allows a customer to review their order before finally submitting it.
    */
   function review() {
-    drupal_add_js(drupal_get_path('module', 'uc_cart') . '/uc_cart.js');
+    drupal_add_js(drupal_get_path('module', 'uc_cart') . 'js/uc_cart.js');
 
     if (empty($_SESSION['cart_order']) || empty($_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_review'])) {
       return new RedirectResponse(url('cart/checkout', array('absolute' => TRUE)));

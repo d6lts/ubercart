@@ -11,7 +11,7 @@
 function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NULL) {
   switch ($op) {
     case 'view':
-      $contents['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . '/uc_payment.css';
+      $contents['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . 'css/uc_payment.css';
 
       if (variable_get('uc_payment_show_order_total_preview', TRUE)) {
         $contents['line_items'] = array(

@@ -442,7 +442,7 @@ function uc_cart_pane_quotes($form, &$form_state, $items) {
   $order->delivery_postal_code = isset($form_state['values']['delivery_postal_code']) ? $form_state['values']['delivery_postal_code'] : '';
   $order->products = $items;
 
-  $form['#attached']['css'][] = drupal_get_path('module', 'uc_quote') . '/uc_quote.css';
+  $form['#attached']['css'][] = drupal_get_path('module', 'uc_quote') . 'css/uc_quote.css';
 
   $form['address'] = array(
     '#type' => 'uc_address',
@@ -509,7 +509,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL
     case 'view':
       $description = filter_xss_admin(variable_get('uc_quote_pane_description', t('Shipping quotes are generated automatically when you enter your address and may be updated manually with the button below.')));
 
-      $contents['#attached']['css'][] = drupal_get_path('module', 'uc_quote') . '/uc_quote.css';
+      $contents['#attached']['css'][] = drupal_get_path('module', 'uc_quote') . 'css/uc_quote.css';
 
       $contents['uid'] = array(
         '#type' => 'hidden',

@@ -149,11 +149,11 @@ function uc_order_admin_paths() {
  */
 function uc_order_page_build(&$page) {
   $path = drupal_get_path('module', 'uc_order');
-  $page['#attached']['css'][$path . '/uc_order.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . 'css/uc_order.css'] = array('every_page' => TRUE);
 
   // Load uc_order.js on all order and customer admin pages.
   if (arg(0) == 'admin' && arg(1) == 'store' && (arg(2) == 'orders' || arg(2) == 'customers')) {
-    $page['#attached']['js'][$path . '/uc_order.js'] = array('every_page' => TRUE);
+    $page['#attached']['js'][$path . 'js/uc_order.js'] = array('every_page' => TRUE);
     $page['#attached']['js'][] = array(
       'type' => 'setting',
       'data' => array('ucURL' => array(
