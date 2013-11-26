@@ -1062,7 +1062,7 @@ function uc_product_kit_uc_cart_display($item) {
     }
 
     if ($done) {
-      drupal_add_css(drupal_get_path('module', 'uc_product_kit') . 'css/uc_product_kit.css');
+      drupal_add_css(drupal_get_path('module', 'uc_product_kit') . '/css/uc_product_kit.css');
       $elements[$unique_id]['data'] = array('#type' => 'value', '#value' => serialize($elements[$unique_id]['data']));
       if ($kit->mutable == UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST) {
         $elements[$unique_id]['description']['#markup'] .= theme('item_list', array('items' => $elements[$unique_id]['#extra'], 'attributes' => array('class' => array('product-description'))));

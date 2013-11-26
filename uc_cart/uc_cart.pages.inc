@@ -40,7 +40,7 @@ function theme_uc_cart_checkout_review($variables) {
   $panes = $variables['panes'];
   $form = $variables['form'];
 
-  drupal_add_css(drupal_get_path('module', 'uc_cart') . 'css/uc_cart.css');
+  drupal_add_css(drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css');
 
   $output = '<div id="review-instructions">' . filter_xss_admin(variable_get('uc_checkout_review_instructions', uc_get_message('review_instructions'))) . '</div>';
 

@@ -63,7 +63,7 @@ function uc_product_admin_paths() {
  */
 function uc_product_page_build(&$page) {
   $path = drupal_get_path('module', 'uc_product');
-  $page['#attached']['css'][$path . 'css/uc_product.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . '/css/uc_product.css'] = array('every_page' => TRUE);
 }
 
 /**
@@ -720,7 +720,7 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
     '#parents' => array('settings', 'uc_product'),
     '#attached' => array(
       'js' => array(
-        'vertical-tabs' => drupal_get_path('module', 'uc_product') . 'js/uc_product.js',
+        'vertical-tabs' => drupal_get_path('module', 'uc_product') . '/js/uc_product.js',
       ),
     ),
   );

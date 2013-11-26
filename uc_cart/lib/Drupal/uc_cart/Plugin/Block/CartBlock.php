@@ -97,11 +97,11 @@ class CartBlock extends BlockBase {
     // items in the cart.
     if (!$this->configuration['hide_empty'] || $product_count) {
       // Add the cart block CSS.
-      drupal_add_css(drupal_get_path('module', 'uc_cart') . 'css/uc_cart_block.css');
+      drupal_add_css(drupal_get_path('module', 'uc_cart') . '/css/uc_cart_block.css');
 
       // If the block is collapsible, add the appropriate JS.
       if ($this->configuration['collapsible']) {
-        drupal_add_js(drupal_get_path('module', 'uc_cart') . 'js/uc_cart_block.js');
+        drupal_add_js(drupal_get_path('module', 'uc_cart') . '/js/uc_cart_block.js');
       }
 
       // First build the help text.

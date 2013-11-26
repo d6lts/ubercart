@@ -33,7 +33,7 @@ class OrderPaymentsForm extends FormBase {
   public function buildForm(array $form, array &$form_state, UcOrderInterface $uc_order = NULL) {
     $this->order = $uc_order;
 
-    $form['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . 'css/uc_payment.css';
+    $form['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . '/css/uc_payment.css';
 
     $total = $this->order->getTotal();
     $payments = uc_payment_load_payments($this->order->id());

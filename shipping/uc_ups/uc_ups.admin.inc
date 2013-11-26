@@ -22,7 +22,7 @@ function uc_ups_admin_settings($form, &$form_state) {
     '#type' => 'vertical_tabs',
     '#attached' => array(
       'js' => array(
-        'vertical-tabs' => drupal_get_path('module', 'uc_ups') . 'js/uc_ups.admin.js',
+        'vertical-tabs' => drupal_get_path('module', 'uc_ups') . '/js/uc_ups.admin.js',
       ),
     ),
   );

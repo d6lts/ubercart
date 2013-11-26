@@ -215,7 +215,7 @@ function uc_store_admin_access() {
  */
 function uc_store_page_build(&$page) {
   $path = drupal_get_path('module', 'uc_store');
-  $page['#attached']['css'][$path . 'css/uc_store.css'] = array('every_page' => TRUE);
+  $page['#attached']['css'][$path . '/css/uc_store.css'] = array('every_page' => TRUE);
 }
 
 /**

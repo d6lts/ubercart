@@ -29,7 +29,7 @@ class CartForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $items = NULL) {
-    $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . 'css/uc_cart.css';
+    $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
 
     $form['items'] = array(
       '#type' => 'table',
