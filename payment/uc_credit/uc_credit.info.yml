@@ -1,4 +1,4 @@
-name: Credit card
+name: Credit Card
 type: module
 description: Enables support for credit card payments at checkout.
 dependencies:

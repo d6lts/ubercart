@@ -1,4 +1,4 @@
-name: Tax report
+name: Tax Report
 type: module
 description: Provides a report of sales tax your customers paid.
 dependencies:

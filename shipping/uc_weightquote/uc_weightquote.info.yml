@@ -1,4 +1,4 @@
-name: Weight quote
+name: Weight Quote
 type: module
 description: Assigns a shipping rate to products based on weight.
 dependencies:
