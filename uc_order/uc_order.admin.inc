@@ -325,13 +325,7 @@ function theme_uc_order_edit_form($variables) {
     }
   }
 
-  $last = '<div class="order-pane abs-left">' . drupal_render($form['order_id']) . drupal_render($form['order_modified'])
-    . drupal_render($form['form_id']) . drupal_render($form['form_token'])
-    . drupal_render($form['form_build_id'])
-    . drupal_render($form['actions'])
-    . '</div>';
-
-  $output .= drupal_render_children($form) . $last;
+  $output .= drupal_render_children($form);
 
   return $output;
 }

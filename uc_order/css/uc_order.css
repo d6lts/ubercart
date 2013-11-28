@@ -29,55 +29,12 @@
   padding-top: 0;
 }
 
-.order-overview-form {
-  float: left;
-  padding: 0 2em 0 0;
-}
-
-.order-overview-form .form-item {
-  margin-bottom: 0;
-}
-
-.order-overview-form #uc-order-select-form,
-.order-overview-form #uc-order-admin-sort-form {
-  margin-bottom: 0;
-}
-
-.uc-orders-table {
-  clear: both;
-  width: 100%;
-}
-
-.uc-orders-table thead th {
-  white-space: nowrap;
-}
-
-.uc-orders-table tr.odd:hover,
-.uc-orders-table tr.even:hover {
-  background-color: #ddd;
-}
-
-.uc-orders-table img {
-  float: left;
-  margin-right: .5em;
-}
-
 .order-pane {
-  border-color: #bbb;
-  border-style: solid;
-  border-width: 1px;
+  border: 1px solid #bbb;
   line-height: 1.1em;
   margin: .5em;
   padding: .5em;
   position: relative;
-}
-
-.order-pane thead {
-  background-color: #ddd;
-}
-
-.order-pane tbody {
-  border-top: 0;
 }
 
 .order-pane-icons {
@@ -95,34 +52,22 @@
   padding-bottom: .5em;
 }
 
-.pos-left {
+.order-pane.pos-left {
   float: left;
-}
-
-.abs-left {
-  clear: left;
 }
 
 .order-pane.abs-left {
   border: 0;
+  clear: left;
   padding: .5em 0;
 }
 
-.pos-right {
-  float: right;
+.order-pane.abs-left .form-submit {
+  margin: 0.5em 0.5em 0.5em 0;
 }
 
-.abs-right {
-  clear: right;
-  float: right;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.full-width {
-  width: 100%;
+.uc-order-edit-form .form-actions {
+  clear: both;
 }
 
 .order-pane #edit-add-line-item,
@@ -138,7 +83,6 @@
 
 .order-pane-table th {
   padding: 4px 8px;
-  font-weight: bold;
 }
 
 .order-pane-table td {
@@ -237,10 +181,6 @@
   display: inline;
 }
 
-.order-review-table tbody {
-  border-top: 0;
-}
-
 .order-pane-table .product-description {
   font-size: .7em;
 }
@@ -255,10 +195,6 @@
   margin: 0;
 }
 
-.order-pane #uc-order-view-update-form {
-  margin-bottom: 1em;
-}
-
 #uc-order-view-update-form #edit-controls label {
   display: inline;
 }
@@ -267,16 +203,12 @@
   padding-top: 8px;
 }
 
-#uc-order-view-update-form #edit-controls .form-submit {
-  margin: 0;
+#uc-order-view-update-form .form-actions {
+  clear: left;
 }
 
 .address-select-box #uc-order-address-book-form {
   margin-bottom: 0;
-}
-
-.order-pane.abs-left .form-submit {
-  margin: 0.5em 0.5em 0.5em 0;
 }
 
 .order-pane #customer-select form {
