@@ -340,7 +340,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       'type' => 'integer_field',
     );
     $properties['primary_email'] = array(
-      'label' => t('Primary e-mail'),
+      'label' => t('E-mail address'),
       'description' => 'The email address of the customer.',
       'type' => 'string_field',
     );

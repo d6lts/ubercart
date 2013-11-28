@@ -131,9 +131,21 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) 
 function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL) {
   switch ($op) {
     case 'view':
-      $build['uid'] = array('#markup' => t('Customer number: !user_link', array('!user_link' => $order->getUserId() ? l($order->getUserId(), 'user/' . $order->getUserId()) : '0')));
-      $build['primary_email'] = array('#markup' => '<br />' . t('Primary e-mail:') . '<br />' . check_plain($order->getEmail()));
-
+      if ($order->getUserId()) {
+        $build['uid'] = array(
+          '#type' => 'link',
+          '#prefix' => t('Customer number') . ': ',
+          '#suffix' => '<br />',
+          '#title' => $order->getUserId(),
+          '#href' => 'user/' . $order->getUserId(),
+        );
+      }
+      $build['primary_email'] = array(
+        '#type' => 'link',
+        '#prefix' => t('E-mail address') . ': ',
+        '#title' => $order->getEmail(),
+        '#href' => 'mailto:' . $order->getEmail(),
+      );
       return $build;
 
     case 'edit-form':
