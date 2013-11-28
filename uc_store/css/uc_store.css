@@ -44,12 +44,6 @@
   width: 10em;
 }
 
-.ubercart-throbber {
-  background-image: url(images/throbber.gif);
-  background-position: 100% -20px;
-  background-repeat: no-repeat;
-}
-
 /**
  * Icon support for admin (http://drupal.org/project/admin).
  */

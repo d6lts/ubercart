@@ -34,7 +34,6 @@ class CheckoutForm extends FormBase {
     }
 
     $form['#attributes']['class'][] = 'uc-cart-checkout-form';
-    $form['#attached']['js'][] = drupal_get_path('module', 'uc_cart') . '/js/uc_cart.js';
     $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
 
     if ($instructions = variable_get('uc_checkout_instructions', '')) {
