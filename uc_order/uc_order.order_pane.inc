@@ -1072,7 +1072,7 @@ function uc_order_view_update_form($form, &$form_state, $order) {
 
   $form['controls'] = array(
     '#type' => 'container',
-    '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
+    '#attributes' => array('class' => array('uc-inline-form')),
     '#weight' => 10,
   );
 
@@ -1095,6 +1095,7 @@ function uc_order_view_update_form($form, &$form_state, $order) {
   $form['controls']['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
+    '#button_type' => 'primary',
   );
 
   return $form;
