@@ -97,14 +97,15 @@ class CheckoutForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['cancel'] = array(
       '#type' => 'submit',
-      '#value' => t('Cancel'),
+      '#value' => $this->t('Cancel'),
       '#validate' => array(),
       '#limit_validation_errors' => array(),
       '#submit' => array(array($this, 'cancel')),
     );
     $form['actions']['continue'] = array(
       '#type' => 'submit',
-      '#value' => t('Review order'),
+      '#value' => $this->t('Review order'),
+      '#button_type' => 'primary',
     );
 
     form_load_include($form_state, 'inc', 'uc_store', 'includes/uc_ajax_attach');
@@ -164,7 +165,7 @@ class CheckoutForm extends FormBase {
   public function cancel(array &$form, array &$form_state) {
     $order = $form_state['storage']['order'];
     if (isset($_SESSION['cart_order']) && $_SESSION['cart_order'] == $order->id()) {
-      uc_order_comment_save($_SESSION['cart_order'], 0, t('Customer canceled this order from the checkout form.'));
+      uc_order_comment_save($_SESSION['cart_order'], 0, $this->t('Customer canceled this order from the checkout form.'));
       unset($_SESSION['cart_order']);
     }
 
