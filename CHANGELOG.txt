@@ -1,3 +1,27 @@
+Ubercart 4.x
+------------
+* All classes and tests comply with PSR-0.
+* Orders, order products and cart items are fully classed entities.
+* Removed TAPIR, use Form API #table instead.
+* Removed hook_uc_cart_pane(), use the standard cart form and blocks instead.
+* Removed uc_store_get_icon().
+* Invoice templates are now named 'uc_order_invoice' to avoid theming conflicts.
+* Order objects now have an interface (UcOrderInterface) and a set of methods:
+    * $order->order_id => $order->id()
+    * $order->uid => $order->getUser(), $order->getUserId() and $order->setUserId()
+    * $order->order_status => $order->getStatusId() and $order->setStatusId()
+    * uc_order_status_data($order, 'state') => $order->getStateId()
+    * $order->primary_email => $order->getEmail() and $order->setEmail()
+    * $order->order_total and uc_order_get_total() => $order->getTotal() and $order->getSubtotal()
+    * $order->product_count and uc_order_get_product_count() => $order->getProductCount()
+    * $order address properties => $order->getAddress() and $order->setAddress()
+    * $order->currency => $order->getCurrency()
+    * $order->payment_method => $order->getPaymentMethod() and $order->setPaymentMethod()
+    * uc_order_can_view_order() => $order->access('view')
+    * uc_order_can_delete() => $order->access('delete')
+    * uc_order_delete() => $order->delete()
+
+
 Ubercart 3.0-rc4, 2012-1-23
 ---------------------------
 - API:
