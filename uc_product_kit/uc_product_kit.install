@@ -96,19 +96,11 @@ function uc_product_kit_install() {
   $locked = Drupal::state()->get('node.type.locked');
   $locked['product_kit'] = 'product_kit';
   Drupal::state()->set('node.type.locked', $locked);
-}
 
-/**
- * Implements hook_enable().
- */
-function uc_product_kit_enable() {
-  // Hack the product kit node type into the catalog if this module is enabled
+  // Add the product kit node type to the catalog if this module is installed
   // some time after uc_catalog.
-  if (module_exists('uc_catalog') && $vid = config('uc_catalog.settings')->get('vocabulary')) {
-    $field = field_info_field('node', 'taxonomy_catalog');
-    if (!isset($field['bundles']['node']['product_kit'])) {
-      uc_catalog_add_node_type('product_kit');
-    }
+  if (module_exists('uc_catalog')) {
+    uc_catalog_add_node_type('product_kit');
   }
 
   // Add a default image field to product kits.

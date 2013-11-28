@@ -15,7 +15,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 class CatalogTest extends UbercartTestBase {
 
   public static $modules = array('uc_catalog', 'field_ui');
-  public static $adminPermissions = array('administer catalog', 'administer node fields');
+  public static $adminPermissions = array('administer catalog', 'administer node fields', 'administer taxonomy_term fields');
 
   public static function getInfo() {
     return array(
@@ -25,11 +25,24 @@ class CatalogTest extends UbercartTestBase {
     );
   }
 
-  public function testCatalogRepair() {
+  public function testCatalogField() {
     $this->drupalLogin($this->adminUser);
 
+    $this->drupalGet('admin/structure/taxonomy/manage/catalog/fields');
+    $this->assertText('uc_catalog_image', 'Catalog term image field exists.');
+
     $this->drupalGet('admin/structure/types/manage/product/fields');
-    $this->assertText('taxonomy_catalog', 'Catalog taxonomy term reference field exists.');
+    $this->assertText('taxonomy_catalog', 'Catalog taxonomy term reference field exists for products.');
+
+    // Check that product kits get the catalog taxonomy.
+    \Drupal::moduleHandler()->install(array('uc_product_kit'));
+
+    $this->drupalGet('admin/structure/types/manage/product_kit/fields');
+    $this->assertText('taxonomy_catalog', 'Catalog taxonomy term reference field exists for product kits.');
+  }
+
+  public function testCatalogRepair() {
+    $this->drupalLogin($this->adminUser);
 
     $this->drupalPostForm('admin/structure/types/manage/product/fields/node.product.taxonomy_catalog/delete', array(), t('Delete'));
     $this->assertText('The field Catalog has been deleted from the Product content type.', 'Catalog taxonomy term reference field deleted.');

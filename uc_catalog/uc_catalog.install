@@ -6,9 +6,9 @@
  */
 
 /**
- * Implements hook_enable().
+ * Implements hook_install().
  */
-function uc_catalog_enable() {
+function uc_catalog_install() {
   foreach (uc_product_types() as $type) {
     uc_catalog_add_node_type($type);
   }
