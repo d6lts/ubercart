@@ -218,6 +218,7 @@ class OrderCreateForm extends FormBase {
         break;
 
       case 'create':
+        $email = trim($form_state['values']['customer']['email']);
         $uid = db_query('SELECT uid FROM {users} WHERE mail LIKE :mail', array(':mail' => $email))->fetchField();
         if ($uid) {
           form_set_error('customer][mail', $form_state, t('An account already exists for that e-mail.'));
