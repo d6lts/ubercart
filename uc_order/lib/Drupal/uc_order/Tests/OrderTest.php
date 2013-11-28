@@ -133,7 +133,7 @@ class OrderTest extends UbercartTestBase {
       'bill_to[first_name]' => $this->randomName(8),
       'bill_to[last_name]' => $this->randomName(15),
     );
-    $this->drupalPostForm('admin/store/orders/' . $order->id() . '/edit', $edit, t('Submit changes'));
+    $this->drupalPostForm('admin/store/orders/' . $order->id() . '/edit', $edit, t('Save changes'));
     $this->assertText(t('Order changes saved.'));
     $this->assertFieldByName('bill_to[first_name]', $edit['bill_to[first_name]'], 'Billing first name changed.');
     $this->assertFieldByName('bill_to[last_name]', $edit['bill_to[last_name]'], 'Billing last name changed.');
