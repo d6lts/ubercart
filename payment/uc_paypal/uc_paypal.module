@@ -397,7 +397,7 @@ function uc_payment_method_paypal_wps($op, &$order) {
 
     case 'settings':
       $form['uc_paypal_wps_email'] = array(
-        '#type' => 'textfield',
+        '#type' => 'email',
         '#title' => t('PayPal e-mail address'),
         '#description' => t('The e-mail address you use for the PayPal account you want to receive payments.'),
         '#default_value' => variable_get('uc_paypal_wps_email', ''),
@@ -503,7 +503,7 @@ function uc_payment_method_paypal_ec($op, &$order) {
 
     case 'settings':
       $form['uc_paypal_wps_email'] = array(
-        '#type' => 'textfield',
+        '#type' => 'email',
         '#title' => t('PayPal e-mail address'),
         '#description' => t('The e-mail address you use for the PayPal account you want to receive payments.'),
         '#default_value' => variable_get('uc_paypal_wps_email', ''),

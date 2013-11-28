@@ -162,7 +162,7 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
         '#disabled' => TRUE,
       );
       $form['customer']['primary_email'] = array(
-        '#type' => 'textfield',
+        '#type' => 'email',
         '#title' => t('E-mail address'),
         '#default_value' => $order->getEmail(),
         '#maxlength' => 64,

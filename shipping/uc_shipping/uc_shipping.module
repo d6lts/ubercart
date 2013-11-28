@@ -737,7 +737,7 @@ function uc_shipping_address_form($form, &$form_state, $addresses, $order) {
   $form['origin']['pickup_address_select'] = uc_shipping_select_address($addresses, 'apply_address(\'pickup\', this.value);', t('Saved Addresses'));
   $form['origin']['pickup_address_select']['#weight'] = -2;
   $form['origin']['pickup_email'] = array(
-    '#type' => 'textfield',
+    '#type' => 'email',
     '#title' => t('E-mail'),
     '#default_value' => uc_store_email(),
     '#weight' => -1,
@@ -761,7 +761,7 @@ function uc_shipping_address_form($form, &$form_state, $addresses, $order) {
     $order->delivery_country = $form_state['values']['delivery_country'];
   }
   $form['destination']['delivery_email'] = array(
-    '#type' => 'textfield',
+    '#type' => 'email',
     '#title' => t('E-mail'),
     '#default_value' => $order->getEmail(),
     '#weight' => -1,

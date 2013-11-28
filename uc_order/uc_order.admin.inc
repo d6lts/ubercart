@@ -147,9 +147,6 @@ function uc_order_select_customer($email = NULL) {
   if (arg(5) == 'check') {
     $email = check_plain($_POST['email']);
     $build['email'] = array('#markup' => '');
-    if (!valid_email_address($email)) {
-      $build['email']['#markup'] .= t('Invalid e-mail address.') . '<br />';
-    }
     $result = db_query("SELECT uid, mail FROM {users} WHERE mail = :mail", array(':mail' => $email));
     if ($user = $result->fetchObject()) {
       $build['email']['#markup'] .= t('An account already exists for that e-mail.') . '<br /><br />';
@@ -248,10 +245,11 @@ function uc_order_select_customer_form($form, &$form_state, $options = NULL) {
     );
 
     $form['email'] = array(
-      '#type' => 'textfield',
+      '#type' => 'email',
       '#title' => t('E-mail'),
       '#size' => 24,
       '#maxlength' => 96,
+      '#required' => TRUE,
     );
   }
 

@@ -52,7 +52,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
         $email = $order->getEmail();
         $description = t('Enter a valid email address for this order or <a href="!url">click here</a> to login with an existing account and return to checkout.', array('!url' => url('user/login', array('query' => drupal_get_destination()))));
         $contents['primary_email'] = array(
-          '#type' => 'textfield',
+          '#type' => 'email',
           '#title' => t('E-mail address'),
           '#default_value' => $email,
           '#required' => TRUE,
@@ -61,7 +61,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
 
       if (variable_get('uc_cart_email_validation', FALSE) && $user->isAnonymous()) {
         $contents['primary_email_confirm'] = array(
-          '#type' => 'textfield',
+          '#type' => 'email',
           '#title' => t('Confirm e-mail address'),
           '#default_value' => $email,
           '#required' => TRUE,
@@ -111,11 +111,6 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
 
     case 'process':
       $pane = $form_state['values']['panes']['customer'];
-
-      if (!empty($pane['primary_email']) && !valid_email_address($pane['primary_email'])) {
-        form_set_error('panes][customer][primary_email', $form_state, t('You must enter a valid e-mail address.'));
-      }
-
       $order->setEmail($pane['primary_email']);
 
       if (variable_get('uc_cart_email_validation', FALSE) && $user->isAnonymous() &&

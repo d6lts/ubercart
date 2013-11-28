@@ -40,7 +40,7 @@ class StoreSettingsForm extends ConfigFormBase {
       '#default_value' => uc_store_name(),
     );
     $form['basic']['uc_store_email'] = array(
-      '#type' => 'textfield',
+      '#type' => 'email',
       '#title' => t('E-mail address'),
       '#size' => 32,
       '#required' => TRUE,
@@ -198,18 +198,6 @@ class StoreSettingsForm extends ConfigFormBase {
     );
 
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
-    $mail = trim($form_state['values']['uc_store_email']);
-    if (!valid_email_address($mail)) {
-      form_set_error('uc_store_email', $form_state, t('The e-mail address %mail is not valid.', array('%mail' => $mail)));
-    }
-
-    parent::validateForm($form, $form_state);
   }
 
   /**

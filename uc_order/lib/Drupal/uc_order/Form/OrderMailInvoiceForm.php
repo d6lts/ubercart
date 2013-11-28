@@ -34,9 +34,10 @@ class OrderMailInvoiceForm extends FormBase {
     $this->order = $uc_order;
 
     $form['email'] = array(
-      '#type' => 'textfield',
+      '#type' => 'email',
       '#title' => t('Recipient e-mail address'),
       '#default_value' => $uc_order->getEmail(),
+      '#required' => TRUE,
     );
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit' ] = array(
@@ -45,16 +46,6 @@ class OrderMailInvoiceForm extends FormBase {
     );
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
-    $recipient = $form_state['values']['email'];
-    if (empty($recipient) || !valid_email_address($recipient)) {
-      form_set_error('email', $form_state, t('Invalid e-mail address.'));
-    }
   }
 
   /**

@@ -171,7 +171,7 @@ class OrderCreateForm extends FormBase {
       );
       // Customer e-mail address.
       $form['customer']['email'] = array(
-        '#type' => 'textfield',
+        '#type' => 'email',
         '#title' => t('Customer e-mail address'),
         '#size' => 24,
         '#maxlength' => 96,
@@ -218,11 +218,6 @@ class OrderCreateForm extends FormBase {
         break;
 
       case 'create':
-        $email = trim($form_state['values']['customer']['email']);
-        if (!valid_email_address($email)) {
-          form_set_error('customer][mail', $form_state, t('Invalid e-mail address.'));
-        }
-
         $uid = db_query('SELECT uid FROM {users} WHERE mail LIKE :mail', array(':mail' => $email))->fetchField();
         if ($uid) {
           form_set_error('customer][mail', $form_state, t('An account already exists for that e-mail.'));
