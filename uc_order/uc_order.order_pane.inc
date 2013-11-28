@@ -638,7 +638,7 @@ function uc_order_edit_products_remove($form, &$form_state) {
     uc_stock_adjust($product->model, $product->qty);
   }
 
-  uc_order_product_delete($order_product_id);
+  entity_delete_multiple('uc_order_product', array($order_product_id));
 
   $order = $form_state['build_info']['args'][0];
   $matches = array();

@@ -573,26 +573,6 @@ function uc_order_product_save($order_id, $product) {
 }
 
 /**
- * Remove a single product line from an order.
- *
- * @param integer $order_product_id
- *   Ordered product ID of product to remove.
- */
-function uc_order_product_delete($order_product_id) {
-  return uc_order_product_delete_multiple(array($order_product_id));
-}
-
-/**
- * Remove multiple product lines from an order.
- *
- * @param array $order_product_ids
- *   List of ordered product IDs of products to remove.
- */
-function uc_order_product_delete_multiple($order_product_ids) {
-  return entity_delete_multiple('uc_order_product', $order_product_ids);
-}
-
-/**
  * Load a single ordered product entity.
  *
  * @param integer $opid

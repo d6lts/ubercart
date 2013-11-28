@@ -141,8 +141,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       ->condition('order_id', $ids, 'IN')
       ->execute();
     if (!empty($result)) {
-      $product_ids = array_keys($result);
-      uc_order_product_delete_multiple($product_ids);
+      entity_delete_multiple('uc_order_product', array_keys($result));
     }
     db_delete('uc_order_comments')
       ->condition('order_id', $ids, 'IN')

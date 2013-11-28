@@ -103,8 +103,7 @@ class CheckoutController extends ControllerBase {
           ->condition('order_id', $order->id())
           ->execute();
         if (!empty($result)) {
-          $product_ids = array_keys($result);
-          uc_order_product_delete_multiple($product_ids);
+          entity_delete_multiple('uc_order_product', array_keys($result));
         }
         uc_order_delete_line_item($order->id(), TRUE);
         $rebuild = TRUE;
