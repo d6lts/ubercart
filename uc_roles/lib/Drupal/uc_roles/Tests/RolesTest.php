@@ -24,7 +24,7 @@ class RolesTest extends UbercartTestBase {
     );
   }
 
-  function testRolePurchaseCheckout() {
+  public function testRolePurchaseCheckout() {
     // Add role assignment to the test product.
     $rid = $this->drupalCreateRole(array('access content'));
     $this->drupalLogin($this->adminUser);

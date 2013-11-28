@@ -24,7 +24,7 @@ class CartCheckoutTest extends UbercartTestBase {
     );
   }
 
-  function testCartAPI() {
+  public function testCartAPI() {
     // Test the empty cart.
     $items = uc_cart_get_contents();
     $this->assertEqual($items, array(), 'Cart is an empty array.');
@@ -82,7 +82,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertEqual($items, array(), 'Cart is emptied correctly.');
   }
 
-  function testCart() {
+  public function testCart() {
     \Drupal::moduleHandler()->install(array('uc_cart_entity_test'));
 
     // Test the empty cart.
@@ -139,7 +139,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertText('hook_uc_cart_item_delete fired');
   }
 
-  function testCartMerge() {
+  public function testCartMerge() {
     // Add an item to the cart as an anonymous user.
     $this->drupalLogin($this->customer);
     $this->addToCart($this->product);
@@ -157,7 +157,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertFieldByName('items[0][qty]', 2, t('The product quantity is 2.'));
   }
 
-  function testDeletedCartItem() {
+  public function testDeletedCartItem() {
     // Add a product to the cart, then delete the node.
     $this->addToCart($this->product);
     $this->product->delete();
@@ -168,7 +168,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertEqual(uc_cart_get_total_qty(), 0, 'There are no items in the cart.');
   }
 
-  // function testMaximumQuantityRule() {
+  // public function testMaximumQuantityRule() {
   //   // Enable the example maximum quantity rule.
   //   $rule = rules_config_load('uc_cart_maximum_product_qty');
   //   $rule->active = TRUE;
@@ -183,7 +183,7 @@ class CartCheckoutTest extends UbercartTestBase {
   //   $this->assertFieldByName('items[0][qty]', 10);
   // }
 
-  function testAuthenticatedCheckout() {
+  public function testAuthenticatedCheckout() {
     $this->drupalLogin($this->customer);
     $this->addToCart($this->product);
     $this->checkout();
@@ -195,7 +195,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertText('There are no products in your shopping cart.');
   }
 
-  function testAnonymousCheckoutAccountGenerated() {
+  public function testAnonymousCheckoutAccountGenerated() {
     $this->addToCart($this->product);
     $this->checkout();
     $this->assertRaw('Your order is complete!');
@@ -230,7 +230,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->drupalPostForm('user', $edit, t('Log in'));
   }
 
-  function testAnonymousCheckoutAccountProvided() {
+  public function testAnonymousCheckoutAccountProvided() {
     $settings = array(
       // Allow customer to specify username and password.
       'uc_cart_new_account_name' => TRUE,
@@ -276,7 +276,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->drupalPostForm('user', $edit, t('Log in'));
   }
 
-  function testAnonymousCheckoutAccountExists() {
+  public function testAnonymousCheckoutAccountExists() {
     $this->addToCart($this->product);
     $this->checkout(array('panes[customer][primary_email]' => $this->customer->getEmail()));
     $this->assertRaw('Your order is complete!');
@@ -287,7 +287,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertText('There are no products in your shopping cart.');
   }
 
-  function testCheckoutNewUsername() {
+  public function testCheckoutNewUsername() {
     // Configure the checkout for this test.
     $this->drupalLogin($this->adminUser);
     $settings = array(
@@ -320,7 +320,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertText('A new account has been created');
   }
 
-  function testCheckoutBlockedUser() {
+  public function testCheckoutBlockedUser() {
     // Block user after checkout.
     $settings = array(
       'uc_new_customer_status_active' => FALSE,
@@ -341,7 +341,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertTrue(empty($mail), 'No unblocked user email found.');
   }
 
-  function testCheckoutLogin() {
+  public function testCheckoutLogin() {
     // Log in after checkout.
     $settings = array(
       'uc_new_customer_login' => TRUE,
@@ -365,7 +365,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertText('There are no products in your shopping cart.');
   }
 
-  function testCheckoutComplete() {
+  public function testCheckoutComplete() {
     // Payment notification is received first.
     $order_data = array('primary_email' => 'simpletest@ubercart.org');
     $order = $this->createOrder($order_data);
@@ -414,7 +414,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertEqual(count($mails), 1, '1 e-mail was sent.');
   }
 
-  function testCheckoutRoleAssignment() {
+  public function testCheckoutRoleAssignment() {
     // Add role assignment to the test product.
     $rid = $this->drupalCreateRole(array('access content'));
     $this->drupalLogin($this->adminUser);
@@ -460,7 +460,7 @@ class CartCheckoutTest extends UbercartTestBase {
   /**
    * Tests that cart orders are marked abandoned after a timeout.
    */
-  function testCartOrderTimeout() {
+  public function testCartOrderTimeout() {
     $this->addToCart($this->product);
     $this->drupalPostForm('cart', array(), 'Checkout');
     $this->assertText(
@@ -535,7 +535,7 @@ class CartCheckoutTest extends UbercartTestBase {
     }
   }
 
-  function testCustomerInformationCheckoutPane() {
+  public function testCustomerInformationCheckoutPane() {
     // Log in as a customer and add an item to the cart.
     $this->drupalLogin($this->customer);
     $this->addToCart($this->product);

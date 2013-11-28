@@ -41,7 +41,7 @@ class AjaxTest extends UbercartTestBase {
    * @param $negate
    *   TRUE to negate the condition.
    */
-  function addPaymentZoneCondition($method, $zone, $negate = FALSE) {
+  protected function addPaymentZoneCondition($method, $zone, $negate = FALSE) {
     $not = $negate ? 'NOT ' : '';
     $name = 'uc_payment_method_' . $method;
     $label = ucfirst($method) . ' conditions';
@@ -76,7 +76,7 @@ class AjaxTest extends UbercartTestBase {
     //$this->drupalGet('admin/config/workflow/rules/components/manage/' . $newconfig->id);
   }
 
-  function testCheckoutAjax() {
+  public function testCheckoutAjax() {
     // Enable two payment methods and set a condition on one.
     variable_set('uc_payment_method_check_checkout', TRUE);
     variable_set('uc_payment_method_other_checkout', TRUE);

@@ -28,7 +28,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Overrides WebTestBase::setUp().
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Set front page we have someplace to redirect to for invalid Cart Links.
@@ -66,7 +66,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Tests access to admin settings page and tests default values.
    */
-  function testCartLinksUISettingsPage() {
+  public function testCartLinksUISettingsPage() {
     // Access settings page by anonymous user
     $this->drupalGet('admin/store/settings/cart-links');
     $this->assertText(t('Access denied'));
@@ -117,7 +117,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Tests Cart Links on a page under a variety of conditions.
    */
-  function testCartLinksBasicFunctionality() {
+  public function testCartLinksBasicFunctionality() {
     // Create product
     $products[] = $this->createCartLinksProduct(FALSE);
 
@@ -208,7 +208,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Tests Cart Links product action messages.
    */
-  function testCartLinksProductActionMessage() {
+  public function testCartLinksProductActionMessage() {
     // Create product
     $products[] = $this->createCartLinksProduct(FALSE);
 
@@ -263,7 +263,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Tests Cart Links cart empty action.
    */
-  function testCartLinksAllowEmptying() {
+  public function testCartLinksAllowEmptying() {
     // Create product
     $products[] = $this->createCartLinksProduct(FALSE);
 
@@ -339,7 +339,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Tests Cart Links restrictions.
    */
-  function testCartLinksRestrictions() {
+  public function testCartLinksRestrictions() {
     // Create product
     $products[] = $this->createCartLinksProduct(FALSE);
 
@@ -448,7 +448,7 @@ class CartLinksTest extends UbercartTestBase {
    *
    * For additional messages, add additional actions, e.g. "-m99-m1337".
    */
-  function testCartLinksMessages() {
+  public function testCartLinksMessages() {
 
     // Create product
     $products[] = $this->createCartLinksProduct(FALSE);
@@ -502,7 +502,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Tests Cart Links tracking.
    */
-  function testCartLinksTracking() {
+  public function testCartLinksTracking() {
 
     // Create product
     $products[] = $this->createCartLinksProduct(FALSE);
@@ -573,7 +573,7 @@ class CartLinksTest extends UbercartTestBase {
    *   TRUE to display product action messages, FALSE to not display.
    *   Defaults to FALSE.
    */
-  function setCartLinksUIProductActionMessage($state = FALSE) {
+  protected function setCartLinksUIProductActionMessage($state = FALSE) {
     $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_add_show' => $state),
@@ -595,7 +595,7 @@ class CartLinksTest extends UbercartTestBase {
    *   TRUE to display product action messages, FALSE to not display.
    *   Defaults to TRUE.
    */
-  function setCartLinksUITrackClicks($state = TRUE) {
+  protected function setCartLinksUITrackClicks($state = TRUE) {
     $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_track' => 0),
@@ -617,7 +617,7 @@ class CartLinksTest extends UbercartTestBase {
    *   TRUE to display product action messages, FALSE to not display.
    *   Defaults to TRUE.
    */
-  function setCartLinksUIAllowEmptying($state = TRUE) {
+  protected function setCartLinksUIAllowEmptying($state = TRUE) {
     $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_empty' => $state),
@@ -639,7 +639,7 @@ class CartLinksTest extends UbercartTestBase {
    *   String containing user input from a textarea, one message per line.
    *   Messages have numeric key and text value, separated by '|'.
    */
-  function setCartLinksUIMessages($messages = '') {
+  protected function setCartLinksUIMessages($messages = '') {
     $message_string = implode("\n", $messages);
     $this->drupalPostForm(
       'admin/store/settings/cart-links',
@@ -662,7 +662,7 @@ class CartLinksTest extends UbercartTestBase {
    *   String containing user input from a textarea, one restriction per line.
    *   Restrictions are valid Cart Links - i.e. relative URLs.
    */
-  function setCartLinksUIRestrictions($restrictions = '') {
+  protected function setCartLinksUIRestrictions($restrictions = '') {
     $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_restrictions' => $restrictions),
@@ -683,7 +683,7 @@ class CartLinksTest extends UbercartTestBase {
    * @param $url
    *   Relative URL of the destination page for the redirect.  Omit leading '/'.
    */
-  function setCartLinksUIRedirect($url = '') {
+  protected function setCartLinksUIRedirect($url = '') {
     $this->drupalPostForm(
       'admin/store/settings/cart-links',
       array('uc_cart_links_invalid_page' => $url),
@@ -702,7 +702,7 @@ class CartLinksTest extends UbercartTestBase {
    * @param $links
    *   Array of Cart Links to appear on page.
    */
-  public function createCartLinksPage($links = array()) {
+  protected function createCartLinksPage($links = array()) {
     if (!empty($links)) {
       $i = 0;
       foreach ($links as $link) {
@@ -733,7 +733,7 @@ class CartLinksTest extends UbercartTestBase {
    *   Defaults to FALSE to create a normal product, set to TRUE to
    *   create a product class instead.
    */
-  public function createCartLinksProduct($product_class = FALSE) {
+  protected function createCartLinksProduct($product_class = FALSE) {
 
     // Create a product
     if ($product_class) {
@@ -805,7 +805,7 @@ class CartLinksTest extends UbercartTestBase {
    * @return
    *   Array containing Cart Links and link metadata.
    */
-  function createValidCartLinks($products = array()) {
+  protected function createValidCartLinks($products = array()) {
     foreach ($products as $key => $product) {
       $nid   = $product->id();
       $title = $product->label();

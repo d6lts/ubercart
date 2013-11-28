@@ -27,7 +27,7 @@ class CartBlockTest extends UbercartTestBase {
   /**
    * Test cart block functionality.
    */
-  function testCartBlock() {
+  public function testCartBlock() {
     $block = $this->drupalPlaceBlock('uc_cart');
 
     // Test the empty cart block.
@@ -60,7 +60,7 @@ class CartBlockTest extends UbercartTestBase {
   /**
    * Test hide cart when empty functionality.
    */
-  function testHiddenCartBlock() {
+  public function testHiddenCartBlock() {
     $block = $this->drupalPlaceBlock('uc_cart');
     $block->getPlugin()->setConfigurationValue('hide_empty', TRUE);
     $block->save();
@@ -78,7 +78,7 @@ class CartBlockTest extends UbercartTestBase {
   /**
    * Test show cart icon functionality.
    */
-  function testCartIcon() {
+  public function testCartIcon() {
     $block = $this->drupalPlaceBlock('uc_cart');
 
     $this->drupalGet('');

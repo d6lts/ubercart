@@ -28,7 +28,7 @@ class QuoteTest extends UbercartTestBase {
   /**
    * Overrides WebTestBase::setUp().
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     module_load_include('inc', 'uc_flatrate', 'uc_flatrate.admin');
     $this->drupalLogin($this->adminUser);
@@ -44,7 +44,7 @@ class QuoteTest extends UbercartTestBase {
    *   If specified, a RulesAnd component defining the conditions to apply
    *   for this method.
    */
-  function createQuote($edit = array(), $condition = FALSE) {
+  protected function createQuote($edit = array(), $condition = FALSE) {
     $edit += array(
       'title' => $this->randomName(8),
       'label' => $this->randomName(8),

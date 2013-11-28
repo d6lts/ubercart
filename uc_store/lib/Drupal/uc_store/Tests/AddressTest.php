@@ -48,7 +48,7 @@ class AddressTest extends UbercartTestBase {
     $this->test_address[] = $this->createAddress($settings);
   }
 
-  function testAddressComparison() {
+  public function testAddressComparison() {
     $address1 = $this->test_address[0];
     $address2 = $this->test_address[1];
 
@@ -96,7 +96,7 @@ class AddressTest extends UbercartTestBase {
    * @return
    *   Address object.
    */
-  public function createAddress($settings = array()) {
+  protected function createAddress($settings = array()) {
     $street = array_flip(array(
       'Street',
       'Avenue',

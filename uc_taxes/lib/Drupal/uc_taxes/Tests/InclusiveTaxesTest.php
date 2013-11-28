@@ -25,7 +25,7 @@ class InclusiveTaxesTest extends UbercartTestBase {
     );
   }
 
-  function testProductKitAttributes() {
+  public function testProductKitAttributes() {
     $this->drupalLogin($this->adminUser);
 
     // Create a 20% inclusive tax rate.

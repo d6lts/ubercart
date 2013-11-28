@@ -22,7 +22,7 @@ class CountryTest extends UbercartTestBase {
   /**
    * Test import/enable/disable/remove of Country information files.
    */
-  function testCountries() {
+  public function testCountries() {
     $import_file = 'belgium_56_3.cif';
     $country_name = 'Belgium';
     $country_code = 'BEL';

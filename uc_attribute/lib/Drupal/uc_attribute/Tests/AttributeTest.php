@@ -770,7 +770,7 @@ class AttributeTest extends UbercartTestBase {
   /**
    * Tests that product in cart has the selected attribute option.
    */
-  function testAttributeAddToCart() {
+  public function testAttributeAddToCart() {
     for ($display = 0; $display <= 3; ++$display) {
       // Set up an attribute.
       $data = array(
@@ -869,7 +869,7 @@ class AttributeTest extends UbercartTestBase {
    *
    * @param $var
    */
-  function showVar($var) {
+  protected function showVar($var) {
     $this->pass('<pre>' . print_r($var, TRUE) . '</pre>');
   }
 }

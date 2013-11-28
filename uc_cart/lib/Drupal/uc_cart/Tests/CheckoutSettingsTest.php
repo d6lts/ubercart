@@ -22,7 +22,7 @@ class CheckoutSettingsTest extends UbercartTestBase {
     );
   }
 
-  function testEnableCheckout() {
+  public function testEnableCheckout() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/store/settings/checkout');
     $this->assertField(
@@ -49,7 +49,7 @@ class CheckoutSettingsTest extends UbercartTestBase {
     );
   }
 
-  function testAnonymousCheckout() {
+  public function testAnonymousCheckout() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/store/settings/checkout');
     $this->assertField(

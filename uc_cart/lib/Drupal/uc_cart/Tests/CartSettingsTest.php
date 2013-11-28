@@ -22,7 +22,7 @@ class CartSettingsTest extends UbercartTestBase {
     );
   }
 
-  function testAddToCartRedirect() {
+  public function testAddToCartRedirect() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/store/settings/cart');
     $this->assertField(
@@ -59,7 +59,7 @@ class CartSettingsTest extends UbercartTestBase {
     $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect works with a query string.');
   }
 
-  function testMinimumSubtotal() {
+  public function testMinimumSubtotal() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/store/settings/cart');
     $this->assertField(
@@ -108,7 +108,7 @@ class CartSettingsTest extends UbercartTestBase {
     $this->assertText('Enter your billing address and information here.');
   }
 
-  function testContinueShopping() {
+  public function testContinueShopping() {
     // Continue shopping link should take you back to the product page.
     $this->drupalPostForm(
       'node/' . $this->product->id(),
@@ -162,7 +162,7 @@ class CartSettingsTest extends UbercartTestBase {
     );
   }
 
-  function testCartBreadcrumb() {
+  public function testCartBreadcrumb() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/store/settings/cart');
     $this->assertField(

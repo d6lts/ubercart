@@ -25,7 +25,7 @@ class StoredTaxesTest extends UbercartTestBase {
     );
   }
 
-  function loadTaxLine($order_id) {
+  protected function loadTaxLine($order_id) {
     $order = uc_order_load($order_id, TRUE);
     foreach ($order->line_items as $line) {
       if ($line['type'] == 'tax') {
@@ -35,7 +35,7 @@ class StoredTaxesTest extends UbercartTestBase {
     return FALSE;
   }
 
-  function assertTaxLineCorrect($line, $rate, $when) {
+  protected function assertTaxLineCorrect($line, $rate, $when) {
     $this->assertTrue($line, t('The tax line item was saved to the order ' . $when));
     $this->assertTrue(number_format($rate * $this->product->sell_price, 2) == number_format($line['amount'], 2), t('Stored tax line item has the correct amount ' . $when));
     $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][li_id]', $line['line_item_id'], t('Found the tax line item ID ' . $when));
@@ -43,7 +43,7 @@ class StoredTaxesTest extends UbercartTestBase {
     $this->assertText(uc_currency_format($line['amount']), t('Tax display has the correct amount ' . $when));
   }
 
-  function testTaxDisplay() {
+  public function testTaxDisplay() {
     $this->drupalLogin($this->adminUser);
 
     // Enable a payment method for the payment preview checkout pane.

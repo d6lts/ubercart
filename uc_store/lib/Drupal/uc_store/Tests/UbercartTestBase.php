@@ -49,7 +49,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Overrides WebTestBase::setUp().
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Collect admin permissions.
@@ -75,7 +75,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Creates a new product.
    */
-  function createProduct($product = array()) {
+  protected function createProduct($product = array()) {
     // Set the default required fields.
     $weight_units = array('lb', 'kg', 'oz', 'g');
     $length_units = array('in', 'ft', 'cm', 'mm');
@@ -106,7 +106,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $data
    * @param $save
    */
-  public function createAttribute($data = array(), $save = TRUE) {
+  protected function createAttribute($data = array(), $save = TRUE) {
     $attribute = $data + array(
       'name' => $this->randomName(8),
       'label' => $this->randomName(8),
@@ -129,7 +129,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $data
    * @param $save
    */
-  public function createAttributeOption($data = array(), $save = TRUE) {
+  protected function createAttributeOption($data = array(), $save = TRUE) {
     $max_aid = db_select('uc_attributes', 'a')
       ->fields('a', array('aid'))
       ->orderBy('aid', 'DESC')
@@ -155,7 +155,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Adds a product to the cart.
    */
-  function addToCart($product, $options = array()) {
+  protected function addToCart($product, $options = array()) {
     $this->drupalPostForm('node/' . $product->id(), $options, 'Add to cart');
   }
 
@@ -164,7 +164,7 @@ abstract class UbercartTestBase extends WebTestBase {
    *
    * Fix this after adding a proper API call for saving a product class.
    */
-  function createProductClass($data = array()) {
+  protected function createProductClass($data = array()) {
     $class = strtolower($this->randomName(12));
     $edit = $data + array(
       'type' => $class,
@@ -183,7 +183,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $edit
    *   The form-values array to which to add required fields.
    */
-  function populateCheckoutForm($edit = array()) {
+  protected function populateCheckoutForm($edit = array()) {
     foreach (array('billing', 'delivery') as $pane) {
       $prefix = 'panes[' . $pane . ']';
       $key =  $prefix . '[country]';
@@ -211,7 +211,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Executes the checkout process.
    */
-  function checkout($edit = array()) {
+  protected function checkout($edit = array()) {
     $this->drupalPostForm('cart', array(), 'Checkout');
     $this->assertText(
       t('Enter your billing address and information here.'),
@@ -245,7 +245,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Creates a new order.
    */
-  function createOrder($edit = array()) {
+  protected function createOrder($edit = array()) {
     $this->addToCart($this->product);
 
     $order = $this->checkout();
@@ -269,7 +269,7 @@ abstract class UbercartTestBase extends WebTestBase {
    *   An array containing the most recently sent matching email,
    *   or FALSE if the subject line did not match anything.
    */
-  function findMail($pattern) {
+  protected function findMail($pattern) {
     foreach (array_reverse($this->drupalGetMails()) as $mail) {
       if (preg_match($pattern, $mail['subject'])) {
         $this->pass(t('E-mail found with subject matching %pattern.', array('%pattern' => $pattern)));
@@ -296,7 +296,7 @@ abstract class UbercartTestBase extends WebTestBase {
    *   TRUE to check only the plain-text contents of the 'data' keys of each 'insert' command (i.e. what would
    *   be inserted into the page).  FALSE to check the complete, json-encoded ajax response.
    */
-  function assertAjaxHelper($ajax, $text, $message = FALSE, $not_exists = FALSE, $plain = TRUE) {
+  protected function assertAjaxHelper($ajax, $text, $message = FALSE, $not_exists = FALSE, $plain = TRUE) {
     $content = '';
     if ($plain) {
       foreach ($ajax as $command) {
@@ -326,7 +326,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $message
    *   The assertion message.
    */
-  function assertAjaxText($ajax, $text, $message = FALSE) {
+  protected function assertAjaxText($ajax, $text, $message = FALSE) {
     $this->assertAjaxHelper($ajax, $text, $message, FALSE, TRUE);
   }
 
@@ -341,7 +341,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $message
    *   The assertion message.
    */
-  function assertNoAjaxText($ajax, $text, $message = FALSE) {
+  protected function assertNoAjaxText($ajax, $text, $message = FALSE) {
     $this->assertAjaxHelper($ajax, $text, $message, TRUE, TRUE);
   }
 
@@ -355,7 +355,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $message
    *   The assertion message.
    */
-  function assertAjaxRaw($ajax, $text, $message = FALSE) {
+  protected function assertAjaxRaw($ajax, $text, $message = FALSE) {
     $this>assertAjaxHelper($ajax, $text, $message, FALSE, FALSE);
   }
 
@@ -369,7 +369,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $message
    *   The assertion message.
    */
-  function assertNoAjaxRaw($ajax, $text, $message = FALSE) {
+  protected function assertNoAjaxRaw($ajax, $text, $message = FALSE) {
     $this>assertAjaxHelper($ajax, $text, $message, TRUE, FALSE);
   }
 

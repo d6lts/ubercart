@@ -20,7 +20,7 @@ class StoreTest extends UbercartTestBase {
     );
   }
 
-  function testStoreAdmin() {
+  public function testStoreAdmin() {
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/store');
