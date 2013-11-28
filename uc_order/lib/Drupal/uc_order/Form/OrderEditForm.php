@@ -59,7 +59,7 @@ class OrderEditForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Delete'),
       '#button_type' => 'danger',
-      '#submit' => array('uc_order_edit_form_delete'),
+      '#submit' => array(array($this, 'delete')),
       '#access' => $order->access('delete'),
     );
 
@@ -154,6 +154,18 @@ class OrderEditForm extends FormBase {
     $order->save();
 
     drupal_set_message(t('Order changes saved.'));
+  }
+
+  /**
+   * Form submission handler for the 'delete' action.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param array $form_state
+   *   A reference to a keyed array containing the current state of the form.
+   */
+  public function delete(array $form, array &$form_state) {
+    $form_state['redirect'] = 'admin/store/orders/' . $form_state['order']->id() . '/delete';
   }
 
 }

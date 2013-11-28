@@ -337,15 +337,6 @@ function theme_uc_order_edit_form($variables) {
 }
 
 /**
- * Handles order delete button action.
- *
- * @see uc_order_edit_form()
- */
-function uc_order_edit_form_delete($form, &$form_state) {
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/delete';
-}
-
-/**
  * Form to add a line item to an order.
  *
  * @see uc_order_add_line_item_form_validate()
