@@ -36,11 +36,11 @@ class CartForm extends FormBase {
       '#tree' => TRUE,
       '#header' => array(
         'remove' => array(
-          'data' => t('Remove'),
+          'data' => $this->t('Remove'),
           'class' => array('remove'),
         ),
         'image' => array(
-          'data' => t('Products'),
+          'data' => $this->t('Products'),
           'class' => array('image'),
         ),
         'desc' => array(
@@ -52,7 +52,7 @@ class CartForm extends FormBase {
           'class' => array('qty'),
         ),
         'total' => array(
-          'data' => t('Total'),
+          'data' => $this->t('Total'),
           'class' => array('price'),
         ),
       ),
@@ -98,7 +98,7 @@ class CartForm extends FormBase {
 
     $form['items'][]['total'] = array(
       '#theme' => 'uc_price',
-      '#prefix' => '<span id="subtotal-title">' . t('Subtotal:') . '</span> ',
+      '#prefix' => '<span id="subtotal-title">' . $this->t('Subtotal') . ':</span> ',
       '#price' => $subtotal,
       '#wrapper_attributes' => array(
         'colspan' => 5,
@@ -113,13 +113,13 @@ class CartForm extends FormBase {
       // Add the element to the form based on the element type.
       if (variable_get('uc_continue_shopping_type', 'link') == 'link') {
         $form['actions']['continue_shopping'] = array(
-          '#markup' => l(t('Continue shopping'), uc_cart_continue_shopping_url()),
+          '#markup' => l($this->t('Continue shopping'), uc_cart_continue_shopping_url()),
         );
       }
       elseif (variable_get('uc_continue_shopping_type', 'link') == 'button') {
         $form['actions']['continue_shopping'] = array(
           '#type' => 'submit',
-          '#value' => t('Continue shopping'),
+          '#value' => $this->t('Continue shopping'),
           '#submit' => array(array($this, 'submitForm'), array($this, 'continueShopping')),
         );
       }
@@ -129,7 +129,7 @@ class CartForm extends FormBase {
     if (variable_get('uc_cart_empty_button', FALSE)) {
       $form['actions']['empty'] = array(
         '#type' => 'submit',
-        '#value' => t('Empty cart'),
+        '#value' => $this->t('Empty cart'),
         '#submit' => array(array($this, 'emptyCart')),
       );
     }
@@ -138,7 +138,7 @@ class CartForm extends FormBase {
     $form['actions']['update'] = array(
       '#type' => 'submit',
       '#name' => 'update-cart',
-      '#value' => t('Update cart'),
+      '#value' => $this->t('Update cart'),
       '#submit' => array(array($this, 'submitForm'), array($this, 'displayUpdateMessage')),
     );
     $form['actions']['checkout'] = array(
@@ -147,7 +147,8 @@ class CartForm extends FormBase {
     if (variable_get('uc_checkout_enabled', TRUE)) {
       $form['actions']['checkout']['checkout'] = array(
         '#type' => 'submit',
-        '#value' => t('Checkout'),
+        '#value' => $this->t('Checkout'),
+        '#button_type' => 'primary',
         '#submit' => array(array($this, 'submitForm'), array($this, 'checkout')),
       );
     }
@@ -163,7 +164,7 @@ class CartForm extends FormBase {
     if (substr($form_state['triggering_element']['#name'], 0, 7) == 'remove-') {
       $item = substr($form_state['triggering_element']['#name'], 7);
       $form_state['values']['items'][$item]['qty'] = 0;
-      drupal_set_message(t('<strong>!product-title</strong> removed from your shopping cart.', array('!product-title' => $form['data'][$item]['title']['#value'])));
+      drupal_set_message($this->t('<strong>!product-title</strong> removed from your shopping cart.', array('!product-title' => $form['data'][$item]['title']['#value'])));
     }
 
     // Update the items in the shopping cart based on the form values, but only
@@ -179,7 +180,7 @@ class CartForm extends FormBase {
    * Displays "cart updated" message for the cart form.
    */
   public function displayUpdateMessage(array &$form, array &$form_state) {
-    drupal_set_message(t('Your cart has been updated.'));
+    drupal_set_message($this->t('Your cart has been updated.'));
   }
 
   /**
