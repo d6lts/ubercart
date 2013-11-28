@@ -565,13 +565,6 @@ function uc_order_new($uid = 0, $state = 'in_checkout') {
 }
 
 /**
- * Saves an order to the database.
- */
-function uc_order_save($order) {
-  $order->save();
-}
-
-/**
  * Save a product to an order.
  */
 function uc_order_product_save($order_id, $product) {

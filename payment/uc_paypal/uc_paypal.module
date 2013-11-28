@@ -724,7 +724,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
   );
 
   $order->products = $items;
-  uc_order_save($order);
+  $order->save();
 
   $nvp_response = uc_paypal_api_request($nvp_request, variable_get('uc_paypal_wpp_server', 'https://api-3t.sandbox.paypal.com/nvp'));
 

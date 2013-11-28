@@ -68,7 +68,7 @@ class CheckoutForm extends FormBase {
     // altered the order.
     if (!$processed) {
       $order->line_items = uc_order_load_line_items($order);
-      uc_order_save($order);
+      $order->save();
     }
 
     foreach ($panes as $id => $pane) {
@@ -138,7 +138,7 @@ class CheckoutForm extends FormBase {
 
     // Reload line items and save order.
     $order->line_items = uc_order_load_line_items($order);
-    uc_order_save($order);
+    $order->save();
   }
 
   /**

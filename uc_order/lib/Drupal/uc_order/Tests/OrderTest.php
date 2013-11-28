@@ -78,7 +78,7 @@ class OrderTest extends UbercartTestBase {
     $this->assertHookMessage('entity_crud_hook_test_entity_load called for type uc_order');
 
     $_SESSION['entity_crud_hook_test'] = array();
-    uc_order_save($order);
+    $order->save();
 
     $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type uc_order');
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type uc_order');

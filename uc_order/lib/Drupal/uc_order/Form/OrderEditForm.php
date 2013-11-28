@@ -149,7 +149,7 @@ class OrderEditForm extends FormBase {
 
     field_attach_extract_form_values($order, $form, $form_state);
 
-    uc_order_save($order);
+    $order->save();
 
     drupal_set_message(t('Order changes saved.'));
   }

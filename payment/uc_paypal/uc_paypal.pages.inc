@@ -248,7 +248,7 @@ function uc_paypal_ec_review() {
     }
     $order->setPaymentMethod('paypal_ec');
 
-    uc_order_save($order);
+    $order->save();
 
     $_SESSION['have_details'][$order->id()] = TRUE;
   }
@@ -267,7 +267,7 @@ function uc_paypal_ec_review_form($form, &$form_state, $order) {
   if (module_exists('uc_quote') && variable_get('uc_paypal_ec_review_shipping', TRUE) && uc_order_is_shippable($order)) {
     uc_checkout_pane_quotes('prepare', $order, NULL);
     $order->line_items = uc_order_load_line_items($order);
-    uc_order_save($order);
+    $order->save();
 
     $result = uc_checkout_pane_quotes('view', $order, NULL);
     $form['panes']['quotes'] = array(
@@ -365,7 +365,7 @@ function uc_paypal_ec_review_form_submit($form, &$form_state) {
     uc_order_comment_save($order->id(), 0, $form_state['values']['order_comments'], 'order');
   }
 
-  uc_order_save($order);
+  $order->save();
 
   $form_state['redirect'] = 'cart/echeckout/submit';
 }

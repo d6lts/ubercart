@@ -57,7 +57,7 @@ function uc_2checkout_complete($cart_id = 0) {
   }
 
   // Save changes to order without it's completion.
-  uc_order_save($order);
+  $order->save();
 
   if (drupal_strtolower($_REQUEST['email']) !== drupal_strtolower($order->getEmail())) {
     uc_order_comment_save($order->id(), 0, t('Customer used a different e-mail address during payment: !email', array('!email' => check_plain($_REQUEST['email']))), 'admin');
