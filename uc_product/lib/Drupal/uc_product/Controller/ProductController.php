@@ -8,7 +8,6 @@
 namespace Drupal\uc_product\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller routines for product routes.
@@ -54,7 +53,7 @@ class ProductController extends ControllerBase {
 
     drupal_set_message(t('Default image support configured for Ubercart products.'));
 
-    return new RedirectResponse(url('admin/store', array('absolute' => TRUE)));
+    return $this->redirect('uc_store.admin');
   }
 
 }

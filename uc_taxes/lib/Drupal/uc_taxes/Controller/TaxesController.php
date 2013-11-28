@@ -8,7 +8,6 @@
 namespace Drupal\uc_taxes\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller routines for tax routes.
@@ -74,7 +73,7 @@ class TaxesController extends ControllerBase {
     // Display a message and redirect back to the overview.
     drupal_set_message(t('Tax rate %name cloned.', array('%name' => $name)));
 
-    return new RedirectResponse(url('admin/store/settings/taxes', array('absolute' => TRUE)));
+    return $this->redirect('uc_taxes.overview');
   }
 
 }

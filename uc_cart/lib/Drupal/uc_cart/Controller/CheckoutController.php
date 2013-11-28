@@ -23,7 +23,7 @@ class CheckoutController extends ControllerBase {
 
     $items = uc_cart_get_contents();
     if (count($items) == 0 || !variable_get('uc_checkout_enabled', TRUE)) {
-      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+      return $this->redirect('uc_cart.cart');
     }
 
     if (($min = variable_get('uc_minimum_subtotal', 0)) > 0) {
@@ -39,7 +39,7 @@ class CheckoutController extends ControllerBase {
 
       if ($subtotal < $min) {
         drupal_set_message(t('The minimum order subtotal for checkout is @min.', array('@min' => uc_currency_format($min))), 'error');
-        return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+        return $this->redirect('uc_cart.cart');
       }
     }
 
@@ -72,7 +72,7 @@ class CheckoutController extends ControllerBase {
         // Ghost session.
         unset($_SESSION['cart_order']);
         drupal_set_message(t('Your session has expired or is no longer valid.  Please review your order and try again.'));
-        return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+        return $this->redirect('uc_cart.cart');
       }
     }
 
@@ -81,11 +81,11 @@ class CheckoutController extends ControllerBase {
       // If this is a form submission, make sure the cart order is still valid.
       if (!isset($order)) {
         drupal_set_message(t('Your session has expired or is no longer valid.  Please review your order and try again.'));
-        return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+        return $this->redirect('uc_cart.cart');
       }
       elseif (!empty($_SESSION['uc_cart_order_rebuild'])) {
         drupal_set_message(t('Your shopping cart contents have changed. Please review your order and try again.'));
-        return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+        return $this->redirect('uc_cart.cart');
       }
     }
     else {
@@ -119,7 +119,7 @@ class CheckoutController extends ControllerBase {
       }
       elseif (!uc_order_product_revive($order->products)) {
         drupal_set_message(t('Some of the products in this order are no longer available.'), 'error');
-        return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+        return $this->redirect('uc_cart.cart');
       }
     }
 
@@ -138,18 +138,18 @@ class CheckoutController extends ControllerBase {
     drupal_add_js(drupal_get_path('module', 'uc_cart') . '/js/uc_cart.js');
 
     if (empty($_SESSION['cart_order']) || empty($_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_review'])) {
-      return new RedirectResponse(url('cart/checkout', array('absolute' => TRUE)));
+      return $this->redirect('uc_cart.checkout');
     }
 
     $order = uc_order_load($_SESSION['cart_order']);
 
     if (!$order || $order->getStateId() != 'in_checkout') {
       unset($_SESSION['uc_checkout'][$order->id()]['do_review']);
-      return new RedirectResponse(url('cart/checkout', array('absolute' => TRUE)));
+      return $this->redirect('uc_cart.checkout');
     }
     elseif (!uc_order_product_revive($order->products)) {
       drupal_set_message(t('Some of the products in this order are no longer available.'), 'error');
-      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+      return $this->redirect('uc_cart.cart');
     }
 
     $panes = _uc_checkout_pane_list();
@@ -185,7 +185,7 @@ class CheckoutController extends ControllerBase {
    */
   function complete() {
     if (empty($_SESSION['cart_order']) || empty($_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_complete'])) {
-      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+      return $this->redirect('uc_cart.cart');
     }
 
     $order = uc_order_load(intval($_SESSION['cart_order']));
@@ -194,7 +194,7 @@ class CheckoutController extends ControllerBase {
       // Display messages to customers and the administrator if the order was lost.
       drupal_set_message(t("We're sorry.  An error occurred while processing your order that prevents us from completing it at this time. Please contact us and we will resolve the issue as soon as possible."), 'error');
       watchdog('uc_cart', 'An empty order made it to checkout! Cart order ID: @cart_order', array('@cart_order' => $_SESSION['cart_order']), WATCHDOG_ERROR);
-      return new RedirectResponse(url('cart', array('absolute' => TRUE)));
+      return $this->redirect('uc_cart.cart');
     }
 
     $build = uc_cart_complete_sale($order, variable_get('uc_new_customer_login', FALSE));
