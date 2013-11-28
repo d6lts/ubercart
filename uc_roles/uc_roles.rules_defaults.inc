@@ -41,8 +41,8 @@ function uc_roles_default_rules_configuration() {
     'expiration:select' => 'expiration',
     'from' => uc_store_email_from(),
     'addresses' => '[order:email]',
-    'subject' => uc_get_message('uc_roles_grant_subject'),
-    'message' => uc_get_message('uc_roles_grant_message'),
+    'subject' => t('[store:name]: [expiration:name] role granted'),
+    'message' => t("[order:first-name] [order:last-name], \n\nThanks to your order, [order:link], at [store:name] you now have a new role, [expiration:name].\n\nThanks again, \n\n[store:name]\n[site:slogan]"),
     'format' => filter_default_format(),
   ));
   $configs['uc_role_notify_grant'] = $rule;
@@ -57,8 +57,8 @@ function uc_roles_default_rules_configuration() {
     'expiration:select' => 'expiration',
     'from' => uc_store_email_from(),
     'addresses' => '[account:mail]',
-    'subject' => uc_get_message('uc_roles_revoke_subject'),
-    'message' => uc_get_message('uc_roles_revoke_message'),
+    'subject' => t('[store:name]: [expiration:name] role expired'),
+    'message' => t("The role, [expiration:name], you acquired by purchasing a product at our store has expired. Any special access or privileges that came with it are now gone. You can purchase it again by going to [store:link]\n\nThanks again, \n\n[store:name]\n[site:slogan]"),
     'format' => filter_default_format(),
   ));
   $configs['uc_role_notify_revoke'] = $rule;
@@ -73,8 +73,8 @@ function uc_roles_default_rules_configuration() {
     'expiration:select' => 'expiration',
     'from' => uc_store_email_from(),
     'addresses' => '[order:email]',
-    'subject' => uc_get_message('uc_roles_renew_subject'),
-    'message' => uc_get_message('uc_roles_renew_message'),
+    'subject' => t('[store:name]: [expiration:name] role renewed'),
+    'message' => t("[order:first-name] [order:last-name], \n\nThanks to your order, [order:link], at [store:name] you have renewed the role, [expiration:name]. It is now set to expire on [expiration:expiration:short].\n\nThanks again, \n\n[store:name]\n[site:slogan]"),
     'format' => filter_default_format(),
   ));
   $configs['uc_role_notify_renew'] = $rule;
@@ -89,8 +89,8 @@ function uc_roles_default_rules_configuration() {
     'expiration:select' => 'expiration',
     'from' => uc_store_email_from(),
     'addresses' => '[account:mail]',
-    'subject' => uc_get_message('uc_roles_reminder_subject'),
-    'message' => uc_get_message('uc_roles_reminder_message'),
+    'subject' => t('[store:name]: [expiration:name] role expiration notice'),
+    'message' => t("This message is to remind you that the role, [expiration:name], you acquired by making a purchase at our store will expire at [expiration:expiration:short]. You may visit [store:link] to renew this role before it expires.\n\nThanks again, \n\n[store:name]\n[site:slogan]"),
     'format' => filter_default_format(),
   ));
   $configs['uc_role_notify_reminder'] = $rule;

@@ -19,7 +19,7 @@ function uc_order_default_rules_configuration() {
       'from' => uc_store_email_from(),
       'addresses' => '[order:email]',
       'subject' => t('Order #[order:order-number] Update'),
-      'message' => uc_get_message('order_update_email'),
+      'message' => t("[order:first-name] [order:last-name],\n\nYour order number [order:link] at [store:name] has been updated.\n\nOrder status: [order:order-status]\n\nOrder comment:\n[order:last-comment]\n\nBrowse to the following page to login to your account and view your order details:\n[site:login-link]\n\n\nThanks again,\n\n[store:name]\n[site:slogan]"),
       'format' => filter_default_format(),
     ));
 

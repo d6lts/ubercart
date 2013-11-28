@@ -44,37 +44,6 @@ function hook_uc_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Convenience function to display large blocks of text in several places.
- *
- * There are many instances where Ubercart modules have configurable blocks of
- * text. These usually come with default messages, like e-mail templates for new
- * orders. Because of the way default values are normally set, you're then stuck
- * having to copy and paste a large chunk of text in at least two different
- * places in the module (when you're wanting to use the variable or to display
- * the settings form with the default value). To cut down code clutter, this
- * hook was introduced. It lets you put your messages in one place and use the
- * function uc_get_message() to retrieve the default value at any time (and from
- * any module).
- *
- * The function is very simple, expecting no arguments and returning a basic
- * associative array with keys being message IDs and their values being the
- * default message. When you call uc_get_message(), use the message ID you set
- * here to refer to the message you want.
- *
- * Note: When using t(), you must not pass it a concatenated string! So our
- * example has no line breaks in the message even though it is much wider than
- * 80 characters. Using concatenation breaks translation.
- *
- * @return
- *   An array of messages.
- */
-function hook_uc_message() {
-  $messages['configurable_message_example'] = t('This block of text represents a configurable message such as a set of instructions or an e-mail template.  Using hook_uc_message to handle the default values for these is so easy even your grandma can do it!');
-
-  return $messages;
-}
-
-/**
  * Adds status messages to the "Store administration" page.
  *
  * This hook is used to add items to the store status table on the main store

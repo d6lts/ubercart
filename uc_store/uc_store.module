@@ -1334,6 +1334,8 @@ function uc_weight_sort($a, $b) {
 
 /**
  * Returns the default message for a configurable message.
+ *
+ * @deprecated
  */
 function uc_get_message($message_id) {
   static $messages;

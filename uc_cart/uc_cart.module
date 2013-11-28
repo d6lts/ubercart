@@ -248,7 +248,6 @@ function uc_cart_preprocess_block(&$variables) {
 function uc_cart_uc_message() {
   global $user;
 
-  $messages['checkout_instructions'] = '';
   $messages['review_instructions'] = '<p>' . t("Your order is almost complete. Please review the details below and click 'Submit order' if all the information is correct.  You may use the 'Back' button to make changes to your order if necessary.") . '</p>';
   $messages['completion_message'] = '<p>' . t('Your order is complete! Your order number is [uc_order:order-number].') . '</p>';
   $messages['completion_logged_in'] = '<p>' . t('Thank you for shopping at [store:name]. While logged in, you may continue shopping or <a href="[uc_order:url]">view your current order status</a> and order history.') . '</p>';
