@@ -573,73 +573,6 @@ function uc_order_product_save($order_id, $product) {
 }
 
 /**
- * Load a single ordered product entity.
- *
- * @param integer $opid
- *   The ID of the ordered product entity.
- * @param boolean $reset
- *   Whether to reset the internal cache for ordered product IDs. Defaults to
- *   FALSE.
- *
- * @return object
- *   The ordered product entity matching $opid.
- */
-function uc_order_product_load($opid, $reset = FALSE) {
-  $products = uc_order_product_load_multiple(array($opid), $reset);
-  return reset($products);
-}
-
-/**
- * Load multiple ordered product entities.
- *
- * @param array $opids
- *   Array of ordered product IDs of products to load.  Default is the empty
- *   array, which loads all ordered products.
- * @param boolean $reset
- *   Whether to reset the internal cache for ordered product IDs. Defaults to
- *   FALSE.
- *
- * @return array
- *   An array of ordered product entities matching $opids, indexed by
- *   ID.
- */
-function uc_order_product_load_multiple($opids = array(), $reset = FALSE) {
-  return entity_load('uc_order_product', $opids, array(), $reset);
-}
-
-/**
- * Generate an array for rendering the multiple order products.
- *
- * Order products being viewed are generally expected to be fully-loaded entity
- * objects, thus have their name or id key set. However, it is possible to
- * view a single entity without any id, e.g. for generating a preview during
- * creation.
- *
- * @param array $order_products
- *   The array of order product to render.
- * @param $view_mode
- *    A view mode as used by this entity type, e.g. 'full', 'teaser'...
- * @param $langcode
- *   (optional) A language code to use for rendering. Defaults to the global
- *   content language of the current request.
- * @param $page
- *   (optional) If set will control if the entity is rendered: if TRUE
- *   the entity will be rendered without its title, so that it can be embedded
- *   in another context. If FALSE the entity will be displayed with its title
- *   in a mode suitable for lists.
- *   If unset, the page mode will be enabled if the current path is the URI
- *   of the entity, as returned by entity_uri().
- *
- * @return
- *   The renderable array, keyed by the entity type and by entity identifiers,
- *   for which the entity name is used if existing - see entity_id(). If there
- *   is no information on how to view an entity, FALSE is returned.
- */
-function uc_order_product_view_multiple($order_products, $view_mode = 'full', $langcode = NULL, $page = NULL) {
-  return entity_view('uc_order_product', $order_products, $view_mode, $langcode, $page);
-}
-
-/**
  * Merge fields from their associated nodes into a set of order products.
  *
  * @param $products
@@ -698,21 +631,6 @@ function uc_order_product_revive($products, $published = TRUE) {
  */
 function uc_order_load($order_id, $reset = FALSE) {
   return entity_load('uc_order', $order_id, $reset);
-}
-
-/**
- * Loads one or more order entities from the database.
- *
- * @param array $ids
- *   An array of order IDs.
- * @param bool $reset
- *   (optional) Whether to reset the internal cache. Defaults to FALSE.
- *
- * @return array
- *   An array of order objects indexed by order_id.
- */
-function uc_order_load_multiple($ids, $reset = FALSE) {
-  return entity_load_multiple('uc_order', $ids, $reset);
 }
 
 /**

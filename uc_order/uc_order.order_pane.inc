@@ -634,7 +634,7 @@ function uc_order_edit_products_remove($form, &$form_state) {
 
   if (module_exists('uc_stock')) {
     // Replace stock immediately.
-    $product = uc_order_product_load($order_product_id);
+    $product = entity_load('uc_order_product', $order_product_id);
     uc_stock_adjust($product->model, $product->qty);
   }
 
