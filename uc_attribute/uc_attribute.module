@@ -54,20 +54,6 @@ function uc_attribute_menu() {
     'route_name' => 'uc_attribute.overview',
     'weight' => -8,
   );
-
-  $items['admin/structure/types/manage/%uc_product_class/attributes'] = array(
-    'title' => 'Attributes',
-    'route_name' => 'uc_attribute.product_class_attributes',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-  );
-  $items['admin/structure/types/manage/%uc_product_class/options'] = array(
-    'title' => 'Options',
-    'route_name' => 'uc_attribute.product_class_options',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 2,
-  );
-
   return $items;
 }
 
