@@ -52,11 +52,13 @@ class OrderEditForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit-changes'] = array(
       '#type' => 'submit',
-      '#value' => t('Submit changes'),
+      '#value' => $this->t('Save changes'),
+      '#button_type' => 'primary',
     );
     $form['actions']['delete'] = array(
       '#type' => 'submit',
-      '#value' => t('Delete'),
+      '#value' => $this->t('Delete'),
+      '#button_type' => 'danger',
       '#submit' => array('uc_order_edit_form_delete'),
       '#access' => $order->access('delete'),
     );
