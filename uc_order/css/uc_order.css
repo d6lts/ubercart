@@ -128,19 +128,6 @@
   width: 80%;
 }
 
-.order-edit-table {
-  width: auto;
-}
-
-.order-edit-table .oet-label {
-  font-weight: bold;
-  text-align: right;
-}
-
-.order-edit-table .form-item {
-  display: inline;
-}
-
 .address-select-box {
   background-color: #ddd;
   border: solid 1px #999;

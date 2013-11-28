@@ -137,13 +137,11 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
       return $build;
 
     case 'edit-form':
-      $form['customer'] = array();
-
       $form['customer']['uid'] = array(
         '#type' => 'hidden',
         '#default_value' => $order->getUserId(),
       );
-      $form['customer']['text']['uid_text'] = array(
+      $form['customer']['uid_text'] = array(
         '#type' => 'textfield',
         '#title' => t('Customer number'),
         '#default_value' => $order->getUserId(),
@@ -152,16 +150,11 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
         '#disabled' => TRUE,
       );
       $form['customer']['primary_email'] = array(
-        '#type' => 'hidden',
-        '#default_value' => $order->getEmail(),
-      );
-      $form['customer']['text']['primary_email_text'] = array(
         '#type' => 'textfield',
-        '#title' => t('Primary e-mail'),
+        '#title' => t('E-mail address'),
         '#default_value' => $order->getEmail(),
         '#maxlength' => 64,
         '#size' => 32,
-        '#disabled' => TRUE,
       );
       return $form;
 
@@ -174,21 +167,13 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
                 . '/images/menu_customers_small.gif" alt="' . t('Create a new customer.') . '" '
                 . 'title="' . t('Create a new customer.') . '" onclick="load_new_customer_form();" />';
       $output .= '</div>';
-      $output .= '<div id="customer-select"></div><table class="order-edit-table">';
-      foreach (element_children($form['customer']['text']) as $field) {
-        $title = $form['customer']['text'][$field]['#title'];
-        $form['customer']['text'][$field]['#title'] = NULL;
-        $output .= '<tr><td class="oet-label">' . $title . ':</td><td>'
-                 . drupal_render($form['customer']['text'][$field]) . '</td></tr>';
-      }
-      $output .= '</table>' . drupal_render($form['customer']['primary_email'])
-               . drupal_render($form['customer']['uid']);
+      $output .= '<div id="customer-select"></div>';
+      $output .= drupal_render($form['customer']);
       return $output;
 
     case 'edit-process':
-      $changes['uid'] = $form_state['values']['uid'];
-      $changes['primary_email'] = $form_state['values']['primary_email'];
-      return $changes;
+      $order->setUserId($form_state['values']['uid']);
+      $order->setEmail($form_state['values']['primary_email']);
   }
 }
 
