@@ -87,9 +87,6 @@ function uc_reports_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_reports_menu() {
-  global $user;
-  $items = array();
-
   $items['admin/store/reports/customers'] = array(
     'title' => 'Customer reports',
     'description' => 'View reports for store customers.',

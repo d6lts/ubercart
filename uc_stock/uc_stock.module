@@ -31,8 +31,6 @@ function uc_stock_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_stock_menu() {
-  $items = array();
-
   $items['admin/store/settings/stock'] = array(
     'title' => 'Stock notifications',
     'description' => 'Enable or disable stock level notifications.',
@@ -47,6 +45,7 @@ function uc_stock_menu() {
       'file' => 'uc_stock.admin.inc',
     );
   }
+
   return $items;
 }
 

@@ -34,9 +34,6 @@ function uc_order_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_order_menu() {
-  global $user;
-  $items = array();
-
   $items['admin/store/customers'] = array(
     'title' => 'Customers',
     'description' => 'View and search customer information.',

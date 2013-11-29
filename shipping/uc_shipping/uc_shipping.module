@@ -24,8 +24,6 @@ function uc_shipping_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_shipping_menu() {
-  $items = array();
-
   $items['admin/store/orders/%uc_order/packages'] = array(
     'title' => 'Packages',
     'page callback' => 'uc_shipping_order_packages',

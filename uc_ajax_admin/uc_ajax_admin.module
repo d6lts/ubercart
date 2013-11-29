@@ -22,7 +22,6 @@ function uc_ajax_admin_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_ajax_admin_menu() {
-  $items = array();
   $items['admin/store/settings/checkout/ajax'] = array(
     'title' => 'Ajax',
     'description' => 'Administer ajax updates on checkout form.',
@@ -32,6 +31,7 @@ function uc_ajax_admin_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 3,
   );
+
   return $items;
 }
 

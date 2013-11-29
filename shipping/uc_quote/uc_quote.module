@@ -29,8 +29,6 @@ function uc_quote_permission() {
  * Implements hook_menu().
  */
 function uc_quote_menu() {
-  $items = array();
-
   $items['admin/store/settings/quotes'] = array(
     'title' => 'Shipping quotes',
     'description' => 'Configure shipping quotes.',

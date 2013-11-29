@@ -20,8 +20,6 @@ use Drupal\node\NodeTypeInterface;
  * Implements hook_menu().
  */
 function uc_product_menu() {
-  $items = array();
-
   $items['admin/store/products'] = array(
     'title' => 'Products',
     'description' => 'Administer products, classes, and more.',

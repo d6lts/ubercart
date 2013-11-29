@@ -22,8 +22,6 @@ function uc_2checkout_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_2checkout_menu() {
-  $items = array();
-
   $items['cart/2checkout/complete'] = array(
     'title' => 'Order complete',
     'page callback' => 'uc_2checkout_complete',

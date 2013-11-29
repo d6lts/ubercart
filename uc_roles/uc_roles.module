@@ -74,8 +74,6 @@ function uc_roles_cron() {
  * Implements hook_menu().
  */
 function uc_roles_menu() {
-  $items = array();
-
   $items['admin/people/expiration'] = array(
     'title' => 'Role expiration',
     'description' => 'Edit and view role expirations set by Ubercart',
@@ -352,9 +350,7 @@ function uc_roles_user_view($account, $view_mode) {
     return;
   }
 
-  $items = array();
   $form = array();
-
   $expirations = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid", array(':uid' => $account->id()));
   foreach ($expirations as $expiration) {
     $form[$expiration->rid] = array(

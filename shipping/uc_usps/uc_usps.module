@@ -15,8 +15,6 @@ use Drupal\uc_store\Address;
  * Implements hook_menu().
  */
 function uc_usps_menu() {
-  $items = array();
-
   $items['admin/store/settings/quotes/settings/usps'] = array(
     'title' => 'USPS',
     'page callback' => 'drupal_get_form',

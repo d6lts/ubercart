@@ -16,8 +16,6 @@ define('UC_AUTHORIZENET_LIVE_GATEWAY_URL', 'https://secure.authorize.net/gateway
  * Implements hook_menu().
  */
 function uc_authorizenet_menu() {
-  $items = array();
-
   $items['authnet/silent-post'] = array(
     'page callback' => 'uc_authorizenet_silent_post',
     'access callback' => TRUE,

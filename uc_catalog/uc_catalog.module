@@ -37,9 +37,6 @@ function uc_catalog_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_catalog_menu() {
-  global $user;
-  $items = array();
-
   $items['catalog'] = array(
     'title' => 'Catalog',
     'page callback' => 'uc_catalog_browse',

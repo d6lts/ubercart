@@ -98,8 +98,6 @@ define('MM_TO_CM', 0.1);
  * Implements hook_menu().
  */
 function uc_store_menu() {
-  $items = array();
-
   $items['admin/store'] = array(
     'title' => 'Store',
     'description' => 'Administer orders, products, customers, store settings, etc.',
