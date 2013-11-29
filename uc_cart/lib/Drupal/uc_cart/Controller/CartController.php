@@ -31,12 +31,6 @@ class CartController extends ControllerBase {
       );
     }
 
-    // Add a custom cart breadcrumb if specified.
-    if (($text = variable_get('uc_cart_breadcrumb_text', '')) !== '') {
-      $link = l($text, variable_get('uc_cart_breadcrumb_url', '<front>'));
-      drupal_set_breadcrumb(array($link));
-    }
-
     return drupal_get_form('Drupal\uc_cart\Form\CartForm', $items);
   }
 

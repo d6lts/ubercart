@@ -1,0 +1,5 @@
+services:
+  uc_cart.breadcrumb:
+    class: Drupal\uc_cart\CartBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }
