@@ -77,30 +77,15 @@ function uc_cart_theme() {
       ),
       'file' => 'uc_cart.theme.inc',
     ),
-    'uc_cart_block_content' => array(
+    'uc_cart_block' => array(
       'variables' => array(
-        'help_text' => NULL,
         'items' => NULL,
         'item_count' => NULL,
-        'item_text' => NULL,
         'total' => NULL,
         'summary_links' => NULL,
         'collapsed' => TRUE,
       ),
-      'file' => 'uc_cart.theme.inc',
-    ),
-    'uc_cart_block_items' => array(
-      'variables' => array('items' => NULL, 'collapsed' => TRUE),
-      'file' => 'uc_cart.theme.inc',
-    ),
-    'uc_cart_block_summary' => array(
-      'variables' => array(
-        'item_count' => NULL,
-        'item_text' => NULL,
-        'total' => NULL,
-        'summary_links' => NULL,
-      ),
-      'file' => 'uc_cart.theme.inc',
+      'template' => 'uc-cart-block',
     ),
     'uc_cart_view_form' => array(
       'render element' => 'form',
@@ -205,17 +190,40 @@ function uc_cart_user_login($account) {
 }
 
 /**
+ * Prepares variables for the cart block template.
+ *
+ * Default template: uc-cart-block.html.twig.
+ */
+function template_preprocess_uc_cart_block(&$variables) {
+  $variables['attributes']['class'][] = 'cart-block-items';
+  if ($variables['collapsed']) {
+    $variables['attributes']['class'][] = 'collapsed';
+  }
+
+  $variables['total'] = theme('uc_price', array('price' => $variables['total']));
+
+  foreach ($variables['items'] as $key => $item) {
+    $variables['items'][$key]['price'] = theme('uc_price', array('price' => $item['price']));
+  }
+
+  $variables['summary_links'] = array(
+    '#theme' => 'links',
+    '#links' => $variables['summary_links'],
+    '#attributes' => array('class' => 'cart-block-summary-links'),
+  );
+}
+
+/**
  * Preprocesses the cart block output to include the icon.
  */
 function uc_cart_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'uc_cart' && $variables['label']) {
-    $settings = $variables['elements']['#block']->get('settings');
     $variables['label'] = theme('uc_cart_block_title', array(
       'title' => $variables['label'],
-      'show_icon' => $settings['show_image'],
+      'show_icon' => $variables['configuration']['show_image'],
       'cart_empty' => !uc_cart_get_contents(),
-      'collapsible' => $settings['collapsible'],
-      'collapsed' => $settings['collapsed'],
+      'collapsible' => $variables['configuration']['collapsible'],
+      'collapsed' => $variables['configuration']['collapsed'],
     ));
   }
 }

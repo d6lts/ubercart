@@ -28,7 +28,6 @@ class CartBlock extends BlockBase {
       'show_image' => TRUE,
       'collapsible' => TRUE,
       'collapsed' => TRUE,
-      'show_help_text' => FALSE,
       'visibility' => array(
         'path' => array(
           'pages' => 'admin*',
@@ -68,11 +67,6 @@ class CartBlock extends BlockBase {
       '#title' => t('Display the shopping cart block collapsed by default.'),
       '#default_value' => $this->configuration['collapsed'],
     );
-    $form['show_help_text'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Display small help text in the shopping cart block.'),
-      '#default_value' => $this->configuration['show_help_text'],
-    );
     return $form;
   }
 
@@ -84,7 +78,6 @@ class CartBlock extends BlockBase {
     $this->configuration['show_image'] = $form_state['values']['show_image'];
     $this->configuration['collapsible'] = $form_state['values']['collapsible'];
     $this->configuration['collapsed'] = $form_state['values']['collapsed'];
-    $this->configuration['show_help_text'] = $form_state['values']['show_help_text'];
   }
 
   /**
@@ -104,17 +97,9 @@ class CartBlock extends BlockBase {
         drupal_add_js(drupal_get_path('module', 'uc_cart') . '/js/uc_cart_block.js');
       }
 
-      // First build the help text.
-      $help_text = FALSE;
-
-      if ($this->configuration['show_help_text']) {
-        $help_text = t('Click title to display cart contents.');
-      }
-
-      $items = FALSE;
+      $items = array();
       $item_count = 0;
       $total = 0;
-
       if ($product_count) {
         $display_items = entity_view_multiple(uc_cart_get_contents(), 'cart');
         foreach (element_children($display_items) as $key) {
@@ -135,20 +120,16 @@ class CartBlock extends BlockBase {
         }
       }
 
-      // Build the item count text and cart links.
-      $item_text = format_plural($item_count, '<span class="num-items">1</span> Item', '<span class="num-items">@count</span> Items');
-
-      $summary_links = array(
-        'cart-block-view-cart' => array(
-          'title' => t('View cart'),
-          'href' => 'cart',
-          'attributes' => array('rel' => 'nofollow'),
-        ),
+      // Build the cart links.
+      $summary_links[] = array(
+        'title' => t('View cart'),
+        'href' => 'cart',
+        'attributes' => array('rel' => 'nofollow'),
       );
 
       // Only add the checkout link if checkout is enabled.
       if (variable_get('uc_checkout_enabled', TRUE)) {
-        $summary_links['cart-block-checkout'] = array(
+        $summary_links[] = array(
           'title' => t('Checkout'),
           'href' => 'cart/checkout',
           'attributes' => array('rel' => 'nofollow'),
@@ -156,11 +137,9 @@ class CartBlock extends BlockBase {
       }
 
       return array(
-        '#theme' => 'uc_cart_block_content',
-        '#help_text' => $help_text,
+        '#theme' => 'uc_cart_block',
         '#items' => $items,
         '#item_count' => $item_count,
-        '#item_text' => $item_text,
         '#total' => $total,
         '#summary_links' => $summary_links,
         '#collapsed' => $this->configuration['collapsed'],
