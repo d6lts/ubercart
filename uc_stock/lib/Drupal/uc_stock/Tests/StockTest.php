@@ -30,6 +30,12 @@ class StockTest extends UbercartTestBase {
    */
   public function setUp() {
     parent::setUp();
+
+    // Ensure test mails are logged.
+    \Drupal::config('system.mail')
+      ->set('interface.uc_stock', 'Drupal\Core\Mail\VariableLog')
+      ->save();
+
     $this->drupalLogin($this->adminUser);
   }
 

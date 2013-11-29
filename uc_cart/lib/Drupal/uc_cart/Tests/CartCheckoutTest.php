@@ -24,6 +24,15 @@ class CartCheckoutTest extends UbercartTestBase {
     );
   }
 
+  public function setUp() {
+    parent::setUp();
+
+    // Ensure test mails are logged.
+    \Drupal::config('system.mail')
+      ->set('interface.uc_order', 'Drupal\Core\Mail\VariableLog')
+      ->save();
+  }
+
   public function testCartAPI() {
     // Test the empty cart.
     $items = uc_cart_get_contents();
