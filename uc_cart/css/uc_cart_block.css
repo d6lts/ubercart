@@ -89,17 +89,11 @@
 }
 
 .cart-block-summary {
-  margin: 0;
-  padding: 2px;
-}
-
-.cart-block-summary tbody {
-  border-top: 0;
+  margin: 0 0 1em;
 }
 
 .cart-block-summary tr {
   background-color: transparent;
-  vertical-align: top;
 }
 
 .cart-block-summary td {
@@ -113,25 +107,19 @@
 .cart-block-summary-total {
   text-align: right;
   white-space: nowrap;
-  width: auto;
 }
 
-.cart-block-summary-total label {
-  display: inline;
-  font-weight: bold;
-}
-
-.cart-block-summary-links td {
+.cart-block-summary-links {
   text-align: right;
 }
 
-.cart-block-summary-links ul.links li {
+.cart-block-summary-links li {
   border-right: solid 1px;
   display: inline;
   padding: 0 1em 0 .75em;
 }
 
-.cart-block-summary-links ul.links li.last {
+.cart-block-summary-links li.last {
   border-right: none;
   padding-right: 0;
 }

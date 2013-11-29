@@ -163,19 +163,19 @@ function theme_uc_cart_block_summary($variables) {
   $summary_links = $variables['summary_links'];
 
   // Build the basic table with the number of items in the cart and total.
-  $output = '<table class="cart-block-summary"><tbody><tr>'
+  $output = '<table class="cart-block-summary"><tr>'
            . '<td class="cart-block-summary-items">' . $item_text . '</td>'
-           . '<td class="cart-block-summary-total"><label>' . t('Total:')
-           . '</label> ' . theme('uc_price', array('price' => $total)) . '</td></tr>';
+           . '<td class="cart-block-summary-total"><strong>' . t('Total')
+           . ':</strong> ' . theme('uc_price', array('price' => $total)) . '</td></tr>'
+           . '</table>';
 
-  // If there are products in the cart...
+  // If there are products in the cart, add links.
   if ($item_count > 0) {
-    // Add a view cart link.
-    $output .= '<tr class="cart-block-summary-links"><td colspan="2">'
-             . theme('links', array('links' => $summary_links)) . '</td></tr>';
+    $output .= theme('links', array(
+      'links' => $summary_links,
+      'attributes' => array('class' => 'cart-block-summary-links'),
+    ));
   }
-
-  $output .= '</tbody></table>';
 
   return $output;
 }
