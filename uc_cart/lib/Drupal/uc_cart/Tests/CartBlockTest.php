@@ -25,16 +25,26 @@ class CartBlockTest extends UbercartTestBase {
   }
 
   /**
+   * The cart block being tested.
+   */
+  protected $block;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->block = $this->drupalPlaceBlock('uc_cart');
+  }
+
+  /**
    * Test cart block functionality.
    */
   public function testCartBlock() {
-    $block = $this->drupalPlaceBlock('uc_cart');
-
     // Test the empty cart block.
     $this->drupalGet('');
 
-    $this->assertRaw('cart-block-icon-empty');
-    $this->assertNoRaw('cart-block-icon-full');
+    $this->assertRaw('empty');
     $this->assertText('There are no products in your shopping cart.');
     $this->assertText('0 Items');
     $this->assertText('Total: $0.00');
@@ -45,8 +55,7 @@ class CartBlockTest extends UbercartTestBase {
     $this->addToCart($this->product);
     $this->drupalGet('');
 
-    $this->assertNoRaw('cart-block-icon-empty');
-    $this->assertRaw('cart-block-icon-full');
+    $this->assertNoRaw('empty');
     $this->assertNoText('There are no products in your shopping cart.');
     $this->assertText('1 ×');
     $this->assertText($this->product->label());
@@ -61,34 +70,52 @@ class CartBlockTest extends UbercartTestBase {
    * Test hide cart when empty functionality.
    */
   public function testHiddenCartBlock() {
-    $block = $this->drupalPlaceBlock('uc_cart');
-    $block->getPlugin()->setConfigurationValue('hide_empty', TRUE);
-    $block->save();
+    $this->block->getPlugin()->setConfigurationValue('hide_empty', TRUE);
+    $this->block->save();
 
     // Test the empty cart block.
     $this->drupalGet('');
-    $this->assertNoText($block->label());
+    $this->assertNoText($this->block->label());
 
     // Test the cart block with an item.
     $this->addToCart($this->product);
     $this->drupalGet('');
-    $this->assertText($block->label());
+    $this->assertText($this->block->label());
   }
 
   /**
    * Test show cart icon functionality.
    */
   public function testCartIcon() {
-    $block = $this->drupalPlaceBlock('uc_cart');
-
     $this->drupalGet('');
     $this->assertRaw('cart-block-icon');
 
-    $block->getPlugin()->setConfigurationValue('show_image', FALSE);
-    $block->save();
+    $this->block->getPlugin()->setConfigurationValue('show_image', FALSE);
+    $this->block->save();
 
     $this->drupalGet('');
     $this->assertNoRaw('cart-block-icon');
+  }
+
+  /**
+   * Test cart block collapse functionality.
+   */
+  public function testCartCollapse() {
+    $this->drupalGet('');
+    $this->assertRaw('cart-block-arrow');
+    $this->assertRaw('collapsed');
+
+    $this->block->getPlugin()->setConfigurationValue('collapsed', FALSE);
+    $this->block->save();
+
+    $this->drupalGet('');
+    $this->assertNoRaw('collapsed');
+
+    $this->block->getPlugin()->setConfigurationValue('collapsible', FALSE);
+    $this->block->save();
+
+    $this->drupalGet('');
+    $this->assertNoRaw('cart-block-arrow');
   }
 
 }
