@@ -11,11 +11,11 @@
 }
 
 .cart-block-icon-full {
-  background: transparent url(images/cart-full.png) no-repeat left center;
+  background: transparent url(../images/cart-full.png) no-repeat left center;
 }
 
 .cart-block-icon-empty {
-  background: transparent url(images/cart-empty.png) no-repeat left center;
+  background: transparent url(../images/cart-empty.png) no-repeat left center;
 }
 
 /**
@@ -32,7 +32,7 @@
 }
 
 .cart-block-arrow {
-  background: transparent url(images/bullet-arrow-up.gif) no-repeat center center;
+  background: transparent url(../images/bullet-arrow-up.gif) no-repeat center center;
   height: 5px;
   position: absolute;
   right: 0;
@@ -41,7 +41,7 @@
 }
 
 .cart-block-title-bar .arrow-down {
-  background: transparent url(images/bullet-arrow-down.gif) no-repeat center center;
+  background: transparent url(../images/bullet-arrow-down.gif) no-repeat center center;
 }
 
 .cart-help-text {
