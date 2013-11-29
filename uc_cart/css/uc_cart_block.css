@@ -2,46 +2,29 @@
  * @file
  * Styles for the uc_cart module cart block.
  */
-.cart-block-icon-full,
-.cart-block-icon-empty {
+.cart-block-icon {
+  background: transparent url(../images/cart-full.png) no-repeat left center;
   float: left;
   height: 16px;
-  margin: 2px 6px 0 0;
+  margin-right: 7px;
   width: 16px;
 }
 
-.cart-block-icon-full {
-  background: transparent url(../images/cart-full.png) no-repeat left center;
-}
-
-.cart-block-icon-empty {
+.cart-block-icon.empty {
   background: transparent url(../images/cart-empty.png) no-repeat left center;
 }
 
 /**
  * Styles for the cart block title and toggle.
  */
-.cart-block-title-bar {
-  display: inline;
-  padding-right: 20px;
-  position: relative;
-}
-
-.ucCollapseBlock-processed {
-  cursor: pointer;
-}
-
 .cart-block-arrow {
-  background: transparent url(../images/bullet-arrow-up.gif) no-repeat center center;
-  height: 5px;
-  position: absolute;
-  right: 0;
-  top: 9px;
-  width: 10px;
+  background: transparent url(../images/arrow-up.png) no-repeat 100% 40%;
+  cursor: pointer;
+  padding-right: 14px;
 }
 
-.cart-block-title-bar .arrow-down {
-  background: transparent url(../images/bullet-arrow-down.gif) no-repeat center center;
+.cart-block-arrow.collapsed {
+  background: transparent url(../images/arrow-down.png) no-repeat 100% 60%;
 }
 
 .cart-help-text {

@@ -5,67 +5,45 @@
  * Theme functions for the uc_cart module.
  */
 
+use Drupal\Core\Template\Attribute;
+
 /**
  * Themes the shopping cart block title.
  *
  * @param $variables
  *   An associative array containing:
  *   - title: The text to use for the title of the block.
- *   - icon_class: Class to use for the cart icon image or FALSE if the icon is
- *     disabled.
- *   - collapsible: TRUE or FALSE indicating whether or not the cart block is
- *     collapsible.
- *   - collapsed: TRUE or FALSE indicating whether or not the cart block is
- *     collapsed.
+ *   - show_icon: TRUE if the cart icon is to be displayed.
+ *   - empty: TRUE if the cart is empty.
+ *   - collapsible: TRUE if the cart block is collapsible.
+ *   - collapsed: TRUE if the cart block is collapsed initially.
  *
  * @ingroup themeable
  */
 function theme_uc_cart_block_title($variables) {
-  $title = $variables['title'];
-  $icon_class = $variables['icon_class'];
-  $collapsible = $variables['collapsible'];
-  $collapsed = $variables['collapsed'];
-
   $output = '';
 
   // Add in the cart image if specified.
-  if ($icon_class) {
-    $output .= theme('uc_cart_block_title_icon', array('icon_class' => $icon_class));
+  if ($variables['show_icon']) {
+    $icon_attributes['title'][] = t('View your shopping cart.');
+    $icon_attributes['class'][] = 'cart-block-icon';
+    if ($variables['cart_empty']) {
+      $icon_attributes['class'][] = 'empty';
+    }
+    $output .= l('<span ' . new Attribute($icon_attributes) . '></span>', 'cart', array('html' => TRUE));
   }
 
-  // Add the main title span and text, with or without the arrow based on the
-  // cart block collapsibility settings.
-  if ($collapsible) {
-    $output .= '<span class="cart-block-title-bar" title="' . t('Show/hide shopping cart contents.') . '">' . $title;
-    if ($collapsed) {
-      $output .= '<span class="cart-block-arrow arrow-down"></span>';
+  $attributes = array();
+  if ($variables['collapsible']) {
+    $attributes['title'] = t('Show/hide shopping cart contents.');
+    $attributes['class'][] = 'cart-block-arrow';
+    if ($variables['collapsed']) {
+      $attributes['class'][] = 'collapsed';
     }
-    else {
-      $output .= '<span class="cart-block-arrow"></span>';
-    }
-    $output .= '</span>';
   }
-  else {
-    $output .= '<span class="cart-block-title-bar">' . $title . '</span>';
-  }
+  $output .= '<span ' . new Attribute($attributes) . '>' . $variables['title'] . '</span>';
 
   return $output;
-}
-
-/**
- * Themes the shopping cart icon.
- *
- * @param $variables
- *   An associative array containing:
- *   - icon_class: Class to use for the cart icon image, either cart-full or
- *     cart-empty.
- *
- * @ingroup themeable
- */
-function theme_uc_cart_block_title_icon($variables) {
-  $icon_class = $variables['icon_class'];
-
-  return l('<span class="' . $icon_class . '" title="' . t('View your shopping cart.') . '"></span>', 'cart', array('html' => TRUE));
 }
 
 /**

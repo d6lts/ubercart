@@ -72,14 +72,11 @@ function uc_cart_theme() {
     'uc_cart_block_title' => array(
       'variables' => array(
         'title' => NULL,
-        'icon_class' => 'cart-empty',
+        'show_icon' => FALSE,
+        'cart_empty' => NULL,
         'collapsible' => TRUE,
         'collapsed' => TRUE,
       ),
-      'file' => 'uc_cart.theme.inc',
-    ),
-    'uc_cart_block_title_icon' => array(
-      'variables' => array('icon_class' => NULL),
       'file' => 'uc_cart.theme.inc',
     ),
     'uc_cart_block_content' => array(
@@ -213,31 +210,14 @@ function uc_cart_user_login($account) {
  * Preprocesses the cart block output to include the icon.
  */
 function uc_cart_preprocess_block(&$variables) {
-  global $user;
-
   if ($variables['plugin_id'] == 'uc_cart' && $variables['label']) {
-    // Build the cart image if enabled.
     $settings = $variables['elements']['#block']->get('settings');
-    if ($settings['show_image']) {
-      $product_count = count(uc_cart_get_contents());
-      if (!$product_count) {
-        // Use the "empty" cart icon.
-        $icon_class = 'cart-block-icon-empty';
-      }
-      else {
-        // Otherwise use the "full" cart icon.
-        $icon_class = 'cart-block-icon-full';
-      }
-    }
-    else {
-      $icon_class = FALSE;
-    }
-
     $variables['label'] = theme('uc_cart_block_title', array(
       'title' => $variables['label'],
-      'icon_class' => $icon_class,
-      'collapsible' => variable_get('uc_cart_block_collapsible', TRUE),
-      'collapsed' => variable_get('uc_cart_block_collapsed', TRUE),
+      'show_icon' => $settings['show_image'],
+      'cart_empty' => !uc_cart_get_contents(),
+      'collapsible' => $settings['collapsible'],
+      'collapsed' => $settings['collapsed'],
     ));
   }
 }
