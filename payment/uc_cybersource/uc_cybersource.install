@@ -28,18 +28,6 @@ function uc_cybersource_requirements($phase) {
     }
   }
 
-  // Using POST with cURL.
-  elseif ($method == 'post') {
-    $requirements['uc_cybersource_curl'] = array(
-      'title' => t('cURL'),
-      'value' => $has_curl ? t('Enabled') : t('Not found'),
-    );
-    if (!$has_curl) {
-      $requirements['uc_cybersource_curl']['severity'] = REQUIREMENT_ERROR;
-      $requirements['uc_cybersource_curl']['description'] = t("CyberSource's Silent Order POST requires the PHP <a href='!curl_url'>cURL</a> library.", array('!curl_url' => 'http://php.net/manual/en/curl.setup.php'));
-    }
-  }
-
   // We need HOP.php if we're using the post method and also the Hosted Order
   // page, which is a payment method rather than a gateway.
   if ($method != 'soap') {
