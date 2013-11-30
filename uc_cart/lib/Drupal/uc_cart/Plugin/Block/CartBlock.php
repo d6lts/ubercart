@@ -89,14 +89,6 @@ class CartBlock extends BlockBase {
     // Display nothing if the block is set to hide on empty and there are no
     // items in the cart.
     if (!$this->configuration['hide_empty'] || $product_count) {
-      // Add the cart block CSS.
-      drupal_add_css(drupal_get_path('module', 'uc_cart') . '/css/uc_cart_block.css');
-
-      // If the block is collapsible, add the appropriate JS.
-      if ($this->configuration['collapsible']) {
-        drupal_add_js(drupal_get_path('module', 'uc_cart') . '/js/uc_cart_block.js');
-      }
-
       $items = array();
       $item_count = 0;
       $total = 0;
@@ -136,7 +128,7 @@ class CartBlock extends BlockBase {
         );
       }
 
-      return array(
+      $build['block'] = array(
         '#theme' => 'uc_cart_block',
         '#items' => $items,
         '#item_count' => $item_count,
@@ -144,6 +136,16 @@ class CartBlock extends BlockBase {
         '#summary_links' => $summary_links,
         '#collapsed' => $this->configuration['collapsed'],
       );
+
+      // Add the cart block CSS.
+      $build['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart_block.css';
+
+      // If the block is collapsible, add the appropriate JS.
+      if ($this->configuration['collapsible']) {
+        $build['#attached']['js'][] = drupal_get_path('module', 'uc_cart') . '/js/uc_cart_block.js';
+      }
+
+      return $build;
     }
   }
 
