@@ -11,9 +11,7 @@
  * not listed in it.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\entity\Entity\EntityDisplay;
 use Drupal\node\NodeTypeInterface;
 
 /**
