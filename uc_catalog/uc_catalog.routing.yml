@@ -4,3 +4,10 @@ uc_catalog.settings:
     _form: 'Drupal\uc_catalog\Form\CatalogSettingsForm'
   requirements:
     _permission: 'administer catalog'
+
+uc_catalog.repair:
+  path: '/admin/store/settings/catalog/repair'
+  defaults:
+    _content: '\Drupal\uc_catalog\Controller\CatalogController::repairField'
+  requirements:
+    _permission: 'administer catalog'

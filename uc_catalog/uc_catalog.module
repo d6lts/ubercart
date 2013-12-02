@@ -45,13 +45,6 @@ function uc_catalog_menu() {
     'description' => 'Configure the product catalog pages.',
     'route_name' => 'uc_catalog.settings',
   );
-  $items['admin/store/settings/catalog/repair'] = array(
-    'title' => 'Repair catalog field',
-    'description' => 'Ensures the catalog taxonomy field is attached to product content types.',
-    'page callback' => 'uc_catalog_repair_field',
-    'access arguments' => array('administer catalog'),
-    'file' => 'uc_catalog.admin.inc',
-  );
   $items['admin/store/products/orphans'] = array(
     'title' => 'Find orphaned products',
     'description' => 'Find products that have not been categorized.',
