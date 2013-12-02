@@ -79,6 +79,7 @@
 .cart-block-summary-total {
   text-align: right;
   white-space: nowrap;
+  width: 100%;
 }
 
 .cart-block-summary-links {
