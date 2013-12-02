@@ -27,7 +27,7 @@ class UcOrderProductViewBuilder extends EntityViewBuilder {
         '#cell_attributes' => array('class' => array('qty')),
       );
       $node = node_load($product->nid->value);
-      $title = node_access('view', $node) ? l($product->title->value, 'node/' . $product->nid->value) : check_plain($product->title->value);
+      $title = $node->access('view') ? l($product->title->value, 'node/' . $product->nid->value) : check_plain($product->title->value);
       $product->content['product'] = array(
         '#markup' => $title . uc_product_get_description($product),
         '#cell_attributes' => array('class' => array('product')),

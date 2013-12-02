@@ -56,7 +56,7 @@ function theme_uc_product_kit_list_item($variables) {
 
   if ($product instanceof NodeInterface) {
     $node = node_load($product->id());
-    if (node_access('view', $node)) {
+    if ($node->access('view')) {
       $title = l($product->label(), 'node/' . $product->id());
     }
     else {
@@ -65,7 +65,7 @@ function theme_uc_product_kit_list_item($variables) {
   }
   else {
     $node = node_load($product->nid);
-    if (node_access('view', $node)) {
+    if ($node->access('view')) {
       $title = l($product->title, 'node/' . $product->nid);
     }
     else {

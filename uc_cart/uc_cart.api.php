@@ -125,7 +125,7 @@ function hook_uc_cart_display($item) {
   $element['remove'] = array('#type' => 'checkbox');
 
   $element['title'] = array(
-    '#markup' => node_access('view', $node) ? l($item->title, 'node/' . $item->nid) : check_plain($item->title),
+    '#markup' => $node->access('view') ? l($item->title, 'node/' . $item->nid) : check_plain($item->title),
   );
 
 

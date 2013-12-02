@@ -145,7 +145,7 @@ function uc_product_forms($form_id, $args) {
  */
 function uc_product_edit_access($node) {
   // Re-inherit access callback for 'node/%node/edit'.
-  return uc_product_is_product($node) && node_access('update', $node);
+  return uc_product_is_product($node) && $node->access('update');
 }
 
 /**
@@ -874,7 +874,7 @@ function uc_product_uc_cart_display($item) {
   $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
 
   $element['title'] = array(
-    '#markup' => node_access('view', $node) ? l($item->title, 'node/' . $node->id()) : check_plain($item->title),
+    '#markup' => $node->access('view') ? l($item->title, 'node/' . $node->id()) : check_plain($item->title),
   );
 
   $element['#total'] = $item->price * $item->qty;
