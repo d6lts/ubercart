@@ -104,42 +104,6 @@ function uc_catalog_theme() {
 }
 
 /**
- * Implements hook_node_view().
- */
-function uc_catalog_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
-  static $parents = array();
-
-  if (uc_product_is_product($node) && isset($node->taxonomy_catalog)) {
-    if ($view_mode == 'full' && config('uc_catalog.settings')->get('breadcrumb')) {
-      $crumbs = array();
-      if (config('system.site')->get('page.front') != 'catalog') {
-        $crumbs[] = l(t('Home'), '');
-      }
-
-      if ($terms = field_get_items($node, 'taxonomy_catalog')) {
-        $crumbs[] = l(t('Catalog'), 'catalog');
-        $used_tids = array();
-
-        foreach ($terms as $term) {
-          if (!isset($parents[$term['tid']])) {
-            $parents[$term['tid']] = taxonomy_term_load_parents_all($term['tid']);
-          }
-
-          foreach (array_reverse($parents[$term['tid']]) as $parent) {
-            if (!in_array($parent->tid, $used_tids)) {
-              $crumbs[] = l($parent->name, uc_catalog_path($parent));
-              $used_tids[] = $parent->tid;
-            }
-          }
-        }
-      }
-
-      drupal_set_breadcrumb($crumbs);
-    }
-  }
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function uc_catalog_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_id) {
