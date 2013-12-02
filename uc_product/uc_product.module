@@ -1042,23 +1042,6 @@ function uc_product_types() {
 }
 
 /**
- * Returns an associative array of product node type names keyed by ID.
- */
-function uc_product_type_names() {
-  $names = array();
-
-  // Get all the node meta data.
-  $node_info = module_invoke_all('node_info');
-
-  // Loop through each product node type.
-  foreach (uc_product_types() as $type) {
-    $names[$type] = $node_info[$type]['name'];
-  }
-
-  return $names;
-}
-
-/**
  * Determines whether or not a given node or node type is a product.
  *
  * @param $node
@@ -1143,20 +1126,6 @@ function uc_product_get_models($nid, $add_blank = TRUE) {
   }
 
   return $models;
-}
-
-/**
- * Gets the cost of a product node.
- *
- * @param $node_id
- *   nid of the selected node
- *
- * @return
- *   float - cost
- */
-function uc_product_get_cost($node_id) {
-  $product = node_load($node_id);
-  return $product->cost;
 }
 
 /**
