@@ -124,18 +124,22 @@ function uc_catalog_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $f
 }
 
 /**
- * Implements hook_preprocess_link().
- *
- * Rewrites taxonomy term links to point to the catalog.
+ * Implements hook_entity_bundle_info_alter().
  */
-function uc_catalog_preprocess_link(&$vars) {
-  // Link back to the catalog and not the taxonomy term page.
-  if (isset($vars['options']['entity_type']) && $vars['options']['entity_type'] == 'taxonomy_term') {
-    $term = $vars['options']['entity'];
-    if ($term->vid == config('uc_catalog.settings')->get('vocabulary')) {
-      $vars['path'] = uc_catalog_path($term);
+function uc_catalog_entity_bundle_info_alter(&$bundles) {
+  // Take over URI construction for taxonomy terms that are catalog categories.
+  if ($vid = \Drupal::config('uc_catalog.settings')->get('vocabulary')) {
+    if (isset($bundles['taxonomy_term'][$vid])) {
+      $bundles['taxonomy_term'][$vid]['uri_callback'] = 'uc_catalog_uri';
     }
   }
+}
+
+/**
+ * Entity URI callback used in uc_catalog_entity_bundle_info_alter().
+ */
+function uc_catalog_uri($category) {
+  return 'catalog/' . $category->id();
 }
 
 /**
