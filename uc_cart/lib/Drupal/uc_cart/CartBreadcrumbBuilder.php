@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains of \Drupal\uc_cart\CartBreadcrumbBuilder.
+ * Contains \Drupal\uc_cart\CartBreadcrumbBuilder.
  */
 
 namespace Drupal\uc_cart;
