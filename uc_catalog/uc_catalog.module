@@ -124,37 +124,6 @@ function uc_catalog_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $f
 }
 
 /**
- * Implements hook_taxonomy_term_insert().
- */
-function uc_catalog_taxonomy_term_insert($term) {
-  if (module_exists('pathauto')) {
-    if ($term->name) {
-      module_load_include('inc', 'uc_catalog', 'uc_catalog.pathauto');
-      $count = _uc_catalog_pathauto_alias($term, 'insert');
-    }
-  }
-}
-
-/**
- * Implements hook_taxonomy_term_update().
- */
-function uc_catalog_taxonomy_term_update($term) {
-  if (module_exists('pathauto')) {
-    if ($term->name) {
-      module_load_include('inc', 'uc_catalog', 'uc_catalog.pathauto');
-      $count = _uc_catalog_pathauto_alias($term, 'update');
-    }
-  }
-}
-
-/**
- * Implements hook_taxonomy_term_delete().
- */
-function uc_catalog_taxonomy_term_delete($term) {
-  path_delete(array('source' => uc_catalog_path($term)));
-}
-
-/**
  * Implements hook_preprocess_link().
  *
  * Rewrites taxonomy term links to point to the catalog.
