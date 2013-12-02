@@ -141,14 +141,6 @@ function uc_product_forms($form_id, $args) {
 }
 
 /**
- * Menu access callback for 'node/%node/edit/product'.
- */
-function uc_product_edit_access($node) {
-  // Re-inherit access callback for 'node/%node/edit'.
-  return uc_product_is_product($node) && $node->access('update');
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function uc_product_form_node_form_alter(&$form, &$form_state) {
