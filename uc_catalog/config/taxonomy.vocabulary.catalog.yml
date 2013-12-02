@@ -1,0 +1,8 @@
+vid: catalog
+uuid: 6709c3ec-1292-4fbf-ac39-d5efb1dd4c6d
+name: Catalog
+description: 'Product catalog'
+hierarchy: 1
+weight: -10
+status: true
+langcode: en

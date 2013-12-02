@@ -140,12 +140,22 @@ function uc_catalog_node_view(EntityInterface $node, EntityDisplay $display, $vi
 }
 
 /**
- * Implements hook_taxonomy_vocabulary_delete().
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
-function uc_catalog_taxonomy_vocabulary_delete($vocabulary) {
-  $config = config('uc_catalog.settings');
-  if ($vocabulary->id() == $config->get('vocabulary')) {
-    $config->clear('vocabulary')->save();
+function uc_catalog_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_id) {
+  $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
+  $vocabulary = $form_state['controller']->getEntity();
+  if ($vid == $vocabulary->id()) {
+    $form['help_catalog_vocab'] = array(
+      '#markup' => t('This is the designated catalog vocabulary. Some of the normal vocabulary options have been removed.'),
+      '#weight' => -1,
+    );
+    // Catalog vocabulary always has single hierarchy.
+    $form['hierarchy']['#value'] = TAXONOMY_HIERARCHY_SINGLE;
+    // Do not allow the catalog vocabulary to be deleted.
+    $form['actions']['delete']['#access'] = FALSE;
+    // Do not allow the catalog vid to be changed.
+    $form['vid']['#disabled'] = TRUE;
   }
 }
 
@@ -395,23 +405,7 @@ function uc_catalog_path($term) {
  * Adds a catalog taxonomy reference field to the specified node type.
  */
 function uc_catalog_add_node_type($type) {
-  $config = config('uc_catalog.settings');
-  $vid = $config->get('vocabulary');
-  if (!$vid) {
-    $vocabulary = entity_load('taxonomy_vocabulary', 'catalog');
-    if (!$vocabulary) {
-      $vocabulary = entity_create('taxonomy_vocabulary', array(
-        'name' => t('Catalog'),
-        'description' => '',
-        'hierarchy' => 1,
-        'module' => 'uc_catalog',
-        'vid' => 'catalog',
-      ));
-      $vocabulary->save();
-    }
-    $vid = $vocabulary->id();
-    $config->set('vocabulary', $vid)->save();
-  }
+  $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
 
   $field = field_info_field('node', 'taxonomy_catalog');
   if (!$field) {
