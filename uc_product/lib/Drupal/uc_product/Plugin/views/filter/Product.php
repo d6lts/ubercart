@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_product\Plugin\views\filter\Product.
+ * Contains \Drupal\uc_product\Plugin\views\filter\Product.
  */
 
 namespace Drupal\uc_product\Plugin\views\filter;

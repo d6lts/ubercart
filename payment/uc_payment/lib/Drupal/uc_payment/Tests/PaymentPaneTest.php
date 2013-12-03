@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_payment\Tests\PaymentPaneTest.
+ * Contains \Drupal\uc_payment\Tests\PaymentPaneTest.
  */
 
 namespace Drupal\uc_payment\Tests;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_credit\Tests\CreditCardTest.
+ * Contains \Drupal\uc_credit\Tests\CreditCardTest.
  */
 
 namespace Drupal\uc_credit\Tests;

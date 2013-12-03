@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_catalog\Tests\CatalogTest.
+ * Contains \Drupal\uc_catalog\Tests\CatalogTest.
  */
 
 namespace Drupal\uc_catalog\Tests;

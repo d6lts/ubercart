@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_credit\Plugin\views\field\DataField.
+ * Contains \Drupal\uc_credit\Plugin\views\field\DataField.
  */
 
 namespace Drupal\uc_credit\Plugin\views\field;

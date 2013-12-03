@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_taxes\Tests\StoredTaxesTest.
+ * Contains \Drupal\uc_taxes\Tests\StoredTaxesTest.
  */
 
 namespace Drupal\uc_taxes\Tests;

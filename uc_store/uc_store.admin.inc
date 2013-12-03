@@ -46,7 +46,7 @@ function uc_store_uc_store_status() {
   }
 
   // Check to see if the store e-mail address has been set.
-  if (!config('uc_store.settings')->get('mail')) {
+  if (!\Drupal::config('uc_store.settings')->get('mail')) {
     $messages[] = array(
       'status' => 'error',
       'title'  => t('Store settings'),

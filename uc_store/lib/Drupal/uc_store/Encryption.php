@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Encryption.
+ * Contains \Drupal\uc_store\Encryption.
  */
 
 namespace Drupal\uc_store;

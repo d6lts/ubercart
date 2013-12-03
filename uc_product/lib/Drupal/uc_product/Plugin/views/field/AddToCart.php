@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_product\Plugin\views\field\AddToCart.
+ * Contains \Drupal\uc_product\Plugin\views\field\AddToCart.
  */
 
 namespace Drupal\uc_product\Plugin\views\field;

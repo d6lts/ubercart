@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\UcOrderViewBuilder.
+ * Contains \Drupal\uc_order\UcOrderViewBuilder.
  */
 
 namespace Drupal\uc_order;

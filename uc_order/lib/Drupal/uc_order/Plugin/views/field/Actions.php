@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Plugin\views\field\Actions.
+ * Contains \Drupal\uc_order\Plugin\views\field\Actions.
  */
 
 namespace Drupal\uc_order\Plugin\views\field;

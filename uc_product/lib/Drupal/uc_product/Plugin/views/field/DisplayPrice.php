@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_product\Plugin\views\field\DisplayPrice.
+ * Contains \Drupal\uc_product\Plugin\views\field\DisplayPrice.
  */
 
 namespace Drupal\uc_product\Plugin\views\field;

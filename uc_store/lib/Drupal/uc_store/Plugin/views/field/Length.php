@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Plugin\views\field\Length.
+ * Contains \Drupal\uc_store\Plugin\views\field\Length.
  */
 
 namespace Drupal\uc_store\Plugin\views\field;

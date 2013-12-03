@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_stock\Tests\StockTest.
+ * Contains \Drupal\uc_stock\Tests\StockTest.
  */
 
 namespace Drupal\uc_stock\Tests;

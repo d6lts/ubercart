@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_cart\Tests\CheckoutSettingsTest.
+ * Contains \Drupal\uc_cart\Tests\CheckoutSettingsTest.
  */
 
 namespace Drupal\uc_cart\Tests;

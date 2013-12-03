@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\UcCartItemViewBuilder.
+ * Contains \Drupal\uc_cart\UcCartItemViewBuilder.
  */
 
 namespace Drupal\uc_cart;

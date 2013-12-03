@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Entity\UcOrderProduct.
+ * Contains \Drupal\uc_order\Entity\UcOrderProduct.
  */
 
 namespace Drupal\uc_order\Entity;

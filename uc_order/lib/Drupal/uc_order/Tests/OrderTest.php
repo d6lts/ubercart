@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_order\Tests\OrderTest.
+ * Contains \Drupal\uc_order\Tests\OrderTest.
  */
 
 namespace Drupal\uc_order\Tests;

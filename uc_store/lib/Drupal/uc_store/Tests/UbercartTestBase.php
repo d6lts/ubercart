@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_store\Tests\UbercartTestBase.
+ * Contains \Drupal\uc_store\Tests\UbercartTestBase.
  */
 
 namespace Drupal\uc_store\Tests;

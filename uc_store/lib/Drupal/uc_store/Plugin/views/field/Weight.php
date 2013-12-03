@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Plugin\views\field\Weight.
+ * Contains \Drupal\uc_store\Plugin\views\field\Weight.
  */
 
 namespace Drupal\uc_store\Plugin\views\field;

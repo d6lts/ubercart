@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Plugin\views\field\Status.
+ * Contains \Drupal\uc_order\Plugin\views\field\Status.
  */
 
 namespace Drupal\uc_order\Plugin\views\field;

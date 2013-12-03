@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_payment\Plugin\views\field\Method.
+ * Contains \Drupal\uc_payment\Plugin\views\field\Method.
  */
 
 namespace Drupal\uc_payment\Plugin\views\field;

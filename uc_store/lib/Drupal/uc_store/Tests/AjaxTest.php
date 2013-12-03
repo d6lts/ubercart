@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_store\Tests\AjaxTest.
+ * Contains \Drupal\uc_store\Tests\AjaxTest.
  */
 
 namespace Drupal\uc_store\Tests;

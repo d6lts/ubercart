@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\uc_attribute\Tests\AttributeTest.
+ * Contains \Drupal\uc_attribute\Tests\AttributeTest.
  */
 
 namespace Drupal\uc_attribute\Tests;

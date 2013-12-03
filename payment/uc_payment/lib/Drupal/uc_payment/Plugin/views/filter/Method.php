@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_payment\Plugin\views\filter\Method.
+ * Contains \Drupal\uc_payment\Plugin\views\filter\Method.
  */
 
 namespace Drupal\uc_payment\Plugin\views\filter;

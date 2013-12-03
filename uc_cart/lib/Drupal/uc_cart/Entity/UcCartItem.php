@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\Entity\UcCartItem.
+ * Contains \Drupal\uc_cart\Entity\UcCartItem.
  */
 
 namespace Drupal\uc_cart\Entity;

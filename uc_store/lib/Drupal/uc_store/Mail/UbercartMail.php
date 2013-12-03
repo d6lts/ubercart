@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Mail\UbercartMail.
+ * Contains \Drupal\uc_store\Mail\UbercartMail.
  */
 
 namespace Drupal\uc_store\Mail;

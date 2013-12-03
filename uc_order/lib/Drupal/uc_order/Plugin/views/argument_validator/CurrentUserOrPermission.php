@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Plugin\views\argument_validator\CurrentUserOrPermission.
+ * Contains \Drupal\uc_order\Plugin\views\argument_validator\CurrentUserOrPermission.
  */
 
 namespace Drupal\uc_order\Plugin\views\argument_validator;

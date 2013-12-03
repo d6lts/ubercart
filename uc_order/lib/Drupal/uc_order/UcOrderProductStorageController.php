@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\UcOrderProductStorageController.
+ * Contains \Drupal\uc_order\UcOrderProductStorageController.
  */
 
 namespace Drupal\uc_order;

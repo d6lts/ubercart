@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_cart\UcCartItemStorageController.
+ * Contains \Drupal\uc_cart\UcCartItemStorageController.
  */
 
 namespace Drupal\uc_cart;

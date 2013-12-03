@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Address utility class definition.
+ * Contains \Drupal\uc_store\Address.
  */
 
 namespace Drupal\uc_store;

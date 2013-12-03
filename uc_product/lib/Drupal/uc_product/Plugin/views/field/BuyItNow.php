@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_product\Plugin\views\field\BuyItNow.
+ * Contains \Drupal\uc_product\Plugin\views\field\BuyItNow.
  */
 
 namespace Drupal\uc_product\Plugin\views\field;

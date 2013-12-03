@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_store\Plugin\views\field\Price.
+ * Contains \Drupal\uc_store\Plugin\views\field\Price.
  */
 
 namespace Drupal\uc_store\Plugin\views\field;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Plugin\views\field\Order.
+ * Contains \Drupal\uc_order\Plugin\views\field\Order.
  */
 
 namespace Drupal\uc_order\Plugin\views\field;

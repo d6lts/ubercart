@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_order\Plugin\views\filter\Status.
+ * Contains \Drupal\uc_order\Plugin\views\filter\Status.
  */
 
 namespace Drupal\uc_order\Plugin\views\filter;
