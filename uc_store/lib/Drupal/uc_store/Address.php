@@ -54,7 +54,7 @@ class Address {
    */
   public function __construct($country = NULL) {
     if (!$this->country) {
-      $this->country = isset($country) ? $country : config('uc_store.settings')->get('address.country');
+      $this->country = isset($country) ? $country : \Drupal::config('uc_store.settings')->get('address.country');
     }
   }
 

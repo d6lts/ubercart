@@ -90,7 +90,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
   }
 
   if ($type == 'store') {
-    $config = config('uc_store.settings');
+    $config = \Drupal::config('uc_store.settings');
 
     foreach ($tokens as $name => $original) {
       switch ($name) {

@@ -133,7 +133,7 @@ function uc_store_schema() {
  */
 function uc_store_install() {
   // Set mail handler for all Ubercart modules
-  config('system.mail')
+  \Drupal::config('system.mail')
     ->set('interface.uc_cart',  'Drupal\uc_store\Mail\UbercartMail')
     ->set('interface.uc_order', 'Drupal\uc_store\Mail\UbercartMail')
     ->set('interface.uc_file',  'Drupal\uc_store\Mail\UbercartMail')
@@ -143,7 +143,7 @@ function uc_store_install() {
     ->save();
 
   // Set the default store date format.
-  config('system.date')
+  \Drupal::config('system.date')
     ->set('formats.uc_store.name', t('Ubercart'))
     ->set('formats.uc_store.locked', 0)
     ->set('formats.uc_store.pattern.php', 'm/d/Y')
@@ -163,6 +163,11 @@ function uc_store_install() {
 function uc_store_update_last_removed() {
   return 7300;
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
 
 /**
  * Moves store settings from variable to config.
@@ -242,7 +247,7 @@ function uc_store_update_8002() {
  * Reset mail handler for Ubercart modules.
  */
 function uc_store_update_8003() {
-  config('system.mail')
+  \Drupal::config('system.mail')
     ->set('interface.uc_cart',  'Drupal\uc_store\Mail\UbercartMail')
     ->set('interface.uc_order', 'Drupal\uc_store\Mail\UbercartMail')
     ->set('interface.uc_file',  'Drupal\uc_store\Mail\UbercartMail')
@@ -251,3 +256,8 @@ function uc_store_update_8003() {
     ->set('interface.uc_store', 'Drupal\uc_store\Mail\UbercartMail')
     ->save();
 }
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */

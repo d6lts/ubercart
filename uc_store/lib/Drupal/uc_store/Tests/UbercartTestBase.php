@@ -187,7 +187,7 @@ abstract class UbercartTestBase extends WebTestBase {
     foreach (array('billing', 'delivery') as $pane) {
       $prefix = 'panes[' . $pane . ']';
       $key =  $prefix . '[country]';
-      $country = empty($edit[$key]) ? config('uc_store.settings')->get('address.country') : $edit[$key];
+      $country = empty($edit[$key]) ? \Drupal::config('uc_store.settings')->get('address.country') : $edit[$key];
       $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => $country))->fetchField();
       $edit += array(
         $prefix . '[first_name]' => $this->randomName(10),

@@ -232,7 +232,7 @@ function uc_store_element_info() {
     '#hidden' => FALSE,
   );
 
-  $config = config('uc_store.settings')->get('currency');
+  $config = \Drupal::config('uc_store.settings')->get('currency');
   $sign_flag = $config['symbol_after'];
   $currency_sign = $config['symbol'];
 
@@ -647,7 +647,7 @@ function uc_currency_format($value, $sign = NULL, $thou = NULL, $dec = NULL) {
 
   $output = '';
 
-  $config = config('uc_store.settings')->get('currency');
+  $config = \Drupal::config('uc_store.settings')->get('currency');
   $sign_after = $config['symbol_after'];
   $prec = $config['precision'];
   if (is_null($sign)) {
@@ -703,7 +703,7 @@ function uc_weight_format($value, $unit = NULL) {
   $vars = array('!value' => $value);
 
   if (is_null($unit)) {
-    $unit = config('uc_store.settings')->get('units.weight');
+    $unit = \Drupal::config('uc_store.settings')->get('units.weight');
   }
 
   switch ($unit) {
@@ -720,7 +720,7 @@ function uc_weight_format($value, $unit = NULL) {
  */
 function uc_weight_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $to_units = config('uc_store.settings')->get('units.weight');
+    $to_units = \Drupal::config('uc_store.settings')->get('units.weight');
   }
   $constant = strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
@@ -747,7 +747,7 @@ function uc_length_format($value, $unit = NULL) {
   $vars = array('!value' => $value);
 
   if (is_null($unit)) {
-    $unit = config('uc_store.settings')->get('units.length');
+    $unit = \Drupal::config('uc_store.settings')->get('units.length');
   }
 
   switch ($unit) {
@@ -764,7 +764,7 @@ function uc_length_format($value, $unit = NULL) {
  */
 function uc_length_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $to_units = config('uc_store.settings')->get('units.length');
+    $to_units = \Drupal::config('uc_store.settings')->get('units.length');
   }
   $constant = strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
@@ -1271,14 +1271,14 @@ function uc_get_message($message_id) {
  * Returns the store name.
  */
 function uc_store_name() {
-  return config('uc_store.settings')->get('name');
+  return \Drupal::config('uc_store.settings')->get('name');
 }
 
 /**
  * Returns the user-defined store address.
  */
 function uc_store_address() {
-  $config = config('uc_store.settings');
+  $config = \Drupal::config('uc_store.settings');
   $store_address = uc_address_format(NULL, NULL, $config->get('name'),
     $config->get('address.street1'), $config->get('address.street2'),
     $config->get('address.city'), $config->get('address.zone'),
@@ -1291,9 +1291,9 @@ function uc_store_address() {
  * Returns the store e-mail address if set, otherwise the site email address.
  */
 function uc_store_email() {
-  $email_from = config('uc_store.settings')->get('mail');
+  $email_from = \Drupal::config('uc_store.settings')->get('mail');
   if (empty($email_from)) {
-    $email_from = config('system.site')->get('mail');
+    $email_from = \Drupal::config('system.site')->get('mail');
   }
   if (empty($email_from)) {
     $email_from = ini_get('sendmail_from');
@@ -1317,7 +1317,7 @@ function uc_store_email_from() {
 
   // Add the store name to the e-mail "From" line.
   // Must be optional to prevent server conflicts.
-  if (config('uc_store.settings')->get('mail_include_name')) {
+  if (\Drupal::config('uc_store.settings')->get('mail_include_name')) {
     $email_from = uc_store_rfc2822_display_name(uc_store_name()) . ' <' . $email_from . '>';
   }
 
@@ -1410,7 +1410,7 @@ function uc_store_default_country() {
     return $default;
   }
 
-  $default = config('uc_store.settings')->get('address.country');
+  $default = \Drupal::config('uc_store.settings')->get('address.country');
 
   $result = db_query("SELECT COUNT(*) FROM {uc_countries} WHERE country_id = :id AND version > :version", array(':id' => $default, ':version' => 0))->fetchField();
   if ($result == 0) {
@@ -1446,7 +1446,7 @@ function uc_store_mail_recipient_langcode($address) {
  */
 function uc_store_format_price_field_value($price) {
   $exact = rtrim(number_format($price, 6, '.', ''), '0');
-  $round = number_format($price, config('uc_store.settings')->get('currency.precision'), '.', '');
+  $round = number_format($price, \Drupal::config('uc_store.settings')->get('currency.precision'), '.', '');
 
   if ($exact == rtrim($round, '0')) {
     return $round;
