@@ -62,16 +62,3 @@ function theme_uc_uid($variables) {
     return '-';
   }
 }
-
-/**
- * Wraps the footer in a div so it can be re-styled.
- *
- * @param $variables
- *   An associative array containing:
- *   - message: String containing footer text.
- *
- * @ingroup themeable
- */
-function theme_uc_store_footer($variables) {
-  return '<div id="store-footer">' . $variables['message'] . '</div>';
-}

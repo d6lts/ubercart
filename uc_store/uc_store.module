@@ -494,10 +494,6 @@ function uc_store_validate_uc_quantity(&$element, &$form_state) {
  */
 function uc_store_theme() {
   return array(
-    'uc_store_footer' => array(
-      'variables' => array('message' => ''),
-      'file' => 'uc_store.theme.inc',
-    ),
     'uc_price' => array(
       'variables' => array('price' => 0, 'suffixes' => array()),
       'file' => 'uc_store.theme.inc',
@@ -552,81 +548,6 @@ function uc_store_permission() {
     'view reports' => array(
       'title' => t('View reports'),
     ),
-  );
-}
-
-/**
- * Implements hook_page_alter().
- */
-function uc_store_page_alter(&$page) {
-  $id = config('uc_store.settings')->get('footer_message');
-
-  // Exit if the store footer is turned off.
-  if ($id === 'none') {
-    return;
-  }
-
-  // Figure out what page is being viewed.
-  $path = current_path();
-  $parts = explode('/', $path);
-
-  // Exit if the page isn't governed by Ubercart.
-  switch ($parts[0]) {
-    case 'admin':
-      // No footer on /admin or /admin/*.
-      // But add a footer on /admin/store and /admin/store/*.
-      if (!isset($parts[1]) || $parts[1] != 'store') {
-        return;
-      }
-      break;
-
-    case 'node':
-      // No footer on /node or /node/[type]/add.
-      // Only add a footer on /node/[nid] if that node is a product.
-      if (count($parts) != 2 || intval($parts[1]) == 0) {
-        return;
-      }
-      else {
-        $node = node_load($parts[1]);
-        if (!$node || !function_exists('uc_product_is_product') || !uc_product_is_product($node)) {
-          return;
-        }
-      }
-      break;
-
-    case 'catalog':
-    case 'cart':
-      break;
-
-    default:
-      return;
-  }
-
-  $messages = _uc_store_footer_options();
-
-  if ($id == 0) {
-    // Pseudorandom number based on the hash of the path and the site's private
-    // key, so messages are consistent between pages on the same site, but
-    // different on the same pages on different sites.
-    $id = (hexdec(substr(md5($path . drupal_get_private_key()), 0, 2)) % count($messages)) + 1;
-  }
-
-  $page['page_bottom']['ubercart_footer'] = array(
-    '#theme' => 'uc_store_footer',
-    '#message' => $messages[$id],
-  );
-}
-
-/**
- * Returns the default store footer options.
- */
-function _uc_store_footer_options() {
-  $url = array('!url' => 'http://www.ubercart.org/');
-  return array(
-    1 => t('<a href="!url">Powered by Ubercart</a>', $url),
-    2 => t('<a href="!url">Drupal e-commerce</a> provided by Ubercart.', $url),
-    3 => t('Supported by Ubercart, an <a href="!url">open source e-commerce suite</a>.', $url),
-    4 => t('Powered by Ubercart, the <a href="!url">free shopping cart software</a>.', $url),
   );
 }
 

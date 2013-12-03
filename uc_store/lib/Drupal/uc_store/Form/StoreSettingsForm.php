@@ -185,17 +185,6 @@ class StoreSettingsForm extends ConfigFormBase {
       '#title' => t('Capitalize address on order screens'),
       '#default_value' => $config->get('capitalize_address'),
     );
-    $form['display']['uc_footer_message'] = array(
-      '#type' => 'radios',
-      '#title' => t('Footer message for store pages'),
-      '#options' => array_merge(
-        array(0 => t('Randomly select a message from the list below.')),
-        _uc_store_footer_options(),
-        array('none' => t('(Do not display a message in the footer.)'))
-      ),
-      '#default_value' => $config->get('footer_message'),
-      '#weight' => 10,
-    );
 
     return parent::buildForm($form, $form_state);
   }
@@ -227,7 +216,6 @@ class StoreSettingsForm extends ConfigFormBase {
       ->set('units.length', $form_state['values']['uc_length_unit'])
       ->set('customer_address', $form_state['values']['uc_customer_list_address'])
       ->set('capitalize_address', $form_state['values']['uc_order_capitalize_addresses'])
-      ->set('footer_message', $form_state['values']['uc_footer_message'])
       ->save();
 
     parent::submitForm($form, $form_state);
