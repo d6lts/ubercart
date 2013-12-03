@@ -180,17 +180,17 @@ function uc_roles_schema() {
 }
 
 /**
- * Implements hook_update_last_removed().
- */
-function uc_roles_update_last_removed() {
-  return 7300;
-}
-
-/**
  * Implements hook_uninstall().
  */
 function uc_roles_uninstall() {
   db_delete('uc_product_features')
     ->condition('fid', 'role')
     ->execute();
+}
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function uc_roles_update_last_removed() {
+  return 7300;
 }

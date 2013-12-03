@@ -195,6 +195,11 @@ function uc_product_update_last_removed() {
 }
 
 /**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
  * Delete unused variables.
  */
 function uc_product_update_8000() {
@@ -236,3 +241,8 @@ function uc_product_update_8001() {
     }
   }
 }
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */
