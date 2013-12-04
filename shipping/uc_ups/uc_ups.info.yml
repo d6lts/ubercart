@@ -5,4 +5,4 @@ dependencies:
   - uc_quote
 package: Ubercart - shipping
 core: 8.x
-configure: admin/store/settings/quotes/settings/ups
+configure: uc_ups.settings

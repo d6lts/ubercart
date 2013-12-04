@@ -17,11 +17,8 @@ use Drupal\uc_store\Address;
 function uc_ups_menu() {
   $items['admin/store/settings/quotes/settings/ups'] = array(
     'title' => 'UPS',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_ups_admin_settings'),
-    'access arguments' => array('configure quotes'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_ups.admin.inc',
+    'route_name' => 'uc_ups.settings',
   );
   $items['admin/store/orders/%uc_order/shipments/ups'] = array(
     'title' => 'UPS shipment',
@@ -48,7 +45,8 @@ function uc_ups_menu() {
  * Default is never delete the labels, keep them forever.
  */
 function uc_ups_cron() {
-  $cutoff = REQUEST_TIME - variable_get('uc_ups_label_lifetime', 0);
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $cutoff = REQUEST_TIME - $ups_config->get('label_lifetime');
   if ($cutoff == REQUEST_TIME) {
     // Label lifetime is set to 0, meaning never delete.
     return;
@@ -97,11 +95,12 @@ function uc_ups_theme() {
  * @see uc_ups_product_alter_validate()
  */
 function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $ups_config = \Drupal::config('uc_ups.settings');
   if (uc_product_is_product_form($form)) {
     $node = $form['#node'];
 
-    $enabled = variable_get('uc_quote_enabled', array()) + array('ups' => FALSE);
-    $weight = variable_get('uc_quote_method_weight', array()) + array('ups' => 0);
+    $enabled = $ups_config->get('uc_quote_enabled') + array('ups' => FALSE);
+    $weight = $ups_config->get('uc_quote_method_weight') + array('ups' => 0);
 
     $ups = array(
       '#type' => 'details',
@@ -114,8 +113,8 @@ function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
     $ups['pkg_type'] = array(
       '#type' => 'select',
       '#title' => t('Package type'),
-      '#options' => _uc_ups_pkg_types(),
-      '#default_value' => isset($node->ups['pkg_type']) ? $node->ups['pkg_type'] : variable_get('uc_ups_pkg_type', '02'),
+      '#options' => \Drupal\uc_ups\UPSUtilities::packageTypes(),
+      '#default_value' => isset($node->ups['pkg_type']) ? $node->ups['pkg_type'] : $ups_config->get('pkg_type'),
     );
 
     $form['shipping']['ups'] = $ups;
@@ -131,7 +130,8 @@ function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
  * @see uc_ups_form_alter()
  */
 function uc_ups_product_alter_validate($form, &$form_state) {
-  if (isset($form_state['values']['shippable']) && ($form_state['values']['shipping_type'] == 'small_package' || (empty($form_state['values']['shipping_type']) && variable_get('uc_store_shipping_type', 'small_package') == 'small_package'))) {
+  $ups_config = \Drupal::config('uc_ups.settings');
+  if (isset($form_state['values']['shippable']) && ($form_state['values']['shipping_type'] == 'small_package' || (empty($form_state['values']['shipping_type']) && $ups_config->get('uc_store_shipping_type') == 'small_package'))) {
     if ($form_state['values']['ups']['pkg_type'] == '02' && (empty($form_state['values']['dim_length']) || empty($form_state['values']['dim_width']) || empty($form_state['values']['dim_height']))) {
       form_set_error('base][dimensions', $form_state, t('Dimensions are required for custom packaging.'));
     }
@@ -180,7 +180,8 @@ function uc_ups_node_load($nodes, $types) {
   }
 
   $vids = array();
-  $shipping_type = variable_get('uc_store_shipping_type', 'small_package');
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $shipping_type = $ups_config->get('uc_store_shipping_type');
   $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => array_keys($nodes)))->fetchAllKeyed();
 
   foreach ($nodes as $nid => $node) {
@@ -234,7 +235,8 @@ function uc_ups_node_revision_delete($node) {
  * Implements hook_uc_shipping_type().
  */
 function uc_ups_uc_shipping_type() {
-  $weight = variable_get('uc_quote_type_weight', array('small_package' => 0));
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $weight = $ups_config->get('uc_quote_type_weight');
 
   $types = array();
   $types['small_package'] = array(
@@ -263,13 +265,13 @@ function uc_ups_uc_shipping_method() {
     'quote' => array(
       'type' => 'small_package',
       'callback' => 'uc_ups_quote',
-      'accessorials' => _uc_ups_service_list(),
+      'accessorials' => \Drupal\uc_ups\UPSUtilities::services(),
     ),
     'ship' => array(
       'type' => 'small_package',
       'callback' => 'uc_ups_fulfill_order',
       'file' => 'uc_ups.ship.inc',
-      'pkg_types' => _uc_ups_pkg_types(),
+      'pkg_types' => \Drupal\uc_ups\UPSUtilities::packageTypes(),
     ),
     'cancel' => 'uc_ups_void_shipment',
   );
@@ -286,10 +288,11 @@ function uc_ups_uc_shipping_method() {
 function uc_ups_uc_store_status() {
   $messages = array();
 
-  $access   = variable_get('uc_ups_access_license', '') != '';
-  $account  = variable_get('uc_ups_shipper_number', '') != '';
-  $user     = variable_get('uc_ups_user_id', '') != '';
-  $password = variable_get('uc_ups_password', '') != '';
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $access   = $ups_config->get('access_license') != '';
+  $account  = $ups_config->get('shipper_number') != '';
+  $user     = $ups_config->get('user_id') != '';
+  $password = $ups_config->get('password') != '';
 
   if ($access && $account && $user && $password) {
     $messages[] = array(
@@ -318,9 +321,10 @@ function uc_ups_uc_store_status() {
  * UPS webservice.
  */
 function uc_ups_access_request() {
-  $access = variable_get('uc_ups_access_license', '');
-  $user = variable_get('uc_ups_user_id', '');
-  $password = variable_get('uc_ups_password', '');
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $access = $ups_config->get('access_license');
+  $user = $ups_config->get('user_id');
+  $password = $ups_config->get('password');
   return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <AccessRequest xml:lang=\"en-US\">
   <AccessLicenseNumber>$access</AccessLicenseNumber>
@@ -346,16 +350,17 @@ function uc_ups_access_request() {
  *   RatingServiceSelectionRequest XML document to send to UPS.
  */
 function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
-  $account = variable_get('uc_ups_shipper_number', '');
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $account = $ups_config->get('shipper_number');
   $ua = explode(' ', $_SERVER['HTTP_USER_AGENT']);
   $user_agent = $ua[0];
 
-  $services = _uc_ups_service_list();
+  $services = \Drupal\uc_ups\UPSUtilities::services();
   $service = array('code' => $ups_service, 'description' => $services[$ups_service]);
 
-  $pkg_types = _uc_ups_pkg_types();
+  $pkg_types = \Drupal\uc_ups\UPSUtilities::packageTypes();
 
-  $store_config = config('uc_store.settings');
+  $store_config = \Drupal::config('uc_store.settings');
   $shipper_zone = uc_get_zone_code($store_config->get('address.zone'));
   $shipper_country = uc_get_country_data(array('country_id' => $store_config->get('address.country')));
   $shipper_country = $shipper_country[0]['country_iso_code_2'];
@@ -369,7 +374,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
   $shipfrom_country = $shipfrom_country[0]['country_iso_code_2'];
   $shipfrom_zip = $origin->postal_code;
 
-  $ups_units = variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length'));
+  $ups_units = $ups_config->get('unit_system');
   switch ($ups_units) {
     case 'in':
       $units = 'LBS';
@@ -387,7 +392,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
 
     // Determine length conversion factor and weight conversion factor
     // for this shipment.
-    $length_factor = uc_length_conversion($package->length_units, variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length')));
+    $length_factor = uc_length_conversion($package->length_units, $ups_config->get('unit_system'));
     switch ($ups_units) {
       case 'in':
         $weight_factor = uc_weight_conversion($package->weight_units, 'lb');
@@ -412,7 +417,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
         }
         $package_schema .= "<Dimensions>";
         $package_schema .=   "<UnitOfMeasurement>";
-        $package_schema .=     "<Code>" . strtoupper(variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length'))) . "</Code>";
+        $package_schema .=     "<Code>" . strtoupper($ups_config->get('unit_system')) . "</Code>";
         $package_schema .=   "</UnitOfMeasurement>";
         $package_schema .=   "<Length>" . number_format($package->length * $length_factor, 2, '.', '') . "</Length>";
         $package_schema .=   "<Width>" . number_format($package->width * $length_factor, 2, '.', '') . "</Width>";
@@ -435,7 +440,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
         $package_schema .= "<LargePackageIndicator/>";
       }
 
-      if (variable_get('uc_ups_insurance', TRUE)) {
+      if ($ups_config->get('insurance')) {
         $package_schema .= "<PackageServiceOptions>";
         $package_schema .=   "<InsuredValue>";
         $package_schema .=     "<CurrencyCode>" . config('uc_store.settings')->get('currency.code') . "</CurrencyCode>";
@@ -459,14 +464,14 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
     <RequestOption>rate</RequestOption>
   </Request>
   <PickupType>
-    <Code>" . variable_get('uc_ups_pickup_type', '01') . "</Code>
+    <Code>" . $ups_config->get('pickup_type') . "</Code>
   </PickupType>
   <CustomerClassification>
-    <Code>" . variable_get('uc_ups_classification', '04') . "</Code>
+    <Code>" . $ups_config->get('classification') . "</Code>
   </CustomerClassification>
   <Shipment>
     <Shipper>
-      <ShipperNumber>" . variable_get('uc_ups_shipper_number', '') . "</ShipperNumber>
+      <ShipperNumber>" . $ups_config->get('shipper_number') . "</ShipperNumber>
       <Address>
         <City>" . $store_config->get('address.city') . "</City>
         <StateProvinceCode>$shipper_zone</StateProvinceCode>
@@ -480,7 +485,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
         <PostalCode>$shipto_zip</PostalCode>
         <CountryCode>$shipto_country</CountryCode>
       ";
-      if (variable_get('uc_ups_residential_quotes', 0)) {
+      if ($ups_config->get('residential_quotes')) {
         $schema .= "<ResidentialAddressIndicator/>
       ";
       }
@@ -506,7 +511,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
     </Service>
     ";
     $schema .= $package_schema;
-    if (variable_get('uc_ups_negotiated_rates', FALSE)) {
+    if ($ups_config->get('negotiated_rates')) {
       $schema .= "<RateInformation>
           <NegotiatedRatesIndicator/>
         </RateInformation>";
@@ -548,11 +553,12 @@ function uc_ups_quote($products, $details, $method) {
 
   $quotes = array();
 
-  $addresses = array(variable_get('uc_quote_store_default_address', new Address()));
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $addresses = array($ups_config->get('uc_quote_store_default_address'));
   $key = 0;
   $last_key = 0;
   $packages = array();
-  if (variable_get('uc_ups_all_in_one', TRUE) && count($products) > 1) {
+  if ($ups_config->get('all_in_one') && count($products) > 1) {
     foreach ($products as $product) {
       if ($product->nid) {
         // Packages are grouped by the address from which they will be
@@ -699,13 +705,13 @@ function uc_ups_quote($products, $details, $method) {
   foreach ($packages as $key => $ship_packages) {
     $orig = $addresses[$key];
     $orig->email = uc_store_email();
-    foreach (array_keys(array_filter(variable_get('uc_ups_services', array()))) as $ups_service) {
+    foreach (array_keys(array_filter($ups_config->get('services'))) as $ups_service) {
       $request = uc_ups_shipping_quote($ship_packages, $orig, $dest, $ups_service);
-      $resp = drupal_http_request(variable_get('uc_ups_connection_address', 'https://wwwcie.ups.com/ups.app/xml/') . 'Rate', array(
+      $resp = drupal_http_request($ups_config->get('connection_address') . 'Rate', array(
         'method' => 'POST',
         'data' => $request,
       ));
-      if (user_access('configure quotes') && variable_get('uc_quote_display_debug', FALSE)) {
+      if (user_access('configure quotes') && $ups_config->get('uc_quote_display_debug')) {
         if (!isset($debug_data[$ups_service]['debug'])) {
           $debug_data[$ups_service]['debug'] = '';
         }
@@ -714,7 +720,7 @@ function uc_ups_quote($products, $details, $method) {
       $response = new SimpleXMLElement($resp->data);
       if (isset($response->Response->Error)) {
         foreach ($response->Response->Error as $error) {
-          if (user_access('configure quotes') && variable_get('uc_quote_display_debug', FALSE)) {
+          if (user_access('configure quotes') && $ups_config->get('uc_quote_display_debug')) {
             $debug_data[$ups_service]['error'][] = (string)$error->ErrorSeverity . ' ' . (string)$error->ErrorCode . ': ' . (string)$error->ErrorDescription;
           }
           if (strpos((string)$error->ErrorSeverity, 'Hard') !== FALSE) {
@@ -828,7 +834,8 @@ function uc_ups_void_shipment_request($shipment_number, $tracking_numbers = arra
 function uc_ups_void_shipment($shipment_number, $tracking_numbers = array()) {
   $success = FALSE;
   $request = uc_ups_void_shipment_request($shipment_number, $tracking_numbers);
-  $resp = drupal_http_request(variable_get('uc_ups_connection_address', 'https://wwwcie.ups.com/ups.app/xml/') . 'Void', array(
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $resp = drupal_http_request($ups_config->get('connection_address') . 'Void', array(
     'method' => 'POST',
     'data' => $request,
   ));
@@ -861,8 +868,9 @@ function uc_ups_void_shipment($shipment_number, $tracking_numbers = array()) {
  *   Shipping rate after markup.
  */
 function uc_ups_rate_markup($rate) {
-  $markup = trim(variable_get('uc_ups_rate_markup', '0'));
-  $type   = variable_get('uc_ups_rate_markup_type', 'percentage');
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $markup = trim($ups_config->get('rate_markup'));
+  $type   = $ups_config->get('rate_markup_type');
 
   if (is_numeric($markup)) {
     switch ($type) {
@@ -889,8 +897,9 @@ function uc_ups_rate_markup($rate) {
  *   Shipping weight after markup.
  */
 function uc_ups_weight_markup($weight) {
-  $markup = trim(variable_get('uc_ups_weight_markup', '0'));
-  $type   = variable_get('uc_ups_weight_markup_type', 'percentage');
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $markup = trim($ups_config->get('weight_markup'));
+  $type   = $ups_config->get('weight_markup_type');
 
   if (is_numeric($markup)) {
     switch ($type) {
@@ -907,54 +916,6 @@ function uc_ups_weight_markup($weight) {
   else {
     return $weight;
   }
-}
-
-/**
- * Convenience function to get UPS codes for their services.
- */
-function _uc_ups_service_list() {
-  return array(
-    // Domestic services.
-    '03' => t('UPS Ground'),
-    '01' => t('UPS Next Day Air'),
-    '13' => t('UPS Next Day Air Saver'),
-    '14' => t('UPS Next Day Early A.M.'),
-    '02' => t('UPS 2nd Day Air'),
-    '59' => t('UPS 2nd Day Air A.M.'),
-    '12' => t('UPS 3 Day Select'),
-    // International services.
-    '11' => t('UPS Standard'),
-    '07' => t('UPS Worldwide Express'),
-    '08' => t('UPS Worldwide Expedited'),
-    '54' => t('UPS Worldwide Express Plus'),
-    '65' => t('UPS Worldwide Saver'),
-    // Poland to Poland shipments only.
-    //'82' => t('UPS Today Standard'),
-    //'83' => t('UPS Today Dedicated Courrier'),
-    //'84' => t('UPS Today Intercity'),
-    //'85' => t('UPS Today Express'),
-    //'86' => t('UPS Today Express Saver'),
-  );
-}
-
-/**
- * Convenience function to get UPS codes for their package types.
- */
-function _uc_ups_pkg_types() {
-  return array(
-    // Customer Supplied Page is first so it will be the default.
-    '02' => t('Customer Supplied Package'),
-    '01' => t('UPS Letter'),
-    '03' => t('Tube'),
-    '04' => t('PAK'),
-    '21' => t('UPS Express Box'),
-    '24' => t('UPS 25KG Box'),
-    '25' => t('UPS 10KG Box'),
-    '30' => t('Pallet'),
-    '2a' => t('Small Express Box'),
-    '2b' => t('Medium Express Box'),
-    '2c' => t('Large Express Box'),
-  );
 }
 
 /**
