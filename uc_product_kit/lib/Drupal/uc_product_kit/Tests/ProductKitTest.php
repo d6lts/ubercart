@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_product_kit\Tests\KitProductTest.
+ * Contains \Drupal\uc_product_kit\Tests\ProductKitTest.
  */
 
 namespace Drupal\uc_product_kit\Tests;
