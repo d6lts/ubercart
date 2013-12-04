@@ -53,6 +53,9 @@ class CatalogBreadcrumbBuilder extends BreadcrumbBuilderBase {
       if ($route_name == 'node.view' && isset($attributes['node']->taxonomy_catalog)) {
         return $this->catalogBreadcrumb($attributes['node']);
       }
+      elseif (substr($route_name, 0, 16) == 'view.uc_catalog.' && isset($attributes['arg_term_node_tid_depth'])) {
+        return $this->catalogTermBreadcrumb($attributes['arg_term_node_tid_depth']);
+      }
     }
   }
 
@@ -65,6 +68,24 @@ class CatalogBreadcrumbBuilder extends BreadcrumbBuilderBase {
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
     $breadcrumb[] = l(t('Catalog'), 'catalog');
     if ($parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->value)) {
+      $parents = array_reverse($parents);
+      foreach ($parents as $parent) {
+        $breadcrumb[] = l($parent->label(), 'catalog/' . $parent->id());
+      }
+    }
+    return $breadcrumb;
+  }
+
+  /**
+   * Builds the breadcrumb for a catalog term page.
+   */
+  protected function catalogTermBreadcrumb($tid) {
+    $vocabulary = $this->entityManager->getStorageController('taxonomy_vocabulary')->load($this->config->get('vocabulary'));
+
+    $breadcrumb[] = $this->l($this->t('Home'), '<front>');
+    $breadcrumb[] = l(t('Catalog'), 'catalog');
+    if ($parents = taxonomy_term_load_parents_all($tid)) {
+      array_shift($parents);
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
         $breadcrumb[] = l($parent->label(), 'catalog/' . $parent->id());

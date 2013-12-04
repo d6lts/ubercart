@@ -1,0 +1,456 @@
+base_field: nid
+base_table: node
+core: 8.x
+description: ''
+status: true
+display:
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: 1
+    display_options:
+      path: catalog
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 1
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'view catalog'
+      cache:
+        type: none
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          slave: false
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: full
+        options:
+          items_per_page: '12'
+          offset: '0'
+          id: '0'
+          total_pages: ''
+          tags:
+            previous: '‹ previous'
+            next: 'next ›'
+            first: '« first'
+            last: 'last »'
+          expose:
+            items_per_page: 0
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 20, 40, 60'
+            items_per_page_options_all: 0
+            items_per_page_options_all_label: '- All -'
+            offset: 0
+            offset_label: Offset
+          quantity: '9'
+      style:
+        type: grid
+        options:
+          grouping: {  }
+          columns: '3'
+          automatic_width: 1
+          alignment: horizontal
+          col_class_default: 1
+          col_class_custom: ''
+          row_class_default: 1
+          row_class_custom: ''
+      row:
+        type: fields
+        options:
+          inline: {  }
+          separator: ''
+          hide_empty: false
+          default_field_elements: true
+      fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          provider: node
+          label: ''
+          alter:
+            alter_text: 0
+            make_link: 0
+            absolute: 0
+            trim: 0
+            word_boundary: 0
+            ellipsis: 0
+            strip_tags: 0
+            html: 0
+          hide_empty: 0
+          empty_zero: 0
+          link_to_node: 1
+          relationship: none
+          group_type: group
+          admin_label: ''
+          exclude: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_alter_empty: true
+        model:
+          id: model
+          table: uc_products
+          field: model
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: 0
+          alter:
+            alter_text: 0
+            text: ''
+            make_link: 0
+            path: ''
+            absolute: 0
+            external: 0
+            replace_spaces: 0
+            path_case: none
+            trim_whitespace: 0
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: 0
+            max_length: ''
+            word_boundary: 1
+            ellipsis: 1
+            more_link: 0
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: 0
+            trim: 0
+            preserve_tags: ''
+            html: 0
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: 1
+          empty: ''
+          hide_empty: 0
+          empty_zero: 0
+          hide_alter_empty: 1
+          link_to_node: 0
+          plugin_id: node
+          provider: node
+        uc_product_image:
+          id: uc_product_image
+          table: node__uc_product_image
+          field: uc_product_image
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: 0
+          alter:
+            alter_text: 0
+            text: ''
+            make_link: 0
+            path: ''
+            absolute: 0
+            external: 0
+            replace_spaces: 0
+            path_case: none
+            trim_whitespace: 0
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: 0
+            max_length: ''
+            word_boundary: 1
+            ellipsis: 1
+            more_link: 0
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: 0
+            trim: 0
+            preserve_tags: ''
+            html: 0
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: 1
+          empty: ''
+          hide_empty: 0
+          empty_zero: 0
+          hide_alter_empty: 1
+          click_sort_column: target_id
+          type: image
+          settings:
+            image_style: uc_product_list
+            image_link: content
+          group_column: ''
+          group_columns: {  }
+          group_rows: 1
+          delta_limit: '1'
+          delta_offset: '0'
+          delta_reversed: 0
+          delta_first_last: 0
+          multi_type: separator
+          separator: ', '
+          field_api_classes: 0
+          plugin_id: field
+          provider: field
+        display_price:
+          id: display_price
+          table: uc_products
+          field: display_price
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: 0
+          alter:
+            alter_text: 0
+            text: ''
+            make_link: 0
+            path: ''
+            absolute: 0
+            external: 0
+            replace_spaces: 0
+            path_case: none
+            trim_whitespace: 0
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: 0
+            max_length: ''
+            word_boundary: 1
+            ellipsis: 1
+            more_link: 0
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: 0
+            trim: 0
+            preserve_tags: ''
+            html: 0
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: 1
+          empty: ''
+          hide_empty: 0
+          empty_zero: 0
+          hide_alter_empty: 1
+          set_precision: false
+          precision: 0
+          decimal: .
+          separator: ','
+          format_plural: 0
+          format_plural_singular: '1'
+          format_plural_plural: '@count'
+          prefix: ''
+          suffix: ''
+          format: uc_price
+          plugin_id: uc_product_display_price
+          provider: uc_product
+        buy_it_now:
+          id: buy_it_now
+          table: uc_products
+          field: buy_it_now
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: 0
+          alter:
+            alter_text: 0
+            text: ''
+            make_link: 0
+            path: ''
+            absolute: 0
+            external: 0
+            replace_spaces: 0
+            path_case: none
+            trim_whitespace: 0
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: 0
+            max_length: ''
+            word_boundary: 1
+            ellipsis: 1
+            more_link: 0
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: 0
+            trim: 0
+            preserve_tags: ''
+            html: 0
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: 1
+          empty: ''
+          hide_empty: 0
+          empty_zero: 0
+          hide_alter_empty: 1
+          plugin_id: uc_product_buy_it_now
+          provider: uc_product
+      filters:
+        status:
+          value: true
+          table: node_field_data
+          field: status
+          provider: node
+          id: status
+          expose:
+            operator: false
+          group: 1
+        is_product:
+          id: is_product
+          table: uc_products
+          field: is_product
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: '1'
+          group: '1'
+          exposed: false
+          expose:
+            operator_id: false
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: 0
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: uc_product
+          provider: uc_product
+      sorts: {  }
+      header:
+        view:
+          id: view
+          table: views
+          field: view
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: 1
+          view_to_insert: 'uc_catalog_terms:default'
+          inherit_arguments: 1
+          plugin_id: view
+          provider: views
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments:
+        term_node_tid_depth:
+          id: term_node_tid_depth
+          table: node
+          field: term_node_tid_depth
+          relationship: none
+          group_type: group
+          admin_label: ''
+          default_action: default
+          exception:
+            value: all
+            title_enable: 0
+            title: All
+          title_enable: 1
+          title: '%1'
+          default_argument_type: fixed
+          default_argument_options:
+            argument: '0'
+          default_argument_skip_url: 0
+          summary_options:
+            base_path: ''
+            count: '1'
+            items_per_page: '25'
+            override: 0
+          summary:
+            sort_order: asc
+            number_of_records: '0'
+            format: default_summary
+          specify_validation: 1
+          validate:
+            type: taxonomy_term
+            fail: empty
+          validate_options:
+            vids:
+              catalog: catalog
+            type: tid
+            transform: 0
+          depth: '0'
+          break_phrase: 0
+          use_taxonomy_term_path: false
+          plugin_id: taxonomy_index_tid_depth
+          provider: taxonomy
+      title: Catalog
+      css_class: views-align-center
+label: Catalog
+module: views
+id: uc_catalog
+tag: ''
+uuid: 43a44aed-4d3b-45fe-a84b-757dd12d36a2
+langcode: en
