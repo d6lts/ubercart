@@ -35,15 +35,6 @@ class CheckoutForm extends FormBase {
 
     $form['#attributes']['class'][] = 'uc-cart-checkout-form';
     $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
-
-    if ($instructions = variable_get('uc_checkout_instructions', '')) {
-      $form['instructions'] = array(
-        '#prefix' => '<div id="checkout-instructions">',
-        '#markup' => filter_xss_admin($instructions),
-        '#suffix' => '</div>',
-      );
-    }
-
     $form['panes'] = array('#tree' => TRUE);
     $panes = _uc_checkout_pane_list();
 

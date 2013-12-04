@@ -42,7 +42,7 @@ function theme_uc_cart_checkout_review($variables) {
 
   drupal_add_css(drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css');
 
-  $output = '<div id="review-instructions">' . filter_xss_admin(variable_get('uc_checkout_review_instructions', uc_get_message('review_instructions'))) . '</div>';
+  $output = '<p>' . t("Your order is almost complete. Please review the details below and click 'Submit order' if all the information is correct.  You may use the 'Back' button to make changes to your order if necessary.") . '</p>';
 
   $output .= '<table class="order-review-table">';
 

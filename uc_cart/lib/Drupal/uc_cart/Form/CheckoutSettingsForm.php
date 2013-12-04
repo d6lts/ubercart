@@ -166,26 +166,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#default_value' => variable_get('uc_cart_delivery_not_shippable', TRUE),
     );
 
-    $form['instructions'] = array(
-      '#type' => 'details',
-      '#title' => t('Instruction messages'),
-      '#group' => 'checkout-settings',
-    );
-    $form['instructions']['uc_checkout_instructions'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Checkout instructions'),
-      '#description' => t('Provide instructions for customers at the top of the checkout screen.'),
-      '#default_value' => variable_get('uc_checkout_instructions', ''),
-      '#rows' => 3,
-    );
-    $form['instructions']['uc_checkout_review_instructions'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Checkout review instructions'),
-      '#description' => t('Provide instructions for customers at the top of the checkout review screen.'),
-      '#default_value' => variable_get('uc_checkout_review_instructions', uc_get_message('review_instructions')),
-      '#rows' => 3,
-    );
-
     $form['completion_messages'] = array(
       '#type' => 'details',
       '#title' => t('Completion messages'),
@@ -283,8 +263,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
 
     variable_set('uc_cart_default_same_address', $form_state['values']['uc_cart_default_same_address']);
     variable_set('uc_cart_delivery_not_shippable', $form_state['values']['uc_cart_delivery_not_shippable']);
-    variable_set('uc_checkout_instructions', $form_state['values']['uc_checkout_instructions']);
-    variable_set('uc_checkout_review_instructions', $form_state['values']['uc_checkout_review_instructions']);
     variable_set('uc_cart_checkout_complete_page', $form_state['values']['uc_cart_checkout_complete_page']);
     variable_set('uc_msg_order_submit', $form_state['values']['uc_msg_order_submit']);
     variable_set('uc_msg_order_logged_in', $form_state['values']['uc_msg_order_logged_in']);
