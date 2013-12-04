@@ -32,7 +32,7 @@ function theme_uc_ups_option_label($variables) {
   $output .= t('@service Rate', array('@service' => $service));
 
   // Add package information
-  $output .= ' (' . format_plural(count($packages), '1 package', '@count packages') . ')';
+  $output .= ' (' . \Drupal::translation()->format_plural(count($packages), '1 package', '@count packages') . ')';
 
   return $output;
 }

@@ -57,7 +57,7 @@ function uc_product_kit_form_node_delete_confirm_alter(&$form, &$form_state) {
 
     if ($kits) {
       $description = $form['description']['#markup'];
-      $form['description']['#markup'] = format_plural($kits, 'There is 1 product kit that consists of only this product. It will be deleted as well.', 'There are @count product kits that consist of only this products. They will be deleted as well.') . ' ' . $description;
+      $form['description']['#markup'] = \Drupal::translation()->format_plural($kits, 'There is 1 product kit that consists of only this product. It will be deleted as well.', 'There are @count product kits that consist of only this products. They will be deleted as well.') . ' ' . $description;
     }
   }
 }

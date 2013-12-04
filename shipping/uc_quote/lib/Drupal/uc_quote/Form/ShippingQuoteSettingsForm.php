@@ -110,7 +110,7 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
 
     $quote_config = $this->configFactory->get('uc_quote.settings');
     $quote_config
-      ->set('store_default_address', (array) $address,
+      ->set('store_default_address', (array) $address)
       ->set('log_errors', $form_state['values']['uc_quote_log_errors'])
       ->set('display_debug', $form_state['values']['uc_quote_display_debug'])
       ->set('require_quote', $form_state['values']['uc_quote_require_quote'])

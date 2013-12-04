@@ -118,7 +118,7 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
     if ($num > 0) {
       $this->attributesAdded();
 
-      drupal_set_message(format_plural($num, '1 attribute has been added.', '@count attributes have been added.'));
+      drupal_set_message(\Drupal::translation()->format_plural($num, '1 attribute has been added.', '@count attributes have been added.'));
     }
   }
 
