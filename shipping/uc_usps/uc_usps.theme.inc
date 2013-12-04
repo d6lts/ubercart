@@ -32,7 +32,7 @@ function theme_uc_usps_option_label($variables) {
   $output .= preg_replace('/^U\.S\.P\.S\./', '', $service);
 
   // Add package information
-  $output .= ' (' . \Drupal::translation()->format_plural(count($packages), '1 package', '@count packages') . ')';
+  $output .= ' (' . \Drupal::translation()->formatPlural(count($packages), '1 package', '@count packages') . ')';
 
   return $output;
 }
