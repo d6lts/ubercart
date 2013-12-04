@@ -7,13 +7,13 @@
 
 namespace Drupal\uc_cart;
 
-use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\FieldableDatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for cart items.
  */
-class UcCartItemStorageController extends DatabaseStorageController {
+class UcCartItemStorageController extends FieldableDatabaseStorageController {
 
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::attachLoad().
@@ -52,6 +52,15 @@ class UcCartItemStorageController extends DatabaseStorageController {
       $entity->changed = REQUEST_TIME;
       parent::save($entity);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
+    $record = parent::mapToStorageRecord($entity, $table_key);
+    $record->data = $entity->data;
+    return $record;
   }
 
 }

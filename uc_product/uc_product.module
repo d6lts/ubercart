@@ -858,7 +858,7 @@ function uc_product_uc_store_status() {
  * Implements hook_uc_cart_display().
  */
 function uc_product_uc_cart_display($item) {
-  $node = node_load($item->nid);
+  $node = node_load($item->nid->value);
 
   $element = array();
   $element['nid'] = array('#type' => 'value', '#value' => $node->id());
@@ -869,14 +869,14 @@ function uc_product_uc_cart_display($item) {
     '#markup' => $node->access('view') ? l($item->title, 'node/' . $node->id()) : check_plain($item->title),
   );
 
-  $element['#total'] = $item->price * $item->qty;
+  $element['#total'] = $item->price * $item->qty->value;
   $element['#suffixes'] = array();
   $element['data'] = array('#type' => 'hidden', '#value' => serialize($item->data));
   $element['qty'] = array(
     '#type' => 'uc_quantity',
     '#title' => t('Quantity'),
     '#title_display' => 'invisible',
-    '#default_value' => $item->qty,
+    '#default_value' => $item->qty->value,
     '#allow_zero' => TRUE,
   );
 

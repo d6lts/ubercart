@@ -28,33 +28,13 @@ use Drupal\Core\Entity\ContentEntityBase;
  */
 class UcCartItem extends ContentEntityBase {
 
-  /**
-   * The cart item ID.
-   *
-   * @var integer
-   */
-  public $cart_item_id;
-
-  /**
-   * The cart ID.
-   *
-   * @var string
-   */
-  public $cart_id;
-
-  /**
-   * The node ID of the product.
-   *
-   * @var integer
-   */
-  public $nid;
-
-  /**
-   * The quantity of this product.
-   *
-   * @var integer
-   */
-  public $qty;
+  public $product;
+  public $title;
+  public $model;
+  public $cost;
+  public $price;
+  public $weight;
+  public $weight_units;
 
   /**
    * The timestamp when this item was last updated.
@@ -74,7 +54,7 @@ class UcCartItem extends ContentEntityBase {
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
-    return $this->cart_item_id;
+    return $this->cart_item_id->value;
   }
 
   /**
@@ -98,7 +78,39 @@ class UcCartItem extends ContentEntityBase {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    return array();
+    $properties['cart_item_id'] = array(
+      'label' => t('Cart item ID'),
+      'description' => 'The cart item ID.',
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    $properties['cart_id'] = array(
+      'label' => t('Cart ID'),
+      'description' => 'A user-specific cart ID. For authenticated users, their {users}.uid. For anonymous users, a token.',
+      'type' => 'string_field',
+    );
+    $properties['nid'] = array(
+      'label' => t('Node ID'),
+      'description' => 'The node ID of the product.',
+      'type' => 'entity_reference_field',
+      'settings' => array('target_type' => 'node'),
+    );
+    $properties['qty'] = array(
+      'label' => t('Quantity'),
+      'description' => 'The number of this product in the cart.',
+      'type' => 'integer_field',
+    );
+    $properties['changed'] = array(
+      'label' => t('Changed'),
+      'description' => 'The Unix timestamp indicating the time the product in the cart was changed.',
+      'type' => 'integer_field',
+    );
+    // $properties['data'] = array(
+    //   'label' => t('Data'),
+    //   'description' => 'A serialized array of extra data.',
+    //   'type' => 'string_field',
+    // );
+    return $properties;
   }
 
 }
