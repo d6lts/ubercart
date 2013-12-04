@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_cart\Entity;
 
-use Drupal\Core\Entity\Entity;
+use Drupal\Core\Entity\ContentEntityBase;
 
 /**
  * Defines the cart item entity class.
@@ -26,7 +26,7 @@ use Drupal\Core\Entity\Entity;
  *   }
  * )
  */
-class UcCartItem extends Entity {
+class UcCartItem extends ContentEntityBase {
 
   /**
    * The cart item ID.
@@ -95,12 +95,9 @@ class UcCartItem extends Entity {
   }
 
   /**
-   * Dummy implementation of getPropertyDefinitions().
-   *
-   * UcCartItem is not a true content entity, but we implement this to
-   * avoid errors when this entity is rendered.
+   * {@inheritdoc}
    */
-  public function getPropertyDefinitions() {
+  public static function baseFieldDefinitions($entity_type) {
     return array();
   }
 
