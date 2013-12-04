@@ -194,30 +194,28 @@ class StoreSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $this->configFactory->get('uc_store.settings')
-      ->setData(array(
-        'name' => $form_state['values']['uc_store_name'],
-        'mail' => $form_state['values']['uc_store_email'],
-        'mail_include_name' => $form_state['values']['uc_store_email_include_name'],
-        'phone' => $form_state['values']['uc_store_phone'],
-        'fax' => $form_state['values']['uc_store_fax'],
-        'help_page' => $form_state['values']['uc_store_help_page'],
-        'address.street1' => $form_state['values']['uc_store_street1'],
-        'address.street2' => $form_state['values']['uc_store_street2'],
-        'address.city' => $form_state['values']['uc_store_city'],
-        'address.zone' => $form_state['values']['uc_store_zone'],
-        'address.country' => $form_state['values']['uc_store_country'],
-        'address.postal_code' => $form_state['values']['uc_store_postal_code'],
-        'currency.code' => $form_state['values']['uc_currency_code'],
-        'currency.symbol' => $form_state['values']['uc_currency_sign'],
-        'currency.symbol_after' => $form_state['values']['uc_sign_after_amount'],
-        'currency.thousands_marker' => $form_state['values']['uc_currency_thou'],
-        'currency.decimal_marker' => $form_state['values']['uc_currency_dec'],
-        'currency.precision' => $form_state['values']['uc_currency_prec'],
-        'units.weight' => $form_state['values']['uc_weight_unit'],
-        'units.length' => $form_state['values']['uc_length_unit'],
-        'customer_address' => $form_state['values']['uc_customer_list_address'],
-        'capitalize_address' => $form_state['values']['uc_order_capitalize_addresses'],
-      ))
+      ->set('name', $form_state['values']['uc_store_name'])
+      ->set('mail', $form_state['values']['uc_store_email'])
+      ->set('mail_include_name', $form_state['values']['uc_store_email_include_name'])
+      ->set('phone', $form_state['values']['uc_store_phone'])
+      ->set('fax', $form_state['values']['uc_store_fax'])
+      ->set('help_page', $form_state['values']['uc_store_help_page'])
+      ->set('address.street1', $form_state['values']['uc_store_street1'])
+      ->set('address.street2', $form_state['values']['uc_store_street2'])
+      ->set('address.city', $form_state['values']['uc_store_city'])
+      ->set('address.zone', $form_state['values']['uc_store_zone'])
+      ->set('address.country', $form_state['values']['uc_store_country'])
+      ->set('address.postal_code', $form_state['values']['uc_store_postal_code'])
+      ->set('currency.code', $form_state['values']['uc_currency_code'])
+      ->set('currency.symbol', $form_state['values']['uc_currency_sign'])
+      ->set('currency.symbol_after', $form_state['values']['uc_sign_after_amount'])
+      ->set('currency.thousands_marker', $form_state['values']['uc_currency_thou'])
+      ->set('currency.decimal_marker', $form_state['values']['uc_currency_dec'])
+      ->set('currency.precision', $form_state['values']['uc_currency_prec'])
+      ->set('units.weight', $form_state['values']['uc_weight_unit'])
+      ->set('units.length', $form_state['values']['uc_length_unit'])
+      ->set('customer_address', $form_state['values']['uc_customer_list_address'])
+      ->set('capitalize_address', $form_state['values']['uc_order_capitalize_addresses'])
       ->save();
 
     parent::submitForm($form, $form_state);
