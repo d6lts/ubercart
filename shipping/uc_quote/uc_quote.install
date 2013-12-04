@@ -182,3 +182,38 @@ function uc_quote_schema() {
 function uc_quote_update_last_removed() {
   return 7001;
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
+ * Converts uc_quote system variables to config.
+ *
+ * @ingroup config_upgrade
+ */
+function uc_quote_update_8000() {
+
+  // Update most system variables to config settings.
+  update_variables_to_config(
+    'uc_quote.settings',
+    array(
+      'uc_quote_type_weight' => 'type_weight',
+      'uc_quote_store_default_address' => 'store_default_address',
+      'uc_quote_pane_description' => 'pane_description',
+      'uc_quote_require_quote' => 'require_quote',
+      'uc_quote_err_msg' => 'error_message',
+      'uc_quote_enabled' => 'enabled',
+      'uc_quote_method_weight' => 'method_weight',
+      'uc_quote_log_errors' => 'log_errors',
+      'uc_quote_display_debug' => 'display_debug',
+      'uc_store_shipping_type' => 'shipping_type',
+    )
+  );
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */

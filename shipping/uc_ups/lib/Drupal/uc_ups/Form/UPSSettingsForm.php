@@ -321,27 +321,25 @@ class UPSSettingsForm extends ConfigFormBase {
 
     $values = $form_state['values'];
     $ups_config
-      ->setData(array(
-        'access_license' => $values['uc_ups_access_license'],
-        'shipper_number' => $values['uc_ups_shipper_number'],
-        'user_id' => $values['uc_ups_user_id'],
-        'password' => $values['uc_ups_password'],
-        'connection_address' => $values['uc_ups_connection_address'],
-        'services' => $values['uc_ups_services'],
-        'pickup_type' => $values['uc_ups_pickup_type'],
-        'package_type' => $values['uc_ups_package_type'],
-        'classification' => $values['uc_ups_classification'],
-        'negotiated_rates' => $values['uc_ups_negotiated_rates'],
-        'residential_quotes' => $values['uc_ups_residential_quotes'],
-        'rate_markup_type' => $values['uc_ups_rate_markup_type'],
-        'rate_markup' => $values['uc_ups_rate_markup'],
-        'weight_markup_type' => $values['uc_ups_weight_markup_type'],
-        'weight_markup' => $values['uc_ups_weight_markup'],
-        'label_lifetime' => $values['uc_ups_label_lifetime'],
-        'all_in_one' => $values['uc_ups_all_in_one'],
-        'unit_system' => $values['uc_ups_unit_system'],
-        'insurance' => $values['uc_ups_insurance'],
-      ))
+      ->set('access_license', $values['uc_ups_access_license'])
+      ->set('shipper_number', $values['uc_ups_shipper_number'])
+      ->set('user_id', $values['uc_ups_user_id'])
+      ->set('password', $values['uc_ups_password'])
+      ->set('connection_address', $values['uc_ups_connection_address'])
+      ->set('services', $values['uc_ups_services'])
+      ->set('pickup_type', $values['uc_ups_pickup_type'])
+      ->set('package_type', $values['uc_ups_package_type'])
+      ->set('classification', $values['uc_ups_classification'])
+      ->set('negotiated_rates', $values['uc_ups_negotiated_rates'])
+      ->set('residential_quotes', $values['uc_ups_residential_quotes'])
+      ->set('rate_markup_type', $values['uc_ups_rate_markup_type'])
+      ->set('rate_markup', $values['uc_ups_rate_markup'])
+      ->set('weight_markup_type', $values['uc_ups_weight_markup_type'])
+      ->set('weight_markup', $values['uc_ups_weight_markup'])
+      ->set('label_lifetime', $values['uc_ups_label_lifetime'])
+      ->set('all_in_one', $values['uc_ups_all_in_one'])
+      ->set('unit_system', $values['uc_ups_unit_system'])
+      ->set('insurance', $values['uc_ups_insurance'])
       ->save();
 
     drupal_set_message(t('The configuration options have been saved.'));

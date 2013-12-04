@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_quote\Form;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Settings for the shipping quote methods.
  */
-class ShippingQuoteMethodsForm extends FormBase {
+class ShippingQuoteMethodsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -25,6 +25,7 @@ class ShippingQuoteMethodsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
+    $quote_config = $this->configFactory->get('uc_quote.settings');
     $form['methods'] = array(
       '#type' => 'table',
       '#header' => array(t('Shipping method'), t('Details'), t('List position'), t('Operations')),
@@ -81,7 +82,7 @@ class ShippingQuoteMethodsForm extends FormBase {
         '#collapsible' => TRUE,
         '#tree' => TRUE,
       );
-      $weight = variable_get('uc_quote_type_weight', array());
+      $weight = $quote_config->get('type_weight');
       $shipping_methods = module_invoke_all('uc_shipping_method');
       $method_types = array();
       foreach ($shipping_methods as $method) {
@@ -107,7 +108,7 @@ class ShippingQuoteMethodsForm extends FormBase {
       '#type' => 'select',
       '#title' => t('Default order fulfillment type for products'),
       '#options' => $shipping_types,
-      '#default_value' => variable_get('uc_store_shipping_type', 'small_package'),
+      '#default_value' => $quote_config->get('shipping_type'),
     );
 
     $form['actions'] = array('#type' => 'actions');
@@ -127,10 +128,14 @@ class ShippingQuoteMethodsForm extends FormBase {
       $method_weight[$id] = $method['weight'];
     }
 
-    variable_set('uc_quote_enabled', $enabled);
-    variable_set('uc_quote_method_weight', $method_weight);
-    variable_set('uc_quote_type_weight', $form_state['values']['uc_quote_type_weight']);
-    variable_set('uc_store_shipping_type', $form_state['values']['uc_store_shipping_type']);
+    $quote_config = $this->configFactory->get('uc_quote.settings');
+    $quote_config
+      ->set('enabled', $enabled)
+      ->set('method_weight', $method_weight)
+      ->set('type_weight', $form_state['values']['uc_quote_type_weight'])
+      ->set('shipping_type', $form_state['values']['uc_store_shipping_type'])
+      ->save();
+
     drupal_set_message(t('The configuration options have been saved.'));
   }
 

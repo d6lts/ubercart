@@ -31,22 +31,23 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $address = variable_get('uc_quote_store_default_address', new Address());
+    $quote_config = $this->configFactory->get('uc_quote.settings');
+    $address = $quote_config->get('store_default_address');
 
     $form['uc_quote_log_errors'] = array(
       '#type' => 'checkbox',
       '#title' => t('Log errors during checkout to watchdog'),
-      '#default_value' => variable_get('uc_quote_log_errors', FALSE),
+      '#default_value' => $quote_config->get('log_errors'),
     );
     $form['uc_quote_display_debug'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display debug information to administrators.'),
-      '#default_value' => variable_get('uc_quote_display_debug', FALSE),
+      '#default_value' => $quote_config->get('display_debug'),
     );
     $form['uc_quote_require_quote'] = array(
       '#type' => 'checkbox',
       '#title' => t('Prevent the customer from completing an order if a shipping quote is not selected.'),
-      '#default_value' => variable_get('uc_quote_require_quote', TRUE),
+      '#default_value' => $quote_config->get('require_quote'),
     );
 
     $form['uc_quote_pane_description'] = array(
@@ -59,20 +60,20 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
     $form['uc_quote_pane_description']['text'] = array(
       '#type' => 'textarea',
       '#title' => t('Message text'),
-      '#default_value' => variable_get('uc_quote_pane_description', t('Shipping quotes are generated automatically when you enter your address and may be updated manually with the button below.')),
+      '#default_value' => $quote_config->get('pane_description'),
     );
 
-    $form['uc_quote_err_msg'] = array(
+    $form['uc_quote_error_message'] = array(
       '#type' => 'details',
       '#title' => t('Shipping quote error message'),
       '#tree' => TRUE,
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
-    $form['uc_quote_err_msg']['text'] = array(
+    $form['uc_quote_error_message']['text'] = array(
       '#type' => 'textarea',
       '#title' => t('Message text'),
-      '#default_value' => variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery and product information and try again.\nIf this does not resolve the issue, please call in to complete your order.")),
+      '#default_value' => $quote_config->get('error_message'),
     );
 
     $form['default_address'] = array(
@@ -107,12 +108,15 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
     $address->postal_code = $form_state['values']['postal_code'];
     $address->country = $form_state['values']['country'];
 
-    variable_set('uc_quote_store_default_address', $address);
-    variable_set('uc_quote_log_errors', $form_state['values']['uc_quote_log_errors']);
-    variable_set('uc_quote_display_debug', $form_state['values']['uc_quote_display_debug']);
-    variable_set('uc_quote_require_quote', $form_state['values']['uc_quote_require_quote']);
-    variable_set('uc_quote_pane_description', $form_state['values']['uc_quote_pane_description']['text']);
-    variable_set('uc_quote_err_msg', $form_state['values']['uc_quote_err_msg']['text']);
+    $quote_config = $this->configFactory->get('uc_quote.settings');
+    $quote_config
+      ->set('store_default_address', (array) $address,
+      ->set('log_errors', $form_state['values']['uc_quote_log_errors'])
+      ->set('display_debug', $form_state['values']['uc_quote_display_debug'])
+      ->set('require_quote', $form_state['values']['uc_quote_require_quote'])
+      ->set('pane_description', $form_state['values']['uc_quote_pane_description']['text'])
+      ->set('error_message', $form_state['values']['uc_quote_error_message']['text'])
+      ->save();
 
     parent::submitForm($form, $form_state);
   }

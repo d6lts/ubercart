@@ -111,7 +111,7 @@ function hook_uc_shipping_method() {
  *   An array of shipping types keyed by a machine-readable name.
  */
 function hook_uc_shipping_type() {
-  $weight = variable_get('uc_quote_type_weight', array('small_package' => 0));
+  $weight = \Drupal::config('uc_quote.settings')->get('type_weight');
 
   $types = array();
   $types['small_package'] = array(

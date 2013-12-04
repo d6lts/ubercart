@@ -252,22 +252,20 @@ class USPSSettingsForm extends ConfigFormBase {
 
     $values = $form_state['values'];
     $usps_config
-      ->setData(array(
-        'user_id' => $values['uc_usps_user_id'],
-        'online_rates' => $values['uc_usps_online_rates'],
-        'env_services' => $values['uc_usps_env_services'],
-        'services' => $values['uc_usps_services'],
-        'intl_env_services' => $values['uc_usps_intl_env_services'],
-        'intl_services' => $values['uc_usps_intl_services'],
-        'rate_markup_type' => $values['uc_usps_rate_markup_type'],
-        'rate_markup' => $values['uc_usps_rate_markup'],
-        'weight_markup_type' => $values['uc_usps_weight_markup_type'],
-        'weight_markup' => $values['uc_usps_weight_markup'],
-        'all_in_one' => $values['uc_usps_all_in_one'],
-        'insurance' => $values['uc_usps_insurance'],
-        'delivery_confirmation' => $values['uc_usps_delivery_confirmation'],
-        'signature_confirmation' => $values['uc_usps_signature_confirmation'],
-      ))
+      ->set('user_id', $values['uc_usps_user_id'])
+      ->set('online_rates', $values['uc_usps_online_rates'])
+      ->set('env_services', $values['uc_usps_env_services'])
+      ->set('services', $values['uc_usps_services'])
+      ->set('intl_env_services', $values['uc_usps_intl_env_services'])
+      ->set('intl_services', $values['uc_usps_intl_services'])
+      ->set('rate_markup_type', $values['uc_usps_rate_markup_type'])
+      ->set('rate_markup', $values['uc_usps_rate_markup'])
+      ->set('weight_markup_type', $values['uc_usps_weight_markup_type'])
+      ->set('weight_markup', $values['uc_usps_weight_markup'])
+      ->set('all_in_one', $values['uc_usps_all_in_one'])
+      ->set('insurance', $values['uc_usps_insurance'])
+      ->set('delivery_confirmation', $values['uc_usps_delivery_confirmation'])
+      ->set('signature_confirmation', $values['uc_usps_signature_confirmation'])
       ->save();
 
     drupal_set_message(t('The configuration options have been saved.'));

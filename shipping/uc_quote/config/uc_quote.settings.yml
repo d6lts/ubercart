@@ -1,0 +1,24 @@
+# Settings tab
+log_errors: false
+display_debug: false
+require_quote: true
+pane_description: "Shipping quotes are generated automatically when you enter your address and may be updated manually with the button below."
+error_message:  "There were problems getting a shipping quote. Please verify the delivery address and product information and try again.\nIf this does not resolve the issue, please call @phone to complete your order."
+store_default_address:
+  first_name: ''
+  last_name: ''
+  company: ''
+  street1: ''
+  street2: ''
+  city: ''
+  zone: 0
+  country: 840
+  postal_code: ''
+  phone: ''
+
+# Methods tab
+method_weight: ""
+shipping_type: 'small_package'
+type_weight:
+  small_package: 0
+enabled: ""

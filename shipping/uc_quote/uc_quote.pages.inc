@@ -84,7 +84,7 @@ function uc_quote_action_get_quote($order, $method) {
   $messages = ob_get_contents();
   ob_end_clean();
 
-  if ($messages && variable_get('uc_quote_log_errors', FALSE)) {
+  if ($messages && \Drupal::config('uc_quote.settings')->get('log_errors')) {
     watchdog('quote', '!messages', array('!messages' => $messages), WATCHDOG_WARNING);
     watchdog('quote', '<pre>@data</pre>', array('@data' => print_r($quote_data, TRUE)), WATCHDOG_WARNING);
   }

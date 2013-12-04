@@ -101,12 +101,13 @@ function uc_quote_node_update($node) {
  */
 function uc_quote_node_load($nodes, $types) {
   $product_types = array_intersect(uc_product_types(), $types);
+  $quote_config = \Drupal::config('uc_quote.settings');
 
   if (empty($product_types)) {
     return;
   }
 
-  $shipping_type = variable_get('uc_store_shipping_type', 'small_package');
+  $shipping_type = $quote_config->get('shipping_type');
   $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => array_keys($nodes)))->fetchAllKeyed();
 
   $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids)", array(':nids' => array_keys($nodes)), array('fetch' => 'Address'))->fetchAllAssoc('nid');
@@ -128,7 +129,7 @@ function uc_quote_node_load($nodes, $types) {
       unset($node->shipping_address['nid']);
     }
     else {
-      $node->shipping_address = (array) variable_get('uc_quote_store_default_address', new Address());
+      $node->shipping_address = (array) $quote_config->get('store_default_address');
     }
   }
 }
@@ -162,8 +163,9 @@ function uc_quote_form_node_form_alter(&$form, &$form_state, $form_id) {
     }
 
     // Use the store default if the product does not have an address set.
+    $quote_config = \Drupal::config('uc_quote.settings');
     if (empty($address)) {
-      $address = variable_get('uc_quote_store_default_address', new Address());
+      $address = $quote_config->get('store_default_address');
     }
 
     // Initialize the shipping fieldset array.
@@ -215,7 +217,8 @@ function uc_quote_form_node_form_alter(&$form, &$form_state, $form_id) {
  */
 function uc_quote_uc_cart_pane($items) {
   if (arg(0) == 'cart') {
-    if (!variable_get('uc_cap_quotes_enabled', FALSE) || (variable_get('uc_cart_delivery_not_shippable', TRUE) && !uc_cart_is_shippable())) {
+    $quote_config = \Drupal::config('uc_quote.settings');
+    if (!$quote_config->get('quotes_enabled') || ($quote_config->get('uc_cart_delivery_not_shippable') && !uc_cart_is_shippable())) {
       return array();
     }
 
@@ -319,7 +322,8 @@ function uc_quote_uc_line_item() {
  * Implements hook_uc_shipping_type().
  */
 function uc_quote_uc_shipping_type() {
-  $weight = variable_get('uc_quote_type_weight', array('small_package' => 0));
+  $quote_config = \Drupal::config('uc_quote.settings');
+  $weight = $quote_config->get('type_weight');
 
   $types = array();
   $types['small_package'] = array(
@@ -395,7 +399,8 @@ function uc_quote_get_shipping_type($id_type, $id) {
  *   the product's is not set.
  */
 function uc_product_get_shipping_type($product) {
-  $shipping_type = variable_get('uc_store_shipping_type', 'small_package');
+  $quote_config = \Drupal::config('uc_quote.settings');
+  $shipping_type = $quote_config->get('shipping_type');
   if ($product->id() &&
       $type = uc_quote_get_shipping_type('product', $product->id())) {
     $shipping_type = $type;
@@ -417,7 +422,8 @@ function uc_quote_get_default_shipping_address($nid) {
   $address = db_query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", array(':nid' => $nid))->fetchObject('Drupal\uc_store\Address');
 
   if (empty($address)) {
-    $address = variable_get('uc_quote_store_default_address', new Address());
+    $quote_config = \Drupal::config('uc_quote.settings');
+    $address = $quote_config->get('store_default_address');
   }
 
   return $address;
@@ -503,9 +509,10 @@ function uc_cart_pane_quotes($form, &$form_state, $items) {
 function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL) {
   global $user;
 
+  $quote_config = \Drupal::config('uc_quote.settings');
   switch ($op) {
     case 'view':
-      $description = filter_xss_admin(variable_get('uc_quote_pane_description', t('Shipping quotes are generated automatically when you enter your address and may be updated manually with the button below.')));
+      $description = filter_xss_admin($quote_config->get('pane_description'));
 
       $contents['#attached']['css'][] = drupal_get_path('module', 'uc_quote') . '/css/uc_quote.css';
 
@@ -601,7 +608,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL
         unset($order->quote);
       }
 
-      if (!isset($order->quote) && $op == 'process' && variable_get('uc_quote_require_quote', TRUE)) {
+      if (!isset($order->quote) && $op == 'process' && $quote_config->get('require_quote')) {
         form_set_error('panes][quotes][quotes][quote_option', $form_state, t('You must select a shipping option before continuing.'));
         return FALSE;
       }
@@ -763,6 +770,7 @@ function uc_quote_apply_quote_to_order($form, &$form_state) {
  */
 function uc_quote_build_quote_form($order, $show_errors = TRUE) {
   $return = array();
+  $quote_config = \Drupal::config('uc_quote.settings');
 
   module_load_include('inc', 'uc_quote', 'uc_quote.pages');
   $quotes = uc_quote_assemble_quotes($order);
@@ -831,7 +839,7 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
   }
   elseif ($show_errors) {
     $return['error'] = array(
-      '#markup' => filter_xss_admin(variable_get('uc_quote_err_msg', t("There were problems getting a shipping quote. Please verify the delivery address and product information and try again.\nIf this does not resolve the issue, please call @phone to complete your order.", array('@phone' => config('uc_store.settings')->get('phone'))))),
+      '#markup' => filter_xss_admin($quote_config->get('error_message')),
     );
   }
 
@@ -907,8 +915,9 @@ function uc_quote_order_update_rates($form, $form_state) {
  *   If FALSE, only enabled shipping methods are returned.
  */
 function uc_quote_methods($all = FALSE) {
-  $enabled = variable_get('uc_quote_enabled', array());
-  $weight = variable_get('uc_quote_method_weight', array());
+  $quote_config = \Drupal::config('uc_quote.settings');
+  $enabled = $quote_config->get('enabled');
+  $weight = $quote_config->get('method_weight');
 
   $methods = array();
   foreach (module_invoke_all('uc_shipping_method') as $id => $method) {

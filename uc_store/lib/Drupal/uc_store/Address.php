@@ -50,7 +50,7 @@ class Address {
    * Constructor.
    *
    * @param $country
-   *   ISO 3166-1 3-digit numeric country code.  Defaults to the store country.
+   *   ISO 3166-1 3-digit numeric country code. Defaults to the store country.
    */
   public function __construct($country = NULL) {
     if (!$this->country) {
@@ -91,7 +91,7 @@ class Address {
    * Utility function to simplify comparison of address properties.
    *
    * For the purpose of this function, the canonical form is stripped of all
-   * whitespace and has been converted to upper case.  This ensures that we
+   * whitespace and has been converted to all upper case. This ensures that we
    * don't get false inequalities when comparing address properties that a
    * human would consider identical, but may be capitalized differently or
    * have different whitespace.

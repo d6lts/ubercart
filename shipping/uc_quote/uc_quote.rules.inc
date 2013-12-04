@@ -51,7 +51,7 @@ function uc_quote_condition_order_shipping_method($order, $method) {
  */
 function uc_quote_condition_order_shipping_method_options() {
   $methods = module_invoke_all('uc_shipping_method');
-  $enabled = variable_get('uc_quote_enabled', array());
+  $enabled = \Drupal::config('uc_quote.settings')->get('enabled');
 
   $options = array();
   foreach ($methods as $id => $method) {
