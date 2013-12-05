@@ -62,18 +62,20 @@ function theme_uc_product_kit_list_item($variables) {
     else {
       $title = check_plain($product->label());
     }
+    $qty = $product->qty;
   }
   else {
-    $node = node_load($product->nid);
+    $node = node_load($product->nid->value);
     if ($node->access('view')) {
-      $title = l($product->title, 'node/' . $product->nid);
+      $title = l($product->title, 'node/' . $product->nid->value);
     }
     else {
       $title = check_plain($product->title);
     }
+    $qty = $product->qty->value;
   }
 
-  return theme('uc_qty', array('qty' => $product->qty)) . ' ' . $title;
+  return theme('uc_qty', array('qty' => $qty)) . ' ' . $title;
 }
 
 /**
