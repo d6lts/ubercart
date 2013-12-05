@@ -496,13 +496,13 @@ function uc_cart_uc_checkout_complete($order) {
 }
 
 /**
- * Returns the unique cart_id of the user.
+ * Returns the unique cart ID for the current user.
  *
  * @param $create
- *   Toggle auto creation of cart id.
+ *   If TRUE, a cart ID will be generated if none is set.
  *
  * @return
- *   Cart id. If $create is FALSE will return FALSE if there is no cart id.
+ *   The cart ID. If $create is FALSE, returns FALSE if no cart exists.
  */
 function uc_cart_get_id($create = TRUE) {
   global $user;
