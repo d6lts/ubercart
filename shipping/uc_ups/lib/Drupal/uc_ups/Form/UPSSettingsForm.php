@@ -256,7 +256,7 @@ class UPSSettingsForm extends ConfigFormBase {
       '#group'         => 'ups-settings',
     );
 
-    $period = drupal_map_assoc(array(86400, 302400, 604800, 1209600, 2419200, 0), 'format_interval');
+    $period = drupal_map_assoc(array(86400, 302400, 604800, 1209600, 2419200, 0), array(\Drupal::service('date'), 'formatInterval'));
     $period[0] = t('Forever');
 
     // Form to select how long labels stay on server
