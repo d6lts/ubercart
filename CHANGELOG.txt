@@ -22,6 +22,9 @@ Ubercart 4.x
     * uc_order_can_delete() => $order->access('delete')
     * uc_order_delete() => $order->delete()
     * uc_order_product_delete[_multiple]() => entity_delete_multiple('uc_order_product', ...)
+* Cart items are entities and old APIs have been removed:
+    * uc_cart_update_item() => $item->save()
+    * uc_cart_update_item_object() removed
 
 
 Ubercart 3.0-rc4, 2012-1-23

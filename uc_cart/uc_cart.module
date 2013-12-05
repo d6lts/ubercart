@@ -624,22 +624,6 @@ function uc_cart_get_total_qty($cid = NULL) {
 }
 
 /**
- * Updates a cart item.
- *
- * @param $item
- *   The loaded cart item.
- *
- * @return
- *   unknown_type
- */
-function uc_cart_update_item($item) {
-  $item_entity = entity_load('uc_cart_item', $item->cart_item_id);
-  $item_entity->qty = $item->qty;
-  $item_entity->data = $item->data;
-  $item_entity->save();
-}
-
-/**
  * Adds an item to a user's cart.
  */
 function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE, $check_redirect = TRUE, $rebuild = TRUE) {
@@ -761,20 +745,6 @@ function uc_cart_remove_item($nid, $cid = NULL, $data = array()) {
 
   if (!empty($result)) {
     entity_delete_multiple('uc_cart_item', array_keys($result));
-  }
-}
-
-/**
- * Updates the quantity of all the items in a cart object.
- */
-function uc_cart_update_item_object($cart) {
-  if (is_object($cart)) {
-    foreach ($cart->items as $item) {
-      module_invoke($item['module'], 'uc_update_cart_item', $item['nid'], unserialize($item['data']), $item['qty']);
-    }
-
-    // Rebuild the cached cart items.
-    uc_cart_get_contents(NULL, 'rebuild');
   }
 }
 

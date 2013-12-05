@@ -169,9 +169,9 @@ class CartForm extends FormBase {
 
     // Update the items in the shopping cart based on the form values, but only
     // if a qty has changed.
-    foreach ($form['items'] as $key => $item) {
-      if (isset($item['qty']['#default_value']) && $item['qty']['#default_value'] != $form_state['values']['items'][$key]['qty']) {
-        uc_cart_update_item_object((object)$form_state['values']);
+    foreach ($form_state['values']['items'] as $key => $item) {
+      if (isset($form['items'][$key]['qty']['#default_value']) && $form['items'][$key]['qty']['#default_value'] != $item['qty']) {
+        module_invoke($item['module'], 'uc_update_cart_item', $item['nid'], unserialize($item['data']), $item['qty']);
       }
     }
   }
