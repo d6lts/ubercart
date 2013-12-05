@@ -26,7 +26,6 @@ function uc_checkout_pane_cart($op, $order, $form = NULL, &$form_state = NULL) {
       return array('contents' => $contents);
 
     case 'review':
-      //$review[] = theme('uc_checkout_pane_cart_review', array('items' => $order->products));
       $review[] = theme('uc_cart_review_table', array('items' => $order->products, 'show_subtotal' => FALSE));
       return $review;
   }
@@ -482,36 +481,4 @@ function theme_uc_cart_review_table($variables) {
   }
 
   return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('cart-review'))));
-}
-
-/**
- * Themes cart items on the checkout review order page.
- *
- * @param $variables
- *   An associative array containing:
- *   - items: An associative array of cart item information containing:
- *     - qty: Quantity in cart.
- *     - title: Item title.
- *     - price: Item price.
- *     - desc: Item description.
- *
- * @return
- *   A string of HTML for the page contents.
- *
- * @ingroup themeable
- */
-function theme_uc_checkout_pane_cart_review($variables) {
-  $rows = array();
-  $items = entity_view_multiple($variables['items']);
-
-  foreach (element_children($items) as $key) {
-    $item = $items[$key];
-    $rows[] = array(
-      array('data' => $item['qty'], 'class' => array('qty')),
-      array('data' => $item['product'], 'class' => array('products')),
-      array('data' => $item['total'], 'class' => array('price')),
-    );
-  }
-
-  return theme('table', array('rows' => $rows, 'attributes' => array('class' => array('cart-review'))));;
 }
