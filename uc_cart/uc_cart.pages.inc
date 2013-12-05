@@ -6,20 +6,6 @@
  */
 
 /**
- * Default theme function for the checkout form.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @see uc_cart_checkout_form()
- * @ingroup themeable
- */
-function theme_uc_cart_checkout_form($variables) {
-  return drupal_render_children($variables['form']);
-}
-
-/**
  * Themes the checkout review order page.
  *
  * @param $variables
