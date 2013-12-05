@@ -21,7 +21,6 @@ function uc_checkout_pane_cart($op, $order, $form = NULL, &$form_state = NULL) {
       $contents['cart_review_table'] = array(
         '#theme' => 'uc_cart_review_table',
         '#items' => $order->products,
-        '#weight' => variable_get('uc_pane_cart_field_cart_weight', 2),
       );
       return array('contents' => $contents);
 
