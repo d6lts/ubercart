@@ -62,10 +62,10 @@ class UcCartItem extends ContentEntityBase {
    */
   public function toOrderProduct() {
     return entity_create('uc_order_product', array(
-      'nid' => $this->nid,
+      'nid' => $this->nid->value,
       'title' => $this->title,
       'model' => $this->model,
-      'qty' => $this->qty,
+      'qty' => $this->qty->value,
       'cost' => $this->cost,
       'price' => $this->price,
       'weight' => $this->weight,

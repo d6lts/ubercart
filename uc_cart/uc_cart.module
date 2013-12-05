@@ -711,7 +711,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
       drupal_set_message(t('Your item(s) have been updated.'));
     }
     $item_entity = entity_load('uc_cart_item', current(array_keys($result)));
-    $qty += $item_entity->qty;
+    $qty += $item_entity->qty->value;
     module_invoke($data['module'], 'uc_update_cart_item', $nid, $data, min($qty, 999999), $cid);
   }
 

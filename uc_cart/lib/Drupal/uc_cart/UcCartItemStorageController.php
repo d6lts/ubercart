@@ -43,9 +43,9 @@ class UcCartItemStorageController extends FieldableDatabaseStorageController {
    * Cart items are deleted if saved with a quantity of zero.
    */
   public function save(EntityInterface $entity) {
-    if ($entity->qty < 1) {
-      if (isset($entity->cart_item_id)) {
-        parent::delete(array($entity->cart_item_id => $entity));
+    if ($entity->qty->value < 1) {
+      if (isset($entity->cart_item_id->value)) {
+        parent::delete(array($entity->cart_item_id->value => $entity));
       }
     }
     else {

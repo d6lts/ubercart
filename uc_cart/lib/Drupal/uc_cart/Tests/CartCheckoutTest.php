@@ -44,8 +44,8 @@ class CartCheckoutTest extends UbercartTestBase {
     $items = uc_cart_get_contents();
     $this->assertEqual(count($items), 1, 'Cart contains one item.');
     $item = reset($items);
-    $this->assertEqual($item->nid, $this->product->id(), 'Cart item nid is correct.');
-    $this->assertEqual($item->qty, 1, 'Cart item quantity is correct.');
+    $this->assertEqual($item->nid->value, $this->product->id(), 'Cart item nid is correct.');
+    $this->assertEqual($item->qty->value, 1, 'Cart item quantity is correct.');
 
     // Add more of the same item.
     $qty = mt_rand(1, 100);
@@ -54,17 +54,17 @@ class CartCheckoutTest extends UbercartTestBase {
     $items = uc_cart_get_contents();
     $this->assertEqual(count($items), 1, 'Updated cart contains one item.');
     $item = reset($items);
-    $this->assertEqual($item->qty, $qty + 1, 'Updated cart item quantity is correct.');
+    $this->assertEqual($item->qty->value, $qty + 1, 'Updated cart item quantity is correct.');
 
     // Set the quantity and data.
     $qty = mt_rand(1, 100);
-    $item->qty = $qty;
+    $item->qty->value = $qty;
     $item->data['updated'] = TRUE;
-    uc_cart_update_item($item);
+    $item->save();
 
     $items = uc_cart_get_contents();
     $item = reset($items);
-    $this->assertEqual($item->qty, $qty, 'Set cart item quantity is correct.');
+    $this->assertEqual($item->qty->value, $qty, 'Set cart item quantity is correct.');
     $this->assertTrue($item->data['updated'], 'Set cart item data is correct.');
 
     // Add an item with different data to the cart.
@@ -75,7 +75,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Remove the items.
     foreach ($items as $item) {
-      uc_cart_remove_item($item->nid, NULL, $item->data);
+      uc_cart_remove_item($item->nid->value, NULL, $item->data);
     }
     // @TODO: remove the need for this
     uc_cart_get_contents(NULL, 'rebuild');
