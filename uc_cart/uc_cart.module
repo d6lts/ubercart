@@ -89,7 +89,7 @@ function uc_cart_theme() {
     ),
     'uc_cart_view_form' => array(
       'render element' => 'form',
-      'file' => 'uc_cart.theme.inc',
+      'template' => 'uc-cart-form',
     ),
     'uc_cart_checkout_buttons' => array(
       'render element' => 'buttons',

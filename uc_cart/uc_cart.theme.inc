@@ -47,32 +47,6 @@ function theme_uc_cart_block_title($variables) {
 }
 
 /**
- * Themes the cart form.
- *
- * Outputs a hidden copy of the update cart button first, so pressing Enter
- * updates the cart instead of removing an item.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @see \Drupal\uc_cart\Form\CartForm
- * @ingroup themeable
- */
-function theme_uc_cart_view_form($variables) {
-  $form = &$variables['form'];
-
-  $output = '<div class="uc-default-submit">';
-  $output .= drupal_render($form['actions']['update']);
-  $output .= '</div>';
-  $form['actions']['update']['#printed'] = FALSE;
-
-  $output .= drupal_render_children($form);
-
-  return $output;
-}
-
-/**
  * Themes the cart checkout button(s).
  *
  * @param $variables
