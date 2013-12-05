@@ -95,12 +95,12 @@ function uc_ups_theme() {
  * @see uc_ups_product_alter_validate()
  */
 function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $ups_config = \Drupal::config('uc_ups.settings');
+  $quote_config = \Drupal::config('uc_ups.settings');
   if (uc_product_is_product_form($form)) {
     $node = $form['#node'];
 
-    $enabled = $ups_config->get('uc_quote_enabled') + array('ups' => FALSE);
-    $weight = $ups_config->get('uc_quote_method_weight') + array('ups' => 0);
+    $enabled = $quote_config->get('enabled') + array('ups' => FALSE);
+    $weight = $quote_config->get('method_weight') + array('ups' => 0);
 
     $ups = array(
       '#type' => 'details',
@@ -235,8 +235,8 @@ function uc_ups_node_revision_delete($node) {
  * Implements hook_uc_shipping_type().
  */
 function uc_ups_uc_shipping_type() {
-  $ups_config = \Drupal::config('uc_ups.settings');
-  $weight = $ups_config->get('uc_quote_type_weight');
+  $quote_config = \Drupal::config('uc_ups.settings');
+  $weight = $quote_config->get('type_weight');
 
   $types = array();
   $types['small_package'] = array(

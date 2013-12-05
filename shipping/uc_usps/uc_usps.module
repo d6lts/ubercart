@@ -47,11 +47,11 @@ function uc_usps_theme() {
  * @see uc_product_form()
  */
 function uc_usps_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $usps_config = \Drupal::config('uc_usps.settings');
+  $quote_config = \Drupal::config('uc_quote.settings');
   if (uc_product_is_product_form($form)) {
     $node = $form['#node'];
-    $enabled = $usps_config->get('uc_quote_enabled') + array('usps' => FALSE, 'usps_intl' => FALSE);
-    $weight = $usps_config->get('uc_quote_method_weight') + array('usps' => 0, 'usps_intl' => 1);
+    $enabled = $quote_config->get('enabled') + array('usps' => FALSE, 'usps_intl' => FALSE);
+    $weight = $quote_config->get('method_weight') + array('usps' => 0, 'usps_intl' => 1);
 
     $form['shipping']['usps'] = array(
       '#type' => 'details',
@@ -167,8 +167,8 @@ function uc_usps_node_revision_delete($node) {
  * Implements hook_uc_shipping_type().
  */
 function uc_usps_uc_shipping_type() {
-  $usps_config = \Drupal::config('uc_usps.settings');
-  $weight = $usps_config->get('uc_quote_type_weight', array('envelope' => -1, 'small_package' => 0));
+  $quote_config = \Drupal::config('uc_quote.settings');
+  $weight = $quote_config->get('type_weight', array('envelope' => -1, 'small_package' => 0));
 
   $types = array(
     'envelope' => array(
@@ -268,6 +268,7 @@ function uc_usps_uc_shipping_method() {
  */
 function uc_usps_quote($products, $details, $method) {
   $usps_config = \Drupal::config('uc_usps.settings');
+  $quote_config = \Drupal::config('uc_quote.settings');
   // The uc_quote AJAX query can fire before the customer has completely
   // filled out the destination address, so check to see whether the address
   // has all needed fields. If not, abort.
@@ -292,7 +293,7 @@ function uc_usps_quote($products, $details, $method) {
   // Initialize $debug_data to prevent PHP notices here and in uc_quote.
   $debug_data = array('debug' => NULL, 'error' => array());
   $services = array();
-  $addresses = array($usps_config->get('uc_quote_store_default_address'));
+  $addresses = array($quote_config->get('store_default_address'));
   $packages = _uc_usps_package_products($products, $addresses);
   if (!count($packages)) {
     return array();
@@ -311,7 +312,7 @@ function uc_usps_quote($products, $details, $method) {
       $request = uc_usps_rate_request($ship_packages, $orig, $destination);
     }
 
-    if (user_access('configure quotes') && $usps_config->get('uc_quote_display_debug')) {
+    if (user_access('configure quotes') && $quote_config->get('display_debug')) {
       $debug_data['debug'] .= htmlentities(urldecode($request)) . "<br />\n";
     }
 
@@ -320,7 +321,7 @@ function uc_usps_quote($products, $details, $method) {
       'data' => $request,
     ));
 
-    if (user_access('configure quotes') && $usps_config->get('uc_quote_display_debug')) {
+    if (user_access('configure quotes') && $quote_config->get('display_debug')) {
       $debug_data['debug'] .= htmlentities($result->data) . "<br />\n";
     }
 
