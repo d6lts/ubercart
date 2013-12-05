@@ -41,9 +41,10 @@ class ProductKitTest extends UbercartTestBase {
     }
 
     // Test creation of a basic kit.
+    $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     $edit = array(
-      'title' => $this->randomName(32),
+      $title_key => $this->randomName(32),
       $body_key => $this->randomName(64),
       'products[]' => array(
         $products[0]->id(),
@@ -53,7 +54,7 @@ class ProductKitTest extends UbercartTestBase {
       'default_qty' => mt_rand(2, 100),
     );
     $this->drupalPostForm('node/add/product_kit', $edit, 'Save');
-    $this->assertText(t('Product kit @title has been created.', array('@title' => $edit['title'])));
+    $this->assertText(t('Product kit @title has been created.', array('@title' => $edit[$title_key])));
     $this->assertText($edit[$body_key], 'Product kit body found.');
     $this->assertText('1 × ' . $products[0]->label(), 'Product 1 title found.');
     $this->assertText('1 × ' . $products[1]->label(), 'Product 2 title found.');
@@ -73,7 +74,7 @@ class ProductKitTest extends UbercartTestBase {
     }
     $kit = $this->drupalCreateNode(array(
       'type' => 'product_kit',
-      'title' => $this->randomName(32),
+      'title[0][value]' => $this->randomName(32),
       'products' => array(
         $products[0]->id(),
         $products[1]->id(),
@@ -143,7 +144,7 @@ class ProductKitTest extends UbercartTestBase {
     }
     $kit_data = array(
       'type' => 'product_kit',
-      'title' => $this->randomName(32),
+      'title[0][value]' => $this->randomName(32),
       'products' => array(
         $products[0]->id(),
         $products[1]->id(),

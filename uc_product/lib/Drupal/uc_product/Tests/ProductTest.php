@@ -45,11 +45,12 @@ class ProductTest extends UbercartTestBase {
     }
     $this->assertFieldByName('files[uc_product_image_0][]', NULL);
 
+    $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
 
     // Make a node with those fields.
     $edit = array(
-      'title' => $this->randomName(32),
+      $title_key => $this->randomName(32),
       $body_key => $this->randomName(64),
       'model' => $this->randomName(8),
       'list_price' => mt_rand(1, 200),
@@ -76,7 +77,7 @@ class ProductTest extends UbercartTestBase {
     );
     $this->drupalPostForm('node/add/product', $edit, 'Save');
 
-    $this->assertText(t('Product @title has been created.', array('@title' => $edit['title'])), 'Product created.');
+    $this->assertText(t('Product @title has been created.', array('@title' => $edit[$title_key])), 'Product created.');
     $this->assertText($edit[$body_key], 'Product body found.');
     $this->assertText($edit['model'], 'Product model found.');
     $this->assertText(uc_currency_format($edit['list_price']), 'Product list price found.');
@@ -92,7 +93,7 @@ class ProductTest extends UbercartTestBase {
 
     // Update the node fields.
     $edit = array(
-      'title' => $this->randomName(32),
+      $title_key => $this->randomName(32),
       $body_key => $this->randomName(64),
       'model' => $this->randomName(8),
       'list_price' => mt_rand(1, 200),
@@ -119,7 +120,7 @@ class ProductTest extends UbercartTestBase {
     $this->clickLink('Edit');
     $this->drupalPostForm(NULL, $edit, 'Save');
 
-    $this->assertText(t('Product @title has been updated.', array('@title' => $edit['title'])), 'Product updated.');
+    $this->assertText(t('Product @title has been updated.', array('@title' => $edit[$title_key])), 'Product updated.');
     $this->assertText($edit[$body_key], 'Updated product body found.');
     $this->assertText($edit['model'], 'Updated product model found.');
     $this->assertText(uc_currency_format($edit['list_price']), 'Updated product list price found.');
@@ -133,7 +134,7 @@ class ProductTest extends UbercartTestBase {
     $this->clickLink('Edit');
     $this->drupalPostForm(NULL, array(), 'Delete');
     $this->drupalPostForm(NULL, array(), 'Delete');
-    $this->assertText(t('Product @title has been deleted.', array('@title' => $edit['title'])), 'Product deleted.');
+    $this->assertText(t('Product @title has been deleted.', array('@title' => $edit[$title_key])), 'Product deleted.');
   }
 
   public function testProductClassForm() {
