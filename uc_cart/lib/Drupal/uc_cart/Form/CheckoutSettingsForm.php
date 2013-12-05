@@ -179,13 +179,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#field_prefix' => url(NULL, array('absolute' => TRUE)),
       '#size' => 16,
     );
-    $form['completion_messages']['uc_msg_order_submit'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Message header'),
-      '#description' => t('Header for message displayed after a user checks out.'),
-      '#default_value' => variable_get('uc_msg_order_submit', uc_get_message('completion_message')),
-      '#rows' => 3,
-    );
     $form['completion_messages']['uc_msg_order_logged_in'] = array(
       '#type' => 'textarea',
       '#title' => t('Logged in users'),
@@ -216,13 +209,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#default_value' => variable_get('uc_msg_order_new_user_logged_in', uc_get_message('completion_new_user_logged_in')),
       '#rows' => 3,
       '#states' => $anon_state,
-    );
-    $form['completion_messages']['uc_msg_continue_shopping'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Continue shopping message'),
-      '#description' => t('Message displayed upon checkout to direct customers to another part of your site.'),
-      '#default_value' => variable_get('uc_msg_continue_shopping', uc_get_message('continue_shopping')),
-      '#rows' => 3,
     );
 
     if (module_exists('token')) {
@@ -264,12 +250,10 @@ class CheckoutSettingsForm extends ConfigFormBase {
     variable_set('uc_cart_default_same_address', $form_state['values']['uc_cart_default_same_address']);
     variable_set('uc_cart_delivery_not_shippable', $form_state['values']['uc_cart_delivery_not_shippable']);
     variable_set('uc_cart_checkout_complete_page', $form_state['values']['uc_cart_checkout_complete_page']);
-    variable_set('uc_msg_order_submit', $form_state['values']['uc_msg_order_submit']);
     variable_set('uc_msg_order_logged_in', $form_state['values']['uc_msg_order_logged_in']);
     variable_set('uc_msg_order_existing_user', $form_state['values']['uc_msg_order_existing_user']);
     variable_set('uc_msg_order_new_user', $form_state['values']['uc_msg_order_new_user']);
     variable_set('uc_msg_order_new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in']);
-    variable_set('uc_msg_continue_shopping', $form_state['values']['uc_msg_continue_shopping']);
 
     parent::submitForm($form, $form_state);
   }
