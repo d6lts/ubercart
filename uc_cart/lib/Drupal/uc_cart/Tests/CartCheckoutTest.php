@@ -75,7 +75,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Remove the items.
     foreach ($items as $item) {
-      uc_cart_remove_item($item->nid->value, NULL, $item->data);
+      $item->delete();
     }
     // @TODO: remove the need for this
     uc_cart_get_contents(NULL, 'rebuild');

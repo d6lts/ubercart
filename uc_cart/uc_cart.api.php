@@ -389,25 +389,19 @@ function hook_uc_checkout_pane_alter(&$panes) {
 function hook_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
   if (!$nid) return NULL;
   $cid = !(is_null($cid) || empty($cid)) ? $cid : uc_cart_get_id();
-  if ($qty < 1) {
-    uc_cart_remove_item($nid, $cid, $data);
-  }
-  else {
-    db_update('uc_cart_products')
-      ->fields(array(
-        'qty' => $qty,
-        'changed' => REQUEST_TIME,
-      ))
-      ->condition('nid', $nid)
-      ->condition('cart_id', $cid)
-      ->condition('data', serialize($data))
-      ->execute();
-  }
 
-  // Rebuild the items hash
-  uc_cart_get_contents(NULL, 'rebuild');
-  if (!strpos(request_uri(), 'cart', -4)) {
-    drupal_set_message(t('Your item(s) have been updated.'));
+  $result = Drupal::entityQuery('uc_cart_item')
+    ->condition('cart_id', $cid)
+    ->condition('nid', $nid)
+    ->condition('data', serialize($data))
+    ->execute();
+
+  if (!empty($result)) {
+    $item = entity_load('uc_cart_item', current(array_keys($result)));
+    if ($item->qty->value != $qty) {
+      $item->qty->value = $qty;
+      $item->save();
+    }
   }
 }
 

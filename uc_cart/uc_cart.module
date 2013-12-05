@@ -689,34 +689,6 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
 }
 
 /**
- * Removes an item from the cart.
- *
- * @param $nid
- *   The node ID of the item to remove.
- * @param $cid
- *   The cart ID of the item to remove.
- * @param $data
- *   The data array for the item to remove.
- */
-function uc_cart_remove_item($nid, $cid = NULL, $data = array()) {
-  if (empty($nid)) {
-    return;
-  }
-
-  $cart_id = !(is_null($cid) || empty($cid)) ? $cid : uc_cart_get_id();
-
-  $result = Drupal::entityQuery('uc_cart_item')
-    ->condition('cart_id', $cart_id)
-    ->condition('nid', $nid)
-    ->condition('data', serialize($data))
-    ->execute();
-
-  if (!empty($result)) {
-    entity_delete_multiple('uc_cart_item', array_keys($result));
-  }
-}
-
-/**
  * Empties a cart of its contents.
  *
  * @param $cart_id
