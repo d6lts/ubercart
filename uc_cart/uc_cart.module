@@ -113,7 +113,7 @@ function uc_cart_theme() {
     ),
     'uc_cart_complete_sale' => array(
       'variables' => array('message' => '', 'order' => NULL),
-      'file' => 'uc_cart.theme.inc',
+      'template' => 'uc-cart-complete-sale',
     ),
   );
 }

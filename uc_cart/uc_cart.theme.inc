@@ -88,17 +88,3 @@ function theme_uc_cart_checkout_buttons($variables) {
 
   return $output;
 }
-
-/**
- * Themes the sale completion page.
- *
- * @param $variables
- *   An associative array containing:
- *   - message: Message containing order number info, account info, and link to
- *     continue shopping.
- *
- * @ingroup themeable
- */
-function theme_uc_cart_complete_sale($variables) {
-  return $variables['message'];
-}
