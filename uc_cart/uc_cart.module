@@ -592,38 +592,6 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
 }
 
 /**
- * Returns the total number of items in the shopping cart.
- *
- * The total number of items in the cart isn't simply queried directly from the
- * database, because when the shopping cart is loaded items may in fact be
- * altered or removed. Hence we actually load the cart and tally up the total
- * number of items from the fully loaded cart instead.
- *
- * @param $cid
- *   The cart ID of the shopping cart whose items we're totalling; defaults to
- *   the current user's cart.
- *
- * @return
- *   An integer representing the total number of items in the cart.
- */
-function uc_cart_get_total_qty($cid = NULL) {
-
-  $qty = 0;
-
-  if (empty($cid)) {
-    $cid = uc_cart_get_id(FALSE);
-  }
-
-  if ($cid) {
-    foreach (uc_cart_get_contents($cid) as $item) {
-      $qty += $item->qty;
-    }
-  }
-
-  return $qty;
-}
-
-/**
  * Adds an item to a user's cart.
  */
 function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE, $check_redirect = TRUE, $rebuild = TRUE) {

@@ -174,7 +174,7 @@ class CartCheckoutTest extends UbercartTestBase {
     // Test that the cart is empty.
     $this->drupalGet('cart');
     $this->assertText('There are no products in your shopping cart.');
-    $this->assertEqual(uc_cart_get_total_qty(), 0, 'There are no items in the cart.');
+    $this->assertIdentical(uc_cart_get_contents(), array(), 'There are no items in the cart.');
   }
 
   // public function testMaximumQuantityRule() {

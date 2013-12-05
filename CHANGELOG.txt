@@ -25,6 +25,7 @@ Ubercart 4.x
 * Cart items are entities and old APIs have been removed:
     * uc_cart_update_item() => $item->save()
     * uc_cart_update_item_object() removed
+    * uc_cart_get_total_qty() removed
 
 
 Ubercart 3.0-rc4, 2012-1-23
