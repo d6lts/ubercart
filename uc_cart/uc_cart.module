@@ -95,9 +95,9 @@ function uc_cart_theme() {
       'render element' => 'buttons',
       'file' => 'uc_cart.theme.inc',
     ),
-    'uc_empty_cart' => array(
+    'uc_cart_empty' => array(
       'variables' => array(),
-      'file' => 'uc_cart.theme.inc',
+      'template' => 'uc-cart-empty',
     ),
     'uc_cart_checkout_form' => array(
       'render element' => 'form',

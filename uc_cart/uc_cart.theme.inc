@@ -116,15 +116,6 @@ function theme_uc_cart_checkout_buttons($variables) {
 }
 
 /**
- * Returns the text displayed for an empty shopping cart.
- *
- * @ingroup themeable
- */
-function theme_uc_empty_cart() {
-  return '<p class="uc-cart-empty">' . t('There are no products in your shopping cart.') . '</p>';
-}
-
-/**
  * Themes the sale completion page.
  *
  * @param $variables

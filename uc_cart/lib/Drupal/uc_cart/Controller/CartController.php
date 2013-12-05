@@ -27,7 +27,7 @@ class CartController extends ControllerBase {
     // Display the empty cart page if there are no items in the cart.
     if (empty($items)) {
       return array(
-        '#theme' => 'uc_empty_cart',
+        '#theme' => 'uc_cart_empty',
       );
     }
 
