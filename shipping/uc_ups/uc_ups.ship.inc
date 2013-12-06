@@ -22,7 +22,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @ingroup forms
  */
 function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
-  $pkg_types = _uc_ups_pkg_types();
+  $store_config = \Drupal::config('uc_store.settings');
+  $pkg_types = \Drupal\uc_ups\UPSUtilities::packageTypes();
   $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
   $packages = array();
   $addresses = array();
@@ -100,7 +101,7 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
           'oz' => t('Ounces'),
           'g'  => t('Grams'),
         ),
-        '#default_value' => isset($package->weight_units) ? $package->weight_units : config('uc_store.settings')->get('units.weight'),
+        '#default_value' => isset($package->weight_units) ? $package->weight_units : $store_config->get('units.weight'),
       );
       $pkg_form['dimensions'] = array(
         '#type'          => 'container',
@@ -135,7 +136,7 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
           'cm' => t('Centimeters'),
           'mm' => t('Millimeters'),
         ),
-        '#default_value' => isset($package->length_units) ? $package->length_units : config('uc_store.settings')->get('units.length'),
+        '#default_value' => isset($package->length_units) ? $package->length_units : $store_config->get('units.length'),
       );
 
       $form['packages'][$id] = $pkg_form;
@@ -226,6 +227,7 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
  */
 function uc_ups_fulfill_order_validate($form, &$form_state) {
 
+  $ups_config = \Drupal::config('uc_ups.setttings');
   $errors = form_get_errors();
   if (isset($errors)) {
     // Some required elements are missing - don't bother with making
@@ -271,7 +273,7 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
   }
 
   // Determine if address is Residential or Commercial
-  $destination->residential = variable_get('uc_ups_residential_quotes', FALSE);
+  $destination->residential = $ups_config->get('residential_quotes');
 
   $_SESSION['ups']['destination'] = $destination;
   foreach ($form_state['values']['packages'] as $id => $pkg_form) {
@@ -294,7 +296,7 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
   $_SESSION['ups']['order_id'] = $form_state['values']['order_id'];
 
   $request = uc_ups_shipment_request($_SESSION['ups']['packages'], $origin, $destination, $form_state['values']['service']);
-  $response_obj = drupal_http_request(variable_get('uc_ups_connection_address', 'https://wwwcie.ups.com/ups.app/xml/') . 'ShipConfirm', array(
+  $response_obj = drupal_http_request($ups_config->get('connection_address') . 'ShipConfirm', array(
     'method' => 'POST',
     'data' => $request,
   ));
@@ -351,14 +353,15 @@ function uc_ups_fulfill_order_submit($form, &$form_state) {
  *   ShipConfirm XML document to send to UPS.
  */
 function uc_ups_shipment_request($packages, $origin, $destination, $ups_service) {
-  $account = variable_get('uc_ups_shipper_number', '');
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $account = $ups_config->get('shipper_number');
   $ua = explode(' ', $_SERVER['HTTP_USER_AGENT']);
   $user_agent = $ua[0];
 
   $services = _uc_ups_service_list();
   $service = array('code' => $ups_service, 'description' => $services[$ups_service]);
 
-  $pkg_types = _uc_ups_pkg_types();
+  $pkg_types = \Drupal\uc_ups\UPSUtilities::packageTypes();
 
   $store_config = config('uc_store.settings');
   $shipper_zone = uc_get_zone_code($store_config->get('address.zone'));
@@ -374,13 +377,13 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
   $shipfrom_country = $shipfrom_country[0]['country_iso_code_2'];
   $shipfrom_zip = $origin->postal_code;
 
-  $ups_units = variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length'));
+  $ups_units = $ups_config('unit_system');
 
   $package_schema = '';
   foreach ($packages as $package) {
     // Determine length conversion factor and weight conversion factor
     // for this shipment
-    $length_factor = uc_length_conversion($package->length_units, variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length')));
+    $length_factor = uc_length_conversion($package->length_units, $ups_config->get('unit_system'));
     switch ($ups_units) {
       case 'in':
         $weight_factor = uc_weight_conversion($package->weight_units, 'lb');
@@ -407,7 +410,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
         }
         $package_schema .= "<Dimensions>";
         $package_schema .=   "<UnitOfMeasurement>";
-        $package_schema .=     "<Code>" . strtoupper(variable_get('uc_ups_unit_system', config('uc_store.settings')->get('units.length'))) . "</Code>";
+        $package_schema .=     "<Code>" . strtoupper($ups_config->get('unit_system')) . "</Code>";
         $package_schema .=   "</UnitOfMeasurement>";
         $package_schema .=   "<Length>" . (floor($package->length * $length_factor) + 1) . "</Length>";
         $package_schema .=   "<Width>" . (floor($package->width * $length_factor) + 1) . "</Width>";
@@ -450,7 +453,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
   <Shipment>";
     $schema .= "<Shipper>";
       $schema .= "<Name>" . $store_config->get('name') . "</Name>";
-      $schema .= "<ShipperNumber>" . variable_get('uc_ups_shipper_number', '') . "</ShipperNumber>";
+      $schema .= "<ShipperNumber>" . $ups_config->get('shipper_number') . "</ShipperNumber>";
       if ($phone = $store_config->get('phone')) {
         $schema .= "<PhoneNumber>" . $phone . "</PhoneNumber>";
       }
@@ -513,7 +516,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
         $schema .= "</BillShipper>";
       $schema .= "</Prepaid>";
     $schema .= "</PaymentInformation>";
-    if (variable_get('uc_ups_negotiated_rates', FALSE)) {
+    if ($ups_config->get('negotiated_rates')) {
       $schema .= "<RateInformation>
           <NegotiatedRatesIndicator/>
         </RateInformation>";
@@ -617,11 +620,12 @@ function theme_uc_ups_confirm_shipment($variables) {
  * @see uc_ups_confirm_shipment()
  */
 function uc_ups_confirm_shipment_submit($form, &$form_state) {
+  $ups_config = \Drupal::config('uc_ups.setttings');
   // Request pickup using parameters in form.
   $order_id = $_SESSION['ups']['order_id'];
   $packages = array_keys($_SESSION['ups']['packages']);
   $request = uc_ups_request_pickup($form_state['values']['digest'], $order_id, $packages);
-  $result = drupal_http_request(variable_get('uc_ups_connection_address', 'https://wwwcie.ups.com/ups.app/xml/') . 'ShipAccept', array(
+  $result = drupal_http_request($ups_config->get('connection_address') . 'ShipAccept', array(
     'method' => 'POST',
     'data' => $request,
   ));

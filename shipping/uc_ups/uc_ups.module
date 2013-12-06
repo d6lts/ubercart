@@ -95,9 +95,10 @@ function uc_ups_theme() {
  * @see uc_ups_product_alter_validate()
  */
 function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
-  $quote_config = \Drupal::config('uc_ups.settings');
+  $ups_config = \Drupal::config('uc_ups.settings');
+  $quote_config = \Drupal::config('uc_quote.settings');
   if (uc_product_is_product_form($form)) {
-    $node = $form['#node'];
+    $node = $form_state['controller']->getEntity();
 
     $enabled = $quote_config->get('enabled') + array('ups' => FALSE);
     $weight = $quote_config->get('method_weight') + array('ups' => 0);
@@ -235,7 +236,7 @@ function uc_ups_node_revision_delete($node) {
  * Implements hook_uc_shipping_type().
  */
 function uc_ups_uc_shipping_type() {
-  $quote_config = \Drupal::config('uc_ups.settings');
+  $quote_config = \Drupal::config('uc_quote.settings');
   $weight = $quote_config->get('type_weight');
 
   $types = array();
@@ -443,7 +444,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
       if ($ups_config->get('insurance')) {
         $package_schema .= "<PackageServiceOptions>";
         $package_schema .=   "<InsuredValue>";
-        $package_schema .=     "<CurrencyCode>" . config('uc_store.settings')->get('currency.code') . "</CurrencyCode>";
+        $package_schema .=     "<CurrencyCode>" . $store_config->get('currency.code') . "</CurrencyCode>";
         $package_schema .=     "<MonetaryValue>" . $package->price . "</MonetaryValue>";
         $package_schema .=   "</InsuredValue>";
         $package_schema .= "</PackageServiceOptions>";
@@ -554,7 +555,9 @@ function uc_ups_quote($products, $details, $method) {
   $quotes = array();
 
   $ups_config = \Drupal::config('uc_ups.settings');
-  $addresses = array($ups_config->get('uc_quote_store_default_address'));
+  $quote_config = \Drupal::config('uc_quote.settings');
+  $store_config = \Drupal::config('uc_store.settings');
+  $addresses = array($quote_config->get('store_default_address'));
   $key = 0;
   $last_key = 0;
   $packages = array();
@@ -738,7 +741,7 @@ function uc_ups_quote($products, $details, $method) {
         if (isset($response->RatedShipment->NegotiatedRates)) {
           $charge = $response->RatedShipment->NegotiatedRates->NetSummaryCharges->GrandTotal;
         }
-        if (!isset($charge->CurrencyCode) || (string)$charge->CurrencyCode == config('uc_store.settings')->get('currency.code')) {
+        if (!isset($charge->CurrencyCode) || (string)$charge->CurrencyCode == $store_config->get('currency.code')) {
           // Markup rate before customer sees it.
           if (!isset($quotes[$ups_service]['rate'])) {
             $quotes[$ups_service]['rate'] = 0;
