@@ -30,7 +30,7 @@ class CheckoutController extends ControllerBase {
       $subtotal = 0;
       if (is_array($items) && count($items) > 0) {
         foreach ($items as $item) {
-          $data = module_invoke($item->module, 'uc_cart_display', $item);
+          $data = module_invoke($item->data['module'], 'uc_cart_display', $item);
           if (!empty($data)) {
             $subtotal += $data['#total'];
           }
