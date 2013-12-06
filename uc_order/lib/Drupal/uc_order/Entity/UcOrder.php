@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_store\Address;
 
@@ -311,176 +312,107 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['order_id'] = array(
-      'label' => t('Order ID'),
-      'description' => t('The order ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['uid'] = array(
-      'label' => t('Customer'),
-      'description' => 'The user that placed the order.',
-      'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'user'),
-    );
-    $properties['order_status'] = array(
-      'label' => t('Order status'),
-      'description' => 'The {uc_order_statuses}.order_status_id indicating the order status.',
-      'type' => 'string_field',
-    );
-    $properties['order_total'] = array(
-      'label' => t('Order total'),
-      'description' => 'The total amount to be paid for the order.',
-      'type' => 'integer_field',
-      // 'type' => 'float',
-    );
-    $properties['product_count'] = array(
-      'label' => t('Product count'),
-      'description' => 'The total product quantity of the order.',
-      'type' => 'integer_field',
-    );
-    $properties['primary_email'] = array(
-      'label' => t('E-mail address'),
-      'description' => 'The email address of the customer.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_first_name'] = array(
-      'label' => t('Delivery first name'),
-      'description' => 'The first name of the person receiving shipment.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_last_name'] = array(
-      'label' => t('Delivery last name'),
-      'description' => 'The last name of the person receiving shipment.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_phone'] = array(
-      'label' => t('Delivery phone'),
-      'description' => 'The phone number at the delivery location.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_company'] = array(
-      'label' => t('Delivery company'),
-      'description' => 'The company at the delivery location.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_street1'] = array(
-      'label' => t('Delivery street 1'),
-      'description' => 'The street address of the delivery location.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_street2'] = array(
-      'label' => t('Delivery street 2'),
-      'description' => 'The second line of the street address.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_city'] = array(
-      'label' => t('Delivery city'),
-      'description' => 'The city of the delivery location.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_zone'] = array(
-      'label' => t('Delivery state/province'),
-      'description' => 'The state/zone/province id of the delivery location.',
-      'type' => 'integer_field',
-    );
-    $properties['delivery_postal_code'] = array(
-      'label' => t('Delivery postal code'),
-      'description' => 'The postal code of the delivery location.',
-      'type' => 'string_field',
-    );
-    $properties['delivery_country'] = array(
-      'label' => t('Delivery country'),
-      'description' => 'The country ID of the delivery location.',
-      'type' => 'integer_field',
-    );
-    $properties['billing_first_name'] = array(
-      'label' => t('Billing first name'),
-      'description' => 'The first name of the person paying for the order.',
-      'type' => 'string_field',
-    );
-    $properties['billing_last_name'] = array(
-      'label' => t('Billing last name'),
-      'description' => 'The last name of the person paying for the order.',
-      'type' => 'string_field',
-    );
-    $properties['billing_phone'] = array(
-      'label' => t('Billing phone'),
-      'description' => 'The phone number for the billing address.',
-      'type' => 'string_field',
-    );
-    $properties['billing_company'] = array(
-      'label' => t('Billing company'),
-      'description' => 'The company of the billing address.',
-      'type' => 'string_field',
-    );
-    $properties['billing_street1'] = array(
-      'label' => t('Billing street 1'),
-      'description' => 'The street address where the bill will be sent.',
-      'type' => 'string_field',
-    );
-    $properties['billing_street2'] = array(
-      'label' => t('Billing street 2'),
-      'description' => 'The second line of the street address.',
-      'type' => 'string_field',
-    );
-    $properties['billing_city'] = array(
-      'label' => t('Billing city'),
-      'description' => 'The city where the bill will be sent.',
-      'type' => 'string_field',
-    );
-    $properties['billing_zone'] = array(
-      'label' => t('Billing state/province'),
-      'description' => 'The state/zone/province ID where the bill will be sent.',
-      'type' => 'integer_field',
-    );
-    $properties['billing_postal_code'] = array(
-      'label' => t('Billing postal code'),
-      'description' => 'The postal code where the bill will be sent.',
-      'type' => 'string_field',
-    );
-    $properties['billing_country'] = array(
-      'label' => t('Billing country'),
-      'description' => 'The country ID where the bill will be sent.',
-      'type' => 'integer_field',
-    );
-    $properties['payment_method'] = array(
-      'label' => t('Payment method'),
-      'description' => 'The method of payment.',
-      'type' => 'string_field',
-    );
-    // $properties['data'] = array(
-    //   'label' => t('Data'),
-    //   'description' => 'A serialized array of extra data.',
-    //   'type' => 'string_field',
-    // );
-    $properties['created'] = array(
-      'label' => t('Created'),
-      'description' => 'The Unix timestamp indicating when the order was created.',
-      'type' => 'integer_field',
-    );
-    $properties['modified'] = array(
-      'label' => t('Modified'),
-      'description' => 'The Unix timestamp indicating when the order was last modified.',
-      'type' => 'integer_field',
-    );
-    $properties['host'] = array(
-      'label' => t('Host'),
-      'description' => 'Host IP address of the person paying for the order.',
-      'type' => 'string_field',
-    );
-    $properties['currency'] = array(
-      'label' => t('Currency'),
-      'description' => 'The ISO currency code for the order.',
-      'type' => 'string_field',
-      // 'settings' => array(
-      //   'default_value' => '',
-      // ),
-      // 'property_constraints' => array(
-      //   'value' => array('Length' => array('max' => 3)),
-      // ),
-    );
-    return $properties;
+    $fields['order_id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Order ID'))
+      ->setDescription(t('The order ID.'))
+      ->setReadOnly(TRUE);
+    $fields['uid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Customer'))
+      ->setDescription(t('The user that placed the order.'))
+      ->setFieldSetting('target_type', 'user');
+    $fields['order_status'] = FieldDefinition::create('string')
+      ->setLabel(t('Order status'))
+      ->setDescription(t('The {uc_order_statuses}.order_status_id indicating the order status.'));
+    $fields['order_total'] = FieldDefinition::create('integer') // float?
+      ->setLabel(t('Order total'))
+      ->setDescription(t('The total amount to be paid for the order.'));
+    $fields['product_count'] = FieldDefinition::create('integer')
+      ->setLabel(t('Product count'))
+      ->setDescription(t('The total product quantity of the order.'));
+    $fields['primary_email'] = FieldDefinition::create('email')
+      ->setLabel(t('E-mail address'))
+      ->setDescription(t('The email address of the customer.'));
+    $fields['delivery_first_name'] = FieldDefinition::create('string')
+      ->setLabel(t('Delivery first name'))
+      ->setDescription(t('The first name of the person receiving shipment.'));
+    $fields['delivery_last_name'] = FieldDefinition::create('string')
+      ->setLabel(t('Delivery last name'))
+      ->setDescription(t('The last name of the person receiving shipment.'));
+    $fields['delivery_phone'] = FieldDefinition::create('string')
+      ->setLabel(t('Delivery phone'))
+      ->setDescription(t('The phone number at the delivery location.'));
+    $fields['delivery_company'] = FieldDefinition::create('string')
+      ->setLabel(t('Delivery company'))
+      ->setDescription(t('The company at the delivery location.'));
+    $fields['delivery_street1'] = FieldDefinition::create('string')
+      ->setLabel(t('Delivery street 1'))
+      ->setDescription(t('The street address of the delivery location.'));
+    $fields['delivery_street2'] = FieldDefinition::create('string')
+      ->setLabel(t('Delivery street 2'))
+      ->setDescription(t('The second line of the street address.'));
+    $fields['delivery_city'] = FieldDefinition::create('string')
+      ->setLabel(t('Delivery city'))
+      ->setDescription(t('The city of the delivery location.'));
+    $fields['delivery_zone'] = FieldDefinition::create('integer')
+      ->setLabel(t('Delivery state/province'))
+      ->setDescription(t('The state/zone/province id of the delivery location.'));
+    $fields['delivery_postal_code'] = FieldDefinition::create('string')
+      ->setLabel(t('Delivery postal code'))
+      ->setDescription(t('The postal code of the delivery location.'));
+    $fields['delivery_country'] = FieldDefinition::create('integer')
+      ->setLabel(t('Delivery country'))
+      ->setDescription(t('The country ID of the delivery location.'));
+    $fields['billing_first_name'] = FieldDefinition::create('string')
+      ->setLabel(t('Billing first name'))
+      ->setDescription(t('The first name of the person paying for the order.'));
+    $fields['billing_last_name'] = FieldDefinition::create('string')
+      ->setLabel(t('Billing last name'))
+      ->setDescription(t('The last name of the person paying for the order.'));
+    $fields['billing_phone'] = FieldDefinition::create('string')
+      ->setLabel(t('Billing phone'))
+      ->setDescription(t('The phone number for the billing address.'));
+    $fields['billing_company'] = FieldDefinition::create('string')
+      ->setLabel(t('Billing company'))
+      ->setDescription(t('The company of the billing address.'));
+    $fields['billing_street1'] = FieldDefinition::create('string')
+      ->setLabel(t('Billing street 1'))
+      ->setDescription(t('The street address where the bill will be sent.'));
+    $fields['billing_street2'] = FieldDefinition::create('string')
+      ->setLabel(t('Billing street 2'))
+      ->setDescription(t('The second line of the street address.'));
+    $fields['billing_city'] = FieldDefinition::create('string')
+      ->setLabel(t('Billing city'))
+      ->setDescription(t('The city where the bill will be sent.'));
+    $fields['billing_zone'] = FieldDefinition::create('integer')
+      ->setLabel(t('Billing state/province'))
+      ->setDescription(t('The state/zone/province ID where the bill will be sent.'));
+    $fields['billing_postal_code'] = FieldDefinition::create('string')
+      ->setLabel(t('Billing postal code'))
+      ->setDescription(t('The postal code where the bill will be sent.'));
+    $fields['billing_country'] = FieldDefinition::create('integer')
+      ->setLabel(t('Billing country'))
+      ->setDescription(t('The country ID where the bill will be sent.'));
+    $fields['payment_method'] = FieldDefinition::create('string')
+      ->setLabel(t('Payment method'))
+      ->setDescription(t('The method of payment.'));
+//    $fields['data'] = FieldDefinition::create('string')
+//      ->setLabel(t('Data'))
+//      ->setDescription(t('A serialized array of extra data.'));
+    $fields['created'] = FieldDefinition::create('integer')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The Unix timestamp indicating when the order was created.'));
+    $fields['modified'] = FieldDefinition::create('integer')
+      ->setLabel(t('Modified'))
+      ->setDescription(t('The Unix timestamp indicating when the order was last modified.'));
+    $fields['host'] = FieldDefinition::create('string')
+      ->setLabel(t('Host'))
+      ->setDescription(t('Host IP address of the person paying for the order.'));
+    $fields['currency'] = FieldDefinition::create('string')
+      ->setLabel(t('Currency'))
+      ->setDescription(t('The ISO currency code for the order.'))
+      ->setPropertyConstraints('value', array('Length' => array('max' => 3)));
+
+    return $fields;
   }
 
 }

@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Field\FieldDefinition;
 
 /**
  * Defines the cart item entity class.
@@ -78,39 +79,28 @@ class UcCartItem extends ContentEntityBase {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['cart_item_id'] = array(
-      'label' => t('Cart item ID'),
-      'description' => 'The cart item ID.',
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['cart_id'] = array(
-      'label' => t('Cart ID'),
-      'description' => 'A user-specific cart ID. For authenticated users, their {users}.uid. For anonymous users, a token.',
-      'type' => 'string_field',
-    );
-    $properties['nid'] = array(
-      'label' => t('Node ID'),
-      'description' => 'The node ID of the product.',
-      'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'node'),
-    );
-    $properties['qty'] = array(
-      'label' => t('Quantity'),
-      'description' => 'The number of this product in the cart.',
-      'type' => 'integer_field',
-    );
-    $properties['changed'] = array(
-      'label' => t('Changed'),
-      'description' => 'The Unix timestamp indicating the time the product in the cart was changed.',
-      'type' => 'integer_field',
-    );
-    // $properties['data'] = array(
-    //   'label' => t('Data'),
-    //   'description' => 'A serialized array of extra data.',
-    //   'type' => 'string_field',
-    // );
-    return $properties;
+    $fields['cart_item_id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Cart item ID'))
+      ->setDescription(t('The cart item ID.'))
+      ->setReadOnly(TRUE);
+    $fields['cart_id'] = FieldDefinition::create('string')
+      ->setLabel(t('Cart ID'))
+      ->setDescription(t('A user-specific cart ID. For authenticated users, their {users}.uid. For anonymous users, a token.'));
+    $fields['nid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Node ID'))
+      ->setDescription(t('The node ID of the product.'))
+      ->setFieldSetting('target_type', 'node');
+    $fields['qty'] = FieldDefinition::create('integer')
+      ->setLabel(t('Quantity'))
+      ->setDescription(t('The number of this product in the cart.'));
+    $fields['changed'] = FieldDefinition::create('integer')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The Unix timestamp indicating the time the product in the cart was changed.'));
+//    $fields['data'] = FieldDefinition::create('string')
+//      ->setLabel(t('Data'))
+//      ->setDescription(t('A serialized array of extra data.'));
+
+    return $fields;
   }
 
 }

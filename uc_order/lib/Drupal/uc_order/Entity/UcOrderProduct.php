@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\uc_order\UcOrderProductInterface;
 
 /**
@@ -32,101 +33,11 @@ use Drupal\uc_order\UcOrderProductInterface;
 class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterface {
 
   /**
-   * The order product ID.
-   *
-   * @var integer
-   */
-  public $order_product_id;
-
-  /**
-   * The order ID.
-   *
-   * @var integer
-   */
-  public $order_id;
-
-  /**
-   * The node ID of this product.
-   *
-   * @var integer
-   */
-  public $nid;
-
-  /**
-   * The title of this product.
-   *
-   * @var string
-   */
-  public $title;
-
-  /**
-   * The SKU of this product.
-   *
-   * @var string
-   */
-  public $model;
-
-  /**
-   * The quantity of this product.
-   *
-   * @var integer
-   */
-  public $qty;
-
-  /**
-   * The cost of this product.
-   *
-   * @var float
-   */
-  public $cost;
-
-  /**
-   * The price of this product.
-   *
-   * @var float
-   */
-  public $price;
-
-  /**
-   * The weight of this product.
-   *
-   * @var float
-   */
-  public $weight;
-
-  /**
-   * The units of weight of this product.
-   *
-   * @var string
-   */
-  public $weight_units;
-
-  /**
    * An array of extra data about this product.
    *
    * @var array
    */
   public $data;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    parent::init();
-
-    // We unset all defined properties, so magic getters apply.
-    unset($this->order_product_id);
-    unset($this->order_id);
-    unset($this->nid);
-    unset($this->title);
-    unset($this->model);
-    unset($this->qty);
-    unset($this->cost);
-    unset($this->price);
-    unset($this->weight);
-    unset($this->weight_units);
-    // unset($this->data);
-  }
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
@@ -139,65 +50,44 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['order_product_id'] = array(
-      'label' => t('Order product ID'),
-      'description' => t('The order ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['order_id'] = array(
-      'label' => t('Order ID'),
-      'description' => t('The order ID.'),
-      'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'uc_order'),
-    );
-    $properties['nid'] = array(
-      'label' => t('Node ID'),
-      'description' => 'The user that placed the order.',
-      'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'node'),
-    );
-    $properties['title'] = array(
-      'label' => t('Title'),
-      'description' => 'The product title.',
-      'type' => 'string_field',
-    );
-    $properties['model'] = array(
-      'label' => t('SKU'),
-      'description' => 'The product model/SKU.',
-      'type' => 'string_field',
-    );
-    $properties['qty'] = array(
-      'label' => t('Quantity'),
-      'description' => 'The number of the product ordered.',
-      'type' => 'integer_field',
-    );
-    $properties['cost'] = array(
-      'label' => t('Cost'),
-      'description' => 'The cost to the store for the product.',
-      'type' => 'integer_field',
-    );
-    $properties['price'] = array(
-      'label' => t('Price'),
-      'description' => 'The price paid for the ordered product.',
-      'type' => 'integer_field',
-    );
-    $properties['weight'] = array(
-      'label' => t('Weight'),
-      'description' => 'The physical weight.',
-      'type' => 'integer_field',
-    );
-    $properties['weight_units'] = array(
-      'label' => t('Weight units'),
-      'description' => 'Unit of measure for the weight field.',
-      'type' => 'string_field',
-    );
-    $properties['data'] = array(
-      'label' => t('Data'),
-      'description' => 'A serialized array of extra data.',
-      'type' => 'string_field',
-    );
-    return $properties;
+    $fields['order_product_id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Order product ID'))
+      ->setDescription(t('The ordered product ID.'))
+      ->setReadOnly(TRUE);
+    $fields['order_id'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Order ID'))
+      ->setDescription(t('The order ID.'))
+      ->setFieldSetting('target_type', 'uc_order');
+    $fields['nid'] = FieldDefinition::create('entity_reference')
+      ->setLabel(t('Node ID'))
+      ->setDescription('The user that placed the order.')
+      ->setFieldSetting('target_type', 'node');
+    $fields['title'] = FieldDefinition::create('string')
+      ->setLabel(t('Title'))
+      ->setDescription('The product title.');
+    $fields['model'] = FieldDefinition::create('string')
+      ->setLabel(t('SKU'))
+      ->setDescription('The product model/SKU.');
+    $fields['qty'] = FieldDefinition::create('integer')
+      ->setLabel(t('Quantity'))
+      ->setDescription('The number of the product ordered.');
+    $fields['cost'] = FieldDefinition::create('integer') // float?
+      ->setLabel(t('Cost'))
+      ->setDescription('The cost to the store for the product.');
+    $fields['price'] = FieldDefinition::create('integer') // float?
+      ->setLabel(t('Price'))
+      ->setDescription('The price paid for the ordered product.');
+    $fields['weight'] = FieldDefinition::create('integer') // float?
+      ->setLabel(t('Weight'))
+      ->setDescription('The physical weight.');
+    $fields['weight_units'] = FieldDefinition::create('string')
+      ->setLabel(t('Weight units'))
+      ->setDescription('Unit of measure for the weight field.');
+//    $fields['data'] = FieldDefinition::create('string')
+//      ->setLabel(t('Data'))
+//      ->setDescription('A serialized array of extra data.');
+
+    return $fields;
   }
 
 }
