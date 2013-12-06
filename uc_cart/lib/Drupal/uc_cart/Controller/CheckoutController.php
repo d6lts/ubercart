@@ -26,23 +26,6 @@ class CheckoutController extends ControllerBase {
       return $this->redirect('uc_cart.cart');
     }
 
-    if (($min = variable_get('uc_minimum_subtotal', 0)) > 0) {
-      $subtotal = 0;
-      if (is_array($items) && count($items) > 0) {
-        foreach ($items as $item) {
-          $data = module_invoke($item->data['module'], 'uc_cart_display', $item);
-          if (!empty($data)) {
-            $subtotal += $data['#total'];
-          }
-        }
-      }
-
-      if ($subtotal < $min) {
-        drupal_set_message(t('The minimum order subtotal for checkout is @min.', array('@min' => uc_currency_format($min))), 'error');
-        return $this->redirect('uc_cart.cart');
-      }
-    }
-
     // Send anonymous users to login page when anonymous checkout is disabled.
     if ($user->isAnonymous() && !variable_get('uc_checkout_anonymous', TRUE)) {
       drupal_set_message(t('You must login before you can proceed to checkout.'));
@@ -121,6 +104,12 @@ class CheckoutController extends ControllerBase {
         drupal_set_message(t('Some of the products in this order are no longer available.'), 'error');
         return $this->redirect('uc_cart.cart');
       }
+    }
+
+    $min = variable_get('uc_minimum_subtotal', 0);
+    if ($min > 0 && $order->getSubtotal() < $min) {
+      drupal_set_message(t('The minimum order subtotal for checkout is @min.', array('@min' => uc_currency_format($min))), 'error');
+      return $this->redirect('uc_cart.cart');
     }
 
     // Trigger the "Customer starts checkout" hook and event.
