@@ -384,15 +384,16 @@ class CartCheckoutTest extends UbercartTestBase {
     // Check that a new account was created.
     $this->assertTrue(strpos($output['#message'], 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
 
-    // 2 e-mails: new account, customer invoice
-    $mails = $this->drupalGetMails();
-    $this->assertEqual(count($mails), 2, '2 e-mails were sent.');
-    \Drupal::state()->set('system.test_email_collector', array());
+    // 3 e-mails: new account, customer invoice, admin invoice
+    $this->assertMailString('subject', 'Account details', 3, 'New account email was sent');
+    $this->assertMailString('subject', 'Your Order at Ubercart', 3, 'Customer invoice was sent');
+    $this->assertMailString('subject', 'New Order at Ubercart', 3, 'Admin notification was sent');
 
+    $mails = $this->drupalGetMails();
     $password = $mails[0]['params']['account']->password;
     $this->assertTrue(!empty($password), 'New password is not empty.');
-    // In D7, new account emails do not contain the password.
-    //$this->assertTrue(strpos($mails[0]['body'], $password) !== FALSE, 'Mail body contains password.');
+
+    \Drupal::state()->set('system.test_email_collector', array());
 
     // Different user, sees the checkout page first.
     $order_data = array('primary_email' => 'simpletest2@ubercart.org');
@@ -400,15 +401,16 @@ class CartCheckoutTest extends UbercartTestBase {
     $output = uc_cart_complete_sale($order, TRUE);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
-    // 2 e-mails: new account, customer invoice
-    $mails = $this->drupalGetMails();
-    $this->assertEqual(count($mails), 2, '2 e-mails were sent.');
-    \Drupal::state()->set('system.test_email_collector', array());
+    // 3 e-mails: new account, customer invoice, admin invoice
+    $this->assertMailString('subject', 'Account details', 3, 'New account email was sent');
+    $this->assertMailString('subject', 'Your Order at Ubercart', 3, 'Customer invoice was sent');
+    $this->assertMailString('subject', 'New Order at Ubercart', 3, 'Admin notification was sent');
 
+    $mails = $this->drupalGetMails();
     $password = $mails[0]['params']['account']->password;
     $this->assertTrue(!empty($password), 'New password is not empty.');
-    // In D7, new account emails do not contain the password.
-    //$this->assertTrue(strpos($mails[0]['body'], $password) !== FALSE, 'Mail body contains password.');
+
+    \Drupal::state()->set('system.test_email_collector', array());
 
     // Same user, new order.
     $order = $this->createOrder($order_data);
@@ -418,9 +420,10 @@ class CartCheckoutTest extends UbercartTestBase {
     // Check that no new account was created.
     $this->assertTrue(strpos($output['#message'], 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
 
-    // 1 e-mail: customer invoice
-    $mails = $this->drupalGetMails();
-    $this->assertEqual(count($mails), 1, '1 e-mail was sent.');
+    // 2 e-mails: customer invoice, admin invoice
+    $this->assertNoMailString('subject', 'Account details', 3, 'New account email was sent');
+    $this->assertMailString('subject', 'Your Order at Ubercart', 3, 'Customer invoice was sent');
+    $this->assertMailString('subject', 'New Order at Ubercart', 3, 'Admin notification was sent');
   }
 
   public function testCheckoutRoleAssignment() {
@@ -443,9 +446,12 @@ class CartCheckoutTest extends UbercartTestBase {
     $order = uc_order_load($order->id());
     $this->assertEqual($order->getStatusId(), 'payment_received', 'Shippable order was set to payment received.');
 
-    // 3 e-mails: new account, customer invoice, role assignment
-    $mails = $this->drupalGetMails();
-    $this->assertEqual(count($mails), 3, '3 e-mails were sent.');
+    // 4 e-mails: new account, customer invoice, admin invoice, role assignment
+    $this->assertMailString('subject', 'Account details', 4, 'New account email was sent');
+    $this->assertMailString('subject', 'Your Order at Ubercart', 4, 'Customer invoice was sent');
+    $this->assertMailString('subject', 'New Order at Ubercart', 4, 'Admin notification was sent');
+    $this->assertMailString('subject', 'role granted', 4, 'Role assignment notification was sent');
+
     \Drupal::state()->set('system.test_email_collector', array());
 
     // Test again with an existing email address and a non-shippable order.
@@ -460,10 +466,11 @@ class CartCheckoutTest extends UbercartTestBase {
     $order = uc_order_load($order->id());
     $this->assertEqual($order->getStatusId(), 'completed', 'Non-shippable order was set to completed.');
 
-    // 2 e-mails: customer invoice, role assignment
-    $mails = $this->drupalGetMails();
-    $this->assertEqual(count($mails), 2, '2 e-mails were sent.');
-    \Drupal::state()->set('system.test_email_collector', array());
+    // 3 e-mails: customer invoice, admin invoice, role assignment
+    $this->assertNoMailString('subject', 'Account details', 4, 'New account email was sent');
+    $this->assertMailString('subject', 'Your Order at Ubercart', 4, 'Customer invoice was sent');
+    $this->assertMailString('subject', 'New Order at Ubercart', 4, 'Admin notification was sent');
+    $this->assertMailString('subject', 'role granted', 4, 'Role assignment notification was sent');
   }
 
   /**

@@ -243,20 +243,32 @@ abstract class UbercartTestBase extends WebTestBase {
   }
 
   /**
-   * Creates a new order.
+   * Creates a new order directly, without going through checkout.
    */
   protected function createOrder($edit = array()) {
-    $this->addToCart($this->product);
-
-    $order = $this->checkout();
-    if ($order && !empty($edit)) {
-      foreach ($edit as $key => $value) {
-        $order->$key = $value;
-      }
-      $order->save();
+    if (empty($edit['primary_email'])) {
+      $edit['primary_email'] = $this->randomString() . '@example.org';
     }
 
-    return $order;
+    $order = entity_create('uc_order', $edit);
+
+    if (!isset($fields['products'])) {
+      $order->products[] = entity_create('uc_order_product', array(
+        'nid' => $this->product->nid->value,
+        'title' => $this->product->title->value,
+        'model' => $this->product->model,
+        'qty' => 1,
+        'cost' => $this->product->cost,
+        'price' => $this->product->sell_price,
+        'weight' => $this->product->weight,
+        'weight_units' => $this->product->weight_units,
+        'data' => array(),
+      ));
+    }
+
+    $order->save();
+
+    return entity_load('uc_order', $order->id());
   }
 
   /**
@@ -279,6 +291,48 @@ abstract class UbercartTestBase extends WebTestBase {
 
     $this->fail(t('E-mail not found with subject matching %pattern.', array('%pattern' => $pattern)));
     return FALSE;
+  }
+
+  /**
+   * Asserts that the most recently sent e-mails do not have the string in it.
+   *
+   * @param $field_name
+   *   Name of field or message property to assert: subject, body, id, ...
+   * @param $string
+   *   String to search for.
+   * @param $email_depth
+   *   Number of emails to search for string, starting with most recent.
+   * @param $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use format_string() to embed variables in the message text, not
+   *   t(). If left blank, a default message will be displayed.
+   * @param $group
+   *   (optional) The group this message is in, which is displayed in a column
+   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
+   *   translate this string. Defaults to 'Other'; most tests do not override
+   *   this default.
+   *
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertNoMailString($field_name, $string, $email_depth, $message = '', $group = 'Other') {
+    $mails = $this->drupalGetMails();
+    $string_found = FALSE;
+    for ($i = count($mails) -1; $i >= count($mails) - $email_depth && $i >= 0; $i--) {
+      $mail = $mails[$i];
+      // Normalize whitespace, as we don't know what the mail system might have
+      // done. Any run of whitespace becomes a single space.
+      $normalized_mail = preg_replace('/\s+/', ' ', $mail[$field_name]);
+      $normalized_string = preg_replace('/\s+/', ' ', $string);
+      $string_found = (FALSE !== strpos($normalized_mail, $normalized_string));
+      if ($string_found) {
+        break;
+      }
+    }
+    if (!$message) {
+      $message = format_string('Expected text not found in @field of email message: "@expected".', array('@field' => $field_name, '@expected' => $string));
+    }
+    return $this->assertFalse($string_found, $message, $group);
   }
 
   /**

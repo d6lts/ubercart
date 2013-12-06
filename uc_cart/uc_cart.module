@@ -376,7 +376,8 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   // Log in new users, if requested.
   if ($type == 'new_user' && $login && $user->isAnonymous()) {
     $type = 'new_user_logged_in';
-    $user = $order->getUser();
+    $account = $order->getUser();
+    user_login_finalize($account);
   }
 
   $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';
