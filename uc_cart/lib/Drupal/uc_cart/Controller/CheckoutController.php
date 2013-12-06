@@ -46,10 +46,10 @@ class CheckoutController extends ControllerBase {
     // Send anonymous users to login page when anonymous checkout is disabled.
     if ($user->isAnonymous() && !variable_get('uc_checkout_anonymous', TRUE)) {
       drupal_set_message(t('You must login before you can proceed to checkout.'));
-      if (variable_get('user_register', 1) != 0) {
+      if ($this->config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
         drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => url('user/register', array('query' => drupal_get_destination())))));
       }
-      return new RedirectResponse(url('cart', array('query' => drupal_get_destination(), 'absolute' => TRUE)));
+      return new RedirectResponse(url('user', array('query' => drupal_get_destination(), 'absolute' => TRUE)));
     }
 
     // Load an order from the session, if available.
