@@ -28,11 +28,6 @@ class CartBlock extends BlockBase {
       'show_image' => TRUE,
       'collapsible' => TRUE,
       'collapsed' => TRUE,
-      'visibility' => array(
-        'path' => array(
-          'pages' => 'admin*',
-        ),
-      ),
     );
   }
 
