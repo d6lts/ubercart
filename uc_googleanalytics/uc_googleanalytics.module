@@ -143,13 +143,13 @@ function uc_googleanalytics_ecommerce_js($order) {
   // Put the arguments into an array that is safe to implode directly.
   $args = array(
     '"' . $trans['order_id'] . '"',
-    drupal_json_encode($trans['store']),
+    \Drupal\Component\Utility\Json::encode($trans['store']),
     '"' . $trans['total'] . '"',
     '"' . $trans['tax'] . '"',
     '"' . $trans['shipping'] . '"',
-    drupal_json_encode($trans['city']),
-    drupal_json_encode($trans['state']),
-    drupal_json_encode($trans['country']),
+    \Drupal\Component\Utility\Json::encode($trans['city']),
+    \Drupal\Component\Utility\Json::encode($trans['state']),
+    \Drupal\Component\Utility\Json::encode($trans['country']),
   );
 
   // Add the transaction line to the JS.
@@ -189,9 +189,9 @@ function uc_googleanalytics_ecommerce_js($order) {
     // Put the arguments into an array that is safe to implode directly.
     $args = array(
       '"' . $item['order_id'] . '"',
-      drupal_json_encode($item['sku']),
-      drupal_json_encode($item['name']),
-      drupal_json_encode((string) $item['category']),
+      \Drupal\Component\Utility\Json::encode($item['sku']),
+      \Drupal\Component\Utility\Json::encode($item['name']),
+      \Drupal\Component\Utility\Json::encode((string) $item['category']),
       '"' . $item['price'] . '"',
       '"' . $item['qty'] . '"',
     );

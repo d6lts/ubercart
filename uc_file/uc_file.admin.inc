@@ -517,8 +517,8 @@ function _uc_file_build_js_file_display($file_ids) {
 
   // Set up some JS to dynamically update the list based on the
   // recursion checkbox state.
-  drupal_add_js('uc_file_list[false] = ' . drupal_json_encode('<li>' . implode('</li><li>', $no_recursion) . '</li>') . ';', 'inline');
-  drupal_add_js('uc_file_list[true] = ' . drupal_json_encode('<li>' . implode('</li><li>', $recursion) . '</li>') . ';', 'inline');
+  drupal_add_js('uc_file_list[false] = ' . \Drupal\Component\Utility\Json::encode('<li>' . implode('</li><li>', $no_recursion) . '</li>') . ';', 'inline');
+  drupal_add_js('uc_file_list[true] = ' . \Drupal\Component\Utility\Json::encode('<li>' . implode('</li><li>', $recursion) . '</li>') . ';', 'inline');
 
   return $result;
 }

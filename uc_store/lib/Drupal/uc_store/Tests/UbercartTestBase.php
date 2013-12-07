@@ -361,7 +361,7 @@ abstract class UbercartTestBase extends WebTestBase {
       $content = filter_xss($content, array());
     }
     else {
-      $content = drupal_json_encode($ajax);
+      $content = \Drupal\Component\Utility\Json::encode($ajax);
     }
     if (!$message) {
       $message = !$not_exists ? t('"@text" found in ajax response', array('@text' => $text)) : t('"@text" not found in ajax response', array('@text' => $text));

@@ -1109,7 +1109,7 @@ function uc_select_address($uid, $type = 'billing', $onchange = '', $title = NUL
         (isset($addresses[$key + 1]) && $option == $addresses[$key + 1]['street1'])) {
       $option .= ' - ' . $address['first_name'] . ' ' . $address['last_name'];
     }
-    $options[drupal_json_encode($address)] = check_plain($option);
+    $options[\Drupal\Component\Utility\Json::encode($address)] = check_plain($option);
   }
 
   $select = array(
