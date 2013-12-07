@@ -914,12 +914,18 @@ function uc_product_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL
  * Implements hook_uc_add_to_cart_data().
  */
 function uc_product_uc_add_to_cart_data($form_values) {
-  $type = isset($form_values['nid']) ? node_load($form_values['nid'])->getType() : 'product';
-  $settings = entity_load('node_type', $type)->getModuleSettings('uc_product');
+  if (isset($form_values['nid'])) {
+    $node = node_load($form_values['nid']);
+    $type = $node->getType();
+  }
+  else {
+    $type = 'product';
+  }
 
+  $settings = entity_load('node_type', $type)->getModuleSettings('uc_product');
   return array(
-    'shippable' => isset($settings['shippable']) ? $settings['shippable'] : TRUE,
-    'type' => $type
+    'shippable' => isset($node) ? $node->shippable : $settings['shippable'],
+    'type' => $type,
   );
 }
 

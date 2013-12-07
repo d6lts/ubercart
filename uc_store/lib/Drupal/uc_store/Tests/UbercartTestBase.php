@@ -442,7 +442,7 @@ abstract class UbercartTestBase extends WebTestBase {
    *
    * @see WebTestBase::drupalPostAjaxForm()
    */
-  protected function ucPostAJAX($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
+  protected function ucPostAjax($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
     $commands = parent::drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path, $options, $headers, $form_html_id, $ajax_settings);
     $dom = new \DOMDocument();
     @$dom->loadHTML($this->drupalGetContent());
@@ -453,7 +453,7 @@ abstract class UbercartTestBase extends WebTestBase {
         if ($wrapperNode) {
           // ajax.js adds an enclosing DIV to work around a Safari bug.
           $newDom = new \DOMDocument();
-          $newDom->loadHTML('<div>' . $command['data'] . '</div>');
+          @$newDom->loadHTML('<div>' . $command['data'] . '</div>');
           $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
           $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
           // The "method" is a jQuery DOM manipulation function. Emulate

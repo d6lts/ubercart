@@ -404,8 +404,7 @@ function uc_quote_get_shipping_type($id_type, $id) {
 function uc_product_get_shipping_type($product) {
   $quote_config = \Drupal::config('uc_quote.settings');
   $shipping_type = $quote_config->get('shipping_type');
-  if ($product->id() &&
-      $type = uc_quote_get_shipping_type('product', $product->id())) {
+  if ($product->nid->value && $type = uc_quote_get_shipping_type('product', $product->nid->value)) {
     $shipping_type = $type;
   }
   return $shipping_type;
@@ -672,12 +671,11 @@ function uc_order_pane_quotes($op, $order, &$form = NULL, &$form_state = NULL) {
 
       if (!empty($form_state['quote_requested'])) {
         // Rebuild form products, from uc_order_edit_form_submit()
-        $order->products = array();
-        if (isset($form_state['values']['products']) && is_array($form_state['values']['products'])) {
-          foreach ($form_state['values']['products'] as $product) {
-            $product['data'] = unserialize($product['data']);
-            $product = (object)$product;
-            $order->products[] = $product;
+        foreach ($form_state['values']['products'] as $product) {
+          if (!isset($product['remove']) && intval($product['qty']) > 0) {
+            foreach (array('qty', 'title', 'model', 'weight', 'weight_units', 'cost', 'price') as $field) {
+              $order->products[$product['order_product_id']]->$field = $product[$field];
+            }
           }
         }
 
