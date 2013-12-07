@@ -1052,7 +1052,7 @@ function template_preprocess_uc_order_invoice(&$variables) {
  * @see uc_order-invoice-page.tpl.php
  */
 function template_preprocess_uc_order_invoice_page(&$variables) {
-  $language_interface = language(Language::TYPE_INTERFACE);
+  $language_interface = Drupal::languageManager()->getLanguage();
 
   // HTML element attributes.
   $variables['html_attributes'] = new Attribute;
