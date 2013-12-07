@@ -710,17 +710,16 @@ function uc_ups_quote($products, $details, $method) {
     $orig->email = uc_store_email();
     foreach (array_keys(array_filter($ups_config->get('services'))) as $ups_service) {
       $request = uc_ups_shipping_quote($ship_packages, $orig, $dest, $ups_service);
-      $resp = drupal_http_request($ups_config->get('connection_address') . 'Rate', array(
-        'method' => 'POST',
-        'data' => $request,
-      ));
+      $resp = \Drupal::httpClient()
+        ->post($ups_config->get('connection_address') . 'Rate', NULL, $request)
+        ->send();
       if (user_access('configure quotes') && $ups_config->get('uc_quote_display_debug')) {
         if (!isset($debug_data[$ups_service]['debug'])) {
           $debug_data[$ups_service]['debug'] = '';
         }
-        $debug_data[$ups_service]['debug'] .= htmlentities($request) . ' <br /><br /> ' . htmlentities($resp->data);
+        $debug_data[$ups_service]['debug'] .= htmlentities($request) . ' <br /><br /> ' . htmlentities($resp->getBody(TRUE));
       }
-      $response = new SimpleXMLElement($resp->data);
+      $response = new SimpleXMLElement($resp->getBody(TRUE));
       if (isset($response->Response->Error)) {
         foreach ($response->Response->Error as $error) {
           if (user_access('configure quotes') && $ups_config->get('uc_quote_display_debug')) {
@@ -838,11 +837,10 @@ function uc_ups_void_shipment($shipment_number, $tracking_numbers = array()) {
   $success = FALSE;
   $request = uc_ups_void_shipment_request($shipment_number, $tracking_numbers);
   $ups_config = \Drupal::config('uc_ups.settings');
-  $resp = drupal_http_request($ups_config->get('connection_address') . 'Void', array(
-    'method' => 'POST',
-    'data' => $request,
-  ));
-  $response = new SimpleXMLElement($resp->data);
+  $resp = \Drupal::httpClient()
+    ->post($ups_config->get('connection_address') . 'Void', NULL, $request)
+    ->send();
+  $response = new SimpleXMLElement($resp->getBody(TRUE));
   if (isset($response->Response)) {
     if (isset($response->Response->ResponseStatusCode)) {
       $success = (string)$response->Response->ResponseStatusCode;

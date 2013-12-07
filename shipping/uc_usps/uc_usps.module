@@ -316,17 +316,17 @@ function uc_usps_quote($products, $details, $method) {
       $debug_data['debug'] .= htmlentities(urldecode($request)) . "<br />\n";
     }
 
-    $result = drupal_http_request($connection_url, array(
-      'method' => 'POST',
-      'data' => $request,
-    ));
+    // Send request
+    $result = \Drupal::httpClient()
+      ->post($connection_url, NULL, $request)
+      ->send();
 
     if (user_access('configure quotes') && $quote_config->get('display_debug')) {
-      $debug_data['debug'] .= htmlentities($result->data) . "<br />\n";
+      $debug_data['debug'] .= htmlentities($result->getBody(TRUE)) . "<br />\n";
     }
 
     $rate_type = $usps_config->get('online_rates');
-    $response = new SimpleXMLElement($result->data);
+    $response = new SimpleXMLElement($result->getBody(TRUE));
 
     // Map double-encoded HTML markup in service names to Unicode characters.
     $service_markup = array(

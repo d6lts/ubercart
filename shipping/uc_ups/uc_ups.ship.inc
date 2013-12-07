@@ -296,11 +296,10 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
   $_SESSION['ups']['order_id'] = $form_state['values']['order_id'];
 
   $request = uc_ups_shipment_request($_SESSION['ups']['packages'], $origin, $destination, $form_state['values']['service']);
-  $response_obj = drupal_http_request($ups_config->get('connection_address') . 'ShipConfirm', array(
-    'method' => 'POST',
-    'data' => $request,
-  ));
-  $response = new SimpleXMLElement($response_obj->data);
+  $response_obj = \Drupal::httpClient()
+    ->post($ups_config->get('connection_address') . 'ShipConfirm', NULL, $request)
+    ->send();
+  $response = new SimpleXMLElement($response_obj->getBody(TRUE));
   if (isset($response->Response->Error)) {
     $error = $response->Response->Error;
     $error_msg = (string) $error->ErrorSeverity . ' Error ' . (string) $error->ErrorCode . ': ' . (string) $error->ErrorDescription;
@@ -625,11 +624,10 @@ function uc_ups_confirm_shipment_submit($form, &$form_state) {
   $order_id = $_SESSION['ups']['order_id'];
   $packages = array_keys($_SESSION['ups']['packages']);
   $request = uc_ups_request_pickup($form_state['values']['digest'], $order_id, $packages);
-  $result = drupal_http_request($ups_config->get('connection_address') . 'ShipAccept', array(
-    'method' => 'POST',
-    'data' => $request,
-  ));
-  $response = new SimpleXMLElement($result->data);
+  $result = \Drupal::httpClient()
+    ->post($ups_config->get('connection_address') . 'ShipAccept', NULL, $request)
+    ->send();
+  $response = new SimpleXMLElement($result->getBody(TRUE));
   $code = (string) $response->Response->ResponseStatusCode;
   if ($code == 0) { // failed request
     $error = $response->Response->Error;
