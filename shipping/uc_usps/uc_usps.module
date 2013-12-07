@@ -403,8 +403,12 @@ function uc_usps_quote($products, $details, $method) {
     }
   }
 
-  $method_services = 'uc_' . $method['id'] . '_services';
-  $usps_services = array_filter($usps_config->get($method_services, array_keys(call_user_func('_' . $method_services))));
+  // Strip leading 'usps_'
+  $method_services = substr($method['id'] . '_services', 5);
+//$method_services is the name of the callback function
+//  array_keys($method['quote']['accessorials'])
+
+  $usps_services = array_filter($usps_config->get($method_services));
   foreach ($services as $service => $quote) {
     if (!in_array($service, $usps_services)) {
       unset($services[$service]);
