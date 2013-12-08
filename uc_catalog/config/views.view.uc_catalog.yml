@@ -434,13 +434,14 @@ display:
             format: default_summary
           specify_validation: 1
           validate:
-            type: taxonomy_term
+            type: 'entity:taxonomy_term'
             fail: empty
           validate_options:
-            vids:
+            bundles:
               catalog: catalog
-            type: tid
-            transform: 0
+            access: '1'
+            operation: view
+            multiple: '0'
           depth: '0'
           break_phrase: 0
           use_taxonomy_term_path: false
