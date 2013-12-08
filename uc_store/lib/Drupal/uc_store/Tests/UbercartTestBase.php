@@ -272,28 +272,6 @@ abstract class UbercartTestBase extends WebTestBase {
   }
 
   /**
-   * Assert that an email was sent with a specific subject line.
-   *
-   * @param $pattern
-   *   A regular expression to match the subject against.
-   *
-   * @return
-   *   An array containing the most recently sent matching email,
-   *   or FALSE if the subject line did not match anything.
-   */
-  protected function findMail($pattern) {
-    foreach (array_reverse($this->drupalGetMails()) as $mail) {
-      if (preg_match($pattern, $mail['subject'])) {
-        $this->pass(t('E-mail found with subject matching %pattern.', array('%pattern' => $pattern)));
-        return $mail;
-      }
-    }
-
-    $this->fail(t('E-mail not found with subject matching %pattern.', array('%pattern' => $pattern)));
-    return FALSE;
-  }
-
-  /**
    * Asserts that the most recently sent e-mails do not have the string in it.
    *
    * @param $field_name

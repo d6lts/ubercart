@@ -43,11 +43,11 @@ class RolesTest extends UbercartTestBase {
     uc_payment_enter($order->id(), 'other', $order->getTotal());
 
     // Test that the role was granted.
-    $account = $order->getUser();
-    $this->assertTrue(isset($account->roles[$rid]), 'Existing user was granted role.');
+    $this->assertTrue($order->getUser()->hasRole($rid), 'Existing user was granted role.');
 
     // Test that the email is correct.
-    $mail = $this->findMail('/Ubercart: ' . preg_quote($account->roles[$rid]) . ' role granted/');
+    $role = entity_load('user_role', $rid);
+    $this->assertMailString('subject', $role->label(), 4, 'Role assignment email mentions role in subject line.');
 
     // Delete the user.
     user_delete($order->getUserId());
