@@ -10,6 +10,8 @@
  * will be collected to complete the purchase.
  */
 
+use Drupal\uc_order\UcOrderInterface;
+
 require_once dirname(__FILE__) . '/uc_payment_checkout_pane.inc';
 require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
 
@@ -410,6 +412,35 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
   // rules_invoke_event('uc_payment_entered', $order, $account);
 
   return $receipt_id;
+}
+
+/**
+ * Implements hook_uc_payment_entered().
+ *
+ * Automatically mark paid orders as "payment received".
+ *
+ * @todo Remove when Rules is available.
+ */
+function uc_payment_uc_payment_entered(UcOrderInterface $order) {
+  if (uc_payment_balance($order) <= 0) {
+    $state = $order->getStateId();
+    if ($state == 'in_checkout' || $state == 'post_checkout') {
+      $order->setStatusId('payment_received')->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_uc_order_update().
+ *
+ * Move non-shippable orders from "payment received" to "completed".
+ *
+ * @todo Remove when Rules is available.
+ */
+function uc_payment_uc_order_update(UcOrderInterface $order) {
+  if ($order->getStatusId() == 'payment_received' && !uc_order_is_shippable($order)) {
+    $order->setStatusId('completed')->save();
+  }
 }
 
 /**
