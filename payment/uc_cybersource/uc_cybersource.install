@@ -9,7 +9,6 @@
  * Implements hook_requirements().
  */
 function uc_cybersource_requirements($phase) {
-  $has_curl = function_exists('curl_init');
   $has_dom = class_exists('DOMDocument');
   $has_soap = class_exists('SoapClient');
 
