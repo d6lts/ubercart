@@ -503,7 +503,7 @@ function uc_usps_rate_request($packages, $origin, $destination) {
   }
   $request .= '</RateV4Request>';
 
-  return 'API=RateV4&XML=' . drupal_encode_path($request);
+  return 'API=RateV4&XML=' . \Drupal\Component\Utility\Url::encodePath($request);
 }
 
 /**
@@ -560,7 +560,7 @@ function uc_usps_intl_rate_request($packages, $origin, $destination) {
   }
   $request .= '</IntlRateV2Request>';
 
-  $request = 'API=IntlRateV2&XML=' . drupal_encode_path($request);
+  $request = 'API=IntlRateV2&XML=' . \Drupal\Component\Utility\Url::encodePath($request);
   return $request;
 }
 

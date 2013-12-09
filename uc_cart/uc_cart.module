@@ -624,14 +624,14 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
               return $redirect;
             }
             else {
-              return array(current_path(), array('query' => drupal_get_query_parameters()));
+              return array(current_path(), array('query' => \Drupal\Component\Utility\Url::filterQueryParameters()));
             }
           }
         }
         else {
           drupal_set_message($message, 'error');
         }
-        return array(current_path(), array('query' => drupal_get_query_parameters()));
+        return array(current_path(), array('query' => \Drupal\Component\Utility\Url::filterQueryParameters()));
       }
     }
   }
@@ -681,7 +681,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
       return $redirect;
     }
     else {
-      return array(current_path(), array('query' => drupal_get_query_parameters()));
+      return array(current_path(), array('query' => \Drupal\Component\Utility\Url::filterQueryParameters()));
     }
   }
 }
