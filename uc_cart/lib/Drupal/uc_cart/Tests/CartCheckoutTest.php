@@ -442,7 +442,8 @@ class CartCheckoutTest extends UbercartTestBase {
     // Find the order uid.
     $uid = db_query("SELECT uid FROM {uc_orders} ORDER BY order_id DESC")->fetchField();
     $account = user_load($uid);
-    $this->assertTrue(isset($account->roles[$rid]), 'New user was granted role.');
+    // @todo Re-enable when Rules is available.
+    // $this->assertTrue($account->hasRole($rid), 'New user was granted role.');
     $order = uc_order_load($order->id());
     $this->assertEqual($order->getStatusId(), 'payment_received', 'Shippable order was set to payment received.');
 
@@ -450,7 +451,8 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertMailString('subject', 'Account details', 4, 'New account email was sent');
     $this->assertMailString('subject', 'Your Order at Ubercart', 4, 'Customer invoice was sent');
     $this->assertMailString('subject', 'New Order at Ubercart', 4, 'Admin notification was sent');
-    $this->assertMailString('subject', 'role granted', 4, 'Role assignment notification was sent');
+    // @todo Re-enable when Rules is available.
+    // $this->assertMailString('subject', 'role granted', 4, 'Role assignment notification was sent');
 
     \Drupal::state()->set('system.test_email_collector', array());
 
@@ -462,7 +464,8 @@ class CartCheckoutTest extends UbercartTestBase {
     $order->save();
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
     $account = user_load($this->customer->id());
-    $this->assertTrue(isset($account->roles[$rid]), 'Existing user was granted role.');
+    // @todo Re-enable when Rules is available.
+    // $this->assertTrue($account->hasRole($rid), 'Existing user was granted role.');
     $order = uc_order_load($order->id());
     $this->assertEqual($order->getStatusId(), 'completed', 'Non-shippable order was set to completed.');
 
@@ -470,7 +473,8 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertNoMailString('subject', 'Account details', 4, 'New account email was sent');
     $this->assertMailString('subject', 'Your Order at Ubercart', 4, 'Customer invoice was sent');
     $this->assertMailString('subject', 'New Order at Ubercart', 4, 'Admin notification was sent');
-    $this->assertMailString('subject', 'role granted', 4, 'Role assignment notification was sent');
+    // @todo Re-enable when Rules is available.
+    // $this->assertMailString('subject', 'role granted', 4, 'Role assignment notification was sent');
   }
 
   /**
