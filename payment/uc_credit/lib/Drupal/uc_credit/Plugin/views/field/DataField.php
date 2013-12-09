@@ -23,7 +23,7 @@ class DataField extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render(ResultRow $values) {
+  public function render(ResultRow $values) {
     // Initialize the encryption key and class.
     $key = uc_credit_encryption_key();
     $crypt = new Encryption();

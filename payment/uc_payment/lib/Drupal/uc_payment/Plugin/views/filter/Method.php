@@ -21,7 +21,7 @@ class Method extends InOperator {
   /**
    * Overrides InOperator::getValueOptions().
    */
-  function getValueOptions() {
+  public function getValueOptions() {
     if (!isset($this->value_options)) {
       $this->value_options = array();
 

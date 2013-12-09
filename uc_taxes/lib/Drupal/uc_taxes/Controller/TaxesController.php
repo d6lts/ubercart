@@ -49,7 +49,7 @@ class TaxesController extends ControllerBase {
   /**
    * Clones a tax rate.
    */
-  function saveClone($tax_rate) {
+  public function saveClone($tax_rate) {
     // Load the source rate object.
     $rate = uc_taxes_rate_load($tax_rate);
     $name = $rate->name;

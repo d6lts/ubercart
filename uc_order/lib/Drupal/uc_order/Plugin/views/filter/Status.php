@@ -21,7 +21,7 @@ class Status extends InOperator {
   /**
    * Overrides InOperator::getValueOptions().
    */
-  function getValueOptions() {
+  public function getValueOptions() {
     if (!isset($this->value_options)) {
       $options['_active'] = t('Active');
       foreach (uc_order_status_list() as $status => $name) {
@@ -36,7 +36,7 @@ class Status extends InOperator {
   /**
    * Overrides InOperator::query().
    */
-  function query() {
+  public function query() {
     if (is_array($this->value) && in_array('_active', $this->value)) {
       $this->value = array_merge($this->value, array_values(uc_order_status_list('general', TRUE)));
     }

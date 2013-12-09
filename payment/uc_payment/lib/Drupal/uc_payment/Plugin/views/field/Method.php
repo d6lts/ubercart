@@ -22,7 +22,7 @@ class Method extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render(ResultRow $values) {
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->sanitizeValue(_uc_payment_method_data($value, 'name'));
   }

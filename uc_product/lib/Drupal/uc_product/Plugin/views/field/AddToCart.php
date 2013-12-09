@@ -22,7 +22,7 @@ class AddToCart extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render(ResultRow $values) {
+  public function render(ResultRow $values) {
     $nid = $this->getValue($values);
     $node = node_load($nid);
     if (uc_product_is_product($node)) {

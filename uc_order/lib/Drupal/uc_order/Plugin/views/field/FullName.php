@@ -71,7 +71,7 @@ class FullName extends FieldPluginBase {
    *
    * Data should be made XSS safe prior to calling this function.
    */
-  function render_link($data, $values) {
+  protected function renderAsLink($data, $values) {
     if (!empty($this->options['link_to_user']) && user_access('access user profiles')) {
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = 'user/' . $this->getValue($values, 'uid');;
@@ -82,7 +82,7 @@ class FullName extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render(ResultRow $values) {
+  public function render(ResultRow $values) {
     $first = $this->getValue($values);
     $last = $this->getValue($values, 'last_name');
 
@@ -96,7 +96,7 @@ class FullName extends FieldPluginBase {
     }
 
     if (isset($output)) {
-      return $this->render_link($this->sanitizeValue($output), $values);
+      return $this->renderAsLink($this->sanitizeValue($output), $values);
     }
   }
 }

@@ -66,7 +66,7 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     );
   }
 
-  function validate_argument($argument) {
+  public function validateArgument($argument) {
     $type = $this->options['type'];
     // is_numeric() can return false positives, so we ensure it's an integer.
     // However, is_integer() will always fail, since $argument is a string.
@@ -120,7 +120,7 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     return TRUE;
   }
 
-  function process_summary_arguments(&$args) {
+  public function processSummaryArguments(&$args) {
     // If the validation says the input is an username, we should reverse the
     // argument so it works for example for generation summary urls.
     $uids_arg_keys = array_flip($args);

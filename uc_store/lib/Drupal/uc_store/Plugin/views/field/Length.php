@@ -46,7 +46,7 @@ class Length extends Numeric {
     }
   }
 
-  function render(ResultRow $values) {
+  public function render(ResultRow $values) {
     if ($this->options['format'] == 'uc_length') {
       $value = $this->getValue($values);
 

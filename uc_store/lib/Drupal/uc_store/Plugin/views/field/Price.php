@@ -46,7 +46,7 @@ class Price extends Numeric {
     }
   }
 
-  function render(ResultRow $values) {
+  public function render(ResultRow $values) {
     if ($this->options['format'] == 'uc_price') {
       $value = $this->getValue($values);
 

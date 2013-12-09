@@ -22,7 +22,7 @@ class Actions extends FieldPluginBase {
   /**
    * Overrides FieldPluginBase::render().
    */
-  function render(ResultRow $values) {
+  public function render(ResultRow $values) {
     $order_id = $this->getValue($values);
     $order = uc_order_load($values->order_id);
     return uc_order_actions($order, TRUE);

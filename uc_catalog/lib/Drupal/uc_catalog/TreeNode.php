@@ -20,7 +20,7 @@ class TreeNode {
   /**
    * Constructor.
    */
-  function __construct($term = NULL) {
+  public function __construct($term = NULL) {
     if ($term) {
       $this->tid = $term->tid;
       $this->name = $term->name;
@@ -38,7 +38,7 @@ class TreeNode {
    * tree structure. Therefore, if the parameter is more than one level
    * deeper than $this, it should be passed to the last child of $this.
    */
-  function add_child(&$child) {
+  public function add_child(&$child) {
     if ($child->depth - $this->depth == 1) {
       $this->children[] = $child;
     }

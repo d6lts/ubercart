@@ -19,7 +19,7 @@ class OrderController extends ControllerBase {
   /**
    * Displays an order invoice.
    */
-  function invoice(UcOrderInterface $uc_order, $print = FALSE) {
+  public function invoice(UcOrderInterface $uc_order, $print = FALSE) {
     $build = array(
       '#theme' => 'uc_order_invoice',
       '#order' => $uc_order,
@@ -38,7 +38,7 @@ class OrderController extends ControllerBase {
   /**
    * Displays a log of changes made to an order.
    */
-  function log(UcOrderInterface $uc_order) {
+  public function log(UcOrderInterface $uc_order) {
     $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", array(':id' => $uc_order->id()));
 
     $header = array(t('Time'), t('User'), t('Changes'));

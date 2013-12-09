@@ -46,7 +46,7 @@ class Weight extends Numeric {
     }
   }
 
-  function render(ResultRow $values) {
+  public function render(ResultRow $values) {
     if ($this->options['format'] == 'uc_weight') {
       $value = $this->getValue($values);
 
