@@ -882,35 +882,6 @@ function uc_order_log_changes($order_id, $changes) {
 }
 
 /**
- * Returns an address from an order object.
- *
- * @param $order
- *   An order object.
- * @param $type
- *   Either 'delivery' or 'billing'.
- */
-function uc_order_address($order, $type) {
-  $name = $order->{$type . '_first_name'} . ' ' . $order->{$type . '_last_name'};
-  $address = uc_address_format(
-    $order->{$type . '_first_name'},
-    $order->{$type . '_last_name'},
-    $order->{$type . '_company'},
-    $order->{$type . '_street1'},
-    $order->{$type . '_street2'},
-    $order->{$type . '_city'},
-    $order->{$type . '_zone'},
-    $order->{$type . '_postal_code'},
-    $order->{$type . '_country'}
-  );
-
-  if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
-    $address = \Drupal\Component\Utility\Unicode::strtoupper($address);
-  }
-
-  return $address;
-}
-
-/**
  * Invokes hook_uc_order() in every module.
  *
  * We cannot use module_invoke() for this, because the arguments need to

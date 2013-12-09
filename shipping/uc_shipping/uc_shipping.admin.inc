@@ -681,8 +681,8 @@ function uc_shipping_new_shipment_submit($form, &$form_state) {
 function uc_shipping_shipment_view($order, $shipment) {
   $build = array();
 
-  $origin = uc_order_address($shipment, 'o');
-  $destination = uc_order_address($shipment, 'd');
+  $origin = uc_shipment_address($shipment, 'o');
+  $destination = uc_shipment_address($shipment, 'd');
 
   $build['pickup_address'] = array('#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . t('Pickup Address:') . '</div>' . $origin . '</div>');
   $build['delivery_address'] = array('#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . t('Delivery Address:') . '</div>' . $destination . '</div>');
@@ -734,6 +734,35 @@ function uc_shipping_shipment_view($order, $shipment) {
   }
 
   return $build;
+}
+
+/**
+ * Returns an address from an object.
+ *
+ * @param $order
+ *   An order-type object.
+ * @param $type
+ *   The key prefix to use to extract the address.
+ */
+function uc_shipment_address($order, $type) {
+  $name = $order->{$type . '_first_name'} . ' ' . $order->{$type . '_last_name'};
+  $address = uc_address_format(
+    $order->{$type . '_first_name'},
+    $order->{$type . '_last_name'},
+    $order->{$type . '_company'},
+    $order->{$type . '_street1'},
+    $order->{$type . '_street2'},
+    $order->{$type . '_city'},
+    $order->{$type . '_zone'},
+    $order->{$type . '_postal_code'},
+    $order->{$type . '_country'}
+  );
+
+  if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
+    $address = \Drupal\Component\Utility\Unicode::strtoupper($address);
+  }
+
+  return $address;
 }
 
 /**
