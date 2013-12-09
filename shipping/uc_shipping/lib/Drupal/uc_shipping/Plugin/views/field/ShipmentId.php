@@ -58,7 +58,7 @@ class ShipmentId extends FieldPluginBase {
    *
    * Data should be made XSS safe prior to calling this function.
    */
-  public function renderAsLink($data, $values) {
+  public function render_link($data, $values) {
     if (!empty($this->options['link_to_shipment'])) {
       $this->options['alter']['make_link'] = FALSE;
 
@@ -81,7 +81,7 @@ class ShipmentId extends FieldPluginBase {
    * Overrides views_handler_field::render().
    */
   public function render($values) {
-    return $this->renderAsLink(check_plain($values->{$this->field_alias}), $values);
+    return $this->render_link(check_plain($values->{$this->field_alias}), $values);
   }
 
 }

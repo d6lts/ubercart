@@ -61,7 +61,7 @@ class Order extends FieldPluginBase {
    *
    * Data should be made XSS safe prior to calling this function.
    */
-  protected function renderAsLink($data, $values) {
+  protected function render_link($data, $values) {
     if (!empty($this->options['link_to_order'])) {
       $this->options['alter']['make_link'] = FALSE;
 
@@ -88,7 +88,7 @@ class Order extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
-    return $this->renderAsLink($this->sanitizeValue($value), $values);
+    return $this->render_link($this->sanitizeValue($value), $values);
   }
 
 }
