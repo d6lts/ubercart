@@ -159,7 +159,7 @@ function uc_shipping_shipment_page_title($shipment) {
  * Ensures access to the Shipments tab.
  */
 function uc_shipping_order_access($order) {
-  return user_access('fulfill orders') && uc_order_is_shippable($order);
+  return user_access('fulfill orders') && $order->isShippable();
 }
 
 /**

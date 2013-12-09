@@ -144,7 +144,7 @@ class CheckoutController extends ControllerBase {
     $panes = _uc_checkout_pane_list();
 
     // If the cart isn't shippable, bypass panes with shippable == TRUE.
-    if (!uc_order_is_shippable($order) && variable_get('uc_cart_delivery_not_shippable', TRUE)) {
+    if (!$order->isShippable() && variable_get('uc_cart_delivery_not_shippable', TRUE)) {
       $panes = uc_cart_filter_checkout_panes($panes, array('shippable' => TRUE));
     }
 

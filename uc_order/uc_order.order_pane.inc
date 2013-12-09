@@ -42,7 +42,7 @@ function uc_order_pane_print_button($op, $order, &$form = NULL, &$form_state = N
 function uc_order_pane_ship_to($op, $order, &$form = NULL, &$form_state = NULL) {
   switch ($op) {
     case 'customer':
-      if (!uc_order_is_shippable($order)) {
+      if (!$order->isShippable()) {
         return;
       }
     case 'view':

@@ -163,4 +163,12 @@ interface UcOrderInterface extends ContentEntityInterface {
    */
   public function setAddress($type, Address $address);
 
+  /**
+   * Returns whether an order is considered shippable or not.
+   *
+   * @return bool
+   *   TRUE if the order is shippable, FALSE otherwise.
+   */
+  public function isShippable();
+
 }

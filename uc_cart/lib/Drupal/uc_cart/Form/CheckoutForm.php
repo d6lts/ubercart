@@ -39,7 +39,7 @@ class CheckoutForm extends FormBase {
     $panes = _uc_checkout_pane_list();
 
     // If the order isn't shippable, remove panes with shippable == TRUE.
-    if (!uc_order_is_shippable($order) && variable_get('uc_cart_delivery_not_shippable', TRUE)) {
+    if (!$order->isShippable() && variable_get('uc_cart_delivery_not_shippable', TRUE)) {
       $panes = uc_cart_filter_checkout_panes($panes, array('shippable' => TRUE));
     }
 

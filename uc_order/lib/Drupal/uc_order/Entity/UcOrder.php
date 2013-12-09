@@ -311,6 +311,19 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
+  public function isShippable() {
+    foreach ($this->products as $product) {
+      if (uc_order_product_is_shippable($product)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions($entity_type) {
     $fields['order_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Order ID'))

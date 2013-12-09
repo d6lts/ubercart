@@ -638,7 +638,7 @@ function uc_order_condition_weight_units_options() {
  * Checks that the order is shippable.
  */
 function uc_order_condition_is_shippable($order, $settings) {
-  return uc_order_is_shippable($order);
+  return $order->isShippable();
 }
 
 /**

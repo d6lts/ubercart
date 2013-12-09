@@ -262,7 +262,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'PHONENUM' => substr($order->billing_phone, 0, 20),
     );
 
-    if (uc_order_is_shippable($order) && !empty($order->delivery_first_name)) {
+    if ($order->isShippable() && !empty($order->delivery_first_name)) {
       $shipdata = array(
         'SHIPTONAME' => substr($order->delivery_first_name . ' ' . $order->delivery_last_name, 0, 25),
         'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
@@ -646,7 +646,7 @@ function uc_paypal_ec_checkout($form, &$form_state) {
     'LANDINGPAGE' => variable_get('uc_paypal_ec_landingpage_style', 'Billing'),
   );
 
-  if (!uc_order_is_shippable($order)) {
+  if (!$order->isShippable()) {
     $nvp_request['NOSHIPPING'] = 1;
     unset($nvp_request['ADDROVERRIDE']);
   }

@@ -946,25 +946,6 @@ function uc_order_product_is_shippable($product) {
 }
 
 /**
- * Determines if an order is shippable.
- *
- * An order can be shipped if any of its products can be shipped.
- */
-function uc_order_is_shippable($order) {
-  if (!is_array($order->products) || empty($order->products)) {
-    return FALSE;
-  }
-
-  foreach ($order->products as $product) {
-    if (uc_order_product_is_shippable($product)) {
-      return TRUE;
-    }
-  }
-
-  return FALSE;
-}
-
-/**
  * Preprocesses a formatted invoice with an order's data.
  *
  * @see uc_order--admin.tpl.php
@@ -987,7 +968,7 @@ function template_preprocess_uc_order_invoice(&$variables) {
       break;
   }
 
-  $variables['shippable'] = uc_order_is_shippable($order);
+  $variables['shippable'] = $order->isShippable();
 
   $variables['products'] = array();
   if (!empty($order->products)) {
