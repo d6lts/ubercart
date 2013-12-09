@@ -824,7 +824,7 @@ function uc_order_update_status($order_id, $status) {
     uc_order_module_invoke('update', $order, $status);
 
     $change = array(t('Order status') => array('old' => uc_order_status_data($order->getStatusId(), 'title'), 'new' => uc_order_status_data($status, 'title')));
-    uc_order_log_changes($order->id(), $change);
+    $order->logChanges($change);
 
     $updated = uc_order_load($order_id, TRUE);
     // rules_invoke_event('uc_order_status_update', $order, $updated);
@@ -834,51 +834,6 @@ function uc_order_update_status($order_id, $status) {
 
   // Return FALSE if the order didn't exist.
   return FALSE;
-}
-
-/**
- * Logs changes made to an order.
- *
- * @param $order_id
- *   The ID of the order that was changed.
- * @param $changes
- *   An array of changes. Two formats are allowed:
- *   - keys: Keys being the name of the field changed and the values being
- *     associative arrays with the keys 'old' and 'new' to represent the old
- *     and new values of the field. These will be converted into a changed
- *     message.
- *   - string: A pre-formatted string describing the change. This is useful for
- *     logging details like payments.
- *
- * @return
- *   TRUE or FALSE depending on whether or not changes were logged.
- */
-function uc_order_log_changes($order_id, $changes) {
-  global $user;
-
-  if (count($changes) == 0) {
-    return FALSE;
-  }
-
-  foreach ($changes as $key => $value) {
-    if (is_array($value)) {
-      $items[] = t('@key changed from %old to %new.', array('@key' => $key, '%old' => $value['old'], '%new' => $value['new']));
-    }
-    elseif (is_string($value)) {
-      $items[] = $value;
-    }
-  }
-
-  db_insert('uc_order_log')
-    ->fields(array(
-      'order_id' => $order_id,
-      'uid' => $user->id(),
-      'changes' => theme('item_list', array('items' => $items)),
-      'created' => REQUEST_TIME,
-    ))
-    ->execute();
-
-  return TRUE;
 }
 
 /**

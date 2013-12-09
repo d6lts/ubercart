@@ -18,6 +18,7 @@ Ubercart 4.x
     * $order->currency => $order->getCurrency()
     * $order->payment_method => $order->getPaymentMethod() and $order->setPaymentMethod()
     * uc_order_is_shippable() => $order->isShippable()
+    * uc_order_log_changes($order_id, $changes) => $order->logChanges($changes)
     * uc_order_can_view_order() => $order->access('view')
     * uc_order_save() => $order->save()
     * uc_order_can_delete() => $order->access('delete')

@@ -58,7 +58,7 @@ class OrderMailInvoiceForm extends FormBase {
 
     $message = t('Invoice e-mailed to @email.', array('@email' => $recipient));
     drupal_set_message($message);
-    uc_order_log_changes($this->order->id(), array($message));
+    $this->order->logChanges(array($message));
   }
 
 }

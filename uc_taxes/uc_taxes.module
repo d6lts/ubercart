@@ -196,7 +196,7 @@ function uc_taxes_uc_order($op, $order, $arg2) {
 
       // And log the changes to the order.
       if (count($changes)) {
-        uc_order_log_changes($order->id(), $changes);
+        $order->logChanges($changes);
         usort($order->line_items, 'uc_weight_sort');
       }
     break;

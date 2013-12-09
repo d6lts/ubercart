@@ -374,6 +374,9 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
  *   A unique ID identifying the payment.
  */
 function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $comment = '', $received = REQUEST_TIME) {
+  $order = uc_order_load($order_id, TRUE);
+  $account = user_load($uid);
+
   $method_name = _uc_payment_method_data($method, 'review');
   if (empty($method_name)) {
     $method_name = _uc_payment_method_data($method, 'name');
@@ -386,7 +389,7 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
   }
 
   $log_message = t('@method payment for @amount entered.', array('@method' => $method_name, '@amount' => uc_currency_format($amount)));
-  uc_order_log_changes($order_id, array($log_message));
+  $order->logChanges(array($log_message));
 
   $receipt_id = db_insert('uc_payment_receipts')
     ->fields(array(
@@ -399,9 +402,6 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
       'received' => $received,
     ))
     ->execute();
-
-  $order = uc_order_load($order_id, TRUE);
-  $account = user_load($uid);
 
   // Ensure user has an account before payment is made.
   if (module_exists('uc_cart')) {
@@ -453,7 +453,7 @@ function uc_payment_delete($receipt_id) {
 
   $payment = uc_payment_load($receipt_id);
   $log_message = t('@method payment for @amount deleted.', array('@method' => $payment->method, '@amount' => uc_currency_format($payment->amount)));
-  uc_order_log_changes($payment->order_id, array($log_message));
+  uc_order_load($payment->order_id)->logChanges(array($log_message));
 
   db_delete('uc_payment_receipts')
     ->condition('receipt_id', $receipt_id)

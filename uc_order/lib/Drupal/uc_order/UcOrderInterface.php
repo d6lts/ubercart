@@ -171,4 +171,21 @@ interface UcOrderInterface extends ContentEntityInterface {
    */
   public function isShippable();
 
+  /**
+   * Logs changes made to an order.
+   *
+   * @param $changes
+   *   An array of changes. Two formats are allowed:
+   *   - keys: Keys being the name of the field changed and the values being
+   *     associative arrays with the keys 'old' and 'new' to represent the old
+   *     and new values of the field. These will be converted into a changed
+   *     message.
+   *   - string: A pre-formatted string describing the change. This is useful for
+   *     logging details like payments.
+   *
+   * @return \Drupal\uc_order\UcOrderInterface
+   *   The called owner entity.
+   */
+  public function logChanges($changes);
+
 }

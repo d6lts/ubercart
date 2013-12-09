@@ -324,6 +324,35 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
+  function logChanges($changes) {
+    global $user;
+
+    if (!empty($changes)) {
+      foreach ($changes as $key => $value) {
+        if (is_array($value)) {
+          $items[] = t('@key changed from %old to %new.', array('@key' => $key, '%old' => $value['old'], '%new' => $value['new']));
+        }
+        elseif (is_string($value)) {
+          $items[] = $value;
+        }
+      }
+
+      db_insert('uc_order_log')
+        ->fields(array(
+          'order_id' => $this->id(),
+          'uid' => $user->id(),
+          'changes' => theme('item_list', array('items' => $items)),
+          'created' => REQUEST_TIME,
+        ))
+        ->execute();
+    }
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions($entity_type) {
     $fields['order_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Order ID'))

@@ -147,7 +147,7 @@ class OrderEditForm extends FormBase {
     // Load line items again, since some may have been updated by the form.
     $order->line_items = uc_order_load_line_items($order);
 
-    uc_order_log_changes($order->id(), $log);
+    $order->logChanges($log);
 
     field_attach_extract_form_values($order, $form, $form_state);
 

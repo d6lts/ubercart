@@ -589,8 +589,7 @@ function uc_order_edit_products_add_blank($form, &$form_state) {
   uc_order_product_save($order->id(), $product);
 
   $order->products[] = $product;
-
-  uc_order_log_changes($order->id(), array('add' => t('Added new product line to order.')));
+  $order->logChanges(array('add' => t('Added new product line to order.')));
 }
 
 /**
@@ -609,8 +608,7 @@ function uc_order_edit_products_add($form, &$form_state) {
   drupal_alter('uc_order_product', $product, $order);
   uc_order_product_save($order->id(), $product);
   $order->products[] = $product;
-
-  uc_order_log_changes($order->id(), array('add' => t('Added (@qty) @title to order.', array('@qty' => $product->qty, '@title' => $product->title))));
+  $order->logChanges(array('add' => t('Added (@qty) @title to order.', array('@qty' => $product->qty, '@title' => $product->title))));
 
   // Decrement stock.
   if (module_exists('uc_stock')) {
