@@ -8,9 +8,7 @@ designed to be extended to meet any need.  Furthermore, the administrative
 interface, particularly relating to processing and fulfilling orders, has been
 designed for ease of use and efficient display of information.
 
-Ubercart is being sponsored and developed by the team at
-http://www.ubercart.org.  Sign up for site access to join the Ubercart community
-and take advantage of our forums and issue tracking.
+Join the Ubercart community by signing up to access our support forums on http://www.ubercart.org.
 
 Features overview:
 http://www.ubercart.org/what_is_ubercart

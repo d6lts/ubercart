@@ -3,8 +3,6 @@
 /**
  * @file
  * Processes payments using Authorize.net. Supports AIM and ARB.
- *
- * Development sponsored by Digital Dollhouse - http://www.digitaldollhouse.com
  */
 
 use Drupal\uc_store\Encryption;

@@ -1,16 +1,8 @@
-<?php
+//<?php
 
 /**
  * @file
- * A module used for CyberSource's Silent Order POST
- * and Hosted Order Page methods of payment.
- *
- * Development sponsored by:
- * Acquia - http://acquia.com
- *
- * Harvard Magazine Classifieds through Growing Venture Solutions
- * https://classifieds.harvardmagazine.com/
- * http://growingventuresolutions.com
+ * CyberSource's Silent Order POST and Hosted Order Page methods of payment.
  */
 
 use Drupal\uc_store\Encryption;
