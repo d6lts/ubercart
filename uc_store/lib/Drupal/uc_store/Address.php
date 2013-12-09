@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_store;
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * Defines an object to hold Ubercart mailing address information.
  */
@@ -106,7 +108,7 @@ class Address {
     // Remove all whitespace.
     $string = preg_replace('/\s+/', '', $string);
     // Make all characters upper case.
-    $string = drupal_strtoupper($string);
+    $string = Unicode::strtoupper($string);
 
     return $string;
   }
@@ -170,7 +172,7 @@ class Address {
     $address = preg_replace($match, $replace, $address);
 
     if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
-      $address = drupal_strtoupper($address);
+      $address = Unicode::strtoupper($address);
     }
 
     return $address;

@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_store;
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * Handles encryption of credit-card information.
  *
@@ -122,8 +124,8 @@ class Encryption {
     $target = NULL;
     $factor2 = 0;
 
-    for ($i = 0; $i < drupal_strlen($source); $i++) {
-      $char1 = drupal_substr($source, $i, 1);
+    for ($i = 0; $i < Unicode::strlen($source); $i++) {
+      $char1 = Unicode::substr($source, $i, 1);
 
       $num1 = strpos(self::$scramble1, $char1);
       if ($num1 === FALSE) {

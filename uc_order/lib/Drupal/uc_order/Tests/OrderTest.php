@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\uc_store\Address;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
@@ -127,7 +128,7 @@ class OrderTest extends UbercartTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('user/' . $this->customer->id() . '/orders/' . $order->id());
     $address = $order->getAddress('billing');
-    $this->assertText(drupal_strtoupper($address->first_name . ' ' . $address->last_name), 'Found customer name.');
+    $this->assertText(Unicode::strtoupper($address->first_name . ' ' . $address->last_name), 'Found customer name.');
 
     $edit = array(
       'bill_to[first_name]' => $this->randomName(8),

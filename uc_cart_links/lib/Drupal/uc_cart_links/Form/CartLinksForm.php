@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart_links\Form;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Url;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -71,7 +72,7 @@ class CartLinksForm extends ConfirmFormBase {
     if ($cart_links_config->get('empty') && !empty($items)) {
       $actions = explode('-', urldecode($this->actions));
       foreach ($actions as $action) {
-        $action = drupal_substr($action, 0, 1);
+        $action = Unicode::substr($action, 0, 1);
         if ($action == 'e' || $action == 'E') {
           $form = parent::buildForm($form, $form_state);
           $form['actions']['cancel']['#href'] = $cart_links_config->get('invalid_page');
@@ -96,11 +97,11 @@ class CartLinksForm extends ConfirmFormBase {
     $id = t('(not specified)');
 
     foreach ($actions as $action) {
-      switch (drupal_substr($action, 0, 1)) {
+      switch (Unicode::substr($action, 0, 1)) {
         // Set the ID of the Cart Link.
         case 'i':
         case 'I':
-          $id = drupal_substr($action, 1, 32);
+          $id = Unicode::substr($action, 1, 32);
           break;
 
         // Add a product to the cart.
@@ -113,22 +114,22 @@ class CartLinksForm extends ConfirmFormBase {
           // Parse the product action to adjust the product variables.
           $parts = explode('_', $action);
           foreach ($parts as $part) {
-            switch (drupal_substr($part, 0, 1)) {
+            switch (Unicode::substr($part, 0, 1)) {
               // Set the product node ID: p23
               case 'p':
               case 'P':
-                $p['nid'] = intval(drupal_substr($part, 1));
+                $p['nid'] = intval(Unicode::substr($part, 1));
                 break;
               // Set the quantity to add to cart: _q2
               case 'q':
               case 'Q':
-                $p['qty'] = intval(drupal_substr($part, 1));
+                $p['qty'] = intval(Unicode::substr($part, 1));
                 break;
               // Set an attribute/option for the product: _a3o6
               case 'a':
               case 'A':
-                $attribute = intval(drupal_substr($part, 1, stripos($part, 'o') - 1));
-                $option = (string) drupal_substr($part, stripos($part, 'o') + 1);
+                $attribute = intval(Unicode::substr($part, 1, stripos($part, 'o') - 1));
+                $option = (string) Unicode::substr($part, stripos($part, 'o') + 1);
                 if (!isset($p['attributes'][$attribute])) {
                   $p['attributes'][$attribute] = $option;
                 }
@@ -201,7 +202,7 @@ class CartLinksForm extends ConfirmFormBase {
           }
 
           // Parse the message key and display it if it exists.
-          $mkey = intval(drupal_substr($action, 1));
+          $mkey = intval(Unicode::substr($action, 1));
           if (!empty($messages[$mkey])) {
             drupal_set_message($messages[$mkey]);
           }

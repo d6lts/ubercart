@@ -1337,7 +1337,7 @@ function uc_store_email_from() {
  */
 function uc_store_rfc2822_display_name($name) {
   // Base64 encode $name string if it contains non-ASCII characters.
-  $name = mime_header_encode($name);
+  $name = \Drupal\Component\Utility\Unicode::mimeHeaderEncode($name);
   // From RFC2822, section 3.4.2, define valid characters for an atom.
   $valid_chars = "[a-zA-Z0-9\!\#\$\%\&\'\*\+\-\/\=\?\^\_\`\{\|\}\~]";
   // Display name is composed of 0 or more atoms separated by white space.

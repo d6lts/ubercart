@@ -904,7 +904,7 @@ function uc_order_address($order, $type) {
   );
 
   if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
-    $address = drupal_strtoupper($address);
+    $address = \Drupal\Component\Utility\Unicode::strtoupper($address);
   }
 
   return $address;
