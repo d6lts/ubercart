@@ -99,7 +99,7 @@ class OrderWorkflowForm extends FormBase {
       );
       if ($status['locked']) {
         $form['order_statuses'][$status['id']]['state'] = array(
-          '#markup' => uc_order_state_data($status['state'], 'title'),
+          '#markup' => $states[$status['state']]['title'],
         );
       }
       else {

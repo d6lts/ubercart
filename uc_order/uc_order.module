@@ -1104,27 +1104,6 @@ function uc_order_state_list($scope = 'all', $sql = FALSE) {
 }
 
 /**
- * Returns a bit of data from a state array based on the state ID and array key.
- *
- * @param $state_id
- *   The ID of the order state you want to get data from.
- * @param $key
- *   The key in the state array whose value you want: id, title, weight, scope.
- *
- * @return
- *   The value of the key you specify.
- */
-function uc_order_state_data($state_id, $key) {
-  static $states;
-
-  if (empty($states)) {
-    $states = uc_order_state_list();
-  }
-
-  return $states[$state_id][$key];
-}
-
-/**
  * Returns the default order status for a particular order state.
  *
  * @param $state_id
