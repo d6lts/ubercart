@@ -2,29 +2,39 @@
 
 /**
  * @file
- * Total package weight field handler.
+ * Contains \Drupal\uc_shipping\Plugin\views\field\PackageWeight.
  */
 
+namespace Drupal\uc_shipping\Plugin\views\field;
+
+use Drupal\uc_store\Plugin\views\field\Weight;
+use Drupal\views\ResultRow;
+
 /**
- * Field handler: displays the weight of the package.
+ * Field handler to provide the weight of the package.
  *
  * We cannot use a subquery because there is no way to make sure that all products
  * in packages have the same weight unit.
+ *
+ * @ingroup views_field_handlers
+ *
+ * @PluginID("uc_shipping_package_weight")
  */
-class uc_shipping_handler_field_package_weight extends uc_product_handler_field_weight {
+class PackageWeight extends Weight {
+
   /**
    * Overrides views_handler::use_group_by().
    *
    * Disables aggregation for this field.
    */
-  function use_group_by() {
+  public function usesGroupBy() {
     return FALSE;
   }
 
   /**
    * Overrides uc_product_handler_field_weight::query().
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
   }
@@ -32,7 +42,7 @@ class uc_shipping_handler_field_package_weight extends uc_product_handler_field_
   /**
    * Overrides uc_product_handler_field_weight::render().
    */
-  function render($values) {
+  public function render($values) {
     $package = uc_shipping_package_load($values->{$this->aliases['package_id']});
 
     if ($this->options['format'] == 'numeric') {
