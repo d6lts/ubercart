@@ -93,6 +93,10 @@ uc_order.admin_log:
   requirements:
     _permission: 'view all orders'
 
+# This is required for Views to discover the correct argument name.
+view.uc_order_history.page_1:
+  path: '/user/{user}/orders'
+
 uc_order.user_view:
   path: '/user/{user}/orders/{uc_order}'
   defaults:

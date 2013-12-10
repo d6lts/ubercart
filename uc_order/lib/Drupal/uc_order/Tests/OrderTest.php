@@ -117,8 +117,7 @@ class OrderTest extends UbercartTestBase {
 
     $this->drupalLogin($this->customer);
     $this->drupalGet('user/' . $this->customer->id() . '/orders');
-    // @todo Figure out why this test fails on testbot.
-    // $this->assertText(t('My order history'));
+    $this->assertText(t('My order history'));
 
     $this->drupalGet('user/' . $this->customer->id() . '/orders/' . $order->id());
     $this->assertResponse(200, 'Customer can view their own order.');
