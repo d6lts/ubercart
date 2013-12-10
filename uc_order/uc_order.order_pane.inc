@@ -1162,11 +1162,3 @@ function _uc_order_pane_list($view = 'view') {
 
   return $panes;
 }
-
-/**
- * Returns data from an order pane by pane ID and the array key.
- */
-function _uc_order_pane_data($pane_id, $key) {
-  $panes = _uc_order_pane_list();
-  return $panes[$pane_id][$key];
-}
