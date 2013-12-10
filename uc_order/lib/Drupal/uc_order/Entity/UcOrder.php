@@ -361,7 +361,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Customer'))
       ->setDescription(t('The user that placed the order.'))
-      ->setFieldSetting('target_type', 'user');
+      ->setSetting('target_type', 'user');
     $fields['order_status'] = FieldDefinition::create('string')
       ->setLabel(t('Order status'))
       ->setDescription(t('The {uc_order_statuses}.order_status_id indicating the order status.'));

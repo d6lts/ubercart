@@ -57,11 +57,11 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
     $fields['order_id'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Order ID'))
       ->setDescription(t('The order ID.'))
-      ->setFieldSetting('target_type', 'uc_order');
+      ->setSetting('target_type', 'uc_order');
     $fields['nid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Node ID'))
       ->setDescription('The user that placed the order.')
-      ->setFieldSetting('target_type', 'node');
+      ->setSetting('target_type', 'node');
     $fields['title'] = FieldDefinition::create('string')
       ->setLabel(t('Title'))
       ->setDescription('The product title.');

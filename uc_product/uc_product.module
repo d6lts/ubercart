@@ -736,7 +736,7 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   $instances = field_info_instances('node');
   if (isset($instances[$type->type])) {
     foreach ($instances[$type->type] as $field_name => $instance) {
-      if ($instance->getFieldType() == 'image') {
+      if ($instance->getType() == 'image') {
         $options[$field_name] = $instance->label();
       }
     }

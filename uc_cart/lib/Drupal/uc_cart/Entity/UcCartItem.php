@@ -89,7 +89,7 @@ class UcCartItem extends ContentEntityBase {
     $fields['nid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Node ID'))
       ->setDescription(t('The node ID of the product.'))
-      ->setFieldSetting('target_type', 'node');
+      ->setSetting('target_type', 'node');
     $fields['qty'] = FieldDefinition::create('integer')
       ->setLabel(t('Quantity'))
       ->setDescription(t('The number of this product in the cart.'));
