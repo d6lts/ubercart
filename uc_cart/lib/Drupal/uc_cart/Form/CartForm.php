@@ -194,14 +194,14 @@ class CartForm extends FormBase {
    * Empty cart redirect for the cart form.
    */
   public function emptyCart(array &$form, array &$form_state) {
-    $form_state['redirect'] = 'cart/empty';
+    $form_state['redirect_route']['route_name'] = 'uc_cart.empty';
   }
 
   /**
    * Checkout redirect for the cart form.
    */
   public function checkout(array &$form, array &$form_state) {
-    $form_state['redirect'] = 'cart/checkout';
+    $form_state['redirect_route']['route_name'] = 'uc_cart.checkout';
   }
 
 }

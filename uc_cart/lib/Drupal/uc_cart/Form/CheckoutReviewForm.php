@@ -27,7 +27,6 @@ class CheckoutReviewForm extends FormBase {
   public function buildForm(array $form, array &$form_state, $order = NULL) {
     if (!isset($form_state['uc_order'])) {
       $form_state['uc_order'] = $order;
-      $form_state['storage']['base_path'] = implode('/', array_slice(arg(), 0, -2));
     }
 
     $form['actions'] = array('#type' => 'actions');
@@ -78,12 +77,12 @@ class CheckoutReviewForm extends FormBase {
     }
 
     if ($error) {
-      $form_state['redirect'] = $form_state['storage']['base_path'] . '/checkout/review';
+      $form_state['redirect_route']['route_name'] = 'uc_cart.checkout_review';
     }
     else {
       unset($_SESSION['uc_checkout'][$order->id()]['do_review']);
       $_SESSION['uc_checkout'][$order->id()]['do_complete'] = TRUE;
-      $form_state['redirect'] = $form_state['storage']['base_path'] . '/checkout/complete';
+      $form_state['redirect_route']['route_name'] = 'uc_cart.checkout_complete';
     }
   }
 
@@ -91,7 +90,7 @@ class CheckoutReviewForm extends FormBase {
    * Returns the customer to the checkout page to edit their information.
    */
   public function back(array &$form, array &$form_state) {
-    $form_state['redirect'] = $form_state['storage']['base_path'] . '/checkout';
+    $form_state['redirect_route']['route_name'] = 'uc_cart.checkout';
   }
 
 }

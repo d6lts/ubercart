@@ -30,7 +30,6 @@ class CheckoutForm extends FormBase {
     }
     else {
       $form_state['storage']['order'] = $order;
-      $form_state['storage']['base_path'] = implode('/', array_slice(arg(), 0, -1));
     }
 
     $form['#attributes']['class'][] = 'uc-cart-checkout-form';
@@ -137,16 +136,14 @@ class CheckoutForm extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     if ($form_state['checkout_valid'] === FALSE) {
-      $url = $form_state['storage']['base_path'] . '/checkout';
+      $form_state['redirect_route']['route_name'] = 'uc_cart.checkout';
     }
     else {
-      $url = $form_state['storage']['base_path'] . '/checkout/review';
+      $form_state['redirect_route']['route_name'] = 'uc_cart.checkout_review';
       $_SESSION['uc_checkout'][$form_state['storage']['order']->id()]['do_review'] = TRUE;
     }
 
     unset($form_state['checkout_valid']);
-
-    $form_state['redirect'] = $url;
   }
 
   /**
@@ -160,7 +157,7 @@ class CheckoutForm extends FormBase {
     }
 
     unset($_SESSION['uc_checkout'][$order->id()]);
-    $form_state['redirect'] = $form_state['storage']['base_path'];
+    $form_state['redirect_route']['route_name'] = 'uc_cart.cart';
   }
 
 }

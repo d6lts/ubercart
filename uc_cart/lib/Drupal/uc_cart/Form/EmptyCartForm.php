@@ -42,7 +42,7 @@ class EmptyCartForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     uc_cart_empty();
-    $form_state['redirect'] = 'cart';
+    $form_state['redirect_route']['route_name'] = 'uc_cart.cart';
   }
 
 }
