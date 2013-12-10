@@ -165,7 +165,7 @@ class CheckoutController extends ControllerBase {
     return array(
       '#theme' => 'uc_cart_checkout_review',
       '#panes' => $data,
-      '#form' => drupal_get_form('uc_cart_checkout_review_form', $order),
+      '#form' => drupal_get_form('Drupal\uc_cart\Form\CheckoutReviewForm', $order),
     );
   }
 

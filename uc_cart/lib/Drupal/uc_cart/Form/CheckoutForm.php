@@ -24,7 +24,7 @@ class CheckoutForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $order= NULL) {
+  public function buildForm(array $form, array &$form_state, $order = NULL) {
     if ($processed = isset($form_state['storage']['order'])) {
       $order = $form_state['storage']['order'];
     }
