@@ -579,7 +579,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
       $p_comment .= t(', AVS: @avs', array('@avs' => $nvp['ccAuthReply_avsCode']));
     }
     if (!empty($nvp['ccAuthReply_cvCode'])) {
-      $o_comment .= t('<br /><b>CVV:</b> !cvv', array('!cvv' => _uc_cybersoure\CybersourceUtilities::cvv_code($nvp['ccAuthReply_cvCode'])));
+      $o_comment .= t('<br /><b>CVV:</b> !cvv', array('!cvv' => \Drupal\uc_cybersource\CybersourceUtilities::cvvResponse($nvp['ccAuthReply_cvCode'])));
       $p_comment .= t(', CVV: @cvv', array('@cvv' => $nvp['ccAuthReply_cvCode']));
     }
     uc_order_comment_save($order->id(), $user->id(), $o_comment, 'admin');
