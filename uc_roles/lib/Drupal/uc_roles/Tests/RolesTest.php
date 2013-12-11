@@ -55,7 +55,6 @@ class RolesTest extends UbercartTestBase {
     user_delete($order->getUserId());
 
     // Run cron to ensure deleted users are handled correctly.
-    $this->drupalLogout();
     $this->cronRun();
   }
 }
