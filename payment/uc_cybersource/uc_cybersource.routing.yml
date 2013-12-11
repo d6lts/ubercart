@@ -1,0 +1,20 @@
+uc_cybersource.hop.post:
+  path: '/cybersource/hop-post'
+  defaults:
+    _controller: 'Drupal\uc_cybersource\Controller\HOPController::post'
+  requirements:
+    _permission: true 
+
+uc_cybersource.hop.complete:
+  path: '/cybersource/hop-complete/{uc_order}'
+  defaults:
+    _controller: 'Drupal\uc_cybersource\Controller\HOPController::complete'
+  requirements:
+    _permission: 'access content'
+
+uc_cybersource.tax:
+  path: '/admin/store/orders/{uc_order}/cs_tax'
+  defaults:
+    _controller: 'Drupal\uc_cybersource\Controller\TaxController::calculate'
+  requirements:
+    _permission: 'administer store'

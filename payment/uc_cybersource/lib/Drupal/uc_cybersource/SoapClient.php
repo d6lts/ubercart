@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Defines a class used for communicating with CyberSource via SOAP.
- *
- * Provided by Acquia, Commercially supported Drupal - http://acquia.com
+ * Contains \Drupal\uc_cybersource\SoapClient.
  */
 
-class CyberSourceSoapClient extends SoapClient {
+namespace Drupal\uc_cybersource;
+
+class SoapClient extends \SoapClient {
   function __construct($wsdl, $options = NULL) {
     parent::__construct($wsdl, $options);
   }
