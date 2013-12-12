@@ -124,8 +124,6 @@ class CheckoutController extends ControllerBase {
    * Allows a customer to review their order before finally submitting it.
    */
   public function review() {
-    drupal_add_js(drupal_get_path('module', 'uc_cart') . '/js/uc_cart.js');
-
     if (empty($_SESSION['cart_order']) || empty($_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_review'])) {
       return $this->redirect('uc_cart.checkout');
     }
@@ -160,13 +158,17 @@ class CheckoutController extends ControllerBase {
       }
     }
 
-    module_load_include('inc', 'uc_cart', 'uc_cart.pages');
-
-    return array(
+    $build = array(
       '#theme' => 'uc_cart_checkout_review',
       '#panes' => $data,
       '#form' => drupal_get_form('Drupal\uc_cart\Form\CheckoutReviewForm', $order),
     );
+
+    $build['#attached']['library'][] = array('system', 'drupal');
+    $build['#attached']['library'][] = array('system', 'jquery.once');
+    $build['#attached']['js'][] = drupal_get_path('module', 'uc_cart') . '/js/uc_cart.js';
+
+    return $build;
   }
 
   /**
