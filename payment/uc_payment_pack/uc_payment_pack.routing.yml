@@ -1,5 +1,5 @@
 uc_payment_pack.check.receive:
-  path: 'admin/store/orders/{order}/receive_check'
+  path: '/admin/store/orders/{order}/receive_check'
   defaults:
     _form: '\Drupal\uc_payment_pack\Form\ReceiveCheckForm'
   requirements:
