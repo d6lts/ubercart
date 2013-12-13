@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Field\FieldDefinition;
 
 /**
@@ -73,6 +74,29 @@ class UcCartItem extends ContentEntityBase {
       'weight_units' => $this->weight_units,
       'data' => $this->data,
     ));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
+    foreach ($entities as $item) {
+      // @todo Move unserialize() back to the storage controller.
+      $item->data = unserialize($item->data);
+
+      $item->product = uc_product_load_variant($item->nid->value, $item->data);
+      if ($item->product) {
+        $item->title = $item->product->label();
+        $item->model = $item->product->model;
+        $item->cost = $item->product->cost;
+        $item->price = $item->product->price;
+        $item->weight = $item->product->weight;
+        $item->weight_units = $item->product->weight_units;
+      }
+
+      $item->module = $item->data['module'];
+    }
+    parent::postLoad($storage_controller, $entities);
   }
 
   /**

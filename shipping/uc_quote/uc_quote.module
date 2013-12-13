@@ -99,37 +99,37 @@ function uc_quote_node_update($node) {
 /**
  * Implements hook_node_load().
  */
-function uc_quote_node_load($nodes, $types) {
-  $product_types = array_intersect(uc_product_types(), $types);
-  $quote_config = \Drupal::config('uc_quote.settings');
-
-  if (empty($product_types)) {
+function uc_quote_node_load($nodes) {
+  $nids = array();
+  foreach ($nodes as $node) {
+    if (uc_product_is_product($node)) {
+      $nids[] = $node->id();
+    }
+  }
+  if (empty($nids)) {
     return;
   }
 
+  $quote_config = \Drupal::config('uc_quote.settings');
   $shipping_type = $quote_config->get('shipping_type');
-  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => array_keys($nodes)))->fetchAllKeyed();
+  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => $nids))->fetchAllKeyed();
 
-  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids)", array(':nids' => array_keys($nodes)), array('fetch' => 'Address'))->fetchAllAssoc('nid');
+  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids)", array(':nids' => $nids), array('fetch' => 'Address'))->fetchAllAssoc('nid');
 
-  foreach ($nodes as $nid => &$node) {
-    if (!in_array($node->getType(), $product_types)) {
-      continue;
-    }
-
+  foreach ($nids as $nid) {
     if (isset($shipping_types[$nid])) {
-      $node->shipping_type = $shipping_types[$nid];
+      $nodes[$nid]->shipping_type = $shipping_types[$nid];
     }
     else {
-      $node->shipping_type = $shipping_type;
+      $nodes[$nid]->shipping_type = $shipping_type;
     }
 
     if (isset($addresses[$nid])) {
-      $node->shipping_address = (array) $addresses[$nid];
-      unset($node->shipping_address['nid']);
+      $nodes[$nid]->shipping_address = (array) $addresses[$nid];
+      unset($nodes[$nid]->shipping_address['nid']);
     }
     else {
-      $node->shipping_address = (array) $quote_config->get('store_default_address');
+      $nodes[$nid]->shipping_address = (array) $quote_config->get('store_default_address');
     }
   }
 }

@@ -57,24 +57,6 @@ class UcOrderStorageController extends FieldableDatabaseStorageController {
   /**
    * {@inheritdoc}
    */
-  protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    parent::attachLoad($queried_entities, $load_revision);
-
-    foreach ($queried_entities as $id => $order) {
-      $order->data = unserialize($order->data);
-
-      $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $id));
-
-      uc_order_module_invoke('load', $order, NULL);
-
-      // Load line items... has to be last after everything has been loaded.
-      $order->line_items = uc_order_load_line_items($order);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
     $record = parent::mapToStorageRecord($entity, $table_key);
     $record->data = $entity->data;

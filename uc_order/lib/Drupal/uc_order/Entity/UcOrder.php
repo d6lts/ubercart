@@ -96,6 +96,25 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
+    parent::postLoad($storage_controller, $entities);
+
+    foreach ($entities as $id => $order) {
+      // @todo Move unserialize() back to the storage controller.
+      $order->data = unserialize($order->data);
+
+      $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $id));
+
+      uc_order_module_invoke('load', $order, NULL);
+
+      // Load line items... has to be last after everything has been loaded.
+      $order->line_items = uc_order_load_line_items($order);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     $this->order_total->value = $this->getTotal();
     $this->product_count->value = $this->getProductCount();

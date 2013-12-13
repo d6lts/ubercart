@@ -104,32 +104,32 @@ function uc_usps_node_update($node) {
 /**
  * Implements hook_node_load().
  */
-function uc_usps_node_load($nodes, $types) {
-  $product_types = array_intersect(uc_product_types(), $types);
-
-  if (empty($product_types)) {
+function uc_usps_node_load($nodes) {
+  $nids = array();
+  foreach ($nodes as $node) {
+    if (uc_product_is_product($node)) {
+      $nids[] = $node->id();
+    }
+  }
+  if (empty($nids)) {
     return;
   }
 
   $vids = array();
   $usps_config = \Drupal::config('uc_usps.settings');
   $shipping_type = $usps_config->get('uc_store_shipping_type');
-  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => array_keys($nodes)))->fetchAllKeyed();
+  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => $nids))->fetchAllKeyed();
 
-  foreach ($nodes as $nid => $node) {
-    if (!in_array($node->getType(), $product_types)) {
-      continue;
-    }
-
+  foreach ($nids as $nid) {
     if (isset($shipping_types[$nid])) {
-      $node->shipping_type = $shipping_types[$nid];
+      $nodes[$nid]->shipping_type = $shipping_types[$nid];
     }
     else {
-      $node->shipping_type = $shipping_type;
+      $nodes[$nid]->shipping_type = $shipping_type;
     }
 
-    if ($node->shipping_type == 'small_package') {
-      $vids[$nid] = $node->getRevisionId();
+    if ($nodes[$nid]->shipping_type == 'small_package') {
+      $vids[$nid] = $nodes[$nid]->getRevisionId();
     }
   }
 

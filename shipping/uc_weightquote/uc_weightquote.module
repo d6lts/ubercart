@@ -86,12 +86,10 @@ function uc_weightquote_node_update($node) {
 /**
  * Implements hook_node_load().
  */
-function uc_weightquote_node_load($nodes, $types) {
+function uc_weightquote_node_load($nodes) {
   $vids = array();
-  $product_types = uc_product_types();
-
-  foreach ($nodes as &$node) {
-    if (in_array($node->getType(), $product_types)) {
+  foreach ($nodes as $node) {
+    if (uc_product_is_product($node)) {
       $vids[$node->id()] = $node->getRevisionId();
     }
   }

@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\uc_order\UcOrderProductInterface;
 
@@ -44,6 +45,18 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
    */
   public function id() {
     return $this->get('order_product_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
+    parent::postLoad($storage_controller, $entities);
+
+    foreach ($entities as $id => $product) {
+      // @todo Move unserialize() back to the storage controller.
+      $product->data = unserialize($product->data);
+    }
   }
 
   /**

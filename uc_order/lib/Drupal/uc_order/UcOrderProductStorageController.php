@@ -18,17 +18,6 @@ class UcOrderProductStorageController extends FieldableDatabaseStorageController
   /**
    * {@inheritdoc}
    */
-  protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    parent::attachLoad($queried_entities, $load_revision);
-
-    foreach ($queried_entities as $id => $product) {
-      $product->data = unserialize($product->data);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save(EntityInterface $product) {
     // Product kits, particularly, shouldn't actually be added to an order,
     // but instead they cause other products to be added.

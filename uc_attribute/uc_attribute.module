@@ -211,19 +211,10 @@ function uc_attribute_uc_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Implements hook_node_load().
  */
-function uc_attribute_node_load($nodes, $types) {
-  $product_types = array_intersect(uc_product_types(), $types);
-
-  if (empty($product_types)) {
-    return;
-  }
-
-  foreach ($nodes as &$node) {
-    if (uc_product_is_product($node->getType())) {
-      $attributes = uc_product_get_attributes($node->id());
-      if (is_array($attributes) && !empty($attributes)) {
-        $node->attributes = $attributes;
-      }
+function uc_attribute_node_load($nodes) {
+  foreach ($nodes as $node) {
+    if (uc_product_is_product($node)) {
+      $node->attributes = uc_product_get_attributes($node->id());
     }
   }
 }
