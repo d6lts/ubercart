@@ -101,18 +101,6 @@ function uc_attribute_theme() {
       'render element' => 'form',
       'file' => 'uc_attribute.theme.inc',
     ),
-    'uc_object_attributes_form' => array(
-      'render element' => 'form',
-      'file' => 'uc_attribute.admin.inc',
-    ),
-    'uc_object_options_form' => array(
-      'render element' => 'form',
-      'file' => 'uc_attribute.admin.inc',
-    ),
-    'uc_attribute_options_form' => array(
-      'render element' => 'form',
-      'file' => 'uc_attribute.admin.inc',
-    ),
     'uc_product_attributes' => array(
       'render element' => 'attributes',
       'file' => 'uc_attribute.admin.inc',

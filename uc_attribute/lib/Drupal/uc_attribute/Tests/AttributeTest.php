@@ -619,7 +619,7 @@ class AttributeTest extends UbercartTestBase {
     unset($o['select']);
     $edit["attributes[$attribute->aid][default]"] = $option->oid;
     $this->showVar($edit);
-    $this->drupalPostForm('admin/structure/types/manage/' . $class->id() . '/options', $edit, t('Submit'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $class->id() . '/options', $edit, t('Save changes'));
     $this->assertText('The changes have been saved.', t('Class attribute option saved.'));
     $this->showVar($option);
 
@@ -648,7 +648,7 @@ class AttributeTest extends UbercartTestBase {
     $this->drupalGet('node/' . $product->id() . '/edit/attributes');
     $this->assertText('No attributes available.');
 
-    $this->clickLink('Add an attribute');
+    $this->clickLink('Add existing attribute');
     $this->assertText($attribute->name);
 
     $this->drupalPostForm(NULL, array('add_attributes[' . $attribute->aid. ']' => 1), t('Add attributes'));

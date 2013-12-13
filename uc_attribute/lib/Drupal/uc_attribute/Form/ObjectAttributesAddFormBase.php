@@ -38,7 +38,7 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'uc_object_attributes_form';
+    return 'uc_object_attributes_add_form';
   }
 
   /**
@@ -68,12 +68,6 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
     $form['actions']['add'] = array(
       '#type' => 'submit',
       '#value' => t('Add attributes'),
-    );
-
-    // @todo Remove when theme_uc_object_attributes_form is removed or refactored.
-    $form['view'] = array(
-      '#type' => 'value',
-      '#value' => 'add',
     );
 
     return $form;

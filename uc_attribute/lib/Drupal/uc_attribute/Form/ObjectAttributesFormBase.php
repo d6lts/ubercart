@@ -45,54 +45,63 @@ abstract class ObjectAttributesFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $attributes = NULL) {
-    $form['#tree'] = TRUE;
+    $form['attributes'] = array(
+      '#type' => 'table',
+      '#header' => array(
+        $this->t('Remove'),
+        $this->t('Name'),
+        $this->t('Label'),
+        $this->t('Default'),
+        $this->t('Required'),
+        $this->t('List position'),
+        $this->t('Display'),
+      ),
+      '#empty' => $this->t('No attributes available.'),
+      '#tabledrag' => array(
+        array('order', 'sibling', 'uc-attribute-table-ordering'),
+      ),
+    );
 
-    $form['attributes'] = array();
-
-    foreach ($attributes as $attribute) {
+    foreach ($attributes as $aid => $attribute) {
       $option = isset($attribute->options[$attribute->default_option]) ? $attribute->options[$attribute->default_option] : NULL;
-
-      $form['attributes'][$attribute->aid] = array(
-        'remove' => array(
-          '#type' => 'checkbox',
-          '#title' => t('Remove'),
-          '#title_display' => 'invisible',
-          '#default_value' => 0,
-        ),
-        'name' => array(
-          '#markup' => check_plain($attribute->name),
-        ),
-        'label' => array(
-          '#type' => 'textfield',
-          '#title' => t('Label'),
-          '#title_display' => 'invisible',
-          '#default_value' => empty($attribute->label) ? $attribute->name : $attribute->label,
-          '#size' => 20,
-        ),
-        'option' => array(
-          '#markup' => $option ? (check_plain($option->name) . ' (' . theme('uc_price', array('price' => $option->price)) . ')' ) : t('n/a'),
-        ),
-        'required' => array(
-          '#type' => 'checkbox',
-          '#title' => t('Required'),
-          '#title_display' => 'invisible',
-          '#default_value' => $attribute->required,
-        ),
-        'ordering' => array(
-          '#type' => 'weight',
-          '#title' => t('List position'),
-          '#title_display' => 'invisible',
-          '#delta' => 25,
-          '#default_value' => $attribute->ordering,
-          '#attributes' => array('class' => array('uc-attribute-table-ordering')),
-        ),
-        'display' => array(
-          '#type' => 'select',
-          '#title' => t('Display'),
-          '#title_display' => 'invisible',
-          '#default_value' => $attribute->display,
-          '#options' => _uc_attribute_display_types(),
-        ),
+      $form['attributes'][$aid]['#attributes']['class'][] = 'draggable';
+      $form['attributes'][$aid]['remove'] = array(
+        '#type' => 'checkbox',
+        '#title' => $this->t('Remove'),
+        '#title_display' => 'invisible',
+      );
+      $form['attributes'][$aid]['name'] = array(
+        '#markup' => check_plain($attribute->name),
+      );
+      $form['attributes'][$aid]['label'] = array(
+        '#type' => 'textfield',
+        '#title' => $this->t('Label'),
+        '#title_display' => 'invisible',
+        '#default_value' => empty($attribute->label) ? $attribute->name : $attribute->label,
+        '#size' => 20,
+      );
+      $form['attributes'][$aid]['option'] = array(
+        '#markup' => $option ? (check_plain($option->name) . ' (' . theme('uc_price', array('price' => $option->price)) . ')' ) : t('n/a'),
+      );
+      $form['attributes'][$aid]['required'] = array(
+        '#type' => 'checkbox',
+        '#title' => $this->t('Required'),
+        '#title_display' => 'invisible',
+        '#default_value' => $attribute->required,
+      );
+      $form['attributes'][$aid]['ordering'] = array(
+        '#type' => 'weight',
+        '#title' => $this->t('List position'),
+        '#title_display' => 'invisible',
+        '#default_value' => $attribute->ordering,
+        '#attributes' => array('class' => array('uc-attribute-table-ordering')),
+      );
+      $form['attributes'][$aid]['display'] = array(
+        '#type' => 'select',
+        '#title' => $this->t('Display'),
+        '#title_display' => 'invisible',
+        '#default_value' => $attribute->display,
+        '#options' => _uc_attribute_display_types(),
       );
     }
 
@@ -100,12 +109,6 @@ abstract class ObjectAttributesFormBase extends FormBase {
     $form['actions']['save'] = array(
       '#type' => 'submit',
       '#value' => t('Save changes'),
-    );
-
-    // @todo Remove when theme_uc_object_attributes_form is removed or refactored.
-    $form['view'] = array(
-      '#type' => 'value',
-      '#value' => 'overview',
     );
 
     return $form;

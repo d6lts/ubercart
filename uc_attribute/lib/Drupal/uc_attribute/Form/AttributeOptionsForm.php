@@ -29,44 +29,65 @@ class AttributeOptionsForm extends FormBase {
 
     drupal_set_title(t('Options for %name', array('%name' => $attribute->name)), PASS_THROUGH);
 
-    $form['options'] = array();
-    foreach ($attribute->options as $key => $data) {
-      $form['options'][$key] = array(
-        'name' => array(
-          '#markup' => check_plain($data->name),
+    $form['options'] = array(
+      '#type' => 'table',
+      '#header' => array(
+        $this->t('Name'),
+        $this->t('Default cost'),
+        $this->t('Default price'),
+        $this->t('Default weight'),
+        $this->t('List position'),
+        $this->t('Operations'),
+      ),
+      '#empty' => $this->t('No options for this attribute have been added yet.'),
+      '#tabledrag' => array(
+        array('order', 'sibling', 'uc-attribute-option-table-ordering'),
+      ),
+    );
+
+    foreach ($attribute->options as $oid => $option) {
+      $form['options'][$oid]['#attributes']['class'][] = 'draggable';
+      $form['options'][$oid]['name'] = array(
+        '#markup' => check_plain($option->name),
+      );
+      $form['options'][$oid]['cost'] = array(
+        '#theme' => 'uc_price',
+        '#price' => $option->cost,
+      );
+      $form['options'][$oid]['price'] = array(
+        '#theme' => 'uc_price',
+        '#price' => $option->price,
+      );
+      $form['options'][$oid]['weight'] = array(
+        '#markup' => (string)$option->weight,
+      );
+      $form['options'][$oid]['ordering'] = array(
+        '#type' => 'weight',
+        '#title' => $this->t('List position'),
+        '#title_display' => 'invisible',
+        '#default_value' => $option->ordering,
+        '#attributes' => array('class' => array('uc-attribute-option-table-ordering')),
+      );
+      $form['options'][$oid]['operations'] = array(
+        '#type' => 'operations',
+        '#links' => array(
+          'edit' => array(
+            'title' => $this->t('Edit'),
+            'href' => 'admin/store/products/attributes/' . $attribute->aid . '/options/' . $oid . '/edit',
+          ),
+          'delete' => array(
+            'title' => $this->t('Delete'),
+            'href' => 'admin/store/products/attributes/' . $attribute->aid . '/options/' . $oid . '/delete',
+          ),
         ),
-        'cost' => array(
-          '#theme' => 'uc_price',
-          '#price' => $data->cost,
-        ),
-        'price' => array(
-          '#theme' => 'uc_price',
-          '#price' => $data->price,
-        ),
-        'weight' => array(
-          '#markup' => (string)$data->weight,
-        ),
-        'ordering' => array(
-          '#type' => 'weight',
-          '#delta' => 50,
-          '#default_value' => $data->ordering,
-          '#attributes' => array('class' => array('uc-attribute-option-table-ordering')),
-        ),
-        'edit' => array('#markup' => l(t('edit'), 'admin/store/products/attributes/' . $attribute->aid . '/options/' . $key . '/edit')),
-        'delete' => array('#markup' => l(t('delete'), 'admin/store/products/attributes/' . $attribute->aid . '/options/' . $key . '/delete')),
       );
     }
 
-    if (count($form['options'])) {
-      $form['options']['#tree'] = TRUE;
-
-      $form['actions'] = array('#type' => 'actions');
-      $form['actions']['submit'] = array(
-        '#type' => 'submit',
-        '#value' => t('Save changes'),
-        '#weight' => 10,
-      );
-    }
+    $form['actions'] = array('#type' => 'actions');
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save changes'),
+    );
 
     return $form;
   }
