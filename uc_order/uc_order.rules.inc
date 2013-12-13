@@ -385,10 +385,7 @@ function uc_order_condition_order_state($order, $order_state) {
  * @see uc_order_condition_order_state()
  */
 function uc_order_condition_order_state_options() {
-  foreach (uc_order_state_list('general') as $id => $state) {
-    $options[$id] = $state['title'];
-  }
-  foreach (uc_order_state_list('specific') as $id => $state) {
+  foreach (uc_order_state_list() as $id => $state) {
     $options[$id] = $state['title'];
   }
 
@@ -658,10 +655,7 @@ function uc_order_action_update_status($order, $status) {
 function uc_order_action_update_status_options() {
   $options = array();
 
-  foreach (uc_order_status_list('general') as $status) {
-    $options[$status['id']] = $status['title'];
-  }
-  foreach (uc_order_status_list('specific') as $status) {
+  foreach (uc_order_status_list() as $status) {
     $options[$status['id']] = $status['title'];
   }
 

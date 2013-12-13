@@ -759,10 +759,6 @@ function uc_roles_feature_settings($form, &$form_state) {
     return $form;
   }
 
-  foreach (uc_order_status_list('general') as $status) {
-    $statuses[$status['id']] = $status['title'];
-  }
-
   $form['uc_roles_default_role'] = array(
     '#type' => 'select',
     '#title' => t('Default role'),
