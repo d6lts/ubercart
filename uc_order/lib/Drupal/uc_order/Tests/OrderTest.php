@@ -140,6 +140,44 @@ class OrderTest extends UbercartTestBase {
     $this->assertFieldByName('bill_to[last_name]', $edit['bill_to[last_name]'], 'Billing last name changed.');
   }
 
+  public function testCustomOrderStatus() {
+    $order = $this->ucCreateOrder($this->customer);
+
+    $this->drupalLogin($this->adminUser);
+
+    // Update an order status label.
+    $this->drupalGet('admin/store/settings/orders');
+    $title = $this->randomName();
+    $edit = array(
+      'order_statuses[in_checkout][title]' => $title,
+    );
+    $this->drupalPostForm(NULL, $edit, 'Submit changes');
+    $this->assertFieldByName('order_statuses[in_checkout][title]', $title, 'Updated status title found.');
+
+    // Confirm the updated label is displayed.
+    $this->drupalGet('admin/store/orders/view');
+    $this->assertText($title, 'Order displays updated status title.');
+
+    // Create a custom order status.
+    $this->drupalGet('admin/store/settings/orders');
+    $this->clickLink('Create custom order status');
+    $edit = array(
+      'status_id' => strtolower($this->randomName()),
+      'status_title' => $this->randomName(),
+      'status_state' => array_rand(uc_order_state_list()),
+      'status_weight' => mt_rand(-10, 10),
+    );
+    $this->drupalPostForm(NULL, $edit, 'Create');
+    $this->assertText($edit['status_id'], 'Custom status ID found.');
+    $this->assertFieldByName('order_statuses[' . $edit['status_id'] . '][title]', $edit['status_title'], 'Custom status title found.');
+    $this->assertFieldByName('order_statuses[' . $edit['status_id'] . '][weight]', $edit['status_weight'], 'Custom status weight found.');
+
+    // Set an order to the custom status.
+    $this->drupalPostForm('admin/store/orders/' . $order->id(), array('status' => $edit['status_id']), 'Update');
+    $this->drupalGet('admin/store/orders/view');
+    $this->assertText($edit['status_title'], 'Order displays custom status title.');
+  }
+
   protected function ucCreateOrder($customer) {
     $order = uc_order_new($customer->id());
     uc_order_comment_save($order->id(), 0, t('Order created programmatically.'), 'admin');

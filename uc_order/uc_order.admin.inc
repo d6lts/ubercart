@@ -6,30 +6,6 @@
  */
 
 /**
- * Themes the order status table in the order workflow settings.
- *
- * @see uc_order_workflow_form()
- * @ingroup themeable
- */
-function theme_uc_order_status_table($variables) {
-  $form = $variables['form'];
-
-  $header = array(t('ID'), t('Title'), t('List position'), t('State'), t('Remove'));
-
-  foreach (element_children($form) as $state_id) {
-    $rows[] = array(
-      drupal_render($form[$state_id]['id']),
-      drupal_render($form[$state_id]['title']),
-      drupal_render($form[$state_id]['weight']),
-      drupal_render($form[$state_id]['state']),
-      array('data' => drupal_render($form[$state_id]['remove']), 'align' => 'center'),
-    );
-  }
-
-  return theme('table', array('header' => $header, 'rows' => $rows));
-}
-
-/**
  * Creates a new order for the specified customer, ready for editing.
  */
 function uc_order_create_for_user($account) {

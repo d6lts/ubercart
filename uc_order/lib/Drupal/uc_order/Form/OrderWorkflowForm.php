@@ -68,8 +68,10 @@ class OrderWorkflowForm extends FormBase {
       '#type' => 'details',
       '#title' => t('Order statuses'),
       '#collapsible' => FALSE,
-      '#theme' => 'uc_order_status_table',
-      '#tree' => TRUE,
+    );
+    $form['order_statuses']['order_statuses'] = array(
+      '#type' => 'table',
+      '#header' => array(t('ID'), t('Title'), t('List position'), t('State'), t('Remove')),
     );
 
     // Build the state option array for the order status table.
@@ -79,36 +81,34 @@ class OrderWorkflowForm extends FormBase {
     }
 
     foreach ($statuses as $status) {
-      $form['order_statuses'][$status['id']]['id'] = array(
+      $form['#locked'][$status['id']] = $status['locked'];
+
+      $form['order_statuses']['order_statuses'][$status['id']]['id'] = array(
         '#markup' => $status['id'],
       );
-      $form['order_statuses'][$status['id']]['title'] = array(
+      $form['order_statuses']['order_statuses'][$status['id']]['title'] = array(
         '#type' => 'textfield',
         '#default_value' => $status['title'],
         '#size' => 32,
         '#required' => TRUE,
       );
-      $form['order_statuses'][$status['id']]['weight'] = array(
+      $form['order_statuses']['order_statuses'][$status['id']]['weight'] = array(
         '#type' => 'weight',
         '#delta' => 20,
         '#default_value' => $status['weight'],
       );
-      $form['order_statuses'][$status['id']]['locked'] = array(
-        '#type' => 'value',
-        '#value' => $status['locked'],
-      );
       if ($status['locked']) {
-        $form['order_statuses'][$status['id']]['state'] = array(
+        $form['order_statuses']['order_statuses'][$status['id']]['state'] = array(
           '#markup' => $states[$status['state']]['title'],
         );
       }
       else {
-        $form['order_statuses'][$status['id']]['state'] = array(
+        $form['order_statuses']['order_statuses'][$status['id']]['state'] = array(
           '#type' => 'select',
           '#options' => $options,
           '#default_value' => $status['state'],
         );
-        $form['order_statuses'][$status['id']]['remove'] = array(
+        $form['order_statuses']['order_statuses'][$status['id']]['remove'] = array(
           '#type' => 'checkbox',
         );
       }
@@ -132,7 +132,7 @@ class OrderWorkflowForm extends FormBase {
     }
 
     foreach ($form_state['values']['order_statuses'] as $key => $value) {
-      if ($value['locked'] != TRUE && $value['remove'] == TRUE) {
+      if (!$form['#locked'][$key] && $value['remove']) {
         db_delete('uc_order_statuses')
           ->condition('order_status_id', $key)
           ->execute();
@@ -145,7 +145,7 @@ class OrderWorkflowForm extends FormBase {
         );
 
         // The state cannot be changed if the status is locked.
-        if ($value['locked'] == FALSE) {
+        if (!$form['#locked'][$key]) {
           $fields['state'] = $value['state'];
         }
 

@@ -183,10 +183,6 @@ function uc_order_theme($existing, $type, $theme, $path) {
       'variables' => array('content' => NULL),
       'template' => 'uc-order-invoice-page',
     ),
-    'uc_order_status_table' => array(
-      'render element' => 'form',
-      'file' => 'uc_order.admin.inc',
-    ),
     'uc_order_edit_form' => array(
       'render element' => 'form',
       'file' => 'uc_order.admin.inc',
