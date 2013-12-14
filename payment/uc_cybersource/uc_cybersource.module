@@ -568,7 +568,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
     $o_comment = t('<b>Credit card !type:</b> !amount<br /><b>Decision: @decision</b><br /><b>Reason:</b> !reason', array('!type' => variable_get('uc_cybersource_hop_transaction_type', 'sale'), '!amount' => uc_currency_format($nvp['orderAmount']), '@decision' => $nvp['decision'], '!reason' => \Drupal\uc_cybersource\CybersourceUtilities::reasonResponse($nvp['reasonCode'])));
     $p_comment = t('!id<br />!decision, Reason: !reason', array('!id' => $nvp['orderPage_serialNumber'], '!decision' => $nvp['decision'], '!reason' => $nvp['reasonCode']));
     if (!empty($nvp['ccAuthReply_avsCode'])) {
-      $o_comment .= t('<br /><b>AVS:</b> !avs', array('!avs' => \Drupal\uc_cybersource\CybersourceUtilites::avsResponse($nvp['ccAuthReply_avsCode'])));
+      $o_comment .= t('<br /><b>AVS:</b> !avs', array('!avs' => \Drupal\uc_cybersource\CybersourceUtilities::avsResponse($nvp['ccAuthReply_avsCode'])));
       $p_comment .= t(', AVS: @avs', array('@avs' => $nvp['ccAuthReply_avsCode']));
     }
     if (!empty($nvp['ccAuthReply_cvCode'])) {

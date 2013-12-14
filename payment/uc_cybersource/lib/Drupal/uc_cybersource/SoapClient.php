@@ -20,8 +20,8 @@ class SoapClient extends \SoapClient {
 
     $soapHeader = '<SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><wsse:Security SOAP-ENV:mustUnderstand="1"><wsse:UsernameToken><wsse:Username>' . $login['merchant_id'] . '</wsse:Username><wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">' . $login['transaction_key'] . '</wsse:Password></wsse:UsernameToken></wsse:Security></SOAP-ENV:Header>';
 
-    $requestDOM = new DOMDocument('1.0');
-    $soapHeaderDOM = new DOMDocument('1.0');
+    $requestDOM = new \DOMDocument('1.0');
+    $soapHeaderDOM = new \DOMDocument('1.0');
 
     try {
       $requestDOM->loadXML($request);
@@ -30,7 +30,7 @@ class SoapClient extends \SoapClient {
       $requestDOM->firstChild->insertBefore($node, $requestDOM->firstChild->firstChild);
       $request = $requestDOM->saveXML();
     }
-    catch (DOMException $e) {
+    catch (\DOMException $e) {
       die('Error adding UsernameToken: ' . $e->code);
     }
 

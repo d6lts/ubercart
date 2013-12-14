@@ -76,7 +76,7 @@ class QuoteTest extends UbercartTestBase {
    *   "United States".
    */
   protected function selectCountry($country = "Canada") {
-    $dom = new DOMDocument();
+    $dom = new \DOMDocument();
     $dom->loadHTML($this->content);
     $parent = $dom->getElementById('edit-panes-delivery-delivery-country');
     $options = $parent->getElementsByTagName('option');
@@ -108,7 +108,7 @@ class QuoteTest extends UbercartTestBase {
     }
 
     // Set the checked attribute of the chosen quote.
-    $dom = new DOMDocument();
+    $dom = new \DOMDocument();
     $dom->loadHTML($this->content);
     $i = 0;
     $selected = '';
