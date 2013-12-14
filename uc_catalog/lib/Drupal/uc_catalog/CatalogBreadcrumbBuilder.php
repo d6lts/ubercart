@@ -63,8 +63,6 @@ class CatalogBreadcrumbBuilder extends BreadcrumbBuilderBase {
    * Builds the breadcrumb for a catalog page.
    */
   protected function catalogBreadcrumb($node) {
-    $vocabulary = $this->entityManager->getStorageController('taxonomy_vocabulary')->load($this->config->get('vocabulary'));
-
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
     $breadcrumb[] = l(t('Catalog'), 'catalog');
     if ($parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->value)) {
@@ -80,8 +78,6 @@ class CatalogBreadcrumbBuilder extends BreadcrumbBuilderBase {
    * Builds the breadcrumb for a catalog term page.
    */
   protected function catalogTermBreadcrumb($tid) {
-    $vocabulary = $this->entityManager->getStorageController('taxonomy_vocabulary')->load($this->config->get('vocabulary'));
-
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
     $breadcrumb[] = l(t('Catalog'), 'catalog');
     if ($parents = taxonomy_term_load_parents_all($tid)) {

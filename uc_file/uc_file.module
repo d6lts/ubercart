@@ -591,8 +591,6 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
     $granularity_value   = $time_status ? $file_product->time_granularity : 'never';
   }
   else {
-    $file_product      = FALSE;
-
     $default_feature   = NULL;
 
     $default_model       = '';
@@ -765,8 +763,6 @@ function uc_file_feature_form_validate($form, &$form_state) {
  * @see uc_file_feature_form_submit()
  */
 function uc_file_feature_form_submit($form, &$form_state) {
-  global $user;
-
   // Build the file_product object from the form values.
   $file = uc_file_get_by_name($form_state['values']['uc_file_filename']);
   $file_product = array(
@@ -1043,8 +1039,6 @@ function _uc_file_autocomplete_filename() {
 
   // Catch "/" characters that drupal autocomplete doesn't escape.
   $url = explode('_autocomplete_file/', request_uri());
-  $string = $url[1];
-
   $files = db_query("SELECT filename FROM {uc_files} WHERE filename LIKE :name ORDER BY filename ASC", array(':name' => '%' . db_like($url[1]) . '%'));
   while ($filename = $files->fetchField()) {
     $matches[$filename] = $filename;

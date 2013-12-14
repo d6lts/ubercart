@@ -149,7 +149,7 @@ class OrderWorkflowForm extends FormBase {
           $fields['state'] = $value['state'];
         }
 
-        $query = db_update('uc_order_statuses')
+        db_update('uc_order_statuses')
           ->fields($fields)
           ->condition('order_status_id', $key)
           ->execute();

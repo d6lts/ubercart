@@ -135,10 +135,6 @@ function uc_order_token_info() {
 function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
   $token_service = Drupal::token();
 
-  $language_code = NULL;
-  if (isset($options['language'])) {
-    $language_code = $options['language']->language;
-  }
   $sanitize = !empty($options['sanitize']);
 
   $replacements = array();
@@ -219,7 +215,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
 
         case 'shipping-method':
           if (is_array($order->line_items)) {
-            foreach ($order->line_items as $key => $value) {
+            foreach ($order->line_items as $value) {
               if ($value['type'] == 'shipping' && !isset($ship_method)) {
                 $ship_method = $value['title'];
                 break;

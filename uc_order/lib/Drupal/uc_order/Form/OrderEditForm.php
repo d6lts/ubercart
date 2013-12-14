@@ -40,7 +40,7 @@ class OrderEditForm extends FormBase {
     $form['order_modified'] = array('#type' => 'hidden', '#value' => $modified);
 
     $panes = _uc_order_pane_list('edit');
-    foreach ($panes as $id => $pane) {
+    foreach ($panes as $pane) {
       if (in_array('edit', $pane['show'])) {
         $func = $pane['callback'];
         if (function_exists($func)) {
@@ -85,12 +85,12 @@ class OrderEditForm extends FormBase {
 
     // Build list of changes to be applied.
     $panes = _uc_order_pane_list();
-    foreach ($panes as $id => $pane) {
+    foreach ($panes as $pane) {
       if (in_array('edit', $pane['show'])) {
         $func = $pane['callback'];
         if (function_exists($func)) {
           if (($changes = $func('edit-process', $form_state['order'], $form, $form_state)) != NULL) {
-            foreach ($changes as $key => $value) {
+            foreach ($changes as $value) {
               //$form_state['order']->$key->value = $value;
             }
           }

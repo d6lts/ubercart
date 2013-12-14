@@ -617,7 +617,7 @@ function theme_uc_reports_product_table($variables) {
 
   // Format the table columns:
   if (count($colgroups)) {
-    foreach ($colgroups as $number => $colgroup) {
+    foreach ($colgroups as $colgroup) {
       $attributes = array();
 
       // Check if we're dealing with a simple or complex column
@@ -638,7 +638,6 @@ function theme_uc_reports_product_table($variables) {
       // Build colgroup
       if (is_array($cols) && count($cols)) {
         $output .= ' <colgroup' . new Attribute($attributes) . '>';
-        $i = 0;
         foreach ($cols as $col) {
           $output .= ' <col' . new Attribute($col) . ' />';
         }
@@ -686,7 +685,7 @@ function theme_uc_reports_product_table($variables) {
     $output .= "<tbody>\n";
     $flip = array('even' => 'odd', 'odd' => 'even');
     $class = 'even';
-    foreach ($rows as $number => $row) {
+    foreach ($rows as $row) {
       $attributes = array();
 
       // Check if we're dealing with a simple or complex row
@@ -877,8 +876,6 @@ function uc_reports_sales_summary() {
  * Displays the yearly sales report form and table.
  */
 function uc_reports_sales_year() {
-  $order_statuses = uc_reports_order_statuses();
-
   // Get the year for the report from the URL.
   if (intval(arg(5)) == 0) {
     $year = date('Y');
@@ -1055,8 +1052,6 @@ function uc_reports_sales_custom() {
   foreach ($subreports as $subreport) {
     $product_data = '';
     $product_csv = '';
-    $order_data = '';
-    $order_csv = '';
 
     // Create the date title for the subreport.
     if ($args['length'] == 'day') {

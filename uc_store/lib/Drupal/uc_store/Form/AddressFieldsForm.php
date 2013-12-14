@@ -80,7 +80,7 @@ class AddressFieldsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $config = $this->configFactory->get('uc_store.settings')
+    $this->configFactory->get('uc_store.settings')
       ->set('address_fields', $form_state['values']['fields'])
       ->save();
 

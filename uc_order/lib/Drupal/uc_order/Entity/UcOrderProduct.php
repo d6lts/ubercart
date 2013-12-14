@@ -53,7 +53,7 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
   public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
     parent::postLoad($storage_controller, $entities);
 
-    foreach ($entities as $id => $product) {
+    foreach ($entities as $product) {
       // @todo Move unserialize() back to the storage controller.
       $product->data = unserialize($product->data);
     }

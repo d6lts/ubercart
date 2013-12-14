@@ -118,7 +118,7 @@ function uc_ajax_process_form($form, &$form_state) {
     $key = implode('][', $parents);
 
     $callbacks = array();
-    foreach ($form_state['uc_ajax'] as $module => $fields) {
+    foreach ($form_state['uc_ajax'] as $fields) {
       if (!empty($fields[$key])) {
         if (is_array($fields[$key])) {
           $callbacks = array_merge($callbacks, $fields[$key]);

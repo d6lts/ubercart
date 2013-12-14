@@ -139,8 +139,6 @@ function uc_product_kit_node_insert($node) {
   $obj->ordering = $node->ordering;
   $obj->shippable = FALSE;
 
-  $values = array();
-  $placeholders = array();
   foreach ($node->products as $product) {
     if (is_numeric($product)) {
       $product = node_load($product);
@@ -237,7 +235,6 @@ function uc_product_kit_node_update($node) {
   else {
     $override_discounts = isset($node->kit_total) && is_numeric($node->kit_total);
   }
-  $product_count = count($node->products);
 
   // Get the price of all the products without any discounts. This number is
   // used if a total kit price was specified to calculate the individual

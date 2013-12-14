@@ -39,8 +39,6 @@ function theme_uc_catalog_item($variables) {
   $inpath = $variables['inpath'];
   $count_children = $variables['count_children'];
 
-  $output = '';
-
   if ($expand || $count_children) {
     if ($here) {
       $output = '<li class="expanded"><span class="trail">' . $link . "</span>\n";

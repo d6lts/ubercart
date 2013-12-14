@@ -24,7 +24,7 @@ class Status extends InOperator {
   public function getValueOptions() {
     if (!isset($this->value_options)) {
       $options['_active'] = t('Active');
-      foreach (uc_order_status_list() as $status => $name) {
+      foreach (uc_order_status_list() as $name) {
         $options[$name['id']] = $name['title'];
       }
 

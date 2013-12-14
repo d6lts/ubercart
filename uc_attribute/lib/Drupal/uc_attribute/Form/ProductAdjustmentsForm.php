@@ -51,8 +51,6 @@ class ProductAdjustmentsForm extends FormBase {
 
     $i = 1;
     $attribute_names = '';
-    $full_attributes = array();
-    $values = array();
 
     $query = db_select('uc_product_options', "po$i")
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')

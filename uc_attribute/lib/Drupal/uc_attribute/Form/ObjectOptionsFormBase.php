@@ -163,7 +163,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
     $error = FALSE;
 
     if (isset($form_state['values']['attributes'])) {
-      foreach ($form_state['values']['attributes'] as $aid => $attribute) {
+      foreach ($form_state['values']['attributes'] as $attribute) {
         $selected_opts = array();
         if (isset($attribute['options'])) {
           foreach ($attribute['options'] as $oid => $option) {

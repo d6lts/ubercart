@@ -146,7 +146,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    * {@inheritdoc}
    */
   static public function preDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
-    foreach ($orders as $order_id => $order) {
+    foreach ($orders as $order) {
       uc_order_module_invoke('delete', $order, NULL);
     }
   }

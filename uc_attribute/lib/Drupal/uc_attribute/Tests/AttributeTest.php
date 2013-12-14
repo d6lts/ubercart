@@ -248,7 +248,6 @@ class AttributeTest extends UbercartTestBase {
     }
 
     // Test deletion of base attribute.
-    $aid = $attribute->aid;
     $options = $attribute->options;
     uc_attribute_delete($attribute->aid);
 

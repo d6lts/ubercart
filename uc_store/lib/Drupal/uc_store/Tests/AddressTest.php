@@ -48,9 +48,6 @@ class AddressTest extends UbercartTestBase {
   }
 
   public function testAddressComparison() {
-    $address1 = $this->test_address[0];
-    $address2 = $this->test_address[1];
-
     $this->pass((string) $this->test_address[0]);
     $this->pass((string) $this->test_address[1]);
 

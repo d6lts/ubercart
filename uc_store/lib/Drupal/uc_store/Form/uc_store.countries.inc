@@ -400,7 +400,6 @@ function _uc_country_import_include($country_id, $version) {
   $match = '_' . $country_id . '_' . $version . '.cif';
   $matchlen = strlen($match);
 
-  $countries = array();
   if (is_dir($dir)) {
     if ($dh = opendir($dir)) {
       while (($file = readdir($dh)) !== FALSE) {

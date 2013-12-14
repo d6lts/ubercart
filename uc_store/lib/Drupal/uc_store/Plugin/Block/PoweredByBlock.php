@@ -42,7 +42,6 @@ class PoweredByBlock extends BlockBase {
   public function blockForm($form, &$form_state) {
     $configuration = $this->configuration;
 
-    $url = array('!url' => 'http://www.ubercart.org/');
     $form['message'] = array(
       '#type' => 'radios',
       '#title' => t('Footer message for store pages'),
@@ -72,7 +71,6 @@ class PoweredByBlock extends BlockBase {
 
     // Figure out what page is being viewed.
     $path = \Drupal::service('path.alias_manager.cached')->getSystemPath(current_path());
-    $parts = explode('/', $path);
 
     $messages = $this->options();
 

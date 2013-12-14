@@ -37,10 +37,6 @@ function uc_roles_token_info() {
 function uc_roles_tokens($type, $tokens, $data = array(), $options = array()) {
   $token_service = Drupal::token();
 
-  $language_code = NULL;
-  if (isset($options['language'])) {
-    $language_code = $options['language']->language;
-  }
   $sanitize = !empty($options['sanitize']);
 
   $replacements = array();

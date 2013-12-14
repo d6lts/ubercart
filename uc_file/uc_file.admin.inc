@@ -368,7 +368,7 @@ function uc_file_admin_files_form_action_validate($form, &$form_state) {
         $module_handler = \Drupal::moduleHandler();
         foreach ($module_handler->getImplementations('uc_file_action') as $module) {
           $name = $module . '_uc_file_action';
-          $result = $name('upload_validate', array('file_object' => $temp_file, 'form_id' => $form_id, 'form_state' => $form_state));
+          $name('upload_validate', array('file_object' => $temp_file, 'form_id' => $form_id, 'form_state' => $form_state));
         }
 
         // Save the uploaded file for later processing.
@@ -387,7 +387,7 @@ function uc_file_admin_files_form_action_validate($form, &$form_state) {
       $module_handler = \Drupal::moduleHandler();
       foreach ($module_handler->getImplementations('uc_file_action') as $module) {
         $name = $module . '_uc_file_action';
-        $result = $name('validate', array('form_id' => $form_id, 'form_state' => $form_state));
+        $name('validate', array('form_id' => $form_id, 'form_state' => $form_state));
       }
 
       break;
@@ -438,7 +438,7 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
           $module_handler = \Drupal::moduleHandler();
           foreach ($module_handler->getImplementations('uc_file_action') as $module) {
             $name = $module . '_uc_file_action';
-            $result = $name('upload', array('file_object' => $file_object, 'form_id' => $form_id, 'form_state' => $form_state));
+            $name('upload', array('file_object' => $file_object, 'form_id' => $form_id, 'form_state' => $form_state));
           }
 
           // Update the file list
@@ -463,7 +463,7 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
       $module_handler = \Drupal::moduleHandler();
       foreach ($module_handler->getImplementations('uc_file_action') as $module) {
         $name = $module . '_uc_file_action';
-        $result = $name('submit', array('form_id' => $form_id, 'form_state' => $form_state));
+        $name('submit', array('form_id' => $form_id, 'form_state' => $form_state));
       }
       break;
   }

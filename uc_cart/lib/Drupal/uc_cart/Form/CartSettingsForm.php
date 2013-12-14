@@ -76,23 +76,6 @@ class CartSettingsForm extends ConfigFormBase {
       '#group' => 'cart-settings',
     );
 
-    $durations = array(
-      'singular' => array(
-        'minutes' => t('minute'),
-        'hours' => t('hour'),
-        'days' => t('day'),
-        'weeks' => t('week'),
-        'years' => t('year'),
-      ),
-      'plural' => array(
-        'minutes' => t('minutes'),
-        'hours' => t('hours'),
-        'days' => t('days'),
-        'weeks' => t('weeks'),
-        'years' => t('years'),
-      ),
-    );
-
     $form['lifetime']['anonymous'] = array(
       '#type' => 'details',
       '#title' => t('Anonymous users'),

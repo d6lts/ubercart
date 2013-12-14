@@ -97,10 +97,10 @@ class AjaxTest extends UbercartTestBase {
     // Change the billing zone and veriy that payment pane updates.
     $edit = array();
     $edit['panes[billing][zone]'] = '26';
-    $result = $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
+    $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
     $this->assertText("Other");
     $edit['panes[billing][zone]'] = '1';
-    $result = $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
+    $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
     // Not in Kansas any more...
     // @todo Re-enable when shipping quote conditions are available.
     // $this->assertNoText("Other");

@@ -21,16 +21,6 @@ function uc_roles_default_rules_configuration() {
     ->action('uc_roles_order_renew', array('order:select' => 'updated_order', 'message' => FALSE));
   $configs['uc_role_renewal'] = $rule;
 
-  $order_args = array(
-    'order:select' => 'order',
-    'expiration:select' => 'expiration',
-  );
-
-  $user_args = array(
-    'account:select' => 'account',
-    'expiration:select' => 'expiration',
-  );
-
   // Notify the user when a role is granted.
   $rule = rules_reaction_rule();
   $rule->label = t('Notify customer when a role is granted');
