@@ -22,7 +22,7 @@ class UcCartItemViewBuilder extends EntityViewBuilder {
 
     $module_handler = \Drupal::moduleHandler();
     foreach ($entities as $item) {
-      $item->content += $module_handler->invoke($item->data['module'], 'uc_cart_display', $item);
+      $item->content += $module_handler->invoke($item->data['module'], 'uc_cart_display', array($item));
     }
   }
 }
