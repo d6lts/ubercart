@@ -172,7 +172,7 @@ class CartLinksForm extends ConfirmFormBase {
                   );
                 }
               }
-              uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', $p), NULL, $msg, FALSE, FALSE);
+              uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($p)), NULL, $msg, FALSE, FALSE);
               $rebuild_cart = TRUE;
             }
             else {

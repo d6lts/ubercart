@@ -970,7 +970,7 @@ function uc_authorizenet_arb_cancel($subscription_id, $order_id = NULL, $fee = a
 
   // Let other modules act on the canceled fee.
   if (!empty($fee)) {
-    \Drupal::moduleHandler()->invokeAll('uc_arb_cancel', $fee);
+    \Drupal::moduleHandler()->invokeAll('uc_arb_cancel', array($fee));
   }
 
   return TRUE;

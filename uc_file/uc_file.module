@@ -1179,7 +1179,7 @@ function _uc_file_gather_files() {
     if (!is_null($fid)) {
       $file_object = uc_file_get_by_id($fid);
 
-      \Drupal::moduleHandler()->invokeAll('uc_file_action', 'insert', array('file_object' => $file_object));
+      \Drupal::moduleHandler()->invokeAll('uc_file_action', array('insert', array('file_object' => $file_object)));
       unset($fid);
     }
   }

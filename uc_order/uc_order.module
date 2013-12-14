@@ -859,7 +859,7 @@ function uc_order_product_is_shippable($product) {
   }
 
   // See if any other modules have a say in the matter...
-  $result = \Drupal::moduleHandler()->invokeAll('uc_order_product_can_ship', $product);
+  $result = \Drupal::moduleHandler()->invokeAll('uc_order_product_can_ship', array($product));
 
   // Return TRUE by default.
   if (empty($result) || in_array(TRUE, $result)) {
@@ -1204,7 +1204,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     );
   }
 
-  $extra = \Drupal::moduleHandler()->invokeAll('uc_order_actions', $order);
+  $extra = \Drupal::moduleHandler()->invokeAll('uc_order_actions', array($order));
   if (count($extra)) {
     $actions = array_merge($actions, $extra);
   }

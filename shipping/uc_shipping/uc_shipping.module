@@ -548,7 +548,7 @@ function uc_shipping_shipment_load($shipment_id) {
     }
     $shipment->packages = $packages;
 
-    $extra = \Drupal::moduleHandler()->invokeAll('uc_shipment', 'load', $shipment);
+    $extra = \Drupal::moduleHandler()->invokeAll('uc_shipment', array('load', $shipment));
     if (is_array($extra)) {
       foreach ($extra as $key => $value) {
         $shipment->$key = $value;
@@ -603,7 +603,7 @@ function uc_shipping_shipment_save($shipment) {
     }
   }
 
-  \Drupal::moduleHandler()->invokeAll('uc_shipment', 'save', $shipment);
+  \Drupal::moduleHandler()->invokeAll('uc_shipment', array('save', $shipment));
   $order = uc_order_load($shipment->order_id);
   // rules_invoke_event('uc_shipment_save', $order, $shipment);
 }
@@ -634,7 +634,7 @@ function uc_shipping_shipment_delete($shipment_id) {
     }
   }
 
-  \Drupal::moduleHandler()->invokeAll('uc_shipment', 'delete', $shipment);
+  \Drupal::moduleHandler()->invokeAll('uc_shipment', array('delete', $shipment));
 }
 
 /**

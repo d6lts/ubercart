@@ -369,7 +369,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
 
     // Invoke the checkout complete trigger and hook.
     $account = $order->getUser();
-    \Drupal::moduleHandler()->invokeAll('uc_checkout_complete', $order, $account);
+    \Drupal::moduleHandler()->invokeAll('uc_checkout_complete', array($order, $account));
     // rules_invoke_event('uc_checkout_complete', $order);
   }
 
@@ -605,7 +605,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     $data['module'] = 'uc_product';
   }
 
-  $result = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart', $nid, $qty, $data);
+  $result = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart', array($nid, $qty, $data));
   if (is_array($result) && !empty($result)) {
     foreach ($result as $row) {
       if ($row['success'] === FALSE) {
@@ -666,7 +666,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     }
     $item_entity = entity_load('uc_cart_item', current(array_keys($result)));
     $qty += $item_entity->qty->value;
-    \Drupal::moduleHandler()->invoke($data['module'], 'uc_update_cart_item', $nid, $data, min($qty, 999999), $cid);
+    \Drupal::moduleHandler()->invoke($data['module'], 'uc_update_cart_item', array($nid, $data, min($qty, 999999), $cid));
   }
 
   // If specified, rebuild the cached cart items array.

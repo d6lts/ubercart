@@ -494,7 +494,7 @@ function uc_taxes_rate_delete($rate_id) {
  */
 function uc_taxes_calculate($order) {
   // Find any taxes specified by enabled modules.
-  $taxes = \Drupal::moduleHandler()->invokeAll('uc_calculate_tax', $order);
+  $taxes = \Drupal::moduleHandler()->invokeAll('uc_calculate_tax', array($order));
 
   return $taxes;
 }

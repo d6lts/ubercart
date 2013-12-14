@@ -408,7 +408,7 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
     uc_cart_complete_sale($order);
   }
 
-  \Drupal::moduleHandler()->invokeAll('uc_payment_entered', $order, $method, $amount, $account, $data, $comment);
+  \Drupal::moduleHandler()->invokeAll('uc_payment_entered', array($order, $method, $amount, $account, $data, $comment));
   // rules_invoke_event('uc_payment_entered', $order, $account);
 
   return $receipt_id;

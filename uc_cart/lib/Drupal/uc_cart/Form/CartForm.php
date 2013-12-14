@@ -172,7 +172,7 @@ class CartForm extends FormBase {
     $module_handler = \Drupal::moduleHandler();
     foreach ($form_state['values']['items'] as $key => $item) {
       if (isset($form['items'][$key]['qty']['#default_value']) && $form['items'][$key]['qty']['#default_value'] != $item['qty']) {
-        $module_handler->invoke($item['module'], 'uc_update_cart_item', $item['nid'], unserialize($item['data']), $item['qty']);
+        $module_handler->invoke($item['module'], 'uc_update_cart_item', array($item['nid'], unserialize($item['data']), $item['qty']));
       }
     }
   }

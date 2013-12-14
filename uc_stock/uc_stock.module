@@ -128,7 +128,7 @@ function uc_stock_adjust($sku, $qty, $check_active = TRUE) {
     ->condition('sku', $sku)
     ->execute();
 
-  \Drupal::moduleHandler()->invokeAll('uc_stock_adjusted', $sku, $stock->stock, $qty);
+  \Drupal::moduleHandler()->invokeAll('uc_stock_adjusted', array($sku, $stock->stock, $qty));
 }
 
 /**

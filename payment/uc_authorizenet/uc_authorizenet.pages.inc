@@ -41,7 +41,7 @@ function uc_authorizenet_silent_post() {
     }
     // Otherwise, let other modules act on the data.
     else {
-      \Drupal::moduleHandler()->invokeAll('uc_auth_arb_payment', $_POST);
+      \Drupal::moduleHandler()->invokeAll('uc_auth_arb_payment', array($_POST));
     }
   }
 
