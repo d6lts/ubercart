@@ -460,7 +460,7 @@ function _uc_product_get_variant($node, $data = FALSE) {
     $node->data = unserialize($node->data);
   }
 
-  drupal_alter('uc_product', $node);
+  \Drupal::moduleHandler()->alter('uc_product', $node);
   $node->variant = TRUE;
   if (!isset($node->data['module'])) {
     $node->data['module'] = 'uc_product';
@@ -1197,7 +1197,7 @@ function uc_product_get_description($product) {
   $description = module_invoke_all('uc_product_description', $product);
 
   // Now allow alterations via hook_uc_product_description_alter().
-  drupal_alter('uc_product_description', $description, $product);
+  \Drupal::moduleHandler()->alter('uc_product_description', $description, $product);
 
   return drupal_render($description);
 }

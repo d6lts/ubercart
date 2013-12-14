@@ -382,7 +382,7 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
   $alter_data['merchant_fields'] = array();
   // Allow other modules to alter the comment & merchant field data stored
   // with CyberSource.
-  drupal_alter('uc_cybersource_data', $alter_data);
+  \Drupal::moduleHandler()->alter('uc_cybersource_data', $alter_data);
   $data['comments'] = $alter_data['comments'];
   if (!empty($alter_data['merchant_fields'])) {
     foreach ($alter_data['merchant_fields'] as $key => $value) {

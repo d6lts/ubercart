@@ -577,7 +577,7 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
     }
 
     // Allow other modules a chance to alter the fully loaded cart object.
-    drupal_alter('uc_cart', $items[$cid]);
+    \Drupal::moduleHandler()->alter('uc_cart', $items[$cid]);
 
     // When there are no longer any items in the cart, the anonymous cart ID is
     // no longer required. To guard against unsetting the session ID in the

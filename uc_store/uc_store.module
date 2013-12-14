@@ -1250,7 +1250,7 @@ function uc_get_message($message_id) {
 
   if (empty($messages)) {
     $messages = module_invoke_all('uc_message');
-    drupal_alter('uc_get_message', $messages);
+    \Drupal::moduleHandler()->alter('uc_get_message', $messages);
   }
 
   return $messages[$message_id];
@@ -1455,5 +1455,5 @@ function uc_store_format_price_field_value($price) {
  * @see hook_uc_form_alter()
  */
 function uc_form_alter(&$form, &$form_state, $form_id) {
-  drupal_alter('uc_form', $form, $form_state, $form_id);
+  \Drupal::moduleHandler()->alter('uc_form', $form, $form_state, $form_id);
 }

@@ -519,7 +519,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   }
 
   // Allow other modules to alter the transaction.
-  drupal_alter('uc_authorizenet_transaction', $submit_data);
+  \Drupal::moduleHandler()->alter('uc_authorizenet_transaction', $submit_data);
 
   // Determine the correct URL based on the transaction mode.
   if (variable_get('uc_authnet_aim_txn_mode', 'live_test') == 'developer_test') {

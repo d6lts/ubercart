@@ -548,7 +548,7 @@ function _uc_payment_gateway_list($filter = NULL, $enabled_only = FALSE) {
   }
 
   // Allow other modules to alter the payment gateways.
-  drupal_alter('uc_payment_gateway', $gateways);
+  \Drupal::moduleHandler()->alter('uc_payment_gateway', $gateways);
 
   foreach ($gateways as $id => $gateway) {
     if ($filter && (!isset($gateway[$filter]) || !function_exists($gateway[$filter]))) {

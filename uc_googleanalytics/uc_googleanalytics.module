@@ -138,7 +138,7 @@ function uc_googleanalytics_ecommerce_js($order) {
   );
 
   // Allow modules to alter the transaction arguments.
-  drupal_alter('ucga_trans', $trans, $order);
+  \Drupal::moduleHandler()->alter('ucga_trans', $trans, $order);
 
   // Put the arguments into an array that is safe to implode directly.
   $args = array(
@@ -184,7 +184,7 @@ function uc_googleanalytics_ecommerce_js($order) {
     );
 
     // Allow modules to alter the item arguments.
-    drupal_alter('ucga_item', $item, $product, $trans, $order);
+    \Drupal::moduleHandler()->alter('ucga_item', $item, $product, $trans, $order);
 
     // Put the arguments into an array that is safe to implode directly.
     $args = array(

@@ -698,7 +698,7 @@ function uc_order_load_line_items($order) {
       'weight' => $row->weight,
       'data' => unserialize($row->data),
     );
-    drupal_alter('uc_line_item', $item, $order);
+    \Drupal::moduleHandler()->alter('uc_line_item', $item, $order);
     $items[] = $item;
   }
 
@@ -718,7 +718,7 @@ function uc_order_load_line_items($order) {
             'weight' => isset($line['weight']) ? $line['weight'] : $type['weight'],
             'data' => isset($line['data']) ? $line['data'] : array(),
           );
-          drupal_alter('uc_line_item', $item, $order);
+          \Drupal::moduleHandler()->alter('uc_line_item', $item, $order);
           $items[] = $item;
         }
       }
@@ -1206,7 +1206,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if (count($extra)) {
     $actions = array_merge($actions, $extra);
   }
-  drupal_alter('uc_order_actions', $actions, $order);
+  \Drupal::moduleHandler()->alter('uc_order_actions', $actions, $order);
 
   return array(
     '#type' => 'operations',

@@ -155,7 +155,7 @@ function _uc_line_item_list($action = NULL) {
     ));
   }
 
-  drupal_alter('uc_line_item_data', $items);
+  \Drupal::moduleHandler()->alter('uc_line_item_data', $items);
 
   uasort($items, 'uc_weight_sort');
 

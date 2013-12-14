@@ -41,7 +41,7 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
         }
       }
 
-      drupal_alter('uc_payment_method_checkout', $options, $order);
+      \Drupal::moduleHandler()->alter('uc_payment_method_checkout', $options, $order);
 
       $description = '';
       if (!$options) {

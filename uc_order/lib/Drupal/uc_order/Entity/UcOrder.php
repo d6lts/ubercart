@@ -135,7 +135,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
     foreach ($this->products as $product) {
-      drupal_alter('uc_order_product', $product, $this);
+      \Drupal::moduleHandler()->alter('uc_order_product', $product, $this);
       uc_order_product_save($this->id(), $product);
     }
 

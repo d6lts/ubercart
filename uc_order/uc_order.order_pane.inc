@@ -605,7 +605,7 @@ function uc_order_edit_products_add($form, &$form_state) {
   $product = uc_product_load_variant(intval($form_state['values']['product_controls']['nid']), $data);
   $product->qty = isset($form_state['values']['product_controls']['qty']) ? $form_state['values']['product_controls']['qty'] : $product->default_qty;
 
-  drupal_alter('uc_order_product', $product, $order);
+  \Drupal::moduleHandler()->alter('uc_order_product', $product, $order);
   uc_order_product_save($order->id(), $product);
   $order->products[] = $product;
   $order->logChanges(array('add' => t('Added (@qty) @title to order.', array('@qty' => $product->qty, '@title' => $product->title))));
@@ -1156,7 +1156,7 @@ function _uc_order_pane_list($view = 'view') {
   }
 
   // Allow other modules to alter the defaults.
-  drupal_alter('uc_order_pane', $panes);
+  \Drupal::moduleHandler()->alter('uc_order_pane', $panes);
 
   uasort($panes, 'uc_weight_sort');
 

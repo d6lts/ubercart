@@ -398,7 +398,7 @@ function _uc_checkout_pane_list($action = NULL) {
   }
 
   // Allow other modules to alter the defaults.
-  drupal_alter('uc_checkout_pane', $panes);
+  \Drupal::moduleHandler()->alter('uc_checkout_pane', $panes);
 
   uasort($panes, 'uc_weight_sort');
 
