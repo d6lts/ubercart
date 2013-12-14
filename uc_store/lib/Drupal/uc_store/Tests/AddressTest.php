@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_store\Tests;
 
-use Drupal\uc_store\Tests\UbercartTestBase;
 use Drupal\uc_store\Address;
 
 class AddressTest extends UbercartTestBase {

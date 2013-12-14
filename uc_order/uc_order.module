@@ -10,8 +10,6 @@
  * displayed to customers.
  */
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 
 require_once dirname(__FILE__) . '/uc_order.order_pane.inc';

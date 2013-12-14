@@ -7,8 +7,6 @@
 
 namespace Drupal\uc_store\Tests;
 
-use Drupal\uc_store\Tests\UbercartTestBase;
-
 class AjaxTest extends UbercartTestBase {
 
   public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack');

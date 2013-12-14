@@ -7,8 +7,6 @@
 
 namespace Drupal\uc_store\Tests;
 
-use Drupal\uc_store\Tests\UbercartTestBase;
-
 class CountryTest extends UbercartTestBase {
 
   public static function getInfo() {
