@@ -353,7 +353,7 @@ function uc_shipping_package_view($package) {
   $rows[] = array(t('Contents:'), filter_xss_admin($package->description));
 
   if ($shipment) {
-    $methods = module_invoke_all('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
     if (isset($methods[$shipment->shipping_method])) {
       $pkg_type = $methods[$shipment->shipping_method]['ship']['pkg_types'][$package->pkg_type];
     }
@@ -548,7 +548,7 @@ function uc_shipping_shipment_load($shipment_id) {
     }
     $shipment->packages = $packages;
 
-    $extra = module_invoke_all('uc_shipment', 'load', $shipment);
+    $extra = \Drupal::moduleHandler()->invokeAll('uc_shipment', 'load', $shipment);
     if (is_array($extra)) {
       foreach ($extra as $key => $value) {
         $shipment->$key = $value;
@@ -603,7 +603,7 @@ function uc_shipping_shipment_save($shipment) {
     }
   }
 
-  module_invoke_all('uc_shipment', 'save', $shipment);
+  \Drupal::moduleHandler()->invokeAll('uc_shipment', 'save', $shipment);
   $order = uc_order_load($shipment->order_id);
   // rules_invoke_event('uc_shipment_save', $order, $shipment);
 }
@@ -634,7 +634,7 @@ function uc_shipping_shipment_delete($shipment_id) {
     }
   }
 
-  module_invoke_all('uc_shipment', 'delete', $shipment);
+  \Drupal::moduleHandler()->invokeAll('uc_shipment', 'delete', $shipment);
 }
 
 /**

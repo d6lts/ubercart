@@ -33,9 +33,9 @@
  *   The function can use this data to whatever purpose to see if the item
  *   can be added to the cart or not. The function should return an array
  *   containing the result array. (This is due to the nature of Drupal's
- *   module_invoke_all() function. You must return an array within an array
- *   or other module data will end up getting ignored.) At this moment,
- *   there are only three keys:
+ *   \Drupal::moduleHandler()->invokeAll() function. You must return an
+ *   array within an array or other module data will end up getting ignored.)
+ *   At this moment, there are only three keys:
  *   - success: TRUE or FALSE for whether the specified quantity of the item
  *     may be added to the cart or not; defaults to TRUE.
  *   - message: The fail message to display in the event of a failure; if

@@ -977,7 +977,7 @@ function uc_catalog_buy_it_now_form_validate($form, &$form_state) {
  * @see uc_catalog_buy_it_now_form_validate()
  */
 function uc_catalog_buy_it_now_form_submit($form, &$form_state) {
-  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], 1,  module_invoke_all('uc_add_to_cart_data', $form_state['values']), NULL, variable_get('uc_cart_add_item_msg', TRUE));
+  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], 1,  \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', $form_state['values']), NULL, variable_get('uc_cart_add_item_msg', TRUE));
 }
 
 /**
@@ -1028,7 +1028,7 @@ function uc_product_add_to_cart_form($form, &$form_state, $node) {
  * Form validation handler for uc_product_add_to_cart_form().
  */
 function uc_product_add_to_cart_form_validate($form, &$form_state) {
-  $form_state['storage']['variant'] = uc_product_load_variant($form_state['values']['nid'], module_invoke_all('uc_add_to_cart_data', $form_state['values']));
+  $form_state['storage']['variant'] = uc_product_load_variant($form_state['values']['nid'], \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', $form_state['values']));
 }
 
 /**
@@ -1037,14 +1037,14 @@ function uc_product_add_to_cart_form_validate($form, &$form_state) {
  * @see uc_product_add_to_cart_form()
  */
 function uc_product_add_to_cart_form_submit($form, &$form_state) {
-  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'],  module_invoke_all('uc_add_to_cart_data', $form_state['values']), NULL, variable_get('uc_cart_add_item_msg', TRUE));
+  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'],  \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', $form_state['values']), NULL, variable_get('uc_cart_add_item_msg', TRUE));
 }
 
 /**
  * Returns an array of product node types.
  */
 function uc_product_types() {
-  return module_invoke_all('uc_product_types');
+  return \Drupal::moduleHandler()->invokeAll('uc_product_types');
 }
 
 /**
@@ -1114,7 +1114,7 @@ function uc_product_is_product_form($form) {
  */
 function uc_product_get_models($nid, $add_blank = TRUE) {
   // Get any modules' SKUs on this node.
-  $models = module_invoke_all('uc_product_models', $nid);
+  $models = \Drupal::moduleHandler()->invokeAll('uc_product_models', $nid);
   // Add the base SKU of the node.
   $models[] = db_query('SELECT model FROM {uc_products} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
 
@@ -1194,7 +1194,7 @@ function uc_product_get_picture($nid, $style = 'uc_product') {
  */
 function uc_product_get_description($product) {
   // Run through implementations of hook_uc_product_description().
-  $description = module_invoke_all('uc_product_description', $product);
+  $description = \Drupal::moduleHandler()->invokeAll('uc_product_description', $product);
 
   // Now allow alterations via hook_uc_product_description_alter().
   \Drupal::moduleHandler()->alter('uc_product_description', $description, $product);
@@ -1218,7 +1218,7 @@ function uc_product_feature_data($fid, $key) {
   static $features;
 
   if (empty($features)) {
-    foreach (module_invoke_all('uc_product_feature') as $feature) {
+    foreach (\Drupal::moduleHandler()->invokeAll('uc_product_feature') as $feature) {
       $features[$feature['id']] = $feature;
     }
   }

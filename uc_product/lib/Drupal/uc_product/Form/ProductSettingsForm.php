@@ -52,7 +52,7 @@ class ProductSettingsForm extends ConfigFormBase {
 
     $form['#submit'][] = array($this, 'submitForm');
 
-    foreach (module_invoke_all('uc_product_feature') as $feature) {
+    foreach (\Drupal::moduleHandler()->invokeAll('uc_product_feature') as $feature) {
       if (isset($feature['settings']) && function_exists($feature['settings'])) {
         $form[$feature['id']] = array(
           '#type' => 'details',

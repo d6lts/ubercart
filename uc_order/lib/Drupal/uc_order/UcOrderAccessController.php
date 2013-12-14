@@ -52,7 +52,8 @@ class UcOrderAccessController extends EntityAccessController {
           else {
             $can_delete = TRUE;
             // See if any modules have a say in this order's eligibility for deletion.
-            foreach (module_implements('uc_order') as $module) {
+            $module_handler = \Drupal::moduleHandler();
+            foreach ($module_handler->getImplementations('uc_order') as $module) {
               $function = $module . '_uc_order';
               if (function_exists($function) && $function('can_delete', $entity, NULL) === FALSE) {
                 $can_delete = FALSE;

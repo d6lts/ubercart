@@ -83,7 +83,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
         '#tree' => TRUE,
       );
       $weight = $quote_config->get('type_weight');
-      $shipping_methods = module_invoke_all('uc_shipping_method');
+      $shipping_methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
       $method_types = array();
       foreach ($shipping_methods as $method) {
         // Get shipping method types from shipping methods that provide quotes

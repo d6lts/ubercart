@@ -151,7 +151,7 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
 
   // Determine shipping option chosen by the customer
   $method  = $order->quote['method'];
-  $methods = module_invoke_all('uc_shipping_method');
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
   if (isset($methods[$method])) {
     $services = $methods[$method]['quote']['accessorials'];
     $method   = $services[$order->quote['accessorials']];

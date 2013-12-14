@@ -112,7 +112,8 @@ function uc_file_admin_files_form_show_files($form, &$form_state) {
   );
 
   // Check if any hook_uc_file_action('info', $args) are implemented
-  foreach (module_implements('uc_file_action') as $module) {
+  $module_handler = \Drupal::moduleHandler();
+  foreach ($module_handler->getImplementations('uc_file_action') as $module) {
     $name = $module . '_uc_file_action';
     $result = $name('info', NULL);
     if (is_array($result)) {
@@ -334,7 +335,8 @@ function uc_file_admin_files_form_action($form, &$form_state) {
 
       // This action isn't handled by us, so check if any
       // hook_uc_file_action('form', $args) are implemented.
-      foreach (module_implements('uc_file_action') as $module) {
+      $module_handler = \Drupal::moduleHandler();
+      foreach ($module_handler->getImplementations('uc_file_action') as $module) {
         $name = $module . '_uc_file_action';
         $result = $name('form', array('action' => $form_state['values']['uc_file_action']['action'], 'file_ids' => $file_ids));
         $form = (is_array($result)) ? array_merge($form, $result) : $form;
@@ -363,7 +365,8 @@ function uc_file_admin_files_form_action_validate($form, &$form_state) {
 
         // Check if any hook_uc_file_action('upload_validate', $args)
         // are implemented.
-        foreach (module_implements('uc_file_action') as $module) {
+        $module_handler = \Drupal::moduleHandler();
+        foreach ($module_handler->getImplementations('uc_file_action') as $module) {
           $name = $module . '_uc_file_action';
           $result = $name('upload_validate', array('file_object' => $temp_file, 'form_id' => $form_id, 'form_state' => $form_state));
         }
@@ -381,7 +384,8 @@ function uc_file_admin_files_form_action_validate($form, &$form_state) {
 
       // This action isn't handled by us, so check if any
       // hook_uc_file_action('validate', $args) are implemented
-      foreach (module_implements('uc_file_action') as $module) {
+      $module_handler = \Drupal::moduleHandler();
+      foreach ($module_handler->getImplementations('uc_file_action') as $module) {
         $name = $module . '_uc_file_action';
         $result = $name('validate', array('form_id' => $form_id, 'form_state' => $form_state));
       }
@@ -431,7 +435,8 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
         if (copy($file_object->uri, $dir . '/' . $file_object->filename)) {
 
           // Check if any hook_uc_file_action('upload', $args) are implemented
-          foreach (module_implements('uc_file_action') as $module) {
+          $module_handler = \Drupal::moduleHandler();
+          foreach ($module_handler->getImplementations('uc_file_action') as $module) {
             $name = $module . '_uc_file_action';
             $result = $name('upload', array('file_object' => $file_object, 'form_id' => $form_id, 'form_state' => $form_state));
           }
@@ -455,7 +460,8 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
 
       // This action isn't handled by us, so check if any
       // hook_uc_file_action('submit', $args) are implemented
-      foreach (module_implements('uc_file_action') as $module) {
+      $module_handler = \Drupal::moduleHandler();
+      foreach ($module_handler->getImplementations('uc_file_action') as $module) {
         $name = $module . '_uc_file_action';
         $result = $name('submit', array('form_id' => $form_id, 'form_state' => $form_state));
       }

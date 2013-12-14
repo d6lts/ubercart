@@ -1249,7 +1249,7 @@ function uc_get_message($message_id) {
   static $messages;
 
   if (empty($messages)) {
-    $messages = module_invoke_all('uc_message');
+    $messages = \Drupal::moduleHandler()->invokeAll('uc_message');
     \Drupal::moduleHandler()->alter('uc_get_message', $messages);
   }
 

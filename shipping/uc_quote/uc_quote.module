@@ -921,7 +921,7 @@ function uc_quote_methods($all = FALSE) {
   $weight = $quote_config->get('method_weight');
 
   $methods = array();
-  foreach (module_invoke_all('uc_shipping_method') as $id => $method) {
+  foreach (\Drupal::moduleHandler()->invokeAll('uc_shipping_method') as $id => $method) {
     // Set defaults.
     $method += array(
       'enabled' => FALSE,
@@ -1001,7 +1001,8 @@ function uc_quote_get_shipping_types() {
   $args = array();
   $hook = 'uc_shipping_type';
   $return = array();
-  foreach (module_implements($hook) as $module) {
+  $module_handler = \Drupal::moduleHandler();
+  foreach ($module_handler->getImplementations($hook) as $module) {
     $function = $module . '_' . $hook;
     $result = call_user_func_array($function, $args);
     if (isset($result) && is_array($result)) {

@@ -117,7 +117,7 @@ class StoreController extends ControllerBase implements ContainerInjectionInterf
       '#blocks' => $blocks,
     );
 
-    if ($results = module_invoke_all('uc_store_status')) {
+    if ($results = \Drupal::moduleHandler()->invokeAll('uc_store_status')) {
       foreach ($results as $message) {
         switch ($message['status']) {
           case 'warning': $icon = 'alert.gif'; break;

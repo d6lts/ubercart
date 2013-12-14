@@ -117,8 +117,8 @@ function hook_uc_product_description_alter(&$description, $product) {
  * Notifies core of any SKUs your module adds to a given node.
  *
  * NOTE: DO NOT map the array keys, as the possibility for numeric SKUs exists,
- * and this will conflict with the behavior of module_invoke_all(), specifically
- * array_merge_recursive().
+ * and this will conflict with the behavior of
+ * \Drupal::moduleHandler()->invokeAll(), specifically array_merge_recursive().
  *
  * Code lifted from uc_attribute.module.
  */

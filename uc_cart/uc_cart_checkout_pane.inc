@@ -375,7 +375,7 @@ function _uc_checkout_pane_list($action = NULL) {
     return $panes;
   }
 
-  foreach (module_invoke_all('uc_checkout_pane') as $id => $pane) {
+  foreach (\Drupal::moduleHandler()->invokeAll('uc_checkout_pane') as $id => $pane) {
     // Preserve backward compatibility for panes with no key specified.
     if (is_numeric($id)) {
       $id = $pane['id'];

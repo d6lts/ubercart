@@ -135,7 +135,7 @@ function _uc_line_item_list($action = NULL) {
   }
 
   $items = array();
-  foreach (module_invoke_all('uc_line_item') as $id => $item) {
+  foreach (\Drupal::moduleHandler()->invokeAll('uc_line_item') as $id => $item) {
     // Preserve backward compatibility for methods with no key specified.
     if (is_numeric($id)) {
       $id = $item['id'];

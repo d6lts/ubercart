@@ -78,7 +78,7 @@ function uc_googleanalytics_display() {
   }
 
   // Or if another module says this is the page through hook_ucga_display().
-  foreach (module_invoke_all('ucga_display') as $result) {
+  foreach (\Drupal::moduleHandler()->invokeAll('ucga_display') as $result) {
     if ($result === TRUE) {
       return TRUE;
     }

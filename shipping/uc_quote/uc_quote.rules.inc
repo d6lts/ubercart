@@ -32,7 +32,7 @@ function uc_quote_condition_order_shipping_method($order, $method) {
   }
   // Otherwise, look harder.
   if (!empty($order->line_items)) {
-    $methods = module_invoke_all('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
     $accessorials = $methods[$method]['quote']['accessorials'];
 
     foreach ($order->line_items as $line_item) {
@@ -50,7 +50,7 @@ function uc_quote_condition_order_shipping_method($order, $method) {
  * @see uc_quote_condition_order_shipping_method()
  */
 function uc_quote_condition_order_shipping_method_options() {
-  $methods = module_invoke_all('uc_shipping_method');
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
   $enabled = \Drupal::config('uc_quote.settings')->get('enabled');
 
   $options = array();

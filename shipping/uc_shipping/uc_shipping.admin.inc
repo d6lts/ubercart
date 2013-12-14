@@ -435,7 +435,7 @@ function uc_shipping_package_cancel_confirm($form, &$form_state, $order, $packag
 function uc_shipping_package_cancel_confirm_submit($form, &$form_state) {
   $package = uc_shipping_package_load($form_state['values']['package_id']);
   $shipment = uc_shipping_shipment_load($package->sid);
-  $methods = module_invoke_all('uc_shipping_method');
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
   if (isset($methods[$shipment->shipping_method]['cancel']) &&
       function_exists($methods[$shipment->shipping_method]['cancel'])) {
     $result = call_user_func($methods[$shipment->shipping_method]['cancel'], $shipment->tracking_number, array($package->tracking_number));
@@ -567,7 +567,7 @@ function uc_shipping_new_shipment($form, &$form_state, $order) {
   }
   $option_methods = array();
   $shipping_types = uc_quote_get_shipping_types();
-  $shipping_methods = module_invoke_all('uc_shipping_method');
+  $shipping_methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
   $shipping_methods_by_type = array();
   foreach ($shipping_methods as $method) {
     if (isset($method['ship'])) {
@@ -710,7 +710,7 @@ function uc_shipping_shipment_view($order, $shipment) {
     $rows[] = array(t('Tracking number:'), check_plain($shipment->tracking_number));
   }
 
-  $methods = module_invoke_all('uc_shipping_method');
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
 
   if (isset($methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials])) {
     $rows[] = array(t('Services:'), $methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials]);
@@ -776,7 +776,7 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
   $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
   if (isset($shipment->sid)) {
     $form['sid'] = array('#type' => 'value', '#value' => $shipment->sid);
-    $methods = module_invoke_all('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
     if (isset($methods[$shipment->shipping_method])) {
       $method = $methods[$shipment->shipping_method];
     }
@@ -928,7 +928,7 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
   if (isset($order->quote['method'])) {
     // Order has a quote attached.
     $method  = $order->quote['method'];
-    $methods = module_invoke_all('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
     if (isset($methods[$method])) {
       // Quote is from a currently-active shipping method.
       $services = $methods[$method]['quote']['accessorials'];
@@ -1155,7 +1155,7 @@ function uc_shipping_shipment_delete_confirm($form, &$form_state, $order, $shipm
  */
 function uc_shipping_shipment_delete_confirm_submit($form, &$form_state) {
   $shipment = uc_shipping_shipment_load($form_state['values']['sid']);
-  $methods = module_invoke_all('uc_shipping_method');
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
   if ($shipment->tracking_number &&
       isset($methods[$shipment->shipping_method]['cancel']) &&
       function_exists($methods[$shipment->shipping_method]['cancel'])) {
@@ -1187,7 +1187,7 @@ function uc_shipping_make_shipment($order) {
     $order = array_shift($args);
     $method_id = array_shift($args);
     $package_ids = $args;
-    $methods = module_invoke_all('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
     if (isset($methods[$method_id])) {
       $method = $methods[$method_id];
       if (isset($method['ship']['file'])) {

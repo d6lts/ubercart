@@ -54,7 +54,8 @@ class CheckoutReviewForm extends FormBase {
     $error = FALSE;
 
     // Invoke it on a per-module basis instead of all at once.
-    foreach (module_implements('uc_order') as $module) {
+    $module_handler = \Drupal::moduleHandler();
+    foreach ($module_handler->getImplementations('uc_order') as $module) {
       $function = $module . '_uc_order';
       if (function_exists($function)) {
         // $order must be passed by reference.

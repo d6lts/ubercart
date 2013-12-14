@@ -28,7 +28,7 @@ class ProductFeatureAddForm extends FormBase {
   public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
     $form['#node'] = $node;
 
-    foreach (module_invoke_all('uc_product_feature') as $feature) {
+    foreach (\Drupal::moduleHandler()->invokeAll('uc_product_feature') as $feature) {
       $options[$feature['id']] = $feature['title'];
     }
     ksort($options);

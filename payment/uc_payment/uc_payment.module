@@ -408,7 +408,7 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
     uc_cart_complete_sale($order);
   }
 
-  module_invoke_all('uc_payment_entered', $order, $method, $amount, $account, $data, $comment);
+  \Drupal::moduleHandler()->invokeAll('uc_payment_entered', $order, $method, $amount, $account, $data, $comment);
   // rules_invoke_event('uc_payment_entered', $order, $account);
 
   return $receipt_id;
@@ -535,7 +535,7 @@ function _uc_payment_method_data($method_id, $key) {
 function _uc_payment_gateway_list($filter = NULL, $enabled_only = FALSE) {
   $gateways = array();
 
-  foreach (module_invoke_all('uc_payment_gateway') as $id => $gateway) {
+  foreach (\Drupal::moduleHandler()->invokeAll('uc_payment_gateway') as $id => $gateway) {
     // Preserve backward compatibility for gateways with no key specified.
     if (is_numeric($id)) {
       $id = $gateway['id'];

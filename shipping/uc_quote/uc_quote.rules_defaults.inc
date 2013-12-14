@@ -10,7 +10,7 @@
  */
 function uc_quote_default_rules_configuration() {
   $configs = array();
-  $methods = module_invoke_all('uc_shipping_method');
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
 
   foreach ($methods as $method) {
     $set = rules_and(array(

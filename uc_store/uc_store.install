@@ -18,7 +18,7 @@ function uc_store_requirements($phase) {
     );
 
     module_load_include('inc', 'uc_store', 'uc_store.admin');
-    $results = module_invoke_all('uc_store_status');
+    $results = \Drupal::moduleHandler()->invokeAll('uc_store_status');
     foreach ($results as $status) {
       $requirements[] = array(
         'severity' => isset($severities[$status['status']]) ? $severities[$status['status']] : NULL,

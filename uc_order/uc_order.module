@@ -271,7 +271,7 @@ function uc_order_permission() {
  * Implements hook_field_extra_fields().
  */
 function uc_order_field_extra_fields() {
-  $panes = module_invoke_all('uc_order_pane');
+  $panes = \Drupal::moduleHandler()->invokeAll('uc_order_pane');
   $extra = array();
 
   foreach ($panes as $id => $pane) {
@@ -801,7 +801,8 @@ function uc_order_update_status($order_id, $status) {
     }
 
     // Return FALSE if any module says the update is not good to go.
-    foreach (module_implements('uc_order') as $module) {
+    $module_handler = \Drupal::moduleHandler();
+    foreach ($module_handler->getImplementations('uc_order') as $module) {
       $function = $module . '_uc_order';
       // $order must be passed by reference.
       if (function_exists($function) && $function('can_update', $order, $status) === FALSE) {
@@ -839,7 +840,8 @@ function uc_order_update_status($order_id, $status) {
  * be passed by reference.
  */
 function uc_order_module_invoke($op, &$order, $edit) {
-  foreach (module_implements('uc_order') as $module) {
+  $module_handler = \Drupal::moduleHandler();
+  foreach ($module_handler->getImplementations('uc_order') as $module) {
     $function = $module . '_uc_order';
     if (function_exists($function)) {
       $function($op, $order, $edit);
@@ -857,7 +859,7 @@ function uc_order_product_is_shippable($product) {
   }
 
   // See if any other modules have a say in the matter...
-  $result = module_invoke_all('uc_order_product_can_ship', $product);
+  $result = \Drupal::moduleHandler()->invokeAll('uc_order_product_can_ship', $product);
 
   // Return TRUE by default.
   if (empty($result) || in_array(TRUE, $result)) {
@@ -1007,7 +1009,7 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
 function uc_order_state_list($scope = 'all', $sql = FALSE) {
   $states = array();
 
-  foreach (module_invoke_all('uc_order_state') as $id => $state) {
+  foreach (\Drupal::moduleHandler()->invokeAll('uc_order_state') as $id => $state) {
     // Preserve backward compatibility for states with no key specified.
     if (is_numeric($id)) {
       $id = $state['id'];
@@ -1202,7 +1204,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     );
   }
 
-  $extra = module_invoke_all('uc_order_actions', $order);
+  $extra = \Drupal::moduleHandler()->invokeAll('uc_order_actions', $order);
   if (count($extra)) {
     $actions = array_merge($actions, $extra);
   }

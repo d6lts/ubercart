@@ -113,7 +113,7 @@ class CheckoutController extends ControllerBase {
     }
 
     // Trigger the "Customer starts checkout" hook and event.
-    module_invoke_all('uc_cart_checkout_start', $order);
+    \Drupal::moduleHandler()->invokeAll('uc_cart_checkout_start', $order);
     // rules_invoke_event('uc_cart_checkout_start', $order);
 
     module_load_include('inc', 'uc_cart', 'uc_cart.pages');
