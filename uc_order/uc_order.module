@@ -1186,7 +1186,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     }
   }
 
-  if ($order->access('edit')) {
+  if ($order->access('update')) {
     $actions['edit'] = array(
       'title' => t('Edit'),
       'href' => 'admin/store/orders/' . $order->id() . '/edit',
