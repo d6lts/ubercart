@@ -299,36 +299,6 @@ function uc_cart_login_update($uid) {
 }
 
 /**
- * Returns the URL redirect for the continue shopping element on the cart page.
- *
- * @param $unset
- *   TRUE or FALSE indicating whether or not to unset the last URL variable.
- *
- * @return
- *   The URL or Drupal path that will be used for the continue shopping element.
- */
-function uc_cart_continue_shopping_url($unset = TRUE) {
-  $url = '';
-
-  // Use the last URL if enabled and available.
-  if (variable_get('uc_continue_shopping_use_last_url', TRUE) && isset($_SESSION['uc_cart_last_url'])) {
-    $url = $_SESSION['uc_cart_last_url'];
-  }
-
-  // If the URL is still empty, fall back to the default.
-  if (empty($url)) {
-    $url = variable_get('uc_continue_shopping_url', '');
-  }
-
-  // Unset the last URL if specified.
-  if ($unset) {
-    unset($_SESSION['uc_cart_last_url']);
-  }
-
-  return $url;
-}
-
-/**
  * Completes a sale, including adjusting order status and creating user account.
  *
  * @param $order

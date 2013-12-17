@@ -113,7 +113,7 @@ class CartForm extends FormBase {
       // Add the element to the form based on the element type.
       if (variable_get('uc_continue_shopping_type', 'link') == 'link') {
         $form['actions']['continue_shopping'] = array(
-          '#markup' => l($this->t('Continue shopping'), uc_cart_continue_shopping_url()),
+          '#markup' => l($this->t('Continue shopping'), $this->continueShoppingUrl()),
         );
       }
       elseif (variable_get('uc_continue_shopping_type', 'link') == 'button') {
@@ -188,7 +188,7 @@ class CartForm extends FormBase {
    * Continue shopping redirect for the cart form.
    */
   public function continueShopping(array &$form, array &$form_state) {
-    $form_state['redirect'] = uc_cart_continue_shopping_url();
+    $form_state['redirect'] = $this->continueShoppingUrl();
   }
 
   /**
@@ -203,6 +203,30 @@ class CartForm extends FormBase {
    */
   public function checkout(array &$form, array &$form_state) {
     $form_state['redirect_route']['route_name'] = 'uc_cart.checkout';
+  }
+
+  /**
+   * Returns the URL redirect for the continue shopping element.
+   *
+   * @return string
+   *   The URL that will be used for the continue shopping element.
+   */
+  protected function continueShoppingUrl() {
+    $url = '';
+
+    // Use the last URL if enabled and available.
+    if (variable_get('uc_continue_shopping_use_last_url', TRUE) && isset($_SESSION['uc_cart_last_url'])) {
+      $url = $_SESSION['uc_cart_last_url'];
+    }
+
+    // If the URL is still empty, fall back to the default.
+    if (empty($url)) {
+      $url = variable_get('uc_continue_shopping_url', '');
+    }
+
+    unset($_SESSION['uc_cart_last_url']);
+
+    return $url;
   }
 
 }
