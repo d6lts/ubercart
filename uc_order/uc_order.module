@@ -193,26 +193,6 @@ function uc_order_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_entity_view_mode_info().
- */
-function uc_order_entity_view_mode_info() {
-  $view_modes['uc_order']['admin'] = array(
-    'label' => t('Admin view'),
-  );
-  $view_modes['uc_order']['customer'] = array(
-    'label' => t('Customer view'),
-    'custom_settings' => TRUE,
-  );
-  $view_modes['uc_order_product']['full'] = array(
-    'label' => t('Normal view'),
-  );
-  $view_modes['uc_order_product']['cart'] = array(
-    'label' => t('Cart view'),
-  );
-  return $view_modes;
-}
-
-/**
  * Implements hook_entity_bundle_info().
  */
 function uc_order_entity_bundle_info() {
