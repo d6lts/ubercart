@@ -31,7 +31,9 @@ use Drupal\uc_store\Address;
  *   base_table = "uc_orders",
  *   uri_callback = "uc_order_uri",
  *   fieldable = TRUE,
- *   route_base_path = "admin/store/settings/orders",
+ *   links = {
+ *     "admin-form" = "uc_order.workflow"
+ *   },
  *   entity_keys = {
  *     "id" = "order_id",
  *   }

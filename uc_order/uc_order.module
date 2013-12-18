@@ -39,19 +39,6 @@ function uc_order_menu() {
     'weight' => -6,
     'position' => 'left',
   );
-  // admin/store/customers/view is provided by Views.
-  // admin/store/customers/orders/% is provided by Views.
-
-  $items['admin/store/settings/orders'] = array(
-    'title' => 'Orders',
-    'description' => 'Configure the workflow and fields for orders.',
-    'route_name' => 'uc_order.workflow',
-  );
-  $items['admin/store/settings/orders/workflow'] = array(
-    'title' => 'Workflow',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
   $items['admin/store/orders'] = array(
     'title' => 'Orders',
     'description' => 'View and process orders.',
@@ -59,7 +46,6 @@ function uc_order_menu() {
     'weight' => -10,
     'position' => 'left',
   );
-  // admin/store/orders/view is provided by Views.
   $items['admin/store/orders/create'] = array(
     'title' => 'Create order',
     'description' => 'Create an empty new order.',
@@ -74,7 +60,6 @@ function uc_order_menu() {
     'access arguments' => array('create orders'),
     'file' => 'uc_order.admin.inc',
   );
-  // admin/store/orders/search is provided by Views.
   $items['admin/store/orders/address_book'] = array(
     'title' => 'Select address',
     'page callback' => 'uc_order_address_book',
@@ -97,6 +82,12 @@ function uc_order_menu() {
     'access arguments' => array('edit orders'),
     'type' => MENU_CALLBACK,
     'file' => 'uc_order.admin.inc',
+  );
+
+  $items['admin/store/settings/orders'] = array(
+    'title' => 'Orders',
+    'description' => 'Configure the workflow and fields for orders.',
+    'route_name' => 'uc_order.workflow',
   );
 
   return $items;

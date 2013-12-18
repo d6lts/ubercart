@@ -1,3 +1,8 @@
+uc_order.workflow:
+  route_name: uc_order.workflow
+  tab_root_id: uc_order.workflow
+  title: Workflow
+
 uc_order.admin_view:
   route_name: uc_order.admin_view
   tab_root_id: uc_order.admin_view
