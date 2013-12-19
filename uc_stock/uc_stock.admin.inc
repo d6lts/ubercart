@@ -142,38 +142,3 @@ function uc_stock_report_form_submit($form, &$form_state) {
     drupal_goto('admin/store/reports/stock');
   }
 }
-
-/**
- * Returns HTML for uc_stock_edit_form().
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @see uc_stock_edit_form()
- * @see uc_stock_edit_form_submit()
- * @ingroup themeable
- */
-function theme_uc_stock_edit_form($variables) {
-  $form = $variables['form'];
-  drupal_add_js('misc/tableselect.js');
-
-  $header = array(
-    array('data' => '&nbsp;&nbsp;' . t('Active'), 'class' => array('select-all')),
-    array('data' => t('SKU')),
-    array('data' => t('Stock')),
-    array('data' => t('Threshold')),
-  );
-  $rows = array();
-
-  foreach (element_children($form['stock']) as $id) {
-    $rows[] = array(
-      array('data' => drupal_render($form['stock'][$id]['active'])),
-      array('data' => drupal_render($form['stock'][$id]['display_sku'])),
-      array('data' => drupal_render($form['stock'][$id]['stock'])),
-      array('data' => drupal_render($form['stock'][$id]['threshold'])),
-    );
-  }
-
-  return theme('table', array('header' => $header, 'rows' => $rows)) . drupal_render_children($form);
-}

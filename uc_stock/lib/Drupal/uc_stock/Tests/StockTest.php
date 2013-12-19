@@ -40,19 +40,21 @@ class StockTest extends UbercartTestBase {
   }
 
   public function testProductStock() {
+    $prefix = 'stock[' . $this->product->model . ']';
+
     $this->drupalGet('node/' . $this->product->id() . '/edit/stock');
     $this->assertText($this->product->label());
     $this->assertText($this->product->model, 'Product SKU found.');
 
-    $this->assertNoFieldChecked('edit-stock-0-active', 'Stock tracking is not active.');
-    $this->assertFieldByName('stock[0][stock]', '0', 'Default stock level found.');
-    $this->assertFieldByName('stock[0][threshold]', '0', 'Default stock threshold found.');
+    $this->assertNoFieldChecked('edit-stock-' . strtolower($this->product->model) . '-active', 'Stock tracking is not active.');
+    $this->assertFieldByName($prefix . '[stock]', '0', 'Default stock level found.');
+    $this->assertFieldByName($prefix . '[threshold]', '0', 'Default stock threshold found.');
 
     $stock = rand(1, 1000);
     $edit = array(
-      'stock[0][active]' => 1,
-      'stock[0][stock]' => $stock,
-      'stock[0][threshold]' => rand(1, 100),
+      $prefix . '[active]' => 1,
+      $prefix . '[stock]' => $stock,
+      $prefix . '[threshold]' => rand(1, 100),
     );
     $this->drupalPostForm(NULL, $edit, t('Save changes'));
     $this->assertText('Stock settings saved.');
@@ -62,14 +64,15 @@ class StockTest extends UbercartTestBase {
     $stock = rand(1, 1000);
     uc_stock_set($this->product->model, $stock);
     $this->drupalGet('node/' . $this->product->id() . '/edit/stock');
-    $this->assertFieldByName('stock[0][stock]', (string)$stock, 'Set stock level found.');
+    $this->assertFieldByName($prefix . '[stock]', (string)$stock, 'Set stock level found.');
   }
 
   public function testStockDecrement() {
+    $prefix = 'stock[' . $this->product->model . ']';
     $stock = rand(100, 1000);
     $edit = array(
-      'stock[0][active]' => 1,
-      'stock[0][stock]' => $stock,
+      $prefix . '[active]' => 1,
+      $prefix . '[stock]' => $stock,
     );
     $this->drupalPostForm('node/' . $this->product->id() . '/edit/stock', $edit, t('Save changes'));
     $this->assertText('Stock settings saved.');
@@ -86,14 +89,16 @@ class StockTest extends UbercartTestBase {
   }
 
   public function testStockThresholdMail() {
+    $prefix = 'stock[' . $this->product->model . ']';
+
     $edit = array('uc_stock_threshold_notification' => 1);
     $this->drupalPostForm('admin/store/settings/stock', $edit, 'Save configuration');
 
     $qty = rand(10, 100);
     $edit = array(
-      'stock[0][active]' => 1,
-      'stock[0][stock]' => $qty + 1,
-      'stock[0][threshold]' => $qty,
+      $prefix . '[active]' => 1,
+      $prefix . '[stock]' => $qty + 1,
+      $prefix . '[threshold]' => $qty,
     );
     $this->drupalPostForm('node/' . $this->product->id() . '/edit/stock', $edit, 'Save changes');
 

@@ -72,18 +72,6 @@ function uc_stock_permission() {
 }
 
 /**
- * Implements hook_theme().
- */
-function uc_stock_theme() {
-  return array(
-    'uc_stock_edit_form' => array(
-      'render element' => 'form',
-      'file' => 'uc_stock.admin.inc',
-    ),
-  );
-}
-
-/**
  * Implements hook_mail().
  */
 function uc_stock_mail($key, &$message, $params) {

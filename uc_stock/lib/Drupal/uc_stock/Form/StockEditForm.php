@@ -26,52 +26,40 @@ class StockEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
-    $form['stock'] = array('#tree' => TRUE);
+    $form['stock'] = array(
+      '#type' => 'table',
+      '#header' => array(
+        array('data' => '&nbsp;&nbsp;' . $this->t('Active'), 'class' => array('select-all')),
+        $this->t('SKU'),
+        $this->t('Stock'),
+        $this->t('Threshold'),
+      ),
+    );
+    $form['#attached']['library'][] = array('system', 'drupal.tableselect');
 
-    $skus = uc_product_get_models($node->id());
+    $skus = uc_product_get_models($node->id(), FALSE);
+    foreach ($skus as $sku) {
+      $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $sku))->fetchAssoc();
 
-    // Remove 'Any'.
-    unset($skus[NULL]);
-
-    if (!$skus) {
-      drupal_set_message(t('No SKU found.'), 'error');
-    }
-    else {
-      foreach (array_values($skus) as $id => $sku) {
-        $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $sku))->fetchAssoc();
-
-        $form['stock'][$id]['sku'] = array(
-          '#type' => 'value',
-          '#value' => $sku,
-        );
-
-        // Checkbox to mark this as active.
-        $form['stock'][$id]['active'] = array(
-          '#type' => 'checkbox',
-          '#default_value' => !empty($stock['active']) ? $stock['active'] : 0,
-        );
-
-        // Sanitized version of the SKU for display.
-        $form['stock'][$id]['display_sku'] = array(
-          '#markup' => check_plain($sku),
-        );
-
-        // Textfield for entering the stock level.
-        $form['stock'][$id]['stock'] = array(
-          '#type' => 'textfield',
-          '#default_value' => !empty($stock['stock']) ? $stock['stock'] : 0,
-          '#maxlength' => 9,
-          '#size' => 9,
-        );
-
-        // Textfield for entering the threshold level.
-        $form['stock'][$id]['threshold'] = array(
-          '#type' => 'textfield',
-          '#default_value' => !empty($stock['threshold']) ? $stock['threshold'] : 0,
-          '#maxlength' => 9,
-          '#size' => 9,
-        );
-      }
+      $form['stock'][$sku]['active'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => !empty($stock['active']) ? $stock['active'] : 0,
+      );
+      $form['stock'][$sku]['sku'] = array(
+        '#markup' => check_plain($sku),
+      );
+      $form['stock'][$sku]['stock'] = array(
+        '#type' => 'textfield',
+        '#default_value' => !empty($stock['stock']) ? $stock['stock'] : 0,
+        '#maxlength' => 9,
+        '#size' => 9,
+      );
+      $form['stock'][$sku]['threshold'] = array(
+        '#type' => 'textfield',
+        '#default_value' => !empty($stock['threshold']) ? $stock['threshold'] : 0,
+        '#maxlength' => 9,
+        '#size' => 9,
+      );
     }
 
     $form['nid'] = array(
@@ -92,18 +80,18 @@ class StockEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    foreach (element_children($form_state['values']['stock']) as $id) {
-      $stock = $form_state['values']['stock'][$id];
+    foreach (element_children($form_state['values']['stock']) as $sku) {
+      $stock = $form_state['values']['stock'][$sku];
 
       db_merge('uc_product_stock')
-        ->key(array('sku' => $stock['sku']))
+        ->key(array('sku' => $sku))
         ->updateFields(array(
           'active' => $stock['active'],
           'stock' => $stock['stock'],
           'threshold' => $stock['threshold'],
         ))
         ->insertFields(array(
-          'sku' => $stock['sku'],
+          'sku' => $sku,
           'active' => $stock['active'],
           'stock' => $stock['stock'],
           'threshold' => $stock['threshold'],
