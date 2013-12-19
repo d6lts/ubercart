@@ -7,12 +7,12 @@
 
 namespace Drupal\uc_order\Form;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Displays the order workflow form for order state and status customization.
  */
-class OrderWorkflowForm extends FormBase {
+class OrderWorkflowForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -107,13 +107,7 @@ class OrderWorkflowForm extends FormBase {
       }
     }
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Submit changes'),
-    );
-
-    return $form;
+    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -143,7 +137,7 @@ class OrderWorkflowForm extends FormBase {
       }
     }
 
-    drupal_set_message(t('Order workflow information saved.'));
+    parent::submitForm($form, $form_state);
   }
 
 }
