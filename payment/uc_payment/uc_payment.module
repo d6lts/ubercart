@@ -176,7 +176,6 @@ function uc_payment_uc_order_state() {
   $states['payment_received'] = array(
     'title' => t('Payment received'),
     'weight' => 10,
-    'scope' => 'general',
   );
 
   return $states;

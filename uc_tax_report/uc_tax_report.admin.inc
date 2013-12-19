@@ -212,11 +212,6 @@ function uc_tax_report_params_form($form, &$form_state, $values) {
     ),
   );
 
-  $options = array();
-  foreach (uc_order_status_list() as $status) {
-    $options[$status['id']] = $status['title'];
-  }
-
   $stat = $values['status'];
   if ($stat === FALSE) {
     $stat = uc_reports_order_statuses();
@@ -226,7 +221,7 @@ function uc_tax_report_params_form($form, &$form_state, $values) {
     '#type' => 'select',
     '#title' => t('Order statuses'),
     '#description' => t('Only orders with selected statuses will be included in the report.') . '<br />' . t('Hold Ctrl + click to select multiple statuses.'),
-    '#options' => $options,
+    '#options' => uc_order_status_options_list(),
     '#default_value' => $stat,
     '#multiple' => TRUE,
     '#size' => 5,

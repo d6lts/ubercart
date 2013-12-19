@@ -1171,11 +1171,15 @@ function uc_get_addresses($uid, $type = 'billing') {
   $alias['postal_code'] = $query->addField('o', $type . '_postal_code', 'postal_code');
   $alias['country'] = $query->addField('o', $type . '_country', 'country');
 
+  $active = \Drupal::entityQuery('uc_order_status')
+    ->condition('weight', 0, '>=')
+    ->execute();
+
   // In pgsql, ORDER BY requires the field being sorted by to be in the SELECT
   // list. But if we have the 'created' column in the SELECT list, the DISTINCT
   // is rather useless. So we will just sort addresses alphabetically.
   $query->condition('uid', $uid)
-    ->condition('order_status', uc_order_status_list('general', TRUE), 'IN')
+    ->condition('order_status', $active, 'IN')
     ->orderBy($alias['street1']);
 
   $result = $query->execute();

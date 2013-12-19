@@ -1,0 +1,8 @@
+id: payment_received
+uuid: e2ff8952-b72e-4621-b40b-119702645140
+name: 'Payment received'
+state: payment_received
+weight: 10
+locked: true
+status: true
+langcode: en

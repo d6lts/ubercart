@@ -73,7 +73,7 @@ function uc_reports_help($path, $arg) {
     if ($include_statuses) {
       $statuses = array();
       foreach (uc_reports_order_statuses() as $status) {
-        $statuses[] = db_query("SELECT title FROM {uc_order_statuses} WHERE order_status_id = :id", array(':id' => $status))->fetchField();
+        $statuses[] = check_plain(entity_load('uc_order_status', $status)->name);
       }
       $order_statuses = t('<b>Order statuses used:</b> @statuses', array('@statuses' => implode(', ', array_filter($statuses))));
 
@@ -199,17 +199,11 @@ function uc_reports_form_uc_store_settings_form_alter(&$form, &$form_state) {
     '#default_value' => variable_get('uc_reports_table_size', 30),
     '#size' => 5,
   );
-
-  $options = array();
-  foreach (uc_order_status_list() as $status) {
-    $options[$status['id']] = $status['title'];
-  }
-
   $form['reports']['uc_reports_reported_statuses'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Reported statuses'),
     '#description' => t('Only orders with selected statuses will be included in reports.'),
-    '#options' => $options,
+    '#options' => uc_order_status_options_list(),
     '#default_value' => variable_get('uc_reports_reported_statuses', array('completed')),
     '#multiple' => TRUE,
   );

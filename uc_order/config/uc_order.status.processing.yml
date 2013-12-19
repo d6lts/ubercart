@@ -1,0 +1,8 @@
+id: processing
+uuid: c28e36b3-6341-434d-bb00-ebd709bc15e9
+name: Processing
+state: post_checkout
+weight: 5
+locked: true
+status: true
+langcode: en

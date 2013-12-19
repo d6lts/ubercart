@@ -23,13 +23,8 @@ class Status extends InOperator {
    */
   public function getValueOptions() {
     if (!isset($this->value_options)) {
-      $options['_active'] = t('Active');
-      foreach (uc_order_status_list() as $name) {
-        $options[$name['id']] = $name['title'];
-      }
-
       $this->value_title = t('Order status');
-      $this->value_options = $options;
+      $this->value_options = array_merge(array('_active' => t('Active')), uc_order_status_options_list());
     }
   }
 
@@ -38,7 +33,10 @@ class Status extends InOperator {
    */
   public function query() {
     if (is_array($this->value) && in_array('_active', $this->value)) {
-      $this->value = array_merge($this->value, array_values(uc_order_status_list('general', TRUE)));
+      $active = \Drupal::entityQuery('uc_order_status')
+        ->condition('weight', 0, '>=')
+        ->execute();
+      $this->value = array_merge($this->value, $active);
     }
 
     parent::query();

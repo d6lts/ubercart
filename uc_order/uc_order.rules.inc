@@ -276,7 +276,7 @@ function uc_order_rules_action_info() {
       'order_status' => array(
         'type' => 'text',
         'label' => t('Status'),
-        'options list' => 'uc_order_action_update_status_options',
+        'options list' => 'uc_order_status_options_list',
       ),
     ),
   );
@@ -385,11 +385,7 @@ function uc_order_condition_order_state($order, $order_state) {
  * @see uc_order_condition_order_state()
  */
 function uc_order_condition_order_state_options() {
-  foreach (uc_order_state_list() as $id => $state) {
-    $options[$id] = $state['title'];
-  }
-
-  return $options;
+  return uc_order_state_options_list();
 }
 
 /**
@@ -647,19 +643,6 @@ function uc_order_action_update_status($order, $status) {
   if (uc_order_update_status($order->id(), $status)) {
     $order->setStatusId($status);
   }
-}
-
-/**
- * @see uc_order_action_update_status()
- */
-function uc_order_action_update_status_options() {
-  $options = array();
-
-  foreach (uc_order_status_list() as $status) {
-    $options[$status['id']] = $status['title'];
-  }
-
-  return $options;
 }
 
 /**

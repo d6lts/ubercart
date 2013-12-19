@@ -209,8 +209,15 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
+  public function getStatus() {
+    return $this->get('order_status')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getStatusId() {
-    return $this->get('order_status')->value;
+    return $this->get('order_status')->target_id;
   }
 
   /**
@@ -225,7 +232,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    * {@inheritdoc}
    */
   public function getStateId() {
-    return uc_order_status_data($this->get('order_status')->value, 'state');
+    return $this->getStatus()->state;
   }
 
   /**
@@ -383,9 +390,10 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       ->setLabel(t('Customer'))
       ->setDescription(t('The user that placed the order.'))
       ->setSetting('target_type', 'user');
-    $fields['order_status'] = FieldDefinition::create('string')
+    $fields['order_status'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Order status'))
-      ->setDescription(t('The {uc_order_statuses}.order_status_id indicating the order status.'));
+      ->setDescription(t('The uc_order_status entity ID indicating the order status'))
+      ->setSetting('target_type', 'uc_order_status');
     $fields['order_total'] = FieldDefinition::create('integer') // float?
       ->setLabel(t('Order total'))
       ->setDescription(t('The total amount to be paid for the order.'));

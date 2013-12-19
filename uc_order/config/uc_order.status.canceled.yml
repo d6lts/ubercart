@@ -1,0 +1,8 @@
+id: canceled
+uuid: 4f5fc766-51d7-47c5-8900-0c0b09035966
+name: Canceled
+state: canceled
+weight: -20
+locked: true
+status: true
+langcode: en

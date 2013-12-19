@@ -505,28 +505,23 @@ function hook_uc_order_product_can_ship($product) {
  *   the machine name of the state, with the following members:
  *   - title: The human-readable, translated name.
  *   - weight: The list position of the state.
- *   - scope: Either "specific" or "general".
  */
 function hook_uc_order_state() {
   $states['canceled'] = array(
     'title' => t('Canceled'),
     'weight' => -20,
-    'scope' => 'specific',
   );
   $states['in_checkout'] = array(
     'title' => t('In checkout'),
     'weight' => -10,
-    'scope' => 'specific',
   );
   $states['post_checkout'] = array(
     'title' => t('Post checkout'),
     'weight' => 0,
-    'scope' => 'general',
   );
   $states['completed'] = array(
     'title' => t('Completed'),
     'weight' => 20,
-    'scope' => 'general',
   );
 
   return $states;

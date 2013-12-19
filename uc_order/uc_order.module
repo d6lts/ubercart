@@ -21,6 +21,8 @@ require_once dirname(__FILE__) . '/uc_order.line_item.inc';
  */
 function uc_order_help($path, $arg) {
   switch ($path) {
+    case 'admin/store/settings/orders':
+      return '<p>' . t('Order statuses with a list position below zero are considered inactive when filtering lists of orders.') . '</p>';
     case 'admin/store/settings/orders/products/fields':
       return '<p>' . t('Attach fields to order product entities.  These entities represent the product line items that appear in orders.  Fields attached here are not visible in the current version of Ubercart, but they are available in Views.  A ')
         . l(t('Computed Field'), 'http://drupal.org/project/computed_field')
@@ -432,22 +434,18 @@ function uc_order_uc_order_state() {
   $states['canceled'] = array(
     'title' => t('Canceled'),
     'weight' => -20,
-    'scope' => 'specific',
   );
   $states['in_checkout'] = array(
     'title' => t('In checkout'),
     'weight' => -10,
-    'scope' => 'specific',
   );
   $states['post_checkout'] = array(
     'title' => t('Post checkout'),
     'weight' => 0,
-    'scope' => 'general',
   );
   $states['completed'] = array(
     'title' => t('Completed'),
     'weight' => 20,
-    'scope' => 'general',
   );
 
   return $states;
@@ -596,11 +594,6 @@ function uc_order_comments_load($order_id, $admin = FALSE) {
     ->condition('order_id', $order_id)
     ->orderBy('oc.created')
     ->orderBy('oc.comment_id');
-
-  if (!$admin) {
-    $query->leftJoin('uc_order_statuses', 'os', 'oc.order_status = os.order_status_id');
-    $query->fields('os');
-  }
 
   $comments = $query->execute()->fetchAll();
 
@@ -756,7 +749,7 @@ function uc_order_load_line_items_display($order) {
  */
 function uc_order_update_status($order_id, $status) {
   // Return FALSE if an invalid $status is specified.
-  if (uc_order_status_data($status, 'id') == NULL) {
+  if (!entity_load('uc_order_status', $status)) {
     return FALSE;
   }
 
@@ -789,7 +782,7 @@ function uc_order_update_status($order_id, $status) {
       ->execute();
     uc_order_module_invoke('update', $order, $status);
 
-    $change = array(t('Order status') => array('old' => uc_order_status_data($order->getStatusId(), 'title'), 'new' => uc_order_status_data($status, 'title')));
+    $change = array(t('Order status') => array('old' => $order->getStatus()->name, 'new' => entity_load('uc_order_status', $status)->name));
     $order->logChanges($change);
 
     $updated = uc_order_load($order_id, TRUE);
@@ -963,37 +956,17 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
 }
 
 /**
- * Returns a sorted list of the order states defined in the various modules.
- *
- * @param $scope
- *   Specify the scope for the order states you want listed - all, general, or
- *   specific. States with a general scope are used on general lists and pages.
- * @param $sql
- *   Pass this parameter as TRUE to alter the return value for a SQL query.
- *
- * @return
- *   Either an array of state arrays or a string containing an array of state
- *   ids for use in a SQL query.
+ * Returns an option list of order states.
  */
-function uc_order_state_list($scope = 'all', $sql = FALSE) {
-  $states = array();
-
-  foreach (\Drupal::moduleHandler()->invokeAll('uc_order_state') as $id => $state) {
-    // Preserve backward compatibility for states with no key specified.
-    if (is_numeric($id)) {
-      $id = $state['id'];
-    }
-    else {
-      $state['id'] = $id;
-    }
-
-    if ($scope == 'all' || $state['scope'] == $scope) {
-      $states[$id] = $state;
-    }
-  }
+function uc_order_state_options_list() {
+  $states = \Drupal::moduleHandler()->invokeAll('uc_order_state');
   uasort($states, 'uc_weight_sort');
 
-  return $sql ? array_keys($states) : $states;
+  $options = array();
+  foreach ($states as $id => $state) {
+    $options[$id] = $state['title'];
+  }
+  return $options;
 }
 
 /**
@@ -1006,101 +979,19 @@ function uc_order_state_list($scope = 'all', $sql = FALSE) {
  *   A string containing the default order status ID for the specified state.
  */
 function uc_order_state_default($state_id) {
-  static $default;
-
-  // Return the default value if it exists.
-  if (isset($default[$state_id])) {
-    return $default[$state_id];
-  }
-
   // Attempt to get the default state from the form.
-  $default[$state_id] = variable_get('uc_state_' . $state_id . '_default', NULL);
+  $default = variable_get('uc_state_' . $state_id . '_default', NULL);
 
   // If it is not found, pick the lightest status for this state.
-  if (empty($default[$state_id])) {
-    $statuses = uc_order_status_list($state_id);
-    $default[$state_id] = $statuses[0]['id'];
+  if (!$default) {
+    $result = Drupal::entityQuery('uc_order_status')
+      ->condition('state', $state_id)
+      ->sort('weight')
+      ->execute();
+    $default = reset($result);
   }
 
-  return $default[$state_id];
-}
-
-/**
- * Returns a sorted list of order statuses, sortable by order state/scope.
- *
- * @param $scope
- *   Specify the scope for the order statuses you want listed - all, general,
- *   specific, or any order state id. Defaults to all.
- * @param $sql
- *   Pass this parameter as TRUE to alter the return value for a SQL query.
- * @param $action
- *   Empty by default. Set to rebuild to load the order statuses from scratch,
- *   disregarding the current cached value for the specified $scope.
- *
- * @return
- *   Either an array of status arrays or a string containing an array of status
- *   ids for use in a SQL query.
- */
-function uc_order_status_list($scope = 'all', $sql = FALSE, $action = '') {
-  static $statuses;
-
-  if (!isset($statuses[$scope]) || $action == 'rebuild') {
-    switch ($scope) {
-      case 'all':
-        $result = db_query("SELECT * FROM {uc_order_statuses}");
-        break;
-      case 'general':
-      case 'specific':
-        $result = db_query("SELECT * FROM {uc_order_statuses} WHERE state IN (:states)", array(':states' => uc_order_state_list($scope, TRUE)));
-        break;
-      default:
-        $result = db_query("SELECT * FROM {uc_order_statuses} WHERE state = :scope", array(':scope' => $scope));
-        break;
-    }
-
-    $statuses[$scope] = array();
-    while ($status = $result->fetchAssoc()) {
-      $status['id'] = $status['order_status_id'];
-      unset($status['order_status_id']);
-
-      $statuses[$scope][] = $status;
-    }
-    usort($statuses[$scope], 'uc_weight_sort');
-  }
-
-  if ($sql) {
-    $ids = array();
-    foreach ($statuses[$scope] as $status) {
-      $ids[] = $status['id'];
-    }
-    return $ids;
-  }
-
-  return $statuses[$scope];
-}
-
-/**
- * Returns a bit of data from a status array based on status ID and array key.
- *
- * @param $status_id
- *   The ID of the order status you want to get data from.
- * @param $key
- *   The key in the status array whose value you want: id, title, state, weight.
- *
- * @return
- *   The value of the key you specify.
- */
-function uc_order_status_data($status_id, $key) {
-  static $statuses;
-
-  if (empty($statuses)) {
-    $data = uc_order_status_list();
-    foreach ($data as $status) {
-      $statuses[$status['id']] = $status;
-    }
-  }
-
-  return $statuses[$status_id][$key];
+  return $default;
 }
 
 /**
@@ -1108,8 +999,8 @@ function uc_order_status_data($status_id, $key) {
  */
 function uc_order_status_options_list() {
   $options = array();
-  foreach (uc_order_status_list() as $status) {
-    $options[$status['id']] = $status['title'];
+  foreach (entity_load_multiple('uc_order_status') as $status) {
+    $options[$status->id] = $status->name;
   }
   return $options;
 }

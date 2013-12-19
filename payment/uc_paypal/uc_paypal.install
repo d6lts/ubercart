@@ -86,38 +86,6 @@ function uc_paypal_schema() {
 }
 
 /**
- * Implements hook_install().
- */
-function uc_paypal_install() {
-  db_merge('uc_order_statuses')
-    ->key(array('order_status_id' => 'paypal_pending'))
-    ->insertFields(array(
-      'order_status_id' => 'paypal_pending',
-      'title' => t('PayPal pending'),
-      'state' => 'post_checkout',
-      'weight' => 7,
-      'locked' => 1,
-    ))
-    ->updateFields(array(
-      'state' => 'post_checkout',
-      'locked' => 1,
-    ))
-    ->execute();
-}
-
-/**
- * Implements hook_uninstall().
- */
-function uc_paypal_uninstall() {
-  db_update('uc_order_statuses')
-    ->fields(array(
-      'locked' => 0,
-    ))
-    ->condition('order_status_id', 'paypal_pending')
-    ->execute();
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function uc_paypal_update_last_removed() {

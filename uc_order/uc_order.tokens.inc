@@ -280,7 +280,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'order-status':
-          $replacements[$original] = uc_order_status_data($order->getStatusId(), 'title');
+          $replacements[$original] = $sanitize ? check_plain($order->getStatus()->name) : $order->getStatus()->name;
           break;
 
         case 'customer':

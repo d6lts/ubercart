@@ -531,16 +531,11 @@ function uc_reports_products_custom_form($form, &$form_state, $values) {
     ),
   );
 
-  $options = array();
-  foreach (uc_order_status_list() as $status) {
-    $options[$status['id']] = $status['title'];
-  }
-
   $form['search']['status'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Order statuses'),
     '#description' => t('Only orders with selected statuses will be included in the report.'),
-    '#options' => $options,
+    '#options' => uc_order_status_options_list(),
     '#default_value' => $values['status'],
   );
 
@@ -1199,11 +1194,6 @@ function uc_reports_sales_custom_form($form, &$form_state, $values, $statuses) {
     '#default_value' => $values['length'],
   );
 
-  $options = array();
-  foreach (uc_order_status_list() as $status) {
-    $options[$status['id']] = $status['title'];
-  }
-
   if ($statuses === FALSE) {
     $statuses = uc_reports_order_statuses();
   }
@@ -1212,7 +1202,7 @@ function uc_reports_sales_custom_form($form, &$form_state, $values, $statuses) {
     '#type' => 'checkboxes',
     '#title' => t('Order statuses'),
     '#description' => t('Only orders with selected statuses will be included in the report.'),
-    '#options' => $options,
+    '#options' => uc_order_status_options_list(),
     '#default_value' => $statuses,
   );
 

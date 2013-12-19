@@ -28,7 +28,7 @@ function uc_order_schema() {
         'default' => 0,
       ),
       'order_status' => array(
-        'description' => 'The {uc_order_statuses}.order_status_id indicating the order status.',
+        'description' => 'The uc_order_status entity ID indicating the order status.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
@@ -249,10 +249,6 @@ function uc_order_schema() {
         'table' => 'users',
         'columns' => array('uid' => 'uid'),
       ),
-      'uc_order_statuses' => array(
-        'table' => 'uc_order_statuses',
-        'columns' => array('order_status' => 'order_status_id'),
-      ),
     ),
   );
 
@@ -330,7 +326,7 @@ function uc_order_schema() {
         'default' => 0,
       ),
       'order_status' => array(
-        'description' => 'The status the order had when the comment was made, from {uc_order_statuses}.order_status_id.',
+        'description' => 'The status the order had when the comment was made.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
@@ -580,114 +576,7 @@ function uc_order_schema() {
     ),
   );
 
-  $schema['uc_order_statuses'] = array(
-    'description' => 'Statuses the order can have during its lifecycle.',
-    'fields' => array(
-      'order_status_id' => array(
-        'description' => 'Primary key: the order status ID.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'title' => array(
-        'description' => 'The status title.',
-        'type' => 'varchar',
-        'length' => 48,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'state' => array(
-        'description' => 'The base order state with which the status is associated.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'weight' => array(
-        'description' => 'The sort criteria for statuses.',
-        'type' => 'int',
-        'size' => 'small',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'locked' => array(
-        'description' => 'A flag indicating whether users can delete the status. 0 => Yes. 1 => No.',
-        'type' => 'int',
-        'size' => 'tiny',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('order_status_id'),
-  );
-
   return $schema;
-}
-
-/**
- * Implements hook_install().
- */
-function uc_order_install() {
-  $query = db_insert('uc_order_statuses')
-    ->fields(array(
-      'order_status_id',
-      'title',
-      'state',
-      'weight',
-      'locked',
-    ));
-
-  $values = array(
-    array(
-      'order_status_id' => 'abandoned',
-      'title' => t('Abandoned'),
-      'state' => 'canceled',
-      'weight' => -30,
-      'locked' => 1,
-    ),
-    array(
-      'order_status_id' => 'canceled',
-      'title' => t('Canceled'),
-      'state' => 'canceled',
-      'weight' => -20,
-      'locked' => 1,
-    ),
-    array(
-      'order_status_id' => 'in_checkout',
-      'title' => t('In checkout'),
-      'state' => 'in_checkout',
-      'weight' => -10,
-      'locked' => 1,
-    ),
-    array(
-      'order_status_id' => 'pending',
-      'title' => t('Pending'),
-      'state' => 'post_checkout',
-      'weight' => 0,
-      'locked' => 1,
-    ),
-    array(
-      'order_status_id' => 'processing',
-      'title' => t('Processing'),
-      'state' => 'post_checkout',
-      'weight' => 5,
-      'locked' => 1,
-    ),
-    array(
-      'order_status_id' => 'completed',
-      'title' => t('Completed'),
-      'state' => 'completed',
-      'weight' => 20,
-      'locked' => 1,
-    ),
-  );
-
-  foreach ($values as $record) {
-    $query->values($record);
-  }
-  $query->execute();
 }
 
 /**

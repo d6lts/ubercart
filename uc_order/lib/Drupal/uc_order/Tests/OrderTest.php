@@ -140,6 +140,36 @@ class OrderTest extends UbercartTestBase {
     $this->assertFieldByName('bill_to[last_name]', $edit['bill_to[last_name]'], 'Billing last name changed.');
   }
 
+  public function testOrderState() {
+    $this->drupalLogin($this->adminUser);
+
+    // Check that the default order state and status is correct.
+    $this->drupalGet('admin/store/settings/orders');
+    $this->assertFieldByName('order_states[in_checkout][default]', 'in_checkout', 'State defaults to correct default status.');
+    $this->assertEqual(uc_order_state_default('in_checkout'), 'in_checkout', 'uc_order_state_default() returns correct default status.');
+    $order = $this->ucCreateOrder($this->customer);
+    $this->assertEqual($order->getStateId(), 'in_checkout', 'Order has correct default state.');
+    $this->assertEqual($order->getStatusId(), 'in_checkout', 'Order has correct default status.');
+
+    // Create a custom "in checkout" order status with a lower weight.
+    $this->drupalGet('admin/store/settings/orders');
+    $this->clickLink('Create custom order status');
+    $edit = array(
+      'id' => strtolower($this->randomName()),
+      'name' => $this->randomName(),
+      'state' => 'in_checkout',
+      'weight' => -15,
+    );
+    $this->drupalPostForm(NULL, $edit, 'Create');
+    $this->assertEqual(uc_order_state_default('in_checkout'), $edit['id'], 'uc_order_state_default() returns lowest weight status.');
+
+    // Set "in checkout" state to default to the new status.
+    $this->drupalPostForm(NULL, array('order_states[in_checkout][default]' => $edit['id']), 'Submit changes');
+    $this->assertFieldByName('order_states[in_checkout][default]', $edit['id'], 'State defaults to custom status.');
+    $order = $this->ucCreateOrder($this->customer);
+    $this->assertEqual($order->getStatusId(), $edit['id'], 'Order has correct custom status.');
+  }
+
   public function testCustomOrderStatus() {
     $order = $this->ucCreateOrder($this->customer);
 
@@ -149,10 +179,10 @@ class OrderTest extends UbercartTestBase {
     $this->drupalGet('admin/store/settings/orders');
     $title = $this->randomName();
     $edit = array(
-      'order_statuses[in_checkout][title]' => $title,
+      'order_statuses[in_checkout][name]' => $title,
     );
     $this->drupalPostForm(NULL, $edit, 'Submit changes');
-    $this->assertFieldByName('order_statuses[in_checkout][title]', $title, 'Updated status title found.');
+    $this->assertFieldByName('order_statuses[in_checkout][name]', $title, 'Updated status title found.');
 
     // Confirm the updated label is displayed.
     $this->drupalGet('admin/store/orders/view');
@@ -162,20 +192,20 @@ class OrderTest extends UbercartTestBase {
     $this->drupalGet('admin/store/settings/orders');
     $this->clickLink('Create custom order status');
     $edit = array(
-      'status_id' => strtolower($this->randomName()),
-      'status_title' => $this->randomName(),
-      'status_state' => array_rand(uc_order_state_list()),
-      'status_weight' => mt_rand(-10, 10),
+      'id' => strtolower($this->randomName()),
+      'name' => $this->randomName(),
+      'state' => array_rand(uc_order_state_options_list()),
+      'weight' => mt_rand(-10, 10),
     );
     $this->drupalPostForm(NULL, $edit, 'Create');
-    $this->assertText($edit['status_id'], 'Custom status ID found.');
-    $this->assertFieldByName('order_statuses[' . $edit['status_id'] . '][title]', $edit['status_title'], 'Custom status title found.');
-    $this->assertFieldByName('order_statuses[' . $edit['status_id'] . '][weight]', $edit['status_weight'], 'Custom status weight found.');
+    $this->assertText($edit['id'], 'Custom status ID found.');
+    $this->assertFieldByName('order_statuses[' . $edit['id'] . '][name]', $edit['name'], 'Custom status title found.');
+    $this->assertFieldByName('order_statuses[' . $edit['id'] . '][weight]', $edit['weight'], 'Custom status weight found.');
 
     // Set an order to the custom status.
-    $this->drupalPostForm('admin/store/orders/' . $order->id(), array('status' => $edit['status_id']), 'Update');
+    $this->drupalPostForm('admin/store/orders/' . $order->id(), array('status' => $edit['id']), 'Update');
     $this->drupalGet('admin/store/orders/view');
-    $this->assertText($edit['status_title'], 'Order displays custom status title.');
+    $this->assertText($edit['name'], 'Order displays custom status title.');
   }
 
   protected function ucCreateOrder($customer) {

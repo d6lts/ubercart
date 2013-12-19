@@ -23,8 +23,8 @@ class Status extends FieldPluginBase {
    * Overrides FieldPluginBase::render().
    */
   public function render(ResultRow $values) {
-    $value = $this->getValue($values);
-    return $this->sanitizeValue(uc_order_status_data($value, 'title'));
+    $status = entity_load('uc_order_status', $this->getValue($values));
+    return $this->sanitizeValue($status->name);
   }
 
 }

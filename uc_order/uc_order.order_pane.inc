@@ -912,13 +912,14 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
         '#empty' => t('This order has no comments associated with it.'),
       );
       $comments = uc_order_comments_load($order->id());
+      $statuses = entity_load_multiple('uc_order_status');
       foreach ($comments as $comment) {
         $icon = $comment->notified ? 'true-icon.gif' : 'false-icon.gif';
         $build['#rows'][] = array(
           array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
           array('data' => theme('uc_uid', array('uid' => $comment->uid)), 'class' => array('user')),
           array('data' => theme('image', array('uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon)), 'class' => array('notified')),
-          array('data' => $comment->title, 'class' => array('status')),
+          array('data' => check_plain($statuses[$comment->order_status]->name), 'class' => array('status')),
           array('data' => check_plain($comment->message), 'class' => array('message')),
         );
       }
@@ -926,6 +927,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
 
     case 'customer':
       $comments = uc_order_comments_load($order->id());
+      $statuses = entity_load_multiple('uc_order_status');
       $header = array(t('Date'), t('Status'), t('Message'));
       $rows[] = array(
         array('data' => format_date($order->created->value, 'uc_store'), 'class' => array('date')),
@@ -936,7 +938,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
         foreach ($comments as $comment) {
           $rows[] = array(
             array('data' => format_date($comment->created, 'uc_store'), 'class' => array('date')),
-            array('data' => $comment->title, 'class' => array('status')),
+            array('data' => check_plain($statuses[$comment->order_status]->name), 'class' => array('status')),
             array('data' => check_plain($comment->message), 'class' => array('message')),
           );
         }
@@ -1069,17 +1071,12 @@ function uc_order_view_update_form($form, &$form_state, $order) {
     '#attributes' => array('class' => array('uc-inline-form')),
     '#weight' => 10,
   );
-
-  foreach (uc_order_status_list() as $status) {
-    $options[$status['id']] = $status['title'];
-  }
   $form['controls']['status'] = array(
     '#type' => 'select',
     '#title' => t('Order status'),
     '#default_value' => $order->getStatusId(),
-    '#options' => $options,
+    '#options' => uc_order_status_options_list(),
   );
-
   $form['controls']['notify'] = array(
     '#type' => 'checkbox',
     '#title' => t('Send e-mail notification on update.'),

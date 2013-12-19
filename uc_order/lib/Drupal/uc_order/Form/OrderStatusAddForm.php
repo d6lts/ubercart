@@ -25,7 +25,7 @@ class OrderStatusAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $form['status_id'] = array(
+    $form['id'] = array(
       '#type' => 'textfield',
       '#title' => t('Order status ID'),
       '#description' => t('Must be a unique ID with no spaces.'),
@@ -34,7 +34,7 @@ class OrderStatusAddForm extends FormBase {
       '#required' => TRUE,
     );
 
-    $form['status_title'] = array(
+    $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Title'),
       '#description' => t('The order status title displayed to users.'),
@@ -43,20 +43,15 @@ class OrderStatusAddForm extends FormBase {
       '#required' => TRUE,
     );
 
-    // Build the state option array for the order status table.
-    $options = array();
-    foreach (uc_order_state_list() as $state) {
-      $options[$state['id']] = $state['title'];
-    }
-    $form['status_state'] = array(
+    $form['state'] = array(
       '#type' => 'select',
       '#title' => t('Order state'),
       '#description' => t('Set which order state this status is for.'),
-      '#options' => $options,
+      '#options' => uc_order_state_options_list(),
       '#default_value' => 'post_checkout',
     );
 
-    $form['status_weight'] = array(
+    $form['weight'] = array(
       '#type' => 'weight',
       '#title' => t('List position'),
       '#delta' => 20,
@@ -79,16 +74,13 @@ class OrderStatusAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
-    $new_status = strtolower(trim($form_state['values']['status_id']));
-    if (strpos($new_status, ' ') !== FALSE || $new_status == 'all') {
-      form_set_error('status_id', $form_state, t('You have entered an invalid status ID.'));
+    $id = strtolower(trim($form_state['values']['id']));
+    if (strpos($id, ' ') !== FALSE || $id == 'all') {
+      form_set_error('id', $form_state, t('You have entered an invalid status ID.'));
     }
 
-    $statuses = uc_order_status_list();
-    foreach ($statuses as $status) {
-      if ($new_status == $status['id']) {
-        form_set_error('status_id', $form_state, t('This ID is already in use.  Please specify a unique ID.'));
-      }
+    if (entity_load('uc_order_status', $id)) {
+      form_set_error('id', $form_state, t('This ID is already in use.  Please specify a unique ID.'));
     }
   }
 
@@ -96,15 +88,12 @@ class OrderStatusAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    db_insert('uc_order_statuses')
-      ->fields(array(
-        'order_status_id' => $form_state['values']['status_id'],
-        'title' => $form_state['values']['status_title'],
-        'state' => $form_state['values']['status_state'],
-        'weight' => $form_state['values']['status_weight'],
-        'locked' => 0,
-      ))
-      ->execute();
+    entity_create('uc_order_status', array(
+      'id' => strtolower(trim($form_state['values']['id'])),
+      'name' => $form_state['values']['name'],
+      'state' => $form_state['values']['state'],
+      'weight' => (int) $form_state['values']['weight'],
+    ))->save();
 
     drupal_set_message(t('Custom order status created.'));
 
