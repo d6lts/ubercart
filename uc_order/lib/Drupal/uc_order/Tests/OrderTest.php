@@ -164,7 +164,7 @@ class OrderTest extends UbercartTestBase {
     $this->assertEqual(uc_order_state_default('in_checkout'), $edit['id'], 'uc_order_state_default() returns lowest weight status.');
 
     // Set "in checkout" state to default to the new status.
-    $this->drupalPostForm(NULL, array('order_states[in_checkout][default]' => $edit['id']), 'Submit changes');
+    $this->drupalPostForm(NULL, array('order_states[in_checkout][default]' => $edit['id']), 'Save configuration');
     $this->assertFieldByName('order_states[in_checkout][default]', $edit['id'], 'State defaults to custom status.');
     $order = $this->ucCreateOrder($this->customer);
     $this->assertEqual($order->getStatusId(), $edit['id'], 'Order has correct custom status.');
@@ -181,7 +181,7 @@ class OrderTest extends UbercartTestBase {
     $edit = array(
       'order_statuses[in_checkout][name]' => $title,
     );
-    $this->drupalPostForm(NULL, $edit, 'Submit changes');
+    $this->drupalPostForm(NULL, $edit, 'Save configuration');
     $this->assertFieldByName('order_statuses[in_checkout][name]', $title, 'Updated status title found.');
 
     // Confirm the updated label is displayed.
