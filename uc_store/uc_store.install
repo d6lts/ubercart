@@ -142,13 +142,6 @@ function uc_store_install() {
     ->set('interface.uc_store', 'Drupal\uc_store\Mail\UbercartMail')
     ->save();
 
-  // Set the default store date format.
-  \Drupal::config('system.date')
-    ->set('formats.uc_store.name', t('Ubercart'))
-    ->set('formats.uc_store.locked', 0)
-    ->set('formats.uc_store.pattern.php', 'm/d/Y')
-    ->save();
-
   // Install United States and Canada by default.
   $path = drupal_get_path('module', 'uc_store');
   require_once($path . '/countries/united_states_840_1.cif');
