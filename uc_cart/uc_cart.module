@@ -293,6 +293,9 @@ function uc_cart_user_login($account) {
 function uc_cart_complete_sale($order, $login = FALSE) {
   $user = \Drupal::currentUser();
 
+  // Empty that cart...
+  uc_cart_empty();
+
   // Ensure we have the latest order data.
   $order->data = unserialize(db_query("SELECT data FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField());
 
@@ -346,9 +349,6 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     }
   }
   $output = filter_xss_admin(implode(' ', $messages));
-
-  // Empty that cart...
-  uc_cart_empty();
 
   return array(
     '#theme' => 'uc_cart_complete_sale',
