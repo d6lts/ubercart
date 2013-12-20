@@ -18,12 +18,22 @@ class CartBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
+  public function applies(array $attributes) {
+    return !empty($attributes[RouteObjectInterface::ROUTE_NAME])
+      && $attributes[RouteObjectInterface::ROUTE_NAME] == 'uc_cart.cart'
+      && \Drupal::config('uc_cart.settings')->get('breadcrumb_text');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(array $attributes) {
-    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'uc_cart.cart' && ($text = variable_get('uc_cart_breadcrumb_text', ''))) {
-      $breadcrumb[] = $this->l($this->t('Home'), '<front>');
-      $breadcrumb[] = l($text, variable_get('uc_cart_breadcrumb_url', '<front>'));
-      return $breadcrumb;
-    }
+    $config = \Drupal::config('uc_cart.settings');
+    $text = $config->get('breadcrumb_text');
+    $breadcrumb[] = $this->l($this->t('Home'), '<front>');
+    $breadcrumb[] = l($text, $config->get('breadcrumb_url'));
+
+    return $breadcrumb;
   }
 
 }

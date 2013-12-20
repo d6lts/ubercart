@@ -47,15 +47,30 @@ class CatalogBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
+  public function applies(array $attributes) {
+    $route_name = $attributes[RouteObjectInterface::ROUTE_NAME];
+    return !empty($route_name)
+      && (
+        ($route_name == 'node.view' &&
+         isset($attributes['node']->taxonomy_catalog))
+        ||
+        (substr($route_name, 0, 16) == 'view.uc_catalog.' &&
+         isset($attributes['arg_term_node_tid_depth']))
+      );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build(array $attributes) {
-    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME])) {
-      $route_name = $attributes[RouteObjectInterface::ROUTE_NAME];
-      if ($route_name == 'node.view' && isset($attributes['node']->taxonomy_catalog)) {
-        return $this->catalogBreadcrumb($attributes['node']);
-      }
-      elseif (substr($route_name, 0, 16) == 'view.uc_catalog.' && isset($attributes['arg_term_node_tid_depth'])) {
-        return $this->catalogTermBreadcrumb($attributes['arg_term_node_tid_depth']);
-      }
+    $route_name = $attributes[RouteObjectInterface::ROUTE_NAME];
+    if ($route_name == 'node.view' &&
+        isset($attributes['node']->taxonomy_catalog)) {
+      return $this->catalogBreadcrumb($attributes['node']);
+    }
+    elseif (substr($route_name, 0, 16) == 'view.uc_catalog.' &&
+            isset($attributes['arg_term_node_tid_depth'])) {
+      return $this->catalogTermBreadcrumb($attributes['arg_term_node_tid_depth']);
     }
   }
 
