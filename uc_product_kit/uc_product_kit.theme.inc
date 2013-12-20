@@ -35,7 +35,7 @@ function theme_uc_product_kit_items_form($variables) {
     return '';
   }
 
-  drupal_add_tabledrag('uc-product-kit-item-table', 'order', 'sibling', 'uc-product-kit-item-ordering');
+//  drupal_add_tabledrag('uc-product-kit-item-table', 'order', 'sibling', 'uc-product-kit-item-ordering');
 
   $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'uc-product-kit-item-table')));
 

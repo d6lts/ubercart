@@ -69,7 +69,11 @@ class PaymentMethodsForm extends ConfigFormBase {
       '#type' => 'table',
       '#header' => array(t('Payment method'), t('List position'), t('Operations')),
       '#tabledrag' => array(
-        array('order', 'sibling', 'uc-payment-method-weight'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'uc-payment-method-weight',
+        ),
       ),
     );
 

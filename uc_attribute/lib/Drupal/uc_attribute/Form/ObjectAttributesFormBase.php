@@ -58,7 +58,11 @@ abstract class ObjectAttributesFormBase extends FormBase {
       ),
       '#empty' => $this->t('No attributes available.'),
       '#tabledrag' => array(
-        array('order', 'sibling', 'uc-attribute-table-ordering'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'uc-attribute-table-ordering',
+        ),
       ),
     );
 

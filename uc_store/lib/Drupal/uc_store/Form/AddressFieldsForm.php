@@ -32,7 +32,11 @@ class AddressFieldsForm extends ConfigFormBase {
       '#type' => 'table',
       '#header' => array(t('Field'), t('Required'), t('List position')),
       '#tabledrag' => array(
-        array('order', 'sibling', 'uc-store-address-fields-weight'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'uc-store-address-fields-weight',
+        ),
       ),
     );
 

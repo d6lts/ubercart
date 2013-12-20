@@ -123,7 +123,11 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#type' => 'table',
       '#header' => array(t('Pane'), t('List position')),
       '#tabledrag' => array(
-        array('order', 'sibling', 'uc-checkout-pane-weight'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'uc-checkout-pane-weight',
+        ),
       ),
     );
     foreach ($panes as $id => $pane) {

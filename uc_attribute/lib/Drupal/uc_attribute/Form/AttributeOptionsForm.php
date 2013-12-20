@@ -41,7 +41,11 @@ class AttributeOptionsForm extends FormBase {
       ),
       '#empty' => $this->t('No options for this attribute have been added yet.'),
       '#tabledrag' => array(
-        array('order', 'sibling', 'uc-attribute-option-table-ordering'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'uc-attribute-option-table-ordering',
+        ),
       ),
     );
 

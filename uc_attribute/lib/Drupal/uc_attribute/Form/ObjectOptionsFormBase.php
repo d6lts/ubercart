@@ -63,7 +63,11 @@ abstract class ObjectOptionsFormBase extends FormBase {
           '#caption' => '<h2>' . check_plain($attribute->name) . '</h2>',
           '#empty' => $this->t('This attribute does not have any options.'),
           '#tabledrag' => array(
-            array('order', 'sibling', 'uc-attribute-option-table-ordering'),
+            array(
+              'action' => 'order',
+              'relationship' => 'sibling',
+              'group' => 'uc-attribute-option-table-ordering',
+            ),
           ),
         );
 

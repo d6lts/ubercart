@@ -30,7 +30,11 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
       '#type' => 'table',
       '#header' => array(t('Shipping method'), t('Details'), t('List position'), t('Operations')),
       '#tabledrag' => array(
-        array('order', 'sibling', 'uc-quote-method-weight'),
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'uc-quote-method-weight',
+        ),
       ),
       '#empty' => t('No shipping quotes have been configured yet.'),
     );
