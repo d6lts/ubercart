@@ -34,8 +34,9 @@ function uc_checkout_pane_cart($op, $order, $form = NULL, &$form_state = NULL) {
  * Gets the user's email address for login.
  */
 function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NULL) {
-  global $user;
+  $user = \Drupal::currentUser();
 
+  $cart_config = \Drupal::config('uc_cart.settings');
   switch ($op) {
     case 'view':
       if ($user->isAuthenticated()) {
@@ -57,7 +58,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
         );
       }
 
-      if (variable_get('uc_cart_email_validation', FALSE) && $user->isAnonymous()) {
+      if ($cart_config->get('email_validation') && $user->isAnonymous()) {
         $contents['primary_email_confirm'] = array(
           '#type' => 'email',
           '#title' => t('Confirm e-mail address'),
@@ -69,7 +70,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
       if ($user->isAnonymous()) {
         $contents['new_account'] = array();
 
-        if (variable_get('uc_cart_new_account_name', FALSE)) {
+        if ($cart_config->get('new_account_name')) {
           $contents['new_account']['name'] = array(
             '#type' => 'textfield',
             '#title' => t('Username'),
@@ -78,7 +79,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
             '#size' => 32,
           );
         }
-        if (variable_get('uc_cart_new_account_password', FALSE)) {
+        if ($cart_config->get('new_account_password')) {
           $contents['new_account']['pass'] = array(
             '#type' => 'password',
             '#title' => t('Password'),
@@ -98,7 +99,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
           $array = array(
             '#type' => 'details',
             '#title' => t('New account details'),
-            '#description' => variable_get('uc_cart_new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
+            '#description' => $cart_config->get('new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
             '#collapsible' => FALSE,
           );
           $contents['new_account'] = array_merge($array, $contents['new_account']);
@@ -111,29 +112,29 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
       $pane = $form_state['values']['panes']['customer'];
       $order->setEmail($pane['primary_email']);
 
-      if (variable_get('uc_cart_email_validation', FALSE) && $user->isAnonymous() &&
+      if ($cart_config->get('email_validation') && $user->isAnonymous() &&
           $pane['primary_email'] !== $pane['primary_email_confirm']) {
         form_set_error('panes][customer][primary_email_confirm', $form_state, t('The e-mail address did not match.'));
       }
 
       // Invalidate if an account already exists for this e-mail address, and the user is not logged into that account
-      if (!variable_get('uc_cart_mail_existing', TRUE) && $user->isAnonymous() && !empty($pane['primary_email'])) {
+      if (!$cart_config->get('mail_existing') && $user->isAnonymous() && !empty($pane['primary_email'])) {
         if (db_query("SELECT uid FROM {users} WHERE mail LIKE :mail", array(':mail' => $pane['primary_email']))->fetchField() > 0) {
           form_set_error('panes][customer][primary_email', $form_state, t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
         }
       }
 
       // If new users can specify names or passwords then...
-      if ((variable_get('uc_cart_new_account_name', FALSE) ||
-          variable_get('uc_cart_new_account_password', FALSE)) &&
+      if (($cart_config->get('new_account_name') ||
+          $cart_config->get('new_account_password')) &&
           $user->isAnonymous()) {
         // Skip if an account already exists for this e-mail address.
-        if (variable_get('uc_cart_mail_existing', TRUE) && db_query("SELECT uid FROM {users} WHERE mail LIKE :mail", array(':mail' => $pane['primary_email']))->fetchField() > 0) {
+        if ($cart_config->get('mail_existing') && db_query("SELECT uid FROM {users} WHERE mail LIKE :mail", array(':mail' => $pane['primary_email']))->fetchField() > 0) {
           drupal_set_message(t('An account already exists for your e-mail address. The new account details you entered will be disregarded.'));
         }
         else {
           // Validate the username.
-          if (variable_get('uc_cart_new_account_name', FALSE) && !empty($pane['new_account']['name'])) {
+          if ($cart_config->get('new_account_name') && !empty($pane['new_account']['name'])) {
             $message = user_validate_name($pane['new_account']['name']);
             if (!empty($message)) {
               form_set_error('panes][customer][new_account][name', $form_state, $message);
@@ -146,7 +147,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
             }
           }
           // Validate the password.
-          if (variable_get('uc_cart_new_account_password', FALSE)) {
+          if ($cart_config->get('new_account_password')) {
             if (strcmp($pane['new_account']['pass'], $pane['new_account']['pass_confirm'])) {
               form_set_error('panes][customer][new_account][pass_confirm', $form_state, t('The passwords you entered did not match. Please try again.'));
             }
@@ -171,7 +172,7 @@ function uc_checkout_pane_customer($op, $order, $form = NULL, &$form_state = NUL
         '#type' => 'textarea',
         '#title' => t('New account details help message'),
         '#description' => t('Enter the help message displayed in the new account details fieldset when shown.'),
-        '#default_value' => variable_get('uc_cart_new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
+        '#default_value' => $cart_config->get('new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
       );
 
       return $form;
@@ -200,21 +201,22 @@ function uc_checkout_pane_billing($op, $order, $form = NULL, &$form_state = NULL
  * Generic address pane handler.
  */
 function uc_checkout_pane_address($pane, $op, $order, &$form_state, $description, $copy) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // Source pane for "copy address" checkbox.
   static $source;
   if (!isset($source)) {
     $source = $pane;
   }
-
+ 
+  $cart_config = \Drupal::config('uc_cart.settings');
   switch ($op) {
     case 'view':
       if ($source != $pane) {
         $contents['copy_address'] = array(
           '#type' => 'checkbox',
           '#title' => $copy,
-          '#default_value' => variable_get('uc_cart_default_same_address', FALSE),
+          '#default_value' => $cart_config->get('default_same_address'),
           '#ajax' => array(
             'callback' => 'uc_checkout_pane_address_render',
             'wrapper' => $pane . '-address-pane',
@@ -256,7 +258,7 @@ function uc_checkout_pane_address($pane, $op, $order, &$form_state, $description
         $contents['address']['#hidden'] = !empty($form_state['values']['panes'][$pane]['copy_address']);
       }
       elseif (isset($contents['copy_address'])) {
-        $contents['address']['#hidden'] = variable_get('uc_cart_default_same_address', FALSE);
+        $contents['address']['#hidden'] = $cart_config->get('default_same_address');
       }
 
       if (isset($form_state['triggering_element'])) {
@@ -375,6 +377,7 @@ function _uc_checkout_pane_list($action = NULL) {
     return $panes;
   }
 
+  $cart_config = \Drupal::config('uc_cart.settings');
   foreach (\Drupal::moduleHandler()->invokeAll('uc_checkout_pane') as $id => $pane) {
     // Preserve backward compatibility for panes with no key specified.
     if (is_numeric($id)) {

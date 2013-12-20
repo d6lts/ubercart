@@ -115,7 +115,7 @@ class CartBlock extends BlockBase {
       );
 
       // Only add the checkout link if checkout is enabled.
-      if (variable_get('uc_checkout_enabled', TRUE)) {
+      if (\Drupal::config('uc_cart.settings')->get('checkout_enabled')) {
         $summary_links[] = array(
           'title' => t('Checkout'),
           'href' => 'cart/checkout',

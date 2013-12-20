@@ -30,6 +30,7 @@ class CartForm extends FormBase {
    */
   public function buildForm(array $form, array &$form_state, $items = NULL) {
     $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
+    $cart_config = \Drupal::config('uc_cart.settings');
 
     $form['items'] = array(
       '#type' => 'table',
@@ -109,14 +110,14 @@ class CartForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
 
     // If the continue shopping element is enabled...
-    if (($cs_type = variable_get('uc_continue_shopping_type', 'link')) !== 'none') {
+    if (($cs_type = $cart_config->get('continue_shopping_type')) !== 'none') {
       // Add the element to the form based on the element type.
-      if (variable_get('uc_continue_shopping_type', 'link') == 'link') {
+      if ($cart_config->get('continue_shopping_type') == 'link') {
         $form['actions']['continue_shopping'] = array(
           '#markup' => l($this->t('Continue shopping'), $this->continueShoppingUrl()),
         );
       }
-      elseif (variable_get('uc_continue_shopping_type', 'link') == 'button') {
+      elseif ($cart_config->get('continue_shopping_type') == 'button') {
         $form['actions']['continue_shopping'] = array(
           '#type' => 'submit',
           '#value' => $this->t('Continue shopping'),
@@ -126,7 +127,7 @@ class CartForm extends FormBase {
     }
 
     // Add the empty cart button if enabled.
-    if (variable_get('uc_cart_empty_button', FALSE)) {
+    if ($cart_config->get('empty_button')) {
       $form['actions']['empty'] = array(
         '#type' => 'submit',
         '#value' => $this->t('Empty cart'),
@@ -144,7 +145,7 @@ class CartForm extends FormBase {
     $form['actions']['checkout'] = array(
       '#theme' => 'uc_cart_checkout_buttons',
     );
-    if (variable_get('uc_checkout_enabled', TRUE)) {
+    if ($cart_config->get('checkout_enabled')) {
       $form['actions']['checkout']['checkout'] = array(
         '#type' => 'submit',
         '#value' => $this->t('Checkout'),
@@ -212,16 +213,17 @@ class CartForm extends FormBase {
    *   The URL that will be used for the continue shopping element.
    */
   protected function continueShoppingUrl() {
+    $cart_config = \Drupal::config('uc_cart.settings');
     $url = '';
 
     // Use the last URL if enabled and available.
-    if (variable_get('uc_continue_shopping_use_last_url', TRUE) && isset($_SESSION['uc_cart_last_url'])) {
+    if ($cart_config->get('continue_shopping_use_last_url') && isset($_SESSION['uc_cart_last_url'])) {
       $url = $_SESSION['uc_cart_last_url'];
     }
 
     // If the URL is still empty, fall back to the default.
     if (empty($url)) {
-      $url = variable_get('uc_continue_shopping_url', '');
+      $url = $cart_config->get('continue_shopping_url');
     }
 
     unset($_SESSION['uc_cart_last_url']);

@@ -25,7 +25,7 @@ class CartSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    //$config = $this->configFactory->get('uc_cart.settings');
+    $cart_config = \Drupal::config('uc_cart.settings');
 
     $form['cart-settings'] = array(
       '#type' => 'vertical_tabs',
@@ -45,13 +45,13 @@ class CartSettingsForm extends ConfigFormBase {
     $form['general']['uc_cart_add_item_msg'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display a message when a customer adds an item to their cart.'),
-      '#default_value' => variable_get('uc_cart_add_item_msg', TRUE),
+      '#default_value' => $cart_config->get('add_item_msg'),
     );
     $form['general']['uc_add_item_redirect'] = array(
       '#type' => 'textfield',
       '#title' => t('Add to cart redirect'),
       '#description' => t('Enter the page to redirect to when a customer adds an item to their cart, or &lt;none&gt; for no redirect.'),
-      '#default_value' => variable_get('uc_add_item_redirect', 'cart'),
+      '#default_value' => $cart_config->get('add_item_redirect'),
       '#size' => 32,
       '#field_prefix' => url(NULL, array('absolute' => TRUE)),
     );
@@ -59,14 +59,14 @@ class CartSettingsForm extends ConfigFormBase {
     $form['general']['uc_cart_empty_button'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show an "Empty cart" button on the cart page.'),
-      '#default_value' => variable_get('uc_cart_empty_button', FALSE),
+      '#default_value' => $cart_config->get('empty_button'),
     );
 
     $form['general']['uc_minimum_subtotal'] = array(
       '#type' => 'uc_price',
       '#title' => t('Minimum order subtotal'),
       '#description' => t('Customers will not be allowed to check out if the subtotal of items in their cart is less than this amount.'),
-      '#default_value' => variable_get('uc_minimum_subtotal', 0),
+      '#default_value' => $cart_config->get('minimum_subtotal'),
     );
 
     $form['lifetime'] = array(
@@ -85,7 +85,7 @@ class CartSettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => t('Duration'),
       '#options' => drupal_map_assoc(range(1, 60)),
-      '#default_value' => variable_get('uc_cart_anon_duration', '4'),
+      '#default_value' => $cart_config->get('anon_duration'),
     );
     $form['lifetime']['anonymous']['uc_cart_anon_unit'] = array(
       '#type' => 'select',
@@ -97,7 +97,7 @@ class CartSettingsForm extends ConfigFormBase {
         'weeks' => t('Week(s)'),
         'years' => t('Year(s)'),
       ),
-      '#default_value' => variable_get('uc_cart_anon_unit', 'hours'),
+      '#default_value' => $cart_config->get('anon_unit'),
     );
 
     $form['lifetime']['authenticated'] = array(
@@ -109,7 +109,7 @@ class CartSettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => t('Duration'),
       '#options' => drupal_map_assoc(range(1, 60)),
-      '#default_value' => variable_get('uc_cart_auth_duration', '1'),
+      '#default_value' => $cart_config->get('auth_duration'),
     );
     $form['lifetime']['authenticated']['uc_cart_auth_unit'] = array(
       '#type' => 'select',
@@ -120,7 +120,7 @@ class CartSettingsForm extends ConfigFormBase {
         'weeks' => t('Week(s)'),
         'years' => t('Year(s)'),
       ),
-      '#default_value' => variable_get('uc_cart_auth_unit', 'years'),
+      '#default_value' => $cart_config->get('auth_unit'),
     );
 
     $form['continue_shopping'] = array(
@@ -137,18 +137,18 @@ class CartSettingsForm extends ConfigFormBase {
         'button' => t('Button'),
         'none' => t('Do not display'),
       ),
-      '#default_value' => variable_get('uc_continue_shopping_type', 'link'),
+      '#default_value' => $cart_config->get('continue_shopping_type'),
     );
     $form['continue_shopping']['uc_continue_shopping_use_last_url'] = array(
       '#type' => 'checkbox',
       '#title' => t('Make <em>continue shopping</em> go back to the last item that was added to the cart.'),
       '#description' => t('If this is disabled or the item is unavailable, the URL specified below will be used.'),
-      '#default_value' => variable_get('uc_continue_shopping_use_last_url', TRUE),
+      '#default_value' => $cart_config->get('continue_shopping_use_last_url'),
     );
     $form['continue_shopping']['uc_continue_shopping_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Default <em>continue shopping</em> destination'),
-      '#default_value' => variable_get('uc_continue_shopping_url', ''),
+      '#default_value' => $cart_config->get('continue_shopping_url'),
       '#size' => 32,
       '#field_prefix' => url(NULL, array('absolute' => TRUE)),
     );
@@ -163,12 +163,12 @@ class CartSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => t('Cart page breadcrumb text'),
       '#description' => t('Leave blank to use the default <em>Home</em> breadcrumb.'),
-      '#default_value' => variable_get('uc_cart_breadcrumb_text', ''),
+      '#default_value' => $cart_config->get('breadcrumb_text'),
     );
     $form['breadcrumb']['uc_cart_breadcrumb_url'] = array(
       '#type' => 'textfield',
       '#title' => t('Cart page breadcrumb destination'),
-      '#default_value' => variable_get('uc_cart_breadcrumb_url', ''),
+      '#default_value' => $cart_config->get('breadcrumb_url'),
       '#size' => 32,
       '#field_prefix' => url(NULL, array('absolute' => TRUE)),
     );
@@ -180,19 +180,22 @@ class CartSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    variable_set('uc_cart_add_item_msg', $form_state['values']['uc_cart_add_item_msg']);
-    variable_set('uc_add_item_redirect', $form_state['values']['uc_add_item_redirect']);
-    variable_set('uc_cart_empty_button', $form_state['values']['uc_cart_empty_button']);
-    variable_set('uc_minimum_subtotal', $form_state['values']['uc_minimum_subtotal']);
-    variable_set('uc_cart_anon_duration', $form_state['values']['uc_cart_anon_duration']);
-    variable_set('uc_cart_anon_unit', $form_state['values']['uc_cart_anon_unit']);
-    variable_set('uc_cart_auth_duration', $form_state['values']['uc_cart_auth_duration']);
-    variable_set('uc_cart_auth_unit', $form_state['values']['uc_cart_auth_unit']);
-    variable_set('uc_continue_shopping_type', $form_state['values']['uc_continue_shopping_type']);
-    variable_set('uc_continue_shopping_use_last_url', $form_state['values']['uc_continue_shopping_use_last_url']);
-    variable_set('uc_continue_shopping_url', $form_state['values']['uc_continue_shopping_url']);
-    variable_set('uc_cart_breadcrumb_text', $form_state['values']['uc_cart_breadcrumb_text']);
-    variable_set('uc_cart_breadcrumb_url', $form_state['values']['uc_cart_breadcrumb_url']);
+    $cart_config = \Drupal::config('uc_cart.settings');
+    $cart_config
+      ->set('add_item_msg', $form_state['values']['uc_cart_add_item_msg'])
+      ->set('add_item_redirect', $form_state['values']['uc_add_item_redirect'])
+      ->set('empty_button', $form_state['values']['uc_cart_empty_button'])
+      ->set('minimum_subtotal', $form_state['values']['uc_minimum_subtotal'])
+      ->set('anon_duration', $form_state['values']['uc_cart_anon_duration'])
+      ->set('anon_unit', $form_state['values']['uc_cart_anon_unit'])
+      ->set('auth_duration', $form_state['values']['uc_cart_auth_duration'])
+      ->set('auth_unit', $form_state['values']['uc_cart_auth_unit'])
+      ->set('continue_shopping_type', $form_state['values']['uc_continue_shopping_type'])
+      ->set('continue_shopping_use_last_url', $form_state['values']['uc_continue_shopping_use_last_url'])
+      ->set('continue_shopping_url', $form_state['values']['uc_continue_shopping_url'])
+      ->set('breadcrumb_text', $form_state['values']['uc_cart_breadcrumb_text'])
+      ->set('breadcrumb_url', $form_state['values']['uc_cart_breadcrumb_url'])
+      ->save();
 
     parent::submitForm($form, $form_state);
   }

@@ -120,8 +120,9 @@ function uc_cart_theme() {
  * Implements hook_cron().
  */
 function uc_cart_cron() {
+  $cart_config = \Drupal::config('uc_cart.settings');
   // Empty anonymous carts.
-  $time = strtotime(variable_get('uc_cart_anon_duration', '4') . ' ' . variable_get('uc_cart_anon_unit', 'hours') . ' ago');
+  $time = strtotime($cart_config->get('anon_duration') . ' ' . $cart_config->get('anon_unit') . ' ago');
   $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= :changed", array(':changed' => $time));
   foreach ($result as $row) {
     if (strlen($row->cart_id) >= 22) {
@@ -130,7 +131,7 @@ function uc_cart_cron() {
   }
 
   // Empty authenticated carts.
-  $time = strtotime(variable_get('uc_cart_auth_duration', '1') . ' ' . variable_get('uc_cart_auth_unit', 'years') . ' ago');
+  $time = strtotime($cart_config->get('auth_duration') . ' ' . $cart_config->get('auth_unit') . ' ago');
   $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= :changed", array(':changed' => $time));
   foreach ($result as $row) {
     if (strlen($row->cart_id) < 22) {
@@ -290,7 +291,7 @@ function uc_cart_user_login($account) {
  *   The HTML text of the default order completion page.
  */
 function uc_cart_complete_sale($order, $login = FALSE) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // Ensure we have the latest order data.
   $order->data = unserialize(db_query("SELECT data FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField());
@@ -335,12 +336,13 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';
   $variables['!new_password'] = isset($order->password) ? $order->password : t('Your password');
   $messages = array(
-    'uc_msg_order_' . $type => uc_get_message('completion_' . $type),
+    'msg_order_' . $type => uc_get_message('completion_' . $type),
   );
+  $cart_config = \Drupal::config('uc_cart.settings');
   foreach ($messages as $id => &$message) {
-    $message = variable_get($id, $message);
+    $message = $cart_config->get($id) ? $cart_config->get($id) : $message;
     $message = Drupal::token()->replace($message, array('uc_order' => $order));
-    if ($id == 'uc_msg_order_' . $type) {
+    if ($id == 'msg_order_' . $type) {
       $message = strtr($message, $variables);
     }
   }
@@ -388,13 +390,14 @@ function uc_cart_complete_sale_account($order) {
   }
 
   // Set up a new user.
+  $cart_config = \Drupal::config('uc_cart.settings');
   $fields = array(
     'name' => uc_store_email_to_username($order->getEmail()),
     'mail' => $order->getEmail(),
     'init' => $order->getEmail(),
     'pass' => user_password(),
     'roles' => array(),
-    'status' => variable_get('uc_new_customer_status_active', TRUE) ? 1 : 0,
+    'status' => $cart_config->get('new_customer_status_active') ? 1 : 0,
   );
 
   // Override the username, if specified.
@@ -417,8 +420,8 @@ function uc_cart_complete_sale_account($order) {
   }
 
   // Send the customer their account details if enabled.
-  if (variable_get('uc_new_customer_email', TRUE)) {
-    $type = variable_get('uc_new_customer_status_active', TRUE) ? 'register_no_approval_required' : 'register_pending_approval';
+  if ($cart_config->get('new_customer_email')) {
+    $type = $cart_config->get('new_customer_status_active') ? 'register_no_approval_required' : 'register_pending_approval';
     drupal_mail('user', $type, $order->getEmail(), uc_store_mail_recipient_langcode($order->getEmail()), array('account' => $account), uc_store_email_from());
   }
 
@@ -436,12 +439,13 @@ function uc_cart_uc_checkout_complete($order) {
   if (!module_exists('rules')) {
     module_load_include('inc', 'uc_order', 'uc_order.rules');
 
-    if (variable_get('uc_checkout_email_customer', TRUE)) {
+    $cart_config = \Drupal::config('uc_cart.settings');
+    if ($cart_config->get('checkout_email_customer')) {
       $subject = t('Your Order at !store', array('!store' => uc_store_name()));
       uc_order_action_email_invoice($order, uc_store_email_from(), $order->getEmail(), $subject, 'customer', 'checkout-mail');
     }
 
-    if (variable_get('uc_checkout_email_admin', TRUE)) {
+    if ($cart_config->get('checkout_email_admin')) {
       $subject = t('New Order at !store', array('!store' => uc_store_name()));
       uc_order_action_email_invoice($order, uc_store_email_from(), uc_store_email(), $subject, 'admin', 'admin-mail');
     }
@@ -458,7 +462,7 @@ function uc_cart_uc_checkout_complete($order) {
  *   The cart ID. If $create is FALSE, returns FALSE if no cart exists.
  */
 function uc_cart_get_id($create = TRUE) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   if ($user->isAuthenticated()) {
     return $user->id();
@@ -571,7 +575,8 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
               drupal_goto();
             }
             $_SESSION['uc_cart_last_url'] = current_path();
-            $redirect = variable_get('uc_add_item_redirect', 'cart');
+            $cart_config = \Drupal::config('uc_cart.settings');
+            $redirect = $cart_config->get('add_item_redirect');
             if ($redirect != '<none>') {
               return $redirect;
             }
@@ -630,7 +635,8 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     }
 
     $_SESSION['uc_cart_last_url'] = current_path();
-    $redirect = variable_get('uc_add_item_redirect', 'cart');
+    $cart_config = \Drupal::config('uc_cart.settings');
+    $redirect = $cart_config->get('add_item_redirect');
     if ($redirect != '<none>') {
       return $redirect;
     }

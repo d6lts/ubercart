@@ -19,17 +19,18 @@ class CheckoutController extends ControllerBase {
    * Displays the cart checkout page built of checkout panes from enabled modules.
    */
   public function checkout() {
-    global $user;
+    $user = \Drupal::currentUser();
+    $cart_config = \Drupal::config('uc_cart.settings');
 
     $items = uc_cart_get_contents();
-    if (count($items) == 0 || !variable_get('uc_checkout_enabled', TRUE)) {
+    if (count($items) == 0 || !$cart_config->get('checkout_enabled')) {
       return $this->redirect('uc_cart.cart');
     }
 
     // Send anonymous users to login page when anonymous checkout is disabled.
-    if ($user->isAnonymous() && !variable_get('uc_checkout_anonymous', TRUE)) {
+    if ($user->isAnonymous() && !$cart_config->get('checkout_anonymous')) {
       drupal_set_message(t('You must login before you can proceed to checkout.'));
-      if ($this->config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
+      if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
         drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => url('user/register', array('query' => drupal_get_destination())))));
       }
       return new RedirectResponse(url('user', array('query' => drupal_get_destination(), 'absolute' => TRUE)));
@@ -106,7 +107,7 @@ class CheckoutController extends ControllerBase {
       }
     }
 
-    $min = variable_get('uc_minimum_subtotal', 0);
+    $min = $cart_config->get('minimum_subtotal');
     if ($min > 0 && $order->getSubtotal() < $min) {
       drupal_set_message(t('The minimum order subtotal for checkout is @min.', array('@min' => uc_currency_format($min))), 'error');
       return $this->redirect('uc_cart.cart');
@@ -141,8 +142,9 @@ class CheckoutController extends ControllerBase {
 
     $panes = _uc_checkout_pane_list();
 
+    $cart_config = \Drupal::config('uc_cart.settings');
     // If the cart isn't shippable, bypass panes with shippable == TRUE.
-    if (!$order->isShippable() && variable_get('uc_cart_delivery_not_shippable', TRUE)) {
+    if (!$order->isShippable() && $cart_config->get('delivery_not_shippable')) {
       $panes = uc_cart_filter_checkout_panes($panes, array('shippable' => TRUE));
     }
 
@@ -188,13 +190,14 @@ class CheckoutController extends ControllerBase {
       return $this->redirect('uc_cart.cart');
     }
 
-    $build = uc_cart_complete_sale($order, variable_get('uc_new_customer_login', FALSE));
+    $cart_config = \Drupal::config('uc_cart.settings');
+    $build = uc_cart_complete_sale($order, $cart_config->get('new_customer_login'));
     unset($_SESSION['uc_checkout'][$order->id()], $_SESSION['cart_order']);
 
     // Add a comment to let sales team know this came in through the site.
     uc_order_comment_save($order->id(), 0, t('Order created through website.'), 'admin');
 
-    $page = variable_get('uc_cart_checkout_complete_page', '');
+    $page = $cart_config->get('checkout_complete_page');
     if (!empty($page)) {
       return new RedirectResponse(url($page, array('absolute' => TRUE)));
     }
