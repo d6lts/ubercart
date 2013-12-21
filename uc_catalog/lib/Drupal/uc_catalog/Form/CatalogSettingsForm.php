@@ -8,6 +8,7 @@
 namespace Drupal\uc_catalog\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\views\Views;
 
 /**
  * Configure catalog settings for this site.
@@ -27,7 +28,7 @@ class CatalogSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, array &$form_state) {
     $config = $this->configFactory->get('uc_catalog.settings');
 
-    $view = views_get_view('uc_catalog');
+    $view = Views::getView('uc_catalog');
     $displays = array();
     foreach ($view->display as $display) {
       if ($display->display_plugin == 'page') {
@@ -44,7 +45,7 @@ class CatalogSettingsForm extends ConfigFormBase {
 
     $vid = $config->get('vocabulary');
     if ($vid) {
-      $catalog = taxonomy_vocabulary_load($vid);
+      $catalog = entity_load('taxonomy_vocabulary', $vid);
 
       $form['catalog_vid'] = array(
         '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => url('admin/structure/taxonomy/manage/' . $catalog->id()), '%name' => $catalog->label())) . '</p>',
@@ -52,7 +53,7 @@ class CatalogSettingsForm extends ConfigFormBase {
     }
 
     $vocabs = array();
-    $vocabularies = taxonomy_vocabulary_load_multiple();
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     foreach ($vocabularies as $vid => $vocabulary) {
       $vocabs[$vid] = $vocabulary->label();
     }
