@@ -46,3 +46,33 @@ function uc_cart_links_schema() {
 function uc_cart_links_update_last_removed() {
   return 6001;
 }
+
+/**
+ * @addtogroup updates-7.x-to-8.x
+ * @{
+ */
+
+/**
+ * Converts uc_cart_links system variables to config.
+ *
+ * @ingroup config_upgrade
+ */
+function uc_cart_links_update_8000() {
+  // Update system variables to config settings.
+  update_variables_to_config(
+    'uc_cart_links.settings',
+    array(
+      'uc_cart_links_add_show' => 'add_show',
+      'uc_cart_links_track' => 'track',
+      'uc_cart_links_empty' => 'empty',
+      'uc_cart_links_messages' => 'messages',
+      'uc_cart_links_restrictions' => 'restrictions',
+      'uc_cart_links_invalid_page' => 'invalid_page',
+    )
+  );
+}
+
+/**
+ * @} End of "defgroup updates-7.x-to-8.x".
+ * The next series of updates should start at 9000.
+ */
