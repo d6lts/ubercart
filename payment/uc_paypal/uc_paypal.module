@@ -975,28 +975,17 @@ function uc_paypal_api_request($request, $server) {
     'SIGNATURE' => variable_get('uc_paypal_api_signature', ''),
   );
 
-  $data = '';
-  foreach ($request as $key => $value) {
-    $data .= $key . '=' . urlencode(str_replace(',', '', $value)) . '&';
-  }
-  $data = substr($data, 0, -1);
+  $response = \Drupal::httpClient()
+    ->setSslVerification(TRUE, TRUE, 2)
+    ->setConfig(array('curl.options' => array(CURLOPT_FOLLOWLOCATION => FALSE)))
+    ->post($server, NULL, $request)
+    ->send();
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $server);
-  curl_setopt($ch, CURLOPT_VERBOSE, 0);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-  curl_setopt($ch, CURLOPT_NOPROGRESS, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-  $response = curl_exec($ch);
-  if ($error = curl_error($ch)) {
-    watchdog('uc_paypal', '!error', array('!error' => $error), WATCHDOG_ERROR);
+  if ($response->isError()) {
+    watchdog('uc_paypal', '!error', array('!error' => $response-getReasonPhrase()), WATCHDOG_ERROR);
   }
-  curl_close($ch);
 
-  return _uc_paypal_nvp_to_array($response);
+  return _uc_paypal_nvp_to_array($response->getBody(TRUE));
 }
 
 /**

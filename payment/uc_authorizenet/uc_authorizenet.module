@@ -529,32 +529,19 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     $post_url = variable_get('uc_authnet_api_live_gateway_url', UC_AUTHORIZENET_LIVE_GATEWAY_URL);
   }
 
-  // Translate the data array into a string we can POST.
-  $post_fields = array();
-  foreach ($submit_data as $key => $value) {
-    $post_fields[] = $key . '=' . urlencode($value);
-  }
-
-  // Setup the cURL request.
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $post_url);
-  curl_setopt($ch, CURLOPT_VERBOSE, 0);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, implode('&', $post_fields));
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-  curl_setopt($ch, CURLOPT_NOPROGRESS, 1);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-  $result = curl_exec($ch);
+  $result = \Drupal::httpClient()
+    ->setSslVerification(TRUE, TRUE, 2)
+    ->setConfig(array('curl.options' => array(CURLOPT_FOLLOWLOCATION => FALSE)))
+    ->post($post_url, NULL, $submit_data)
+    ->send();
 
   // Log any errors to the watchdog.
-  if ($error = curl_error($ch)) {
-    watchdog('uc_authorizenet', 'cURL error: @error', array('@error' => $error), WATCHDOG_ERROR);
+  if ($result->isError()) {
+    watchdog('uc_authorizenet', '@error', array('@error' => $result->getReasonPhrase()), WATCHDOG_ERROR);
     return array('success' => FALSE);
   }
-  curl_close($ch);
 
-  $response = explode('|', $result);
+  $response = explode('|', $result->getBody(TRUE));
 
   if (variable_get('uc_authnet_response_debug', FALSE)) {
     watchdog('uc_authorizenet', 'Debug response: !data', array('!data' => '<pre>' . check_plain(print_r($response, TRUE)) . '</pre>'));
@@ -700,24 +687,19 @@ function uc_authorizenet_xml_api($server, $xml) {
     return FALSE;
   }
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $post_url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
-  curl_setopt($ch, CURLOPT_HEADER, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-  $response = curl_exec($ch);
+  $response = \Drupal::httpClient()
+    ->setSslVerification(TRUE, TRUE, 2)
+    ->setConfig(array('curl.options' => array(CURLOPT_FOLLOWLOCATION => FALSE)))
+    ->post($post_url, array("Content-Type: text/xml"), $xml)
+    ->send();
 
   // Log any errors to the watchdog.
-  if ($error = curl_error($ch)) {
-    watchdog('uc_authorizenet', 'cURL error: @error', array('@error' => $error), WATCHDOG_ERROR);
+  if ($response->isError()) {
+    watchdog('uc_authorizenet', '@error', array('@error' => $response->getReasonPhrase()), WATCHDOG_ERROR);
     return FALSE;
   }
-  curl_close($ch);
 
-  return $response;
+  return $response->getBody(TRUE);
 }
 
 /**
