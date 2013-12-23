@@ -95,6 +95,27 @@ class CartLinksHelp {
       '#suffix' => '</p>',
     );
 
+    $build['messages']['stop'] = array(
+      '#prefix' => '<p>',
+      '#markup' => t('To stop the default "xxx was added to your shopping cart" message for a product, use the argument "_s". For example: <blockquote><code>/cart/add/p23_s</code></blockquote> "_s" is an argument to the "p" action, and suppresses the message for this product only.  Other products added by other actions in the Cart Link will still show the message.  e.g. <blockquote><code>/cart/add/p23_s-p15</code></blockquote> will show a message for product 15 but not for product 23.'),
+      '#suffix' => '</p>',
+    );
+    $build['messages']['custom'] = array(
+      '#prefix' => '<p>',
+      '#markup' => t('To insert your own message, first define your message in the Cart Links messages panel on the Cart Links settings page, by entering for example "99|My message text". Then use the action "-m99" (a dash, not an underscore) to add the message. For example: <blockquote><code>/cart/add/p23-m99</code></blockquote>'),
+      '#suffix' => '</p>',
+    );
+    $build['messages']['note'] = array(
+      '#prefix' => '<p>',
+      '#markup' => t('Note that just specifying "-m99" will display both your message 99 and the default message, unless you have turned off the default message with "_s".'),
+      '#suffix' => '</p>',
+    );
+    $build['messages']['additional'] = array(
+      '#prefix' => '<p>',
+      '#markup' => t('For additional messages, add additional actions, e.g. "-m99-m1337".'),
+      '#suffix' => '</p>',
+    );
+
     $build['example'] = array(
       '#prefix' => '<p>',
       '#markup' => t('A Cart Link that uses all of the available actions and arguments might look something like this:<blockquote><code>/cart/add/e-p23_q5_a12o5_a19o9_a1oA%20Text%20String_s-ispecialoffer-m77?destination=cart/checkout</code></blockquote>Note that the "e", "p", "i", and "m" actions are separated by dashes, while the optional arguments within the "p" action are separated by underscores. This example will first empty the shopping cart, then add 5 items of product 23 to the cart, track clicks with the ID "specialoffer", display a custom message with the ID "77", then redirect the user to the checkout page. In this case product 23 has three attributes which are set (aid = 12, 19, and 1), one of which is a textfield attribute (aid = 1).'),
