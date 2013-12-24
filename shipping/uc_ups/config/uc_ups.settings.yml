@@ -23,7 +23,7 @@ negotiated_rates: 0
 residential_quotes: 0
 all_in_one: 1
 unit_system: ""
-insurance: TRUE
+insurance: true
 rate_markup_type: 'percentage'
 rate_markup: 0
 weight_markup_type: 'percentage'

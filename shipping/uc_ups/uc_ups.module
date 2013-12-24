@@ -289,13 +289,13 @@ function uc_ups_uc_shipping_method() {
 function uc_ups_uc_store_status() {
   $messages = array();
 
-  $ups_config = \Drupal::config('uc_ups.settings');
-  $access   = $ups_config->get('access_license') != '';
-  $account  = $ups_config->get('shipper_number') != '';
-  $user     = $ups_config->get('user_id') != '';
-  $password = $ups_config->get('password') != '';
+  $ups_config  = \Drupal::config('uc_ups.settings');
+  $access      = $ups_config->get('access_license') != '';
+  $ups_account = $ups_config->get('shipper_number') != '';
+  $user        = $ups_config->get('user_id') != '';
+  $password    = $ups_config->get('password') != '';
 
-  if ($access && $account && $user && $password) {
+  if ($access && $ups_account && $user && $password) {
     $messages[] = array(
       'status' => 'ok',
       'title' => t('UPS Online Tools'),
@@ -352,7 +352,6 @@ function uc_ups_access_request() {
  */
 function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
   $ups_config = \Drupal::config('uc_ups.settings');
-  $account = $ups_config->get('shipper_number');
   $ua = explode(' ', $_SERVER['HTTP_USER_AGENT']);
   $user_agent = $ua[0];
 
@@ -713,7 +712,8 @@ function uc_ups_quote($products, $details, $method) {
       $resp = \Drupal::httpClient()
         ->post($ups_config->get('connection_address') . 'Rate', NULL, $request)
         ->send();
-      if (user_access('configure quotes') && $ups_config->get('uc_quote_display_debug')) {
+      $account = \Drupal::currentUser();
+      if ($account->hasPermission('configure quotes') && $ups_config->get('uc_quote_display_debug')) {
         if (!isset($debug_data[$ups_service]['debug'])) {
           $debug_data[$ups_service]['debug'] = '';
         }
@@ -722,7 +722,7 @@ function uc_ups_quote($products, $details, $method) {
       $response = new SimpleXMLElement($resp->getBody(TRUE));
       if (isset($response->Response->Error)) {
         foreach ($response->Response->Error as $error) {
-          if (user_access('configure quotes') && $ups_config->get('uc_quote_display_debug')) {
+          if ($account->hasPermission('configure quotes') && $ups_config->get('uc_quote_display_debug')) {
             $debug_data[$ups_service]['error'][] = (string)$error->ErrorSeverity . ' ' . (string)$error->ErrorCode . ': ' . (string)$error->ErrorDescription;
           }
           if (strpos((string)$error->ErrorSeverity, 'Hard') !== FALSE) {

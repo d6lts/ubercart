@@ -62,7 +62,7 @@ class ShipmentId extends FieldPluginBase {
     if (!empty($this->options['link_to_shipment'])) {
       $this->options['alter']['make_link'] = FALSE;
 
-      if (user_access('fulfill orders')) {
+      if (\Drupal::currentUser()->hasPermission('fulfill orders')) {
         $path = 'admin/store/orders/' . $this->get_value($values, 'order_id') . '/shipments/' . $values->{$this->field_alias};
       }
       else {

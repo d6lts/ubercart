@@ -72,7 +72,8 @@ class FullName extends FieldPluginBase {
    * Data should be made XSS safe prior to calling this function.
    */
   protected function render_link($data, $values) {
-    if (!empty($this->options['link_to_user']) && user_access('access user profiles')) {
+    $account = \Drupal::currentUser();
+    if (!empty($this->options['link_to_user']) && $account->hasPermission('access user profiles')) {
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = 'user/' . $this->getValue($values, 'uid');;
     }

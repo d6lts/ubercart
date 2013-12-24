@@ -51,6 +51,7 @@ class OrderPaymentsForm extends FormBase {
       '#weight' => 10,
     );
 
+    $account = \Drupal::currentUser();
     if ($payments !== FALSE) {
       foreach ($payments as $payment) {
         $form['payments'][$payment->receipt_id]['received'] = array(
@@ -74,7 +75,7 @@ class OrderPaymentsForm extends FormBase {
         $form['payments'][$payment->receipt_id]['comment'] = array(
           '#markup' => ($payment->comment == '') ? '-' : filter_xss_admin($payment->comment),
         );
-        if (user_access('delete payments')) {
+        if ($account->hasPermission('delete payments')) {
           $action_value = l(t('Delete'), 'admin/store/orders/' . $this->order->id() . '/payments/'
                             . $payment->receipt_id . '/delete');
         }
@@ -94,7 +95,7 @@ class OrderPaymentsForm extends FormBase {
       '#price' => $total,
     );
 
-    if (user_access('manual payments')) {
+    if ($account->hasPermission('manual payments')) {
       $form['payments']['new']['received'] = array(
         '#type' => 'date',
         '#default_value' => array(

@@ -312,7 +312,8 @@ function uc_usps_quote($products, $details, $method) {
       $request = uc_usps_rate_request($ship_packages, $orig, $destination);
     }
 
-    if (user_access('configure quotes') && $quote_config->get('display_debug')) {
+    $account = \Drupal::currentUser();
+    if ($account->hasPermission('configure quotes') && $quote_config->get('display_debug')) {
       $debug_data['debug'] .= htmlentities(urldecode($request)) . "<br />\n";
     }
 
@@ -321,7 +322,7 @@ function uc_usps_quote($products, $details, $method) {
       ->post($connection_url, NULL, $request)
       ->send();
 
-    if (user_access('configure quotes') && $quote_config->get('display_debug')) {
+    if ($account->hasPermission('configure quotes') && $quote_config->get('display_debug')) {
       $debug_data['debug'] .= htmlentities($result->getBody(TRUE)) . "<br />\n";
     }
 

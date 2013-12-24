@@ -268,9 +268,11 @@ function uc_order_field_extra_fields() {
  * Implements hook_user_view().
  */
 function uc_order_user_view($account, $view_mode) {
-  global $user;
+  $user = \Drupal::currentUser();
 
-  if ($view_mode == 'full' && $user->isAuthenticated() && (($user->id() == $account->id() && user_access('view own orders')) || user_access('view all orders'))) {
+  if ($view_mode == 'full' &&
+      $user->isAuthenticated() &&
+      (($user->id() == $account->id() && $user->hasPermission('view own orders')) || $user->hasPermission('view all orders'))) {
     $account->content['orders'] = array(
       '#type' => 'item',
       '#title' => t('Orders'),
@@ -1015,11 +1017,11 @@ function uc_order_status_options_list() {
  *   A renderable set of operation links.
  */
 function uc_order_actions($order, $icon_html = FALSE) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   $actions = array();
 
-  if (user_access('view all orders')) {
+  if ($user->hasPermission('view all orders')) {
     $actions['view'] = array(
       'title' => t('View'),
       'href' => 'admin/store/orders/' . $order->id(),

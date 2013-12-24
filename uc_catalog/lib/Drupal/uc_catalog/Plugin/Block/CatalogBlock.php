@@ -40,7 +40,7 @@ class CatalogBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockAccess() {
-    return user_access('view catalog');
+    return \Drupal::currentUser()->hasPermission('view catalog');
   }
 
   /**

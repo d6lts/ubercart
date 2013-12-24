@@ -133,7 +133,7 @@ function uc_roles_theme() {
 function uc_roles_form_user_profile_form_alter(&$form, &$form_state) {
   $account = $form_state['user'];
 
-  if (!user_access('administer users')) {
+  if (!\Drupal::currentUser()->hasPermission('administer users')) {
     return;
   }
 
@@ -280,7 +280,7 @@ function uc_roles_user_cancel($edit, $account, $method) {
  * Implements hook_user_presave().
  */
 function uc_roles_user_presave($account) {
-  if (!user_access('administer users')) {
+  if (!\Drupal::currentUser()->hasPermission('administer users')) {
     return;
   }
 
@@ -345,7 +345,7 @@ function uc_roles_user_view($account, $view_mode) {
   // Only show if this user can access all role expirations, or if it's the same
   // user and the expirations are showing on the user pages.
   $show_expiration = variable_get('uc_roles_default_show_expiration', TRUE);
-  if (!user_access('view all role expirations') && ($user->id() != $account->id() || !$show_expiration)) {
+  if (!$user->hasPermission('view all role expirations') && ($user->id() != $account->id() || !$show_expiration)) {
     return;
   }
 

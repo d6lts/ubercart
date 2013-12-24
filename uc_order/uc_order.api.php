@@ -188,8 +188,9 @@ function hook_uc_order($op, $order, $arg2) {
  *   - weight: Sets the display order of operations.
  */
 function hook_uc_order_actions($order) {
+  $account = \Drupal::currentUser();
   $actions = array();
-  if (user_access('fulfill orders')) {
+  if ($account->hasPermission('fulfill orders')) {
     $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", array(':id' => $order->id(), ':data' => '%s:9:\"shippable\";s:1:\"1\";%'));
     if ($result->fetchField()) {
       $actions['package'] = array(
@@ -322,7 +323,7 @@ function hook_uc_order_pane_alter(&$panes) {
  *     object.
  */
 function uc_order_pane_callback($op, $order, &$form = NULL, &$form_state = NULL) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   switch ($op) {
     case 'view':

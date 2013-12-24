@@ -23,7 +23,8 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
     case 'view':
       $build['balance'] = array('#markup' => t('Balance: @balance', array('@balance' => uc_currency_format(uc_payment_balance($order)))));
 
-      if (user_access('view payments')) {
+      $account = \Drupal::currentUser();
+      if ($account->hasPermission('view payments')) {
         $build['view_payments'] = array(
           '#markup' => ' (' . l(t('View'), 'admin/store/orders/' . $order->id() . '/payments') . ')',
         );

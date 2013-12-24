@@ -159,7 +159,8 @@ function uc_shipping_shipment_page_title($shipment) {
  * Ensures access to the Shipments tab.
  */
 function uc_shipping_order_access($order) {
-  return user_access('fulfill orders') && $order->isShippable();
+  $account = \Drupal::currentUser();
+  return $account->hasPermission('fulfill orders') && $order->isShippable();
 }
 
 /**
@@ -312,7 +313,8 @@ function uc_shipping_uc_order_pane() {
  */
 function uc_shipping_uc_order_actions($order) {
   $actions = array();
-  if (user_access('fulfill orders')) {
+  $account = \Drupal::currentUser();
+  if ($account->hasPermission('fulfill orders')) {
     $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", array(':id' => $order->id(), ':data' => '%s:9:\"shippable\";s:1:\"1\";%'));
     if ($result->fetchField()) {
       $actions['package'] = array(

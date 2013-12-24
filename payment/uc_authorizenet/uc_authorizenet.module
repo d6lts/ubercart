@@ -170,7 +170,7 @@ function uc_authorizenet_settings_form($form, &$form_state) {
     '#title' => t('MD5 Hash'),
     '#description' => t('<b>Note:</b> You must first configure credit card encryption before setting this.<br />Enter the value here you entered in your Auth.Net account settings.'),
     '#default_value' => $login_data['md5_hash'],
-    '#access' => user_access('administer credit cards'),
+    '#access' => \Drupal::currentUser()->hasPermission('administer credit cards'),
   );
   $form['arb_settings']['uc_authnet_report_arb_post'] = array(
     '#type' => 'checkbox',

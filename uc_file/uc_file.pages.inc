@@ -171,7 +171,7 @@ function uc_file_user_downloads($account) {
     '#files' => $files,
   );
 
-  if (user_access('administer users')) {
+  if (\Drupal::currentUser()->hasPermission('administer users')) {
     $build['admin'] = drupal_get_form('uc_file_user_form', $account);
   }
 
@@ -189,7 +189,7 @@ function uc_file_user_downloads($account) {
  * @see _uc_file_download_validate()
  */
 function _uc_file_download($fid) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // Error messages for various failed download states.
   $admin_message = t('Please contact the site administrator if this message has been received in error.');
@@ -204,7 +204,7 @@ function _uc_file_download($fid) {
   );
 
   $ip = Drupal::request()->getClientIp();
-  if (user_access('view all downloads')) {
+  if ($user->hasPermission('view all downloads')) {
     $file_download = uc_file_get_by_id($fid);
   }
   else {
@@ -220,7 +220,7 @@ function _uc_file_download($fid) {
 
   // If it's ok, we push the file to the user.
   $status = UC_FILE_ERROR_OK;
-  if (!user_access('view all downloads')) {
+  if (!$user->hasPermission('view all downloads')) {
     $status = _uc_file_download_validate($file_download, $user, $ip);
   }
   if ($status == UC_FILE_ERROR_OK) {
@@ -255,7 +255,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
   $request_cache = cache_get('uc_file_' . $ip);
   $requests = ($request_cache) ? $request_cache->data + 1 : 1;
 
-  $message_user = ($user->id()) ? t('The user %username', array('%username' => user_format_name($user))) : t('The IP address %ip', array('%ip' => $ip));
+  $message_user = ($user->id()) ? t('The user %username', array('%username' => $user->getUsername())) : t('The IP address %ip', array('%ip' => $ip));
 
   if ($requests > UC_FILE_REQUEST_LIMIT) {
     return UC_FILE_ERROR_TOO_MANY_BOGUS_REQUESTS;

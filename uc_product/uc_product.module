@@ -617,7 +617,7 @@ function uc_product_view_product(EntityInterface $node, EntityDisplay $display, 
         'uc-product-' . $node->id(),
       ),
     ),
-    '#access' => user_access('administer products'),
+    '#access' => \Drupal::currentUser()->hasPermission('administer products'),
   );
   $node->content['sell_price'] = array(
     '#theme' => 'uc_product_price',

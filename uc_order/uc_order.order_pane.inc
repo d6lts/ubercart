@@ -227,7 +227,8 @@ function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL)
         '#empty' => t('This order contains no products.'),
       );
 
-      if (!user_access('administer products')) {
+      $account = \Drupal::currentUser();
+      if (!$account->hasPermission('administer products')) {
         unset($build['#header']['cost']);
       }
 
@@ -958,8 +959,6 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
  * Handles the "Admin Comments" order pane.
  */
 function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state = NULL) {
-  global $user;
-
   switch ($op) {
     case 'view':
       $build = array(
@@ -1011,7 +1010,8 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
 
     case 'edit-process':
       if (!empty($form_state['values']['admin_comment'])) {
-        uc_order_comment_save($form_state['values']['order_id'], $user->id(), $form_state['values']['admin_comment']);
+        $uid = \Drupal::currentUser()->id();
+        uc_order_comment_save($form_state['values']['order_id'], $uid, $form_state['values']['admin_comment']);
       }
       return;
   }
@@ -1098,20 +1098,20 @@ function uc_order_view_update_form($form, &$form_state, $order) {
  * @see uc_order_view_update_form()
  */
 function uc_order_view_update_form_submit($form, &$form_state) {
-  global $user;
+  $uid = \Drupal::currentUser()->id();
 
   if (!empty($form_state['values']['order_comment'])) {
-    uc_order_comment_save($form_state['values']['order_id'], $user->id(), $form_state['values']['order_comment'], 'order', $form_state['values']['status'], $form_state['values']['notify']);
+    uc_order_comment_save($form_state['values']['order_id'], $uid, $form_state['values']['order_comment'], 'order', $form_state['values']['status'], $form_state['values']['notify']);
   }
 
   if (!empty($form_state['values']['admin_comment'])) {
-    uc_order_comment_save($form_state['values']['order_id'], $user->id(), $form_state['values']['admin_comment']);
+    uc_order_comment_save($form_state['values']['order_id'], $uid, $form_state['values']['admin_comment']);
   }
 
   if ($form_state['values']['status'] != $form_state['values']['current_status']) {
     if (uc_order_update_status($form_state['values']['order_id'], $form_state['values']['status'])) {
       if (empty($form_state['values']['order_comment'])) {
-        uc_order_comment_save($form_state['values']['order_id'], $user->id(), '-', 'order', $form_state['values']['status'], $form_state['values']['notify']);
+        uc_order_comment_save($form_state['values']['order_id'], $uid, '-', 'order', $form_state['values']['status'], $form_state['values']['notify']);
       }
     }
   }

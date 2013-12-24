@@ -24,27 +24,27 @@ class UcOrderAccessController extends EntityAccessController {
       case 'view':
       case 'invoice':
         // Admins can view all orders.
-        if (user_access('view all orders', $account)) {
+        if ($account->hasPermission('view all orders')) {
           return TRUE;
         }
         // Non-anonymous users can view their own orders and invoices with permission.
         $permission = $operation == 'view' ? 'view own orders' : 'view own invoices';
-        if ($account->id() && $account->id() == $entity->getUserId() && user_access($permission, $account)) {
+        if ($account->id() && $account->id() == $entity->getUserId() && $account->hasPermission($permission)) {
           return TRUE;
         }
         return FALSE;
         break;
 
       case 'update':
-        return user_access('edit orders', $account);
+        return $account->hasPermission('edit orders');
         break;
 
       case 'delete':
-        if (user_access('unconditionally delete orders', $account)) {
+        if ($account->hasPermission('unconditionally delete orders')) {
           // Unconditional deletion perms are always TRUE.
           return TRUE;
         }
-        if (user_access('delete orders', $account)) {
+        if ($account->hasPermission('delete orders')) {
           // Only users with unconditional deletion perms can delete completed orders.
           if ($entity->getStateId() == 'completed') {
             return FALSE;
@@ -73,7 +73,7 @@ class UcOrderAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('create orders', $account);
+    return $account->hasPermission('create orders');
   }
 
 }

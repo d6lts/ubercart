@@ -62,13 +62,14 @@ class Order extends FieldPluginBase {
    * Data should be made XSS safe prior to calling this function.
    */
   protected function render_link($data, $values) {
+    $account = \Drupal::currentUser();
     if (!empty($this->options['link_to_order'])) {
       $this->options['alter']['make_link'] = FALSE;
 
-      if (user_access('view all orders')) {
+      if ($account->hasPermission('view all orders')) {
         $path = 'admin/store/orders/' . $this->getValue($values, 'order_id');
       }
-      elseif (user_access('view own orders') && $this->getValue($values, 'uid') == $GLOBALS['user']->id()) {
+      elseif ($account->hasPermission('view own orders') && $this->getValue($values, 'uid') == $GLOBALS['user']->id()) {
         $path = 'user/' . $GLOBALS['user']->id() . '/orders/' . $this->getValue($values, 'order_id');
       }
       else {

@@ -318,7 +318,8 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
     // Otherwise display an error message to administrators.
     $result['success'] = FALSE;
     $result['message'] = t('An error has occurred with your payment gateway. The charge function could not be found.');
-    if (user_access('administer store')) {
+    $account = \Drupal::currentUser();
+    if ($account->hasPermission('administer store')) {
       drupal_set_message($result['message']);
     }
   }

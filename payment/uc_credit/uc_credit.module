@@ -437,7 +437,8 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
       $build = array();
 
       // Add the hidden span for the CC details if possible.
-      if (user_access('view cc details')) {
+      $account = \Drupal::currentUser();
+      if ($account->hasPermission('view cc details')) {
         $rows = array();
 
         if (!empty($order->payment_details['cc_type'])) {
@@ -475,7 +476,7 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
         );
 
         // Add the form to process the card if applicable.
-        if (user_access('process credit cards')) {
+        if ($account->hasPermission('process credit cards')) {
           $build['terminal'] = drupal_get_form('uc_credit_order_view_form', $order->id());
         }
       }

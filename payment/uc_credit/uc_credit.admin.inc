@@ -12,7 +12,8 @@
  * @see uc_credit_settings_form_submit()
  */
 function uc_credit_settings_form($form, &$form_state) {
-  if (!user_access('administer credit cards')) {
+  $account = \Drupal::currentUser();
+  if (!$account->hasPermission('administer credit cards')) {
     $form['notice'] = array(
       '#markup' => '<div>' . t('You must have access to <b>administer credit cards</b> to adjust these settings.') . '</div>',
     );

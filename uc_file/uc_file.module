@@ -73,8 +73,8 @@ function uc_file_menu() {
  * Access callback for a user's list of purchased file downloads.
  */
 function uc_file_user_access($account) {
-  global $user;
-  return $user->id() && (user_access('view all downloads') || $user->id() == $account->id());
+  $user = \Drupal::currentUser();
+  return $user->id() && ($user-hasPermission('view all downloads') || $user->id() == $account->id());
 }
 
 /**
@@ -362,12 +362,12 @@ function uc_file_user_form_submit($form, &$form_state) {
  * Implements hook_user_view().
  */
 function uc_file_user_view($account, $view_mode) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   // If user has files and permission to view them, put a link
   // on the user's profile.
   $existing_download = db_query("SELECT fid FROM {uc_file_users} WHERE uid = :uid", array(':uid' => $account->id()))->fetchField();
-  if ($view_mode != 'full' || !$existing_download || (!user_access('view all downloads') && $user->id() != $account->id())) {
+  if ($view_mode != 'full' || !$existing_download || (!$user->hasPermission('view all downloads') && $user->id() != $account->id())) {
     return;
   }
 

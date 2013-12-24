@@ -36,7 +36,8 @@ class UcOrderProductViewBuilder extends EntityViewBuilder {
         '#markup' => check_plain($product->model->value),
         '#cell_attributes' => array('class' => array('sku')),
       );
-      if (user_access('administer products')) {
+      $account = \Drupal::currentUser();
+      if ($account->hasPermission('administer products')) {
         $product->content['cost'] = array(
           '#theme' => 'uc_price',
           '#price' => $product->cost->value,

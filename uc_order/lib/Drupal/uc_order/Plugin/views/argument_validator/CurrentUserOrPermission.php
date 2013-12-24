@@ -112,12 +112,12 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
 
     // If the current user is not the account specified by the argument
     // and doesn't have the correct permission, validation fails.
-    if ($GLOBALS['user']->id() != $account->id() && !user_access($this->options['perm'])) {
+    if ($GLOBALS['user']->id() != $account->id() && !$account->hasPermission($this->options['perm'])) {
       return FALSE;
     }
 
     $this->argument->argument = $account->id();
-    $this->argument->validated_title = check_plain(user_format_name($account));
+    $this->argument->validated_title = check_plain($account->hasPermission($account));
     return TRUE;
   }
 
