@@ -6,18 +6,13 @@
  * customers on to checkout.
  */
 
-
 /**
  * Implements hook_help().
  */
 function uc_cart_links_help($section = 'admin/help#uc_cart_links', $arg = NULL) {
   switch ($section) {
     case 'admin/store/settings/cart-links':
-      if (module_exists('help')) {
-        return '<p>' . t('<a href="!url">View the help page</a> to learn how to create Cart Links.', array('!url' => url('admin/help/uc_cart_links'))) . '</p>';
-      }
-      break;
-
+      return '<p>' . t('<a href="!url">View the help page</a> to learn how to create Cart Links.', array('!url' => url('admin/help/uc_cart_links'))) . '</p>';
     case 'admin/help#uc_cart_links':
     case 'admin/help/cart-links':
       $build = \Drupal\uc_cart_links\Controller\CartLinksHelp::creationHelp();
