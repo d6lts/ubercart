@@ -147,7 +147,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  static public function preDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
+  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
     foreach ($orders as $order) {
       uc_order_module_invoke('delete', $order, NULL);
     }
@@ -156,7 +156,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  static public function postDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
     // Delete data from the appropriate Ubercart order tables.
     $ids = array_keys($orders);
     $result = \Drupal::entityQuery('uc_order_product')
@@ -352,7 +352,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  function logChanges($changes) {
+  public function logChanges($changes) {
     global $user;
 
     if (!empty($changes)) {
