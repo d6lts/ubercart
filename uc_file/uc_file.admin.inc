@@ -300,7 +300,7 @@ function uc_file_admin_files_form_action($form, &$form_state) {
       $directories = array('' => '/');
       $files = db_query("SELECT * FROM {uc_files}");
       foreach ($files as $file) {
-        if (is_dir(variable_get('uc_file_base_dir', NULL) . "/" . $file->filename)) {
+        if (is_dir(\Drupal::config('uc_file.settings')->get('base_dir') . "/" . $file->filename)) {
           $directories[$file->filename] = $file->filename;
         }
       }
@@ -424,7 +424,7 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
 
       // Build the destination location. We start with the base directory,
       // then add any directory which was explicitly selected.
-      $dir = variable_get('uc_file_base_dir', NULL) . '/';
+      $dir = \Drupal::config('uc_file.settings')->get('base_dir') . '/';
       $dir = (is_null($form_state['values']['upload_dir'])) ? $dir : $dir . $form_state['values']['upload_dir'];
       if (is_dir($dir)) {
 

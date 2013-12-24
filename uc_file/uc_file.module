@@ -342,14 +342,15 @@ function uc_file_user_form_submit($form, &$form_state) {
   // Check out if any downloads were added. We pass NULL to file_user_renew,
   // because this shouldn't be associated with a random product.
   if (isset($edit['file_add'])) {
+    $file_config = \Drupal::config('uc_file.settings');
     foreach ((array)$edit['file_add'] as $fid => $data) {
-      $download_modification['download_limit'] = variable_get('uc_file_download_limit_number', NULL);
-      $download_modification['address_limit'] = variable_get('uc_file_download_limit_addresses', NULL);
+      $download_modification['download_limit'] = $file_config->get('download_limit_number');
+      $download_modification['address_limit'] = $file_config->get('download_limit_addresses');
 
       $download_modification['expiration'] = _uc_file_expiration_date(array(
         'time_polarity' => '+',
-        'time_quantity' => variable_get('uc_file_download_limit_duration_qty', NULL),
-        'time_granularity' => variable_get('uc_file_download_limit_duration_granularity', 'never'),
+        'time_quantity' => $file_config->get('download_limit_duration_qty'),
+        'time_granularity' => $file_config->get('download_limit_duration_granularity'),
       ), REQUEST_TIME);
 
       // Renew. (Explicit overwrite.)
@@ -404,13 +405,14 @@ Drupal.behaviors.ucUserAccountFileDownload" . $id . " = {
  * downloading a duplicate file. Calculate and show the new limits.
  */
 function uc_file_uc_add_to_cart($nid, $qty, $data) {
+  $file_config = \Drupal::config('uc_file.settings');
 
   // Only warn if it's set in the product admin interface.
-  if (!variable_get('uc_file_duplicate_warning', TRUE)) {
+  if (!$file_config->get('duplicate_warning')) {
     return;
   }
 
-  global $user;
+  $user = \Drupal::currentUser();
 
   // Get all the files on this product.
   $product_features = db_query("SELECT * FROM {uc_product_features} upf " .
@@ -509,8 +511,9 @@ function uc_file_uc_product_feature() {
  * Implements hook_uc_store_status().
  */
 function uc_file_uc_store_status() {
+  $file_config = \Drupal::config('uc_file.settings');
   $message = array();
-  if (!is_dir(variable_get('uc_file_base_dir', NULL))) {
+  if (!is_dir($file_config->get('base_dir'))) {
     $message[] = array(
       'status' => 'warning',
       'title' => t('File downloads'),
@@ -544,7 +547,8 @@ function uc_file_feature_delete($feature) {
  * @ingroup forms
  */
 function uc_file_feature_form($form, &$form_state, $node, $feature) {
-  if (!is_dir(variable_get('uc_file_base_dir', NULL))) {
+  $file_config = \Drupal::config('uc_file.settings');
+  if (!is_dir($file_config->get('base_dir'))) {
     drupal_set_message(t('A file directory needs to be configured in <a href="@url">product settings</a> under the file download settings tab before a file can be selected.', array('@url' => url('admin/store/settings/products'))), 'error');
 
     unset($form['buttons']);
@@ -629,7 +633,7 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
     '#title' => t('File download'),
     '#default_value' => $default_filename,
     '#autocomplete_path' => '_autocomplete_file',
-    '#description' => t('The file that can be downloaded when product is purchased (enter a path relative to the %dir directory).', array('%dir' => variable_get('uc_file_base_dir', NULL))),
+    '#description' => t('The file that can be downloaded when product is purchased (enter a path relative to the %dir directory).', array('%dir' => $file_config->get('base_dir'))),
     '#maxlength' => 255,
   );
   $form['uc_file_description'] = array(
@@ -781,8 +785,9 @@ function uc_file_feature_form_submit($form, &$form_state) {
   );
 
   // Build product feature descriptions.
+  $file_config = \Drupal::config('uc_file.settings');
   $description = t('<strong>SKU:</strong> !sku<br />', array('!sku' => empty($file_product['model']) ? 'Any' : $file_product['model']));
-  if (is_dir(variable_get('uc_file_base_dir', NULL) . "/" . $file_product['filename'])) {
+  if (is_dir($file_config->get('base_dir') . "/" . $file_product['filename'])) {
     $description .= t('<strong>Directory:</strong> !dir<br />', array('!dir' => $file_product['filename']));
   }
   else {
@@ -826,17 +831,18 @@ function _uc_file_get_fpid($pfid) {
  * @ingroup forms
  */
 function uc_file_feature_settings($form, &$form_state) {
+  $file_config = \Drupal::config('uc_file.settings');
   $form['uc_file_base_dir'] = array(
     '#type' => 'textfield',
     '#title' => t('Files path'),
     '#description' => t('The absolute path (or relative to Drupal root) where files used for file downloads are located. For security reasons, it is recommended to choose a path outside the web root.'),
-    '#default_value' => variable_get('uc_file_base_dir', NULL),
+    '#default_value' => $file_config->get('base_dir'),
   );
   $form['uc_file_duplicate_warning'] = array(
     '#type' => 'checkbox',
     '#title' => t('Warn about purchasing duplicate files'),
     '#description' => t("If a customer attempts to purchase a product containing a file download, warn them and notify them that the download limits will be added onto their current limits."),
-    '#default_value' => variable_get('uc_file_duplicate_warning', TRUE),
+    '#default_value' => $file_config->get('duplicate_warning'),
   );
   $form['uc_file_download_limit'] = array(
     '#type' => 'details',
@@ -848,7 +854,7 @@ function uc_file_feature_settings($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Downloads'),
     '#description' => t("The number of times a file can be downloaded. Leave empty to set no limit."),
-    '#default_value' => variable_get('uc_file_download_limit_number', NULL),
+    '#default_value' => $file_config->get('download_limit_number'),
     '#maxlength' => 4,
     '#size' => 4,
   );
@@ -856,14 +862,14 @@ function uc_file_feature_settings($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('IP addresses'),
     '#description' => t("The number of unique IPs that a file can be downloaded from. Leave empty to set no limit."),
-    '#default_value' => variable_get('uc_file_download_limit_addresses', NULL),
+    '#default_value' => $file_config->get('download_limit_addresses'),
     '#maxlength' => 4,
     '#size' => 4,
   );
   $form['uc_file_download_limit']['uc_file_download_limit_duration_qty'] = array(
     '#type' => 'textfield',
     '#title' => t('Time'),
-    '#default_value' => variable_get('uc_file_download_limit_duration_qty', NULL),
+    '#default_value' => $file_config->get('download_limit_duration_qty'),
     '#size' => 4,
     '#maxlength' => 4,
     '#prefix' => '<div class="duration">',
@@ -882,7 +888,7 @@ function uc_file_feature_settings($form, &$form_state) {
       'month' => t('month(s)'),
       'year' => t('year(s)')
     ),
-    '#default_value' => variable_get('uc_file_download_limit_duration_granularity', 'never'),
+    '#default_value' => $file_config->get('download_limit_duration_granularity'),
     '#description' => t('How long after a product has been purchased until its file download expires.'),
     '#prefix' => '<div class="duration">',
     '#suffix' => '</div>',
@@ -936,12 +942,16 @@ function uc_file_feature_settings_submit($form, &$form_state) {
     uc_file_refresh();
   }
 
-  variable_set('uc_file_base_dir', $form_state['values']['uc_file_base_dir']);
-  variable_set('uc_file_duplicate_warning', $form_state['values']['uc_file_duplicate_warning']);
-  variable_set('uc_file_download_limit_number', $form_state['values']['uc_file_download_limit_number']);
-  variable_set('uc_file_download_limit_addresses', $form_state['values']['uc_file_download_limit_addresses']);
-  variable_set('uc_file_download_limit_duration_qty', $form_state['values']['uc_file_download_limit_duration_qty']);
-  variable_set('uc_file_download_limit_duration_granularity', $form_state['values']['uc_file_download_limit_duration_granularity']);
+  $file_config = \Drupal::config('uc_file.settings');
+
+  $file_config
+    ->set('base_dir', $form_state['values']['uc_file_base_dir'])
+    ->set('duplicate_warning', $form_state['values']['uc_file_duplicate_warning'])
+    ->set('download_limit_number', $form_state['values']['uc_file_download_limit_number'])
+    ->set('download_limit_addresses', $form_state['values']['uc_file_download_limit_addresses'])
+    ->set('download_limit_duration_qty', $form_state['values']['uc_file_download_limit_duration_qty'])
+    ->set('download_limit_duration_granularity', $form_state['values']['uc_file_download_limit_duration_granularity'])
+    ->save();
 }
 
 /**
@@ -1141,13 +1151,14 @@ function _uc_file_prune_files() {
  * Retrieves an updated list of available downloads.
  */
 function _uc_file_gather_files() {
+  $file_config = \Drupal::config('uc_file.settings');
   // Don't bother if the directory isn't set.
-  if (!($dir = variable_get('uc_file_base_dir', NULL))) {
+  if (!($dir = $file_config->get('base_dir'))) {
     return;
   }
 
   // Grab files and prepare the base dir for appending.
-  $files = file_scan_directory($dir, variable_get('uc_file_file_mask', '/.*/'));
+  $files = file_scan_directory($dir, $file_config->get('file_mask'));
   $dir = (substr($dir, -1) != '/' || substr($dir, -1) != '\\') ? $dir . '/' : $dir;
 
   foreach ($files as $file) {
@@ -1409,7 +1420,8 @@ function _uc_file_sort_fids($fids) {
  *   The qualified path.
  */
 function uc_file_qualify_file($filename) {
-  return variable_get('uc_file_base_dir', NULL) . '/' . $filename;
+  $file_config = \Drupal::config('uc_file.settings');
+  return $file_config->get('base_dir') . '/' . $filename;
 }
 
 /**
@@ -1680,7 +1692,8 @@ function _uc_file_user_get($user, $fid) {
  */
 function uc_file_get_download_limit($file) {
   if (!isset($file->download_limit) || $file->download_limit == UC_FILE_LIMIT_SENTINEL) {
-    return variable_get('uc_file_download_limit_number', NULL);
+    $file_config = \Drupal::config('uc_file.settings');
+    return $file_config->get('download_limit_number');
   }
   else {
     return $file->download_limit;
@@ -1701,7 +1714,8 @@ function uc_file_get_download_limit($file) {
  */
 function uc_file_get_address_limit($file) {
   if (!isset($file->address_limit) || $file->address_limit == UC_FILE_LIMIT_SENTINEL) {
-    return variable_get('uc_file_download_limit_addresses', NULL);
+    $file_config = \Drupal::config('uc_file.settings');
+    return $file_config->get('download_limit_addresses');
   }
   else {
     return $file->address_limit;
@@ -1723,10 +1737,11 @@ function uc_file_get_address_limit($file) {
 function uc_file_get_time_limit($file) {
 
   if (!isset($file->time_granularity) || $file->time_granularity == UC_FILE_LIMIT_SENTINEL) {
+    $file_config = \Drupal::config('uc_file.settings');
     return array(
       'time_polarity'    => '+',
-      'time_granularity' => variable_get('uc_file_download_limit_duration_granularity', 'never'),
-      'time_quantity'    => variable_get('uc_file_download_limit_duration_qty', NULL),
+      'time_granularity' => $file_config->get('download_limit_duration_granularity'),
+      'time_quantity'    => $file_config->get('download_limit_duration_qty'),
     );
   }
   else {
