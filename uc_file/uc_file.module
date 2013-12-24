@@ -74,7 +74,7 @@ function uc_file_menu() {
  */
 function uc_file_user_access($account) {
   $user = \Drupal::currentUser();
-  return $user->id() && ($user-hasPermission('view all downloads') || $user->id() == $account->id());
+  return $user->id() && ($user->hasPermission('view all downloads') || $user->id() == $account->id());
 }
 
 /**
