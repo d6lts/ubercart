@@ -8,6 +8,8 @@
  * preview of the line items and order total.
  */
 
+use Drupal\Component\Plugin\Exception\PluginException;
+
 function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NULL) {
   switch ($op) {
     case 'view':
@@ -79,10 +81,14 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
         '#suffix' => '</div>',
       );
 
-      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
-      if (function_exists($func) && $details = $func('cart-details', $order, $form, $form_state)) {
-        unset($contents['details']['#markup']);
-        $contents['details'] += $details;
+      try {
+        $details = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartDetails($order, $form, $form_state);
+        if ($details) {
+          unset($contents['details']['#markup']);
+          $contents['details'] += $details;
+        }
+      }
+      catch (PluginException $e) {
       }
 
       return array('description' => $description, 'contents' => $contents);
@@ -93,31 +99,19 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
         return FALSE;
       }
       $order->setPaymentMethodId($form_state['values']['panes']['payment']['payment_method']);
-      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
-      if (function_exists($func)) {
-        $result = $func('cart-process', $order, $form, $form_state);
-        if ($result === FALSE) {
-          return FALSE;
-        }
-      }
-      return TRUE;
+      $result = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartProcess($order, $form, $form_state);
+      return $result !== FALSE;
 
     case 'review':
       $line_items = uc_order_load_line_items_display($order);
       foreach ($line_items as $line_item) {
         $review[] = array('title' => $line_item['title'], 'data' => theme('uc_price', array('price' => $line_item['amount'])));
       }
-      $review_data = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
-      if (empty($review_data)) {
-        $review_data = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
-      }
-      $review[] = array('border' => 'top', 'title' => t('Paying by'), 'data' => $review_data);
-      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
-      if (function_exists($func)) {
-        $result = $func('cart-review', $order);
-        if (is_array($result)) {
-          $review = array_merge($review, $result);
-        }
+      $method = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+      $review[] = array('border' => 'top', 'title' => t('Paying by'), 'data' => $method->cartReviewTitle());
+      $result = $method->cartReview($order);
+      if (is_array($result)) {
+        $review = array_merge($review, $result);
       }
       return $review;
 

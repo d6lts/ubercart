@@ -11,6 +11,7 @@
  */
 
 use Drupal\uc_order\UcOrderInterface;
+use Drupal\Component\Plugin\Exception\PluginException;
 
 require_once dirname(__FILE__) . '/uc_payment_checkout_pane.inc';
 require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
@@ -81,10 +82,11 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, &$form_state) {
  */
 function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, &$form_state) {
   $order = $form_state['uc_order'];
+  $definition = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->getPluginDefinition();
 
-  if ($redirect = _uc_payment_method_data($order->getPaymentMethodId(), 'redirect')) {
+  if (isset($definition['redirect'])) {
     unset($form['actions']['submit']);
-    $suffix = drupal_get_form($redirect, $order);
+    $suffix = drupal_get_form($definition['redirect'], $order);
     $form['#suffix'] = drupal_render($suffix);
   }
 }
@@ -95,23 +97,17 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, &$form_state
 function uc_payment_uc_order($op, $order) {
   switch ($op) {
     case 'submit':
-      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
-      if (function_exists($func)) {
-        return $func('order-submit', $order);
-      }
-      break;
+      return Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSubmit($order);
 
     case 'load':
-      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
-      if (function_exists($func)) {
-        $func('order-load', $order);
+      if ($order->getPaymentMethodId()) {
+        Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderLoad($order);
       }
       break;
 
     case 'save':
-      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
-      if (function_exists($func)) {
-        $func('order-save', $order);
+      if ($order->getPaymentMethodId()) {
+        Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSave($order);
       }
       break;
 
@@ -130,10 +126,7 @@ function uc_payment_uc_order($op, $order) {
       // database.
       $methods = _uc_payment_method_list();
       foreach ($methods as $method) {
-        $func = $method['callback'];
-        if (function_exists($func)) {
-          $func('order-delete', $order);
-        }
+        Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderDelete($order);
       }
       break;
   }
@@ -278,7 +271,7 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
   if (empty($gateways)) {
     // Display an error message if messages weren't silenced.
     if (!$default) {
-      drupal_set_message(t('You are not able to process %type payments.', array('%type' => _uc_payment_method_data($method, 'name'))));
+      drupal_set_message(t('You are not able to process %type payments.', array('%type' => $method)));
     }
 
     return FALSE;
@@ -377,13 +370,13 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
   $order = uc_order_load($order_id, TRUE);
   $account = user_load($uid);
 
-  $method_name = _uc_payment_method_data($method, 'review');
-  if (empty($method_name)) {
-    $method_name = _uc_payment_method_data($method, 'name');
+  try {
+    $method_name = Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->cartReviewTitle();
   }
-  if (is_null($method_name)) {
+  catch (PluginException $e) {
     $method_name = t('Other');
   }
+
   if (is_array($data)) {
     $data = serialize($data);
   }
@@ -519,14 +512,6 @@ function _uc_payment_method_list() {
   uasort($methods, 'uc_weight_sort');
 
   return $methods;
-}
-
-/**
- * Returns data from a payment method by method ID and the array key.
- */
-function _uc_payment_method_data($method_id, $key) {
-  $methods = _uc_payment_method_list();
-  return ($method_id && isset($methods[$method_id][$key])) ? $methods[$method_id][$key] : NULL;
 }
 
 /**

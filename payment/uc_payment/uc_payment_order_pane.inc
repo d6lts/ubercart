@@ -30,40 +30,30 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
         );
       }
 
-      $method_name = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
-      if (empty($method_name)) {
-        $method_name = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
-      }
+      $method = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
       $build['method'] = array(
-        '#markup' => t('Method: @payment_method', array('@payment_method' => $method_name)),
+        '#markup' => t('Method: @payment_method', array('@payment_method' => $method->cartReviewTitle())),
         '#prefix' => '<br />',
       );
-      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
-      if (function_exists($func)) {
-        $method_output = $func('order-view', $order);
-        if (!empty($method_output)) {
-          $build['output'] = $method_output + array(
-            '#prefix' => '<br />',
-          );
-        }
+
+      $method_output = $method->orderView($order);
+      if (!empty($method_output)) {
+        $build['output'] = $method_output + array(
+          '#prefix' => '<br />',
+        );
       }
 
       return $build;
 
     case 'customer':
-      $method_name = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
-      if (empty($method_name)) {
-        $method_name = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
-      }
-      $build['method'] = array('#markup' => t('Method: @payment_method', array('@payment_method' => $method_name)));
-      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
-      if (function_exists($func)) {
-        $method_output = $func('customer-view', $order);
-        if (!empty($method_output)) {
-          $build['output'] = $method_output + array(
-            '#prefix' => '<br />',
-          );
-        }
+      $method = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+      $build['method'] = array('#markup' => t('Method: @payment_method', array('@payment_method' => $method->cartReviewTitle())));
+
+      $method_output = $method->customerView($order);
+      if (!empty($method_output)) {
+        $build['output'] = $method_output + array(
+          '#prefix' => '<br />',
+        );
       }
 
       return $build;
@@ -94,8 +84,8 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
       );
 
       $method = isset($form_state['values']['payment_method']) ? $form_state['values']['payment_method'] : $order->getPaymentMethodId();
-      $func = _uc_payment_method_data($method, 'callback');
-      if (function_exists($func) && $details = $func('order-details', $order)) {
+      $details = Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderEditDetails($order);
+      if ($details) {
         if (is_array($details)) {
           $form['payment']['payment_details'] += $details;
         }
@@ -111,14 +101,15 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
     case 'edit-process':
       $changes['payment_method'] = $form_state['values']['payment_method'];
       $changes['payment_details'] = isset($form_state['values']['payment_details']) ? $form_state['values']['payment_details'] : array();
-      $func = _uc_payment_method_data($form_state['values']['payment_method'], 'callback');
-      if (function_exists($func) && ($return = $func('edit-process', $order, $form, $form_state)) != NULL && is_array($return)) {
+
+      $order->setPaymentMethodId($changes['payment_method']);
+      $method = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+      $return = $method->orderEditProcess($order, $form, $form_state);
+      if (is_array($return)) {
         $changes['payment_details'] = array_merge($changes['payment_details'], $return);
       }
+      $order->payment_details = $changes['payment_details'];
 
-      if (!isset($order->payment_details)) {
-        $order->payment_details = array();
-      }
       return $changes;
   }
 }

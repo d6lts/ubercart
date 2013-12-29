@@ -24,7 +24,8 @@ class Method extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
-    return $this->sanitizeValue(_uc_payment_method_data($value, 'name'));
+    $methods = _uc_payment_method_list();
+    return $this->sanitizeValue($methods[$value]['name']);
   }
 
 }

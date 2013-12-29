@@ -5,6 +5,8 @@
  * Token hooks for the uc_payment module.
  */
 
+use Drupal\Component\Plugin\Exception\PluginException;
+
 /**
  * Implements hook_token_info().
  */
@@ -34,9 +36,11 @@ function uc_payment_tokens($type, $tokens, $data = array(), $options = array()) 
 
     if (isset($tokens['payment-method'])) {
       $original = $tokens['payment-method'];
-      $values[$original] = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
-      if (empty($values[$original])) {
-        $values[$original] = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
+      try {
+        $values[$original] = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
+      }
+      catch (PluginException $e) {
+        $values[$original] = t('Other');
       }
     }
 

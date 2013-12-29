@@ -265,11 +265,7 @@ function template_preprocess_uc_packing_slip(&$variables) {
   $variables['shipping_phone'] = check_plain($order->getAddress('delivery')->phone);
 
   if (module_exists('uc_payment')) {
-    $payment_method = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
-    if (empty($payment_method)) {
-      $payment_method = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
-    }
-    $variables['payment_method'] = $payment_method;
+    $variables['payment_method'] = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
   }
   else {
     $variables['payment_method'] = '';

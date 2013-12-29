@@ -1,4 +1,4 @@
 services:
   plugin.manager.uc_payment.method:
     class: Drupal\uc_payment\Plugin\PaymentMethodManager
-    arguments: ['@container.namespaces', '@module_handler']
+    parent: default_plugin_manager
