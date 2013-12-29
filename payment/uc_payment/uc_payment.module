@@ -82,7 +82,7 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, &$form_state) {
 function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, &$form_state) {
   $order = $form_state['uc_order'];
 
-  if ($redirect = _uc_payment_method_data($order->getPaymentMethod(), 'redirect')) {
+  if ($redirect = _uc_payment_method_data($order->getPaymentMethodId(), 'redirect')) {
     unset($form['actions']['submit']);
     $suffix = drupal_get_form($redirect, $order);
     $form['#suffix'] = drupal_render($suffix);
@@ -95,21 +95,21 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, &$form_state
 function uc_payment_uc_order($op, $order) {
   switch ($op) {
     case 'submit':
-      $func = _uc_payment_method_data($order->getPaymentMethod(), 'callback');
+      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
       if (function_exists($func)) {
         return $func('order-submit', $order);
       }
       break;
 
     case 'load':
-      $func = _uc_payment_method_data($order->getPaymentMethod(), 'callback');
+      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
       if (function_exists($func)) {
         $func('order-load', $order);
       }
       break;
 
     case 'save':
-      $func = _uc_payment_method_data($order->getPaymentMethod(), 'callback');
+      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
       if (function_exists($func)) {
         $func('order-save', $order);
       }

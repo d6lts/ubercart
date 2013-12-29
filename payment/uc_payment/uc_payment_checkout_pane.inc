@@ -52,8 +52,8 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
         $description = t('Select a payment method from the following options.');
       }
 
-      if (!$order->getPaymentMethod() || !isset($options[$order->getPaymentMethod()])) {
-        $order->setPaymentMethod(key($options));
+      if (!$order->getPaymentMethodId() || !isset($options[$order->getPaymentMethodId()])) {
+        $order->setPaymentMethodId(key($options));
       }
 
       $contents['payment_method'] = array(
@@ -61,7 +61,7 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
         '#title' => t('Payment method'),
         '#title_display' => 'invisible',
         '#options' => $options,
-        '#default_value' => $order->getPaymentMethod(),
+        '#default_value' => $order->getPaymentMethodId(),
         '#disabled' => count($options) == 1,
         '#required' => TRUE,
         '#ajax' => array(
@@ -74,12 +74,12 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
       );
 
       $contents['details'] = array(
-        '#prefix' => '<div id="payment-details" class="clearfix payment-details-' . $order->getPaymentMethod() . '">',
+        '#prefix' => '<div id="payment-details" class="clearfix payment-details-' . $order->getPaymentMethodId() . '">',
         '#markup' => t('Continue with checkout to complete payment.'),
         '#suffix' => '</div>',
       );
 
-      $func = _uc_payment_method_data($order->getPaymentMethod(), 'callback');
+      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
       if (function_exists($func) && $details = $func('cart-details', $order, $form, $form_state)) {
         unset($contents['details']['#markup']);
         $contents['details'] += $details;
@@ -92,8 +92,8 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
         form_set_error('panes][payment][payment_method', $form_state, t('You cannot check out without selecting a payment method.'));
         return FALSE;
       }
-      $order->setPaymentMethod($form_state['values']['panes']['payment']['payment_method']);
-      $func = _uc_payment_method_data($order->getPaymentMethod(), 'callback');
+      $order->setPaymentMethodId($form_state['values']['panes']['payment']['payment_method']);
+      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
       if (function_exists($func)) {
         $result = $func('cart-process', $order, $form, $form_state);
         if ($result === FALSE) {
@@ -107,12 +107,12 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
       foreach ($line_items as $line_item) {
         $review[] = array('title' => $line_item['title'], 'data' => theme('uc_price', array('price' => $line_item['amount'])));
       }
-      $review_data = _uc_payment_method_data($order->getPaymentMethod(), 'review');
+      $review_data = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
       if (empty($review_data)) {
-        $review_data = _uc_payment_method_data($order->getPaymentMethod(), 'name');
+        $review_data = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
       }
       $review[] = array('border' => 'top', 'title' => t('Paying by'), 'data' => $review_data);
-      $func = _uc_payment_method_data($order->getPaymentMethod(), 'callback');
+      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
       if (function_exists($func)) {
         $result = $func('cart-review', $order);
         if (is_array($result)) {

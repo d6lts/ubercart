@@ -134,7 +134,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    * @return string
    *   The payment method.
    */
-  public function getPaymentMethod();
+  public function getPaymentMethodId();
 
   /**
    * Sets the order payment method.
@@ -145,7 +145,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    * @return \Drupal\uc_order\UcOrderInterface
    *   The called owner entity.
    */
-  public function setPaymentMethod($payment_method);
+  public function setPaymentMethodId($payment_method);
 
   /**
    * Returns an address attached to the order.

@@ -465,7 +465,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     // Transaction information.
     'x_version' => '3.1',
     'x_type' => _uc_authorizenet_txn_map($data['txn_type']),
-    // 'x_method' => $order->getPaymentMethod() == 'credit' ? 'CC' : 'ECHECK',
+    // 'x_method' => $order->getPaymentMethodId() == 'credit' ? 'CC' : 'ECHECK',
     'x_method' => 'CC',
     // 'x_recurring_billing' => 'FALSE',
     'x_amount' => uc_currency_format($amount, FALSE, FALSE, '.'),
@@ -801,7 +801,7 @@ function uc_authorizenet_arb_create($order, $fee) {
   }
 
   // Add the payment information to the data array based on the payment method.
-  if ($order->getPaymentMethod() == 'credit') {
+  if ($order->getPaymentMethodId() == 'credit') {
     if ($order->payment_details['cc_exp_month'] < 10) {
       $order->payment_details['cc_exp_month'] = '0' . $order->payment_details['cc_exp_month'];
     }

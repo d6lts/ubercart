@@ -265,9 +265,9 @@ function template_preprocess_uc_packing_slip(&$variables) {
   $variables['shipping_phone'] = check_plain($order->getAddress('delivery')->phone);
 
   if (module_exists('uc_payment')) {
-    $payment_method = _uc_payment_method_data($order->getPaymentMethod(), 'review');
+    $payment_method = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
     if (empty($payment_method)) {
-      $payment_method = _uc_payment_method_data($order->getPaymentMethod(), 'name');
+      $payment_method = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
     }
     $variables['payment_method'] = $payment_method;
   }

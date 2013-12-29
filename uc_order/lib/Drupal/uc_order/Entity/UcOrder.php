@@ -289,14 +289,14 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPaymentMethod() {
+  public function getPaymentMethodId() {
     return $this->get('payment_method')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setPaymentMethod($payment_method) {
+  public function setPaymentMethodId($payment_method) {
     $this->set('payment_method', $payment_method);
     return $this;
   }

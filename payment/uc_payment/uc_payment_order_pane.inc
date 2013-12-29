@@ -30,15 +30,15 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
         );
       }
 
-      $method_name = _uc_payment_method_data($order->getPaymentMethod(), 'review');
+      $method_name = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
       if (empty($method_name)) {
-        $method_name = _uc_payment_method_data($order->getPaymentMethod(), 'name');
+        $method_name = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
       }
       $build['method'] = array(
         '#markup' => t('Method: @payment_method', array('@payment_method' => $method_name)),
         '#prefix' => '<br />',
       );
-      $func = _uc_payment_method_data($order->getPaymentMethod(), 'callback');
+      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
       if (function_exists($func)) {
         $method_output = $func('order-view', $order);
         if (!empty($method_output)) {
@@ -51,12 +51,12 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
       return $build;
 
     case 'customer':
-      $method_name = _uc_payment_method_data($order->getPaymentMethod(), 'review');
+      $method_name = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
       if (empty($method_name)) {
-        $method_name = _uc_payment_method_data($order->getPaymentMethod(), 'name');
+        $method_name = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
       }
       $build['method'] = array('#markup' => t('Method: @payment_method', array('@payment_method' => $method_name)));
-      $func = _uc_payment_method_data($order->getPaymentMethod(), 'callback');
+      $func = _uc_payment_method_data($order->getPaymentMethodId(), 'callback');
       if (function_exists($func)) {
         $method_output = $func('customer-view', $order);
         if (!empty($method_output)) {
@@ -77,7 +77,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
       $form['payment']['payment_method'] = array(
         '#type' => 'select',
         '#title' => t('Payment method'),
-        '#default_value' => $order->getPaymentMethod(),
+        '#default_value' => $order->getPaymentMethodId(),
         '#options' => !empty($options) ? $options : array(t('None available')),
         '#disabled' => empty($options),
         '#ajax' => array(
@@ -93,7 +93,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
         '#suffix' => '</div>',
       );
 
-      $method = isset($form_state['values']['payment_method']) ? $form_state['values']['payment_method'] : $order->getPaymentMethod();
+      $method = isset($form_state['values']['payment_method']) ? $form_state['values']['payment_method'] : $order->getPaymentMethodId();
       $func = _uc_payment_method_data($method, 'callback');
       if (function_exists($func) && $details = $func('order-details', $order)) {
         if (is_array($details)) {

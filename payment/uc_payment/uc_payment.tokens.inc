@@ -34,9 +34,9 @@ function uc_payment_tokens($type, $tokens, $data = array(), $options = array()) 
 
     if (isset($tokens['payment-method'])) {
       $original = $tokens['payment-method'];
-      $values[$original] = _uc_payment_method_data($order->getPaymentMethod(), 'review');
+      $values[$original] = _uc_payment_method_data($order->getPaymentMethodId(), 'review');
       if (empty($values[$original])) {
-        $values[$original] = _uc_payment_method_data($order->getPaymentMethod(), 'name');
+        $values[$original] = _uc_payment_method_data($order->getPaymentMethodId(), 'name');
       }
     }
 

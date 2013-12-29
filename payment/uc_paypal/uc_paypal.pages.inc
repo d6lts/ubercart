@@ -88,7 +88,7 @@ function uc_paypal_ipn() {
 
     $duplicate = (bool) db_query_range('SELECT 1 FROM {uc_payment_paypal_ipn} WHERE txn_id = :id AND status <> :status', 0, 1, array(':id' => $txn_id, ':status' => 'Pending'))->fetchField();
     if ($duplicate) {
-      if ($order->getPaymentMethod() != 'credit') {
+      if ($order->getPaymentMethodId() != 'credit') {
         watchdog('uc_paypal', 'IPN transaction ID has been processed before.', array(), WATCHDOG_NOTICE);
       }
       return;
@@ -243,7 +243,7 @@ function uc_paypal_ec_review() {
     if (!$order->getEmail()) {
       $order->setEmail($nvp_response['EMAIL']);
     }
-    $order->setPaymentMethod('paypal_ec');
+    $order->setPaymentMethodId('paypal_ec');
 
     $order->save();
 
@@ -423,7 +423,7 @@ function uc_paypal_complete($order) {
   }
 
   // Ensure the payment method is PayPal WPS.
-  if ($order->getPaymentMethod() != 'paypal_wps') {
+  if ($order->getPaymentMethodId() != 'paypal_wps') {
     drupal_goto('cart');
   }
 
