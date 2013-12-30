@@ -124,4 +124,40 @@ class PaymentPackTest extends UbercartTestBase {
     $this->assertText('Method: Cash on delivery', 'COD payment method displayed.');
   }
 
+  public function testOther() {
+    $this->drupalGet('admin/store/settings/payment');
+    $this->assertText('Other', 'Other payment method found.');
+    $this->assertFieldByName('methods[other][status]', 0, 'Other payment method is disabled by default.');
+    $edit = array(
+      'methods[other][status]' => 1,
+      'methods[other][weight]' => -10,
+    );
+    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+
+    $this->drupalGet('cart/checkout');
+    $this->assertFieldByName('panes[payment][payment_method]', 'other', 'Other payment method is selected at checkout.');
+
+    $this->drupalPostForm(NULL, array(), 'Review order');
+    $this->assertText('Other', 'Other payment method found on review page.');
+
+    $this->drupalPostForm(NULL, array(), 'Submit order');
+
+    $order = entity_load('uc_order', 1);
+    $this->assertEqual($order->getPaymentMethodId(), 'other', 'Order has other payment method.');
+
+    $this->drupalGet('admin/store/orders/' . $order->id() . '/edit');
+    $this->assertFieldByName('payment_method', 'other', 'Other payment method is selected in the order edit form.');
+    $edit = array(
+      'payment_details[description]' => $this->randomString(),
+    );
+    $this->drupalPostForm(NULL, array(), 'Save changes');
+    // @todo: Fix storage of payment details.
+
+    $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
+    $this->assertText('Method: Other', 'Other payment method displayed.');
+
+    $this->drupalGet('admin/store/orders/' . $order->id());
+    $this->assertText('Method: Other', 'Other payment method displayed.');
+  }
+
 }
