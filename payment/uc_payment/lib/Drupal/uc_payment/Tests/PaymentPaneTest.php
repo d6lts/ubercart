@@ -99,6 +99,7 @@ class PaymentPaneTest extends UbercartTestBase {
     $this->drupalGet('cart/checkout');
     $this->assertNoText('Check or money order');
     $this->assertText('No payment required');
+    $this->assertText('Continue with checkout to complete your order.');
     $this->assertText('Subtotal: $0.00');
 
     // Check that this is the only available payment method.
