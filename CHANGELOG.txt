@@ -34,6 +34,11 @@ Ubercart 4.x
     * uc_order_status_data() removed
     * uc_order_state_list() converted to uc_order_state_options_list()
     * Order state scopes removed, replaced with order status weights.
+* Payment methods are plugins
+    * hook_uc_payment_method() is still supported but can be converted to PaymentMethodPluginInterface plugins
+    * PaymentMethodManager manages the available plugins
+    * _uc_payment_method_list() => uc_payment_method_list()
+    * _uc_payment_method_data() removed
 
 
 Ubercart 3.0-rc4, 2012-1-23
