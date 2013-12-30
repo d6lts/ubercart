@@ -20,6 +20,7 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  *   description = @Translation("Allow customers with free orders to check out without paying."),
  *   checkout = TRUE,
  *   no_gateway = TRUE,
+ *   configurable = FALSE,
  *   weight = 0,
  * )
  */

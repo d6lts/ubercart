@@ -106,10 +106,18 @@ class PaymentMethodsForm extends ConfigFormBase {
       }
 
       $links = array();
-      $null = NULL;
-      // @todo Replace this with a "configurable" plugin annotation key.
-      $method_settings = $this->paymentMethodManager->createInstance($id)->settingsForm(array(), $form_state);
-      if (is_array($method_settings)) {
+
+      if (!isset($method['configurable'])) {
+        // Determine whether a legacy plugin has a valid settings form.
+        $method_settings = $this->paymentMethodManager->createInstance($id)->settingsForm(array(), $form_state);
+        if (is_array($method_settings)) {
+          $links['settings'] = array(
+            'title' => t('Settings'),
+            'href' => 'admin/store/settings/payment/method/' . $id,
+          );
+        }
+      }
+      elseif ($method['configurable']) {
         $links['settings'] = array(
           'title' => t('Settings'),
           'href' => 'admin/store/settings/payment/method/' . $id,
