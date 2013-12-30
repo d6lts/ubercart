@@ -4,3 +4,7 @@ uc_payment_pack.check.receive:
     _form: '\Drupal\uc_payment_pack\Form\ReceiveCheckForm'
   requirements:
     _permission: 'view all orders'
+  options:
+    parameters:
+      order:
+        type: 'entity:uc_order'

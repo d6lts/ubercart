@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment_pack\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\uc_order\UcOrderInterface;
 
 /**
  * Form for recording received checks.
@@ -26,7 +27,7 @@ class ReceiveCheckForm extends FormBase {
    *
    * Receives a check for an order and put in a clear date.
    */
-  public function buildForm(array $form, array &$form_state, $order) {
+  public function buildForm(array $form, array &$form_state, UcOrderInterface $order = NULL) {
     $balance = uc_payment_balance($order);
     $form['balance'] = array(
       '#prefix' => '<strong>' . t('Order balance:') . '</strong> ',
@@ -62,6 +63,8 @@ class ReceiveCheckForm extends FormBase {
       '#type' => 'submit',
       '#value' => t('Receive check'),
     );
+
+    return $form;
   }
 
   /**
