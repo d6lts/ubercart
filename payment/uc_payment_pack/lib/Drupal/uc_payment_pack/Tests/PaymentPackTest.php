@@ -89,4 +89,39 @@ class PaymentPackTest extends UbercartTestBase {
     $this->assertText($formatted, 'Check clear date found.');
   }
 
+  public function testCashOnDelivery() {
+    $this->drupalGet('admin/store/settings/payment');
+    $this->assertText('Cash on delivery', 'COD payment method found.');
+    $this->assertFieldByName('methods[cod][status]', 0, 'COD payment method is disabled by default.');
+    $edit = array(
+      'methods[cod][status]' => 1,
+      'methods[cod][weight]' => -10,
+    );
+    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+
+    $this->drupalGet('admin/store/settings/payment/method/cod');
+    $this->assertTitle('Cash on delivery settings | Drupal');
+    // @todo: Fix and test the settings page
+
+    $this->drupalGet('cart/checkout');
+    $this->assertFieldByName('panes[payment][payment_method]', 'cod', 'COD payment method is selected at checkout.');
+    // @todo: Test the settings
+    // $this->assertText('Full payment is expected upon delivery or prior to pick-up.');
+
+    $this->drupalPostForm(NULL, array(), 'Review order');
+    $this->assertText('Cash on delivery', 'COD payment method found on review page.');
+    // @todo: Test the settings
+
+    $this->drupalPostForm(NULL, array(), 'Submit order');
+
+    $order = entity_load('uc_order', 1);
+    $this->assertEqual($order->getPaymentMethodId(), 'cod', 'Order has COD payment method.');
+
+    $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
+    $this->assertText('Method: Cash on delivery', 'COD payment method displayed.');
+
+    $this->drupalGet('admin/store/orders/' . $order->id());
+    $this->assertText('Method: Cash on delivery', 'COD payment method displayed.');
+  }
+
 }
