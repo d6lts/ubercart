@@ -25,9 +25,8 @@ class Method extends InOperator {
     if (!isset($this->value_options)) {
       $this->value_options = array();
 
-      $methods = _uc_payment_method_list();
-      foreach ($methods as $method) {
-        $this->value_options[$method['id']] = $method['name'];
+      foreach (uc_payment_method_list() as $id => $method) {
+        $this->value_options[$id] = $method['name'];
       }
     }
   }

@@ -66,8 +66,7 @@ function uc_payment_theme() {
  * Adds express buttons for enabled payment modules directly to the cart page.
  */
 function uc_payment_form_uc_cart_view_form_alter(&$form, &$form_state) {
-  $methods = _uc_payment_method_list();
-  foreach ($methods as $id => $method) {
+  foreach (uc_payment_method_list() as $id => $method) {
     if ($method['checkout'] && isset($method['express']) && $express = $method['express'](array(), $form_state)) {
       $form['actions']['checkout'][$id] = $express;
     }
@@ -124,9 +123,8 @@ function uc_payment_uc_order($op, $order) {
 
       // Call each payment method to delete method-specific data from the
       // database.
-      $methods = _uc_payment_method_list();
-      foreach ($methods as $method) {
-        Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderDelete($order);
+      foreach (uc_payment_method_list() as $id => $method) {
+        Drupal::service('plugin.manager.uc_payment.method')->createInstance($id)->orderDelete($order);
       }
       break;
   }
@@ -463,13 +461,14 @@ function uc_payment_load_payments($order_id) {
 }
 
 /**
- * Builds a list of payment methods defined in the enabled modules.
+ * Returns a list of available payment methods plugins.
+ *
+ * @return array
+ *   An array of payment method definitions, keyed by method ID.
  */
-function _uc_payment_method_list() {
+function uc_payment_method_list() {
   $methods = Drupal::service('plugin.manager.uc_payment.method')->getDefinitions();
-
   uasort($methods, 'uc_weight_sort');
-
   return $methods;
 }
 

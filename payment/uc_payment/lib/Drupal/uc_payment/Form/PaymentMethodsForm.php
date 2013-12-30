@@ -63,8 +63,6 @@ class PaymentMethodsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $methods = _uc_payment_method_list();
-
     $form['methods'] = array(
       '#type' => 'table',
       '#header' => array(t('Payment method'), t('List position'), t('Operations')),
@@ -77,7 +75,7 @@ class PaymentMethodsForm extends ConfigFormBase {
       ),
     );
 
-    foreach ($methods as $id => $method) {
+    foreach (uc_payment_method_list() as $id => $method) {
       $form['methods'][$id]['#attributes']['class'][] = 'draggable';
       $form['methods'][$id]['status'] = array(
         '#type' => 'checkbox',
@@ -142,11 +140,9 @@ class PaymentMethodsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $methods = _uc_payment_method_list();
-
-    foreach ($methods as $id => $method) {
-      variable_set('uc_payment_method_' . $id . '_checkout', $form_state['values']['methods'][$id]['status']);
-      variable_set('uc_payment_method_' . $id . '_weight', $form_state['values']['methods'][$id]['weight']);
+    foreach ($form_state['values']['methods'] as $id => $method) {
+      variable_set('uc_payment_method_' . $id . '_checkout', $method['status']);
+      variable_set('uc_payment_method_' . $id . '_weight', $method['weight']);
     }
 
     $this->paymentMethodManager->clearCachedDefinitions();

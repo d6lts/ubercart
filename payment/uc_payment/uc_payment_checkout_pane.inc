@@ -32,7 +32,7 @@ function uc_checkout_pane_payment($op, &$order, $form = NULL, &$form_state = NUL
       unset($form_state['input']['panes']['payment']['payment_method']);
 
       $options = array();
-      foreach (_uc_payment_method_list() as $id => $method) {
+      foreach (uc_payment_method_list() as $id => $method) {
         // $set = rules_config_load('uc_payment_method_' . $method['id']);
         // if ($set && !$set->execute($order)) {
         //   continue;

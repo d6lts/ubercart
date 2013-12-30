@@ -59,17 +59,11 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
       return $build;
 
     case 'edit-form':
-      $methods = _uc_payment_method_list();
-      $options = array();
-      foreach ($methods as $id => $method) {
-        $options[$id] = $method['name'];
-      }
       $form['payment']['payment_method'] = array(
         '#type' => 'select',
         '#title' => t('Payment method'),
         '#default_value' => $order->getPaymentMethodId(),
-        '#options' => !empty($options) ? $options : array(t('None available')),
-        '#disabled' => empty($options),
+        '#options' => \Drupal::service('plugin.manager.uc_payment.method')->listOptions(),
         '#ajax' => array(
           'callback' => 'uc_payment_order_pane_ajax_callback',
           'progress' => array('type' => 'throbber'),

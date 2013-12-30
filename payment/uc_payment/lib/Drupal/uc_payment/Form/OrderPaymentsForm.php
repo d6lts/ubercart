@@ -107,15 +107,11 @@ class OrderPaymentsForm extends FormBase {
       $form['payments']['new']['user'] = array(
         '#markup' => '-',
       );
-      $methods = _uc_payment_method_list();
-      foreach ($methods as $id => $method) {
-        $options[$id] = $method['name'];
-      }
       $form['payments']['new']['method'] = array(
         '#type' => 'select',
         '#title' => t('Method'),
         '#title_display' => 'invisible',
-        '#options' => $options,
+        '#options' => $this->container()->get('plugin.manager.uc_payment.method')->listOptions(),
       );
       $form['payments']['new']['amount'] = array(
         '#type' => 'textfield',

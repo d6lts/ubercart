@@ -65,4 +65,18 @@ class PaymentMethodManager extends DefaultPluginManager {
     return $this->createInstance($order->getPaymentMethodId());
   }
 
+  /**
+   * Populates a key-value pair of available payment methods.
+   *
+   * @return array
+   *   An array of payment method labels, keyed by ID.
+   */
+  public function listOptions() {
+    $options = array();
+    foreach ($this->getDefinitions() as $key => $definition) {
+      $options[$key] = $definition['name'];
+    }
+    return $options;
+  }
+
 }
