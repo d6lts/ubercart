@@ -474,10 +474,6 @@ function uc_product_kit_module_implements_alter(&$implementations, $hook) {
  */
 function uc_product_kit_theme() {
   return array(
-    'uc_product_kit_items_form' => array(
-      'render element' => 'form',
-      'file' => 'uc_product_kit.theme.inc',
-    ),
     'uc_product_kit_add_to_cart' => array(
       'variables' => array('form' => NULL, 'view_mode' => 'full'),
       'file' => 'uc_product_kit.theme.inc',
@@ -555,17 +551,25 @@ function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
   );
   $total = 0;
   $base_total = 0;
-  $form['base']['items'] = array(
-    '#tree' => TRUE,
-    '#theme' => 'uc_product_kit_items_form',
-    '#weight' => 1,
-    '#description' => t('Enter a positive or negative discount to raise or lower the item price by that amount. The change is applied to each item in the kit.'),
-  );
   if (!empty($node->products)) {
+    $form['base']['items'] = array(
+      '#type' => 'table',
+      '#header' => array(t('Product'), t('Quantity'), t('List position'), t('Discount')),
+      '#tabledrag' => array(
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'uc-product-kit-item-ordering',
+        ),
+      ),
+      '#weight' => 1,
+    );
+    $form['base']['help'] = array(
+      '#markup' => '<p>' . t('Enter a positive or negative discount to raise or lower the item price by that amount. The change is applied to each item in the kit.') . '</p>',
+      '#weight' => 2,
+    );
     foreach ($node->products as $i => $product) {
-      $form['base']['items'][$i] = array(
-        '#type' => 'details',
-      );
+      $form['base']['items'][$i]['#attributes']['class'][] = 'draggable';
       $form['base']['items'][$i]['link'] = array(
         '#type' => 'item',
         '#markup' => l($product->label(), 'node/' . $i),
