@@ -107,7 +107,8 @@ class PaymentMethodsForm extends ConfigFormBase {
 
       $links = array();
       $null = NULL;
-      $method_settings = $method['callback']('settings', $null, array(), $form_state);
+      // @todo Replace this with a "configurable" plugin annotation key.
+      $method_settings = $this->paymentMethodManager->createInstance($id)->settingsForm(array(), $form_state);
       if (is_array($method_settings)) {
         $links['settings'] = array(
           'title' => t('Settings'),
