@@ -1,7 +1,7 @@
 name: 2Checkout
 type: module
-description: Processes payments using 2Checkout.com.
-dependencies:
-  - uc_payment
+description: 'Processes payments using 2Checkout.com.'
 package: Ubercart - payment
 core: 8.x
+dependencies:
+  - uc_payment

@@ -1,8 +1,8 @@
 name: Payment
 type: module
-description: Enables payments to be taken at checkout.
-dependencies:
-  - uc_order
+description: 'Enables payments to be taken at checkout.'
 package: Ubercart - core (optional)
 core: 8.x
+dependencies:
+  - uc_order
 configure: uc_payment.methods

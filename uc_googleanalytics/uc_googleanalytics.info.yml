@@ -1,8 +1,8 @@
-name: Google Analytics for Ubercart
+name: 'Google Analytics for Ubercart'
 type: module
-description: Adds e-commerce tracking to the Google Analytics module.
+description: 'Adds e-commerce tracking to the Google Analytics module.'
+package: Ubercart - extra
+core: 8.x
 dependencies:
   - googleanalytics
   - uc_cart
-package: Ubercart - extra
-core: 8.x

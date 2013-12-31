@@ -1,8 +1,8 @@
-name: Tax Report
+name: 'Tax Report'
 type: module
-description: Provides a report of sales tax your customers paid.
+description: 'Provides a report of sales tax your customers paid.'
+package: Ubercart - core (optional)
+core: 8.x
 dependencies:
   - uc_reports
   - uc_taxes
-package: Ubercart - core (optional)
-core: 8.x

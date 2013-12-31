@@ -1,7 +1,7 @@
-name: Test Gateway
+name: 'Test Gateway'
 type: module
-description: Adds a credit card gateway that simulates a successful payment for testing checkout.
-dependencies:
-  - uc_credit
+description: 'Adds a credit card gateway that simulates a successful payment for testing checkout.'
 package: Ubercart - payment
 core: 8.x
+dependencies:
+  - uc_credit

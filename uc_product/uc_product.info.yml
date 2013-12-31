@@ -1,9 +1,9 @@
 name: Product
 type: module
-description: REQUIRED. Provides content types to represent items in an online store.
+description: 'REQUIRED. Provides content types to represent items in an online store.'
+package: Ubercart - core
+core: 8.x
 dependencies:
   - image
   - uc_store
-package: Ubercart - core
-core: 8.x
 configure: uc_product.settings

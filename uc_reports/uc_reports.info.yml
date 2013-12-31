@@ -1,9 +1,9 @@
 name: Reports
 type: module
-description: Provides reports about your store's sales, customers, and products.
+description: 'Provides reports about your store's sales, customers, and products.'
+package: Ubercart - core (optional)
+core: 8.x
 dependencies:
   - uc_order
   - uc_product
-package: Ubercart - core (optional)
-core: 8.x
 configure: admin/store/settings/store

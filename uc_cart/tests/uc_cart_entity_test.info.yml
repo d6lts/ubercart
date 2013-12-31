@@ -1,5 +1,7 @@
-name: Cart item entity test module
+name: 'Cart item entity test module'
 type: module
+description: 'Helper module to test cart item entity.'
+package: Ubercart - core
 core: 8.x
 dependencies:
   - uc_cart

@@ -1,7 +1,7 @@
 name: CyberSource
 type: module
-description: Processes payments using the CyberSource Silent Order POST and Hosted Order Page services.
-dependencies:
-  - uc_payment
+description: 'Processes payments using the CyberSource Silent Order POST and Hosted Order Page services.'
 package: Ubercart - payment
 core: 8.x
+dependencies:
+  - uc_payment

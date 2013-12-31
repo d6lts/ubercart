@@ -1,8 +1,8 @@
-name: U.S. Postal Service
+name: 'U.S. Postal Service'
 type: module
-description: Integrates USPS Rate Calculator and Mail Service Standards Web Tools.
-dependencies:
-  - uc_quote
+description: 'Integrates USPS Rate Calculator and Mail Service Standards Web Tools.'
 package: Ubercart - shipping
 core: 8.x
+dependencies:
+  - uc_quote
 configure: uc_usps.settings

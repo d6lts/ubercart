@@ -1,6 +1,6 @@
 name: Store
 type: module
-description: REQUIRED. Handles store settings and management of your Ubercart site.
+description: 'REQUIRED. Handles store settings and management of your Ubercart site.'
 package: Ubercart - core
 core: 8.x
 configure: uc_store.admin
