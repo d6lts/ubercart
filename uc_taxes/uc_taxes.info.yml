@@ -1,6 +1,6 @@
 name: Taxes
 type: module
-description: 'Defines tax rates for customers' geographic locations and products sold.'
+description: "Defines tax rates for customers' geographic locations and products sold."
 package: Ubercart - core (optional)
 core: 8.x
 dependencies:
