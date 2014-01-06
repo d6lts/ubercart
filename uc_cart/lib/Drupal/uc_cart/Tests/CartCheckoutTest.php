@@ -29,7 +29,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Ensure test mails are logged.
     \Drupal::config('system.mail')
-      ->set('interface.uc_order', 'Drupal\Core\Mail\VariableLog')
+      ->set('interface.uc_order', 'Drupal\Core\Mail\TestMailCollector')
       ->save();
   }
 
