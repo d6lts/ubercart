@@ -9,11 +9,39 @@ namespace Drupal\uc_payment\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_payment\Plugin\PaymentMethodManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays a list of payments attached to an order.
  */
 class OrderPaymentsForm extends FormBase {
+
+  /**
+   * The payment method manager.
+   *
+   * @var \Drupal\uc_payment\Plugin\PaymentMethodManager
+   */
+  protected $paymentMethodManager;
+
+  /**
+   * Constructs an OrderPaymentsForm object.
+   *
+   * @param \Drupal\uc_payment\Plugin\PaymentMethodManager $payment_method_manager
+   *   The payment method plugin manager.
+   */
+  public function __construct(PaymentMethodManager $payment_method_manager) {
+    $this->paymentMethodManager = $payment_method_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.uc_payment.method')
+    );
+  }
 
   /**
    * The order that is being viewed.
@@ -111,7 +139,7 @@ class OrderPaymentsForm extends FormBase {
         '#type' => 'select',
         '#title' => t('Method'),
         '#title_display' => 'invisible',
-        '#options' => $this->container()->get('plugin.manager.uc_payment.method')->listOptions(),
+        '#options' => $this->paymentMethodManager->listOptions(),
       );
       $form['payments']['new']['amount'] = array(
         '#type' => 'textfield',
