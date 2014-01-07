@@ -685,22 +685,3 @@ function uc_cart_is_shippable($cart_id = NULL) {
 
   return FALSE;
 }
-
-/**
- * Removes panes from the list that match the given conditions.
- *
- * @return
- *   A checkout pane array with panes filtered out that have key values
- *   matching the combinations in the $remove array.
- */
-function uc_cart_filter_checkout_panes($panes, $remove) {
-  foreach ($panes as $id => $pane) {
-    foreach ($remove as $key => $value) {
-      if (isset($panes[$id][$key]) && $panes[$id][$key] == $value) {
-        unset($panes[$id]);
-      }
-    }
-  }
-
-  return $panes;
-}

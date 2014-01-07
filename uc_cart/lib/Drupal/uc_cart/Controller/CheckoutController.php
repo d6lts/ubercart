@@ -8,12 +8,41 @@
 namespace Drupal\uc_cart\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\uc_cart\Plugin\CheckoutPaneManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller routines for the checkout.
  */
-class CheckoutController extends ControllerBase {
+class CheckoutController extends ControllerBase implements ContainerInjectionInterface {
+
+  /**
+   * The checkout pane manager.
+   *
+   * @var \Drupal\uc_cart\Plugin\CheckoutPaneManager
+   */
+  protected $checkoutPaneManager;
+
+  /**
+   * Constructs a CheckoutController.
+   *
+   * @param \Drupal\uc_cart\Plugin\CheckoutPaneManager $checkout_pane_manager
+   *   The checkout pane plugin manager.
+   */
+  public function __construct(CheckoutPaneManager $checkout_pane_manager) {
+    $this->checkoutPaneManager = $checkout_pane_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.uc_cart.checkout_pane')
+    );
+  }
 
   /**
    * Displays the cart checkout page built of checkout panes from enabled modules.
@@ -140,23 +169,18 @@ class CheckoutController extends ControllerBase {
       return $this->redirect('uc_cart.cart');
     }
 
-    $panes = _uc_checkout_pane_list();
+    $filter = array('enabled' => FALSE);
 
-    $cart_config = \Drupal::config('uc_cart.settings');
     // If the cart isn't shippable, bypass panes with shippable == TRUE.
-    if (!$order->isShippable() && $cart_config->get('delivery_not_shippable')) {
-      $panes = uc_cart_filter_checkout_panes($panes, array('shippable' => TRUE));
+    if (!$order->isShippable() && \Drupal::config('uc_cart.settings')->get('delivery_not_shippable')) {
+      $filter['shippable'] = TRUE;
     }
 
+    $panes = $this->checkoutPaneManager->getDefinitions($filter);
     foreach ($panes as $pane) {
-      if ($pane['enabled']) {
-        $func = $pane['callback'];
-        if (function_exists($func)) {
-          $return = $func('review', $order, NULL);
-          if (!is_null($return)) {
-            $data[$pane['title']] = $return;
-          }
-        }
+      $return = $pane['callback']('review', $order, NULL);
+      if (!is_null($return)) {
+        $data[$pane['title']] = $return;
       }
     }
 

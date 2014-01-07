@@ -1,4 +1,7 @@
 services:
+  plugin.manager.uc_cart.checkout_pane:
+    class: Drupal\uc_cart\Plugin\CheckoutPaneManager
+    parent: default_plugin_manager
   uc_cart.breadcrumb:
     class: Drupal\uc_cart\CartBreadcrumbBuilder
     tags:

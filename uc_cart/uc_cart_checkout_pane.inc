@@ -368,55 +368,6 @@ function uc_checkout_pane_comments($op, $order, $form = NULL, &$form_state = NUL
 }
 
 /**
- * Builds a list of checkout panes defined in the enabled modules.
- */
-function _uc_checkout_pane_list($action = NULL) {
-  static $panes = array();
-
-  if (count($panes) > 0 && $action !== 'rebuild') {
-    return $panes;
-  }
-
-  $cart_config = \Drupal::config('uc_cart.settings');
-  foreach (\Drupal::moduleHandler()->invokeAll('uc_checkout_pane') as $id => $pane) {
-    // Preserve backward compatibility for panes with no key specified.
-    if (is_numeric($id)) {
-      $id = $pane['id'];
-    }
-
-    // Set defaults.
-    $pane += array(
-      'id' => $id,
-      'enabled' => TRUE,
-      'weight' => 0,
-      'review' => TRUE,
-      'process' => TRUE,
-      'collapsible' => TRUE,
-    );
-
-    $pane['enabled'] = variable_get('uc_pane_' . $id . '_enabled', $pane['enabled']);
-    $pane['weight'] = variable_get('uc_pane_' . $id . '_weight', $pane['weight']);
-
-    $panes[$id] = $pane;
-  }
-
-  // Allow other modules to alter the defaults.
-  \Drupal::moduleHandler()->alter('uc_checkout_pane', $panes);
-
-  uasort($panes, 'uc_weight_sort');
-
-  return $panes;
-}
-
-/**
- * Returns data from a checkout pane by pane ID and the array key.
- */
-function _uc_checkout_pane_data($pane_id, $key) {
-  $panes = _uc_checkout_pane_list();
-  return $panes[$pane_id][$key];
-}
-
-/**
  * Formats the cart contents table on the checkout page.
  *
  * @param $variables

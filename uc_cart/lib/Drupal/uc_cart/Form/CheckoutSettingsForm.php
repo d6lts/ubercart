@@ -7,12 +7,50 @@
 
 namespace Drupal\uc_cart\Form;
 
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\uc_cart\Plugin\CheckoutPaneManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure general checkout settings for this site.
  */
 class CheckoutSettingsForm extends ConfigFormBase {
+
+  /**
+   * The checkout pane manager.
+   *
+   * @var \Drupal\uc_cart\Plugin\CheckoutPaneManager
+   */
+  protected $checkoutPaneManager;
+
+  /**
+   * Constructs a CheckoutSettingsForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\Context\ContextInterface $context
+   *   The configuration context used for this configuration object.
+   * @param \Drupal\uc_cart\Plugin\CheckoutPaneManager $checkout_pane_manager
+   *   The checkout pane plugin manager.
+   */
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context, CheckoutPaneManager $checkout_pane_manager) {
+    parent::__construct($config_factory, $context);
+
+    $this->checkoutPaneManager = $checkout_pane_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('config.context.free'),
+      $container->get('plugin.manager.uc_cart.checkout_pane')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -118,7 +156,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#states' => $anon_state,
     );
 
-    $panes = _uc_checkout_pane_list();
+    $panes = $this->checkoutPaneManager->getDefinitions();
     $form['checkout']['panes'] = array(
       '#type' => 'table',
       '#header' => array(t('Pane'), t('List position')),
@@ -148,9 +186,8 @@ class CheckoutSettingsForm extends ConfigFormBase {
       );
       $form['checkout']['panes'][$id]['#weight'] = variable_get('uc_pane_' . $id . '_weight', $pane['weight']);
 
-      $null = NULL;
-      $pane_settings = $pane['callback']('settings', $null, array());
-      if (is_array($pane_settings)) {
+      $pane_settings = $this->checkoutPaneManager->createInstance($id)->settingsForm();
+      if (!empty($pane_settings)) {
         $form['pane_' . $id] = $pane_settings + array(
           '#type' => 'details',
           '#title' => t('@pane pane', array('@pane' => $pane['title'])),
@@ -281,6 +318,8 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('msg_order_new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in']);
 
     $cart_config->save();
+
+    $this->checkoutPaneManager->clearCachedDefinitions();
 
     parent::submitForm($form, $form_state);
   }

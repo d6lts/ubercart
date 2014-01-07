@@ -8,11 +8,39 @@
 namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\uc_cart\Plugin\CheckoutPaneManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The checkout form built up from the enabled checkout panes.
  */
 class CheckoutForm extends FormBase {
+
+  /**
+   * The checkout pane manager.
+   *
+   * @var \Drupal\uc_cart\Plugin\CheckoutPaneManager
+   */
+  protected $checkoutPaneManager;
+
+  /**
+   * Constructs a CheckoutController.
+   *
+   * @param \Drupal\uc_cart\Plugin\CheckoutPaneManager $checkout_pane_manager
+   *   The checkout pane plugin manager.
+   */
+  public function __construct(CheckoutPaneManager $checkout_pane_manager) {
+    $this->checkoutPaneManager = $checkout_pane_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.uc_cart.checkout_pane')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -35,19 +63,21 @@ class CheckoutForm extends FormBase {
     $form['#attributes']['class'][] = 'uc-cart-checkout-form';
     $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
     $form['panes'] = array('#tree' => TRUE);
-    $panes = _uc_checkout_pane_list();
+
+    $filter = array('enabled' => FALSE);
 
     // If the order isn't shippable, remove panes with shippable == TRUE.
-    $cart_config = \Drupal::config('uc_cart.settings');
-    if (!$order->isShippable() && $cart_config->get('delivery_not_shippable')) {
-      $panes = uc_cart_filter_checkout_panes($panes, array('shippable' => TRUE));
+    if (!$order->isShippable() && \Drupal::config('uc_cart.settings')->get('delivery_not_shippable')) {
+      $filter['shippable'] = TRUE;
     }
+
+    $panes = $this->checkoutPaneManager->createInstances($filter);
 
     // Invoke the 'prepare' op of enabled panes, but only if their 'process' ops
     // have not been invoked on this request (i.e. when rebuilding after AJAX).
     foreach ($panes as $id => $pane) {
-      if ($pane['enabled'] && empty($form_state['storage']['panes'][$id]['prepared']) && isset($pane['callback']) && function_exists($pane['callback'])) {
-        $pane['callback']('prepare', $order, $form, $form_state);
+      if (empty($form_state['storage']['panes'][$id]['prepared'])) {
+        $pane->prepare($order, $form, $form_state);
         $form_state['storage']['panes'][$id]['prepared'] = TRUE;
         $processed = FALSE; // Make sure we save the updated order.
       }
@@ -62,26 +92,12 @@ class CheckoutForm extends FormBase {
     }
 
     foreach ($panes as $id => $pane) {
-      if ($pane['enabled']) {
-        $return = $pane['callback']('view', $order, $form, $form_state);
-
-        // Add the pane if any display data is returned from the callback.
-        if (is_array($return) && (!empty($return['description']) || !empty($return['contents']))) {
-          // Create the fieldset for the pane.
-          $form['panes'][$id] = array(
-            '#type' => 'details',
-            '#title' => check_plain($pane['title']),
-            '#description' => !empty($return['description']) ? $return['description'] : '',
-            '#id' => $id . '-pane',
-            '#theme' => isset($return['theme']) ? $return['theme'] : NULL,
-          );
-
-          // Add the contents of the fieldset if any were returned.
-          if (!empty($return['contents'])) {
-            $form['panes'][$id] = array_merge($form['panes'][$id], $return['contents']);
-          }
-        }
-      }
+      $form['panes'][$id] = $pane->view($order, $form, $form_state);
+      $form['panes'][$id] += array(
+        '#type' => 'details',
+        '#title' => check_plain($pane->getTitle()),
+        '#id' => $id . '-pane',
+      );
     }
 
     $form['actions'] = array('#type' => 'actions');
@@ -117,13 +133,10 @@ class CheckoutForm extends FormBase {
 
     // Validate/process the cart panes.  A FALSE value results in failed checkout.
     $form_state['checkout_valid'] = TRUE;
-    foreach (element_children($form_state['values']['panes']) as $pane_id) {
-      $func = _uc_checkout_pane_data($pane_id, 'callback');
-      if (is_string($func) && function_exists($func)) {
-        $isvalid = $func('process', $order, $form, $form_state);
-        if ($isvalid === FALSE) {
-          $form_state['checkout_valid'] = FALSE;
-        }
+    foreach (element_children($form_state['values']['panes']) as $id) {
+      $pane = $this->checkoutPaneManager->createInstance($id);
+      if ($pane->process($order, $form, $form_state) === FALSE) {
+        $form_state['checkout_valid'] = FALSE;
       }
     }
 

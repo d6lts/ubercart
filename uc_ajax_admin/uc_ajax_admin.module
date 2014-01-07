@@ -47,10 +47,10 @@ function uc_ajax_admin_form($form, &$form_state, $target_form = 'checkout') {
   switch ($target_form) {
     case 'checkout':
       $triggers = _uc_ajax_admin_checkout_trigger_options(_uc_ajax_admin_build_checkout_form());
-      $panes = _uc_checkout_pane_list();
+      $panes = \Drupal::service('plugin.manager.uc_cart.checkout_pane')->getDefinitions();
       $wrappers = array();
       foreach ($panes as $id => $pane) {
-        $wrappers["$id-pane"] = _uc_checkout_pane_data($id, 'title');
+        $wrappers["$id-pane"] = $pane['title'];
       }
       break;
 
