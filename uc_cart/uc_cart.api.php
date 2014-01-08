@@ -270,14 +270,6 @@ function hook_uc_cart_checkout_start($order) {
  *     - type: boolean
  *     - value: Optional. Whether or not the pane is enabled by default.
  *       Defaults to TRUE.
- *   - process:
- *     - type: boolean
- *     - value: Optional. Whether or not this pane needs to be processed when
- *       the checkout form is submitted. Defaults to TRUE.
- *   - collapsible:
- *     - type: boolean
- *     - value: Optional. Whether or not this pane is displayed as a collapsible
- *       fieldset. Defaults to TRUE.
  *   - shippable:
  *     - type: boolean
  *     - value: Optional. If TRUE, the pane is only shown if the cart is
@@ -291,8 +283,6 @@ function hook_uc_checkout_pane() {
     'title' => t('Cart contents'),
     'desc' => t("Display the contents of a customer's shopping cart."),
     'weight' => 1,
-    'process' => FALSE,
-    'collapsible' => FALSE,
   );
   return $panes;
 }

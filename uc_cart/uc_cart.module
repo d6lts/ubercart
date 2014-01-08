@@ -217,20 +217,6 @@ function uc_cart_uc_message() {
  * Implements hook_uc_checkout_pane().
  */
 function uc_cart_uc_checkout_pane() {
-  $panes['cart'] = array(
-    'callback' => 'uc_checkout_pane_cart',
-    'title' => t('Cart contents'),
-    'desc' => t("Display the contents of a customer's shopping cart."),
-    'weight' => 1,
-    'process' => FALSE,
-    'collapsible' => FALSE,
-  );
-  $panes['customer'] = array(
-    'callback' => 'uc_checkout_pane_customer',
-    'title' => t('Customer information'),
-    'desc' => t('Get the necessary information to create a customer on the site.'),
-    'weight' => 2,
-  );
   $panes['delivery'] = array(
     'callback' => 'uc_checkout_pane_delivery',
     'title' => t('Delivery information'),
@@ -243,12 +229,6 @@ function uc_cart_uc_checkout_pane() {
     'title' => t('Billing information'),
     'desc' => t('Get basic information needed to collect payment.'),
     'weight' => 4,
-  );
-  $panes['comments'] = array(
-    'callback' => 'uc_checkout_pane_comments',
-    'title' => t('Order comments'),
-    'desc' => t('Allow a customer to put comments on an order.'),
-    'weight' => 7,
   );
 
   return $panes;

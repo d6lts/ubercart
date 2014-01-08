@@ -26,9 +26,6 @@ class CheckoutPaneManager extends DefaultPluginManager {
   protected $defaults = array(
     'enabled' => TRUE,
     'weight' => 0,
-    'review' => TRUE,
-    'process' => TRUE,
-    'collapsible' => TRUE,
   );
 
   /**
