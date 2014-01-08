@@ -192,6 +192,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
 
     $build['#attached']['library'][] = array('system', 'drupal');
     $build['#attached']['library'][] = array('system', 'jquery.once');
+    $build['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
     $build['#attached']['js'][] = drupal_get_path('module', 'uc_cart') . '/js/uc_cart.js';
 
     return $build;
