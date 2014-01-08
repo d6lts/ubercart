@@ -39,16 +39,23 @@ class LegacyCheckoutPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm() {
-    $null = NULL;
-    return $this->pluginDefinition['callback']('settings', $null, array());
+  public function process(UcOrderInterface $order, array $form, array &$form_state) {
+    $this->pluginDefinition['callback']('process', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function process(UcOrderInterface $order, array $form, array &$form_state) {
-    $this->pluginDefinition['callback']('process', $order, $form, $form_state);
+  public function review(UcOrderInterface $order) {
+    return $this->pluginDefinition['callback']('review', $order, NULL);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm() {
+    $null = NULL;
+    return $this->pluginDefinition['callback']('settings', $null, array());
   }
 
 }

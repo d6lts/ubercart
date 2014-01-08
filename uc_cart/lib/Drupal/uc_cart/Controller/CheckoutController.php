@@ -176,11 +176,11 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       $filter['shippable'] = TRUE;
     }
 
-    $panes = $this->checkoutPaneManager->getDefinitions($filter);
+    $panes = $this->checkoutPaneManager->createInstances($filter);
     foreach ($panes as $pane) {
-      $return = $pane['callback']('review', $order, NULL);
+      $return = $pane->review($order);
       if (!is_null($return)) {
-        $data[$pane['title']] = $return;
+        $data[$pane->getTitle()] = $return;
       }
     }
 

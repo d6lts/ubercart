@@ -58,6 +58,17 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface {
   public function process(UcOrderInterface $order, array $form, array &$form_state);
 
   /**
+   * Returns the review contents of a checkout pane.
+   *
+   * @param \Drupal\uc_order\UcOrderInterface $order
+   *   The order that is being processed.
+   *
+   * @return array
+   *   A checkout review array.
+   */
+  public function review(UcOrderInterface $order);
+
+  /**
    * Returns the settings form for a checkout pane.
    *
    * @return array
