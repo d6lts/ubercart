@@ -16,6 +16,14 @@ define('UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST', 0);
 define('UC_PRODUCT_KIT_MUTABLE', 1);
 
 /**
+ * Implements hook_page_build().
+ */
+function uc_product_kit_page_build(&$page) {
+  $path = drupal_get_path('module', 'uc_product_kit');
+  $page['#attached']['css'][$path . '/css/uc_product_kit.css'] = array('every_page' => TRUE);
+}
+
+/**
  * Implements hook_form_FORM_ID_alter() for uc_product_settings_form().
  */
 function uc_product_kit_form_uc_product_settings_form_alter(&$form, &$form_state) {
@@ -1061,7 +1069,6 @@ function uc_product_kit_uc_cart_display($item) {
     }
 
     if ($done) {
-      drupal_add_css(drupal_get_path('module', 'uc_product_kit') . '/css/uc_product_kit.css');
       $elements[$unique_id]['data'] = array('#type' => 'value', '#value' => serialize($elements[$unique_id]['data']));
       if ($kit->mutable == UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST) {
         $elements[$unique_id]['description']['#markup'] .= theme('item_list', array('items' => $elements[$unique_id]['#extra'], 'attributes' => array('class' => array('product-description'))));
