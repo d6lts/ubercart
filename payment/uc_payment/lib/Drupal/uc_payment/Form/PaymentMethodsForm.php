@@ -8,7 +8,6 @@
 namespace Drupal\uc_payment\Form;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,13 +29,11 @@ class PaymentMethodsForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Config\Context\ContextInterface $context
-   *   The configuration context used for this configuration object.
    * @param \Drupal\uc_payment\Plugin\PaymentMethodManager $payment_method_manager
    *   The payment method plugin manager.
    */
-  public function __construct(ConfigFactory $config_factory, ContextInterface $context, PaymentMethodManager $payment_method_manager) {
-    parent::__construct($config_factory, $context);
+  public function __construct(ConfigFactory $config_factory, PaymentMethodManager $payment_method_manager) {
+    parent::__construct($config_factory);
 
     $this->paymentMethodManager = $payment_method_manager;
   }
@@ -47,7 +44,6 @@ class PaymentMethodsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('config.context.free'),
       $container->get('plugin.manager.uc_payment.method')
     );
   }
