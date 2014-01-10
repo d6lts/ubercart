@@ -149,7 +149,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
             form_set_error('panes][customer][new_account][pass_confirm', $form_state, t('The passwords you entered did not match. Please try again.'));
           }
           if (!empty($pane['new_account']['pass'])) {
-            $order->data['new_user']['hash'] = Drupal::service('password')->hash(trim($pane['new_account']['pass']));
+            $order->data['new_user']['hash'] = \Drupal::service('password')->hash(trim($pane['new_account']['pass']));
           }
         }
       }
