@@ -36,9 +36,13 @@ Ubercart 4.x
     * Order state scopes removed, replaced with order status weights.
 * Payment methods are plugins
     * hook_uc_payment_method() is still supported but can be converted to PaymentMethodPluginInterface plugins
-    * PaymentMethodManager manages the available plugins
+    * plugin.manager.uc_payment.method service (PaymentMethodManager) manages the available plugins
     * _uc_payment_method_list() => uc_payment_method_list()
     * _uc_payment_method_data() removed
+* Checkout panes are plugins
+    * hook_uc_checkout_pane() is still supported but can be converted to CheckoutPanePluginInterface plugins
+    * plugin.manager.uc_cart.checkout_pane service (CheckoutPaneManager) manages the available plugins
+    * _uc_checkout_pane_list() and _uc_checkout_pane_data() removed
 
 
 Ubercart 3.0-rc4, 2012-1-23
