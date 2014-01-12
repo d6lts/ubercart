@@ -12,8 +12,6 @@
 
 use Drupal\Component\Utility\Url;
 
-require_once dirname(__FILE__) . '/uc_cart_checkout_pane.inc';
-
 /**
  * Time in seconds after which a cart order is deemed abandoned.
  */
@@ -103,11 +101,11 @@ function uc_cart_theme() {
     ),
     'uc_cart_review_table' => array(
       'variables' => array('items' => array(), 'show_subtotal' => TRUE),
-      'file' => 'uc_cart_checkout_pane.inc',
+      'file' => 'uc_cart.theme.inc',
     ),
     'uc_cart_checkout_review' => array(
       'variables' => array('panes' => NULL, 'form' => NULL),
-      'file' => 'uc_cart.pages.inc',
+      'file' => 'uc_cart.theme.inc',
     ),
     'uc_cart_complete_sale' => array(
       'variables' => array('message' => '', 'order' => NULL),

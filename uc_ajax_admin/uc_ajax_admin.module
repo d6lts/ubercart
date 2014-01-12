@@ -209,7 +209,6 @@ function _uc_ajax_admin_checkout_trigger_options($form) {
  * shippable order if not.
  */
 function _uc_ajax_admin_build_checkout_form() {
-  module_load_include('inc', 'uc_cart', 'uc_cart.pages');
   $order = empty($_SESSION['cart_order']) ? FALSE : uc_order_load($_SESSION['cart_order']);
   if (!$order) {
     $order = entity_create('uc_order', array());
