@@ -13,7 +13,6 @@
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 
-require_once dirname(__FILE__) . '/uc_payment_checkout_pane.inc';
 require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
 
 
@@ -128,20 +127,6 @@ function uc_payment_uc_order($op, $order) {
       }
       break;
   }
-}
-
-/**
- * Implements hook_uc_checkout_pane().
- */
-function uc_payment_uc_checkout_pane() {
-  $panes['payment'] = array(
-    'title' => t('Payment method'),
-    'desc' => t('Select a payment method from the enabled payment modules.'),
-    'callback' => 'uc_checkout_pane_payment',
-    'weight' => 6,
-  );
-
-  return $panes;
 }
 
 /**
