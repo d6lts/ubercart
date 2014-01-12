@@ -214,27 +214,6 @@ function uc_cart_uc_message() {
 }
 
 /**
- * Implements hook_uc_checkout_pane().
- */
-function uc_cart_uc_checkout_pane() {
-  $panes['delivery'] = array(
-    'callback' => 'uc_checkout_pane_delivery',
-    'title' => t('Delivery information'),
-    'desc' => t('Get the information for where the order needs to ship.'),
-    'weight' => 3,
-    'shippable' => TRUE,
-  );
-  $panes['billing'] = array(
-    'callback' => 'uc_checkout_pane_billing',
-    'title' => t('Billing information'),
-    'desc' => t('Get basic information needed to collect payment.'),
-    'weight' => 4,
-  );
-
-  return $panes;
-}
-
-/**
  * Implements hook_user_login().
  *
  * Updates a user's cart to include items from their anonymous session.
