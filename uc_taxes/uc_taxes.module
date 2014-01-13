@@ -197,7 +197,7 @@ function uc_taxes_uc_order($op, $order, $arg2) {
       // And log the changes to the order.
       if (count($changes)) {
         $order->logChanges($changes);
-        usort($order->line_items, 'uc_weight_sort');
+        usort($order->line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
       }
     break;
   }

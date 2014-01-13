@@ -452,9 +452,7 @@ function uc_payment_load_payments($order_id) {
  *   An array of payment method definitions, keyed by method ID.
  */
 function uc_payment_method_list() {
-  $methods = Drupal::service('plugin.manager.uc_payment.method')->getDefinitions();
-  uasort($methods, 'uc_weight_sort');
-  return $methods;
+  return \Drupal::service('plugin.manager.uc_payment.method')->getDefinitions();
 }
 
 /**

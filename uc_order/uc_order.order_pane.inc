@@ -688,7 +688,7 @@ function uc_order_pane_line_items($op, $order, &$form = NULL, &$form_state = NUL
           }
         }
       }
-      usort($line_items, 'uc_weight_sort');
+      usort($line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
       $build['line_items'] = array(
         '#prefix' => '<table class="line-item-table">',
@@ -740,7 +740,7 @@ function uc_order_pane_line_items($op, $order, &$form = NULL, &$form_state = NUL
           }
         }
       }
-      usort($line_items, 'uc_weight_sort');
+      usort($line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
       $form['add_line_item'] = array('#type' => 'container');
 
@@ -1154,7 +1154,7 @@ function _uc_order_pane_list($view = 'view') {
   // Allow other modules to alter the defaults.
   \Drupal::moduleHandler()->alter('uc_order_pane', $panes);
 
-  uasort($panes, 'uc_weight_sort');
+  uasort($panes, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
   return $panes;
 }

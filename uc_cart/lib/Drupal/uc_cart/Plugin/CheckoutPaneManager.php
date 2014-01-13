@@ -89,7 +89,7 @@ class CheckoutPaneManager extends DefaultPluginManager {
       }
     }
 
-    uasort($panes, 'uc_weight_sort');
+    uasort($panes, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
     return $panes;
   }

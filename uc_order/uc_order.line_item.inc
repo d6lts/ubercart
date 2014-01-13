@@ -157,7 +157,7 @@ function _uc_line_item_list($action = NULL) {
 
   \Drupal::moduleHandler()->alter('uc_line_item_data', $items);
 
-  uasort($items, 'uc_weight_sort');
+  uasort($items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
   return $items;
 }

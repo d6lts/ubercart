@@ -689,7 +689,7 @@ function uc_order_load_line_items($order) {
     }
   }
 
-  usort($items, 'uc_weight_sort');
+  usort($items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
   return $items;
 }
@@ -733,7 +733,7 @@ function uc_order_load_line_items_display($order) {
     $item['formatted_amount'] = uc_currency_format($item['amount']);
   }
 
-  usort($line_items, 'uc_weight_sort');
+  usort($line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
   return $line_items;
 }
@@ -962,7 +962,7 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
  */
 function uc_order_state_options_list() {
   $states = \Drupal::moduleHandler()->invokeAll('uc_order_state');
-  uasort($states, 'uc_weight_sort');
+  uasort($states, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
   $options = array();
   foreach ($states as $id => $state) {

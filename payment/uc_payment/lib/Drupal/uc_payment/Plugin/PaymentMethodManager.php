@@ -43,6 +43,17 @@ class PaymentMethodManager extends DefaultPluginManager {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getDefinitions() {
+    $methods = parent::getDefinitions();
+
+    uasort($methods, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+
+    return $methods;
+  }
+
+  /**
    * Overrides \Drupal\Component\Plugin\PluginManagerBase::processDefinition().
    */
   public function processDefinition(&$definition, $plugin_id) {

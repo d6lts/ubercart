@@ -1233,17 +1233,6 @@ function _uc_country_import_list() {
 }
 
 /**
- * Sorts an array of arrays having a weight key to determine their order.
- */
-function uc_weight_sort($a, $b) {
-  if ($a['weight'] == $b['weight']) {
-    return 0;
-  }
-
-  return ($a['weight'] > $b['weight']) ? 1 : -1;
-}
-
-/**
  * Returns the default message for a configurable message.
  *
  * @deprecated
