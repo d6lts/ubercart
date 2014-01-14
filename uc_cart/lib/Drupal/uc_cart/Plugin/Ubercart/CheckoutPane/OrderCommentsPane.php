@@ -16,7 +16,6 @@ use Drupal\uc_order\UcOrderInterface;
  * @Plugin(
  *   id = "comments",
  *   title = @Translation("Order comments"),
- *   description = @Translation("Allow a customer to put comments on an order."),
  *   weight = 7,
  * )
  */

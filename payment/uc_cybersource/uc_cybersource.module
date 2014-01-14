@@ -252,7 +252,6 @@ function uc_cybersource_payment_method() {
     'name' => t('CyberSource Hosted Order Page'),
     'title' => "Credit/Debit card payment processed by CyberSource",
     'review' => t('Credit/Debit card payment processed by CyberSource'),
-    'desc' => t('Payment with CyberSource HOP Service.'),
     'callback' => 'uc_payment_method_cybersource_hop',
     'weight' => 1,
     'checkout' => FALSE,

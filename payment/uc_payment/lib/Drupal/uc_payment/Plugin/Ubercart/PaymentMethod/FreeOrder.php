@@ -17,7 +17,6 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  *   id = "free_order",
  *   name = @Translation("Free order"),
  *   title = @Translation("No payment required"),
- *   description = @Translation("Allow customers with free orders to check out without paying."),
  *   checkout = TRUE,
  *   no_gateway = TRUE,
  *   configurable = FALSE,

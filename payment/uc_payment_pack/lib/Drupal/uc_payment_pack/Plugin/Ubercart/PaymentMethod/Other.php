@@ -17,7 +17,6 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  *   id = "other",
  *   name = @Translation("Other"),
  *   title = @Translation("Other"),
- *   description = @Translation("A generic payment method type."),
  *   checkout = FALSE,
  *   no_gateway = TRUE,
  *   configurable = FALSE,

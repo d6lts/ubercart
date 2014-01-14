@@ -15,7 +15,6 @@ use Drupal\uc_order\UcOrderInterface;
  * @Plugin(
  *   id = "billing",
  *   title = @Translation("Billing information"),
- *   description = @Translation("Get basic information needed to collect payment."),
  *   weight = 4
  * )
  */

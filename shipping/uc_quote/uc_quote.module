@@ -248,7 +248,6 @@ function uc_quote_uc_checkout_pane() {
   $panes['quotes'] = array(
     'callback' => 'uc_checkout_pane_quotes',
     'title' => t('Calculate shipping cost'),
-    'desc' => t('Extra information necessary to ship.'),
     'weight' => 5,
     'shippable' => TRUE,
   );

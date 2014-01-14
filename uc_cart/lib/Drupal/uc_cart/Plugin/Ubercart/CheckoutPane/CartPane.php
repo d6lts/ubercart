@@ -16,7 +16,6 @@ use Drupal\uc_order\UcOrderInterface;
  * @Plugin(
  *   id = "cart",
  *   title = @Translation("Cart contents"),
- *   description = @Translation("Display the contents of a customer's shopping cart."),
  *   weight = 1,
  * )
  */

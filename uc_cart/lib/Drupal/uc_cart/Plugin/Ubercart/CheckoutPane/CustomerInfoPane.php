@@ -16,7 +16,6 @@ use Drupal\uc_order\UcOrderInterface;
  * @Plugin(
  *   id = "customer",
  *   title = @Translation("Customer information"),
- *   description = @Translation("Get the necessary information to create a customer on the site."),
  *   weight = 2,
  * )
  */

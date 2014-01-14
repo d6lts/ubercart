@@ -59,7 +59,6 @@ function uc_2checkout_uc_payment_method() {
     'name' => t('2Checkout'),
     'title' => $title,
     'review' => $module_config->get('check') ? t('Credit card/eCheck') : t('Credit card'),
-    'desc' => t('Redirect to 2Checkout to pay by credit card or eCheck.'),
     'callback' => 'uc_payment_method_2checkout',
     'redirect' => 'uc_2checkout_form',
     'weight' => 3,

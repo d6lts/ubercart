@@ -256,9 +256,6 @@ function hook_uc_cart_checkout_start($order) {
  *   - title:
  *     - type: string
  *     - value: The name of the pane as it appears on the checkout form.
- *   - desc:
- *     - type: string
- *     - value: A short description of the pane for the admin pages.
  *   - callback:
  *     - type: string
  *     - value: The name of the callback function for this pane.
@@ -281,7 +278,6 @@ function hook_uc_checkout_pane() {
   $panes['cart'] = array(
     'callback' => 'uc_checkout_pane_cart',
     'title' => t('Cart contents'),
-    'desc' => t("Display the contents of a customer's shopping cart."),
     'weight' => 1,
   );
   return $panes;

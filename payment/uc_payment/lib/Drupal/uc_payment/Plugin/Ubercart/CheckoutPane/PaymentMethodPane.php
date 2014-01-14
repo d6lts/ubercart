@@ -20,7 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Plugin(
  *   id = "payment",
  *   title = @Translation("Payment method"),
- *   description = @Translation("Select a payment method from the enabled payment modules."),
  *   weight = 6
  * )
  */

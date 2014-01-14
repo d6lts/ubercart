@@ -126,7 +126,6 @@ function hook_uc_payment_gateway_alter(&$gateways) {
  *   - "name": the human-readable name of the payment method.
  *   - "title": the human-readable title of the payment method, displayed
  *     during checkout.
- *   - "desc": a human-readable description of the payment method.
  *   - "callback": a callback function that handles operations that the method
  *     may need to perform. See hook_uc_payment_method_callback()
  *   - "weight": the default weight of the payment method.
@@ -141,7 +140,6 @@ function hook_uc_payment_method() {
   $methods['check'] = array(
     'name' => t('Check'),
     'title' => t('Check or money order'),
-    'desc' => t('Pay by mailing a check or money order.'),
     'callback' => 'uc_payment_method_callback',
     'weight' => 1,
     'checkout' => TRUE,

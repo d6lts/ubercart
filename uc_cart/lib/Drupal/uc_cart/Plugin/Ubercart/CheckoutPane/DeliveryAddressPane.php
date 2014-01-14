@@ -15,7 +15,6 @@ use Drupal\uc_order\UcOrderInterface;
  * @Plugin(
  *   id = "delivery",
  *   title = @Translation("Delivery information"),
- *   description = @Translation("Get the information for where the order needs to ship."),
  *   weight = 3,
  *   shippable = TRUE
  * )

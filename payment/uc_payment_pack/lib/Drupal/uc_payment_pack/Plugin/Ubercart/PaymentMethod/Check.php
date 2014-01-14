@@ -17,7 +17,6 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  *   id = "check",
  *   name = @Translation("Check", context = "cheque"),
  *   title = @Translation("Check or money order"),
- *   description = @Translation("Pay by mailing a check or money order."),
  *   checkout = TRUE,
  *   no_gateway = TRUE,
  *   configurable = TRUE,

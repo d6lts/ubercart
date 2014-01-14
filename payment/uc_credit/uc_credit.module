@@ -280,7 +280,6 @@ function uc_credit_uc_payment_method() {
   $methods['credit'] = array(
     'name' => t('Credit card'),
     'title' => $title,
-    'desc' => t('Pay by credit card.'),
     'callback' => 'uc_payment_method_credit',
     'weight' => 2,
     'checkout' => TRUE,

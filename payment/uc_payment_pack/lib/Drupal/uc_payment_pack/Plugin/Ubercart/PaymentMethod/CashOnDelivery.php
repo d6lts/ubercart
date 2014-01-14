@@ -17,7 +17,6 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  *   id = "cod",
  *   name = @Translation("Cash on delivery"),
  *   title = @Translation("Cash on delivery"),
- *   description = @Translation("Pay cash on delivery on pick-up."),
  *   checkout = FALSE,
  *   no_gateway = TRUE,
  *   configurable = TRUE,
