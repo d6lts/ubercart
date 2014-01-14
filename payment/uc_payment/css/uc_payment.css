@@ -61,22 +61,13 @@ img.uc-2checkout-logo {
   left: 2.2em;
 }
 
-#line-items-div {
-  border: 1px solid #bbb;
+.uc-payment-totals {
   float: right;
-  margin: 0 0 1em 1em;
-}
-
-#line-items-div table {
-  margin: 0;
+  margin-left: 1em;
   width: auto;
 }
 
-#line-items-div td {
-  padding: 0.2em 0.5em;
-}
-
-#line-items-div td.title {
+.uc-payment-totals td.title {
   font-weight: bold;
 }
 

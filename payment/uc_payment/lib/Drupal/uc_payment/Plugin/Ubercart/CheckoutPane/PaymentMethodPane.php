@@ -69,8 +69,6 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
       $contents['line_items'] = array(
         '#theme' => 'uc_payment_totals',
         '#order' => $order,
-        '#prefix' => '<div id="line-items-div">',
-        '#suffix' => '</div>',
         '#weight' => -20,
       );
     }
