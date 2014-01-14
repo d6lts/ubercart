@@ -75,7 +75,7 @@ function uc_cart_theme() {
         'collapsible' => TRUE,
         'collapsed' => TRUE,
       ),
-      'file' => 'uc_cart.theme.inc',
+      'template' => 'uc-cart-block-title',
     ),
     'uc_cart_block' => array(
       'variables' => array(
@@ -197,6 +197,15 @@ function uc_cart_preprocess_block(&$variables) {
       'collapsed' => $variables['configuration']['collapsed'],
     ));
   }
+}
+
+/**
+ * Prepares variables for the cart block title template.
+ *
+ * Default template: uc-cart-block-title.html.twig.
+ */
+function template_preprocess_uc_cart_block_title(&$variables) {
+  $variables['cart_url'] = url('cart');
 }
 
 /**
