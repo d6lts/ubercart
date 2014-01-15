@@ -32,8 +32,11 @@ class PaymentPackTest extends UbercartTestBase {
     $this->addToCart($this->product);
 
     // Disable address panes during checkout.
-    variable_set('uc_pane_delivery_enabled', FALSE);
-    variable_set('uc_pane_billing_enabled', FALSE);
+    $edit = array(
+      'panes[delivery][status]' => FALSE,
+      'panes[billing][status]' => FALSE,
+    );
+    $this->drupalPostForm('admin/store/settings/checkout', $edit, t('Save configuration'));
   }
 
   public function testCheck() {

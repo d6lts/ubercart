@@ -169,18 +169,18 @@ class CheckoutSettingsForm extends ConfigFormBase {
       $form['checkout']['panes'][$id]['status'] = array(
         '#type' => 'checkbox',
         '#title' => check_plain($pane['title']),
-        '#default_value' => variable_get('uc_pane_' . $id . '_enabled', $pane['enabled']),
+        '#default_value' => $pane['enabled'],
       );
       $form['checkout']['panes'][$id]['weight'] = array(
         '#type' => 'weight',
         '#title' => t('Weight for @title', array('@title' => $pane['title'])),
         '#title_display' => 'invisible',
-        '#default_value' => variable_get('uc_pane_' . $id . '_weight', $pane['weight']),
+        '#default_value' => $pane['weight'],
         '#attributes' => array(
           'class' => array('uc-checkout-pane-weight'),
         ),
       );
-      $form['checkout']['panes'][$id]['#weight'] = variable_get('uc_pane_' . $id . '_weight', $pane['weight']);
+      $form['checkout']['panes'][$id]['#weight'] = $pane['weight'];
 
       $pane_settings = $this->checkoutPaneManager->createInstance($id)->settingsForm();
       if (!empty($pane_settings)) {
@@ -295,23 +295,17 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('new_account_password', $form_state['values']['uc_cart_new_account_password'])
       ->set('new_customer_email', $form_state['values']['uc_new_customer_email'])
       ->set('new_customer_login', $form_state['values']['uc_new_customer_login'])
-      ->set('new_customer_status_active', $form_state['values']['uc_new_customer_status_active']);
-
-    foreach (element_children($form['checkout']['panes']) as $id) {
-        variable_set('uc_pane_' . $id . '_enabled', $form_state['values']['panes'][$id]['status']);
-        variable_set('uc_pane_' . $id . '_weight', $form_state['values']['panes'][$id]['weight']);
-
-      // TODO: handle (or remove) checkout pane settings
-    }
-
-    $cart_config
+      ->set('new_customer_status_active', $form_state['values']['uc_new_customer_status_active'])
       ->set('default_same_address', $form_state['values']['uc_cart_default_same_address'])
       ->set('delivery_not_shippable', $form_state['values']['uc_cart_delivery_not_shippable'])
       ->set('checkout_complete_page', $form_state['values']['uc_cart_checkout_complete_page'])
       ->set('msg_order_logged_in', $form_state['values']['uc_msg_order_logged_in'])
       ->set('msg_order_existing_user', $form_state['values']['uc_msg_order_existing_user'])
       ->set('msg_order_new_user', $form_state['values']['uc_msg_order_new_user'])
-      ->set('msg_order_new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in']);
+      ->set('msg_order_new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in'])
+      ->set('panes', $form_state['values']['panes']);
+
+    // @todo Handle (or remove) per-pane settings.
 
     $cart_config->save();
 

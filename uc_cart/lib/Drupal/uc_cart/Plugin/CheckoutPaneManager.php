@@ -21,6 +21,11 @@ use Drupal\uc_store\Plugin\Discovery\InfoHookDecorator;
 class CheckoutPaneManager extends DefaultPluginManager {
 
   /**
+   * Configuration for the checkout panes.
+   */
+  protected $paneConfig;
+
+  /**
    * {@inheritdoc}
    */
   protected $defaults = array(
@@ -48,6 +53,8 @@ class CheckoutPaneManager extends DefaultPluginManager {
 
     $this->alterInfo($module_handler, 'uc_checkout_pane');
     $this->setCacheBackend($cache_backend, $language_manager, 'uc_checkout_panes');
+
+    $this->paneConfig = \Drupal::config('uc_cart.settings')->get('panes');
   }
 
   /**
@@ -100,8 +107,12 @@ class CheckoutPaneManager extends DefaultPluginManager {
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
-    $definition['enabled'] = variable_get('uc_pane_' . $plugin_id . '_enabled', $definition['enabled']);
-    $definition['weight'] = variable_get('uc_pane_' . $plugin_id . '_weight', $definition['weight']);
+    if (isset($this->paneConfig[$plugin_id]['status'])) {
+      $definition['enabled'] = $this->paneConfig[$plugin_id]['status'];
+    }
+    if (isset($this->paneConfig[$plugin_id]['weight'])) {
+      $definition['weight'] = $this->paneConfig[$plugin_id]['weight'];
+    }
   }
 
 }
