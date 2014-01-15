@@ -12,7 +12,7 @@ Drupal.behaviors.ucProductFieldsetSummaries = {
       $('input:checked', context).next('label').each(function() {
         vals.push(Drupal.checkPlain($(this).text()));
       });
-      if (!$('#edit-settings-uc-product-shippable', context).is(':checked')) {
+      if ($('#edit-settings-uc-product-shippable', context).is(':not(:checked)')) {
         vals.unshift(Drupal.t('Not shippable'));
       }
       return vals.join(', ');
