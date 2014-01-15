@@ -257,26 +257,16 @@ function uc_cart_user_login($account) {
  *   The HTML text of the default order completion page.
  */
 function uc_cart_complete_sale($order, $login = FALSE) {
-  $user = \Drupal::currentUser();
-
   // Empty that cart...
   uc_cart_empty();
 
   // Ensure we have the latest order data.
+  // @todo Remove this once uc_payment_enter() can modify order objects.
   $order->data = unserialize(db_query("SELECT data FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField());
 
   // Ensure that user creation and triggers are only run once.
   if (empty($order->data['complete_sale'])) {
     uc_cart_complete_sale_account($order);
-
-    // Store account data.
-    db_update('uc_orders')
-      ->fields(array(
-        'uid' => $order->getUserId(),
-        'data' => serialize($order->data),
-      ))
-      ->condition('order_id', $order->id())
-      ->execute();
 
     // Move an order's status from "In checkout" to "Pending".
     if ($order->getStateId() == 'in_checkout') {
@@ -285,6 +275,8 @@ function uc_cart_complete_sale($order, $login = FALSE) {
         $order->setStatusId($status);
       }
     }
+
+    $order->save();
 
     // Invoke the checkout complete trigger and hook.
     $account = $order->getUser();
@@ -295,30 +287,21 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   $type = $order->data['complete_sale'];
 
   // Log in new users, if requested.
-  if ($type == 'new_user' && $login && $user->isAnonymous()) {
+  if ($type == 'new_user' && $login && \Drupal::currentUser()->isAnonymous()) {
     $type = 'new_user_logged_in';
-    $account = $order->getUser();
-    user_login_finalize($account);
+    user_login_finalize($order->getUser());
   }
+
+  $message = \Drupal::config('uc_cart.settings')->get('msg_order_' . $type) ?: uc_get_message('completion_' . $type);
+  $message = \Drupal::token()->replace($message, array('uc_order' => $order));
 
   $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';
   $variables['!new_password'] = isset($order->password) ? $order->password : t('Your password');
-  $messages = array(
-    'msg_order_' . $type => uc_get_message('completion_' . $type),
-  );
-  $cart_config = \Drupal::config('uc_cart.settings');
-  foreach ($messages as $id => &$message) {
-    $message = $cart_config->get($id) ? $cart_config->get($id) : $message;
-    $message = Drupal::token()->replace($message, array('uc_order' => $order));
-    if ($id == 'msg_order_' . $type) {
-      $message = strtr($message, $variables);
-    }
-  }
-  $output = filter_xss_admin(implode(' ', $messages));
+  $message = strtr($message, $variables);
 
   return array(
     '#theme' => 'uc_cart_complete_sale',
-    '#message' => $output,
+    '#message' => filter_xss_admin($message),
     '#order' => $order,
   );
 }
