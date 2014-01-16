@@ -138,7 +138,7 @@ function uc_order_select_customer($email = NULL) {
         'name' => $name,
         'mail' => $email,
         'pass' => user_password(6),
-        'status' => variable_get('uc_new_customer_status_active', TRUE) ? 1 : 0,
+        'status' => \Drupal::config('uc_cart.settings')->get('new_customer_status_active') ? 1 : 0,
       );
 
       $account = entity_create('user', $fields);

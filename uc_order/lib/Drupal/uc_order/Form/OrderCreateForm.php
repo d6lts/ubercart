@@ -245,7 +245,7 @@ class OrderCreateForm extends FormBase {
           'name' => uc_store_email_to_username($email),
           'mail' => $email,
           'pass' => user_password(),
-          'status' => variable_get('uc_new_customer_status_active', TRUE) ? 1 : 0,
+          'status' => $this->config('uc_cart.settings')->get('new_customer_status_active') ? 1 : 0,
         );
         $account = entity_create('user', $fields);
         $account->save();
