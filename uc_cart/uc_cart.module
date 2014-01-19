@@ -209,18 +209,6 @@ function template_preprocess_uc_cart_block_title(&$variables) {
 }
 
 /**
- * Implements hook_uc_message().
- */
-function uc_cart_uc_message() {
-  $messages['completion_logged_in'] = '<p>' . t('Thank you for shopping at [store:name]. While logged in, you may continue shopping or <a href="[uc_order:url]">view your current order status</a> and order history.') . '</p>';
-  $messages['completion_existing_user'] = '<p>' . t("Thank you for shopping at [store:name]. Your current order has been attached to the account we found matching your e-mail address.\n<br /><br />\n<a href=\"!user_url\">Login</a> to view your current order status and order history. Remember to login when you make your next purchase for a faster checkout experience!", array('!user_url' => '[site:login-url]')) . '</p>';
-  $messages['completion_new_user'] = '<p>' . t("Thank you for shopping at [store:name]. A new account has been created for you here that you may use to view your current order status.\n<br /><br />\n<a href=\"!user_url\">Login</a> to your new account using the following information:\n<br /><br />\n<strong>Username:</strong> !new_username<br />\n<strong>Password:</strong> !new_password", array('!user_url' => '[site:login-url]')) . '</p>';
-  $messages['completion_new_user_logged_in'] = '<p>' . t("Thank you for shopping at [store:name]. A new account has been created for you here that you may use to view your current order status.\n<br /><br />\nYour password and further instructions have been sent to your e-mail address.\n<br /><br />\nFor your convenience, you are already logged in with your newly created account.") . '</p>';
-
-  return $messages;
-}
-
-/**
  * Implements hook_user_login().
  *
  * Updates a user's cart to include items from their anonymous session.
@@ -292,7 +280,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     user_login_finalize($order->getUser());
   }
 
-  $message = \Drupal::config('uc_cart.settings')->get('msg_order_' . $type) ?: uc_get_message('completion_' . $type);
+  $message = \Drupal::config('uc_cart.messages')->get($type);
   $message = \Drupal::token()->replace($message, array('uc_order' => $order));
 
   $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';

@@ -60,6 +60,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, array &$form_state) {
     $cart_config = \Drupal::config('uc_cart.settings');
+    $messages = \Drupal::config('uc_cart.messages');
 
     $form['checkout-settings'] = array(
       '#type' => 'vertical_tabs',
@@ -216,50 +217,34 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#field_prefix' => url(NULL, array('absolute' => TRUE)),
       '#size' => 16,
     );
-    $msg = $cart_config->get('msg_order_logged_in');
-    if (empty($msg)) {
-      $msg = uc_get_message('completion_logged_in');
-    }
     $form['completion_messages']['uc_msg_order_logged_in'] = array(
       '#type' => 'textarea',
       '#title' => t('Logged in users'),
       '#description' => t('Message displayed upon checkout for a user who is logged in.'),
-      '#default_value' => $msg,
+      '#default_value' => $messages->get('logged_in'),
       '#rows' => 3,
     );
-    $msg = $cart_config->get('msg_order_existing_user');
-    if (empty($msg)) {
-      $msg = uc_get_message('completion_existing_user');
-    }
     $form['completion_messages']['uc_msg_order_existing_user'] = array(
       '#type' => 'textarea',
       '#title' => t('Existing users'),
       '#description' => t("Message displayed upon checkout for a user who has an account but wasn't logged in."),
-      '#default_value' => $msg,
+      '#default_value' => $messages->get('existing_user'),
       '#rows' => 3,
       '#states' => $anon_state,
     );
-    $msg = $cart_config->get('msg_order_new_user');
-    if (empty($msg)) {
-      $msg = uc_get_message('completion_new_user');
-    }
     $form['completion_messages']['uc_msg_order_new_user'] = array(
       '#type' => 'textarea',
       '#title' => t('New users'),
       '#description' => t("Message displayed upon checkout for a new user whose account was just created. You may use the special tokens !new_username for the username of a newly created account and !new_password for that account's password."),
-      '#default_value' => $msg,
+      '#default_value' => $messages->get('new_user'),
       '#rows' => 3,
       '#states' => $anon_state,
     );
-    $msg = $cart_config->get('msg_order_new_user_logged_in');
-    if (empty($msg)) {
-      $msg = uc_get_message('completion_new_user_logged_in');
-    }
     $form['completion_messages']['uc_msg_order_new_user_logged_in'] = array(
       '#type' => 'textarea',
       '#title' => t('New logged in users'),
       '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href="!user_login_setting_ur">checkout settings</a>.', array('!user_login_setting_ur' => 'admin/store/settings/checkout')),
-      '#default_value' => $msg,
+      '#default_value' => $messages->get('new_user_logged_in'),
       '#rows' => 3,
       '#states' => $anon_state,
     );
@@ -299,15 +284,18 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('default_same_address', $form_state['values']['uc_cart_default_same_address'])
       ->set('delivery_not_shippable', $form_state['values']['uc_cart_delivery_not_shippable'])
       ->set('checkout_complete_page', $form_state['values']['uc_cart_checkout_complete_page'])
-      ->set('msg_order_logged_in', $form_state['values']['uc_msg_order_logged_in'])
-      ->set('msg_order_existing_user', $form_state['values']['uc_msg_order_existing_user'])
-      ->set('msg_order_new_user', $form_state['values']['uc_msg_order_new_user'])
-      ->set('msg_order_new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in'])
       ->set('panes', $form_state['values']['panes']);
 
     // @todo Handle (or remove) per-pane settings.
 
     $cart_config->save();
+
+    \Drupal::config('uc_cart.messages')
+      ->set('logged_in', $form_state['values']['uc_msg_order_logged_in'])
+      ->set('existing_user', $form_state['values']['uc_msg_order_existing_user'])
+      ->set('new_user', $form_state['values']['uc_msg_order_new_user'])
+      ->set('new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in'])
+      ->save();
 
     $this->checkoutPaneManager->clearCachedDefinitions();
 
