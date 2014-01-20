@@ -83,7 +83,7 @@ class OrderPaymentsForm extends FormBase {
     if ($payments !== FALSE) {
       foreach ($payments as $payment) {
         $form['payments'][$payment->receipt_id]['received'] = array(
-          '#markup' => format_date($payment->received, 'custom', variable_get('date_format_uc_store', 'm/d/Y') . '<b\r />H:i:s'),
+          '#markup' => format_date($payment->received, 'short'),
         );
         $form['payments'][$payment->receipt_id]['user'] = array(
           '#markup' => theme('uc_uid', array('uid' => $payment->uid)),
