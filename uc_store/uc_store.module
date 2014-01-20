@@ -1233,22 +1233,6 @@ function _uc_country_import_list() {
 }
 
 /**
- * Returns the default message for a configurable message.
- *
- * @deprecated
- */
-function uc_get_message($message_id) {
-  static $messages;
-
-  if (empty($messages)) {
-    $messages = \Drupal::moduleHandler()->invokeAll('uc_message');
-    \Drupal::moduleHandler()->alter('uc_get_message', $messages);
-  }
-
-  return $messages[$message_id];
-}
-
-/**
  * Returns the store name.
  */
 function uc_store_name() {
