@@ -94,10 +94,6 @@ function uc_product_theme() {
       'variables' => array('model' => '', 'view_mode' => 'full', 'attributes' => array()),
       'file' => 'uc_product.theme.inc',
     ),
-    'uc_product_add_to_cart' => array(
-      'variables' => array('form' => NULL, 'view_mode' => 'full'),
-      'file' => 'uc_product.theme.inc',
-    ),
     'uc_product_price' => array(
       'render element' => 'element',
       'file' => 'uc_product.theme.inc',
@@ -650,11 +646,7 @@ function uc_product_view_product(EntityInterface $node, EntityDisplay $display, 
   );
 
   if (isset($add_to_cart_form)) {
-    $node->content['add_to_cart'] = array(
-      '#theme' => 'uc_product_add_to_cart',
-      '#view_mode' => $view_mode,
-      '#form' => $add_to_cart_form,
-    );
+    $node->content['add_to_cart'] = $add_to_cart_form;
   }
 
   $node->content['#node'] = $variant;

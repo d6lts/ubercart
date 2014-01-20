@@ -38,18 +38,3 @@ function theme_uc_product_kit_list_item($variables) {
 
   return theme('uc_qty', array('qty' => $qty)) . ' ' . $title;
 }
-
-/**
- * Wraps the "Add to Cart" form in a <div>.
- *
- * @ingroup themeable
- */
-function theme_uc_product_kit_add_to_cart($variables) {
-  $form = $variables['form'];
-
-  $output = '<div class="add-to-cart" title="' . t('Click to add to cart.') . '">';
-  $output .= drupal_render($form);
-  $output .= '</div>';
-
-  return $output;
-}

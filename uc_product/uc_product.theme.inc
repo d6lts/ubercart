@@ -34,25 +34,6 @@ function theme_uc_product_model($variables) {
 }
 
 /**
- * Wraps the "Add to Cart" form in a <div>.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the add-to-cart form.
- *
- * @ingroup themeable
- */
-function theme_uc_product_add_to_cart($variables) {
-  $form = $variables['form'];
-
-  $output = '<div class="add-to-cart">';
-  $output .= drupal_render($form);
-  $output .= '</div>';
-
-  return $output;
-}
-
-/**
  * Formats a product's price.
  *
  * @param $variables

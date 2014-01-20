@@ -481,10 +481,6 @@ function uc_product_kit_module_implements_alter(&$implementations, $hook) {
  */
 function uc_product_kit_theme() {
   return array(
-    'uc_product_kit_add_to_cart' => array(
-      'variables' => array('form' => NULL, 'view_mode' => 'full'),
-      'file' => 'uc_product_kit.theme.inc',
-    ),
     'uc_product_kit_list_item' => array(
       'arguments' => array('product' => NULL),
       'file' => 'uc_product_kit.theme.inc',
