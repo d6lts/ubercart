@@ -84,15 +84,6 @@ function uc_stock_mail($key, &$message, $params) {
 }
 
 /**
- * Implements hook_uc_message().
- */
-function uc_stock_uc_message() {
-  $messages['uc_stock_threshold_notification_subject'] = t('[store:name]: Stock threshold limit reached');
-  $messages['uc_stock_threshold_notification_message'] = t('This message has been sent to let you know that the stock level for "[node:title]" with SKU [uc_stock:model] has reached [uc_stock:level]. There may not be enough units in stock to fulfill order #[uc_order:link].');
-  return $messages;
-}
-
-/**
  * Adjusts the product stock level by a set amount.
  *
  * @param $sku
@@ -185,15 +176,16 @@ function _uc_stock_send_mail($order, $node, $stock) {
   $account = $order->getUser();
   $token_filters = array('uc_order' => $order, 'user' => $account, 'uc_stock' => $stock, 'node' => $node);
 
-  $to = variable_get('uc_stock_threshold_notification_recipients', uc_store_email());
+  $to = \Drupal::config('uc_stock.settings')->get('recipients');
+  $to = $token_service->replace($to, $token_filters);
   $to = explode(',', $to);
 
   $from = uc_store_email_from();
 
-  $subject = variable_get('uc_stock_threshold_notification_subject', uc_get_message('uc_stock_threshold_notification_subject'));
+  $mail_config = \Drupal::config('uc_stock.mail');
+  $subject = $mail_config->get('threshold_notification.subject');
   $subject = $token_service->replace($subject, $token_filters);
-
-  $body = variable_get('uc_stock_threshold_notification_message', uc_get_message('uc_stock_threshold_notification_message'));
+  $body = $mail_config->get('threshold_notification.body');
   $body = $token_service->replace($body, $token_filters);
 
   // Send to each recipient.
@@ -245,7 +237,7 @@ function uc_stock_adjust_product_stock($product, $key, $order) {
   $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $product->model->value))->fetchObject();
 
   // Should we notify?
-  if (variable_get('uc_stock_threshold_notification', FALSE) && $stock->stock <= $stock->threshold) {
+  if (\Drupal::config('uc_stock.settings')->get('notify') && $stock->stock <= $stock->threshold) {
     $node = node_load($product->nid->value);
     _uc_stock_send_mail($order, $node, $stock);
   }

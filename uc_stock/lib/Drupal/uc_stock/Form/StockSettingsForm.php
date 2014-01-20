@@ -25,29 +25,32 @@ class StockSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
+    $config = $this->config('uc_stock.settings');
+    $mail = $this->config('uc_stock.mail');
+
     $form['uc_stock_threshold_notification'] = array(
       '#type' => 'checkbox',
       '#title' => t('Send email notification when stock level reaches its threshold value'),
-      '#default_value' => variable_get('uc_stock_threshold_notification', FALSE),
+      '#default_value' => $config->get('notify'),
     );
 
     $form['uc_stock_threshold_notification_recipients'] = array(
       '#type' => 'textfield',
       '#title' => t('Notification recipients'),
-      '#default_value' => variable_get('uc_stock_threshold_notification_recipients', uc_store_email()),
+      '#default_value' => $config->get('recipients'),
       '#description' => t('The list of comma-separated email addresses that will receive the notification.'),
     );
 
     $form['uc_stock_threshold_notification_subject'] = array(
       '#type' => 'textfield',
       '#title' => t('Message subject'),
-      '#default_value' => variable_get('uc_stock_threshold_notification_subject', uc_get_message('uc_stock_threshold_notification_subject')),
+      '#default_value' => $mail->get('threshold_notification.subject'),
     );
 
     $form['uc_stock_threshold_notification_message'] = array(
       '#type' => 'textarea',
       '#title' => t('Message text'),
-      '#default_value' => variable_get('uc_stock_threshold_notification_message', uc_get_message('uc_stock_threshold_notification_message')),
+      '#default_value' => $mail->get('threshold_notification.body'),
       '#description' => t('The message the user receives when the stock level reaches its threshold value.'),
       '#rows' => 10,
     );
@@ -65,10 +68,15 @@ class StockSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    variable_set('uc_stock_threshold_notification', $form_state['values']['uc_stock_threshold_notification']);
-    variable_set('uc_stock_threshold_notification_recipients', $form_state['values']['uc_stock_threshold_notification_recipients']);
-    variable_set('uc_stock_threshold_notification_subject', $form_state['values']['uc_stock_threshold_notification_subject']);
-    variable_set('uc_stock_threshold_notification_message', $form_state['values']['uc_stock_threshold_notification_message']);
+    $this->config('uc_stock.settings')
+      ->set('notify', $form_state['values']['uc_stock_threshold_notification'])
+      ->set('recipients', $form_state['values']['uc_stock_threshold_notification_recipients'])
+      ->save();
+
+    $this->config('uc_stock.mail')
+      ->set('threshold_notification.subject', $form_state['values']['uc_stock_threshold_notification_subject'])
+      ->set('threshold_notification.body', $form_state['values']['uc_stock_threshold_notification_message'])
+      ->save();
 
     parent::submitForm($form, $form_state);
   }

@@ -107,6 +107,7 @@ class StockTest extends UbercartTestBase {
 
     $mail = $this->drupalGetMails(array('id' => 'uc_stock_threshold'));
     $mail = array_pop($mail);
+    $this->assertEqual($mail['to'], uc_store_email(), 'Threshold mail recipient is correct.');
     $this->assertTrue(strpos($mail['subject'], 'Stock threshold limit reached') !== FALSE, 'Threshold mail subject is correct.');
     $this->assertTrue(strpos($mail['body'], $this->product->label()) !== FALSE, 'Mail body contains product title.');
     $this->assertTrue(strpos($mail['body'], $this->product->model) !== FALSE, 'Mail body contains SKU.');
