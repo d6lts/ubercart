@@ -982,7 +982,7 @@ function uc_order_state_options_list() {
  */
 function uc_order_state_default($state_id) {
   // Attempt to get the default state from the form.
-  $default = variable_get('uc_state_' . $state_id . '_default', NULL);
+  $default = Drupal::config('uc_order.settings')->get("default_state.$state_id");
 
   // If it is not found, pick the lightest status for this state.
   if (!$default) {

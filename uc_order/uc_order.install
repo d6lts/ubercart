@@ -580,15 +580,6 @@ function uc_order_schema() {
 }
 
 /**
- * Implements hook_uninstall().
- */
-function uc_order_uninstall() {
-  db_delete('variable')
-    ->condition('name', 'uc_state_%', 'LIKE')
-    ->execute();
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function uc_order_update_last_removed() {

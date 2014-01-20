@@ -114,9 +114,11 @@ class OrderWorkflowForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
+    $config = $this->config('uc_order.settings');
     foreach ($form_state['values']['order_states'] as $key => $value) {
-      variable_set('uc_state_' . $key . '_default', $value['default']);
+      $config->set("default_state.$key", $value['default']);
     }
+    $config->save();
 
     foreach ($form_state['values']['order_statuses'] as $id => $value) {
       $status = entity_load('uc_order_status', $id);
