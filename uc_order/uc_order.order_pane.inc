@@ -1109,10 +1109,12 @@ function uc_order_view_update_form_submit($form, &$form_state) {
   }
 
   if ($form_state['values']['status'] != $form_state['values']['current_status']) {
-    if (uc_order_update_status($form_state['values']['order_id'], $form_state['values']['status'])) {
-      if (empty($form_state['values']['order_comment'])) {
-        uc_order_comment_save($form_state['values']['order_id'], $uid, '-', 'order', $form_state['values']['status'], $form_state['values']['notify']);
-      }
+    entity_load('uc_order', $form_state['values']['order_id'])
+      ->setStatusId($form_state['values']['status'])
+      ->save();
+
+    if (empty($form_state['values']['order_comment'])) {
+      uc_order_comment_save($form_state['values']['order_id'], $uid, '-', 'order', $form_state['values']['status'], $form_state['values']['notify']);
     }
   }
 

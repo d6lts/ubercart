@@ -142,6 +142,16 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
     }
 
     uc_order_module_invoke('save', $this, NULL);
+
+    // Record a log entry if the order status has changed.
+    if ($update && $this->getStatusId() != $this->original->getStatusId()) {
+      $this->logChanges(array(t('Order status') => array(
+        'old' => $this->original->getStatus()->name,
+        'new' => $this->getStatus()->name,
+      )));
+
+      // rules_invoke_event('uc_order_status_update', $this->original, $this);
+    }
   }
 
   /**

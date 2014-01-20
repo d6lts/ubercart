@@ -141,7 +141,9 @@ function uc_cart_cron() {
   $result = db_query("SELECT order_id FROM {uc_orders} WHERE order_status = :status AND modified < :time",
     array(':status' => 'in_checkout', ':time' => REQUEST_TIME - UC_CART_ORDER_TIMEOUT))->fetchCol();
   foreach ($result as $order_id) {
-    uc_order_update_status($order_id, 'abandoned');
+    entity_load('uc_order', $order_id)
+      ->setStatusId('abandoned')
+      ->save();
   }
 }
 
@@ -258,10 +260,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
 
     // Move an order's status from "In checkout" to "Pending".
     if ($order->getStateId() == 'in_checkout') {
-      $status = uc_order_state_default('post_checkout');
-      if (uc_order_update_status($order->id(), $status)) {
-        $order->setStatusId($status);
-      }
+      $order->setStatusId(uc_order_state_default('post_checkout'));
     }
 
     $order->save();

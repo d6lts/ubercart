@@ -739,65 +739,6 @@ function uc_order_load_line_items_display($order) {
 }
 
 /**
- * Updates an order's status as long as no one objects.
- *
- * @param $order_id
- *   The ID of the order to be updated.
- * @param $status
- *   The new status ID we want to move the order to.
- *
- * @return
- *   TRUE or FALSE depending on the success of the update.
- */
-function uc_order_update_status($order_id, $status) {
-  // Return FALSE if an invalid $status is specified.
-  if (!entity_load('uc_order_status', $status)) {
-    return FALSE;
-  }
-
-  $order = uc_order_load($order_id);
-
-  // Attempt the update if the order exists.
-  if ($order !== FALSE) {
-    // Return TRUE if the order status is already set.
-    if ($order->getStatusId() == $status) {
-      return TRUE;
-    }
-
-    // Return FALSE if any module says the update is not good to go.
-    $module_handler = \Drupal::moduleHandler();
-    foreach ($module_handler->getImplementations('uc_order') as $module) {
-      $function = $module . '_uc_order';
-      // $order must be passed by reference.
-      if (function_exists($function) && $function('can_update', $order, $status) === FALSE) {
-        return FALSE;
-      }
-    }
-
-    // Otherwise perform the update and log the changes.
-    db_update('uc_orders')
-      ->fields(array(
-        'order_status' => $status,
-        'modified' => REQUEST_TIME,
-      ))
-      ->condition('order_id', $order_id)
-      ->execute();
-    uc_order_module_invoke('update', $order, $status);
-
-    $change = array(t('Order status') => array('old' => $order->getStatus()->name, 'new' => entity_load('uc_order_status', $status)->name));
-    $order->logChanges($change);
-
-    $updated = uc_order_load($order_id, TRUE);
-    // rules_invoke_event('uc_order_status_update', $order, $updated);
-
-    return TRUE;
-  }
-
-  // Return FALSE if the order didn't exist.
-  return FALSE;
-}
-
-/**
  * Invokes hook_uc_order() in every module.
  *
  * We cannot use module_invoke() for this, because the arguments need to
@@ -1150,12 +1091,9 @@ function uc_order_action_info() {
  * Action implementation: sets the status of an order.
  */
 function uc_order_action_set_status($order, $context = array()) {
-  $update = uc_order_update_status($order->id(), $context['status']);
+  $order->setStatusId($context['status'])->save();
 
-  if ($update && $context['notify']) {
-    // Update order object, as uc_order_update_status() cannot.
-    $order->setStatusId($context['status']);
-
+  if ($context['notify']) {
     // rules_invoke_event('uc_order_status_email_update', $order);
   }
 }

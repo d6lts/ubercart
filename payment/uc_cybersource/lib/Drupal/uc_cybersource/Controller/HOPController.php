@@ -87,7 +87,7 @@ class HOPController extends ControllerBase {
         uc_order_comment_save($order_id, 0, t("Payment is rejected:@reason with request ID @rid", array('@reason' => $reason, '@rid' => '@request_id')), 'admin');
         break;
       case 'REVIEW':
-        uc_order_update_status($order_id, 'review');
+        $order->setStatusId('review')->save();
         uc_order_comment_save($order_id, 0, t('Payment is in review & not complete: @reason. Request ID @rid', array('@reason' => $reason, '@rid' => '@request_id')), 'admin');
         break;
     }

@@ -135,7 +135,7 @@ function uc_paypal_ipn() {
         break;
 
       case 'Pending':
-        uc_order_update_status($order_id, 'paypal_pending');
+        $order->setStatusId('paypal_pending')->save();
         uc_order_comment_save($order_id, 0, t('Payment is pending at PayPal: @reason', array('@reason' => _uc_paypal_pending_message(check_plain($_POST['pending_reason'])))), 'admin');
         break;
 

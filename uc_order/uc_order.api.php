@@ -152,13 +152,6 @@ function hook_uc_line_item_data_alter(&$items) {
  *         'message' => t('We were unable to process your credit card.'),
  *       ));
  *     @endcode
- *   - can_update: Called before an order's status is changed to make sure the
- *     order can be updated. $order is the order object with the old order
- *     status ID ($order->order_status), and $arg2 is simply the new order
- *     status ID. Return FALSE to stop the update for some reason.
- *   - update: Called when an order's status is changed. $order is the order
- *     object with the old order status ID ($order->order_status), and $arg2 is
- *     the new order status ID.
  *   - can_delete: Called before an order is deleted to verify that the order
  *     may be deleted. Returning FALSE will prevent a delete from happening.
  *     (For example, the payment module returns FALSE by default when an order
