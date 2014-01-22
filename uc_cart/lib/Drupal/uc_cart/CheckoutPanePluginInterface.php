@@ -7,13 +7,14 @@
 
 namespace Drupal\uc_cart;
 
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
  * Defines an interface for checkout pane plugins.
  */
-interface CheckoutPanePluginInterface extends PluginInspectionInterface {
+interface CheckoutPanePluginInterface extends PluginInspectionInterface, ConfigurablePluginInterface {
 
   /**
    * Prepares a pane for display.
@@ -84,4 +85,19 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface {
    */
   public function getTitle();
 
+  /**
+   * Returns whether the checkout pane is enabled.
+   *
+   * @return bool
+   *   TRUE if the pane is enabled, FALSE otherwise.
+   */
+  public function isEnabled();
+
+  /**
+   * Returns the weight of the checkout pane.
+   *
+   * @return int
+   *   The integer weight of the checkout pane.
+   */
+  public function getWeight();
 }

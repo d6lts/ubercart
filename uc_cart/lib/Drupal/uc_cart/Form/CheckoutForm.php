@@ -71,7 +71,7 @@ class CheckoutForm extends FormBase {
       $filter['shippable'] = TRUE;
     }
 
-    $panes = $this->checkoutPaneManager->createInstances($filter);
+    $panes = $this->checkoutPaneManager->getPanes($filter);
 
     // Invoke the 'prepare' op of enabled panes, but only if their 'process' ops
     // have not been invoked on this request (i.e. when rebuilding after AJAX).

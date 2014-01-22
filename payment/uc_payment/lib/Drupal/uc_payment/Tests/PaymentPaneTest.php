@@ -62,11 +62,17 @@ class PaymentPaneTest extends UbercartTestBase {
    * Tests operation of uc_payment_show_order_total_preview variable.
    */
   public function testOrderTotalPreview() {
-    variable_set('uc_payment_show_order_total_preview', TRUE);
+    $edit = array(
+      'panes[payment][settings][show_preview]' => TRUE,
+    );
+    $this->drupalPostForm('admin/store/settings/checkout', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertText('Order total:');
 
-    variable_set('uc_payment_show_order_total_preview', FALSE);
+    $edit = array(
+      'panes[payment][settings][show_preview]' => FALSE,
+    );
+    $this->drupalPostForm('admin/store/settings/checkout', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertNoText('Order total:');
   }

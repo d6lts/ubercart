@@ -65,7 +65,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
   public function view(UcOrderInterface $order, array $form, array &$form_state) {
     $contents['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . '/css/uc_payment.css';
 
-    if (variable_get('uc_payment_show_order_total_preview', TRUE)) {
+    if ($this->configuration['show_preview']) {
       $contents['line_items'] = array(
         '#theme' => 'uc_payment_totals',
         '#order' => $order,
@@ -175,12 +175,21 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function settingsForm() {
-    $form['uc_payment_show_order_total_preview'] = array(
+    $form['show_preview'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show the order total preview on the payment pane.'),
-      '#default_value' => variable_get('uc_payment_show_order_total_preview', TRUE),
+      '#default_value' => $this->configuration['show_preview'],
     );
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array(
+      'show_preview' => TRUE,
+    );
   }
 
   /**

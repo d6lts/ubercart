@@ -75,6 +75,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('Basic settings'),
       '#group' => 'checkout-settings',
+      '#weight' => -10,
     );
     $form['checkout']['uc_checkout_enabled'] = array(
       '#type' => 'checkbox',
@@ -100,6 +101,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('Anonymous checkout'),
       '#group' => 'checkout-settings',
+      '#weight' => -5,
     );
     $form['anonymous']['uc_checkout_anonymous'] = array(
       '#type' => 'checkbox',
@@ -153,7 +155,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#states' => $anon_state,
     );
 
-    $panes = $this->checkoutPaneManager->getDefinitions();
+    $panes = $this->checkoutPaneManager->getPanes();
     $form['checkout']['panes'] = array(
       '#type' => 'table',
       '#header' => array(t('Pane'), t('List position')),
@@ -165,30 +167,33 @@ class CheckoutSettingsForm extends ConfigFormBase {
         ),
       ),
     );
+    $form['checkout']['pane_settings']['#tree'] = TRUE;
     foreach ($panes as $id => $pane) {
       $form['checkout']['panes'][$id]['#attributes']['class'][] = 'draggable';
       $form['checkout']['panes'][$id]['status'] = array(
         '#type' => 'checkbox',
-        '#title' => check_plain($pane['title']),
-        '#default_value' => $pane['enabled'],
+        '#title' => check_plain($pane->getTitle()),
+        '#default_value' => $pane->isEnabled(),
       );
       $form['checkout']['panes'][$id]['weight'] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $pane['title'])),
+        '#title' => t('Weight for @title', array('@title' => $pane->getTitle())),
         '#title_display' => 'invisible',
-        '#default_value' => $pane['weight'],
+        '#default_value' => $pane->getWeight(),
         '#attributes' => array(
           'class' => array('uc-checkout-pane-weight'),
         ),
       );
-      $form['checkout']['panes'][$id]['#weight'] = $pane['weight'];
+      $form['checkout']['panes'][$id]['#weight'] = $pane->getWeight();
 
-      $pane_settings = $this->checkoutPaneManager->createInstance($id)->settingsForm();
+      // @todo Move settingsForm to an interface.
+      $pane_settings = $pane->settingsForm();
       if (!empty($pane_settings)) {
-        $form['pane_' . $id] = $pane_settings + array(
+        $form['checkout']['pane_settings'][$id] = $pane_settings + array(
           '#type' => 'details',
-          '#title' => t('@pane pane', array('@pane' => $pane['title'])),
+          '#title' => t('@pane pane', array('@pane' => $pane->getTitle())),
           '#group' => 'checkout-settings',
+          '#parents' => array('panes', $id, 'settings'),
         );
       }
     }
@@ -284,11 +289,8 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('default_same_address', $form_state['values']['uc_cart_default_same_address'])
       ->set('delivery_not_shippable', $form_state['values']['uc_cart_delivery_not_shippable'])
       ->set('checkout_complete_page', $form_state['values']['uc_cart_checkout_complete_page'])
-      ->set('panes', $form_state['values']['panes']);
-
-    // @todo Handle (or remove) per-pane settings.
-
-    $cart_config->save();
+      ->set('panes', $form_state['values']['panes'])
+      ->save();
 
     \Drupal::config('uc_cart.messages')
       ->set('logged_in', $form_state['values']['uc_msg_order_logged_in'])
@@ -296,8 +298,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('new_user', $form_state['values']['uc_msg_order_new_user'])
       ->set('new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in'])
       ->save();
-
-    $this->checkoutPaneManager->clearCachedDefinitions();
 
     parent::submitForm($form, $form_state);
   }

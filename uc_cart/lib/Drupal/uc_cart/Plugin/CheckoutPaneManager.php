@@ -29,7 +29,7 @@ class CheckoutPaneManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   protected $defaults = array(
-    'enabled' => TRUE,
+    'status' => TRUE,
     'weight' => 0,
   );
 
@@ -66,53 +66,38 @@ class CheckoutPaneManager extends DefaultPluginManager {
    * @return array
    *   An array of checkout pane plugin instances.
    */
-  public function createInstances($filter = array()) {
-    $definitions = $this->getDefinitions($filter);
-
+  public function getPanes($filter = array()) {
     $instances = array();
-    foreach (array_keys($definitions) as $id) {
-      $instances[$id] = $this->createInstance($id);
+    foreach ($this->getDefinitions() as $id => $definition) {
+      foreach ($filter as $key => $value) {
+        if (isset($definition[$key]) && $definition[$key] == $value) {
+          continue 2;
+        }
+      }
+
+      $instance = $this->createInstance($id, $this->paneConfig[$id] ?: array());
+      if (!isset($filter['enabled']) || $filter['enabled'] != $instance->isEnabled()) {
+        $instances[$id] = $instance;
+      }
     }
+
+    uasort($instances, array($this, 'sortHelper'));
+
     return $instances;
   }
 
   /**
-   * Gets the definition of checkout pane plugins, optionally filtered.
-   *
-   * @param array $filter
-   *   An array of definition keys to filter by.
-   *
-   * @return array
-   *   An array of checkout pane plugin definitions.
+   * Provides uasort() callback to sort plugins.
    */
-  public function getDefinitions($filter = array()) {
-    $panes = parent::getDefinitions();
+  public function sortHelper($a, $b) {
+    $a_weight = $a->getWeight();
+    $b_weight = $b->getWeight();
 
-    foreach ($panes as $id => $pane) {
-      foreach ($filter as $key => $value) {
-        if (isset($panes[$id][$key]) && $panes[$id][$key] == $value) {
-          unset($panes[$id]);
-        }
-      }
+    if ($a_weight == $b_weight) {
+      return 0;
     }
 
-    uasort($panes, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-
-    return $panes;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function processDefinition(&$definition, $plugin_id) {
-    parent::processDefinition($definition, $plugin_id);
-
-    if (isset($this->paneConfig[$plugin_id]['status'])) {
-      $definition['enabled'] = $this->paneConfig[$plugin_id]['status'];
-    }
-    if (isset($this->paneConfig[$plugin_id]['weight'])) {
-      $definition['weight'] = $this->paneConfig[$plugin_id]['weight'];
-    }
+    return ($a_weight < $b_weight) ? -1 : 1;
   }
 
 }

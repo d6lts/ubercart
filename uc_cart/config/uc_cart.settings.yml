@@ -35,4 +35,3 @@ checkout_complete_page: ''
 checkout_enabled: true
 
 delivery_not_shippable: true
-new_account_details: '<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.'

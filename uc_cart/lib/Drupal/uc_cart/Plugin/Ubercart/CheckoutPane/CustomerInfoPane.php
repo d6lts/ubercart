@@ -88,7 +88,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
         $array = array(
           '#type' => 'details',
           '#title' => t('New account details'),
-          '#description' => $cart_config->get('new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
+          '#description' => $this->configuration['new_account_details'],
           '#collapsible' => FALSE,
         );
         $contents['new_account'] = array_merge($array, $contents['new_account']);
@@ -174,14 +174,23 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
   public function settingsForm() {
     $cart_config = \Drupal::config('uc_cart.settings');
 
-    $form['uc_cart_new_account_details'] = array(
+    $form['new_account_details'] = array(
       '#type' => 'textarea',
       '#title' => t('New account details help message'),
       '#description' => t('Enter the help message displayed in the new account details fieldset when shown.'),
-      '#default_value' => $cart_config->get('new_account_details', t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.')),
+      '#default_value' => $this->configuration['new_account_details'],
     );
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array(
+      'new_account_details' => t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.'),
+    );
   }
 
 }

@@ -16,6 +16,76 @@ use Drupal\uc_order\UcOrderInterface;
 abstract class CheckoutPanePluginBase extends PluginBase implements CheckoutPanePluginInterface {
 
   /**
+   * Whether the pane is enabled or not.
+   *
+   * @var bool
+   */
+  protected $status = TRUE;
+
+  /**
+   * The weight of the checkout pane.
+   *
+   * @var int|string
+   */
+  protected $weight = '';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEnabled() {
+    return $this->status;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->setConfiguration($configuration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return array(
+      'status' => $this->isEnabled(),
+      'weight' => $this->getWeight(),
+      'settings' => $this->configuration,
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $configuration += array(
+      'status' => $this->pluginDefinition['status'],
+      'weight' => $this->pluginDefinition['weight'],
+      'settings' => array(),
+    );
+    $this->status = $configuration['status'];
+    $this->weight = $configuration['weight'];
+    $this->configuration = $configuration['settings'] + $this->defaultConfiguration();
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function prepare(UcOrderInterface $order, array $form, array &$form_state) {
