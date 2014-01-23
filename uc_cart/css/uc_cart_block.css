@@ -92,7 +92,7 @@
   padding: 0 1em 0 .75em;
 }
 
-.cart-block-summary-links li.last {
+.cart-block-summary-links li:last-child {
   border-right: none;
   padding-right: 0;
 }

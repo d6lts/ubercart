@@ -20,6 +20,6 @@
 .kit-component-cart-desc li:after {
   content: ", ";
 }
-.kit-component-cart-desc li.last:after {
+.kit-component-cart-desc li:last-child:after {
   content: "";
 }
