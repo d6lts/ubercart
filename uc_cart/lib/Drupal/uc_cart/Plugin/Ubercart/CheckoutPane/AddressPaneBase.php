@@ -40,22 +40,11 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    if (!isset(self::$sourcePaneId)) {
-      self::$sourcePaneId = $plugin_definition['id'];
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function view(UcOrderInterface $order, array $form, array &$form_state) {
     $user = \Drupal::currentUser();
     $cart_config = \Drupal::config('uc_cart.settings');
     $pane = $this->pluginDefinition['id'];
-    $source = self::$sourcePaneId;
+    $source = $this->sourcePaneId();
 
     $contents['#description'] = $this->getDescription();
 
@@ -142,7 +131,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
    */
   public function process(UcOrderInterface $order, array $form, array &$form_state) {
     $pane = $this->pluginDefinition['id'];
-    $source = self::$sourcePaneId;
+    $source = $this->sourcePaneId();
 
     $address = new Address;
     $panes = &$form_state['values']['panes'];
@@ -171,6 +160,16 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       $review[] = array('title' => t('Phone'), 'data' => check_plain($address->phone));
     }
     return $review;
+  }
+
+  /**
+   * Returns the ID of the source (first) address pane for copying.
+   */
+  protected function sourcePaneId() {
+    if (!isset(self::$sourcePaneId)) {
+      self::$sourcePaneId = $this->pluginDefinition['id'];
+    }
+    return self::$sourcePaneId;
   }
 
   /**
