@@ -1,29 +1,26 @@
 uc_attribute.product_attributes:
   route_name: uc_attribute.product_attributes
-  tab_root_id: node.view
-  tab_parent_id: node.page_edit
+  parent_id: node.page_edit
   title: Attributes
   weight: 1
 uc_attribute.product_options:
   route_name: uc_attribute.product_options
-  tab_root_id: node.view
-  tab_parent_id: node.page_edit
+  parent_id: node.page_edit
   title: Options
   weight: 2
 uc_attribute.product_adjustments:
   route_name: uc_attribute.product_adjustments
-  tab_root_id: node.view
-  tab_parent_id: node.page_edit
+  parent_id: node.page_edit
   title: Adjustments
   weight: 3
 
 uc_attribute.product_class_attributes:
   route_name: uc_attribute.product_class_attributes
-  tab_root_id: node.type_edit
+  base_route: node.type_edit
   title: Attributes
   weight: 1
 uc_attribute.product_class_options:
   route_name: uc_attribute.product_class_options
-  tab_root_id: node.type_edit
+  base_route: node.type_edit
   title: Options
   weight: 2
