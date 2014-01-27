@@ -97,10 +97,6 @@ function uc_attribute_theme() {
       'variables' => array('option' => '', 'price' => ''),
       'file' => 'uc_attribute.theme.inc',
     ),
-    'uc_attribute_add_to_cart' => array(
-      'render element' => 'form',
-      'file' => 'uc_attribute.theme.inc',
-    ),
     'uc_product_attributes' => array(
       'render element' => 'attributes',
       'file' => 'uc_attribute.admin.inc',
@@ -1100,7 +1096,6 @@ function uc_attribute_option_ajax($form, $form_state) {
  *   FALSE, if there are multiple attributes and one or more of them is set to
  *   display total price.
  *
- * @see theme_uc_attribute_add_to_cart()
  * @see uc_attribute_option_ajax()
  */
 function _uc_attribute_alter_form($id, &$product, $use_ajax) {
@@ -1141,8 +1136,11 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
 
   // Initialize the form element.
   $form_attributes = array(
-    '#theme' => 'uc_attribute_add_to_cart',
-    '#id' => $id,
+    '#type' => 'container',
+    '#attributes' => array(
+      'id' => $id,
+      'class' => array('product-attributes'),
+    ),
   );
 
   $price_format = variable_get('uc_attribute_option_price_format', 'adjustment');
