@@ -55,7 +55,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
         if (isset($operations['delete'])) {
           $operations['delete']['weight'] = 10;
         }
-        uasort($operations, 'drupal_sort_weight');
+        uasort($operations, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
         $form['methods'][$id]['status'] = array(
           '#type' => 'checkbox',
