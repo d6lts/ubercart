@@ -95,7 +95,7 @@ function uc_attribute_theme() {
   return array(
     'uc_attribute_option' => array(
       'variables' => array('option' => '', 'price' => ''),
-      'file' => 'uc_attribute.theme.inc',
+      'template' => 'uc-attribute-option',
     ),
     'uc_product_attributes' => array(
       'render element' => 'attributes',
