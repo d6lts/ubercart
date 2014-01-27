@@ -12,19 +12,6 @@ use Drupal\uc_store\Address;
  ******************************************************************************/
 
 /**
- * Implements hook_menu().
- */
-function uc_usps_menu() {
-  $items['admin/store/settings/quotes/settings/usps'] = array(
-    'title' => 'USPS',
-    'type' => MENU_LOCAL_TASK,
-    'route_name' => 'uc_usps.settings',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_usps_theme() {

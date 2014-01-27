@@ -11,3 +11,4 @@ uc_quote.basic_settings:
   route_name: uc_quote.settings
   parent_id: uc_quote.settings
   title: Basic settings
+  weight: -10
