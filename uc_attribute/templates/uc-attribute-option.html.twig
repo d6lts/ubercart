@@ -11,8 +11,10 @@
  *
  * @ingroup themeable
 #}
+{% spaceless %}
 {% if price %}
   {{ option }}, {{ price }}
 {% else %}
   {{ option }}
 {% endif %}
+{% endspaceless %}
