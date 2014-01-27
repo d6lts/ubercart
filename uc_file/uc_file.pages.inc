@@ -252,7 +252,7 @@ function _uc_file_download($fid) {
  */
 function _uc_file_download_validate($file_download, &$user, $ip) {
 
-  $request_cache = cache_get('uc_file_' . $ip);
+  $request_cache = cache()->get('uc_file_' . $ip);
   $requests = ($request_cache) ? $request_cache->data + 1 : 1;
 
   $message_user = ($user->id()) ? t('The user %username', array('%username' => $user->getUsername())) : t('The IP address %ip', array('%ip' => $ip));
@@ -263,7 +263,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
 
   // Must be a valid file.
   if (!$file_download || !is_readable($file_download->full_path)) {
-    cache_set('uc_file_' . $ip, $requests, 'cache', REQUEST_TIME + 86400);
+    cache()->set('uc_file_' . $ip, $requests, REQUEST_TIME + 86400);
     if ($requests == UC_FILE_REQUEST_LIMIT) {
       // $message_user has already been passed through check_plain()
       watchdog('uc_file', '!username has been temporarily banned from file downloads.', array('!username' => $message_user), WATCHDOG_WARNING);

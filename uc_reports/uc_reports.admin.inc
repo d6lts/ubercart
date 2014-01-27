@@ -1277,7 +1277,7 @@ function uc_reports_store_csv($report_id, $rows) {
     }
     $csv_output .= implode(',', $row) . "\n";
   }
-  cache_set('uc_reports_' . $report_id . '_' . $user_id, $csv_output, 'cache', REQUEST_TIME + 86400);
+  cache->set('uc_reports_' . $report_id . '_' . $user_id, $csv_output, REQUEST_TIME + 86400);
   return array('user' => $user_id, 'report' => $report_id, 'csv' => $csv_output);
 }
 
@@ -1294,7 +1294,7 @@ function uc_reports_store_csv($report_id, $rows) {
 function uc_reports_get_csv($report_id, $user_id) {
   global $user;
   $user_check = $user->isAnonymous() ? session_id() : $user->id();
-  $csv_data = cache_get('uc_reports_' . $report_id . '_' . $user_id, 'cache');
+  $csv_data = cache->get('uc_reports_' . $report_id . '_' . $user_id);
 
   if (!$csv_data || $user_id != $user_check) {
     drupal_set_message(t("The CSV data could not be retrieved. It's possible the data might have expired. Refresh the report page and try to retrieve the CSV file again."), 'error');
