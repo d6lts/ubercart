@@ -76,7 +76,7 @@ function uc_taxes_form_uc_order_edit_form_alter(&$form, &$form_state) {
  * Adds included taxes (VAT) to display price of applicable products.
  */
 function uc_taxes_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay $display) {
-  switch ($entity->entityType()) {
+  switch ($entity->getEntityTypeId()) {
     case 'node':
       if (uc_product_is_product($entity)) {
         list($amount, $suffixes) = uc_taxes_get_included_tax($entity);
