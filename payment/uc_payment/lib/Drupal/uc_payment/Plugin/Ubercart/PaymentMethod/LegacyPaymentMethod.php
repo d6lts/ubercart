@@ -95,9 +95,21 @@ class LegacyPaymentMethod extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, array &$form_state) {
     $null = NULL;
     return $this->pluginDefinition['callback']('settings', $null, $form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array $form, array &$form_state) {
+    // @todo Refactor when uc_credit is moved to a separate plugin.
+    if ($this->pluginId == 'credit') {
+      \Drupal::config('uc_credit.settings')
+        ->set('encryption_path', $form_state['values']['uc_credit_encryption_path'])
+        ->save();
+    }
   }
 
 }

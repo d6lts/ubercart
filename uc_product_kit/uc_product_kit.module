@@ -624,7 +624,7 @@ function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
     );
   }
 
-  if (variable_get('uc_product_add_to_cart_qty', FALSE)) {
+  if (\Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
     $form['base']['default_qty'] = array(
       '#type' => 'uc_quantity',
       '#title' => t('Default quantity to add to cart'),
@@ -737,7 +737,7 @@ function uc_product_kit_add_to_cart_form($form, &$form_state, $node) {
     $form['products'][$i]['nid'] = array('#type' => 'hidden', '#value' => $product->id());
     $form['products'][$i]['qty'] = array('#type' => 'hidden', '#value' => $product->qty);
   }
-  if ($node->default_qty > 0 && variable_get('uc_product_add_to_cart_qty', FALSE)) {
+  if ($node->default_qty > 0 && \Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
     $form['qty'] = array(
       '#type' => 'uc_quantity',
       '#title' => t('Quantity'),

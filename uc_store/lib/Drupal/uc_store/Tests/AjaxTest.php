@@ -76,15 +76,19 @@ class AjaxTest extends UbercartTestBase {
 
   public function testCheckoutAjax() {
     // Enable two payment methods and set a condition on one.
-    variable_set('uc_payment_method_check_checkout', TRUE);
-    variable_set('uc_payment_method_other_checkout', TRUE);
-    $this->container->get('plugin.manager.uc_payment.method')->clearCachedDefinitions();
+    $edit = array(
+      'methods[check][status]' => TRUE,
+      'methods[other][status]' => TRUE,
+    );
+    $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
     // $this->addPaymentZoneCondition('other', '26');
 
     // Speciy that the billing zone should update the payment pane.
-    $config = variable_get('uc_ajax_checkout', _uc_ajax_defaults('checkout'));
+    $config = _uc_ajax_defaults('checkout');
     $config['panes][billing][address][zone'] = array('payment-pane' => 'payment-pane');
-    variable_set('uc_ajax_checkout', $config);
+    \Drupal::config('uc_cart.settings')
+      ->set('ajax.checkout', $config)
+      ->save();
 
     // Go to the checkout page, veriy that the conditional payment method is
     // not available.

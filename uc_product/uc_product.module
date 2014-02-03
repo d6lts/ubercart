@@ -277,7 +277,7 @@ function uc_product_form_node_form_alter(&$form, &$form_state) {
       ),
     );
 
-    if (variable_get('uc_product_add_to_cart_qty', FALSE)) {
+    if (\Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
       $form['base']['default_qty'] = array(
         '#type' => 'uc_quantity',
         '#title' => t('Default quantity to add to cart'),
@@ -533,7 +533,7 @@ function uc_product_node_delete($node) {
  *   (e.g. 'display_price').
  */
 function uc_product_view_ajax_commands(AjaxResponse $response, $form_state, $keys) {
-  if (variable_get('uc_product_update_node_view', FALSE) && !empty($form_state['storage']['variant'])) {
+  if (\Drupal::config('uc_product.settings')->get('update_node_view') && !empty($form_state['storage']['variant'])) {
     $node_div = '.uc-product-' . $form_state['storage']['variant']->nid;
     $build = node_view($form_state['storage']['variant']);
     foreach ($keys as $key) {
@@ -571,7 +571,7 @@ function uc_product_view_product(EntityInterface $node, EntityDisplay $display, 
     // provided by the form (e.g. attribute default options).
     if (module_exists('uc_cart') && $variant->id() && empty($variant->data['display_only'])) {
       $add_to_cart_form = drupal_get_form('uc_product_add_to_cart_form_' . $variant->id(), $variant);
-      if (variable_get('uc_product_update_node_view', FALSE)) {
+      if (\Drupal::config('uc_product.settings')->get('update_node_view')) {
         $variant = $add_to_cart_form['node']['#value'];
       }
     }
@@ -984,7 +984,7 @@ function uc_catalog_buy_it_now_form_submit($form, &$form_state) {
 function uc_product_add_to_cart_form($form, &$form_state, $node) {
   $form['nid'] = array('#type' => 'value', '#value' => $node->id());
 
-  if ($node->default_qty > 0 && variable_get('uc_product_add_to_cart_qty', FALSE)) {
+  if ($node->default_qty > 0 && \Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
     $form['qty'] = array(
       '#type' => 'uc_quantity',
       '#title' => t('Quantity'),

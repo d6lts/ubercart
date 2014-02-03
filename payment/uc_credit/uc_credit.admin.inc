@@ -12,6 +12,7 @@
  * @see uc_credit_settings_form_submit()
  */
 function uc_credit_settings_form($form, &$form_state) {
+  $config = \Drupal::config('uc_credit.settings');
   $account = \Drupal::currentUser();
   if (!$account->hasPermission('administer credit cards')) {
     $form['notice'] = array(
@@ -70,7 +71,7 @@ function uc_credit_settings_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Encryption key directory'),
     '#description' => t('The card type, expiration date and last four digits of the card number are encrypted and stored temporarily while the customer is in the process of checking out.<br /><b>You must enable encryption</b> by following the <a href="!url">encryption instructions</a> in order to accept credit card payments.<br />In short, you must enter the path of a directory outside of your document root where the encryption key may be stored.<br />Relative paths will be resolved relative to the Drupal installation directory.<br />Once this directory is set, you should not change it.', array('!url' => 'http://drupal.org/node/1309226')),
-    '#default_value' => uc_credit_encryption_key() ? variable_get('uc_credit_encryption_path', t('Not configured.')) : t('Not configured.'),
+    '#default_value' => uc_credit_encryption_key() ? $config->get('encryption_path') : t('Not configured.'),
   );
 
   // Form elements that deal with the type of data requested at checkout.

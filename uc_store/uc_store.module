@@ -1433,3 +1433,12 @@ function uc_store_format_price_field_value($price) {
 function uc_form_alter(&$form, &$form_state, $form_id) {
   \Drupal::moduleHandler()->alter('uc_form', $form, $form_state, $form_id);
 }
+
+/**
+ * Temporary shim for removed variable_get().
+ */
+if (!function_exists('variable_get')) {
+  function variable_get($name, $default = NULL) {
+    return $default;
+  }
+}

@@ -161,8 +161,9 @@ class CreditCardTest extends UbercartTestBase {
 
     // Try to submit settings form without a key file path.
     // Save current variable, reset to its value when first installed.
-    $temp_variable = variable_get('uc_credit_encryption_path', '');
-    variable_set('uc_credit_encryption_path', '');
+    $config = \Drupal::config('uc_credit.settings');
+    $temp_variable = $config->get('encryption_path');
+    $config->set('encryption_path', '')->save();
 
     $this->drupalGet('admin/store/settings/payment/method/credit');
     $this->assertText(t('Credit card security settings must be configured in the security settings tab.'));
@@ -178,7 +179,7 @@ class CreditCardTest extends UbercartTestBase {
       t('Key file has not yet been configured.')
     );
     // Restore variable setting.
-    variable_set('uc_credit_encryption_path', $temp_variable);
+    $config->set('encryption_path', $temp_variable)->save();
 
     // Try to submit settings form with an empty key file path.
     $this->drupalPostForm(

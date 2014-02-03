@@ -15,6 +15,11 @@ use Drupal\Core\Form\ConfigFormBase;
 class PaymentMethodSettingsForm extends ConfigFormBase {
 
   /**
+   * The plugin instance that is being configured.
+   */
+  protected $instance;
+
+  /**
    * {@inheritdoc}
    */
   public function getFormID() {
@@ -28,8 +33,8 @@ class PaymentMethodSettingsForm extends ConfigFormBase {
     $definition = \Drupal::service('plugin.manager.uc_payment.method')->getDefinition($method);
     $form['#title'] = $this->t('!method settings', array('!method' => $definition['name']));
 
-    $method = \Drupal::service('plugin.manager.uc_payment.method')->createInstance($method);
-    $form = $method->settingsForm($form, $form_state);
+    $this->instance = \Drupal::service('plugin.manager.uc_payment.method')->createInstance($method);
+    $form = $this->instance->settingsForm($form, $form_state);
     $form['#submit'][] = array($this, 'submitForm');
     return parent::buildForm($form, $form_state);
   }
@@ -39,10 +44,7 @@ class PaymentMethodSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     form_state_values_clean($form_state);
-    foreach ($form_state['values'] as $key => $value) {
-      variable_set($key, $value);
-    }
-
+    $this->instance->submitConfigurationForm($form, $form_state);
     parent::submitForm($form, $form_state);
   }
 

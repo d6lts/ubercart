@@ -117,8 +117,9 @@ function uc_attribute_form_uc_product_settings_form_alter(&$form, &$form_state) 
   $form['attributes']['uc_attribute_option_price_format'] = array(
     '#type' => 'radios',
     '#title' => t('Option price format'),
-    '#default_value' => variable_get('uc_attribute_option_price_format', 'adjustment'),
-    '#options' => array('none' => t('Do not display'),
+    '#default_value' => \Drupal::config('uc_attribute.settings')->get('option_price_format'),
+    '#options' => array(
+      'none' => t('Do not display'),
       'adjustment' => t('Display price adjustment'),
       'total' => t('Display total price'),
     ),
@@ -134,7 +135,9 @@ function uc_attribute_form_uc_product_settings_form_alter(&$form, &$form_state) 
  * @see uc_attribute_form_uc_product_settings_form_alter()
  */
 function uc_attribute_uc_product_settings_form_submit($form, &$form_state) {
-  variable_set('uc_attribute_option_price_format', $form_state['values']['uc_attribute_option_price_format']);
+  \Drupal::config('uc_attribute.settings')
+    ->set('option_price_format', $form_state['values']['uc_attribute_option_price_format'])
+    ->save();
 }
 
 /**
@@ -160,7 +163,7 @@ function uc_attribute_module_implements_alter(&$implementations, $hook) {
  */
 function uc_attribute_uc_form_alter(&$form, &$form_state, $form_id) {
   if (strpos($form_id, 'add_to_cart_form') || $form_id == 'uc_order_add_product_form') {
-    $use_ajax = strpos($form_id, 'add_to_cart_form') && variable_get('uc_product_update_node_view', FALSE);
+    $use_ajax = strpos($form_id, 'add_to_cart_form') && \Drupal::config('uc_product.settings')->get('update_node_view');
     $node =& $form['node']['#value'];
     $id = $form_id . '-' . $node->id() . '-attributes';
     // If the node has a product list, add attributes to them.
@@ -1143,7 +1146,7 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
     ),
   );
 
-  $price_format = variable_get('uc_attribute_option_price_format', 'adjustment');
+  $price_format = \Drupal::config('uc_attribute.settings')->get('option_price_format');
 
   // Loop through each product attribute and generate its form element.
   foreach ($attributes as $attribute) {

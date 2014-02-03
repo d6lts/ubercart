@@ -78,7 +78,8 @@ class StockTest extends UbercartTestBase {
     $this->assertText('Stock settings saved.');
 
     // Enable product quantity field.
-    variable_set('uc_product_add_to_cart_qty', TRUE);
+    $edit = array('uc_product_add_to_cart_qty' => TRUE);
+    $this->drupalPostForm('admin/store/settings/products', $edit, 'Save configuration');
 
     $qty = rand(1, 100);
     $edit = array('qty' => $qty);

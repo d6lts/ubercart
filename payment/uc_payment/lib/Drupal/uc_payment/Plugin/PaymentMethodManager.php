@@ -21,6 +21,19 @@ use Drupal\uc_store\Plugin\Discovery\InfoHookDecorator;
 class PaymentMethodManager extends DefaultPluginManager {
 
   /**
+   * Configuration for the payment methods.
+   */
+  protected $methodConfig;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaults = array(
+    'status' => TRUE,
+    'weight' => 0,
+  );
+
+  /**
    * Constructs a PaymentMethodManager object.
    *
    * @param \Traversable $namespaces
@@ -40,6 +53,8 @@ class PaymentMethodManager extends DefaultPluginManager {
 
     $this->alterInfo($module_handler, 'uc_payment_method');
     $this->setCacheBackend($cache_backend, $language_manager, 'uc_payment_methods');
+
+    $this->methodConfig = \Drupal::config('uc_payment.settings')->get('methods');
   }
 
   /**
@@ -59,9 +74,13 @@ class PaymentMethodManager extends DefaultPluginManager {
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
-    $definition['checkout'] = variable_get('uc_payment_method_' . $plugin_id . '_checkout', $definition['checkout']);
-    $definition['weight'] = variable_get('uc_payment_method_' . $plugin_id . '_weight', $definition['weight']);
-  }
+    if (isset($this->methodConfig[$plugin_id]['status'])) {
+      $definition['checkout'] = $this->methodConfig[$plugin_id]['status'];
+    }
+    if (isset($this->methodConfig[$plugin_id]['weight'])) {
+      $definition['weight'] = $this->methodConfig[$plugin_id]['weight'];
+    }
+ }
 
   /**
    * Returns an instance of the payment method plugin for a specific order.

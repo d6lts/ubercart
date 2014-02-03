@@ -76,13 +76,13 @@ class PaymentMethodsForm extends ConfigFormBase {
       $form['methods'][$id]['status'] = array(
         '#type' => 'checkbox',
         '#title' => check_plain($method['name']),
-        '#default_value' => variable_get('uc_payment_method_' . $id . '_checkout', $method['checkout']),
+        '#default_value' => $method['checkout'],
       );
       $form['methods'][$id]['weight'] = array(
         '#type' => 'weight',
         '#title' => t('Weight for @title', array('@title' => $method['name'])),
         '#title_display' => 'invisible',
-        '#default_value' => variable_get('uc_payment_method_' . $id . '_weight', $method['weight']),
+        '#default_value' => $method['weight'],
         '#attributes' => array(
           'class' => array('uc-payment-method-weight'),
         ),
@@ -136,10 +136,9 @@ class PaymentMethodsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    foreach ($form_state['values']['methods'] as $id => $method) {
-      variable_set('uc_payment_method_' . $id . '_checkout', $method['status']);
-      variable_set('uc_payment_method_' . $id . '_weight', $method['weight']);
-    }
+    $this->config('uc_payment.settings')
+      ->set('methods', $form_state['values']['methods'])
+      ->save();
 
     $this->paymentMethodManager->clearCachedDefinitions();
 

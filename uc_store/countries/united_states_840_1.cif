@@ -93,6 +93,7 @@ function united_states_install() {
   // because the Canada .cif file is loaded during the installation
   // of the uc_store module, before uc_set_address_format() is available
   // to use.
+  /*
   variable_set(
     'uc_address_format_840',
     "!company\r\n".
@@ -102,4 +103,5 @@ function united_states_install() {
     "!city, !zone_code !postal_code\r\n".
     "!country_name_if"
   );
+  */
 }

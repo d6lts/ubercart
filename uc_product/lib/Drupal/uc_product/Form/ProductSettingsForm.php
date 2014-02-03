@@ -25,7 +25,7 @@ class ProductSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    //$config = $this->configFactory->get('uc_product.settings');
+    $config = $this->configFactory->get('uc_product.settings');
 
     $form['product-settings'] = array('#type' => 'vertical_tabs');
 
@@ -40,12 +40,12 @@ class ProductSettingsForm extends ConfigFormBase {
       $form['product']['uc_product_add_to_cart_qty'] = array(
         '#type' => 'checkbox',
         '#title' => t('Display an optional quantity field in the <em>Add to Cart</em> form.'),
-        '#default_value' => variable_get('uc_product_add_to_cart_qty', FALSE),
+        '#default_value' => $config->get('add_to_cart_qty'),
       );
       $form['product']['uc_product_update_node_view'] = array(
         '#type' => 'checkbox',
         '#title' => t('Update product display based on customer selections'),
-        '#default_value' => variable_get('uc_product_update_node_view', FALSE),
+        '#default_value' => $config->get('update_node_view'),
         '#description' => t('Check this box to dynamically update the display of product information such as display-price or weight based on customer input on the add-to-cart form (e.g. selecting a particular attribute option).'),
       );
     }
@@ -77,8 +77,10 @@ class ProductSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    variable_set('uc_product_add_to_cart_qty', $form_state['values']['uc_product_add_to_cart_qty']);
-    variable_set('uc_product_update_node_view', $form_state['values']['uc_product_update_node_view']);
+    $this->configFactory->get('uc_product.settings')
+      ->set('add_to_cart_qty', $form_state['values']['uc_product_add_to_cart_qty'])
+      ->set('update_node_view', $form_state['values']['uc_product_update_node_view'])
+      ->save();
 
     parent::submitForm($form, $form_state);
   }

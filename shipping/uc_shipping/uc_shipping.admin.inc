@@ -100,7 +100,8 @@ function uc_shipping_new_package($form, &$form_state, $order) {
     }
   }
 
-  $shipping_type_weights = variable_get('uc_quote_type_weight', array());
+  $quote_config = \Drupal::config('uc_quote.settings');
+  $shipping_type_weights = $quote_config->get('type_weight');
 
   $result = db_query("SELECT op.order_product_id, SUM(pp.qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE p.order_id = :id GROUP BY op.order_product_id", array(':id' => $order->id()));
   $packaged_products = $result->fetchAllKeyed();

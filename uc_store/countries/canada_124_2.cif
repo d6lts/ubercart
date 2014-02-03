@@ -41,6 +41,7 @@ function canada_install() {
   // because the Canada .cif file is loaded during the installation
   // of the uc_store module, before uc_set_address_format() is available
   // to use.
+  /*
   variable_set(
     'uc_address_format_124',
     "!company\r\n".
@@ -50,6 +51,7 @@ function canada_install() {
     "!city, !postal_code\r\n".
     "!zone_name, !country_name"
   );
+  */
 }
 
 function canada_update($version) {

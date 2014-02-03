@@ -899,7 +899,8 @@ function uc_credit_encryption_key() {
   static $key = FALSE;
 
   if (empty($key)) {
-    $key_file = variable_get('uc_credit_encryption_path', '') . '/' . UC_CREDIT_KEYFILE_NAME;
+    $config = \Drupal::config('uc_credit.settings');
+    $key_file = $config->get('encryption_path') . '/' . UC_CREDIT_KEYFILE_NAME;
     $contents = @file_get_contents($key_file);
     if (strlen($contents) == 32) {
       $key = $contents;

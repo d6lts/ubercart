@@ -682,7 +682,8 @@ function uc_shipping_select_address($addresses, $onchange = '', $title = NULL) {
   if (!is_array($addresses) || count($addresses) == 0) {
     $addresses = array();
   }
-  $store_address = variable_get('uc_quote_store_default_address', new Address());
+  $quote_config = \Drupal::config('uc_quote.settings');
+  $store_address = $quote_config->get('store_default_address');
   if (!in_array($store_address, $addresses)) {
     $addresses[] = $store_address;
   }
