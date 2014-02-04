@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Displays the customer report.
  */
 function uc_reports_customers() {
-  $address_preference = config('uc_store.settings')->get('customer_address');
+  $address_preference = \Drupal::config('uc_store.settings')->get('customer_address');
   $first_name = ($address_preference == 'billing') ? 'billing_first_name' : 'delivery_first_name';
   $last_name = ($address_preference == 'billing') ? 'billing_last_name' : 'delivery_last_name';
   $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
@@ -124,7 +124,7 @@ function uc_reports_customers() {
  * Displays the product reports.
  */
 function uc_reports_products() {
-  $views_column = module_exists('statistics') && config('statistics.settings')->get('count_content_views');
+  $views_column = module_exists('statistics') && \Drupal::config('statistics.settings')->get('count_content_views');
 
   $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
   $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
@@ -321,7 +321,7 @@ function uc_reports_product_get_skus($nid) {
  * Displays the custom product report.
  */
 function uc_reports_products_custom() {
-  $views_column = module_exists('statistics') && config('statistics.settings')->get('count_content_views');
+  $views_column = module_exists('statistics') && \Drupal::config('statistics.settings')->get('count_content_views');
 
   $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
   $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);

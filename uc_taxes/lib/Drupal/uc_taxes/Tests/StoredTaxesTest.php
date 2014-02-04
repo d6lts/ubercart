@@ -82,7 +82,7 @@ class StoredTaxesTest extends UbercartTestBase {
     $this->assertRaw(uc_currency_format($rate->rate * $this->product->sell_price), t('Correct tax amount displayed.'));
 
     // Build the panes.
-    $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => config('uc_store.settings')->get('address.country')))->fetchField();
+    $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => \Drupal::config('uc_store.settings')->get('address.country')))->fetchField();
     $edit = array(
       'panes[delivery][first_name]' => $this->randomName(10),
       'panes[delivery][last_name]' => $this->randomName(10),

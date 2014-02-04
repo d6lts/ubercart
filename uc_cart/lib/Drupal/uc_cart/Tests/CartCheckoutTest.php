@@ -489,7 +489,7 @@ class CartCheckoutTest extends UbercartTestBase {
     );
 
     // Build the panes.
-    $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => config('uc_store.settings')->get('address.country')))->fetchField();
+    $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => \Drupal::config('uc_store.settings')->get('address.country')))->fetchField();
     $oldname = $this->randomName(10);
     $edit = array(
       'panes[delivery][first_name]' => $oldname,

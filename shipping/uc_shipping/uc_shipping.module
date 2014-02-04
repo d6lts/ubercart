@@ -398,7 +398,7 @@ function uc_shipping_package_load($package_id) {
       $products = array();
       $description = '';
       $weight = 0;
-      $units = config('uc_store.settings')->get('units.weight');
+      $units = \Drupal::config('uc_store.settings')->get('units.weight');
       $addresses = array();
       $result = db_query("SELECT op.order_product_id, pp.qty, pp.qty * op.weight AS weight, op.weight_units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id", array(':id' => $package_id));
       foreach ($result as $product) {

@@ -47,7 +47,7 @@ class CartLinksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $actions = NULL) {
-    $cart_links_config = config('uc_cart_links.settings');
+    $cart_links_config = $this->config('uc_cart_links.settings');
 
     $this->actions = $actions;
 
@@ -89,7 +89,7 @@ class CartLinksForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $cart_links_config = config('uc_cart_links.settings');
+    $cart_links_config = $this->config('uc_cart_links.settings');
 
     $actions = explode('-', urldecode($this->actions));
     $rebuild_cart = FALSE;

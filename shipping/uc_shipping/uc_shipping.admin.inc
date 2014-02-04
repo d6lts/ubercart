@@ -551,7 +551,7 @@ function uc_shipping_new_shipment($form, &$form_state, $order) {
   $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
 
   $packages_by_type = array();
-  $units = config('uc_store.settings')->get('units.weight');
+  $units = \Drupal::config('uc_store.settings')->get('units.weight');
   $result = db_query("SELECT * FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", array(':id' => $order->id()));
   foreach ($result as $package) {
     $products = array();
@@ -862,7 +862,7 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
         'oz' => t('Ounces'),
         'g'  => t('Grams'),
       ),
-      '#default_value' => isset($package->weight_units) ? $package->weight_units : config('uc_store.settings')->get('units.weight'),
+      '#default_value' => isset($package->weight_units) ? $package->weight_units : \Drupal::config('uc_store.settings')->get('units.weight'),
     );
     $pkg_form['dimensions'] = array(
       '#type'        => 'container',
@@ -898,7 +898,7 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
         'cm' => t('Centimeters'),
         'mm' => t('Millimeters'),
       ),
-      '#default_value' => isset($package->length_units) ? $package->length_units : config('uc_store.settings')->get('units.length'),
+      '#default_value' => isset($package->length_units) ? $package->length_units : \Drupal::config('uc_store.settings')->get('units.length'),
     );
     $pkg_form['tracking_number'] = array(
       '#type'          => 'textfield',

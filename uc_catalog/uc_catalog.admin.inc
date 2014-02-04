@@ -12,8 +12,8 @@
 function uc_catalog_orphaned_products() {
   $build = array();
 
-  if (config('taxonomy.settings')->get('maintain_index_table')) {
-    $vid = config('uc_catalog.settings')->get('vocabulary');
+  if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+    $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
     $product_types = uc_product_types();
     $field = field_info_field('node', 'taxonomy_catalog');
     $types = array_intersect($product_types, $field['bundles']['node']);

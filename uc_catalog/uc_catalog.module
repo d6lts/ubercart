@@ -153,11 +153,11 @@ function uc_catalog_uc_store_status() {
   }
 
   $statuses = array();
-  $cat_id = config('uc_catalog.settings')->get('vocabulary');
+  $cat_id = \Drupal::config('uc_catalog.settings')->get('vocabulary');
   $catalog = taxonomy_vocabulary_load($cat_id);
   if ($catalog) {
     // Don't display a status if the taxonomy_index table has no data.
-    if (config('taxonomy.settings')->get('maintain_index_table')) {
+    if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
       $statuses[] = array('status' => 'ok', 'title' => t('Catalog vocabulary'),
         'desc' => t('Vocabulary !name has been identified as the Ubercart catalog.', array('!name' => l($catalog->label(), 'admin/structure/taxonomy/manage/' . $catalog->vid)))
       );

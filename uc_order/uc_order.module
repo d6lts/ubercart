@@ -869,7 +869,7 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   $variables['html_attributes']['lang'] = $language_interface->langcode;
   $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
-  $site_config = config('system.site');
+  $site_config = \Drupal::config('system.site');
   // Construct page title.
   if (drupal_get_title()) {
     $head_title = array(

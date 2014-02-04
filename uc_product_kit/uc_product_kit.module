@@ -141,7 +141,7 @@ function uc_product_kit_node_insert($node) {
   $obj->cost = 0;
   $obj->sell_price = 0;
   $obj->weight = 0;
-  $obj->weight_units = config('uc_store.settings')->get('units.weight');
+  $obj->weight_units = \Drupal::config('uc_store.settings')->get('units.weight');
   $obj->default_qty = $node->default_qty;
   $obj->ordering = $node->ordering;
   $obj->shippable = FALSE;
@@ -230,7 +230,7 @@ function uc_product_kit_node_update($node) {
   $obj->cost = 0;
   $obj->sell_price = 0;
   $obj->weight = 0;
-  $obj->weight_units = config('uc_store.settings')->get('units.weight');
+  $obj->weight_units = \Drupal::config('uc_store.settings')->get('units.weight');
   $obj->default_qty = $node->default_qty;
   $obj->ordering = $node->ordering;
   $obj->shippable = FALSE;

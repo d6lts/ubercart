@@ -362,7 +362,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
 
   $pkg_types = \Drupal\uc_ups\UPSUtilities::packageTypes();
 
-  $store_config = config('uc_store.settings');
+  $store_config = \Drupal::config('uc_store.settings');
   $shipper_zone = uc_get_zone_code($store_config->get('address.zone'));
   $shipper_country = uc_get_country_data(array('country_id' => $store_config->get('address.country')));
   $shipper_country = $shipper_country[0]['country_iso_code_2'];

@@ -85,7 +85,7 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     }
     else {
       if ($type == 'name' || $type == 'either') {
-        $name = !empty($GLOBALS['user']->name) ? $GLOBALS['user']->name : config('user.settings')->get('anonymous');
+        $name = !empty($GLOBALS['user']->name) ? $GLOBALS['user']->name : \Drupal::config('user.settings')->get('anonymous');
         if ($argument == $name) {
           $account = clone $GLOBALS['user'];
         }

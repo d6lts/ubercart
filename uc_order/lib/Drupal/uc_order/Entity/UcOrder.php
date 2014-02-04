@@ -121,10 +121,10 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
     $this->order_total->value = $this->getTotal();
     $this->product_count->value = $this->getProductCount();
     if (is_null($this->delivery_country->value) || $this->delivery_country->value == 0) {
-      $this->delivery_country->value = config('uc_store.settings')->get('address.country');
+      $this->delivery_country->value = \Drupal::config('uc_store.settings')->get('address.country');
     }
     if (is_null($this->billing_country->value) || $this->billing_country->value == 0) {
-      $this->billing_country->value = config('uc_store.settings')->get('address.country');
+      $this->billing_country->value = \Drupal::config('uc_store.settings')->get('address.country');
     }
     $this->host->value = \Drupal::request()->getClientIp();
     $this->modified->value = REQUEST_TIME;

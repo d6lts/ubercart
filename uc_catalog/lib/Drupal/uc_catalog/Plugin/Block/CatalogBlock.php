@@ -83,7 +83,7 @@ class CatalogBlock extends BlockBase {
    */
   public function build() {
     // Get the vocabulary tree information.
-    $vid = config('uc_catalog.settings')->get('vocabulary');
+    $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
     $tree = taxonomy_get_tree($vid);
 
     // Then convert it into an actual tree structure.

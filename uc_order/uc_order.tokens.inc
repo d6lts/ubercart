@@ -246,7 +246,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'first-name':
-          if (config('uc_store.settings')->get('customer_address') == 'shipping') {
+          if (\Drupal::config('uc_store.settings')->get('customer_address') == 'shipping') {
             $replacements[$original] = $sanitize ? check_plain($order->getAddress('delivery')->first_name) : $order->getAddress('delivery')->first_name;
           }
           else {
@@ -255,7 +255,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'last-name':
-          if (config('uc_store.settings')->get('customer_address') == 'shipping') {
+          if (\Drupal::config('uc_store.settings')->get('customer_address') == 'shipping') {
             $replacements[$original] = $sanitize ? check_plain($order->getAddress('delivery')->last_name) : $order->getAddress('delivery')->last_name;
           }
           else {
