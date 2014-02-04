@@ -28,7 +28,7 @@ class CatalogTest extends UbercartTestBase {
   public function testCatalogField() {
     $this->drupalLogin($this->adminUser);
 
-    $this->drupalGet('admin/structure/taxonomy/manage/catalog/fields');
+    $this->drupalGet('admin/structure/taxonomy/manage/catalog/overview/fields');
     $this->assertText('uc_catalog_image', 'Catalog term image field exists.');
 
     $this->drupalGet('admin/structure/types/manage/product/fields');
