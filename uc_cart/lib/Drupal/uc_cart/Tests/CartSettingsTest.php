@@ -22,6 +22,19 @@ class CartSettingsTest extends UbercartTestBase {
     );
   }
 
+  public function testAddToCartMessage() {
+    $this->drupalLogin($this->adminUser);
+
+    $this->addToCart($this->product);
+    $this->assertText($this->product->getTitle() . ' added to your shopping cart.');
+
+    $this->drupalPostForm('cart', array(), 'Remove');
+    $this->drupalPostForm('admin/store/settings/cart', array('uc_cart_add_item_msg' => FALSE), 'Save configuration');
+
+    $this->addToCart($this->product);
+    $this->assertNoText($this->product->getTitle() . ' added to your shopping cart.');
+  }
+
   public function testAddToCartRedirect() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/store/settings/cart');

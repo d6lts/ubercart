@@ -968,7 +968,9 @@ function uc_catalog_buy_it_now_form_validate($form, &$form_state) {
  * @see uc_catalog_buy_it_now_form_validate()
  */
 function uc_catalog_buy_it_now_form_submit($form, &$form_state) {
-  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], 1,  \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values'])), NULL, variable_get('uc_cart_add_item_msg', TRUE));
+  $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
+  $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
+  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], 1, $data, NULL, $msg);
 }
 
 /**
@@ -1019,7 +1021,8 @@ function uc_product_add_to_cart_form($form, &$form_state, $node) {
  * Form validation handler for uc_product_add_to_cart_form().
  */
 function uc_product_add_to_cart_form_validate($form, &$form_state) {
-  $form_state['storage']['variant'] = uc_product_load_variant($form_state['values']['nid'], \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values'])));
+  $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
+  $form_state['storage']['variant'] = uc_product_load_variant($form_state['values']['nid'], $data);
 }
 
 /**
@@ -1028,7 +1031,9 @@ function uc_product_add_to_cart_form_validate($form, &$form_state) {
  * @see uc_product_add_to_cart_form()
  */
 function uc_product_add_to_cart_form_submit($form, &$form_state) {
-  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'],  \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values'])), NULL, variable_get('uc_cart_add_item_msg', TRUE));
+  $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
+  $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
+  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'], $data, NULL, $msg);
 }
 
 /**
