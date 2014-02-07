@@ -18,7 +18,7 @@ class UcOrderStorageController extends FieldableDatabaseStorageController {
   /**
    * {@inheritdoc}
    */
-  public function create(array $values) {
+  public function create(array $values = array()) {
     $store_config = \Drupal::config('uc_store.settings');
 
     // Set the primary email address.
