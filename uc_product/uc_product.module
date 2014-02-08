@@ -43,6 +43,34 @@ function uc_product_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function uc_product_menu_link_defaults() {
+  $links['uc_product.admin.store.products'] = array(
+    'link_title' => 'Products',
+    'description' => 'Administer products, classes, and more.',
+    'route_name' => 'uc_product.admin',
+    'parent' => 'uc_store.admin.store',
+    'weight' => -2,
+  );
+  $links['uc_product.admin.store.products.classes'] = array(
+    'link_title' => 'Manage classes',
+    'description' => 'Create and edit product node types.',
+    'route_name' => 'uc_product.classes',
+    'parent' => 'uc_product.admin.store.products',
+    'weight' => -2,
+  );
+  $links['uc_product.admin.store.settings.products'] = array(
+    'link_title' => 'Products',
+    'description' => 'Configure product settings.',
+    'route_name' => 'uc_product.settings',
+    'parent' => 'uc_store.admin.store.settings',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_admin_paths().
  */
 function uc_product_admin_paths() {

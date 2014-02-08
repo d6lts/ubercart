@@ -39,6 +39,26 @@ function uc_cart_links_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function uc_cart_links_menu_link_defaults() {
+  $links['uc_cart_links.admin.store.settings.cart-links'] = array(
+    'link_title' => 'Cart links',
+    'description' => 'Configure and craft special links to add products directly to the cart.',
+    'route_name' => 'uc_cart_links.settings',
+    'parent' => 'uc_store.admin.store.settings',
+  );
+  $links['uc_cart_links.admin.store.reports.cart-links'] = array(
+    'link_title' => 'Cart links',
+    'description' => 'Track clicks through Cart Links.',
+    'route_name' => 'uc_cart_links.reports',
+    'parent' => 'uc_store.admin.store.reports',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_permission().
  */
 function uc_cart_links_permission() {

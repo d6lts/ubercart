@@ -63,6 +63,31 @@ function uc_cart_menu() {
 }
 
 /**
+ * Implements hook_menu_link_defaults().
+ */
+function uc_cart_menu_link_defaults() {
+  $links['uc_cart.admin.store.settings.cart'] = array(
+    'link_title' => 'Cart',
+    'description' => 'Configure the cart page display and settings.',
+    'route_name' => 'uc_cart.cart_settings',
+    'parent' => 'uc_store.admin.store.settings',
+  );
+  $links['uc_cart.admin.store.settings.checkout'] = array(
+    'link_title' => 'Checkout',
+    'description' => 'Configure the checkout page display and completion rules.',
+    'route_name' => 'uc_cart.checkout_settings',
+    'parent' => 'uc_store.admin.store.settings',
+  );
+  $links['uc_cart'] = array(
+    'link_title' => 'Shopping cart',
+    'route_name' => 'uc_cart.cart',
+    'menu_name' => 'account',
+  );
+
+  return $links;
+}
+
+/**
  * Implements hook_theme().
  */
 function uc_cart_theme() {
