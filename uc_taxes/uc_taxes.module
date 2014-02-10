@@ -8,7 +8,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityViewDisplay;
 
 /**
  * Implements hook_permission().
@@ -75,7 +75,7 @@ function uc_taxes_form_uc_order_edit_form_alter(&$form, &$form_state) {
  *
  * Adds included taxes (VAT) to display price of applicable products.
  */
-function uc_taxes_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay $display) {
+function uc_taxes_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplay $display) {
   switch ($entity->getEntityTypeId()) {
     case 'node':
       if (uc_product_is_product($entity)) {

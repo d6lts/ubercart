@@ -11,7 +11,7 @@
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\entity\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
@@ -576,7 +576,7 @@ function uc_product_view_ajax_commands(AjaxResponse $response, $form_state, $key
 /**
  * Implements hook_node_view().
  */
-function uc_product_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
+function uc_product_node_view(EntityInterface $node, EntityViewDisplay $display, $view_mode) {
   if (!uc_product_is_product($node)) {
     return;
   }
@@ -587,7 +587,7 @@ function uc_product_node_view(EntityInterface $node, EntityDisplay $display, $vi
 /**
  * Renders product related content for product-type modules.
  */
-function uc_product_view_product(EntityInterface $node, EntityDisplay $display, $view_mode) {
+function uc_product_view_product(EntityInterface $node, EntityViewDisplay $display, $view_mode) {
   // Give modules a chance to alter this product.  If it is a variant, this will
   // have been done already by uc_product_load_variant(), so we check a flag to
   // be sure not to alter twice -- cf. entity_prepare_view().

@@ -8,7 +8,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\node\NodeInterface;
 
 define('UC_PRODUCT_KIT_UNMUTABLE_NO_LIST', -1);
@@ -677,7 +677,7 @@ function uc_product_kit_node_builder($entity_type, $entity, &$form, &$form_state
 /**
  * Implements hook_node_view().
  */
-function uc_product_kit_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
+function uc_product_kit_node_view(EntityInterface $node, EntityViewDisplay $display, $view_mode) {
   if ($node->getType() != 'product_kit') {
     return;
   }
