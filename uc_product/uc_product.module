@@ -700,8 +700,9 @@ function uc_product_theme_suggestions_node_alter(array &$suggestions, array $var
  * @see html.html.twig
  */
 function uc_product_preprocess_html(&$variables) {
-  if ($node = menu_get_object()) {
-    if (uc_product_is_product($node)) {
+  $request = \Drupal::request();
+  if ($request->attributes->has('node')) {
+    if (uc_product_is_product($request->attributes->get('node'))) {
       $variables['attributes']['class'][] = 'uc-product-node';
     }
   }

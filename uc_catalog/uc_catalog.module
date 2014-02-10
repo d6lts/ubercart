@@ -255,18 +255,19 @@ function _uc_catalog_navigation($branch) {
   $here = current_path() == $branch_path;
 
   // Determine whether to expand menu item.
-  $node = menu_get_object('node', 1);
-  if (isset($node->taxonomy_catalog)) {
-    $inpath = FALSE;
-    $parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->value);
-    foreach ($parents as $parent) {
-      if ($parent->id() == $branch->tid) {
-        $inpath = TRUE;
+  $inpath = $here;
+  $request = \Drupal::request();
+  if ($request->attributes->has('node')) {
+    $node = $request->attributes->get('node');
+    if (isset($node->taxonomy_catalog)) {
+      $inpath = FALSE;
+      $parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->value);
+      foreach ($parents as $parent) {
+        if ($parent->id() == $branch->tid) {
+          $inpath = TRUE;
+        }
       }
     }
-  }
-  else {
-    $inpath = $here;
   }
 
   $lis = array();
