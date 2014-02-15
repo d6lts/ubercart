@@ -609,6 +609,12 @@ function uc_roles_feature_form($form, &$form_state, $node, $feature) {
     '#description' => t('Check if the role duration should be multiplied by the quantity purchased.'),
   );
 
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save feature'),
+  );
+
   return $form;
 }
 

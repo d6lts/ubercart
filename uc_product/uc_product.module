@@ -1235,44 +1235,6 @@ function uc_product_feature_data($fid, $key) {
 }
 
 /**
- * Returns a form array with some default hidden values and submit button.
- *
- * @param $form
- *   The form array you wish to add the elements to.
- *
- * @return
- *   The form array with elements added for the nid, pfid, submit button, and
- *   cancel link.
- *
- * @ingroup forms
- */
-function uc_product_feature_form($form, &$form_state, $node, $feature) {
-  $form['nid'] = array(
-    '#type' => 'hidden',
-    '#value' => $node->id(),
-  );
-
-  // Forms to add a feature are only given an empty array.
-  if (!empty($feature)) {
-    $form['pfid'] = array(
-      '#type' => 'hidden',
-      '#value' => $feature['pfid'],
-    );
-  }
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save feature'),
-  );
-  $form['actions']['cancel'] = array(
-    '#markup' => l(t('Cancel'), 'node/' . $node->id() . '/edit/features'),
-  );
-
-  return $form;
-}
-
-/**
  * Saves a product feature to a product node.
  *
  * @param $data

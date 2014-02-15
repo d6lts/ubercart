@@ -728,6 +728,12 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
     ),
   );
 
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save feature'),
+  );
+
   return $form;
 }
 
