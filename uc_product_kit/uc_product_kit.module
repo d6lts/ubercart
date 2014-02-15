@@ -92,6 +92,38 @@ function uc_product_kit_uc_form_alter(&$form, &$form_state, $form_id) {
       $form = array_merge(array('sub_products' => $products), $form);
     }
   }
+  elseif ($form_id == 'uc_product_add_to_cart_form') {
+    $kit = $form['node']['#value'];
+    if ($kit->getType() !== 'product_kit') {
+      return;
+    }
+
+    $form['products'] = array('#tree' => TRUE);
+    foreach ($kit->products as $i => $product) {
+      $form['products'][$i] = array('#title' => check_plain($product->label()));
+      $form['products'][$i]['nid'] = array('#type' => 'hidden', '#value' => $product->id());
+      $form['products'][$i]['qty'] = array('#type' => 'hidden', '#value' => $product->qty);
+    }
+
+    $form['#validate'][] = 'uc_product_kit_add_to_cart_form_validate';
+    $form['#submit'][] = 'uc_product_kit_add_to_cart_form_submit';
+  }
+  elseif ($form_id == 'uc_catalog_buy_it_now_form') {
+    $kit = $form['node']['#value'];
+    if ($kit->getType() !== 'product_kit') {
+      return;
+    }
+
+    $form['products'] = array('#tree' => TRUE);
+    foreach ($node->products as $i => $product) {
+      $form['products'][$i] = array('#title' => check_plain($product->title));
+      $form['products'][$i]['nid'] = array('#type' => 'hidden', '#value' => $product->nid);
+      $form['products'][$i]['qty'] = array('#type' => 'hidden', '#value' => $product->qty);
+    }
+
+    $form['#validate'][] = 'uc_product_kit_buy_it_now_form_validate';
+    $form['#submit'][] = 'uc_product_kit_buy_it_now_form_submit';
+  }
 }
 
 /**
@@ -489,26 +521,6 @@ function uc_product_kit_theme() {
 }
 
 /**
- * Implements hook_forms().
- *
- * Registers an "Add to Cart" form for each product kit.
- *
- * @see uc_product_kit_add_to_cart_form()
- * @see uc_catalog_buy_it_now_form()
- */
-function uc_product_kit_forms($form_id, $args) {
-  $forms = array();
-  if ($args[0] instanceof NodeInterface) {
-    $product = $args[0];
-    if ($product->getType() == 'product_kit') {
-      $forms['uc_product_add_to_cart_form_' . $product->id()] = array('callback' => 'uc_product_kit_add_to_cart_form');
-      $forms['uc_catalog_buy_it_now_form_' . $product->id()] = array('callback' => 'uc_product_kit_buy_it_now_form');
-    }
-  }
-  return $forms;
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
@@ -720,55 +732,6 @@ function uc_product_kit_node_view(EntityInterface $node, EntityViewDisplay $disp
 }
 
 /**
- * Lets the cart know how many of which products are included in a kit.
- *
- * uc_attribute_form_alter() hooks into this form to add attributes to each
- * element in $form['products'].
- *
- * @see uc_product_kit_add_to_cart_form_validate()
- * @see uc_product_kit_add_to_cart_form_submit()
- * @ingroup forms
- */
-function uc_product_kit_add_to_cart_form($form, &$form_state, $node) {
-  $form['nid'] = array('#type' => 'value', '#value' => $node->id());
-  $form['products'] = array('#tree' => TRUE);
-  foreach ($node->products as $i => $product) {
-    $form['products'][$i] = array('#title' => check_plain($product->label()));
-    $form['products'][$i]['nid'] = array('#type' => 'hidden', '#value' => $product->id());
-    $form['products'][$i]['qty'] = array('#type' => 'hidden', '#value' => $product->qty);
-  }
-  if ($node->default_qty > 0 && \Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
-    $form['qty'] = array(
-      '#type' => 'uc_quantity',
-      '#title' => t('Quantity'),
-      '#default_value' => $node->default_qty,
-    );
-  }
-  else {
-    $form['qty'] = array('#type' => 'hidden', '#value' => $node->default_qty ? $node->default_qty : 1);
-  }
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Add to cart'),
-    '#id' => 'edit-submit-' . $node->id(),
-    '#attributes' => array(
-      'class' => array('node-add-to-cart'),
-    ),
-  );
-
-  $form['node'] = array(
-    '#type' => 'value',
-    '#value' => isset($form_state['storage']['variant']) ? $form_state['storage']['variant'] : $node,
-  );
-
-  uc_form_alter($form, $form_state, __FUNCTION__);
-
-  return $form;
-}
-
-/**
  * Form validation handler for uc_product_add_to_cart_form().
  *
  * @see uc_product_kit_add_to_cart_form()
@@ -796,42 +759,6 @@ function uc_product_kit_add_to_cart_form_submit($form, &$form_state) {
     drupal_set_message(t('<strong>@product-title</strong> added to <a href="!url">your shopping cart</a>.', array('@product-title' => $node->label(), '!url' => url('cart'))));
   }
   $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'], $form_state['values']);
-}
-
-/**
- * Add-to-cart button with any extra fields.
- *
- * @see uc_product_kit_buy_it_now_form_validate()
- * @see uc_product_kit_buy_it_now_form_submit()
- * @ingroup forms
- */
-function uc_product_kit_buy_it_now_form($form, &$form_state, $node) {
-  $form['nid'] = array(
-    '#type' => 'hidden',
-    '#value' => $node->id(),
-  );
-  if ($node->getType() == 'product_kit') {
-    $form['products'] = array('#tree' => TRUE);
-    foreach ($node->products as $i => $product) {
-      $form['products'][$i] = array('#title' => check_plain($product->title));
-      $form['products'][$i]['nid'] = array('#type' => 'hidden', '#value' => $product->nid);
-      $form['products'][$i]['qty'] = array('#type' => 'hidden', '#value' => $product->qty);
-    }
-  }
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Add to cart'),
-    '#id' => 'edit-submit-' . $node->nid,
-    '#attributes' => array(
-      'class' => array('list-add-to-cart'),
-    ),
-  );
-
-  uc_form_alter($form, $form_state, __FUNCTION__);
-
-  return $form;
 }
 
 /**

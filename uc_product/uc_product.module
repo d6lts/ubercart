@@ -147,23 +147,6 @@ function uc_product_preprocess_field(&$variables) {
 }
 
 /**
- * Implements hook_forms().
- *
- * Register an "add to cart" form for each product to prevent id collisions.
- */
-function uc_product_forms($form_id, $args) {
-  $forms = array();
-  if ($args[0] instanceof NodeInterface) {
-    $product = $args[0];
-    if (uc_product_is_product($product)) {
-      $forms['uc_product_add_to_cart_form_' . $product->id()] = array('callback' => 'uc_product_add_to_cart_form');
-      $forms['uc_catalog_buy_it_now_form_' . $product->id()] = array('callback' => 'uc_catalog_buy_it_now_form');
-    }
-  }
-  return $forms;
-}
-
-/**
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function uc_product_form_node_form_alter(&$form, &$form_state) {
@@ -598,7 +581,7 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
     // Build the 'add to cart' form, and use the updated variant based on data
     // provided by the form (e.g. attribute default options).
     if (module_exists('uc_cart') && $variant->id() && empty($variant->data['display_only'])) {
-      $add_to_cart_form = drupal_get_form('uc_product_add_to_cart_form_' . $variant->id(), $variant);
+      $add_to_cart_form = drupal_get_form('uc_product_add_to_cart_form', $variant);
       if (\Drupal::config('uc_product.settings')->get('update_node_view')) {
         $variant = $add_to_cart_form['node']['#value'];
       }
