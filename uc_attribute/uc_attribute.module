@@ -211,6 +211,27 @@ function uc_attribute_uc_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter() for uc_product_buy_it_now_form().
+ */
+function uc_attribute_form_uc_product_buy_it_now_form_alter(&$form, &$form_state) {
+  $form['#validate'][] = 'uc_attribute_buy_it_now_form_validate';
+}
+
+/**
+ * Validation callback for "buy it now" forms with attributes.
+ */
+function uc_attribute_buy_it_now_form_validate(&$form, &$form_state) {
+  $attributes = uc_product_get_attributes($form_state['values']['nid']);
+  if (!empty($attributes)) {
+    drupal_set_message(t('This product has options that need to be selected before purchase. Please select them in the form below.'), 'error');
+    $form_state['redirect'] = 'node/' . $form_state['values']['nid'];
+
+    // Prevent submit handlers from running.
+    $form_state['submit_handlers'] = array();
+  }
+}
+
+/**
  * Implements hook_node_load().
  */
 function uc_attribute_node_load($nodes) {

@@ -538,7 +538,7 @@ function uc_product_node_delete($node) {
  *   The current form state.  This must contain a 'variant' entry in the
  *   'storage' array which represents the product as configured by user input
  *   data. In most cases, this is provided automatically by
- *   uc_product_add_to_cart_form_validate().
+ *   AddToCartForm::validateForm().
  * @param $keys
  *   An array of keys in the built product content which should be replaced
  *   (e.g. 'display_price').
@@ -581,7 +581,7 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
     // Build the 'add to cart' form, and use the updated variant based on data
     // provided by the form (e.g. attribute default options).
     if (module_exists('uc_cart') && $variant->id() && empty($variant->data['display_only'])) {
-      $add_to_cart_form = drupal_get_form('uc_product_add_to_cart_form', $variant);
+      $add_to_cart_form = drupal_get_form('\Drupal\uc_product\Form\AddToCartForm', $variant);
       if (\Drupal::config('uc_product.settings')->get('update_node_view')) {
         $variant = $add_to_cart_form['node']['#value'];
       }
@@ -930,122 +930,6 @@ function uc_product_uc_add_to_cart_data($form_values) {
     'shippable' => isset($node) ? $node->shippable : $settings['shippable'],
     'type' => $type,
   );
-}
-
-/**
- * Form builder for uc_catalog_buy_it_now_form().
- *
- * @see uc_product_forms()
- * @see uc_catalog_buy_it_now_form_validate()
- * @see uc_catalog_buy_it_now_form_submit()
- * @ingroup forms
- */
-function uc_catalog_buy_it_now_form($form, &$form_state, $node) {
-  $form['nid'] = array('#type' => 'hidden', '#value' => $node->id());
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Add to cart'),
-    '#id' => 'edit-submit-' . $node->id(),
-    '#attributes' => array(
-      'class' => array('list-add-to-cart'),
-    ),
-  );
-
-  uc_form_alter($form, $form_state, __FUNCTION__);
-
-  return $form;
-}
-
-/**
- * Redirects to the product page if attributes need to be selected.
- *
- * @see uc_catalog_buy_it_now_form()
- * @see uc_catalog_buy_it_now_form_submit()
- */
-function uc_catalog_buy_it_now_form_validate($form, &$form_state) {
-  if (module_exists('uc_attribute')) {
-    $attributes = uc_product_get_attributes($form_state['values']['nid']);
-    if (!empty($attributes)) {
-      drupal_set_message(t('This product has options that need to be selected before purchase. Please select them in the form below.'), 'error');
-      drupal_goto('node/' . $form_state['values']['nid']);
-    }
-  }
-}
-
-/**
- * Form submission handler for uc_catalog_buy_it_now_form().
- *
- * @see uc_catalog_buy_it_now_form()
- * @see uc_catalog_buy_it_now_form_validate()
- */
-function uc_catalog_buy_it_now_form_submit($form, &$form_state) {
-  $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
-  $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
-  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], 1, $data, NULL, $msg);
-}
-
-/**
- * Form to add the $node product to the cart.
- *
- * @param $node
- *   A product node.
- *
- * @see uc_product_forms()
- * @see uc_product_add_to_cart_form_submit()
- * @ingroup forms
- */
-function uc_product_add_to_cart_form($form, &$form_state, $node) {
-  $form['nid'] = array('#type' => 'value', '#value' => $node->id());
-
-  if ($node->default_qty > 0 && \Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
-    $form['qty'] = array(
-      '#type' => 'uc_quantity',
-      '#title' => t('Quantity'),
-      '#default_value' => $node->default_qty,
-    );
-  }
-  else {
-    $form['qty'] = array('#type' => 'hidden', '#value' => $node->default_qty ? $node->default_qty : 1);
-  }
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Add to cart'),
-    '#id' => 'edit-submit-' . $node->id(),
-    '#attributes' => array(
-      'class' => array('node-add-to-cart'),
-    ),
-  );
-
-  $form['node'] = array(
-    '#type' => 'value',
-    '#value' => isset($form_state['storage']['variant']) ? $form_state['storage']['variant'] : $node,
-  );
-
-  uc_form_alter($form, $form_state, __FUNCTION__);
-
-  return $form;
-}
-
-/**
- * Form validation handler for uc_product_add_to_cart_form().
- */
-function uc_product_add_to_cart_form_validate($form, &$form_state) {
-  $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
-  $form_state['storage']['variant'] = uc_product_load_variant($form_state['values']['nid'], $data);
-}
-
-/**
- * Form submission handler for uc_product_add_to_cart_form().
- *
- * @see uc_product_add_to_cart_form()
- */
-function uc_product_add_to_cart_form_submit($form, &$form_state) {
-  $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
-  $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
-  $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'], $data, NULL, $msg);
 }
 
 /**

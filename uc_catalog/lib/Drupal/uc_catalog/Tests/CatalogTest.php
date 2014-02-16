@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_catalog\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -14,8 +15,8 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class CatalogTest extends UbercartTestBase {
 
-  public static $modules = array('uc_catalog', 'field_ui');
-  public static $adminPermissions = array('administer catalog', 'administer node fields', 'administer taxonomy_term fields');
+  public static $modules = array('uc_catalog', 'uc_attribute', 'field_ui');
+  public static $adminPermissions = array('administer catalog', 'administer node fields', 'administer taxonomy_term fields', 'view catalog');
 
   public static function getInfo() {
     return array(
@@ -23,6 +24,50 @@ class CatalogTest extends UbercartTestBase {
       'description' => 'Ensure that the catalog functions properly.',
       'group' => 'Ubercart',
     );
+  }
+
+  /**
+   * Tests the catalog display and "buy it now" button.
+   */
+  public function testCatalog() {
+    $this->drupalLogin($this->adminUser);
+
+    $term = $this->createTerm();
+    $product = $this->createProduct(array(
+      'taxonomy_catalog' => array($term->id()),
+    ));
+
+    $this->drupalGet('catalog');
+    $this->assertTitle('Catalog | Drupal');
+    $this->assertLink($term->label(), 0, 'The term is listed in the catalog.');
+
+    $this->clickLink($term->label());
+    $this->assertTitle($term->label() . ' | Drupal');
+    $this->assertLink($product->label(), 0, 'The product is listed in the catalog.');
+    $this->assertText($product->model, 'The product SKU is shown in the catalog.');
+    $this->assertText(uc_currency_format($product->sell_price), 'The product price is shown in the catalog.');
+
+    $this->drupalPostForm(NULL, array(), 'Add to cart');
+    $this->assertText($product->label() . ' added to your shopping cart.');
+  }
+
+  /**
+   * Tests the catalog with a product with attributes.
+   */
+  public function testCatalogAttribute() {
+    $this->drupalLogin($this->adminUser);
+
+    $term = $this->createTerm();
+    $product = $this->createProduct(array(
+      'taxonomy_catalog' => array($term->id()),
+    ));
+    $attribute = $this->createAttribute(array('display' => 0));
+    uc_attribute_subject_save($attribute, 'product', $product->id());
+
+    $this->drupalGet('catalog/' . $term->id());
+    $this->drupalPostForm(NULL, array(), 'Add to cart');
+    $this->assertNoText($product->label() . ' added to your shopping cart.');
+    $this->assertText('This product has options that need to be selected before purchase. Please select them in the form below.');
   }
 
   public function testCatalogField() {
@@ -33,6 +78,9 @@ class CatalogTest extends UbercartTestBase {
 
     $this->drupalGet('admin/structure/types/manage/product/fields');
     $this->assertText('taxonomy_catalog', 'Catalog taxonomy term reference field exists for products.');
+
+    $this->drupalGet('node/add/product');
+    $this->assertFieldByName('taxonomy_catalog', NULL, 'Catalog taxonomy field is shown on product node form.');
 
     // Check that product kits get the catalog taxonomy.
     \Drupal::moduleHandler()->install(array('uc_product_kit'));
@@ -59,4 +107,22 @@ class CatalogTest extends UbercartTestBase {
     $this->drupalGet('admin/structure/types/manage/product/fields');
     $this->assertText('taxonomy_catalog', 'Catalog taxonomy term reference field exists.');
   }
+
+  /**
+   * Returns a new term with random properties in the catalog vocabulary.
+   */
+  function createTerm() {
+    $term = entity_create('taxonomy_term', array(
+      'name' => $this->randomName(),
+      'description' => array(
+        'value' => $this->randomName(),
+        'format' => 'plain_text',
+      ),
+      'vid' => 'catalog',
+      'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+    ));
+    $term->save();
+    return $term;
+  }
+
 }
