@@ -10,6 +10,8 @@
  * Google Analytics.
  */
 
+use Drupal\Component\Utility\Json;
+
 /**
  * Implements hook_enable().
  */
@@ -143,13 +145,13 @@ function uc_googleanalytics_ecommerce_js($order) {
   // Put the arguments into an array that is safe to implode directly.
   $args = array(
     '"' . $trans['order_id'] . '"',
-    \Drupal\Component\Utility\Json::encode($trans['store']),
+    Json::encode($trans['store']),
     '"' . $trans['total'] . '"',
     '"' . $trans['tax'] . '"',
     '"' . $trans['shipping'] . '"',
-    \Drupal\Component\Utility\Json::encode($trans['city']),
-    \Drupal\Component\Utility\Json::encode($trans['state']),
-    \Drupal\Component\Utility\Json::encode($trans['country']),
+    Json::encode($trans['city']),
+    Json::encode($trans['state']),
+    Json::encode($trans['country']),
   );
 
   // Add the transaction line to the JS.
@@ -189,9 +191,9 @@ function uc_googleanalytics_ecommerce_js($order) {
     // Put the arguments into an array that is safe to implode directly.
     $args = array(
       '"' . $item['order_id'] . '"',
-      \Drupal\Component\Utility\Json::encode($item['sku']),
-      \Drupal\Component\Utility\Json::encode($item['name']),
-      \Drupal\Component\Utility\Json::encode((string) $item['category']),
+      Json::encode($item['sku']),
+      Json::encode($item['name']),
+      Json::encode((string) $item['category']),
       '"' . $item['price'] . '"',
       '"' . $item['qty'] . '"',
     );

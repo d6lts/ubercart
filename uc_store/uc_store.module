@@ -9,7 +9,9 @@
  * settings pages for use in store administration.
  */
 
+use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Unicode;
 use Drupal\uc_store\Address;
 
 /**
@@ -1133,7 +1135,7 @@ function uc_select_address($uid, $type = 'billing', $onchange = '', $title = NUL
         (isset($addresses[$key + 1]) && $option == $addresses[$key + 1]['street1'])) {
       $option .= ' - ' . $address['first_name'] . ' ' . $address['last_name'];
     }
-    $options[\Drupal\Component\Utility\Json::encode($address)] = check_plain($option);
+    $options[Json::encode($address)] = check_plain($option);
   }
 
   $select = array(
@@ -1338,7 +1340,7 @@ function uc_store_email_from() {
  */
 function uc_store_rfc2822_display_name($name) {
   // Base64 encode $name string if it contains non-ASCII characters.
-  $name = \Drupal\Component\Utility\Unicode::mimeHeaderEncode($name);
+  $name = Unicode::mimeHeaderEncode($name);
   // From RFC2822, section 3.4.2, define valid characters for an atom.
   $valid_chars = "[a-zA-Z0-9\!\#\$\%\&\'\*\+\-\/\=\?\^\_\`\{\|\}\~]";
   // Display name is composed of 0 or more atoms separated by white space.

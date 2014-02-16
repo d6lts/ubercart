@@ -5,6 +5,8 @@
  * Paypal administration menu items.
  */
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * Processes Instant Payment Notifiations from PayPal.
  */
@@ -54,7 +56,7 @@ function uc_paypal_ipn() {
   // Express Checkout IPNs may not have the WPS email stored. But if it is,
   // make sure that the right account is being paid.
   $uc_paypal_wps_email = trim(variable_get('uc_paypal_wps_email', ''));
-  if (!empty($uc_paypal_wps_email) && \Drupal\Component\Utility\Unicode::strtolower($receiver_email) != \Drupal\Component\Utility\Unicode::strtolower($uc_paypal_wps_email)) {
+  if (!empty($uc_paypal_wps_email) && Unicode::strtolower($receiver_email) != Unicode::strtolower($uc_paypal_wps_email)) {
     watchdog('uc_paypal', 'IPN for a different PayPal account attempted.', array(), WATCHDOG_ERROR);
     return;
   }

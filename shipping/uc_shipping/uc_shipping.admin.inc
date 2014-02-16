@@ -5,6 +5,8 @@
  * Shipping administration menu items.
  */
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * Displays a list of an order's packaged products.
  */
@@ -760,7 +762,7 @@ function uc_shipment_address($order, $type) {
   );
 
   if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
-    $address = \Drupal\Component\Utility\Unicode::strtoupper($address);
+    $address = Unicode::strtoupper($address);
   }
 
   return $address;
@@ -1034,7 +1036,7 @@ function uc_shipping_shipment_edit_validate($form, &$form_state) {
   foreach ($form_state['values']['packages'] as $key => $package) {
     foreach (array('length', 'width', 'height') as $property) {
       if (!empty($package['dimensions'][$property]) && (!is_numeric($package['dimensions'][$property]) || $package['dimensions'][$property] < 0)) {
-        form_set_error('packages][' . $key . '][dimensions][' . $property, $form_state, t('@property must be a positive number. No commas and only one decimal point.', array('@property' => \Drupal\Component\Utility\Unicode::ucfirst($property))));
+        form_set_error('packages][' . $key . '][dimensions][' . $property, $form_state, t('@property must be a positive number. No commas and only one decimal point.', array('@property' => Unicode::ucfirst($property))));
       }
     }
   }

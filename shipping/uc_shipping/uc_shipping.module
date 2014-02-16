@@ -7,6 +7,7 @@
  * and tracking numbers.
  */
 
+use Drupal\Component\Utility\Json;
 use Drupal\uc_store\Address;
 
 /**
@@ -700,16 +701,16 @@ function uc_shipping_select_address($addresses, $onchange = '', $title = NULL) {
     'country' => 0,
     'zone' => 0,
   );
-  $options = array(\Drupal\Component\Utility\Json::encode($blank) => t('- Reset fields -'));
+  $options = array(Json::encode($blank) => t('- Reset fields -'));
   foreach ($addresses as $address) {
-    $options[\Drupal\Component\Utility\Json::encode($address)] = $address->company . ' ' . $address->street1 . ' ' . $address->city;
+    $options[Json::encode($address)] = $address->company . ' ' . $address->street1 . ' ' . $address->city;
   }
 
   $select = array(
     '#type' => 'select',
     '#title' => is_null($title) ? t('Address book') : $title,
     '#options' => $options,
-    '#default_value' => \Drupal\Component\Utility\Json::encode($addresses[0]),
+    '#default_value' => Json::encode($addresses[0]),
     '#attributes' => array('onchange' => $onchange),
   );
 

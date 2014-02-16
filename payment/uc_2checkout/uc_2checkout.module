@@ -5,6 +5,7 @@
  * Integrates 2Checkout.com's redirected payment service.
  */
 
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Implements hook_help().
@@ -175,15 +176,15 @@ function uc_2checkout_form($form, &$form_state, $order) {
     'x_receipt_link_url' => url('cart/2checkout/complete/' . uc_cart_get_id(), array('absolute' => TRUE)),
     'merchant_order_id' => $order->id(),
     'pay_method' => isset($_SESSION['pay_method']) ? $_SESSION['pay_method'] : 'CC',
-    'card_holder_name' => \Drupal\Component\Utility\Unicode::substr($order->billing_first_name . ' ' . $order->billing_last_name, 0, 128),
-    'street_address' => \Drupal\Component\Utility\Unicode::substr($order->billing_street1, 0, 64),
-    'street_address2' => \Drupal\Component\Utility\Unicode::substr($order->billing_street2, 0, 64),
-    'city' => \Drupal\Component\Utility\Unicode::substr($order->billing_city, 0, 64),
+    'card_holder_name' => Unicode::substr($order->billing_first_name . ' ' . $order->billing_last_name, 0, 128),
+    'street_address' => Unicode::substr($order->billing_street1, 0, 64),
+    'street_address2' => Unicode::substr($order->billing_street2, 0, 64),
+    'city' => Unicode::substr($order->billing_city, 0, 64),
     'state' => uc_get_zone_code($order->billing_zone),
-    'zip' => \Drupal\Component\Utility\Unicode::substr($order->billing_postal_code, 0, 16),
+    'zip' => Unicode::substr($order->billing_postal_code, 0, 16),
     'country' => $country[0]['country_iso_code_3'],
-    'email' => \Drupal\Component\Utility\Unicode::substr($order->getEmail(), 0, 64),
-    'phone' => \Drupal\Component\Utility\Unicode::substr($order->billing_phone, 0, 16),
+    'email' => Unicode::substr($order->getEmail(), 0, 64),
+    'phone' => Unicode::substr($order->billing_phone, 0, 16),
     'id_type' => 1,
   );
 
