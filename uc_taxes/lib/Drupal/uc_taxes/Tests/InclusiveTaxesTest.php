@@ -110,22 +110,7 @@ class InclusiveTaxesTest extends UbercartTestBase {
     $this->assertText('Subtotal: $16.80', 'Order subtotal is correct on checkout page.');
 
     // Manually proceed to checkout review.
-    $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => \Drupal::config('uc_store.settings')->get('address.country')))->fetchField();
-    $edit = array(
-      'panes[delivery][first_name]' => $this->randomName(10),
-      'panes[delivery][last_name]' => $this->randomName(10),
-      'panes[delivery][street1]' => $this->randomName(10),
-      'panes[delivery][city]' => $this->randomName(10),
-      'panes[delivery][zone]' => $zone_id,
-      'panes[delivery][postal_code]' => mt_rand(10000, 99999),
-
-      'panes[billing][first_name]' => $this->randomName(10),
-      'panes[billing][last_name]' => $this->randomName(10),
-      'panes[billing][street1]' => $this->randomName(10),
-      'panes[billing][city]' => $this->randomName(10),
-      'panes[billing][zone]' => $zone_id,
-      'panes[billing][postal_code]' => mt_rand(10000, 99999),
-    );
+    $edit = $this->populateCheckoutForm();
     $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
     $this->assertRaw(t('Your order is almost complete.'));
 

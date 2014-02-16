@@ -40,9 +40,6 @@ abstract class UbercartTestBase extends WebTestBase {
     'unconditionally delete orders',
   );
 
-  /** Authenticated but unprivileged user. */
-  protected $customer;
-
   /** Test product. */
   protected $product;
 
@@ -64,9 +61,6 @@ abstract class UbercartTestBase extends WebTestBase {
 
     // Create a store administrator user account.
     $this->adminUser = $this->drupalCreateUser($adminPermissions);
-
-    // Create a simple customer user account.
-    $this->customer = $this->drupalCreateUser(array('view own orders'));
 
     // Create a test product.
     $this->product = $this->createProduct(array('uid' => $this->adminUser->id()));

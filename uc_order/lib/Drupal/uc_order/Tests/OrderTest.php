@@ -16,12 +16,22 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class OrderTest extends UbercartTestBase {
 
+  /** Authenticated but unprivileged user. */
+  protected $customer;
+
   public static function getInfo() {
     return array(
       'name' => 'Orders',
       'description' => 'Ensure that orders function properly.',
       'group' => 'Ubercart',
     );
+  }
+
+  public function setUp() {
+    parent::setUp();
+
+    // Create a simple customer user account.
+    $this->customer = $this->drupalCreateUser(array('view own orders'));
   }
 
   public function testOrderAPI() {

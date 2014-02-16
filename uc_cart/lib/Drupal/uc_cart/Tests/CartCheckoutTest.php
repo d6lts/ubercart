@@ -16,6 +16,9 @@ class CartCheckoutTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack', 'uc_roles');
 
+  /** Authenticated but unprivileged user. */
+  protected $customer;
+
   public static function getInfo() {
     return array(
       'name' => 'Cart and checkout',
@@ -26,6 +29,9 @@ class CartCheckoutTest extends UbercartTestBase {
 
   public function setUp() {
     parent::setUp();
+
+    // Create a simple customer user account.
+    $this->customer = $this->drupalCreateUser();
 
     // Ensure test mails are logged.
     \Drupal::config('system.mail')
@@ -488,32 +494,9 @@ class CartCheckoutTest extends UbercartTestBase {
       t('Viewed cart page: Billing pane has been displayed.')
     );
 
-    // Build the panes.
-    $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => \Drupal::config('uc_store.settings')->get('address.country')))->fetchField();
-    $oldname = $this->randomName(10);
-    $edit = array(
-      'panes[delivery][first_name]' => $oldname,
-      'panes[delivery][last_name]' => $this->randomName(10),
-      'panes[delivery][street1]' => $this->randomName(10),
-      'panes[delivery][city]' => $this->randomName(10),
-      'panes[delivery][zone]' => $zone_id,
-      'panes[delivery][postal_code]' => mt_rand(10000, 99999),
-
-      'panes[billing][first_name]' => $this->randomName(10),
-      'panes[billing][last_name]' => $this->randomName(10),
-      'panes[billing][street1]' => $this->randomName(10),
-      'panes[billing][city]' => $this->randomName(10),
-      'panes[billing][zone]' => $zone_id,
-      'panes[billing][postal_code]' => mt_rand(10000, 99999),
-    );
-
-    // If the email address has not been set, and the user has not logged in,
-    // add a primary email address.
-    if (!isset($edit['panes[customer][primary_email]']) && !$this->loggedInUser) {
-      $edit['panes[customer][primary_email]'] = $this->randomName(8) . '@example.com';
-    }
-
     // Submit the checkout page.
+    $edit = $this->populateCheckoutForm();
+    $oldname = $edit['panes[delivery][first_name]'];
     $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
 
     $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $oldname))->fetchField();
