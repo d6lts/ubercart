@@ -13,12 +13,9 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 /**
  * Defines the order status entity.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "uc_order_status",
  *   label = @Translation("Order status"),
- *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
- *   },
  *   admin_permission = "administer order workflow",
  *   config_prefix = "uc_order.status",
  *   entity_keys = {
