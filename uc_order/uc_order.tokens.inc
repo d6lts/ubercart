@@ -298,7 +298,11 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
         case 'products':
           $products = array();
           foreach ($order->products as $product) {
-            $products[] = theme('uc_qty', array('qty' => $product->qty->value)) . ' ' . $product->title->value;
+            $qty = array(
+              '#theme' => 'uc_qty',
+              '#qty' => $product->qty->value,
+            );
+            $products[] = drupal_render($qty) . ' ' . $product->title->value;
           }
           if ($sanitize) {
             $products = array_map('check_plain', $products);

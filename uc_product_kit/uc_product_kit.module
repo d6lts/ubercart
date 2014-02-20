@@ -514,7 +514,7 @@ function uc_product_kit_module_implements_alter(&$implementations, $hook) {
 function uc_product_kit_theme() {
   return array(
     'uc_product_kit_list_item' => array(
-      'arguments' => array('product' => NULL),
+      'variables' => array('product' => NULL),
       'file' => 'uc_product_kit.theme.inc',
     ),
   );
@@ -724,7 +724,10 @@ function uc_product_kit_node_view(EntityInterface $node, EntityViewDisplay $disp
     $i = 0;
     foreach ($node->products as $product) {
       $node->content['products'][$product->id()]['qty'] = array(
-        '#markup' => '<div class="product-qty">' . theme('uc_product_kit_list_item', array('product' => $product)) . '</div>',
+        '#theme' => 'uc_product_kit_list_item',
+        '#product' => $product,
+        '#prefix' => '<div class="product-qty">',
+        '#suffix' => '</div>',
       );
       $node->content['products'][$product->id()]['#weight'] = $i++;
     }
@@ -964,12 +967,12 @@ function uc_product_kit_uc_cart_display($item) {
                                   // render-array to be the kit itself.
       $elements[$unique_id] = $element;
     }
-    // Add product specific information.
-    $extra = uc_product_get_description($item);
 
     if ($kit->mutable == UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST) {
       $elements[$unique_id]['#extra'][] = array(
-        '#markup' => theme('uc_product_kit_list_item', array('product' => $item)) . $extra,
+        '#theme' => 'uc_product_kit_list_item',
+        '#product' => $item,
+        '#suffix' => uc_product_get_description($item),
         '#wrapper_attributes' => array(
           'class' => array('kit-component-cart-desc'),
         ),
@@ -995,7 +998,13 @@ function uc_product_kit_uc_cart_display($item) {
     if ($done) {
       $elements[$unique_id]['data'] = array('#type' => 'value', '#value' => serialize($elements[$unique_id]['data']));
       if ($kit->mutable == UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST) {
-        $elements[$unique_id]['description']['#markup'] .= theme('item_list', array('items' => $elements[$unique_id]['#extra'], 'attributes' => array('class' => array('product-description'))));
+        $elements[$unique_id]['description'] = array(
+          '#theme' => 'item_list',
+          '#items' => $elements[$unique_id]['#extra'],
+          '#attributes' => array(
+            'class' => array('product-description'),
+          ),
+        );
       }
       $element = $elements[$unique_id];
       unset($products[$unique_id]);

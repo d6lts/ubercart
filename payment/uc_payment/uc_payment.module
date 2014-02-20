@@ -83,7 +83,7 @@ function template_preprocess_uc_payment_totals(&$variables) {
 
   foreach ($variables['line_items'] as $key => $line) {
     $variables['line_items'][$key]['title'] = filter_xss($line['title']);
-    $variables['line_items'][$key]['amount'] = theme('uc_price', array('price' => $line['amount']));
+    $variables['line_items'][$key]['amount'] = uc_currency_format($line['amount']);
   }
 }
 

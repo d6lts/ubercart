@@ -847,11 +847,8 @@ function uc_product_uc_store_status() {
   }
   else {
     $status = 'warning';
-    $description = t('<a href="!url">Click here</a> to automatically configure the following items for core image support:', array('!url' => url('admin/store/settings/products/defaults')));
-
-    $items[] = t('The Image file field has not been created for products.');
-
-    $description .= theme('item_list', array('items' => $items)) . t('(This action is not required and should not be taken if you do not need images or have implemented your own image support.)');
+    $description = t('<a href="!url">Click here</a> to automatically configure core image support.', array('!url' => url('admin/store/settings/products/defaults')))
+      . ' ' . t('(This action is not required and should not be taken if you do not need images or have implemented your own image support.)');
   }
 
   return array(array('status' => $status, 'title' => t('Images'), 'desc' => $description));

@@ -75,7 +75,7 @@ function theme_uc_cart_review_table($variables) {
 
   // Set up table header.
   $header = array(
-    array('data' => theme('uc_qty_label'), 'class' => array('qty')),
+    array('data' => array('#theme' => 'uc_qty_label'), 'class' => array('qty')),
     array('data' => t('Products'), 'class' => array('products')),
     array('data' => t('Price'), 'class' => array('price')),
   );
@@ -115,7 +115,14 @@ function theme_uc_cart_review_table($variables) {
     );
   }
 
-  return theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('cart-review'))));
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#attributes' => array('class' => array('cart-review')),
+  );
+
+  return drupal_render($table);
 }
 
 /**
@@ -147,27 +154,25 @@ function theme_uc_cart_checkout_review($variables) {
     $output .= '<tr class="pane-title-row">';
     $output .= '<td colspan="2">' . $title . '</td>';
     $output .= '</tr>';
-    if (is_array($data)) {
-      foreach ($data as $row) {
-        if (is_array($row)) {
-          if (isset($row['border'])) {
-            $border = ' class="row-border-' . $row['border'] . '"';
-          }
-          else {
-            $border = '';
-          }
-          $output .= '<tr' . $border . '>';
-          $output .= '<td class="title-col">' . $row['title'] . ':</td>';
-          $output .= '<td class="data-col">' . $row['data'] . '</td>';
-          $output .= '</tr>';
+    foreach ($data as $row) {
+      if (isset($row['data'])) {
+        if (is_array($row['data'])) {
+          $row['data'] = drupal_render($row['data']);
+        }
+        if (isset($row['border'])) {
+          $border = ' class="row-border-' . $row['border'] . '"';
         }
         else {
-          $output .= '<tr><td colspan="2">' . $row . '</td></tr>';
+          $border = '';
         }
+        $output .= '<tr' . $border . '>';
+        $output .= '<td class="title-col">' . $row['title'] . ':</td>';
+        $output .= '<td class="data-col">' . $row['data'] . '</td>';
+        $output .= '</tr>';
       }
-    }
-    else {
-      $output .= '<tr><td colspan="2">' . $data . '</td></tr>';
+      else {
+        $output .= '<tr><td colspan="2">' . drupal_render($row) . '</td></tr>';
+      }
     }
   }
 

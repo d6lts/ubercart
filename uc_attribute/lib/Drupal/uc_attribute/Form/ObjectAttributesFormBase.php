@@ -85,7 +85,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
         '#size' => 20,
       );
       $form['attributes'][$aid]['option'] = array(
-        '#markup' => $option ? (check_plain($option->name) . ' (' . theme('uc_price', array('price' => $option->price)) . ')' ) : t('n/a'),
+        '#markup' => $option ? (check_plain($option->name) . ' (' . uc_currency_format($option->price) . ')' ) : t('n/a'),
       );
       $form['attributes'][$aid]['required'] = array(
         '#type' => 'checkbox',

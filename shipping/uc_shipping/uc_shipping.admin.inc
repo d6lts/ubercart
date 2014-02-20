@@ -141,7 +141,7 @@ function uc_shipping_new_package($form, &$form_state, $order) {
         );
         $product_row['qty'] = array(
           '#type'          => 'select',
-          '#title'         => theme('uc_qty_label'),
+          '#title'         => t('Quantity'),
           '#title_display' => 'invisible',
           '#options'       => drupal_map_assoc(range(1, $unboxed_qty)),
           '#default_value' => $unboxed_qty,
@@ -198,7 +198,7 @@ function theme_uc_shipping_new_package_fieldset($variables) {
   drupal_add_js('misc/tableselect.js');
 
   $output = '';
-  $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), theme('uc_qty_label'), t('Package'));
+  $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), t('Quantity'), t('Package'));
 
   $rows = array();
   foreach (element_children($fieldset) as $op_id) {
@@ -379,7 +379,7 @@ function theme_uc_shipping_edit_package_fieldset($variables) {
   drupal_add_js('misc/tableselect.js');
 
   $output = '';
-  $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), theme('uc_qty_label'));
+  $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), t('Quantity'));
   $rows = array();
   foreach (element_children($fieldset) as $op_id) {
     $row = array();

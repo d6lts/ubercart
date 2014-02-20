@@ -49,7 +49,7 @@ class CartForm extends FormBase {
           'class' => array('desc'),
         ),
         'qty' => array(
-          'data' => theme('uc_qty_label'),
+          'data' => array('#theme' => 'uc_qty_label'),
           'class' => array('qty'),
         ),
         'total' => array(
@@ -73,7 +73,8 @@ class CartForm extends FormBase {
         $form['items'][$i]['remove'] = $item['remove'];
         $form['items'][$i]['remove']['#name'] = 'remove-' . $i;
         $form['items'][$i]['image'] = uc_product_get_picture($item['nid']['#value'], 'uc_cart');
-        $form['items'][$i]['desc']['#markup'] = $item['title']['#markup'] . $item['description']['#markup'];
+        $form['items'][$i]['desc']['title'] = $item['title'];
+        $form['items'][$i]['desc']['description'] = $item['description'];
         $form['items'][$i]['qty'] = $item['qty'];
         $form['items'][$i]['total'] = array(
           '#theme' => 'uc_price',

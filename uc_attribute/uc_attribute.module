@@ -1119,7 +1119,8 @@ function uc_attribute_option_ajax($form, $form_state) {
   if (strpos($form['#form_id'], 'add_to_cart_form') !== FALSE) {
     uc_product_view_ajax_commands($response, $form_state, array('display_price', 'weight', 'cost'));
   }
-  $response->addCommand(new PrependCommand($wrapper, trim(theme('status_messages'))));
+  $status_messages = array('#theme' => 'status_messages');
+  $response->addCommand(new PrependCommand($wrapper, drupal_render($status_messages)));
   return $response;
 }
 
@@ -1236,10 +1237,12 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
       }
 
       // Select options are check_plain()ed, but radio button labels are not.
-      $options[$option->oid] = theme('uc_attribute_option', array(
-        'option' => $attribute->display == 2 ? check_plain($option->name) : $option->name,
-        'price' => $display_price,
-      ));
+      $build = array(
+        '#theme' => 'uc_attribute_option',
+        '#option' => $attribute->display == 2 ? check_plain($option->name) : $option->name,
+        '#price' => $display_price,
+      );
+      $options[$option->oid] = drupal_render($build);
     }
 
     if (count($attribute->options) && $attribute->display > 0) {

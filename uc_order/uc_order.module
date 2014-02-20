@@ -850,13 +850,16 @@ function template_preprocess_uc_order_invoice(&$variables) {
         $variables['products'][$id]->individual_price = '';
       }
 
-      $variables['products'][$id]->details = '';
+      $variables['products'][$id]->details = array();
       if (!empty($product->data['attributes'])) {
         $attributes = array();
         foreach ($product->data['attributes'] as $attribute => $option) {
           $attributes[] = t('@attribute: @options', array('@attribute' => $attribute, '@options' => implode(', ', (array)$option)));
         }
-        $variables['products'][$id]->details .= theme('item_list', array('items' => $attributes));
+        $variables['products'][$id]->details = array(
+          '#theme' => 'item_list',
+          '#items' => $attributes,
+        );
       }
     }
   }

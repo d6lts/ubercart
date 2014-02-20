@@ -124,8 +124,10 @@ class StoreController extends ControllerBase implements ContainerInjectionInterf
           case 'error':   $icon = 'error.gif'; break;
           default:        $icon = 'info.gif';
         }
-        $icon = theme('image', array('uri' => drupal_get_path('module', 'uc_store') . '/images/' . $icon));
-
+        $icon = array(
+          '#theme' => 'image',
+          '#uri' => drupal_get_path('module', 'uc_store') . '/images/' . $icon,
+        );
         $rows[] = array(
           array('data' => $icon, 'class' => array('status-icon')),
           array('data' => $message['title'], 'class' => array('status-title')),

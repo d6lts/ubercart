@@ -95,7 +95,7 @@ class CartBlock extends BlockBase {
           if (count(element_children($display_item))) {
             $items[] = array(
               'nid' => $display_item['nid']['#value'],
-              'qty' => theme('uc_qty', array('qty' => $display_item['qty']['#default_value'])),
+              'qty' => $display_item['qty']['#default_value'],
               'title' => $display_item['title']['#markup'],
               'price' => $display_item['#total'],
               'desc' => isset($display_item['description']['#markup']) ? $display_item['description']['#markup'] : FALSE,

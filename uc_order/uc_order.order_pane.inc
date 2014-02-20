@@ -200,7 +200,7 @@ function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL)
         '#attributes' => array('class' => array('order-pane-table')),
         '#header' => array(
           'qty' => array(
-            'data' => theme('uc_qty_label'),
+            'data' => t('Quantity'),
             'class' => array('qty'),
           ),
           'product' => array(
@@ -388,7 +388,7 @@ function uc_order_add_product_form($form, &$form_state, $order, $node) {
   );
   $form['qty'] = array(
     '#type' => 'uc_quantity',
-    '#title' => theme('uc_qty_label'),
+    '#title' => t('Quantity'),
     '#default_value' => 1,
   );
   $form['actions'] = array('#type' => 'actions');
@@ -428,7 +428,7 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
   $form['products'] = array(
     '#type' => 'table',
     '#tree' => TRUE,
-    '#header' => array(t('Remove'), theme('uc_qty_label'), t('Name'), t('SKU'), t('Weight'), t('Units'), t('Cost'), t('Price')),
+    '#header' => array(t('Remove'), t('Quantity'), t('Name'), t('SKU'), t('Weight'), t('Units'), t('Cost'), t('Price')),
     '#attributes' => array('id' => 'order-edit-products', 'class' => array('order-pane-table')),
     '#empty' => t('This order contains no products.'),
   );
@@ -455,7 +455,7 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
     );
     $form['products'][$i]['qty'] = array(
       '#type' => 'uc_quantity',
-      '#title' => theme('uc_qty_label'),
+      '#title' => t('Quantity'),
       '#title_display' => 'invisible',
       '#default_value' => $product->qty->value,
     );
@@ -650,12 +650,12 @@ function uc_order_edit_products_remove($form, &$form_state) {
 function uc_order_pane_products_ajax_callback($form, &$form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#product-controls', trim(drupal_render($form['product_controls']))));
-  $response->addCommand(new PrependCommand('#product-controls', trim(theme('status_messages'))));
+  $status_messages = array('#theme' => 'status_messages');
+  $response->addCommand(new PrependCommand('#product-controls', drupal_render($status_messages)));
 
   if (isset($form_state['refresh_products']) && $form_state['refresh_products']) {
     $response->addCommand(new ReplaceCommand('#order-edit-products', trim(drupal_render($form['products']))));
     $response->addCommand(new ReplaceCommand('#order-line-items', trim(drupal_render($form['line_items']))));
-    $response->addCommand(new PrependCommand('#order-edit-products', trim(theme('status_messages'))));
   }
 
   // Remove the field so we only refresh the admin comments item-list.
@@ -888,7 +888,8 @@ function uc_order_pane_line_items_remove($form, &$form_state) {
 function uc_order_pane_line_items_update($form, &$form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#order-line-items', trim(drupal_render($form['line_items']))));
-  $response->addCommand(new PrependCommand('#order-line-items', theme('status_messages')));
+  $status_messages = array('#theme' => 'status_messages');
+  $response->addCommand(new PrependCommand('#order-line-items', drupal_render($status_messages)));
 
   return $response;
 }
@@ -918,8 +919,8 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
         $icon = $comment->notified ? 'true-icon.gif' : 'false-icon.gif';
         $build['#rows'][] = array(
           array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
-          array('data' => theme('uc_uid', array('uid' => $comment->uid)), 'class' => array('user')),
-          array('data' => theme('image', array('uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon)), 'class' => array('notified')),
+          array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
+          array('data' => array('#theme' => 'image', '#uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon), 'class' => array('notified')),
           array('data' => check_plain($statuses[$comment->order_status]->name), 'class' => array('status')),
           array('data' => check_plain($comment->message), 'class' => array('message')),
         );
@@ -976,7 +977,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
       foreach ($comments as $comment) {
         $build['#rows'][] = array(
           array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
-          array('data' => theme('uc_uid', array('uid' => $comment->uid)), 'class' => array('user')),
+          array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
           array('data' => filter_xss_admin($comment->message), 'class' => array('message')),
         );
       }
@@ -996,16 +997,22 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
       return $form;
 
     case 'edit-theme':
+      $items = array();
       $comments = uc_order_comments_load($form['order_id']['#value'], TRUE);
-      if (is_array($comments) && count($comments) > 0) {
-        foreach ($comments as $comment) {
-          $items[] = '[' . theme('uc_uid', array('uid' => $comment->uid)) . '] ' . filter_xss_admin($comment->message);
-        }
+      foreach ($comments as $comment) {
+        $username = array(
+          '#theme' => 'uc_uid',
+          '#uid' => $comment->uid,
+        );
+        $items[] = '[' . drupal_render($username) . '] ' . filter_xss_admin($comment->message);
       }
-      else {
-        $items = array(t('No admin comments have been entered for this order.'));
-      }
-      $output = theme('item_list', array('items' => $items)) . drupal_render($form['admin_comment_field']);
+      $item_list = array(
+        '#theme' => 'item_list',
+        '#items' => $items,
+        '#empty' => t('No admin comments have been entered for this order.'),
+      );
+      $output = drupal_render($item_list);
+      $output .= drupal_render($form['admin_comment_field']);
       return $output;
 
     case 'edit-process':

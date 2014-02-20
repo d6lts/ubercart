@@ -56,11 +56,14 @@ function theme_uc_product_price($variables) {
   if ($label) {
     $output .= '<span class="uc-price-label">' . $label . '</span> ';
   }
-  $vars = array('price' => $price);
+  $vars = array(
+    '#theme' => 'uc_price',
+    '#price' => $price,
+  );
   if (!empty($element['#suffixes'])) {
-    $vars['suffixes'] = $element['#suffixes'];
+    $vars['#suffixes'] = $element['#suffixes'];
   }
-  $output .= theme('uc_price', $vars);
+  $output .= drupal_render($vars);
   $output .= drupal_render_children($element);
   $output .= '</div>';
 

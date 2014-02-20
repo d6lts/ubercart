@@ -36,7 +36,11 @@ class CartPane extends CheckoutPanePluginBase {
    * {@inheritdoc}
    */
   public function review(UcOrderInterface $order) {
-    $review[] = theme('uc_cart_review_table', array('items' => $order->products, 'show_subtotal' => FALSE));
+    $review[] = array(
+      '#theme' => 'uc_cart_review_table',
+      '#items' => $order->products,
+      '#show_subtotal' => FALSE,
+    );
     return $review;
   }
 

@@ -375,11 +375,16 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
         }
       }
 
+      $item_list = array(
+        '#theme' => 'item_list',
+        '#items' => $items,
+      );
+
       db_insert('uc_order_log')
         ->fields(array(
           'order_id' => $this->id(),
           'uid' => $user->id(),
-          'changes' => theme('item_list', array('items' => $items)),
+          'changes' => drupal_render($item_list),
           'created' => REQUEST_TIME,
         ))
         ->execute();

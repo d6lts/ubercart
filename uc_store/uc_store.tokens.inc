@@ -82,7 +82,11 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
           // Use a logo; but only if we have one to use.
           $replacements[$original] = '';
           if ($uri = theme_get_setting('logo.url')) {
-            $replacements[$original] = theme('image', array('uri' => $uri));
+            $logo = array(
+              '#theme' => 'image',
+              '#uri' => $uri,
+            );
+            $replacements[$original] = drupal_render($logo);
           }
           break;
       }

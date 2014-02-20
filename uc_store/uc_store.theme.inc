@@ -56,7 +56,11 @@ function theme_uc_qty($variables) {
  */
 function theme_uc_uid($variables) {
   if ($variables['uid']) {
-    return theme('username', array('account' => user_load($variables['uid'])));
+    $username = array(
+      '#theme' => 'username',
+      '#account' => user_load($variables['uid']),
+    );
+    return drupal_render($username);
   }
   else {
     return '-';

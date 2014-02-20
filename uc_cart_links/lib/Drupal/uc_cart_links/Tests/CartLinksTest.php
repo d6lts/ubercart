@@ -679,10 +679,14 @@ class CartLinksTest extends UbercartTestBase {
    *   Array of Cart Links to appear on page.
    */
   protected function createCartLinksPage($links = array()) {
+    $item_list = array(
+      '#theme' => 'links',
+      '#links' => array(),
+    );
     if (!empty($links)) {
       $i = 0;
       foreach ($links as $link) {
-        $body['links'][] = array(
+        $item_list['#links'][] = array(
           'title' => t('Cart Link #@num', array('@num' => $i++)),
           'href' => $link,
         );
@@ -693,7 +697,7 @@ class CartLinksTest extends UbercartTestBase {
       'type' => 'page',  // This is default anyway ...
       'body' => array(
         0 => array(
-          'value' => isset($body) ? theme('links', $body) : $this->randomName(128),
+          'value' => !empty($links) ? drupal_render($item_list) : $this->randomName(128),
           'format' => 'full_html',
         )
       ),

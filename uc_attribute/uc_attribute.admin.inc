@@ -45,7 +45,14 @@ function theme_uc_product_attributes($variables) {
   }
 
   if (!empty($option_rows)) {
-    return theme('item_list', array('items' => array_values($option_rows), 'attributes' => array('class' => array('product-description'))));
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => array_values($option_rows),
+      '#attributes' => array(
+        'class' => array('product-description'),
+      ),
+    );
+    return drupal_render($item_list);
   }
 
   return '';

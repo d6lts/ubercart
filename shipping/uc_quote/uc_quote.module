@@ -636,7 +636,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL
 
       $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
       if ($line_item = $result->fetchAssoc()) {
-        $review[] = array('title' => $line_item['title'], 'data' => theme('uc_price', array('price' => $line_item['amount'])));
+        $review[] = array('title' => $line_item['title'], 'data' => array('#theme' => 'uc_price', '#price' => $line_item['amount']));
       }
 
       return $review;
@@ -868,7 +868,8 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
 function uc_quote_cart_returned_rates($form, $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#quote', trim(drupal_render($form['quote']))));
-  $response->addCommand(new PrependCommand('#quote', trim(theme('status_messages'))));
+  $status_messages = array('#theme' => 'status_messages');
+  $response->addCommand(new PrependCommand('#quote', drupal_render($status_messages)));
 
   return $response;
 }
@@ -917,7 +918,8 @@ function uc_quote_order_update_rates($form, $form_state) {
 
   // Reset shipping form.
   $response->addCommand(new ReplaceCommand('#quote', trim(drupal_render($form['quotes']['quotes']))));
-  $response->addCommand(new PrependCommand('#quote', trim(theme('status_messages'))));
+  $status_messages = array('#theme' => 'status_messages');
+  $response->addCommand(new PrependCommand('#quote', drupal_render($status_messages)));
 
   return $response;
 }

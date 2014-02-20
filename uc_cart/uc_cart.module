@@ -198,10 +198,10 @@ function template_preprocess_uc_cart_block(&$variables) {
     $variables['attributes']['class'][] = 'collapsed';
   }
 
-  $variables['total'] = theme('uc_price', array('price' => $variables['total']));
+  $variables['total'] = uc_currency_format($variables['total']);
 
   foreach ($variables['items'] as $key => $item) {
-    $variables['items'][$key]['price'] = theme('uc_price', array('price' => $item['price']));
+    $variables['items'][$key]['price'] = uc_currency_format($item['price']);
   }
 
   $variables['summary_links'] = array(
@@ -216,13 +216,14 @@ function template_preprocess_uc_cart_block(&$variables) {
  */
 function uc_cart_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'uc_cart' && $variables['label']) {
-    $variables['label'] = theme('uc_cart_block_title', array(
-      'title' => $variables['label'],
-      'show_icon' => $variables['configuration']['show_image'],
-      'cart_empty' => !uc_cart_get_contents(),
-      'collapsible' => $variables['configuration']['collapsible'],
-      'collapsed' => $variables['configuration']['collapsed'],
-    ));
+    $variables['label'] = array(
+      '#theme' => 'uc_cart_block_title',
+      '#title' => $variables['label'],
+      '#show_icon' => $variables['configuration']['show_image'],
+      '#cart_empty' => !uc_cart_get_contents(),
+      '#collapsible' => $variables['configuration']['collapsible'],
+      '#collapsed' => $variables['configuration']['collapsed'],
+    );
   }
 }
 
