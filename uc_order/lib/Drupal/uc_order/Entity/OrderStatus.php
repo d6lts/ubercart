@@ -17,7 +17,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
  *   id = "uc_order_status",
  *   label = @Translation("Order status"),
  *   admin_permission = "administer order workflow",
- *   config_prefix = "uc_order.status",
+ *   config_prefix = "status",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "name",
