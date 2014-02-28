@@ -2,15 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\uc_store\Mail\UbercartMail.
+ * Contains \Drupal\uc_store\Plugin\Mail\UbercartMail.
  */
 
-namespace Drupal\uc_store\Mail;
+namespace Drupal\uc_store\Plugin\Mail;
 
-use Drupal\Core\Mail\PhpMail;
+use Drupal\Core\Mail\Plugin\Mail\PhpMail;
 
 /**
  * Modifies the Drupal mail system to send HTML emails.
+ *
+ * @Mail(
+ *   id = "ubercart_mail",
+ *   label = @Translation("Ubercart mailer"),
+ *   description = @Translation("Sends the message as HTML, using PHP's native mail() function.")
+ * )
  */
 class UbercartMail extends PhpMail {
 

@@ -134,12 +134,12 @@ function uc_store_schema() {
 function uc_store_install() {
   // Set mail handler for all Ubercart modules
   \Drupal::config('system.mail')
-    ->set('interface.uc_cart',  'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_order', 'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_file',  'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_roles', 'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_stock', 'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_store', 'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_cart',  'ubercart_mail')
+    ->set('interface.uc_order', 'ubercart_mail')
+    ->set('interface.uc_file',  'ubercart_mail')
+    ->set('interface.uc_roles', 'ubercart_mail')
+    ->set('interface.uc_stock', 'ubercart_mail')
+    ->set('interface.uc_store', 'ubercart_mail')
     ->save();
 
   // Install United States and Canada by default.
@@ -241,12 +241,12 @@ function uc_store_update_8002() {
  */
 function uc_store_update_8003() {
   \Drupal::config('system.mail')
-    ->set('interface.uc_cart',  'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_order', 'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_file',  'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_roles', 'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_stock', 'Drupal\uc_store\Mail\UbercartMail')
-    ->set('interface.uc_store', 'Drupal\uc_store\Mail\UbercartMail')
+    ->set('interface.uc_cart',  'ubercart_mail')
+    ->set('interface.uc_order', 'ubercart_mail')
+    ->set('interface.uc_file',  'ubercart_mail')
+    ->set('interface.uc_roles', 'ubercart_mail')
+    ->set('interface.uc_stock', 'ubercart_mail')
+    ->set('interface.uc_store', 'ubercart_mail')
     ->save();
 }
 
