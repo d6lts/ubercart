@@ -148,7 +148,8 @@ class AttributeTest extends UbercartTestBase {
     }
 
     // Pick 5 keys to check at random.
-    $aids = drupal_map_assoc(array_rand($attributes, 3));
+    $aids = array_rand($attributes, 3);
+    $aids = array_combine($aids, $aids);
 
     // Load the attributes back.
     $loaded_attributes = uc_attribute_load_multiple($aids);

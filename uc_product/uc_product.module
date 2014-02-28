@@ -1008,7 +1008,7 @@ function uc_product_get_models($nid, $add_blank = TRUE) {
   $models[] = db_query('SELECT model FROM {uc_products} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
 
   // Now we map the SKUs to the keys, for form handling, etc.
-  $models = drupal_map_assoc($models);
+  $models = array_combine($models, $models);
   // Sort the SKUs.
   asort($models);
 

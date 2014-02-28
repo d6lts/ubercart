@@ -139,15 +139,17 @@ function uc_shipping_new_package($form, &$form_state, $order) {
         $product_row['name'] = array(
           '#markup' => filter_xss_admin($product->title)
         );
+        $range = range(1, $unboxed_qty);
         $product_row['qty'] = array(
           '#type'          => 'select',
           '#title'         => t('Quantity'),
           '#title_display' => 'invisible',
-          '#options'       => drupal_map_assoc(range(1, $unboxed_qty)),
+          '#options'       => array_combine($range, $range),
           '#default_value' => $unboxed_qty,
         );
 
-        $options = drupal_map_assoc(range(0, count($order->products)));
+        $range = range(0, count($order->products));
+        $options = array_combine($options, $options);
         $options[0] = t('Sep.');
         $product_row['package'] = array(
           '#type' => 'select',
@@ -339,9 +341,10 @@ function uc_shipping_package_edit($form, &$form_state, $order, $package) {
       $product_row['checked'] = array('#type' => 'checkbox', '#default_value' => isset($package->products[$product->order_product_id]));
       $product_row['model'] = array('#markup' => check_plain($product->model));
       $product_row['name'] = array('#markup' => filter_xss_admin($product->title));
+      $range = range(1, $product->qty);
       $product_row['qty'] = array(
         '#type' => 'select',
-        '#options' => drupal_map_assoc(range(1, $product->qty)),
+        '#options' => array_combine($range, $range),
         '#default_value' => isset($package->products[$product->order_product_id]) ? $package->products[$product->order_product_id]->qty : 1,
       );
 

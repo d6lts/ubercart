@@ -139,7 +139,7 @@ class StoreSettingsForm extends ConfigFormBase {
     $form['currency']['uc_currency_prec'] = array(
       '#type' => 'select',
       '#title' => t('Number of decimal places'),
-      '#options' => drupal_map_assoc(array(0, 1, 2)),
+      '#options' => array(0 => 0, 1 => 1, 2 => 2),
       '#default_value' => $config->get('currency.precision'),
     );
 

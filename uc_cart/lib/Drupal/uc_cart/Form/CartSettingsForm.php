@@ -76,6 +76,7 @@ class CartSettingsForm extends ConfigFormBase {
       '#group' => 'cart-settings',
     );
 
+    $range = range(1, 60);
     $form['lifetime']['anonymous'] = array(
       '#type' => 'details',
       '#title' => t('Anonymous users'),
@@ -84,7 +85,7 @@ class CartSettingsForm extends ConfigFormBase {
     $form['lifetime']['anonymous']['uc_cart_anon_duration'] = array(
       '#type' => 'select',
       '#title' => t('Duration'),
-      '#options' => drupal_map_assoc(range(1, 60)),
+      '#options' => array_combine($range, $range),
       '#default_value' => $cart_config->get('anon_duration'),
     );
     $form['lifetime']['anonymous']['uc_cart_anon_unit'] = array(
@@ -108,7 +109,7 @@ class CartSettingsForm extends ConfigFormBase {
     $form['lifetime']['authenticated']['uc_cart_auth_duration'] = array(
       '#type' => 'select',
       '#title' => t('Duration'),
-      '#options' => drupal_map_assoc(range(1, 60)),
+      '#options' => array_combine($range, $range),
       '#default_value' => $cart_config->get('auth_duration'),
     );
     $form['lifetime']['authenticated']['uc_cart_auth_unit'] = array(

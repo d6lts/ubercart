@@ -1063,11 +1063,11 @@ function uc_country_option_list() {
  */
 function uc_select_day($title = NULL, $default = NULL, $allow_empty = FALSE) {
   $options = $allow_empty ? array('' => '') : array();
-
+  $days = range(1, 31);
   $select = array(
     '#type' => 'select',
     '#title' => (is_null($title) ? t('Day') : $title),
-    '#options' => $options + drupal_map_assoc(range(1, 31)),
+    '#options' => $options + array_combine($days, $days),
     '#default_value' => (is_null($default) ? 0 : $default),
   );
 
@@ -1104,11 +1104,11 @@ function uc_select_year($title = NULL, $default = NULL, $min = NULL, $max = NULL
   $min = is_null($min) ? intval(date('Y')) : $min;
   $max = is_null($max) ? intval(date('Y')) + 20 : $max;
   $options = $allow_empty ? array('' => '') : array();
-
+  $years = range($min, $max);
   $select = array(
     '#type' => 'select',
     '#title' => (is_null($title) ? t('Year') : $title),
-    '#options' => $options + drupal_map_assoc(range($min, $max)),
+    '#options' => $options + array_combine($years, $years),
     '#default_value' => (is_null($default) ? 0 : $default),
   );
 

@@ -532,11 +532,12 @@ function uc_payment_method_credit_form($form, &$form_state, $order) {
   );
 
   $types = variable_get('uc_credit_accepted_types', implode("\r\n", array(t('Visa'), t('Mastercard'), t('Discover'), t('American Express'))));
+  $types = explode("\r\n", $types);
   if (variable_get('uc_credit_type_enabled', FALSE) && $types) {
     $form['cc_type'] = array(
       '#type' => 'select',
       '#title' => t('Card type'),
-      '#options' => drupal_map_assoc(explode("\r\n", $types)),
+      '#options' => array_combine($types, $types),
       '#default_value' => isset($order->payment_details['cc_type']) ? $order->payment_details['cc_type'] : NULL,
     );
   }

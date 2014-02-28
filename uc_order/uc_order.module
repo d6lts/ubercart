@@ -877,7 +877,8 @@ function template_preprocess_uc_order_invoice(&$variables) {
 
   $replacements = array();
   foreach (array('site', 'store', 'uc_order') as $type) {
-    $replacements[$type] = $token_service->generate($type, drupal_map_assoc(array_keys($token_info['tokens'][$type])), $types);
+    $tokens = array_keys($token_info['tokens'][$type]);
+    $replacements[$type] = $token_service->generate($type, array_combine($tokens, $tokens), $types);
   }
 
   foreach ($replacements as $type => $tokens) {

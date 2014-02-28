@@ -226,7 +226,7 @@ function uc_ajax_replace_checkout_pane($form, $form_state, $wrapper = NULL) {
 function _uc_ajax_defaults($target_form) {
   switch ($target_form) {
     case 'checkout':
-      $quotes_defaults = drupal_map_assoc(array('payment-pane', 'quotes-pane'));
+      $quotes_defaults = array('payment-pane' => 'payment-pane', 'quotes-pane' => 'quotes-pane');
       return array(
         'panes][delivery][address][delivery_country' => $quotes_defaults,
         'panes][delivery][address][delivery_postal_code' => $quotes_defaults,

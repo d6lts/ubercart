@@ -402,10 +402,11 @@ function uc_payment_method_paypal_wps($op, &$order) {
         '#options' => _uc_paypal_currency_array(),
         '#default_value' => variable_get('uc_paypal_wps_currency', 'USD'),
       );
+      $languages = array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US');
       $form['uc_paypal_wps_language'] = array(
         '#type' => 'select',
         '#title' => t('PayPal login page language'),
-        '#options' => drupal_map_assoc(array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US')),
+        '#options' => array_combine($languages, $languages),
         '#default_value' => variable_get('uc_paypal_wps_language', 'US'),
       );
       $form['uc_paypal_wps_server'] = array(
@@ -1182,5 +1183,6 @@ function _uc_paypal_reversal_message($reason) {
  * Returns an array of possible currency codes.
  */
 function _uc_paypal_currency_array() {
-  return drupal_map_assoc(array('AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'SEK', 'SGD', 'THB', 'TWD', 'USD'));
+  $currencies = array('AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'SEK', 'SGD', 'THB', 'TWD', 'USD');
+  return array_combine($currencies, $currencies);
 }

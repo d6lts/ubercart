@@ -86,12 +86,13 @@ function uc_authorizenet_settings_form($form, &$form_state) {
   $login_data = _uc_authorizenet_login_data();
 
   // Allow admin to set duplicate window.
+  $intervals = array(0, 15, 30, 45, 60, 75, 90, 105, 120);
   $form['uc_authnet_duplicate_window'] = array(
     '#type' => 'select',
     '#title' => t('Duplicate window'),
     '#description' => t('Blocks submission of duplicate transactions within the specified window.  Defaults to 120 seconds.'),
     '#default_value' => variable_get('uc_authnet_duplicate_window', 120),
-    '#options' => drupal_map_assoc(array(0, 15, 30, 45, 60, 75, 90, 105, 120)),
+    '#options' => array_combine($intervals, $intervals),
   );
 
   $form['api_id_key'] = array(
