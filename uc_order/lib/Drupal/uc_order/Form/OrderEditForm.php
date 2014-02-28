@@ -106,7 +106,7 @@ class OrderEditForm extends FormBase {
     $order = uc_order_load($form_state['values']['order_id']);
     $log = array();
 
-    foreach (array_keys($form_state['order']->getPropertyDefinitions()) as $key) {
+    foreach (array_keys($form_state['order']->getFieldDefinitions()) as $key) {
       $value = $form_state['order']->$key->value;
       if ($order->$key->value !== $value) {
         if (!is_array($value)) {
