@@ -9,6 +9,7 @@ namespace Drupal\uc_cart\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 
 /**
@@ -102,7 +103,7 @@ class UcCartItem extends ContentEntityBase {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions($entity_type) {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['cart_item_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Cart item ID'))
       ->setDescription(t('The cart item ID.'))

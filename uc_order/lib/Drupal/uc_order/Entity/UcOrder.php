@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_store\Address;
@@ -396,7 +397,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions($entity_type) {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['order_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Order ID'))
       ->setDescription(t('The order ID.'))
