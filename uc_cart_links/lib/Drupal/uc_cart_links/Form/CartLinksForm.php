@@ -8,7 +8,7 @@
 namespace Drupal\uc_cart_links\Form;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -230,7 +230,7 @@ class CartLinksForm extends ConfirmFormBase {
 
     $query = $this->getRequest()->query;
     if ($query->has('destination')) {
-      $options = Url::parse($query->get('destination'));
+      $options = UrlHelper::parse($query->get('destination'));
       $path = $options['path'];
     }
     else {

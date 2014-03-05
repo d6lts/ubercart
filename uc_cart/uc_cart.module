@@ -10,7 +10,7 @@
  * products, and checkout to be extensible.
  */
 
-use Drupal\Component\Utility\Url;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Time in seconds after which a cart order is deemed abandoned.
@@ -528,7 +528,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
             }
             else {
               $query = Drupal::request()->query;
-              return array(current_path(), array('query' => Url::filterQueryParameters($query->all())));
+              return array(current_path(), array('query' => UrlHelper::filterQueryParameters($query->all())));
             }
           }
         }
@@ -536,7 +536,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
           drupal_set_message($message, 'error');
         }
         $query = Drupal::request()->query;
-        return array(current_path(), array('query' => Url::filterQueryParameters($query->all())));
+        return array(current_path(), array('query' => UrlHelper::filterQueryParameters($query->all())));
       }
     }
   }
@@ -588,7 +588,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     }
     else {
       $query = Drupal::request()->query;
-      return array(current_path(), array('query' => Url::filterQueryParameters($query->all())));
+      return array(current_path(), array('query' => UrlHelper::filterQueryParameters($query->all())));
     }
   }
 }
