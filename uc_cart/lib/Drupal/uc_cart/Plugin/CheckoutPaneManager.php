@@ -51,7 +51,8 @@ class CheckoutPaneManager extends DefaultPluginManager {
     $this->discovery = new InfoHookDecorator($this->discovery, 'uc_checkout_pane', 'Drupal\uc_cart\Plugin\Ubercart\CheckoutPane\LegacyCheckoutPane');
     $this->factory = new ContainerFactory($this);
 
-    $this->alterInfo($module_handler, 'uc_checkout_pane');
+    $this->moduleHandler = $module_handler;
+    $this->alterInfo('uc_checkout_pane');
     $this->setCacheBackend($cache_backend, $language_manager, 'uc_checkout_panes');
 
     $this->paneConfig = \Drupal::config('uc_cart.settings')->get('panes');

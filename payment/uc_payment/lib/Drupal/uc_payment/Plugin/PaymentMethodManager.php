@@ -51,7 +51,8 @@ class PaymentMethodManager extends DefaultPluginManager {
     $this->discovery = new InfoHookDecorator($this->discovery, 'uc_payment_method', 'Drupal\uc_payment\Plugin\Ubercart\PaymentMethod\LegacyPaymentMethod');
     $this->factory = new ContainerFactory($this);
 
-    $this->alterInfo($module_handler, 'uc_payment_method');
+    $this->moduleHandler = $module_handler;
+    $this->alterInfo('uc_payment_method');
     $this->setCacheBackend($cache_backend, $language_manager, 'uc_payment_methods');
 
     $this->methodConfig = \Drupal::config('uc_payment.settings')->get('methods');
