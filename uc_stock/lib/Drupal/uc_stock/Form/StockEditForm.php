@@ -35,7 +35,7 @@ class StockEditForm extends FormBase {
         $this->t('Threshold'),
       ),
     );
-    $form['#attached']['library'][] = array('system', 'drupal.tableselect');
+    $form['#attached']['library'][] = 'core/drupal.tableselect';
 
     $skus = uc_product_get_models($node->id(), FALSE);
     foreach ($skus as $sku) {
