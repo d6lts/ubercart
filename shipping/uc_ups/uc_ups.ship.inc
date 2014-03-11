@@ -30,9 +30,8 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
 
   // Container for package data
   $form['packages'] = array(
-    '#type'        => 'details',
+    '#type'        => 'fieldset',
     '#title'       => t('Packages'),
-    '#collapsible' => TRUE,
     '#tree'        => TRUE
   );
   foreach ($package_ids as $id) {
@@ -55,7 +54,7 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
       $ups_data = db_query("SELECT pkg_type FROM {uc_ups_products} WHERE nid = :nid", array(':nid' => $product->nid))->fetchAssoc();
       $product->ups = $ups_data;
       $pkg_form = array(
-        '#type' => 'details',
+        '#type' => 'fieldset',
         '#title' => t('Package !id', array('!id' => $id)),
       );
       $pkg_form['products'] = array(
@@ -159,9 +158,8 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
 
   // Container for shipment data
   $form['shipment'] = array(
-    '#type'        => 'details',
+    '#type'        => 'fieldset',
     '#title'       => t('Shipment data'),
-    '#collapsible' => TRUE,
   );
 
   // Inform user of customer's shipping choice

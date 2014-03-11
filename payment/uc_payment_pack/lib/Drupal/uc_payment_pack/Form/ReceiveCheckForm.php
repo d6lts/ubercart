@@ -50,7 +50,7 @@ class ReceiveCheckForm extends FormBase {
       '#maxlength' => 256,
     );
     $form['clear'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => t('Expected clear date'),
       '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
     );

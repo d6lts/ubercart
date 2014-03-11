@@ -153,7 +153,6 @@ function uc_credit_settings_form($form, &$form_state) {
     '#type' => 'details',
     '#title' => t('Customer messages'),
     '#description' => t('Here you can alter messages displayed to customers using credit cards.'),
-    '#collapsible' => FALSE,
     '#group' => 'uc_credit',
     '#weight' => 10,
   );
@@ -181,8 +180,6 @@ function uc_credit_settings_form($form, &$form_state) {
     $form['gateways'][$id] = array(
       '#type' => 'details',
       '#title' => check_plain($gateway['title']),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
       '#group' => 'uc_credit',
       '#weight' => 5,
     );

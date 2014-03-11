@@ -27,8 +27,6 @@ function uc_weightquote_form_node_form_alter(&$form, &$form_state, $form_id) {
           '#title' => t('Shipping rates by weight'),
           '#description' => t("Overrides the default shipping rate per product for each flat rate shipping method. Leave field empty to use the method's default value."),
           '#tree' => TRUE,
-          '#collapsible' => TRUE,
-          '#collapsed' => FALSE,
           '#weight' => 0,
         );
       }

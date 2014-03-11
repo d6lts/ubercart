@@ -78,7 +78,7 @@ class CartSettingsForm extends ConfigFormBase {
 
     $range = range(1, 60);
     $form['lifetime']['anonymous'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => t('Anonymous users'),
       '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
     );
@@ -102,7 +102,7 @@ class CartSettingsForm extends ConfigFormBase {
     );
 
     $form['lifetime']['authenticated'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => t('Authenticated users'),
       '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
     );

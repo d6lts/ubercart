@@ -45,8 +45,6 @@ class UPSSettingsForm extends ConfigFormBase {
       '#type'          => 'details',
       '#title'         => t('Credentials'),
       '#description'   => t('Account number and authorization information.'),
-      '#collapsible'   => TRUE,
-      '#collapsed'     => TRUE,
       '#group'         => 'ups-settings',
     );
 
@@ -88,8 +86,6 @@ class UPSSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('Service options'),
       '#description' => t('Set the conditions that will return a UPS quote.'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
       '#group'         => 'ups-settings',
     );
 
@@ -106,8 +102,6 @@ class UPSSettingsForm extends ConfigFormBase {
       '#type'          => 'details',
       '#title'         => t('Quote options'),
       '#description'   => t('Preferences that affect computation of quote.'),
-      '#collapsible'   => TRUE,
-      '#collapsed'     => TRUE,
       '#group'         => 'ups-settings',
     );
 
@@ -199,8 +193,6 @@ class UPSSettingsForm extends ConfigFormBase {
       '#type'          => 'details',
       '#title'         => t('Markups'),
       '#description'   => t('Modifiers to the shipping weight and quoted rate.'),
-      '#collapsible'   => TRUE,
-      '#collapsed'     => TRUE,
       '#group'         => 'ups-settings',
     );
 
@@ -251,8 +243,6 @@ class UPSSettingsForm extends ConfigFormBase {
       '#type'          => 'details',
       '#title'         => t('Label Printing'),
       '#description'   => t('Preferences for UPS Shipping Label Printing.  Additional permissions from UPS are required to use this feature.'),
-      '#collapsible'   => TRUE,
-      '#collapsed'     => TRUE,
       '#group'         => 'ups-settings',
     );
 

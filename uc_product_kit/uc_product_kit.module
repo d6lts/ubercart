@@ -545,6 +545,7 @@ function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
     '#type' => 'details',
     '#title' => t('Product kit information'),
     '#weight' => 0,
+    '#open' => TRUE,
   );
   $form['base']['mutable'] = array(
     '#type' => 'radios',

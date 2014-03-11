@@ -31,7 +31,6 @@ class OrderWorkflowForm extends ConfigFormBase {
     $form['order_states'] = array(
       '#type' => 'details',
       '#title' => t('Order states'),
-      '#collapsed' => TRUE,
     );
     $form['order_states']['order_states'] = array(
       '#type' => 'table',
@@ -67,6 +66,7 @@ class OrderWorkflowForm extends ConfigFormBase {
     $form['order_statuses'] = array(
       '#type' => 'details',
       '#title' => t('Order statuses'),
+      '#open' => TRUE,
     );
     $form['order_statuses']['order_statuses'] = array(
       '#type' => 'table',

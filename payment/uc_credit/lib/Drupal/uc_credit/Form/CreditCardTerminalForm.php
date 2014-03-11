@@ -54,7 +54,7 @@ class CreditCardTerminalForm extends FormBase {
 
     // Build a credit card form.
     $form['specify_card'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => t('Credit card details'),
       '#description' => t('Use the available buttons in this fieldset to process with the specified card details.'),
     );
@@ -115,7 +115,7 @@ class CreditCardTerminalForm extends FormBase {
     if (!empty($options)) {
       // Display a fieldset with the authorizations and available action buttons.
       $form['authorizations'] = array(
-        '#type' => 'details',
+        '#type' => 'fieldset',
         '#title' => t('Prior authorizations'),
         '#description' => t('Use the available buttons in this fieldset to select and act on a prior authorization. The charge amount specified above will be captured against the authorization listed below.  Only one capture is possible per authorization, and a capture for more than the amount of the authorization may result in additional fees to you.'),
       );
@@ -146,8 +146,7 @@ class CreditCardTerminalForm extends FormBase {
 
       // Collapse this fieldset if no actions are available.
       if (!isset($form['authorizations']['actions']['auth_capture']) && !isset($form['authorizations']['actions']['auth_void'])) {
-        $form['authorizations']['#collapsible'] = TRUE;
-        $form['authorizations']['#collapsed'] = TRUE;
+        $form['authorizations']['#type'] = 'details';
       }
     }
 
@@ -167,7 +166,7 @@ class CreditCardTerminalForm extends FormBase {
     if (!empty($options)) {
       // Display a fieldset with the authorizations and available action buttons.
       $form['references'] = array(
-        '#type' => 'details',
+        '#type' => 'fieldset',
         '#title' => t('Customer references'),
         '#description' => t('Use the available buttons in this fieldset to select and act on a customer reference.'),
       );
@@ -206,8 +205,7 @@ class CreditCardTerminalForm extends FormBase {
 
       // Collapse this fieldset if no actions are available.
       if (!isset($form['references']['actions']['ref_capture']) && !isset($form['references']['actions']['ref_remove']) && !isset($form['references']['actions']['ref_credit'])) {
-        $form['references']['#collapsible'] = TRUE;
-        $form['references']['#collapsed'] = TRUE;
+        $form['references']['#type'] = 'details';
       }
     }
 

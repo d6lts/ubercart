@@ -987,8 +987,6 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
       $form['admin_comment_field'] = array(
         '#type' => 'details',
         '#title' => t('Add an admin comment'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
       );
       $form['admin_comment_field']['admin_comment'] = array(
         '#type' => 'textarea',
@@ -1044,8 +1042,6 @@ function uc_order_view_update_form($form, &$form_state, $order) {
   $form['order_comment_field'] = array(
     '#type' => 'details',
     '#title' => t('Add an order comment'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
   $form['order_comment_field']['order_comment'] = array(
     '#type' => 'textarea',
@@ -1055,8 +1051,6 @@ function uc_order_view_update_form($form, &$form_state, $order) {
   $form['admin_comment_field'] = array(
     '#type' => 'details',
     '#title' => t('Add an admin comment'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
   $form['admin_comment_field']['admin_comment'] = array(
     '#type' => 'textarea',

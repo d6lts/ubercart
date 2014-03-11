@@ -54,7 +54,7 @@ class OrderCreateForm extends FormBase {
 
       // Container for customer search fields.
       $form['customer'] += array(
-        '#type' => 'details',
+        '#type' => 'fieldset',
         '#title' => t('Customer search'),
         '#description' => t('Enter full or partial information in one or more of the following fields, then press the "Search" button. Search results will match all the provided information.'),
       );
@@ -166,7 +166,7 @@ class OrderCreateForm extends FormBase {
     elseif ($form_state['values']['customer_type'] == 'create') {
       // Container for new customer information.
       $form['customer'] += array(
-        '#type'  => 'details',
+        '#type'  => 'fieldset',
         '#title' => t('New customer details'),
       );
       // Customer e-mail address.

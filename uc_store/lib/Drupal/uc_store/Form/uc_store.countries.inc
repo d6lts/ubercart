@@ -59,8 +59,6 @@ function uc_country_import_form($form, &$form_state) {
     $form['country_import'] = array(
       '#title' => t('Import countries'),
       '#type' => 'details',
-      '#collapsed' => TRUE,
-      '#collapsible' => TRUE,
     );
 
     $form['country_import']['text'] = array(
@@ -117,8 +115,6 @@ function uc_country_formats_form($form, &$form_state) {
   $form['instructions'] = array(
     '#type' => 'details',
     '#title' => t('Address format variables'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
   $header = array(t('Variable'), t('Description'));
   $rows = array(

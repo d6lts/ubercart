@@ -89,7 +89,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
           '#type' => 'details',
           '#title' => t('New account details'),
           '#description' => $this->configuration['new_account_details'],
-          '#collapsible' => FALSE,
+          '#open' => TRUE,
         );
         $contents['new_account'] = array_merge($array, $contents['new_account']);
       }

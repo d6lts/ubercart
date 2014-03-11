@@ -270,9 +270,8 @@ function uc_paypal_ec_review_form($form, &$form_state, $order) {
 
     $result = uc_checkout_pane_quotes('view', $order, NULL);
     $form['panes']['quotes'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => t('Shipping cost'),
-      '#collapsible' => FALSE,
     );
     $form['panes']['quotes'] += $result['contents'];
     unset($form['panes']['quotes']['quote_button']);

@@ -112,12 +112,10 @@ function uc_shipping_new_package($form, &$form_state, $order) {
   $shipping_type_options = uc_quote_shipping_type_options();
   foreach ($shipping_types_products as $shipping_type => $products) {
     $form['shipping_types'][$shipping_type] = array(
-      '#type'        => 'details',
+      '#type'        => 'fieldset',
       '#title'       => isset($shipping_type_options[$shipping_type]) ?
                         $shipping_type_options[$shipping_type]        :
                         ucwords(str_replace('_', ' ', $shipping_type)),
-      '#collapsible' => TRUE,
-      '#collapsed'   => FALSE,
       '#weight'      => isset($shipping_type_weights[$shipping_type]) ? $shipping_type_weights[$shipping_type] : 0,
     );
 
@@ -583,7 +581,7 @@ function uc_shipping_new_shipment($form, &$form_state, $order) {
   $pkgs_exist = FALSE;
   foreach ($packages_by_type as $shipping_type => $packages) {
     $form['shipping_types'][$shipping_type] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => $shipping_types[$shipping_type]['title'],
     );
     $form['shipping_types'][$shipping_type]['packages'] = array();
@@ -789,9 +787,8 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
   }
   $addresses = array();
   $form['packages'] = array(
-    '#type'        => 'details',
+    '#type'        => 'fieldset',
     '#title'       => t('Packages'),
-    '#collapsible' => TRUE,
     '#tree'        => TRUE,
   );
   if (isset($shipment->o_street1)) {
@@ -819,7 +816,7 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
       $declared_value += $product->qty * $product->price;
     }
     $pkg_form = array(
-      '#type'  => 'details',
+      '#type'  => 'fieldset',
       '#title' => t('Package @id', array('@id' => $id)),
     );
     $pkg_form['products'] = array(
@@ -924,9 +921,8 @@ function uc_shipping_shipment_edit($form, &$form_state, $order, $shipment) {
   $form = uc_shipping_address_form($form, $form_state, $addresses, $order);
 
   $form['shipment'] = array(
-    '#type'        => 'details',
+    '#type'        => 'fieldset',
     '#title'       => t('Shipment data'),
-    '#collapsible' => TRUE,
   );
 
   // Determine shipping option chosen by the customer.

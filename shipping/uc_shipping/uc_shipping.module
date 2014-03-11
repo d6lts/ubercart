@@ -726,10 +726,8 @@ function uc_shipping_address_form($form, &$form_state, $addresses, $order) {
   drupal_add_js(drupal_get_path('module', 'uc_shipping') . '/js/uc_shipping.js');
 
   $form['origin'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Origin address'),
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
     '#weight' => -2,
   );
   $form['origin']['pickup_address_select'] = uc_shipping_select_address($addresses, 'apply_address(\'pickup\', this.value);', t('Saved Addresses'));
@@ -749,10 +747,8 @@ function uc_shipping_address_form($form, &$form_state, $addresses, $order) {
   );
 
   $form['destination'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Destination address'),
-    '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
     '#weight' => -1,
   );
   if (isset($form_state['values']['delivery_country'])) {

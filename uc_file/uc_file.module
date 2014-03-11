@@ -134,8 +134,6 @@ function uc_file_user_form($form, &$form_state, $account) {
   $form['file'] = array(
     '#type' => 'details',
     '#title' => t('Administration'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
 
   // Drop out early if we don't even have any files uploaded.
@@ -651,10 +649,8 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
   );
 
   $form['uc_file_limits'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#description' => t('Use these options to override any global download limits set at the !url.', array('!url' => l(t('Ubercart product settings page'), 'admin/store/settings/products', array('query' => array('destination' => 'node/' . $node->id() . '/edit/features/file/add'))))),
-    '#collapsed' => FALSE,
-    '#collapsible' => FALSE,
     '#title' => t('File limitations'),
   );
 
@@ -851,10 +847,8 @@ function uc_file_feature_settings($form, &$form_state) {
     '#default_value' => $file_config->get('duplicate_warning'),
   );
   $form['uc_file_download_limit'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Default download limits'),
-    '#collapsible' => FALSE,
-    '#collapsed' => FALSE,
   );
   $form['uc_file_download_limit']['uc_file_download_limit_number'] = array(
     '#type' => 'textfield',

@@ -25,7 +25,7 @@ function uc_authorizenet_arb_admin_update_form($form, &$form_state, $rfid) {
   );
 
   $form['cc_data'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Credit card details'),
     '#theme' => 'uc_payment_method_credit_form',
     '#tree' => TRUE,

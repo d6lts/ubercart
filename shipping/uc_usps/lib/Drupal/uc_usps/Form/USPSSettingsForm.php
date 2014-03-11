@@ -42,8 +42,6 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type'          => 'details',
       '#title'         => t('Credentials'),
       '#description'   => t('Account number and authorization information.'),
-      '#collapsible'   => TRUE,
-      '#collapsed'     => TRUE,
       '#group'         => 'usps-settings',
     );
 
@@ -58,8 +56,6 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('USPS Domestic'),
       '#description' => t('Set the conditions that will return a USPS quote.'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
       '#group'         => 'usps-settings',
     );
 
@@ -90,8 +86,6 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('USPS International'),
       '#description' => t('Set the conditions that will return a USPS International quote.'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
       '#group'         => 'usps-settings',
     );
 
@@ -116,8 +110,6 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type'          => 'details',
       '#title'         => t('Quote options'),
       '#description'   => t('Preferences that affect computation of quote.'),
-      '#collapsible'   => TRUE,
-      '#collapsed'     => TRUE,
       '#group'         => 'usps-settings',
     );
 
@@ -164,8 +156,6 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type'          => 'details',
       '#title'         => t('Markups'),
       '#description'   => t('Modifiers to the shipping weight and quoted rate.'),
-      '#collapsible'   => TRUE,
-      '#collapsed'     => TRUE,
       '#group'         => 'usps-settings',
     );
 

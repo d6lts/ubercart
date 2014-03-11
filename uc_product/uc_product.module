@@ -156,6 +156,7 @@ function uc_product_form_node_form_alter(&$form, &$form_state) {
       '#type' => 'details',
       '#title' => t('Product information'),
       '#weight' => 0,
+      '#open' => TRUE,
     );
     $form['base']['model'] = array(
       '#type' => 'textfield',

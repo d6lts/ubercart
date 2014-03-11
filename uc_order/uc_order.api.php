@@ -327,8 +327,6 @@ function uc_order_pane_callback($op, $order, &$form = NULL, &$form_state = NULL)
       $form['admin_comment_field'] = array(
         '#type' => 'details',
         '#title' => t('Add an admin comment'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
       );
       $form['admin_comment_field']['admin_comment'] = array(
         '#type' => 'textarea',

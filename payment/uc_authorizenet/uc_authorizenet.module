@@ -96,7 +96,7 @@ function uc_authorizenet_settings_form($form, &$form_state) {
   );
 
   $form['api_id_key'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('API Login ID and Transaction Key'),
     '#description' => t('This information is required for Ubercart to interact with your payment gateway account.  It is different from your login ID and password and may be found through your account settings page.  Do not change the gateway URLs unless you are using this module with an Authorize.net-compatible gateway that requires different URLs.'),
   );
@@ -122,7 +122,7 @@ function uc_authorizenet_settings_form($form, &$form_state) {
   );
 
   $form['aim_settings'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('AIM settings'),
     '#description' => t('These settings pertain to the Authorize.Net AIM payment method for card not present transactions.'),
   );
@@ -151,9 +151,9 @@ function uc_authorizenet_settings_form($form, &$form_state) {
 
 
   $form['arb_settings'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('ARB settings'),
-    '#description' => t('These settings pertain to the Authorize.Net Automated Recurring Billing service.')
+    '#description' => t('These settings pertain to the Authorize.Net Automated Recurring Billing service.'),
   );
   $form['arb_settings']['uc_authnet_arb_mode'] = array(
     '#type' => 'radios',
@@ -181,9 +181,9 @@ function uc_authorizenet_settings_form($form, &$form_state) {
   );
 
   $form['cim_settings'] = array(
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('CIM settings'),
-    '#description' => t('These settings pertain to the Authorize.Net Customer Information Management service.')
+    '#description' => t('These settings pertain to the Authorize.Net Customer Information Management service.'),
   );
   $form['cim_settings']['uc_authnet_cim_profile'] = array(
     '#type' => 'checkbox',

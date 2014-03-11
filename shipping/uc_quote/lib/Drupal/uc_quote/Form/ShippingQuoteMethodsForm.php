@@ -83,7 +83,6 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
         '#type' => 'details',
         '#title' => t('List position'),
         '#description' => t('Determines which shipping methods are quoted at checkout when products of different shipping types are ordered. Larger values take precedence.'),
-        '#collapsible' => TRUE,
         '#tree' => TRUE,
       );
       $weight = $quote_config->get('type_weight');

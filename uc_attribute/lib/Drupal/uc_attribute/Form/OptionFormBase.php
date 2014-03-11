@@ -44,10 +44,9 @@ abstract class OptionFormBase extends FormBase {
       '#weight' => 4,
     );
     $form['adjustments'] = array(
-      '#type' => 'details',
+      '#type' => 'fieldset',
       '#title' => t('Default adjustments'),
       '#description' => t('Enter a positive or negative value for each adjustment applied when this option is selected.<br />Any of these may be overriden at the product level.'),
-      '#collapsible' => FALSE,
       '#weight' => 8,
     );
     $form['adjustments']['cost'] = array(

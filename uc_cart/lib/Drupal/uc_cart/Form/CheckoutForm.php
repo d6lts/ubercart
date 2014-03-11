@@ -97,6 +97,7 @@ class CheckoutForm extends FormBase {
         '#type' => 'details',
         '#title' => check_plain($pane->getTitle()),
         '#id' => $id . '-pane',
+        '#open' => TRUE,
       );
     }
 

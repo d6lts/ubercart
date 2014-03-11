@@ -101,8 +101,6 @@ function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
     $ups = array(
       '#type' => 'details',
       '#title' => t('UPS product description'),
-      '#collapsible' => TRUE,
-      '#collapsed' => ($enabled['ups'] == FALSE || uc_product_get_shipping_type($node) != 'small_package'),
       '#weight' => $weight['ups'],
       '#tree' => TRUE,
     );

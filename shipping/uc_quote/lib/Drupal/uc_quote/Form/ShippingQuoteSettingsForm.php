@@ -54,8 +54,6 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('Shipping quote pane description'),
       '#tree' => TRUE,
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
     );
     $form['uc_quote_pane_description']['text'] = array(
       '#type' => 'textarea',
@@ -67,8 +65,6 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('Shipping quote error message'),
       '#tree' => TRUE,
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
     );
     $form['uc_quote_error_message']['text'] = array(
       '#type' => 'textarea',
@@ -80,8 +76,6 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
       '#type' => 'details',
       '#title' => t('Default pickup address'),
       '#description' => t("When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. This form provides the default location for all products in the store. If a product's individual pickup address is blank, Ubercart uses the store's default pickup address specified here."),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
     );
     $form['default_address']['address'] = array(
       '#type' => 'uc_address',
