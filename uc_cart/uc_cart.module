@@ -118,7 +118,7 @@ function uc_cart_theme() {
     ),
     'uc_cart_checkout_buttons' => array(
       'render element' => 'buttons',
-      'file' => 'uc_cart.theme.inc',
+      'template' => 'uc-cart-checkout-buttons',
     ),
     'uc_cart_empty' => array(
       'variables' => array(),
@@ -631,4 +631,17 @@ function uc_cart_is_shippable($cart_id = NULL) {
   }
 
   return FALSE;
+}
+
+/**
+ * Prepares variables for the cart checkout buttons template.
+ *
+ * Default template: uc-cart-checkout-buttons.html.twig.
+ */
+function template_preprocess_uc_cart_checkout_buttons(&$variables) {
+  $buttons = array();
+  foreach (element_children($variables['buttons']) as $button) {
+    $buttons[] = $variables['buttons'][$button];
+  }
+  $variables['buttons'] = $buttons;
 }

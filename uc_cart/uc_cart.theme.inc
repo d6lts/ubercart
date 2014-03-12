@@ -7,49 +7,6 @@
 
 
 /**
- * Themes the cart checkout button(s).
- *
- * @param $variables
- *   An associative array containing:
- *   - buttons: A render element representing the form buttons.
- *
- * @see \Drupal\uc_cart\Form\CartForm
- * @ingroup themeable
- */
-function theme_uc_cart_checkout_buttons($variables) {
-  $output = '';
-
-  if ($buttons = element_children($variables['buttons'])) {
-    // Render the first button.
-    $button = array_shift($buttons);
-    $output = drupal_render($variables['buttons'][$button]);
-
-    // Render any remaining buttons inside a separate container.
-    if ($buttons) {
-      $output .= '<div class="uc-cart-checkout-button-container clearfix">';
-
-      // Render the second button.
-      $output .= '<div class="uc-cart-checkout-button">';
-      $output .= '<div class="uc-cart-checkout-button-separator">' . t('- or -') . '</div>';
-      $button = array_shift($buttons);
-      $output .= drupal_render($variables['buttons'][$button]);
-      $output .= '</div>';
-
-      // Render any remaining buttons.
-      foreach ($buttons as $button) {
-        $output .= '<div class="uc-cart-checkout-button">';
-        $output .= drupal_render($variables['buttons'][$button]);
-        $output .= '</div>';
-      }
-
-      $output .= '</div>';
-    }
-  }
-
-  return $output;
-}
-
-/**
  * Formats the cart contents table on the checkout page.
  *
  * @param $variables
