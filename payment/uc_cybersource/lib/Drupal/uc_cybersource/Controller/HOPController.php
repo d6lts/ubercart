@@ -21,7 +21,6 @@ class HOPController extends ControllerBase {
     if (!uc_cybersource_hop_include()) {
       watchdog('uc_cybersource_hop', 'Unable to receive HOP POST due to missing or unreadable HOP.php file.', array(), 'error');
       drupal_add_http_header('Status', '503 Service unavailable');
-      drupal_set_title(t('Unable to receive HOP POST.'));
       print t('The site was unable to receive a HOP post because of a missing or unreadble HOP.php');
       exit();
     }

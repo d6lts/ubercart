@@ -20,7 +20,7 @@ class AttributeEditForm extends AttributeFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
-    drupal_set_title(t('Edit attribute: %name', array('%name' => $attribute->name)), PASS_THROUGH);
+    $form['#title'] = $this->t('Edit attribute: %name', array('%name' => $attribute->name));
 
     $form['aid'] = array('#type' => 'value', '#value' => $attribute->aid);
     $form['name']['#default_value'] = $attribute->name;

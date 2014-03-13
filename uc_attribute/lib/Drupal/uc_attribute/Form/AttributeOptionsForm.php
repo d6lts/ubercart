@@ -27,7 +27,7 @@ class AttributeOptionsForm extends FormBase {
   public function buildForm(array $form, array &$form_state, $aid = NULL) {
     $attribute = uc_attribute_load($aid);
 
-    drupal_set_title(t('Options for %name', array('%name' => $attribute->name)), PASS_THROUGH);
+    $form['#title'] = $this->t('Options for %name', array('%name' => $attribute->name));
 
     $form['options'] = array(
       '#type' => 'table',

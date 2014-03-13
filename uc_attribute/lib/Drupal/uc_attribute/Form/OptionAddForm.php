@@ -17,9 +17,12 @@ class OptionAddForm extends OptionFormBase {
    */
   public function buildForm(array $form, array &$form_state, $aid = NULL) {
     $attribute = uc_attribute_load($aid);
-    drupal_set_title(t('Options for %name', array('%name' => $attribute->name)), PASS_THROUGH);
 
-    return parent::buildForm($form, $form_state, $aid);
+    $form = parent::buildForm($form, $form_state, $aid);
+
+    $form['#title'] = $this->t('Options for %name', array('%name' => $attribute->name));
+
+    return $form;
   }
 
   /**

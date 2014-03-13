@@ -91,7 +91,7 @@ function uc_file_user_downloads($account) {
     array('data' => t('Addresses'  )),
   );
 
-  drupal_set_title(t('File downloads'));
+  $build['#title'] = t('File downloads');
 
   $files = array();
 

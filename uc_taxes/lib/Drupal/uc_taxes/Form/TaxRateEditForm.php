@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_taxes\Form;
 
+use Drupal\Component\Utility\String;
+
 /**
  * Defines the tax rate edit form.
  */
@@ -17,9 +19,10 @@ class TaxRateEditForm extends TaxRateFormBase {
    */
   public function buildForm(array $form, array &$form_state, $tax_rate = NULL) {
     $rate = uc_taxes_rate_load($tax_rate);
-    drupal_set_title($rate->name);
 
     $form = parent::buildForm($form, $form_state);
+
+    $form['#title'] = String::checkPlain($rate->name);
 
     $form['id'] = array('#type' => 'value', '#value' => $tax_rate);
     $form['name']['#default_value'] = $rate->name;

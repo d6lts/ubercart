@@ -20,7 +20,7 @@ class OptionEditForm extends OptionFormBase {
 
     $form = parent::buildForm($form, $form_state, $aid);
 
-    drupal_set_title($this->t('Edit option: %name', array('%name' => $option->name)), PASS_THROUGH);
+    $form['#title'] = $this->t('Edit option: %name', array('%name' => $option->name));
 
     $form['oid'] = array('#type' => 'value', '#value' => $option->oid);
     $form['name']['#default_value'] = $option->name;
