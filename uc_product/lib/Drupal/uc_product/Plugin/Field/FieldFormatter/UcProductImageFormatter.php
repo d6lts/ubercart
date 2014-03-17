@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\uc_product\Plugin\field\formatter\UcProductImageFormatter.
+ * Contains \Drupal\uc_product\Plugin\Field\FieldFormatter\UcProductImageFormatter.
  */
 
-namespace Drupal\uc_product\Plugin\field\formatter;
+namespace Drupal\uc_product\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Entity\Field\FieldItemListInterface;
-use Drupal\image\Plugin\field\formatter\ImageFormatterBase;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 
 /**
  * Plugin implementation of the 'uc_product_image' formatter.
@@ -29,7 +29,7 @@ use Drupal\image\Plugin\field\formatter\ImageFormatterBase;
 class UcProductImageFormatter extends ImageFormatterBase {
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state) {
     $image_styles = image_style_options(FALSE);
@@ -64,7 +64,7 @@ class UcProductImageFormatter extends ImageFormatterBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::settingsSummary().
+   * {@inheritdoc}
    */
   public function settingsSummary() {
     $summary = array();
@@ -100,7 +100,7 @@ class UcProductImageFormatter extends ImageFormatterBase {
   }
 
   /**
-   * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
     $elements = array();
