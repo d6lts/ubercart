@@ -8,6 +8,7 @@
 namespace Drupal\uc_store\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Provides a block to identify Ubercart as the store software on a site.
@@ -32,7 +33,9 @@ class PoweredByBlock extends BlockBase {
   public function defaultConfiguration() {
     return array(
       'label_display' => 0,
-      'cache' => DRUPAL_CACHE_PER_ROLE,
+      'cache' => array(
+        'max_age' => Cache::PERMANENT,
+      )
     );
   }
 
@@ -98,4 +101,12 @@ class PoweredByBlock extends BlockBase {
       4 => t('Powered by Ubercart, the <a href="!url">free shopping cart software</a>.', $url),
     );
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getRequiredCacheContexts() {
+    return array('cache_context.url');
+  }
+
 }
