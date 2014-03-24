@@ -44,19 +44,6 @@ function uc_product_menu_link_defaults() {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function uc_product_admin_paths() {
-  $paths = array(
-    'node/*/edit/product' => TRUE,
-    'node/*/edit/features' => TRUE,
-    'node/*/edit/features/*' => TRUE,
-  );
-
-  return $paths;
-}
-
-/**
  * Implements hook_page_build().
  */
 function uc_product_page_build(&$page) {

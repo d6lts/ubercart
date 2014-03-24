@@ -131,16 +131,6 @@ function uc_order_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function uc_order_admin_paths() {
-  return array(
-    // Don't show invoices with the admin theme, overlay, etc.
-    'admin/store/orders/*/invoice*' => FALSE,
-  );
-}
-
-/**
  * Implements hook_page_build().
  */
 function uc_order_page_build(&$page) {

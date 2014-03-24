@@ -86,6 +86,8 @@ uc_attribute.product_attributes:
     _uc_product_is_product: 'TRUE'
     _entity_access: 'node.update'
     _permission: 'administer product attributes'
+  options:
+    _admin_route: TRUE
 
 uc_attribute.product_attributes_add:
   path: '/node/{node}/edit/attributes/add'
@@ -95,6 +97,8 @@ uc_attribute.product_attributes_add:
     _uc_product_is_product: 'TRUE'
     _entity_access: 'node.update'
     _permission: 'administer product attributes'
+  options:
+    _admin_route: TRUE
 
 uc_attribute.product_options:
   path: '/node/{node}/edit/options'
@@ -104,6 +108,8 @@ uc_attribute.product_options:
     _uc_product_is_product: 'TRUE'
     _entity_access: 'node.update'
     _permission: 'administer product options'
+  options:
+    _admin_route: TRUE
 
 uc_attribute.product_adjustments:
   path: '/node/{node}/edit/adjustments'
@@ -113,3 +119,5 @@ uc_attribute.product_adjustments:
     _uc_product_is_product: 'TRUE'
     _entity_access: 'node.update'
     _permission: 'administer product options'
+  options:
+    _admin_route: TRUE

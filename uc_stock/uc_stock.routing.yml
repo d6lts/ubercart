@@ -13,3 +13,5 @@ uc_stock.edit:
     _uc_product_is_product: 'TRUE'
     _entity_access: 'node.update'
     _permission: 'administer product stock'
+  options:
+    _admin_route: TRUE

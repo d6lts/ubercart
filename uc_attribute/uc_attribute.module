@@ -60,20 +60,6 @@ function uc_attribute_menu_link_defaults() {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function uc_attribute_admin_paths() {
-  $paths = array(
-    'node/*/edit/attributes' => TRUE,
-    'node/*/edit/attributes/add' => TRUE,
-    'node/*/edit/options' => TRUE,
-    'node/*/edit/adjustments' => TRUE,
-  );
-
-  return $paths;
-}
-
-/**
  * Implements hook_permission().
  */
 function uc_attribute_permission() {

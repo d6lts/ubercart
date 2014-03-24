@@ -50,17 +50,6 @@ function uc_stock_menu() {
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function uc_stock_admin_paths() {
-  $paths = array(
-    'node/*/edit/stock' => TRUE,
-  );
-
-  return $paths;
-}
-
-/**
  * Implements hook_permission().
  */
 function uc_stock_permission() {
