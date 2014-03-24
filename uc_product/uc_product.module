@@ -16,33 +16,6 @@ use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
 /**
- * Implements hook_menu().
- */
-function uc_product_menu() {
-  $items['admin/store/products'] = array(
-    'title' => 'Products',
-    'description' => 'Administer products, classes, and more.',
-    'route_name' => 'uc_product.admin',
-    'weight' => -2,
-    'position' => 'left',
-  );
-  // admin/store/products/view is provided by Views.
-  $items['admin/store/products/classes'] = array(
-    'title' => 'Manage classes',
-    'description' => 'Create and edit product node types.',
-    'route_name' => 'uc_product.classes',
-    'weight' => -2,
-  );
-  $items['admin/store/settings/products'] = array(
-    'title' => 'Products',
-    'description' => 'Configure product settings.',
-    'route_name' => 'uc_product.settings',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function uc_product_menu_link_defaults() {

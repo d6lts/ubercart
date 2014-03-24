@@ -34,26 +34,6 @@ function uc_order_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_order_menu() {
-  $items['admin/store/customers'] = array(
-    'title' => 'Customers',
-    'description' => 'View and search customer information.',
-    'route_name' => 'uc_order.customer_admin',
-    'weight' => -6,
-    'position' => 'left',
-  );
-  $items['admin/store/orders'] = array(
-    'title' => 'Orders',
-    'description' => 'View and process orders.',
-    'route_name' => 'uc_order.order_admin',
-    'weight' => -10,
-    'position' => 'left',
-  );
-  $items['admin/store/orders/create'] = array(
-    'title' => 'Create order',
-    'description' => 'Create an empty new order.',
-    'route_name' => 'uc_order.create',
-    'weight' => -5,
-  );
   $items['admin/store/orders/create/%user'] = array(
     'title' => 'Create order for this customer',
     'description' => 'Create an empty new order.',
@@ -85,13 +65,6 @@ function uc_order_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'uc_order.admin.inc',
   );
-
-  $items['admin/store/settings/orders'] = array(
-    'title' => 'Orders',
-    'description' => 'Configure the workflow and fields for orders.',
-    'route_name' => 'uc_order.workflow',
-  );
-
   return $items;
 }
 

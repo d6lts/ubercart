@@ -34,11 +34,6 @@ function uc_catalog_help($path, $arg) {
  * Implements hook_menu().
  */
 function uc_catalog_menu() {
-  $items['admin/store/settings/catalog'] = array(
-    'title' => 'Catalog',
-    'description' => 'Configure the product catalog pages.',
-    'route_name' => 'uc_catalog.settings',
-  );
   $items['admin/store/products/orphans'] = array(
     'title' => 'Find orphaned products',
     'description' => 'Find products that have not been categorized.',

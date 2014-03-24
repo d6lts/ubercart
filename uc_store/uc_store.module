@@ -100,26 +100,6 @@ define('MM_TO_CM', 0.1);
  * Implements hook_menu().
  */
 function uc_store_menu() {
-  $items['admin/store'] = array(
-    'title' => 'Store',
-    'description' => 'Administer orders, products, customers, store settings, etc.',
-    'route_name' => 'uc_store.admin',
-    'weight' => -12,
-  );
-  $items['admin/store/reports'] = array(
-    'title' => 'Reports',
-    'description' => 'Browse various store reports.',
-    'route_name' => 'uc_store.reports',
-    'weight' => 2,
-    'position' => 'right',
-  );
-  $items['admin/store/settings'] = array(
-    'title' => 'Configuration',
-    'description' => 'Adjust configuration settings for Ubercart.',
-    'route_name' => 'uc_store.settings',
-    'weight' => 6,
-    'position' => 'right',
-  );
   $items['admin/store/settings/countries'] = array(
     'title' => 'Countries and addresses',
     'description' => 'Manage available countries and configure address formats.',
@@ -152,14 +132,6 @@ function uc_store_menu() {
     'weight' => 1,
     'file' => 'uc_store.countries.inc',
   );
-
-  $items['admin/store/settings/store'] = array(
-    'title' => 'Store',
-    'description' => 'Configure basic store settings.',
-    'route_name' => 'uc_store.settings_form',
-    'weight' => -1,
-  );
-
   $items['admin/store/settings/countries/%/disable'] = array(
     'title' => 'Disable a country',
     'description' => 'Disable a country from use.',

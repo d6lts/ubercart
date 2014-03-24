@@ -45,19 +45,6 @@ function uc_attribute_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function uc_attribute_menu() {
-  $items['admin/store/products/attributes'] = array(
-    'title' => 'Attributes',
-    'description' => 'Create and edit product attributes and options.',
-    'route_name' => 'uc_attribute.overview',
-    'weight' => -8,
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function uc_attribute_menu_link_defaults() {

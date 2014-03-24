@@ -24,45 +24,6 @@ define('UC_CART_CHECKOUT_TIMEOUT', 1800); // 30 minutes
 
 
 /**
- * Implements hook_menu().
- */
-function uc_cart_menu() {
-  $items['admin/store/settings/cart'] = array(
-    'title' => 'Cart',
-    'description' => 'Configure the cart page display and settings.',
-    'route_name' => 'uc_cart.cart_settings',
-  );
-  $items['admin/store/settings/checkout'] = array(
-    'title' => 'Checkout',
-    'description' => 'Configure the checkout page display and completion rules.',
-    'route_name' => 'uc_cart.checkout_settings',
-  );
-  $items['admin/store/settings/checkout/settings'] = array(
-    'title' => 'Settings',
-    'description' => 'Edit the basic checkout settings.',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  // $items['admin/store/settings/checkout/rules'] = array(
-  //   'title' => 'Rules',
-  //   'description' => 'Edit the checkout rules.',
-  //   'page callback' => 'uc_cart_checkout_rules',
-  //   'access arguments' => array('administer store'),
-  //   'type' => MENU_LOCAL_TASK,
-  //   'weight' => 2,
-  //   'file' => 'uc_cart.admin.inc',
-  // );
-  // $items += rules_ui()->config_menu('admin/store/settings/checkout/rules');
-
-  $items['cart'] = array(
-    'title' => 'Shopping cart',
-    'route_name' => 'uc_cart.cart',
-    'menu_name' => 'account',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function uc_cart_menu_link_defaults() {

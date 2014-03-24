@@ -26,20 +26,6 @@ function uc_quote_permission() {
 }
 
 /**
- * Implements hook_menu().
- */
-function uc_quote_menu() {
-  $items['admin/store/settings/quotes'] = array(
-    'title' => 'Shipping quotes',
-    'description' => 'Configure shipping quotes.',
-    'route_name' => 'uc_quote.methods',
-  );
-  // $items += rules_ui()->config_menu('admin/store/settings/quotes');
-
-  return $items;
-}
-
-/**
  * Implements hook_menu_link_defaults().
  */
 function uc_quote_menu_link_defaults() {
