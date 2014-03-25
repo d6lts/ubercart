@@ -1302,24 +1302,3 @@ function uc_product_add_default_image_field($type = NULL) {
     }
   }
 }
-
-/**
- * Implements hook_action_info().
- */
-function uc_product_action_info() {
-  return array(
-    'uc_product_action_add_to_cart' => array(
-      'label' => t('Add to cart'),
-      'type' => 'node',
-      'configurable' => FALSE,
-      'triggers' => array('any'),
-    ),
-  );
-}
-
-/**
- * Action implementation: adds a product to the cart.
- */
-function uc_product_action_add_to_cart($product, $context = array()) {
-  uc_cart_add_item($product->id(), 1, NULL, NULL, TRUE, FALSE, TRUE);
-}
