@@ -48,34 +48,6 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   public $data = array();
 
   /**
-   * The order creation timestamp.
-   *
-   * @var integer
-   */
-  public $created;
-
-  /**
-   * The order modification timestamp.
-   *
-   * @var integer
-   */
-  public $modified;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    parent::init();
-
-    // We unset all defined properties, so magic getters apply.
-    // unset($this->products);
-    // unset($this->line_items);
-    // unset($this->data);
-    unset($this->created);
-    unset($this->modified);
-  }
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
