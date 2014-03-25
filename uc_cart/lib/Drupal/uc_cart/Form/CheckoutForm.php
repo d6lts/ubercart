@@ -87,7 +87,7 @@ class CheckoutForm extends FormBase {
     // callbacks of enabled panes have been invoked, because these may have
     // altered the order.
     if (!$processed) {
-      $order->line_items = uc_order_load_line_items($order);
+      $order->line_items = $order->getLineItems();
       $order->save();
     }
 
@@ -142,7 +142,7 @@ class CheckoutForm extends FormBase {
     }
 
     // Reload line items and save order.
-    $order->line_items = uc_order_load_line_items($order);
+    $order->line_items = $order->getLineItems();
     $order->save();
   }
 

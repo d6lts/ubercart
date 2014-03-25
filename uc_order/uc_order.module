@@ -629,114 +629,6 @@ function uc_order_comment_save($order_id, $uid, $message, $type = 'admin', $stat
 }
 
 /**
- * Returns an array containing an order's line items ordered by weight.
- *
- * @param $order
- *   An order object whose line items are to be loaded.
- * @param $stored
- *   Boolean flag. If TRUE, only line items stored in the database are loaded.
- *   If FALSE, only line items not stored in the database are loaded.
- *   This distinction is made because the non-stored line items may depend on
- *   the amounts of all of the stored line items.
- *
- * @return
- *   An array of line items, which are arrays containing the following keys:
- *   - line_item_id: The line item id.
- *   - type: The line item type.
- *   - title: The line item title.
- *   - amount: The line item amount.
- *   - weight: The line item weight.
- */
-function uc_order_load_line_items($order) {
-  $items = array();
-
-  $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id", array(':id' => $order->id()));
-  foreach ($result as $row) {
-    $item = array(
-      'line_item_id' => $row->line_item_id,
-      'type' => $row->type,
-      'title' => $row->title,
-      'amount' => $row->amount,
-      'weight' => $row->weight,
-      'data' => unserialize($row->data),
-    );
-    \Drupal::moduleHandler()->alter('uc_line_item', $item, $order);
-    $items[] = $item;
-  }
-
-  // Set stored line items so hook_uc_line_item_alter() can access them.
-  $order->line_items = $items;
-
-  foreach (_uc_line_item_list() as $type) {
-    if ($type['stored'] == FALSE && empty($type['display_only']) && !empty($type['callback']) && function_exists($type['callback'])) {
-      $result = $type['callback']('load', $order);
-      if ($result !== FALSE && is_array($result)) {
-        foreach ($result as $line) {
-          $item = array(
-            'line_item_id' => $line['id'],
-            'type' => $type['id'],
-            'title' => $line['title'],
-            'amount' => $line['amount'],
-            'weight' => isset($line['weight']) ? $line['weight'] : $type['weight'],
-            'data' => isset($line['data']) ? $line['data'] : array(),
-          );
-          \Drupal::moduleHandler()->alter('uc_line_item', $item, $order);
-          $items[] = $item;
-        }
-      }
-    }
-  }
-
-  usort($items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-
-  return $items;
-}
-
-/**
- * Returns an order's line items ordered by weight, prepared for display.
- *
- * @param $order
- *   An order object whose line items are to be loaded.
- *
- * @return
- *   An array of line items, which are arrays containing the following keys:
- *   - type: The line item type.
- *   - title: The line item title.
- *   - amount: The line item amount.
- *   - weight: The line item weight.
- */
-function uc_order_load_line_items_display($order) {
-  $temp = clone $order;
-  $line_items = uc_order_load_line_items($order);
-//  $temp->line_items = &$line_items;
-
-  $items = _uc_line_item_list();
-  foreach ($items as $item) {
-    if (!empty($item['display_only'])) {
-      $result = $item['callback']('display', $temp);
-      if (is_array($result)) {
-        foreach ($result as $line) {
-          $line_items[] = array(
-            'type' => $item['id'],
-            'title' => $line['title'],
-            'amount' => $line['amount'],
-            'weight' => isset($line['weight']) ? $line['weight'] : $item['weight'],
-            'data' => isset($line['data']) ? $line['data'] : array(),
-          );
-        }
-      }
-    }
-  }
-  foreach ($line_items as &$item) {
-    $item['formatted_amount'] = uc_currency_format($item['amount']);
-  }
-
-  usort($line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-
-  return $line_items;
-}
-
-/**
  * Invokes hook_uc_order() in every module.
  *
  * We cannot use module_invoke() for this, because the arguments need to
@@ -827,7 +719,7 @@ function template_preprocess_uc_order_invoice(&$variables) {
     }
   }
 
-  $variables['line_items'] = uc_order_load_line_items_display($variables['order']);
+  $variables['line_items'] = $variables['order']->getDisplayLineItems();
   $order->line_items = $variables['line_items'];
 
   // Generate tokens to use as template variables.

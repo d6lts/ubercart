@@ -85,7 +85,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       uc_order_module_invoke('load', $order, NULL);
 
       // Load line items... has to be last after everything has been loaded.
-      $order->line_items = uc_order_load_line_items($order);
+      $order->line_items = $order->getLineItems();
     }
   }
 
@@ -167,6 +167,89 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       // Log the action in the database.
       watchdog('uc_order', 'Order @order_id deleted by user @uid.', array('@order_id' => $order_id, '@uid' => $GLOBALS['user']->id()));
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLineItems() {
+    $items = array();
+
+    $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id", array(':id' => $this->id()));
+    foreach ($result as $row) {
+      $item = array(
+        'line_item_id' => $row->line_item_id,
+        'type' => $row->type,
+        'title' => $row->title,
+        'amount' => $row->amount,
+        'weight' => $row->weight,
+        'data' => unserialize($row->data),
+      );
+      \Drupal::moduleHandler()->alter('uc_line_item', $item, $this);
+      $items[] = $item;
+    }
+
+    // Set stored line items so hook_uc_line_item_alter() can access them.
+    // @todo Somehow avoid this!
+    $this->line_items = $items;
+
+    foreach (_uc_line_item_list() as $type) {
+      if ($type['stored'] == FALSE && empty($type['display_only']) && !empty($type['callback']) && function_exists($type['callback'])) {
+        $result = $type['callback']('load', $this);
+        if ($result !== FALSE && is_array($result)) {
+          foreach ($result as $line) {
+            $item = array(
+              'line_item_id' => $line['id'],
+              'type' => $type['id'],
+              'title' => $line['title'],
+              'amount' => $line['amount'],
+              'weight' => isset($line['weight']) ? $line['weight'] : $type['weight'],
+              'data' => isset($line['data']) ? $line['data'] : array(),
+            );
+            \Drupal::moduleHandler()->alter('uc_line_item', $item, $this);
+            $items[] = $item;
+          }
+        }
+      }
+    }
+
+    usort($items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+
+    return $items;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayLineItems() {
+    $temp = clone $this;
+    $line_items = $this->getLineItems();
+
+    $items = _uc_line_item_list();
+    foreach ($items as $item) {
+      if (!empty($item['display_only'])) {
+        $result = $item['callback']('display', $temp);
+        if (is_array($result)) {
+          foreach ($result as $line) {
+            $line_items[] = array(
+              'type' => $item['id'],
+              'title' => $line['title'],
+              'amount' => $line['amount'],
+              'weight' => isset($line['weight']) ? $line['weight'] : $item['weight'],
+              'data' => isset($line['data']) ? $line['data'] : array(),
+            );
+          }
+        }
+      }
+    }
+
+    foreach ($line_items as &$item) {
+      $item['formatted_amount'] = uc_currency_format($item['amount']);
+    }
+
+    usort($line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
+
+    return $line_items;
   }
 
   /**

@@ -158,7 +158,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function review(UcOrderInterface $order) {
-    $line_items = uc_order_load_line_items_display($order);
+    $line_items = $order->getDisplayLineItems();
     foreach ($line_items as $line_item) {
       $review[] = array('title' => $line_item['title'], 'data' => uc_currency_format($line_item['amount']));
     }

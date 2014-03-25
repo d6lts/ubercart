@@ -16,6 +16,31 @@ use Drupal\uc_store\Address;
 interface UcOrderInterface extends ContentEntityInterface {
 
   /**
+   * Returns an array containing an order's line items ordered by weight.
+   *
+   * @return array
+   *   An array of line items, which are arrays containing the following keys:
+   *   - line_item_id: The line item id.
+   *   - type: The line item type.
+   *   - title: The line item title.
+   *   - amount: The line item amount.
+   *   - weight: The line item weight.
+   */
+  public function getLineItems();
+
+  /**
+   * Returns an order's line items ordered by weight, prepared for display.
+   *
+   * @return array
+   *   An array of line items, which are arrays containing the following keys:
+   *   - type: The line item type.
+   *   - title: The line item title.
+   *   - amount: The line item amount.
+   *   - weight: The line item weight.
+   */
+  public function getDisplayLineItems();
+
+  /**
    * Returns the order user entity.
    *
    * @return \Drupal\user\UserInterface

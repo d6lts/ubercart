@@ -123,7 +123,7 @@ class UcOrderFormController extends ContentEntityFormController {
     }
 
     // Load line items again, since some may have been updated by the form.
-    $order->line_items = uc_order_load_line_items($order);
+    $order->line_items = $order->getLineItems();
 
     $order->logChanges($log);
 

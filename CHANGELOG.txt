@@ -19,6 +19,8 @@ Ubercart 4.x
     * $order address properties => $order->getAddress() and $order->setAddress()
     * $order->currency => $order->getCurrency()
     * $order->payment_method => $order->getPaymentMethodId() and $order->setPaymentMethodId()
+    * uc_order_load_line_items() => $order->getLineItems()
+    * uc_order_load_line_items_display() => $order->getDisplayLineItems()
     * uc_order_is_shippable() => $order->isShippable()
     * uc_order_log_changes($order_id, $changes) => $order->logChanges($changes)
     * uc_order_can_view_order() => $order->access('view')

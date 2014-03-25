@@ -753,7 +753,7 @@ function uc_quote_apply_quote_to_order($form, &$form_state) {
       uc_quote_uc_order('save', $order, '');
 
       // Update line items.
-      $order->line_items = uc_order_load_line_items($order);
+      $order->line_items = $order->getLineItems();
       $form_state['order'] = $order;
 
       $form_state['rebuild'] = TRUE;

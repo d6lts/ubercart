@@ -864,7 +864,7 @@ function uc_order_pane_line_items_add($form, &$form_state) {
   $type = $form_state['values']['li_type_select'];
 
   uc_order_line_item_add($order->id(), $type, _uc_line_item_data($type, 'title'), 0);
-  $order->line_items = uc_order_load_line_items($order);
+  $order->line_items = $order->getLineItems();
 
   $form_state['rebuild'] = TRUE;
 }
@@ -877,7 +877,7 @@ function uc_order_pane_line_items_remove($form, &$form_state) {
   $line_item_id = intval($form_state['triggering_element']['#return_value']);
 
   uc_order_delete_line_item($line_item_id);
-  $order->line_items = uc_order_load_line_items($order);
+  $order->line_items = $order->getLineItems();
 
   $form_state['rebuild'] = TRUE;
 }

@@ -66,7 +66,7 @@ function uc_payment_theme() {
  * Default template: uc-payment-totals.html.twig.
  */
 function template_preprocess_uc_payment_totals(&$variables) {
-  $variables['line_items'] = uc_order_load_line_items_display($variables['order']);
+  $variables['line_items'] = $variables['order']->getDisplayLineItems();
 
   foreach ($variables['line_items'] as $key => $line) {
     $variables['line_items'][$key]['title'] = filter_xss($line['title']);
