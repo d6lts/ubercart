@@ -42,23 +42,6 @@ function uc_line_item_total($op, $order) {
 }
 
 /**
- * Calculates the total value of line items of types that should be calculated.
- */
-function uc_line_items_calculate($order) {
-  $total = 0;
-
-  if (is_array($order->line_items)) {
-    foreach ($order->line_items as $item) {
-      if (_uc_line_item_data($item['type'], 'calculated') == TRUE) {
-        $total += $item['amount'];
-      }
-    }
-  }
-
-  return $total;
-}
-
-/**
  * Updates a line item.
  */
 function uc_order_update_line_item($id, $title, $amount, $data = NULL) {

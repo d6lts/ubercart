@@ -250,7 +250,13 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
    * {@inheritdoc}
    */
   public function getTotal() {
-    return $this->getSubtotal() + uc_line_items_calculate($this);
+    $total = $this->getSubtotal();
+    foreach ($this->line_items as $item) {
+      if (_uc_line_item_data($item['type'], 'calculated') == TRUE) {
+        $total += $item['amount'];
+      }
+    }
+    return $total;
   }
 
   /**
