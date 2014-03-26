@@ -304,7 +304,7 @@ function uc_product_node_builder($entity_type, $entity, &$form, &$form_state) {
 /**
  * Implements hook_node_prepare_form().
  */
-function uc_product_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
+function uc_product_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
   if (!uc_product_is_product($node)) {
     return;
   }

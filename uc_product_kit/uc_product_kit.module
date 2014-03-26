@@ -129,7 +129,7 @@ function uc_product_kit_uc_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Implements hook_node_prepare_form().
  */
-function uc_product_kit_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
+function uc_product_kit_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
   if ($node->getType() != 'product_kit') {
     return;
   }
