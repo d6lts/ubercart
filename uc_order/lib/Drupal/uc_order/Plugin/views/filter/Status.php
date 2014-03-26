@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\InOperator;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("uc_order_status")
+ * @ViewsFilter("uc_order_status")
  */
 class Status extends InOperator {
 

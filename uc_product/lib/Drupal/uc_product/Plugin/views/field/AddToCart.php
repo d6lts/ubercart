@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_product_add_to_cart")
+ * @ViewsField("uc_product_add_to_cart")
  */
 class AddToCart extends FieldPluginBase {
 

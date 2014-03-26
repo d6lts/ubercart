@@ -17,7 +17,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_order")
+ * @ViewsField("uc_order")
  */
 class Order extends FieldPluginBase {
 

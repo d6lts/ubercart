@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_payment_method")
+ * @ViewsField("uc_payment_method")
  */
 class Method extends FieldPluginBase {
 

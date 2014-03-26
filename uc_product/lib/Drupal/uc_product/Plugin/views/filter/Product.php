@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\BooleanOperator;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("uc_product")
+ * @ViewsFilter("uc_product")
  */
 class Product extends BooleanOperator {
 

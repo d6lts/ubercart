@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\filter\InOperator;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_payment_method")
+ * @ViewsFilter("uc_payment_method")
  */
 class Method extends InOperator {
 

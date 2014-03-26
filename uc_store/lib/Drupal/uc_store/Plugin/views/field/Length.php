@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_length")
+ * @ViewsField("uc_length")
  */
 class Length extends Numeric {
 

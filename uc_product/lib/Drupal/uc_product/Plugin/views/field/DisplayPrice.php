@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_product_display_price")
+ * @ViewsField("uc_product_display_price")
  */
 class DisplayPrice extends Price {
 

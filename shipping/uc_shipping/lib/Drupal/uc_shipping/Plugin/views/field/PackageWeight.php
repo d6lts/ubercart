@@ -18,7 +18,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_shipping_package_weight")
+ * @ViewsField("uc_shipping_package_weight")
  */
 class PackageWeight extends Weight {
 

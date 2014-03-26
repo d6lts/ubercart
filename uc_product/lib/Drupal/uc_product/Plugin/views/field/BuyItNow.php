@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_product_buy_it_now")
+ * @ViewsField("uc_product_buy_it_now")
  */
 class BuyItNow extends FieldPluginBase {
 

@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_order_actions")
+ * @ViewsField("uc_order_actions")
  */
 class Actions extends FieldPluginBase {
 

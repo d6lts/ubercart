@@ -16,7 +16,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_credit_data")
+ * @ViewsField("uc_credit_data")
  */
 class DataField extends FieldPluginBase {
 

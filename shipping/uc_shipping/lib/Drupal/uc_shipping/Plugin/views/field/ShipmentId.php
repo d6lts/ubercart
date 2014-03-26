@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_shipping_shipment_id")
+ * @ViewsField("uc_shipping_shipment_id")
  */
 class ShipmentId extends FieldPluginBase {
 

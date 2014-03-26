@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @PluginID("uc_weight")
+ * @ViewsField("uc_weight")
  */
 class Weight extends Numeric {
 
