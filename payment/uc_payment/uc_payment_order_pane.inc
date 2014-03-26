@@ -78,8 +78,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
       );
 
       $method = isset($form_state['values']['payment_method']) ? $form_state['values']['payment_method'] : $order->getPaymentMethodId();
-      $details = Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderEditDetails($order);
-      if ($details) {
+      if ($method && $details = Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderEditDetails($order)) {
         if (is_array($details)) {
           $form['payment']['payment_details'] += $details;
         }

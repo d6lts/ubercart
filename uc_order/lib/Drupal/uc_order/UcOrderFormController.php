@@ -2,36 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\Form\OrderEditForm.
+ * Contains \Drupal\uc_order\UcOrderFormController.
  */
 
-namespace Drupal\uc_order\Form;
+namespace Drupal\uc_order;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
- * Displays the order edit screen, constructed via hook_uc_order_pane().
+ * Form controller for the Ubercart order form.
  */
-class OrderEditForm extends FormBase {
+class UcOrderFormController extends ContentEntityFormController {
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
-    return 'uc_order_edit_form';
-  }
+  public function form(array $form, array &$form_state) {
+    $order = $this->entity;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function buildForm(array $form, array &$form_state, UcOrderInterface $uc_order = NULL) {
-    if (isset($form_state['order'])) {
-      $order = $form_state['order'];
-    }
-    else {
-      $form_state['order'] = $order = $uc_order;
-    }
     $form['#order'] = $order;
     $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
     $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->getUserId());
@@ -49,22 +38,7 @@ class OrderEditForm extends FormBase {
       }
     }
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit-changes'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Save changes'),
-      '#button_type' => 'primary',
-    );
-    $form['actions']['delete'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Delete'),
-      '#button_type' => 'danger',
-      '#submit' => array(array($this, 'delete')),
-      '#access' => $order->access('delete'),
-    );
-
-    $form_state['form_display'] = entity_get_form_display('uc_order', 'uc_order', 'default');
-    field_attach_form($order, $form, $form_state);
+    $form = parent::form($form, $form_state);
 
     form_load_include($form_state, 'inc', 'uc_store', 'includes/uc_ajax_attach');
     $form['#process'][] = 'uc_ajax_process_form';
@@ -75,44 +49,48 @@ class OrderEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
-    $order = uc_order_load($form_state['values']['order_id']);
-    if ($form_state['values']['order_modified'] != $order->modified->value) {
-      form_set_error('order_modified', $form_state, t('This order has been modified by another user, changes cannot be saved.'));
-    }
-
-    field_attach_form_validate($order, $form, $form_state);
-
-    // Build list of changes to be applied.
-    $panes = _uc_order_pane_list();
-    foreach ($panes as $pane) {
-      if (in_array('edit', $pane['show'])) {
-        $func = $pane['callback'];
-        if (function_exists($func)) {
-          if (($changes = $func('edit-process', $form_state['order'], $form, $form_state)) != NULL) {
-            foreach ($changes as $value) {
-              //$form_state['order']->$key->value = $value;
-            }
-          }
-        }
-      }
-    }
+  protected function actions(array $form, array &$form_state) {
+    $element = parent::actions($form, $form_state);
+    $element['submit']['#value'] = $this->t('Save changes');
+    $element['delete']['#access'] = $this->entity->access('delete');
+    return $element;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
-    $order = uc_order_load($form_state['values']['order_id']);
+  public function validate(array $form, array &$form_state) {
+    $order = $this->buildEntity($form, $form_state);
+
+    if ($form_state['values']['order_modified'] != $order->modified->value) {
+      form_set_error('order_modified', $form_state, t('This order has been modified by another user, changes cannot be saved.'));
+    }
+
+    parent::validate($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submit(array $form, array &$form_state) {
+    $order = parent::submit($form, $form_state);
+    $original = clone $order;
+
+    // Build list of changes to be applied.
+    $panes = _uc_order_pane_list();
+    foreach ($panes as $pane) {
+      if (in_array('edit', $pane['show'])) {
+        $pane['callback']('edit-process', $order, $form, $form_state);
+      }
+    }
+
     $log = array();
 
-    foreach (array_keys($form_state['order']->getFieldDefinitions()) as $key) {
-      $value = $form_state['order']->$key->value;
-      if ($order->$key->value !== $value) {
-        if (!is_array($value)) {
-          $log[$key] = array('old' => $order->$key->value, 'new' => $value);
+    foreach (array_keys($order->getFieldDefinitions()) as $key) {
+      if ($original->$key->value !== $order->$key->value) {
+        if (!is_array($order->$key->value)) {
+          $log[$key] = array('old' => $original->$key->value, 'new' => $order->$key->value);
         }
-        $order->$key->value = $value;
       }
     }
 
@@ -149,11 +127,11 @@ class OrderEditForm extends FormBase {
 
     $order->logChanges($log);
 
-    field_attach_extract_form_values($order, $form, $form_state);
-
     $order->save();
 
     drupal_set_message(t('Order changes saved.'));
+
+    return $order;
   }
 
   /**
@@ -165,7 +143,7 @@ class OrderEditForm extends FormBase {
    *   A reference to a keyed array containing the current state of the form.
    */
   public function delete(array $form, array &$form_state) {
-    $form_state['redirect'] = 'admin/store/orders/' . $form_state['order']->id() . '/delete';
+    $form_state['redirect'] = 'admin/store/orders/' . $this->entity->id() . '/delete';
   }
 
 }

@@ -26,7 +26,9 @@ use Drupal\uc_store\Address;
  *     "view_builder" = "Drupal\uc_order\UcOrderViewBuilder",
  *     "access" = "Drupal\uc_order\UcOrderAccessController",
  *     "form" = {
+ *       "default" = "Drupal\uc_order\UcOrderFormController",
  *       "delete" = "Drupal\uc_order\Form\OrderDeleteForm",
+ *       "edit" = "Drupal\uc_order\UcOrderFormController"
  *     }
  *   },
  *   base_table = "uc_orders",

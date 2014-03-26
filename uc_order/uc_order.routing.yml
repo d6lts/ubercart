@@ -76,7 +76,7 @@ uc_order.admin_invoice_mail:
 uc_order.admin_edit:
   path: '/admin/store/orders/{uc_order}/edit'
   defaults:
-    _form: '\Drupal\uc_order\Form\OrderEditForm'
+    _entity_form: 'uc_order.edit'
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _permission: 'edit orders'
