@@ -18,6 +18,7 @@ uc_order.workflow:
   path: '/admin/store/settings/orders'
   defaults:
     _form: '\Drupal\uc_order\Form\OrderWorkflowForm'
+    _title: 'Order workflow settings'
   requirements:
     _permission: 'administer order workflow'
 
