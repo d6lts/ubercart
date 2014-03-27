@@ -85,19 +85,19 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
     $fields['qty'] = FieldDefinition::create('integer')
       ->setLabel(t('Quantity'))
       ->setDescription('The number of the product ordered.');
-    $fields['cost'] = FieldDefinition::create('integer') // float?
+    $fields['cost'] = FieldDefinition::create('float')
       ->setLabel(t('Cost'))
       ->setDescription('The cost to the store for the product.');
-    $fields['price'] = FieldDefinition::create('integer') // float?
+    $fields['price'] = FieldDefinition::create('float')
       ->setLabel(t('Price'))
       ->setDescription('The price paid for the ordered product.');
-    $fields['weight'] = FieldDefinition::create('integer') // float?
+    $fields['weight'] = FieldDefinition::create('float')
       ->setLabel(t('Weight'))
       ->setDescription('The physical weight.');
     $fields['weight_units'] = FieldDefinition::create('string')
       ->setLabel(t('Weight units'))
       ->setDescription('Unit of measure for the weight field.');
-//    $fields['data'] = FieldDefinition::create('string')
+//    $fields['data'] = FieldDefinition::create('map')
 //      ->setLabel(t('Data'))
 //      ->setDescription('A serialized array of extra data.');
 

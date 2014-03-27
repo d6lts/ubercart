@@ -473,7 +473,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       ->setLabel(t('Order status'))
       ->setDescription(t('The uc_order_status entity ID indicating the order status'))
       ->setSetting('target_type', 'uc_order_status');
-    $fields['order_total'] = FieldDefinition::create('integer') // float?
+    $fields['order_total'] = FieldDefinition::create('float')
       ->setLabel(t('Order total'))
       ->setDescription(t('The total amount to be paid for the order.'));
     $fields['product_count'] = FieldDefinition::create('integer')
@@ -545,7 +545,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
     $fields['payment_method'] = FieldDefinition::create('string')
       ->setLabel(t('Payment method'))
       ->setDescription(t('The method of payment.'));
-//    $fields['data'] = FieldDefinition::create('string')
+//    $fields['data'] = FieldDefinition::create('map')
 //      ->setLabel(t('Data'))
 //      ->setDescription(t('A serialized array of extra data.'));
     $fields['created'] = FieldDefinition::create('integer')
