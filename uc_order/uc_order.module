@@ -69,41 +69,6 @@ function uc_order_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function uc_order_menu_link_defaults() {
-  $links['uc_order.admin.store.customers'] = array(
-    'link_title' => 'Customers',
-    'description' => 'View and search customer information.',
-    'route_name' => 'uc_order.customer_admin',
-    'parent' => 'uc_store.admin.store',
-    'weight' => -6,
-  );
-  $links['uc_order.admin.store.orders'] = array(
-    'link_title' => 'Orders',
-    'description' => 'View and process orders.',
-    'route_name' => 'uc_order.order_admin',
-    'parent' => 'uc_store.admin.store',
-    'weight' => -10,
-  );
-  $links['uc_order.admin.store.orders.create'] = array(
-    'link_title' => 'Create order',
-    'description' => 'Create an empty new order.',
-    'route_name' => 'uc_order.create',
-    'parent' => 'uc_order.admin.store.orders',
-    'weight' => -5,
-  );
-  $links['uc_order.admin.store.settings.orders'] = array(
-    'link_title' => 'Orders',
-    'description' => 'Configure the workflow and fields for orders.',
-    'route_name' => 'uc_order.workflow',
-    'parent' => 'uc_store.admin.store.settings',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_menu_alter().
  */
 function uc_order_menu_alter(&$items) {

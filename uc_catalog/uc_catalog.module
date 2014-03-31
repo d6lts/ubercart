@@ -47,20 +47,6 @@ function uc_catalog_menu() {
 }
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function uc_catalog_links_menu_link_defaults() {
-  $links['uc_catalog.admin.store.settings.catalog'] = array(
-    'link_title' => 'Catalog',
-    'description' => 'Configure the product catalog pages.',
-    'route_name' => 'uc_catalog.settings',
-    'parent' => 'uc_store.admin.store.settings',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_permission().
  */
 function uc_catalog_permission() {

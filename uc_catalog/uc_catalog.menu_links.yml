@@ -1,0 +1,5 @@
+uc_catalog.admin.store.settings.catalog:
+  title: Catalog
+  description: 'Configure the product catalog pages.'
+  route_name: uc_catalog.settings
+  parent: uc_store.admin.store.settings

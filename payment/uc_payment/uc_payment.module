@@ -17,20 +17,6 @@ require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
 
 
 /**
- * Implements hook_menu_link_defaults().
- */
-function uc_payment_menu_link_defaults() {
-  $links['uc_payment.admin.store.settings.payment'] = array(
-    'link_title' => 'Payment methods',
-    'description' => 'Choose and configure available payment methods.',
-    'route_name' => 'uc_payment.methods',
-    'parent' => 'uc_store.admin.store.settings',
-  );
-
-  return $links;
-}
-
-/**
  * Implements hook_permission().
  */
 function uc_payment_permission() {
