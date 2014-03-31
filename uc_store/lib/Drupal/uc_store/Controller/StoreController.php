@@ -25,8 +25,7 @@ class StoreController extends SystemController {
     $blocks = array();
     // Load all links on admin/store and menu links below it.
     $query = $this->queryFactory->get('menu_link')
-      ->condition('link_path', 'admin/store')
-      ->condition('module', 'system');
+      ->condition('link_path', 'admin/store');
     $result = $query->execute();
     $menu_link_storage = $this->entityManager()->getStorage('menu_link');
     if ($system_link = $menu_link_storage->loadMultiple($result)) {
