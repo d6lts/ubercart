@@ -7,59 +7,15 @@
 
 namespace Drupal\uc_store\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\system\SystemManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\system\Controller\SystemController;
 
 /**
  * Returns responses for Ubercart store routes.
  */
-class StoreController extends ControllerBase implements ContainerInjectionInterface {
-
-  /**
-   * The entity query factory object.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $queryFactory;
-
-  /**
-   * System Manager Service.
-   *
-   * @var \Drupal\system\SystemManager
-   */
-  protected $systemManager;
-
-  /**
-   * Constructs a new StoreController.
-   *
-   * @param \Drupal\system\SystemManager $systemManager
-   *   System manager service.
-   * @param \Drupal\Core\Entity\Query\QueryFactory $queryFactory
-   *   The entity query object.
-   */
-  public function __construct(SystemManager $systemManager, QueryFactory $queryFactory) {
-    $this->systemManager = $systemManager;
-    $this->queryFactory = $queryFactory;
-  }
+class StoreController extends SystemController {
 
   /**
    * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('system.manager'),
-      $container->get('entity.query')
-    );
-  }
-
-  /**
-   * Provide the administration overview page.
-   *
-   * @return array
-   *   A renderable array of the administration overview page.
    */
   public function overview() {
     // Check for status report errors.
@@ -101,12 +57,10 @@ class StoreController extends ControllerBase implements ContainerInjectionInterf
           );
 
           if (!empty($block['content']['#content'])) {
-            $block['show'] = TRUE;
+            // Prepare for sorting as in function _menu_tree_check_access().
+            // The weight is offset so it is always positive, with a uniform 5-digits.
+            $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
           }
-
-          // Prepare for sorting as in function _menu_tree_check_access().
-          // The weight is offset so it is always positive, with a uniform 5-digits.
-          $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
         }
       }
     }
