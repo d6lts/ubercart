@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\UcOrderProductStorageController.
+ * Contains \Drupal\uc_order\UcOrderProductStorage.
  */
 
 namespace Drupal\uc_order;
 
-use Drupal\Core\Entity\FieldableDatabaseStorageController;
+use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for ordered products.
  */
-class UcOrderProductStorageController extends FieldableDatabaseStorageController {
+class UcOrderProductStorage extends ContentEntityDatabaseStorage {
 
   /**
    * {@inheritdoc}

@@ -8,7 +8,7 @@
 namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
  * Defines the order status entity.
@@ -73,8 +73,8 @@ class OrderStatus extends ConfigEntityBase {
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
-    parent::postLoad($storage_controller, $entities);
+  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
+    parent::postLoad($storage, $entities);
     uasort($entities, 'static::sort');
   }
 

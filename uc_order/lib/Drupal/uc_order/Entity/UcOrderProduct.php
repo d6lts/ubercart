@@ -8,7 +8,7 @@
 namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\uc_order\UcOrderProductInterface;
@@ -22,7 +22,7 @@ use Drupal\uc_order\UcOrderProductInterface;
  *   module = "uc_order",
  *   controllers = {
  *     "view_builder" = "Drupal\uc_order\UcOrderProductViewBuilder",
- *     "storage" = "Drupal\uc_order\UcOrderProductStorageController"
+ *     "storage" = "Drupal\uc_order\UcOrderProductStorage"
  *   },
  *   base_table = "uc_order_products",
  *   fieldable = TRUE,
@@ -51,10 +51,10 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
-    parent::postLoad($storage_controller, $entities);
+  public static function postLoad(EntityStorageInterface $storage, array &$products) {
+    parent::postLoad($storage, $products);
 
-    foreach ($entities as $product) {
+    foreach ($products as $product) {
       // @todo Move unserialize() back to the storage controller.
       $product->data = unserialize($product->data);
     }

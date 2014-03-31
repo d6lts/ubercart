@@ -8,7 +8,7 @@
 namespace Drupal\uc_cart\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 
@@ -20,7 +20,7 @@ use Drupal\Core\Field\FieldDefinition;
  *   label = @Translation("Cart item"),
  *   module = "uc_cart",
  *   controllers = {
- *     "storage" = "Drupal\uc_cart\UcCartItemStorageController",
+ *     "storage" = "Drupal\uc_cart\UcCartItemStorage",
  *     "view_builder" = "Drupal\uc_cart\UcCartItemViewBuilder",
  *   },
  *   base_table = "uc_cart_products",
@@ -80,8 +80,8 @@ class UcCartItem extends ContentEntityBase {
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
-    foreach ($entities as $item) {
+  public static function postLoad(EntityStorageInterface $storage, array &$items) {
+    foreach ($items as $item) {
       // @todo Move unserialize() back to the storage controller.
       $item->data = unserialize($item->data);
 
@@ -97,7 +97,7 @@ class UcCartItem extends ContentEntityBase {
 
       $item->module = $item->data['module'];
     }
-    parent::postLoad($storage_controller, $entities);
+    parent::postLoad($storage, $items);
   }
 
   /**

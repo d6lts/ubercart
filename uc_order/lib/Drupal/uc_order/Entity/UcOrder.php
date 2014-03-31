@@ -8,7 +8,7 @@
 namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\uc_order\UcOrderInterface;
@@ -22,7 +22,7 @@ use Drupal\uc_store\Address;
  *   label = @Translation("Order"),
  *   module = "uc_order",
  *   controllers = {
- *     "storage" = "Drupal\uc_order\UcOrderStorageController",
+ *     "storage" = "Drupal\uc_order\UcOrderStorage",
  *     "view_builder" = "Drupal\uc_order\UcOrderViewBuilder",
  *     "access" = "Drupal\uc_order\UcOrderAccessController",
  *     "form" = {
@@ -73,10 +73,10 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageControllerInterface $storage_controller, array &$entities) {
-    parent::postLoad($storage_controller, $entities);
+  public static function postLoad(EntityStorageInterface $storage, array &$orders) {
+    parent::postLoad($storage, $orders);
 
-    foreach ($entities as $id => $order) {
+    foreach ($orders as $id => $order) {
       // @todo Move unserialize() back to the storage controller.
       $order->data = unserialize($order->data);
 
@@ -92,7 +92,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageControllerInterface $storage_controller) {
+  public function preSave(EntityStorageInterface $storage) {
     $this->order_total->value = $this->getTotal();
     $this->product_count->value = $this->getProductCount();
     if (is_null($this->delivery_country->value) || $this->delivery_country->value == 0) {
@@ -110,7 +110,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     foreach ($this->products as $product) {
       \Drupal::moduleHandler()->alter('uc_order_product', $product, $this);
       uc_order_product_save($this->id(), $product);
@@ -132,7 +132,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
+  public static function preDelete(EntityStorageInterface $storage, array $orders) {
     foreach ($orders as $order) {
       uc_order_module_invoke('delete', $order, NULL);
     }
@@ -141,7 +141,7 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $orders) {
+  public static function postDelete(EntityStorageInterface $storage, array $orders) {
     // Delete data from the appropriate Ubercart order tables.
     $ids = array_keys($orders);
     $result = \Drupal::entityQuery('uc_order_product')

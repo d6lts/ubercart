@@ -2,21 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\uc_cart\UcCartItemStorageController.
+ * Contains \Drupal\uc_cart\UcCartItemStorage.
  */
 
 namespace Drupal\uc_cart;
 
-use Drupal\Core\Entity\FieldableDatabaseStorageController;
+use Drupal\Core\Entity\ContentEntityDatabaseStorage;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller class for cart items.
  */
-class UcCartItemStorageController extends FieldableDatabaseStorageController {
+class UcCartItemStorage extends ContentEntityDatabaseStorage {
 
   /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::save().
+   * Overrides Drupal\Core\Entity\ContentEntityDatabaseStorage::save().
    *
    * Cart items are deleted if saved with a quantity of zero.
    */
