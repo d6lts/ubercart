@@ -12,6 +12,8 @@
  */
 
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\NodeTypeInterface;
 
 /**
@@ -138,7 +140,7 @@ function uc_catalog_preprocess_block(&$variables) {
  * listed in the catalog.
  */
 function uc_catalog_uc_store_status() {
-  $field = field_info_field('node', 'taxonomy_catalog');
+  $field = FieldConfig::loadByName('node', 'taxonomy_catalog');
   if (!$field) {
     return array(array(
       'status' => 'error',
@@ -302,7 +304,7 @@ function uc_catalog_path($term) {
 function uc_catalog_add_node_type($type) {
   $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
 
-  $field = field_info_field('node', 'taxonomy_catalog');
+  $field = FieldConfig::loadByName('node', 'taxonomy_catalog');
   if (!$field) {
     $field = entity_create('field_config', array(
       'entity_type' => 'node',
@@ -321,7 +323,7 @@ function uc_catalog_add_node_type($type) {
     $field->save();
   }
 
-  $instance = field_info_instance('node', 'taxonomy_catalog', $type);
+  $instance = FieldInstanceConfig::loadByName('node', 'taxonomy_catalog', $type);
   if (!$instance) {
     $instance = entity_create('field_instance_config', array(
       'field_name' => 'taxonomy_catalog',
@@ -347,7 +349,7 @@ function uc_catalog_add_node_type($type) {
  * Sets up a default image field on the Catalog vocabulary.
  */
 function uc_catalog_add_image_field() {
-  $field = field_info_field('taxonomy_term', 'uc_catalog_image');
+  $field = FieldConfig::loadByName('taxonomy_term', 'uc_catalog_image');
 
   if (!$field) {
     $field = entity_create('field_config', array(
@@ -358,7 +360,7 @@ function uc_catalog_add_image_field() {
     $field->save();
   }
 
-  $instance = field_info_instance('taxonomy_term', 'uc_catalog_image', 'catalog');
+  $instance = FieldInstanceConfig::loadByName('taxonomy_term', 'uc_catalog_image', 'catalog');
 
   // Only add the instance if it doesn't exist. Don't overwrite any changes.
   if (!$instance) {

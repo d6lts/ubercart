@@ -12,6 +12,8 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\entity\Entity\EntityViewDisplay;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
@@ -1204,7 +1206,7 @@ function uc_product_node_type_update(NodeTypeInterface $type) {
  *   types get an instance of the field.
  */
 function uc_product_add_default_image_field($type = NULL) {
-  $field = field_info_field('node', 'uc_product_image');
+  $field = FieldConfig::loadByName('node', 'uc_product_image');
 
   // Set up field if it doesn't exist.
   if (!$field) {
@@ -1241,7 +1243,7 @@ function uc_product_add_default_image_field($type = NULL) {
     $field_name = !empty($settings['image_field']) ? $settings['image_field'] : 'uc_product_image';
     $new_instance['field_name'] = $field_name;
 
-    $instance = field_info_instance('node', $field_name, $type);
+    $instance = FieldInstanceConfig::loadByName('node', $field_name, $type);
 
     // Only add the instance if it doesn't exist. Don't overwrite any changes.
     if (!$instance) {
