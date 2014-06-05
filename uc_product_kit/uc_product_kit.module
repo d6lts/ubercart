@@ -7,8 +7,7 @@
  * Product kits are groups of products that are sold as a unit.
  */
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\NodeInterface;
 
 define('UC_PRODUCT_KIT_UNMUTABLE_NO_LIST', -1);
@@ -690,13 +689,13 @@ function uc_product_kit_node_builder($entity_type, $entity, &$form, &$form_state
 /**
  * Implements hook_node_view().
  */
-function uc_product_kit_node_view(EntityInterface $node, EntityViewDisplay $display, $view_mode) {
+function uc_product_kit_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if ($node->getType() != 'product_kit') {
     return;
   }
 
-  uc_product_view_product($node, $display, $view_mode);
-  $variant = $node->content['#node'];
+  uc_product_view_product($build, $node, $display, $view_mode);
+  $variant = $build['#node'];
 
   // Calculate the display price.
   $display_price = 0;
@@ -716,21 +715,21 @@ function uc_product_kit_node_view(EntityInterface $node, EntityViewDisplay $disp
     $suffixes = array();
   }
 
-  $node->content['display_price']['#value'] = $display_price;
-  $node->content['display_price']['#suffixes'] = $suffixes;
+  $build['display_price']['#value'] = $display_price;
+  $build['display_price']['#suffixes'] = $suffixes;
 
   if ($node->mutable != UC_PRODUCT_KIT_UNMUTABLE_NO_LIST) {
-    $node->content['products'] = array('#weight' => 6);
+    $build['products'] = array('#weight' => 6);
 
     $i = 0;
     foreach ($node->products as $product) {
-      $node->content['products'][$product->id()]['qty'] = array(
+      $build['products'][$product->id()]['qty'] = array(
         '#theme' => 'uc_product_kit_list_item',
         '#product' => $product,
         '#prefix' => '<div class="product-qty">',
         '#suffix' => '</div>',
       );
-      $node->content['products'][$product->id()]['#weight'] = $i++;
+      $build['products'][$product->id()]['#weight'] = $i++;
     }
   }
 }

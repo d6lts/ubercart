@@ -9,9 +9,8 @@
  */
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\NodeInterface;
@@ -494,18 +493,18 @@ function uc_product_view_ajax_commands(AjaxResponse $response, $form_state, $key
 /**
  * Implements hook_node_view().
  */
-function uc_product_node_view(EntityInterface $node, EntityViewDisplay $display, $view_mode) {
+function uc_product_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   if (!uc_product_is_product($node)) {
     return;
   }
 
-  uc_product_view_product($node, $display, $view_mode);
+  uc_product_view_product($build, $node, $display, $view_mode);
 }
 
 /**
  * Renders product related content for product-type modules.
  */
-function uc_product_view_product(EntityInterface $node, EntityViewDisplay $display, $view_mode) {
+function uc_product_view_product(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
   // Give modules a chance to alter this product.  If it is a variant, this will
   // have been done already by uc_product_load_variant(), so we check a flag to
   // be sure not to alter twice -- cf. entity_prepare_view().
@@ -523,7 +522,7 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
     }
   }
 
-  $node->content['display_price'] = array(
+  $build['display_price'] = array(
     '#theme' => 'uc_product_price',
     '#value' => isset($variant->price) ? $variant->price : $variant->sell_price,
     '#suffixes' => array(),
@@ -534,12 +533,12 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
       ),
     ),
   );
-  $node->content['model'] = array(
+  $build['model'] = array(
     '#theme' => 'uc_product_model',
     '#model' => $variant->model,
     '#view_mode' => $view_mode,
   );
-  $node->content['list_price'] = array(
+  $build['list_price'] = array(
     '#theme' => 'uc_product_price',
     '#title' => t('List price:'),
     '#value' => $variant->list_price,
@@ -549,7 +548,7 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
       ),
     ),
   );
-  $node->content['cost'] = array(
+  $build['cost'] = array(
     '#theme' => 'uc_product_price',
     '#title' => t('Cost:'),
     '#value' => $variant->cost,
@@ -561,7 +560,7 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
     ),
     '#access' => \Drupal::currentUser()->hasPermission('administer products'),
   );
-  $node->content['sell_price'] = array(
+  $build['sell_price'] = array(
     '#theme' => 'uc_product_price',
     '#title' => t('Price:'),
     '#value' => $variant->sell_price,
@@ -571,7 +570,7 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
       ),
     ),
   );
-  $node->content['weight'] = array(
+  $build['weight'] = array(
     '#theme' => 'uc_product_weight',
     '#amount' => $variant->weight,
     '#units' => $variant->weight_units,
@@ -582,7 +581,7 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
       ),
     ),
   );
-  $node->content['dimensions'] = array(
+  $build['dimensions'] = array(
     '#theme' => 'uc_product_dimensions',
     '#length' => $variant->length,
     '#width' => $variant->width,
@@ -592,10 +591,10 @@ function uc_product_view_product(EntityInterface $node, EntityViewDisplay $displ
   );
 
   if (isset($add_to_cart_form)) {
-    $node->content['add_to_cart'] = $add_to_cart_form;
+    $build['add_to_cart'] = $add_to_cart_form;
   }
 
-  $node->content['#node'] = $variant;
+  $build['#node'] = $variant;
 }
 
 /**
