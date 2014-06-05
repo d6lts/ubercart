@@ -671,12 +671,10 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
 
   // Image field.
   $options = array('' => t('None'));
-  $instances = field_info_instances('node');
-  if (isset($instances[$type->type])) {
-    foreach ($instances[$type->type] as $field_name => $instance) {
-      if ($instance->getType() == 'image') {
-        $options[$field_name] = $instance->label();
-      }
+  $instances = \Drupal::entityManager()->getFieldDefinitions('node', $type->type);
+  foreach ($instances as $field_name => $instance) {
+    if ($instance->getType() == 'image') {
+      $options[$field_name] = $instance->label();
     }
   }
 
@@ -774,7 +772,7 @@ function uc_product_uc_product_types() {
 function uc_product_uc_store_status() {
   $settings = entity_load('node_type', 'product')->getModuleSettings('uc_product');
   $field = $settings['image_field'];
-  $instances = field_info_instances('node', 'product');
+  $instances = \Drupal::entityManager()->getFieldDefinitions('node', 'product');
 
   if (isset($instances[$field])) {
     $status = 'ok';
