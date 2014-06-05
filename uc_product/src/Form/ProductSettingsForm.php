@@ -25,7 +25,7 @@ class ProductSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('uc_product.settings');
+    $config = $this->config('uc_product.settings');
 
     $form['product-settings'] = array('#type' => 'vertical_tabs');
 
@@ -77,7 +77,7 @@ class ProductSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('uc_product.settings')
+    $this->config('uc_product.settings')
       ->set('add_to_cart_qty', $form_state['values']['uc_product_add_to_cart_qty'])
       ->set('update_node_view', $form_state['values']['uc_product_update_node_view'])
       ->save();

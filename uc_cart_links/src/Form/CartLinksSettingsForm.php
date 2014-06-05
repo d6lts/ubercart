@@ -25,7 +25,7 @@ class CartLinksSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $cart_links_config = $this->configFactory->get('uc_cart_links.settings');
+    $cart_links_config = $this->config('uc_cart_links.settings');
 
     $form['uc_cart_links_add_show'] = array(
       '#type' => 'checkbox',
@@ -72,7 +72,7 @@ class CartLinksSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $values = $form_state['values'];
 
-    $cart_links_config = $this->configFactory->get('uc_cart_links.settings');
+    $cart_links_config = $this->config('uc_cart_links.settings');
 
     $cart_links_config
       ->setData(array(

@@ -25,7 +25,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $quote_config = $this->configFactory->get('uc_quote.settings');
+    $quote_config = $this->config('uc_quote.settings');
     $form['methods'] = array(
       '#type' => 'table',
       '#header' => array(t('Shipping method'), t('Details'), t('List position'), t('Operations')),
@@ -131,7 +131,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
       $method_weight[$id] = $method['weight'];
     }
 
-    $quote_config = $this->configFactory->get('uc_quote.settings');
+    $quote_config = $this->config('uc_quote.settings');
     $quote_config
       ->set('enabled', $enabled)
       ->set('method_weight', $method_weight)

@@ -26,7 +26,7 @@ class CatalogSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('uc_catalog.settings');
+    $config = $this->config('uc_catalog.settings');
 
     $view = Views::getView('uc_catalog');
     $displays = array();
@@ -77,7 +77,7 @@ class CatalogSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('uc_catalog.settings')
+    $this->config('uc_catalog.settings')
       ->set('display', $form_state['values']['uc_catalog_display'])
       ->set('vocabulary', $form_state['values']['uc_catalog_vid'])
       ->set('breadcrumb', $form_state['values']['uc_catalog_breadcrumb'])

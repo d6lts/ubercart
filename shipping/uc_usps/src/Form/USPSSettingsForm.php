@@ -25,7 +25,7 @@ class USPSSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $usps_config = $this->configFactory->get('uc_usps.settings');
+    $usps_config = $this->config('uc_usps.settings');
 
     // Put fieldsets into vertical tabs
     $form['usps-settings'] = array(
@@ -238,7 +238,7 @@ class USPSSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $usps_config = $this->configFactory->get('uc_usps.settings');
+    $usps_config = $this->config('uc_usps.settings');
 
     $values = $form_state['values'];
     $usps_config

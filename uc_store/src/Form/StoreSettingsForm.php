@@ -25,7 +25,7 @@ class StoreSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('uc_store.settings');
+    $config = $this->config('uc_store.settings');
 
     $form['store'] = array('#type' => 'vertical_tabs');
 
@@ -193,7 +193,7 @@ class StoreSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('uc_store.settings')
+    $this->config('uc_store.settings')
       ->set('name', $form_state['values']['uc_store_name'])
       ->set('mail', $form_state['values']['uc_store_email'])
       ->set('mail_include_name', $form_state['values']['uc_store_email_include_name'])

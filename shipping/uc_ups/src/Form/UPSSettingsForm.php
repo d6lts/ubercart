@@ -28,7 +28,7 @@ class UPSSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    $ups_config = $this->configFactory->get('uc_ups.settings');
+    $ups_config = $this->config('uc_ups.settings');
 
     // Put fieldsets into vertical tabs
     $form['ups-settings'] = array(
@@ -284,7 +284,7 @@ class UPSSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
   public function validateForm(array &$form, array &$form_state) {
-    $old_password = $this->configFactory->get('uc_ups.settings')->get('password');
+    $old_password = $this->config('uc_ups.settings')->get('password');
     if (!$form_state['values']['uc_ups_password']) {
       if ($old_password) {
         form_set_value($form['uc_ups_credentials']['uc_ups_password'], $old_password, $form_state);
@@ -308,7 +308,7 @@ class UPSSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    $ups_config = $this->configFactory->get('uc_ups.settings');
+    $ups_config = $this->config('uc_ups.settings');
 
     $values = $form_state['values'];
     $ups_config

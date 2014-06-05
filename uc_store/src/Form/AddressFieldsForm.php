@@ -25,7 +25,7 @@ class AddressFieldsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('uc_store.settings')
+    $config = $this->config('uc_store.settings')
       ->get('address_fields');
 
     $form['fields'] = array(
@@ -84,7 +84,7 @@ class AddressFieldsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('uc_store.settings')
+    $this->config('uc_store.settings')
       ->set('address_fields', $form_state['values']['fields'])
       ->save();
 

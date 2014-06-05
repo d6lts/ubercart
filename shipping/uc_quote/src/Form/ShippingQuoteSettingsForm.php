@@ -31,7 +31,7 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $quote_config = $this->configFactory->get('uc_quote.settings');
+    $quote_config = $this->config('uc_quote.settings');
     $address = $quote_config->get('store_default_address');
 
     $form['uc_quote_log_errors'] = array(
@@ -102,7 +102,7 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
     $address->postal_code = $form_state['values']['postal_code'];
     $address->country = $form_state['values']['country'];
 
-    $quote_config = $this->configFactory->get('uc_quote.settings');
+    $quote_config = $this->config('uc_quote.settings');
     $quote_config
       ->set('store_default_address', (array) $address)
       ->set('log_errors', $form_state['values']['uc_quote_log_errors'])
