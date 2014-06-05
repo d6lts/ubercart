@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart;
 
 use Drupal\Core\Entity\ContentEntityDatabaseStorage;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -35,10 +36,33 @@ class UcCartItemStorage extends ContentEntityDatabaseStorage {
   /**
    * {@inheritdoc}
    */
-  protected function mapToStorageRecord(EntityInterface $entity, $table_key = 'base_table') {
-    $record = parent::mapToStorageRecord($entity, $table_key);
+  protected function mapToStorageRecord(ContentEntityInterface $entity, $table_name = NULL) {
+    $record = parent::mapToStorageRecord($entity, $table_name);
     $record->data = $entity->data;
     return $record;
+  }
+
+  /**
+    * {@inheritdoc}
+    */
+  public function getSchema() {
+    $schema = parent::getSchema();
+
+    // Marking the respective fields as NOT NULL makes the indexes more
+    // performant.
+    $schema['uc_cart_products']['fields']['cart_id']['not null'] = TRUE;
+
+    $schema['uc_cart_products']['indexes'] += array(
+     'cart_id' => array('cart_id'),
+    );
+
+    $schema['uc_cart_products']['foreign keys'] += array(
+      'node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+    );
+    return $schema;
   }
 
 }

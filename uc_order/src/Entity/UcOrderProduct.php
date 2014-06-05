@@ -16,7 +16,7 @@ use Drupal\uc_order\UcOrderProductInterface;
 /**
  * Defines the order product entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "uc_order_product",
  *   label = @Translation("Order product"),
  *   module = "uc_order",
@@ -67,36 +67,47 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
     $fields['order_product_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Order product ID'))
       ->setDescription(t('The ordered product ID.'))
-      ->setReadOnly(TRUE);
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
     $fields['order_id'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Order ID'))
       ->setDescription(t('The order ID.'))
-      ->setSetting('target_type', 'uc_order');
+      ->setSetting('target_type', 'uc_order')
+      ->setSetting('default_value', 0);
     $fields['nid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Node ID'))
       ->setDescription('The user that placed the order.')
-      ->setSetting('target_type', 'node');
+      ->setSetting('target_type', 'node')
+      ->setSetting('default_value', 0);
     $fields['title'] = FieldDefinition::create('string')
       ->setLabel(t('Title'))
-      ->setDescription('The product title.');
+      ->setDescription('The product title.')
+      ->setSetting('default_value', '');
     $fields['model'] = FieldDefinition::create('string')
       ->setLabel(t('SKU'))
-      ->setDescription('The product model/SKU.');
+      ->setDescription('The product model/SKU.')
+      ->setSetting('default_value', '');
     $fields['qty'] = FieldDefinition::create('integer')
       ->setLabel(t('Quantity'))
-      ->setDescription('The number of the product ordered.');
+      ->setDescription('The number of the product ordered.')
+      ->setSetting('default_value', 0)
+      ->setSetting('unsigned', TRUE);
     $fields['cost'] = FieldDefinition::create('float')
       ->setLabel(t('Cost'))
-      ->setDescription('The cost to the store for the product.');
+      ->setDescription('The cost to the store for the product.')
+      ->setSetting('default_value', 0.0);
     $fields['price'] = FieldDefinition::create('float')
       ->setLabel(t('Price'))
-      ->setDescription('The price paid for the ordered product.');
+      ->setDescription('The price paid for the ordered product.')
+      ->setSetting('default_value', 0.0);
     $fields['weight'] = FieldDefinition::create('float')
       ->setLabel(t('Weight'))
-      ->setDescription('The physical weight.');
+      ->setDescription('The physical weight.')
+      ->setSetting('default_value', 0.0);
     $fields['weight_units'] = FieldDefinition::create('string')
       ->setLabel(t('Weight units'))
-      ->setDescription('Unit of measure for the weight field.');
+      ->setDescription('Unit of measure for the weight field.')
+      ->setSetting('default_value', 'lb');
 //    $fields['data'] = FieldDefinition::create('map')
 //      ->setLabel(t('Data'))
 //      ->setDescription('A serialized array of extra data.');

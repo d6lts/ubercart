@@ -15,7 +15,7 @@ use Drupal\Core\Field\FieldDefinition;
 /**
  * Defines the cart item entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "uc_cart_item",
  *   label = @Translation("Cart item"),
  *   module = "uc_cart",
@@ -107,20 +107,26 @@ class UcCartItem extends ContentEntityBase {
     $fields['cart_item_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Cart item ID'))
       ->setDescription(t('The cart item ID.'))
-      ->setReadOnly(TRUE);
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
     $fields['cart_id'] = FieldDefinition::create('string')
       ->setLabel(t('Cart ID'))
-      ->setDescription(t('A user-specific cart ID. For authenticated users, their {users}.uid. For anonymous users, a token.'));
+      ->setDescription(t('A user-specific cart ID. For authenticated users, their {users}.uid. For anonymous users, a token.'))
+      ->setSetting('default_value', 0);
     $fields['nid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Node ID'))
       ->setDescription(t('The node ID of the product.'))
-      ->setSetting('target_type', 'node');
+      ->setSetting('target_type', 'node')
+      ->setSetting('default_value', 0);
     $fields['qty'] = FieldDefinition::create('integer')
       ->setLabel(t('Quantity'))
-      ->setDescription(t('The number of this product in the cart.'));
+      ->setDescription(t('The number of this product in the cart.'))
+      ->setSetting('default_value', 0)
+      ->setSetting('unsigned', TRUE);
     $fields['changed'] = FieldDefinition::create('integer')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The Unix timestamp indicating the time the product in the cart was changed.'));
+      ->setDescription(t('The Unix timestamp indicating the time the product in the cart was changed.'))
+      ->setSetting('default_value', 0);
 //    $fields['data'] = FieldDefinition::create('string')
 //      ->setLabel(t('Data'))
 //      ->setDescription(t('A serialized array of extra data.'));

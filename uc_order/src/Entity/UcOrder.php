@@ -17,7 +17,7 @@ use Drupal\uc_store\Address;
 /**
  * Defines the order entity class.
  *
- * @EntityType(
+ * @ContentEntityType(
  *   id = "uc_order",
  *   label = @Translation("Order"),
  *   module = "uc_order",
@@ -464,103 +464,146 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
     $fields['order_id'] = FieldDefinition::create('integer')
       ->setLabel(t('Order ID'))
       ->setDescription(t('The order ID.'))
-      ->setReadOnly(TRUE);
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Customer'))
       ->setDescription(t('The user that placed the order.'))
-      ->setSetting('target_type', 'user');
+      ->setSetting('target_type', 'user')
+      ->setSetting('default_value', 0);
     $fields['order_status'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Order status'))
       ->setDescription(t('The uc_order_status entity ID indicating the order status'))
-      ->setSetting('target_type', 'uc_order_status');
+      ->setSetting('target_type', 'uc_order_status')
+      ->setSetting('default_value', '')
+      ->setSetting('max_length', 32);
     $fields['order_total'] = FieldDefinition::create('float')
       ->setLabel(t('Order total'))
-      ->setDescription(t('The total amount to be paid for the order.'));
+      ->setDescription(t('The total amount to be paid for the order.'))
+      ->setSetting('default_value', 0.0);
     $fields['product_count'] = FieldDefinition::create('integer')
       ->setLabel(t('Product count'))
-      ->setDescription(t('The total product quantity of the order.'));
+      ->setDescription(t('The total product quantity of the order.'))
+      ->setSetting('default_value', 0)
+      ->setSetting('unsigned', TRUE);
     $fields['primary_email'] = FieldDefinition::create('email')
       ->setLabel(t('E-mail address'))
-      ->setDescription(t('The email address of the customer.'));
+      ->setDescription(t('The email address of the customer.'))
+      ->setSetting('default_value', '')
+      ->setSetting('max_length', 96);
     $fields['delivery_first_name'] = FieldDefinition::create('string')
       ->setLabel(t('Delivery first name'))
-      ->setDescription(t('The first name of the person receiving shipment.'));
+      ->setDescription(t('The first name of the person receiving shipment.'))
+      ->setSetting('default_value', '');
     $fields['delivery_last_name'] = FieldDefinition::create('string')
       ->setLabel(t('Delivery last name'))
-      ->setDescription(t('The last name of the person receiving shipment.'));
+      ->setDescription(t('The last name of the person receiving shipment.'))
+      ->setSetting('default_value', '');
     $fields['delivery_phone'] = FieldDefinition::create('string')
       ->setLabel(t('Delivery phone'))
-      ->setDescription(t('The phone number at the delivery location.'));
+      ->setDescription(t('The phone number at the delivery location.'))
+      ->setSetting('default_value', '');
     $fields['delivery_company'] = FieldDefinition::create('string')
       ->setLabel(t('Delivery company'))
-      ->setDescription(t('The company at the delivery location.'));
+      ->setDescription(t('The company at the delivery location.'))
+      ->setSetting('default_value', '');
     $fields['delivery_street1'] = FieldDefinition::create('string')
       ->setLabel(t('Delivery street 1'))
-      ->setDescription(t('The street address of the delivery location.'));
+      ->setDescription(t('The street address of the delivery location.'))
+      ->setSetting('default_value', '');
     $fields['delivery_street2'] = FieldDefinition::create('string')
       ->setLabel(t('Delivery street 2'))
-      ->setDescription(t('The second line of the street address.'));
+      ->setDescription(t('The second line of the street address.'))
+      ->setSetting('default_value', '');
     $fields['delivery_city'] = FieldDefinition::create('string')
       ->setLabel(t('Delivery city'))
-      ->setDescription(t('The city of the delivery location.'));
+      ->setDescription(t('The city of the delivery location.'))
+      ->setSetting('default_value', '');
     $fields['delivery_zone'] = FieldDefinition::create('integer')
       ->setLabel(t('Delivery state/province'))
-      ->setDescription(t('The state/zone/province id of the delivery location.'));
+      ->setDescription(t('The state/zone/province id of the delivery location.'))
+      ->setSetting('default_value', 0)
+      ->setSetting('unsigned', TRUE);
     $fields['delivery_postal_code'] = FieldDefinition::create('string')
       ->setLabel(t('Delivery postal code'))
-      ->setDescription(t('The postal code of the delivery location.'));
+      ->setDescription(t('The postal code of the delivery location.'))
+      ->setSetting('default_value', '');
     $fields['delivery_country'] = FieldDefinition::create('integer')
       ->setLabel(t('Delivery country'))
-      ->setDescription(t('The country ID of the delivery location.'));
+      ->setDescription(t('The country ID of the delivery location.'))
+      ->setSetting('size', 'medium')
+      ->setSetting('default_value', 0)
+      ->setSetting('unsigned', TRUE);
     $fields['billing_first_name'] = FieldDefinition::create('string')
       ->setLabel(t('Billing first name'))
-      ->setDescription(t('The first name of the person paying for the order.'));
+      ->setDescription(t('The first name of the person paying for the order.'))
+      ->setSetting('default_value', '');
     $fields['billing_last_name'] = FieldDefinition::create('string')
       ->setLabel(t('Billing last name'))
-      ->setDescription(t('The last name of the person paying for the order.'));
+      ->setDescription(t('The last name of the person paying for the order.'))
+      ->setSetting('default_value', '');
     $fields['billing_phone'] = FieldDefinition::create('string')
       ->setLabel(t('Billing phone'))
-      ->setDescription(t('The phone number for the billing address.'));
+      ->setDescription(t('The phone number for the billing address.'))
+      ->setSetting('default_value', '');
     $fields['billing_company'] = FieldDefinition::create('string')
       ->setLabel(t('Billing company'))
-      ->setDescription(t('The company of the billing address.'));
+      ->setDescription(t('The company of the billing address.'))
+      ->setSetting('default_value', '');
     $fields['billing_street1'] = FieldDefinition::create('string')
       ->setLabel(t('Billing street 1'))
-      ->setDescription(t('The street address where the bill will be sent.'));
+      ->setDescription(t('The street address where the bill will be sent.'))
+      ->setSetting('default_value', '');
     $fields['billing_street2'] = FieldDefinition::create('string')
       ->setLabel(t('Billing street 2'))
-      ->setDescription(t('The second line of the street address.'));
+      ->setDescription(t('The second line of the street address.'))
+      ->setSetting('default_value', '');
     $fields['billing_city'] = FieldDefinition::create('string')
       ->setLabel(t('Billing city'))
-      ->setDescription(t('The city where the bill will be sent.'));
+      ->setDescription(t('The city where the bill will be sent.'))
+      ->setSetting('default_value', '');
     $fields['billing_zone'] = FieldDefinition::create('integer')
       ->setLabel(t('Billing state/province'))
-      ->setDescription(t('The state/zone/province ID where the bill will be sent.'));
+      ->setDescription(t('The state/zone/province ID where the bill will be sent.'))
+      ->setSetting('default_value', 0)
+      ->setSetting('size', 'medium')
+      ->setSetting('unsigned', TRUE);
     $fields['billing_postal_code'] = FieldDefinition::create('string')
       ->setLabel(t('Billing postal code'))
-      ->setDescription(t('The postal code where the bill will be sent.'));
+      ->setDescription(t('The postal code where the bill will be sent.'))
+      ->setSetting('default_value', '');
     $fields['billing_country'] = FieldDefinition::create('integer')
       ->setLabel(t('Billing country'))
-      ->setDescription(t('The country ID where the bill will be sent.'));
+      ->setDescription(t('The country ID where the bill will be sent.'))
+      ->setSetting('default_value', 0)
+      ->setSetting('size', 'medium')
+      ->setSetting('unsigned', TRUE);
     $fields['payment_method'] = FieldDefinition::create('string')
       ->setLabel(t('Payment method'))
-      ->setDescription(t('The method of payment.'));
+      ->setDescription(t('The method of payment.'))
+      ->setSetting('default_value', '')
+      ->setSetting('max_length', 32);
 //    $fields['data'] = FieldDefinition::create('map')
 //      ->setLabel(t('Data'))
 //      ->setDescription(t('A serialized array of extra data.'));
     $fields['created'] = FieldDefinition::create('integer')
       ->setLabel(t('Created'))
-      ->setDescription(t('The Unix timestamp indicating when the order was created.'));
+      ->setDescription(t('The Unix timestamp indicating when the order was created.'))
+      ->setSetting('default_value', 0);
     $fields['modified'] = FieldDefinition::create('integer')
       ->setLabel(t('Modified'))
-      ->setDescription(t('The Unix timestamp indicating when the order was last modified.'));
+      ->setDescription(t('The Unix timestamp indicating when the order was last modified.'))
+      ->setSetting('default_value', 0);
     $fields['host'] = FieldDefinition::create('string')
       ->setLabel(t('Host'))
-      ->setDescription(t('Host IP address of the person paying for the order.'));
+      ->setDescription(t('Host IP address of the person paying for the order.'))
+      ->setSetting('default_value', '');
     $fields['currency'] = FieldDefinition::create('string')
       ->setLabel(t('Currency'))
       ->setDescription(t('The ISO currency code for the order.'))
-      ->setPropertyConstraints('value', array('Length' => array('max' => 3)));
+      ->setPropertyConstraints('value', array('Length' => array('max' => 3)))
+      ->setSetting('default_value', '')
+      ->setSetting('max_length', 3);
 
     return $fields;
   }
