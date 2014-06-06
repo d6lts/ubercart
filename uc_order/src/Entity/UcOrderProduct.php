@@ -108,9 +108,9 @@ class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterfac
       ->setLabel(t('Weight units'))
       ->setDescription('Unit of measure for the weight field.')
       ->setSetting('default_value', 'lb');
-//    $fields['data'] = FieldDefinition::create('map')
-//      ->setLabel(t('Data'))
-//      ->setDescription('A serialized array of extra data.');
+    $fields['data'] = FieldDefinition::create('map')
+      ->setLabel(t('Data'))
+      ->setDescription('A serialized array of extra data.');
 
     return $fields;
   }
