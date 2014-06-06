@@ -583,9 +583,9 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       ->setDescription(t('The method of payment.'))
       ->setSetting('default_value', '')
       ->setSetting('max_length', 32);
-//    $fields['data'] = FieldDefinition::create('map')
-//      ->setLabel(t('Data'))
-//      ->setDescription(t('A serialized array of extra data.'));
+    $fields['data'] = FieldDefinition::create('map')
+      ->setLabel(t('Data'))
+      ->setDescription(t('A serialized array of extra data.'));
     $fields['created'] = FieldDefinition::create('integer')
       ->setLabel(t('Created'))
       ->setDescription(t('The Unix timestamp indicating when the order was created.'))

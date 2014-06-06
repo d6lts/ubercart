@@ -127,9 +127,9 @@ class UcCartItem extends ContentEntityBase {
       ->setLabel(t('Changed'))
       ->setDescription(t('The Unix timestamp indicating the time the product in the cart was changed.'))
       ->setSetting('default_value', 0);
-//    $fields['data'] = FieldDefinition::create('string')
-//      ->setLabel(t('Data'))
-//      ->setDescription(t('A serialized array of extra data.'));
+    $fields['data'] = FieldDefinition::create('map')
+      ->setLabel(t('Data'))
+      ->setDescription(t('A serialized array of extra data.'));
 
     return $fields;
   }
