@@ -47,8 +47,6 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
   public $products = array();
   public $line_items = array();
 
-  public $data = array();
-
   /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
@@ -77,9 +75,6 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
     parent::postLoad($storage, $orders);
 
     foreach ($orders as $id => $order) {
-      // @todo Move unserialize() back to the storage controller.
-      $order->data = unserialize($order->data);
-
       $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $id));
 
       uc_order_module_invoke('load', $order, NULL);

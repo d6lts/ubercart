@@ -35,29 +35,10 @@ use Drupal\uc_order\UcOrderProductInterface;
 class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterface {
 
   /**
-   * An array of extra data about this product.
-   *
-   * @var array
-   */
-  public $data;
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
     return $this->get('order_product_id')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function postLoad(EntityStorageInterface $storage, array &$products) {
-    parent::postLoad($storage, $products);
-
-    foreach ($products as $product) {
-      // @todo Move unserialize() back to the storage controller.
-      $product->data = unserialize($product->data);
-    }
   }
 
   /**

@@ -47,13 +47,6 @@ class UcCartItem extends ContentEntityBase {
   public $changed;
 
   /**
-   * An array of data about this item.
-   *
-   * @var array
-   */
-  public $data;
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
@@ -82,9 +75,6 @@ class UcCartItem extends ContentEntityBase {
    */
   public static function postLoad(EntityStorageInterface $storage, array &$items) {
     foreach ($items as $item) {
-      // @todo Move unserialize() back to the storage controller.
-      $item->data = unserialize($item->data);
-
       $item->product = uc_product_load_variant($item->nid->value, $item->data);
       if ($item->product) {
         $item->title = $item->product->label();

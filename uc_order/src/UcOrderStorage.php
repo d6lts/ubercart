@@ -56,15 +56,6 @@ class UcOrderStorage extends ContentEntityDatabaseStorage {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function mapToStorageRecord(ContentEntityInterface $entity, $table_name = NULL) {
-    $record = parent::mapToStorageRecord($entity, $table_name);
-    $record->data = $entity->data;
-    return $record;
-  }
-
-  /**
     * {@inheritdoc}
     */
   public function getSchema() {
