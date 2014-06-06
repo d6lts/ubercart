@@ -803,7 +803,7 @@ function uc_product_uc_cart_display($item) {
 
   $element['#total'] = $item->price * $item->qty->value;
   $element['#suffixes'] = array();
-  $element['data'] = array('#type' => 'hidden', '#value' => serialize($item->data));
+  $element['data'] = array('#type' => 'hidden', '#value' => serialize($item->data->first()->toArray()));
   $element['qty'] = array(
     '#type' => 'uc_quantity',
     '#title' => t('Quantity'),
