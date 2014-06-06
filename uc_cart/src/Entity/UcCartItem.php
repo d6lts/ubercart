@@ -85,7 +85,7 @@ class UcCartItem extends ContentEntityBase {
         $item->weight_units = $item->product->weight_units;
       }
 
-      $item->module = $item->data['module'];
+      $item->module = $item->data->module;
     }
     parent::postLoad($storage, $items);
   }
