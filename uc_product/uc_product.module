@@ -790,7 +790,7 @@ function uc_product_uc_store_status() {
  * Implements hook_uc_cart_display().
  */
 function uc_product_uc_cart_display($item) {
-  $node = node_load($item->nid->value);
+  $node = node_load($item->nid->target_id);
 
   $element = array();
   $element['nid'] = array('#type' => 'value', '#value' => $node->id());
