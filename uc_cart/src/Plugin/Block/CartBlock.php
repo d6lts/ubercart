@@ -88,9 +88,8 @@ class CartBlock extends BlockBase {
       $item_count = 0;
       $total = 0;
       if ($product_count) {
-        $display_items = entity_view_multiple(uc_cart_get_contents(), 'cart');
-        foreach (element_children($display_items) as $key) {
-          $display_item = $display_items[$key];
+        foreach (uc_cart_get_contents() as $item) {
+          $display_item = \Drupal::moduleHandler()->invoke($item->data->module, 'uc_cart_display', array($item));
 
           if (count(element_children($display_item))) {
             $items[] = array(

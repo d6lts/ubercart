@@ -21,7 +21,6 @@ use Drupal\Core\Field\FieldDefinition;
  *   module = "uc_cart",
  *   controllers = {
  *     "storage" = "Drupal\uc_cart\UcCartItemStorage",
- *     "view_builder" = "Drupal\uc_cart\UcCartItemViewBuilder",
  *   },
  *   base_table = "uc_cart_products",
  *   entity_keys = {

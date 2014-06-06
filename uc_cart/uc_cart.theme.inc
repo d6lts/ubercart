@@ -38,17 +38,14 @@ function theme_uc_cart_review_table($variables) {
   );
 
   // Set up table rows.
-  $display_items = entity_view_multiple($items, 'cart');
-  if (!empty($display_items)) {
-    foreach (element_children($display_items) as $key) {
-      $display_item = $display_items[$key];
-      $subtotal += $display_item['total']['#price'];
-      $rows[] = array(
-        array('data' => $display_item['qty'], 'class' => array('qty')),
-        array('data' => $display_item['product'], 'class' => array('products')),
-        array('data' => $display_item['total'], 'class' => array('price')),
-      );
-    }
+  foreach ($items as $item) {
+    $display_item = \Drupal::moduleHandler()->invoke($item->data->module, 'uc_cart_display', array($item));
+    $subtotal += $display_item['total']['#price'];
+    $rows[] = array(
+      array('data' => $display_item['qty'], 'class' => array('qty')),
+      array('data' => $display_item['product'], 'class' => array('products')),
+      array('data' => $display_item['total'], 'class' => array('price')),
+    );
   }
 
   // Add the subtotal as the final row.

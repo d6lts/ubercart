@@ -66,9 +66,8 @@ class CartForm extends FormBase {
 
     $i = 0;
     $subtotal = 0;
-    $display_items = entity_view_multiple($items, 'cart');
-    foreach (element_children($display_items) as $key) {
-      $item = $display_items[$key];
+    foreach ($items as $cart_item) {
+      $item = \Drupal::moduleHandler()->invoke($cart_item->data->module, 'uc_cart_display', array($cart_item));
       if (element_children($item)) {
         $form['items'][$i]['remove'] = $item['remove'];
         $form['items'][$i]['remove']['#name'] = 'remove-' . $i;
