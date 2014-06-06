@@ -58,7 +58,7 @@ class UcCartItem extends ContentEntityBase {
    */
   public function toOrderProduct() {
     return entity_create('uc_order_product', array(
-      'nid' => $this->nid->value,
+      'nid' => $this->nid->target_id,
       'title' => $this->title,
       'model' => $this->model,
       'qty' => $this->qty->value,
@@ -75,7 +75,7 @@ class UcCartItem extends ContentEntityBase {
    */
   public static function postLoad(EntityStorageInterface $storage, array &$items) {
     foreach ($items as $item) {
-      $item->product = uc_product_load_variant($item->nid->value, $item->data);
+      $item->product = uc_product_load_variant($item->nid->target_id, $item->data);
       if ($item->product) {
         $item->title = $item->product->label();
         $item->model = $item->product->model;
