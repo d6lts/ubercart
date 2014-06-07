@@ -26,9 +26,9 @@ function theme_uc_product_kit_list_item($variables) {
     $qty = $product->qty;
   }
   else {
-    $node = node_load($product->nid->value);
+    $node = node_load($product->nid->target_id);
     if ($node->access('view')) {
-      $title = l($product->title, 'node/' . $product->nid->value);
+      $title = l($product->title, 'node/' . $product->nid->target_id);
     }
     else {
       $title = check_plain($product->title);

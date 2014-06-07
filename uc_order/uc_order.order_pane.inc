@@ -452,7 +452,7 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
     );
     $form['data'][$i]['nid'] = array(
       '#type' => 'hidden',
-      '#value' => $product->nid->value,
+      '#value' => $product->nid->target_id,
     );
     $form['products'][$i]['qty'] = array(
       '#type' => 'uc_quantity',

@@ -50,7 +50,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $items = uc_cart_get_contents();
     $this->assertEqual(count($items), 1, 'Cart contains one item.');
     $item = reset($items);
-    $this->assertEqual($item->nid->value, $this->product->id(), 'Cart item nid is correct.');
+    $this->assertEqual($item->nid->target_id, $this->product->id(), 'Cart item nid is correct.');
     $this->assertEqual($item->qty->value, 1, 'Cart item quantity is correct.');
 
     // Add more of the same item.

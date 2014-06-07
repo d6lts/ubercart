@@ -190,7 +190,7 @@ function uc_cart_user_login($account) {
 
     // Merge the anonymous items into the user cart.
     foreach ($items as $item) {
-      uc_cart_add_item($item->nid->value, $item->qty->value, $item->data, $account->id(), FALSE, FALSE, FALSE);
+      uc_cart_add_item($item->nid->target_id, $item->qty->value, $item->data, $account->id(), FALSE, FALSE, FALSE);
     }
 
     // Unset the anonymous cart ID, it's no longer needed.

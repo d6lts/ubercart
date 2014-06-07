@@ -374,7 +374,7 @@ function uc_roles_user_view($account, $view_mode) {
  * Implements hook_uc_order_product_can_ship().
  */
 function uc_roles_uc_order_product_can_ship($item) {
-  $roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid", array(':nid' => $item->nid->value));
+  $roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid", array(':nid' => $item->nid->target_id));
   foreach ($roles as $role) {
     // If the model is empty, keep looking. (Everyone needs a role model...)
     if (empty($role->model)) {

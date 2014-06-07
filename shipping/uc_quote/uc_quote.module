@@ -387,7 +387,7 @@ function uc_quote_get_shipping_type($id_type, $id) {
 function uc_product_get_shipping_type($product) {
   $quote_config = \Drupal::config('uc_quote.settings');
   $shipping_type = $quote_config->get('shipping_type');
-  if ($product->nid->value && $type = uc_quote_get_shipping_type('product', $product->nid->value)) {
+  if ($product->nid->target_id && $type = uc_quote_get_shipping_type('product', $product->nid->target_id)) {
     $shipping_type = $type;
   }
   return $shipping_type;

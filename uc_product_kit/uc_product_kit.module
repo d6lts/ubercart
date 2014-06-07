@@ -947,7 +947,8 @@ function uc_product_kit_uc_cart_display($item) {
   else {
     if (!isset($products[$unique_id])) {
       // Initialize table row.
-      $kit_qty = $item->qty->value / $kit->products[$item->nid->value]->qty;
+      $nid =  $item->nid->target_id;
+      $kit_qty = $item->qty->value / $kit->products[$nid]->qty;
       $element = array();
       $element['nid'] = array('#type' => 'value', '#value' => $kit->id());
       $element['module'] = array('#type' => 'value', '#value' => 'uc_product_kit');
@@ -980,11 +981,11 @@ function uc_product_kit_uc_cart_display($item) {
     }
 
     // Build the kit item product variant.
-    $variant = uc_product_load_variant($item->nid->value, $item->data);
+    $variant = uc_product_load_variant($nid, $item->data);
 
     $elements[$unique_id]['#total'] += $variant->price * $item->qty->value;
-    $elements[$unique_id]['data'][$item->nid->value] = $item;
-    $products[$unique_id][] = $item->nid->value;
+    $elements[$unique_id]['data'][$nid] = $item;
+    $products[$unique_id][] = $nid;
 
     // Check if all products in this kit have been accounted for.
     $done = TRUE;

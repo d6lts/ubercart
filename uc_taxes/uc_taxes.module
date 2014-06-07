@@ -534,10 +534,10 @@ function uc_taxes_apply_item_tax($item, $tax) {
   if (is_array($item->data) && isset($item->data['type'])) { // Saved in the order product data array.
     $type = $item->data['type'];
   }
-  elseif (empty($item->nid->value)) { // "Blank-line" product.
+  elseif (empty($item->nid->target_id)) { // "Blank-line" product.
     $type = 'blank-line';
   }
-  elseif ($node = node_load($item->nid->value)) { // Use type of current node, if it exists.
+  elseif ($node = node_load($item->nid->target_id)) { // Use type of current node, if it exists.
     $type = $node->getType();
   }
   else { // Default to generic product.
@@ -548,10 +548,10 @@ function uc_taxes_apply_item_tax($item, $tax) {
   if (is_array($item->data) && isset($item->data['shippable'])) { // Saved in the order product data array.
     $shippable = $item->data['shippable'];
   }
-  elseif (empty($item->nid->value)) { // "Blank line" product.
+  elseif (empty($item->nid->target_id)) { // "Blank line" product.
     $shippable = $item->weight > 0;
   }
-  elseif ($node = node_load($item->nid->value)) { // Use current node.
+  elseif ($node = node_load($item->nid->target_id)) { // Use current node.
     $shippable = $node->shippable;
   }
   else { // Use default for this node type.

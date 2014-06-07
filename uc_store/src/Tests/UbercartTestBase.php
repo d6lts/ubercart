@@ -248,7 +248,7 @@ abstract class UbercartTestBase extends WebTestBase {
 
     if (!isset($fields['products'])) {
       $order->products[] = entity_create('uc_order_product', array(
-        'nid' => $this->product->nid->value,
+        'nid' => $this->product->nid->target_id,
         'title' => $this->product->title->value,
         'model' => $this->product->model,
         'qty' => 1,

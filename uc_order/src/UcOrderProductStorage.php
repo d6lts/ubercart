@@ -27,11 +27,11 @@ class UcOrderProductStorage extends ContentEntityDatabaseStorage {
     }
 
     if (empty($product->weight_units->value)) {
-      if (empty($product->nid->value)) {
+      if (empty($product->nid->target_id)) {
         $product->weight_units->value = \Drupal::config('uc_store.settings')->get('units.weight');
       }
       else {
-        $units = db_query("SELECT weight_units FROM {node} n JOIN {uc_products} p ON n.vid = p.vid WHERE n.nid = :nid", array(':nid' => $product->nid->value))->fetchField();
+        $units = db_query("SELECT weight_units FROM {node} n JOIN {uc_products} p ON n.vid = p.vid WHERE n.nid = :nid", array(':nid' => $product->nid->target_id))->fetchField();
         $product->weight_units->value = empty($units) ? \Drupal::config('uc_store.settings')->get('units.weight') : $units;
       }
     }
