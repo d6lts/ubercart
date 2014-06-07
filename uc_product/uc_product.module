@@ -669,22 +669,24 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   );
 
   // Image field.
-  $options = array('' => t('None'));
-  $instances = \Drupal::entityManager()->getFieldDefinitions('node', $type->type);
-  foreach ($instances as $field_name => $instance) {
-    if ($instance->getType() == 'image') {
-      $options[$field_name] = $instance->label();
+  if (!empty($type->type)) {
+    $options = array('' => t('None'));
+    $instances = \Drupal::entityManager()->getFieldDefinitions('node', $type->type);
+    foreach ($instances as $field_name => $instance) {
+      if ($instance->getType() == 'image') {
+        $options[$field_name] = $instance->label();
+      }
     }
-  }
 
-  $form['uc_product']['image_field'] = array(
-    '#type' => 'select',
-    '#title' => t('Product image field'),
-    '#default_value' => $settings['image_field'],
-    '#options' => $options,
-    '#description' => t('The selected field will be used on Ubercart pages to represent the products of this content type.'),
-    '#weight' => -4,
-  );
+    $form['uc_product']['image_field'] = array(
+      '#type' => 'select',
+      '#title' => t('Product image field'),
+      '#default_value' => $settings['image_field'],
+      '#options' => $options,
+      '#description' => t('The selected field will be used on Ubercart pages to represent the products of this content type.'),
+      '#weight' => -4,
+    );
+  }
 }
 
 /**
