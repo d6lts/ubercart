@@ -11,6 +11,7 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Time in seconds after which a cart order is deemed abandoned.
@@ -250,7 +251,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
 
   return array(
     '#theme' => 'uc_cart_complete_sale',
-    '#message' => filter_xss_admin($message),
+    '#message' => Xss::filterAdmin($message),
     '#order' => $order,
   );
 }

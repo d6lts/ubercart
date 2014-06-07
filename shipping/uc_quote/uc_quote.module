@@ -9,6 +9,7 @@
  * their specific information so that a shipment may be quoted and requested.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -496,7 +497,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, &$form_state = NULL
   $quote_config = \Drupal::config('uc_quote.settings');
   switch ($op) {
     case 'view':
-      $description = filter_xss_admin($quote_config->get('pane_description'));
+      $description = Xss::filterAdmin($quote_config->get('pane_description'));
 
       $contents['#attached']['css'][] = drupal_get_path('module', 'uc_quote') . '/css/uc_quote.css';
 
@@ -822,7 +823,7 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
   }
   elseif ($show_errors) {
     $return['error'] = array(
-      '#markup' => filter_xss_admin($quote_config->get('error_message')),
+      '#markup' => Xss::filterAdmin($quote_config->get('error_message')),
     );
   }
 

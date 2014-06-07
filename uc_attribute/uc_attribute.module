@@ -12,6 +12,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -1259,7 +1260,7 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
       $form_attributes[$attribute->aid]['#title'] = check_plain($name);
     }
 
-    $form_attributes[$attribute->aid]['#description'] = filter_xss($attribute->description);
+    $form_attributes[$attribute->aid]['#description'] = Xss::filter($attribute->description);
     $form_attributes[$attribute->aid]['#required'] = $attribute->required;
   }
 

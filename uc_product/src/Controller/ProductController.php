@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_product\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
@@ -32,7 +33,7 @@ class ProductController extends ControllerBase {
       $rows[] = array(
         check_plain($class->type),
         check_plain($class->name),
-        filter_xss_admin($class->description),
+        Xss::filterAdmin($class->description),
         implode(' ', $ops),
       );
     }

@@ -10,6 +10,7 @@
  * default order panes are defined in uc_order_order_pane() in uc_order.module.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -978,7 +979,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
         $build['#rows'][] = array(
           array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
           array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
-          array('data' => filter_xss_admin($comment->message), 'class' => array('message')),
+          array('data' => Xss::filterAdmin($comment->message), 'class' => array('message')),
         );
       }
       return $build;
@@ -1002,7 +1003,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
           '#theme' => 'uc_uid',
           '#uid' => $comment->uid,
         );
-        $items[] = '[' . drupal_render($username) . '] ' . filter_xss_admin($comment->message);
+        $items[] = '[' . drupal_render($username) . '] ' . Xss::filterAdmin($comment->message);
       }
       $item_list = array(
         '#theme' => 'item_list',

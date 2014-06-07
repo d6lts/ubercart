@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment\Form;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
@@ -101,7 +102,7 @@ class OrderPaymentsForm extends FormBase {
           '#price' => $total,
         );
         $form['payments'][$payment->receipt_id]['comment'] = array(
-          '#markup' => ($payment->comment == '') ? '-' : filter_xss_admin($payment->comment),
+          '#markup' => ($payment->comment == '') ? '-' : Xss::filterAdmin($payment->comment),
         );
         if ($account->hasPermission('delete payments')) {
           $action_value = l(t('Delete'), 'admin/store/orders/' . $this->order->id() . '/payments/'

@@ -12,6 +12,7 @@
 
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Utility\Xss;
 
 require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
 
@@ -55,7 +56,7 @@ function template_preprocess_uc_payment_totals(&$variables) {
   $variables['line_items'] = $variables['order']->getDisplayLineItems();
 
   foreach ($variables['line_items'] as $key => $line) {
-    $variables['line_items'][$key]['title'] = filter_xss($line['title']);
+    $variables['line_items'][$key]['title'] = Xss::filter($line['title']);
     $variables['line_items'][$key]['amount'] = uc_currency_format($line['amount']);
   }
 }

@@ -10,6 +10,7 @@
  * displayed to customers.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
 require_once dirname(__FILE__) . '/uc_order.order_pane.inc';
@@ -731,7 +732,7 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   $site_config = \Drupal::config('system.site');
   $head_title = array('name' => check_plain($site_config->get('name')));
   if ($site_config->get('slogan')) {
-    $head_title['slogan'] = strip_tags(filter_xss_admin($site_config->get('slogan')));
+    $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_config->get('slogan')));
   }
 
   // Add favicon.

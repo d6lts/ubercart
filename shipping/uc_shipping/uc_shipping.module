@@ -8,6 +8,7 @@
  */
 
 use Drupal\Component\Utility\Json;
+use Drupal\Component\Utility\Xss;
 use Drupal\uc_store\Address;
 
 /**
@@ -349,7 +350,7 @@ function uc_shipping_package_view($package) {
     '#suffix' => '</div>',
   );
 
-  $rows[] = array(t('Contents:'), filter_xss_admin($package->description));
+  $rows[] = array(t('Contents:'), Xss::filterAdmin($package->description));
 
   if ($shipment) {
     $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');

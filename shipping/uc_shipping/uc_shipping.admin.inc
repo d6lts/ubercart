@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Displays a list of an order's packaged products.
@@ -135,7 +136,7 @@ function uc_shipping_new_package($form, &$form_state, $order) {
           '#markup' => check_plain($product->model)
         );
         $product_row['name'] = array(
-          '#markup' => filter_xss_admin($product->title)
+          '#markup' => Xss::filterAdmin($product->title)
         );
         $range = range(1, $unboxed_qty);
         $product_row['qty'] = array(
@@ -338,7 +339,7 @@ function uc_shipping_package_edit($form, &$form_state, $order, $package) {
       $product_row = array();
       $product_row['checked'] = array('#type' => 'checkbox', '#default_value' => isset($package->products[$product->order_product_id]));
       $product_row['model'] = array('#markup' => check_plain($product->model));
-      $product_row['name'] = array('#markup' => filter_xss_admin($product->title));
+      $product_row['name'] = array('#markup' => Xss::filterAdmin($product->title));
       $range = range(1, $product->qty);
       $product_row['qty'] = array(
         '#type' => 'select',
