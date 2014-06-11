@@ -510,7 +510,7 @@ function uc_order_product_revive($products, $published = TRUE) {
   // Load the nodes associated with each order product.
   $nids = array();
   foreach ($products as $product) {
-    $nids[] = $product->nid->value;
+    $nids[] = $product->nid->target_id;
   }
   $nodes = node_load_multiple($nids);
 
@@ -518,8 +518,8 @@ function uc_order_product_revive($products, $published = TRUE) {
   // product fields that are already set).
   $return = TRUE;
   foreach ($products as &$product) {
-    if (!empty($nodes[$product->nid->value]) && (!$published || $nodes[$product->nid->value]->isPublished())) {
-      foreach (get_object_vars($nodes[$product->nid->value]) as $key => $value) {
+    if (!empty($nodes[$product->nid->target_id]) && (!$published || $nodes[$product->nid->target_id]->isPublished())) {
+      foreach (get_object_vars($nodes[$product->nid->target_id]) as $key => $value) {
         if (!property_exists($product, $key)) {
           $product->$key = $value;
         }
