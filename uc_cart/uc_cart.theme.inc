@@ -38,13 +38,25 @@ function theme_uc_cart_review_table($variables) {
   );
 
   // Set up table rows.
+  // @todo Replace with Views.
   foreach ($items as $item) {
-    $display_item = \Drupal::moduleHandler()->invoke($item->data->module, 'uc_cart_display', array($item));
-    $subtotal += $display_item['total']['#price'];
+    $subtotal += $item->price->value * $item->qty->value;
     $rows[] = array(
-      array('data' => $display_item['qty'], 'class' => array('qty')),
-      array('data' => $display_item['product'], 'class' => array('products')),
-      array('data' => $display_item['total'], 'class' => array('price')),
+      array(
+        'data' => array(
+          '#theme' => 'uc_qty',
+          '#qty' => $item->qty->value,
+        ),
+        'class' => array('qty'),
+      ),
+      array('data' => $item->title->value, 'class' => array('products')),
+      array(
+        'data' => array(
+          '#theme' => 'uc_price',
+          '#price' => $item->price->value * $item->qty->value,
+        ),
+        'class' => array('price'),
+      ),
     );
   }
 
