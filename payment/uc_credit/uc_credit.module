@@ -245,8 +245,8 @@ function uc_credit_uc_order($op, $order, $arg2) {
         $order->payment_details = uc_credit_cache('load');
 
         // Otherwise load any details that might be stored in the data array.
-        if (empty($order->payment_details) && isset($order->data['cc_data'])) {
-          $order->payment_details = uc_credit_cache('save', $order->data['cc_data']);
+        if (empty($order->payment_details) && isset($order->data->cc_data)) {
+          $order->payment_details = uc_credit_cache('save', $order->data->cc_data);
         }
       }
       break;

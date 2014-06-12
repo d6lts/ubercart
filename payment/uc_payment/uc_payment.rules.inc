@@ -67,7 +67,7 @@ function uc_payment_rules_condition_info() {
 function uc_payment_condition_order_balance($order, $balance_comparison, $include_authorizations) {
   $balance = uc_payment_balance($order);
   if ($include_authorizations) {
-    foreach ((array) $order->data['cc_txns']['authorizations'] as $auth_id => $data) {
+    foreach ((array) $order->data->cc_txns['authorizations'] as $auth_id => $data) {
       $balance -= $data['amount'];
     }
   }
