@@ -65,13 +65,13 @@ class CartCheckoutTest extends UbercartTestBase {
     // Set the quantity and data.
     $qty = mt_rand(1, 100);
     $item->qty->value = $qty;
-    $item->data['updated'] = TRUE;
+    $item->data->updated = TRUE;
     $item->save();
 
     $items = uc_cart_get_contents();
     $item = reset($items);
     $this->assertEqual($item->qty->value, $qty, 'Set cart item quantity is correct.');
-    $this->assertTrue($item->data['updated'], 'Set cart item data is correct.');
+    $this->assertTrue($item->data->updated, 'Set cart item data is correct.');
 
     // Add an item with different data to the cart.
     uc_cart_add_item($this->product->id(), 1, array('test' => TRUE));
