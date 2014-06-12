@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Provides a form for deleting a feed.
@@ -25,9 +26,7 @@ class OrderDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'view.uc_orders.page_1',
-    );
+    return new Url('view.uc_orders.page_1');
   }
 
   /**

@@ -8,6 +8,7 @@
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Defines the attribute delete form.
@@ -45,9 +46,7 @@ class AttributeDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'uc_attribute.overview',
-    );
+    return new Url('uc_attribute.overview');
   }
 
   /**

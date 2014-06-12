@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Drupal\uc_order\UcOrderInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -39,12 +40,7 @@ class PaymentDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'uc_payments.order_payments',
-      'route_parameters' => array(
-        'uc_order' => $this->payment->order_id,
-      ),
-    );
+    return new Url('uc_payments.order_payments', array('uc_order' => $this->payment->order_id));
   }
 
   /**

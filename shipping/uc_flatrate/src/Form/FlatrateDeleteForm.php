@@ -8,6 +8,7 @@
 namespace Drupal\uc_flatrate\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Confirms deletion of a flat rate shipping method.
@@ -44,9 +45,7 @@ class FlatrateDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'uc_quote.methods',
-    );
+    return new Url('uc_quote.methods');
   }
 
   /**

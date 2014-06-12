@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Confirm that the customer wants to empty their cart.
@@ -25,9 +26,7 @@ class EmptyCartForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'uc_cart.cart',
-    );
+    return new Url('uc_cart.cart');
   }
 
   /**

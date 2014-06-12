@@ -8,6 +8,7 @@
 namespace Drupal\uc_taxes\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 
 /**
  * Deletes a tax rate.
@@ -37,9 +38,7 @@ class TaxRateDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'uc_taxes.overview',
-    );
+    return new Url('uc_taxes.overview');
   }
 
   /**

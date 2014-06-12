@@ -8,6 +8,7 @@
 namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 /**
@@ -55,12 +56,7 @@ class ProductFeatureDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelRoute() {
-    return array(
-      'route_name' => 'uc_product.features',
-      'route_parameters' => array(
-        'node' => $this->node->id(),
-      ),
-    );
+    return new Url('uc_product.features', array('node' => $this->node->id()));
   }
 
   /**
