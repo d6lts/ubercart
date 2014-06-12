@@ -32,13 +32,6 @@ class CartBlock extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::access().
-   */
-  public function blockAccess() {
-    return \Drupal::currentUser()->hasPermission('access content');
-  }
-
-  /**
    * Overrides \Drupal\block\BlockBase::blockForm().
    */
   public function blockForm($form, &$form_state) {
