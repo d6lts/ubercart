@@ -108,7 +108,7 @@ abstract class CheckoutPanePluginBase extends PluginBase implements CheckoutPane
    * {@inheritdoc}
    */
   public function getTitle() {
-    return $this->pluginDefinition['title'];
+    return (string) $this->pluginDefinition['title'];
   }
 
   /**
