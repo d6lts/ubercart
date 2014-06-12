@@ -17,15 +17,15 @@ class StoreController extends SystemController {
   /**
    * {@inheritdoc}
    */
-  public function overview() {
+  public function overview($path = 'admin/store') {
     // Check for status report errors.
     if ($this->systemManager->checkRequirements() && $this->currentUser()->hasPermission('administer site configuration')) {
       drupal_set_message($this->t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
     }
     $blocks = array();
-    // Load all links on admin/store and menu links below it.
+    // Load all links on $path and menu links below it.
     $query = $this->queryFactory->get('menu_link')
-      ->condition('link_path', 'admin/store');
+      ->condition('link_path', $path);
     $result = $query->execute();
     $menu_link_storage = $this->entityManager()->getStorage('menu_link');
     if ($system_link = $menu_link_storage->loadMultiple($result)) {
