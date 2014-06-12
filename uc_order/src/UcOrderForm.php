@@ -7,13 +7,13 @@
 
 namespace Drupal\uc_order;
 
-use Drupal\Core\Entity\ContentEntityFormController;
+use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
  * Form controller for the Ubercart order form.
  */
-class UcOrderFormController extends ContentEntityFormController {
+class UcOrderForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
