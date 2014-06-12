@@ -30,6 +30,10 @@ class DisplayPrice extends Price {
   public function getValue(ResultRow $values, $field = NULL) {
     $nid = parent::getValue($values, $field);
     if (!is_null($nid)) {
+      // @todo Refactor to allow display price to be calculated.
+      $node = node_load($nid);
+      return $node->sell_price;
+
       // !TODO Refactor so that all variants are loaded at once in the pre_render hook.
       $node = node_view(node_load($nid), 'teaser');
       return $node['display_price']['#value'];
