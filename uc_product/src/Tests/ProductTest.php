@@ -131,8 +131,7 @@ class ProductTest extends UbercartTestBase {
     $this->assertText(uc_length_format($edit['dim_width'], $edit['length_units']), 'Product width found.');
     $this->assertText(uc_length_format($edit['dim_height'], $edit['length_units']), 'Product height found.');
 
-    $this->clickLink('Edit');
-    $this->drupalPostForm(NULL, array(), 'Delete');
+    $this->clickLink('Delete');
     $this->drupalPostForm(NULL, array(), 'Delete');
     $this->assertText(t('Product @title has been deleted.', array('@title' => $edit[$title_key])), 'Product deleted.');
   }
