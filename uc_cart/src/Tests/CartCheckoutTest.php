@@ -441,7 +441,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Process an anonymous, shippable order.
     $order = $this->createOrder();
-    $order->products[1]->data['shippable'] = TRUE;
+    $order->products[1]->data->shippable = TRUE;
     $order->save();
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
@@ -466,7 +466,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $order = $this->createOrder(array(
       'primary_email' => $this->customer->getEmail(),
     ));
-    $order->products[2]->data['shippable'] = FALSE;
+    $order->products[2]->data->shippable = FALSE;
     $order->save();
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
     $account = user_load($this->customer->id());

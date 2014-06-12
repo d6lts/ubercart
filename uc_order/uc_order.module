@@ -615,7 +615,7 @@ function uc_order_module_invoke($op, &$order, $edit) {
  */
 function uc_order_product_is_shippable($product) {
   // Return FALSE if the product form specifies this as not shippable.
-  if (empty($product->data['shippable'])) {
+  if (empty($product->data->shippable)) {
     return FALSE;
   }
 

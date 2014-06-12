@@ -218,7 +218,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   $order->data = unserialize(db_query("SELECT data FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField());
 
   // Ensure that user creation and triggers are only run once.
-  if (empty($order->data['complete_sale'])) {
+  if (empty($order->data->complete_sale)) {
     uc_cart_complete_sale_account($order);
 
     // Move an order's status from "In checkout" to "Pending".
@@ -234,7 +234,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
     // rules_invoke_event('uc_checkout_complete', $order);
   }
 
-  $type = $order->data['complete_sale'];
+  $type = $order->data->complete_sale;
 
   // Log in new users, if requested.
   if ($type == 'new_user' && $login && \Drupal::currentUser()->isAnonymous()) {
@@ -245,7 +245,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
   $message = \Drupal::config('uc_cart.messages')->get($type);
   $message = \Drupal::token()->replace($message, array('uc_order' => $order));
 
-  $variables['!new_username'] = isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '';
+  $variables['!new_username'] = isset($order->data->new_user['name']) ? $order->data->new_user['name'] : '';
   $variables['!new_password'] = isset($order->password) ? $order->password : t('Your password');
   $message = strtr($message, $variables);
 
@@ -274,7 +274,7 @@ function template_preprocess_uc_cart_complete_sale(&$variables) {
 function uc_cart_complete_sale_account($order) {
   // Order already has a user ID, so the user was logged in during checkout.
   if ($order->getUserId()) {
-    $order->data['complete_sale'] = 'logged_in';
+    $order->data->complete_sale = 'logged_in';
     return;
   }
 
@@ -283,7 +283,7 @@ function uc_cart_complete_sale_account($order) {
   // Email address matches an existing account.
   if ($account = $result->fetchObject()) {
     $order->setUserId($account->uid);
-    $order->data['complete_sale'] = 'existing_user';
+    $order->data->complete_sale = 'existing_user';
     return;
   }
 
@@ -299,8 +299,8 @@ function uc_cart_complete_sale_account($order) {
   );
 
   // Override the username, if specified.
-  if (isset($order->data['new_user']['name'])) {
-    $fields['name'] = $order->data['new_user']['name'];
+  if (isset($order->data->new_user['name'])) {
+    $fields['name'] = $order->data->new_user['name'];
   }
 
   // Create the account.
@@ -308,8 +308,8 @@ function uc_cart_complete_sale_account($order) {
   $account->save();
 
   // Override the password, if specified.
-  if (isset($order->data['new_user']['hash'])) {
-    db_query("UPDATE {users} SET pass = :hash WHERE uid = :uid", array(':hash' => $order->data['new_user']['hash'], ':uid' => $account->id()));
+  if (isset($order->data->new_user['hash'])) {
+    db_query("UPDATE {users} SET pass = :hash WHERE uid = :uid", array(':hash' => $order->data->new_user['hash'], ':uid' => $account->id()));
     $account->password = t('Your password');
   }
   else {
@@ -324,8 +324,8 @@ function uc_cart_complete_sale_account($order) {
   }
 
   $order->setUserId($account->id());
-  $order->data['new_user']['name'] = $fields['name'];
-  $order->data['complete_sale'] =  'new_user';
+  $order->data->new_user['name'] = $fields['name'];
+  $order->data->complete_sale =  'new_user';
 }
 
 /**

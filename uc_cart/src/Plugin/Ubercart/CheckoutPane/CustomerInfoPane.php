@@ -63,7 +63,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
         $contents['new_account']['name'] = array(
           '#type' => 'textfield',
           '#title' => t('Username'),
-          '#default_value' => isset($order->data['new_user']['name']) ? $order->data['new_user']['name'] : '',
+          '#default_value' => isset($order->data->new_user['name']) ? $order->data->new_user['name'] : '',
           '#maxlength' => 60,
           '#size' => 32,
         );
@@ -139,7 +139,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
             form_set_error('panes][customer][new_account][name', $form_state, t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
           }
           else {
-            $order->data['new_user']['name'] = $pane['new_account']['name'];
+            $order->data->new_user['name'] = $pane['new_account']['name'];
           }
         }
         // Validate the password.
@@ -148,7 +148,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
             form_set_error('panes][customer][new_account][pass_confirm', $form_state, t('The passwords you entered did not match. Please try again.'));
           }
           if (!empty($pane['new_account']['pass'])) {
-            $order->data['new_user']['hash'] = \Drupal::service('password')->hash(trim($pane['new_account']['pass']));
+            $order->data->new_user['hash'] = \Drupal::service('password')->hash(trim($pane['new_account']['pass']));
           }
         }
       }
