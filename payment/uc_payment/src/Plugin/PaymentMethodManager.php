@@ -8,7 +8,6 @@ namespace Drupal\uc_payment\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
@@ -41,19 +40,17 @@ class PaymentMethodManager extends DefaultPluginManager {
    *   keyed by the corresponding namespace to look for plugin implementations,
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
-   *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $this->discovery = new AnnotatedClassDiscovery('Plugin/Ubercart/PaymentMethod', $namespaces, 'Drupal\Component\Annotation\Plugin');
     $this->discovery = new InfoHookDecorator($this->discovery, 'uc_payment_method', 'Drupal\uc_payment\Plugin\Ubercart\PaymentMethod\LegacyPaymentMethod');
     $this->factory = new ContainerFactory($this);
 
     $this->moduleHandler = $module_handler;
     $this->alterInfo('uc_payment_method');
-    $this->setCacheBackend($cache_backend, $language_manager, 'uc_payment_methods');
+    $this->setCacheBackend($cache_backend, 'uc_payment_methods');
 
     $this->methodConfig = \Drupal::config('uc_payment.settings')->get('methods');
   }
