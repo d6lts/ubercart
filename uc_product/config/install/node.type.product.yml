@@ -3,20 +3,19 @@ uuid: e6c57fc4-7987-4c4d-a03b-594be41733a4
 name: Product
 description: 'Use <em>products</em> to represent items for sale on the website, including all the unique information that can be attributed to a specific model number.'
 help: ''
-has_title: '1'
 title_label: Name
 settings:
   node:
-    preview: '1'
+    preview: 1
     options:
-      status: status
-      promote: promote
-      sticky: '0'
-      revision: '0'
-    submitted: '1'
+      status: true
+      promote: false
+      sticky: false
+      revision: false
+    submitted: false
   uc_product:
-    product: '1'
-    shippable: '1'
+    product: 1
+    shippable: 1
     image_field: uc_product_image
-status: '1'
-langcode: und
+status: true
+langcode: en
