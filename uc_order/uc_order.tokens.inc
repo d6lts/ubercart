@@ -148,8 +148,8 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'new-username':
-          if (isset($order->data->new_user['name'])) {
-            $replacements[$original] = $sanitize ? check_plain($order->data->new_user['name']) : $order->data->new_user['name'];
+          if (isset($order->data->new_user_name)) {
+            $replacements[$original] = $sanitize ? check_plain($order->data->new_user_name) : $order->data->new_user_name;
           }
           break;
 
