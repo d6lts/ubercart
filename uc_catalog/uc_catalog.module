@@ -11,7 +11,7 @@
  * not listed in it.
  */
 
-use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\node\NodeTypeInterface;
@@ -310,7 +310,7 @@ function uc_catalog_add_node_type($type) {
       'entity_type' => 'node',
       'name' => 'taxonomy_catalog',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
         'allowed_values' => array(
           array(
