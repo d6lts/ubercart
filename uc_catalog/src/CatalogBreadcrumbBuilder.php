@@ -10,7 +10,7 @@ namespace Drupal\uc_catalog;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityManagerInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Provides a custom breadcrumb builder for catalog node pages.
@@ -36,7 +36,7 @@ class CatalogBreadcrumbBuilder extends BreadcrumbBuilderBase {
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
-  -   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
    *   The configuration factory.
    */
   public function __construct(EntityManagerInterface $entity_manager, ConfigFactory $configFactory) {
@@ -47,29 +47,22 @@ class CatalogBreadcrumbBuilder extends BreadcrumbBuilderBase {
   /**
    * {@inheritdoc}
    */
-  public function applies(array $attributes) {
-    return isset($attributes[RouteObjectInterface::ROUTE_NAME])
-      && (
-        ($attributes[RouteObjectInterface::ROUTE_NAME] == 'node.view' &&
-         isset($attributes['node']->taxonomy_catalog))
-        ||
-        (substr($attributes[RouteObjectInterface::ROUTE_NAME], 0, 16) == 'view.uc_catalog.' &&
-         isset($attributes['arg_term_node_tid_depth']))
-      );
+  public function applies(RouteMatchInterface $route_match) {
+    $route_name = $route_match->getRouteName();
+    return $route_name == 'node.view' && $route_match->getParameter('node') && isset($route_match->getParameter('node')->taxonomy_catalog)
+        || (substr($route_name, 0, 16) == 'view.uc_catalog.' && $route_match->getParameter('arg_term_node_tid_depth'));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function build(array $attributes) {
-    $route_name = $attributes[RouteObjectInterface::ROUTE_NAME];
-    if ($route_name == 'node.view' &&
-        isset($attributes['node']->taxonomy_catalog)) {
-      return $this->catalogBreadcrumb($attributes['node']);
+  public function build(RouteMatchInterface $route_match) {
+    $route_name = $route_match->getRouteName();
+    if ($route_name == 'node.view' && $route_match->getParameter('node') && isset($route_match->getParameter('node')->taxonomy_catalog)) {
+      return $this->catalogBreadcrumb($route_match->getParameter('node'));
     }
-    elseif (substr($route_name, 0, 16) == 'view.uc_catalog.' &&
-            isset($attributes['arg_term_node_tid_depth'])) {
-      return $this->catalogTermBreadcrumb($attributes['arg_term_node_tid_depth']);
+    elseif (substr($route_name, 0, 16) == 'view.uc_catalog.' && $route_match->getParameter('arg_term_node_tid_depth')) {
+      return $this->catalogTermBreadcrumb($route_match->getParameter('arg_term_node_tid_depth'));
     }
   }
 
