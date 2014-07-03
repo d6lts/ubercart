@@ -704,9 +704,11 @@ function uc_product_kit_node_view(array &$build, NodeInterface $node, EntityView
     // If this is a non-mutable kit, then sum the display price of each of the
     // component products.
     foreach ($variant->products as $product) {
-      $build = node_view($product, $view_mode);
-      $display_price += $build['display_price']['#value'] * $product->qty;
-      $suffixes += $build['display_price']['#suffixes'];
+      // @todo Refactor to allow display price to be calculated.
+      // $build = node_view($product, $view_mode);
+      // $display_price += $build['display_price']['#value'] * $product->qty;
+      // $suffixes += $build['display_price']['#suffixes'];
+      $display_price += $product->price * $product->qty;
     }
   }
   else {
