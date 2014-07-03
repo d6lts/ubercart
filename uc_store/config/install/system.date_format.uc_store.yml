@@ -3,6 +3,4 @@ label: 'Ubercart'
 status: true
 langcode: en
 locked: false
-pattern:
-  php: 'm-d-Y'
-  intl: 'mm-dd-yyyy'
+pattern: 'm-d-Y'
