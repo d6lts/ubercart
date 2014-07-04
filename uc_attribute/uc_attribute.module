@@ -16,6 +16,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
 /**
@@ -1024,7 +1025,7 @@ function _uc_cart_product_get_options($item) {
   $data = $item->data;
 
   // @todo The $item parameter can be many different objects, refactor this!
-  if (isset($item->attributes)) {
+  if ($item instanceof NodeInterface) {
     $node = $item;
   }
   else {
