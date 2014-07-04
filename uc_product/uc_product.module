@@ -366,6 +366,8 @@ function uc_product_node_load($nodes) {
         $nodes[$node->nid]->$field = $value;
       }
       $nodes[$node->nid]->price = $nodes[$node->nid]->sell_price;
+      $nodes[$node->nid]->display_price = $nodes[$node->nid]->sell_price;
+      $nodes[$node->nid]->display_price_suffixes = array();
     }
   }
 }
@@ -524,8 +526,8 @@ function uc_product_view_product(array &$build, NodeInterface $node, EntityViewD
 
   $build['display_price'] = array(
     '#theme' => 'uc_product_price',
-    '#value' => isset($variant->price) ? $variant->price : $variant->sell_price,
-    '#suffixes' => array(),
+    '#value' => $variant->display_price,
+    '#suffixes' => $variant->display_price_suffixes,
     '#attributes' => array(
       'class' => array(
         'display-price',
