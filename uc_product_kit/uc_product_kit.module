@@ -939,8 +939,8 @@ function uc_product_kit_uc_order_product_alter(&$product, $order) {
 function uc_product_kit_uc_cart_display($item) {
   static $elements = array();
   static $products;
-  $unique_id = $item->data['unique_id'];
-  $kit = node_load($item->data['kit_id']);
+  $unique_id = $item->data->unique_id;
+  $kit = node_load($item->data->kit_id);
   if ($kit->mutable == UC_PRODUCT_KIT_MUTABLE) {
     return uc_product_uc_cart_display($item);
   }
@@ -981,7 +981,7 @@ function uc_product_kit_uc_cart_display($item) {
     }
 
     // Build the kit item product variant.
-    $variant = uc_product_load_variant($nid, $item->data);
+    $variant = uc_product_load_variant($nid, $item->data->first()->toArray());
 
     $elements[$unique_id]['#total'] += $variant->price * $item->qty->value;
     $elements[$unique_id]['data'][$nid] = $item;
