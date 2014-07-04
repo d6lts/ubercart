@@ -208,13 +208,13 @@ function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL)
             'data' => t('Product'),
             'class' => array('product'),
           ),
-          'cost' => array(
-            'data' => t('Cost'),
-            'class' => array('cost'),
-          ),
           'model' => array(
             'data' => t('SKU'),
             'class' => array('sku'),
+          ),
+          'cost' => array(
+            'data' => t('Cost'),
+            'class' => array('cost'),
           ),
           'price' => array(
             'data' => t('Price'),
@@ -233,14 +233,43 @@ function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL)
         unset($build['#header']['cost']);
       }
 
-      if (!empty($order->products)) {
-        $products = entity_view_multiple($order->products, 'full');
-        foreach ($products as $id => $product) {
-          foreach (array_keys($build['#header']) as $field) {
-            $build[$id][$field] = $product[$field];
-            $build[$id][$field]['#wrapper_attributes']['class'] = $build['#header'][$field]['class'];
-          }
+      // @todo Replace with Views.
+      foreach ($order->products as $id => $product) {
+        $build[$id]['qty'] = array(
+          '#theme' => 'uc_qty',
+          '#qty' => $product->qty->value,
+          '#cell_attributes' => array('class' => array('qty')),
+        );
+        $node = node_load($product->nid->target_id);
+        $title = $node->access('view') ? l($product->title->value, 'node/' . $product->nid->target_id) : check_plain($product->title->value);
+        $build[$id]['product'] = array(
+          '#markup' => $title . uc_product_get_description($product),
+          '#cell_attributes' => array('class' => array('product')),
+        );
+        $build[$id]['model'] = array(
+          '#markup' => check_plain($product->model->value),
+          '#cell_attributes' => array('class' => array('sku')),
+        );
+        if ($account->hasPermission('administer products')) {
+          $build[$id]['cost'] = array(
+            '#theme' => 'uc_price',
+            '#price' => $product->cost->value,
+            '#cell_attributes' => array('class' => array('cost')),
+          );
         }
+        $build[$id]['price'] = array(
+          '#theme' => 'uc_price',
+          '#price' => $product->price->value,
+          '#suffixes' => array(),
+          '#cell_attributes' => array('class' => array('price')),
+        );
+        $build[$id]['total'] = array(
+          '#theme' => 'uc_price',
+          '#price' => $product->price->value * $product->qty->value,
+          '#suffixes' => array(),
+          '#cell_attributes' => array('class' => array('total')),
+        );
+//        $build[$id][$field]['#wrapper_attributes']['class'] = $build['#header'][$field]['class'];
       }
 
       return $build;
