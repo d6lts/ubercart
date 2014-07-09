@@ -5,6 +5,7 @@
  * Defines the credit card payment method and hooks in payment gateways.
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\uc_store\Encryption;
 
 /** Just authorize an amount on a credit card account. */
@@ -42,9 +43,9 @@ define('UC_CREDIT_KEYFILE_NAME', 'uc_credit.key');
 /**
  * Implements hook_help().
  */
-function uc_credit_help($path, $arg) {
-  switch ($path) {
-    case 'admin/store/orders/%/credit':
+function uc_credit_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'uc_credit.terminal':
       return '<p>' . t('Use this terminal to process credit card payments through your default gateway.') . '</p>';
   }
 }
