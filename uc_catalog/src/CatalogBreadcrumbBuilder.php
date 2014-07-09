@@ -7,15 +7,19 @@
 
 namespace Drupal\uc_catalog;
 
-use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides a custom breadcrumb builder for catalog node pages.
  */
-class CatalogBreadcrumbBuilder extends BreadcrumbBuilderBase {
+class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+  use StringTranslationTrait;
+  use LinkGeneratorTrait;
 
   /**
    * Configuration object for this builder.
