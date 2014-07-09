@@ -540,7 +540,7 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
     );
     $form['data'][$i]['data'] = array(
       '#type' => 'hidden',
-      '#value' => serialize($product->data),
+      '#value' => serialize($product->data->first()->toArray()),
     );
   }
 
