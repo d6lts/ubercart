@@ -240,8 +240,7 @@ function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL)
           '#qty' => $product->qty->value,
           '#cell_attributes' => array('class' => array('qty')),
         );
-        $node = node_load($product->nid->target_id);
-        $title = $node->access('view') ? l($product->title->value, 'node/' . $product->nid->target_id) : check_plain($product->title->value);
+        $title = $product->nid->entity && $product->nid->entity->access('view') ? l($product->title->value, 'node/' . $product->nid->target_id) : check_plain($product->title->value);
         $build[$id]['product'] = array(
           '#markup' => $title . uc_product_get_description($product),
           '#cell_attributes' => array('class' => array('product')),
