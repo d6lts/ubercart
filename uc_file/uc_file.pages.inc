@@ -436,7 +436,7 @@ function _uc_file_log_download($file_user, $ip) {
   $file_user->accessed++;
 
   // Calculate hash
-  $file_user->file_key = drupal_get_token(serialize($file_user));
+  $file_user->file_key = \Drupal::csrfToken()->get(serialize($file_user));
 
   drupal_write_record('uc_file_users', $file_user, 'fuid');
 }

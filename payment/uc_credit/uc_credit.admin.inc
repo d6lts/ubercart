@@ -334,7 +334,7 @@ function uc_credit_settings_form_submit($form, &$form_state) {
       else {
         // Replacement key generation suggested by Barry Jaspan
         // for increased security.
-        fwrite($file, md5(drupal_get_token(serialize($_REQUEST) . serialize($_SERVER) . REQUEST_TIME)));
+        fwrite($file, md5(\Drupal::csrfToken()->get(serialize($_REQUEST) . serialize($_SERVER) . REQUEST_TIME)));
         fclose($file);
 
         drupal_set_message(t('Credit card encryption key file generated. Card data will now be encrypted.'));
