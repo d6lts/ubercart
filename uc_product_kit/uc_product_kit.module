@@ -945,9 +945,10 @@ function uc_product_kit_uc_cart_display($item) {
     return uc_product_uc_cart_display($item);
   }
   else {
+    $nid = $item->nid->target_id;
+
     if (!isset($products[$unique_id])) {
       // Initialize table row.
-      $nid =  $item->nid->target_id;
       $kit_qty = $item->qty->value / $kit->products[$nid]->qty;
       $element = array();
       $element['nid'] = array('#type' => 'value', '#value' => $kit->id());
@@ -984,7 +985,7 @@ function uc_product_kit_uc_cart_display($item) {
     $variant = uc_product_load_variant($nid, $item->data->first()->toArray());
 
     $elements[$unique_id]['#total'] += $variant->price * $item->qty->value;
-    $elements[$unique_id]['data'][$nid] = $item;
+    $elements[$unique_id]['data'][$nid] = $item->data->first()->toArray();
     $products[$unique_id][] = $nid;
 
     // Check if all products in this kit have been accounted for.
@@ -1031,8 +1032,8 @@ function uc_product_kit_uc_update_cart_item($nid, $data = array(), $qty, $cid = 
   }
   else {
     $kit = node_load($nid);
-    foreach ($data as $p_nid => $product) {
-      uc_product_uc_update_cart_item($p_nid, $product->data, $qty * $kit->products[$p_nid]->qty, $cid);
+    foreach ($data as $p_nid => $data) {
+      uc_product_uc_update_cart_item($p_nid, $data, $qty * $kit->products[$p_nid]->qty, $cid);
     }
   }
 }
