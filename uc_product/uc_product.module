@@ -513,7 +513,7 @@ function uc_product_view_product(array &$build, NodeInterface $node, EntityViewD
   $variant = empty($node->variant) ? _uc_product_get_variant($node) : $node;
 
   // Skip the add to cart form in comment reply forms.
-  if (arg(0) != 'comment' && arg(1) != 'reply') {
+  if (\Drupal::routeMatch()->getRouteName() != 'comment.reply') {
     // Build the 'add to cart' form, and use the updated variant based on data
     // provided by the form (e.g. attribute default options).
     if (module_exists('uc_cart') && $variant->id() && empty($variant->data['display_only'])) {
