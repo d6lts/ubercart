@@ -11,16 +11,10 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Tests the cart settings page.
+ *
+ * @group Ubercart
  */
 class CartSettingsTest extends UbercartTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cart settings',
-      'description' => 'Tests the cart settings page.',
-      'group' => 'Ubercart',
-    );
-  }
 
   public function testAddToCartMessage() {
     $this->drupalLogin($this->adminUser);

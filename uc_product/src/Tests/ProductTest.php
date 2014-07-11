@@ -9,21 +9,15 @@ namespace Drupal\uc_product\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
+/**
+ * Tests the product content type.
+ *
+ * @group Ubercart
+ */
 class ProductTest extends UbercartTestBase {
 
   public static $adminPermissions = array('administer content types');
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Products',
-      'description' => 'Ensure that the product content types provided function properly.',
-      'group' => 'Ubercart',
-    );
-  }
-
-  /**
-   * Overrides WebTestBase::setUp().
-   */
   public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);

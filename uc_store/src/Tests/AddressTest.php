@@ -9,22 +9,16 @@ namespace Drupal\uc_store\Tests;
 
 use Drupal\uc_store\Address;
 
+/**
+ * Tests the creation and comparison of addresses.
+ *
+ * @group Ubercart
+ */
 class AddressTest extends UbercartTestBase {
 
   /** Array of Address objects */
   protected $test_address = array();
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Address functionality',
-      'description' => 'Create and compare addresses.',
-      'group' => 'Ubercart',
-    );
-  }
-
-  /**
-   * Overrides WebTestBase::setUp().
-   */
   public function setUp() {
     parent::setUp();
 

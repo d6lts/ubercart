@@ -10,20 +10,14 @@ namespace Drupal\uc_taxes\Tests;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
- * Tests stored tax data.
+ * Tests that historical tax data is stored correctly, and that the proper amount is displayed.
+ *
+ * @group Ubercart
  */
 class StoredTaxesTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_taxes');
   public static $adminPermissions = array(/*'administer rules', */'configure taxes');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Stored tax data',
-      'description' => 'Ensures that historical tax data is stored correctly, and that the proper amount is displayed.',
-      'group' => 'Ubercart',
-    );
-  }
 
   protected function loadTaxLine($order_id) {
     $order = uc_order_load($order_id, TRUE);

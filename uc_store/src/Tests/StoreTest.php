@@ -7,15 +7,12 @@
 
 namespace Drupal\uc_store\Tests;
 
+/**
+ * Tests basic store functionality.
+ *
+ * @group Ubercart
+ */
 class StoreTest extends UbercartTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Store',
-      'description' => 'Tests basic store functionality.',
-      'group' => 'Ubercart',
-    );
-  }
 
   public function testStoreAdmin() {
     $this->drupalLogin($this->adminUser);

@@ -10,24 +10,15 @@ namespace Drupal\uc_quote\Tests;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
- * Ubercart Shipping Quote Tests.
+ * Tests shipping quote functionality.
+ *
+ * @group Ubercart
  */
 class QuoteTest extends UbercartTestBase {
 
   public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack', 'uc_quote', 'uc_flatrate');
   public static $adminPermissions = array('configure quotes'/*, 'administer rules', 'bypass rules access'*/);
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Shipping Quotes',
-      'description' => 'Test shipping quotes.',
-      'group' => 'Ubercart',
-    );
-  }
-
-  /**
-   * Overrides WebTestBase::setUp().
-   */
   public function setUp() {
     parent::setUp();
     module_load_include('inc', 'uc_flatrate', 'uc_flatrate.admin');

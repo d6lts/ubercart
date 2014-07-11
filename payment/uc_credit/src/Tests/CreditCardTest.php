@@ -14,12 +14,13 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  *
  * This class is intended to be subclassed for use in testing other credit
  * card gateways. Subclasses which test other gateways need to:
- * - Define getInfo().
  * - Override setUp(), if necessary, to enable the other gateway and any other
  *   needed modules.
  * - Override configureGateway() to implement gateway-specific configuration.
  * No other overrides are necessary, although a subclass may want to add
  * additional test functions to cover cases not included in this base class.
+ *
+ * @group Ubercart
  */
 class CreditCardTest extends UbercartTestBase {
 
@@ -54,17 +55,6 @@ class CreditCardTest extends UbercartTestBase {
   public static $modules = array('uc_payment', 'uc_credit', 'test_gateway');
   public static $adminPermissions = array('administer credit cards', 'process credit cards');
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Credit cards with Test Gateway',
-      'description' => 'Uses the Test Gateway to ensure credit card processing is functioning.',
-      'group' => 'Ubercart',
-    );
-  }
-
-  /**
-   * Overrides WebTestBase::setUp().
-   */
   public function setUp() {
     parent::setUp();
 

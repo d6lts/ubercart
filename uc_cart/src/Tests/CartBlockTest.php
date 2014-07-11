@@ -11,27 +11,18 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Tests the cart block functionality.
+ *
+ * @group Ubercart
  */
 class CartBlockTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart', 'block');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cart block',
-      'description' => 'Ensures the cart block functions as expected.',
-      'group' => 'Ubercart',
-    );
-  }
 
   /**
    * The cart block being tested.
    */
   protected $block;
 
-  /**
-   * {@inheritdoc}
-   */
   public function setUp() {
     parent::setUp();
     $this->block = $this->drupalPlaceBlock('uc_cart');

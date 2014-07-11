@@ -9,18 +9,15 @@ namespace Drupal\uc_product_kit\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
+/**
+ * Tests product kit functionality.
+ *
+ * @group Ubercart
+ */
 class ProductKitTest extends UbercartTestBase {
 
   public static $modules = array('uc_product_kit');
   public static $adminPermissions = array('create product_kit content', 'edit any product_kit content');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Product kits',
-      'description' => 'Ensure that the product kit functions properly.',
-      'group' => 'Ubercart',
-    );
-  }
 
   public function testProductKitNodeForm() {
     $this->drupalLogin($this->adminUser);

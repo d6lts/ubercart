@@ -10,23 +10,14 @@ namespace Drupal\uc_payment\Tests;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
- * Ubercart payment related tests.
+ * Tests the checkout payment pane.
+ *
+ * @group Ubercart
  */
 class PaymentPaneTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack');
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Payment checkout pane',
-      'description' => 'Ensures that the payment pane functions properly during checkout.',
-      'group' => 'Ubercart',
-    );
-  }
-
-  /**
-   * Overrides WebTestBase::setUp().
-   */
   public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);

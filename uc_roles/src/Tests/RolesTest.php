@@ -11,18 +11,12 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Tests the role purchase functionality.
+ *
+ * @group Ubercart
  */
 class RolesTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack', 'uc_roles');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Roles',
-      'description' => 'Ensures that the purchase of roles functions correctly.',
-      'group' => 'Ubercart',
-    );
-  }
 
   public function testRolePurchaseCheckout() {
     // Add role assignment to the test product.

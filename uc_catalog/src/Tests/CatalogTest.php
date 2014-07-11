@@ -12,19 +12,13 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Tests for the Ubercart catalog.
+ *
+ * @group Ubercart
  */
 class CatalogTest extends UbercartTestBase {
 
   public static $modules = array('uc_catalog', 'uc_attribute', 'field_ui');
   public static $adminPermissions = array('administer catalog', 'administer node fields', 'administer taxonomy_term fields', 'view catalog');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Catalog',
-      'description' => 'Ensure that the catalog functions properly.',
-      'group' => 'Ubercart',
-    );
-  }
 
   /**
    * Tests the catalog display and "buy it now" button.

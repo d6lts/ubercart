@@ -10,19 +10,13 @@ namespace Drupal\uc_payment_pack\Tests;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
- * Payment method pack tests.
+ * Tests the payment method pack.
+ *
+ * @group Ubercart
  */
 class PaymentPackTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack');
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Payment method pack',
-      'description' => 'Ensures that the payment pack methods function correctly.',
-      'group' => 'Ubercart',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

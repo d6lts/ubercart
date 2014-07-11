@@ -11,16 +11,10 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Tests the checkout settings page.
+ *
+ * @group Ubercart
  */
 class CheckoutSettingsTest extends UbercartTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Checkout settings',
-      'description' => 'Tests the checkout settings page.',
-      'group' => 'Ubercart',
-    );
-  }
 
   public function testEnableCheckout() {
     $this->drupalLogin($this->adminUser);

@@ -7,22 +7,16 @@
 
 namespace Drupal\uc_store\Tests;
 
+/**
+ * Tests Ajax updating of checkout and order pages.
+ *
+ * @group Ubercart
+ */
 class AjaxTest extends UbercartTestBase {
 
   public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack');
   public static $adminPermissions = array(/*'administer rules', 'bypass rules access'*/);
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Ajax functionality',
-      'description' => 'Ajax update of checkout and order pages.',
-      'group' => 'Ubercart',
-    );
-  }
-
-  /**
-   * Overrides WebTestBase::setUp().
-   */
   public function setUp() {
     module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
     parent::setUp();

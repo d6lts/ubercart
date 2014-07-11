@@ -10,24 +10,15 @@ namespace Drupal\uc_cart_links\Tests;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
- * SimpleTests for Ubercart Cart Links.
+ * Tests the cart links functionality.
+ *
+ * @group Ubercart
  */
 class CartLinksTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart_links', 'uc_attribute', 'help', 'block');
   public static $adminPermissions = array('administer cart links', 'view cart links report', 'access administration pages');
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Cart Links',
-      'description' => 'Test Cart Links.',
-      'group' => 'Ubercart',
-    );
-  }
-
-  /**
-   * Overrides WebTestBase::setUp().
-   */
   public function setUp() {
     parent::setUp();
 

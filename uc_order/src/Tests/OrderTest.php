@@ -13,19 +13,13 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Tests for Ubercart orders.
+ *
+ * @group Ubercart
  */
 class OrderTest extends UbercartTestBase {
 
   /** Authenticated but unprivileged user. */
   protected $customer;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Orders',
-      'description' => 'Ensure that orders function properly.',
-      'group' => 'Ubercart',
-    );
-  }
 
   public function setUp() {
     parent::setUp();

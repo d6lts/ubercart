@@ -10,24 +10,15 @@ namespace Drupal\uc_stock\Tests;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
- * Ubercart stock related tests
+ * Tests the stock control functionality.
+ *
+ * @group Ubercart
  */
 class StockTest extends UbercartTestBase {
 
   public static $modules = array('uc_stock');
   public static $adminPermissions = array('administer product stock');
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Stock',
-      'description' => 'Ensure that stock control functions properly.',
-      'group' => 'Ubercart',
-    );
-  }
-
-  /**
-   * Overrides WebTestBase::setUp().
-   */
   public function setUp() {
     parent::setUp();
 

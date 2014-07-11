@@ -11,6 +11,8 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Tests the cart and checkout functionality.
+ *
+ * @group Ubercart
  */
 class CartCheckoutTest extends UbercartTestBase {
 
@@ -18,14 +20,6 @@ class CartCheckoutTest extends UbercartTestBase {
 
   /** Authenticated but unprivileged user. */
   protected $customer;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Cart and checkout',
-      'description' => 'Ensures the cart and checkout process is functioning for both anonymous and authenticated users.',
-      'group' => 'Ubercart',
-    );
-  }
 
   public function setUp() {
     parent::setUp();
