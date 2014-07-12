@@ -334,7 +334,7 @@ function uc_cart_complete_sale_account($order) {
  * Sends basic e-mail notifications if Rules is not installed.
  */
 function uc_cart_uc_checkout_complete($order) {
-  if (!module_exists('rules')) {
+  if (!\Drupal::moduleHandler()->moduleExists('rules')) {
     module_load_include('inc', 'uc_order', 'uc_order.rules');
 
     $cart_config = \Drupal::config('uc_cart.settings');

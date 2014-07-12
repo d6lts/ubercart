@@ -36,7 +36,7 @@ class ProductSettingsForm extends ConfigFormBase {
       '#weight' => -10,
     );
 
-    if (module_exists('uc_cart')) {
+    if (\Drupal::moduleHandler()->moduleExists('uc_cart')) {
       $form['product']['uc_product_add_to_cart_qty'] = array(
         '#type' => 'checkbox',
         '#title' => t('Display an optional quantity field in the <em>Add to Cart</em> form.'),

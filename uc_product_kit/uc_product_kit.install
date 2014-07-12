@@ -99,7 +99,7 @@ function uc_product_kit_install() {
 
   // Add the product kit node type to the catalog if this module is installed
   // some time after uc_catalog.
-  if (module_exists('uc_catalog')) {
+  if (\Drupal::moduleHandler()->moduleExists('uc_catalog')) {
     uc_catalog_add_node_type('product_kit');
   }
 

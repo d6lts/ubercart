@@ -84,7 +84,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#default_value' => $cart_config->get('checkout_enabled'),
     );
 
-    if (!module_exists('rules')) {
+    if (!\Drupal::moduleHandler()->moduleExists('rules')) {
       $form['checkout']['uc_checkout_email_customer'] = array(
         '#type' => 'checkbox',
         '#title' => t('Send e-mail invoice to customer after checkout.'),
@@ -254,7 +254,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#states' => $anon_state,
     );
 
-    if (module_exists('token')) {
+    if (\Drupal::moduleHandler()->moduleExists('token')) {
       $form['completion_messages']['token_tree'] = array(
         '#markup' => theme('token_tree', array('token_types' => array('uc_order', 'site', 'store'))),
       );
@@ -271,7 +271,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
     $cart_config
       ->set('checkout_enabled', $form_state['values']['uc_checkout_enabled']);
 
-    if (!module_exists('rules')) {
+    if (!\Drupal::moduleHandler()->moduleExists('rules')) {
       $cart_config
         ->set('checkout_email_customer', $form_state['values']['uc_checkout_email_customer'])
         ->set('checkout_email_admin', $form_state['values']['uc_checkout_email_admin']);

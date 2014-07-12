@@ -94,7 +94,7 @@ class UcOrderForm extends ContentEntityForm {
       }
     }
 
-    if (module_exists('uc_stock')) {
+    if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
       $qtys = array();
       foreach ($order->products as $product) {
         $qtys[$product->order_product_id] = $product->qty;
@@ -108,7 +108,7 @@ class UcOrderForm extends ContentEntityForm {
             $order->products[$product['order_product_id']]->$field = $product[$field];
           }
 
-          if (module_exists('uc_stock')) {
+          if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
             $product = (object)$product;
             $temp = $product->qty;
             $product->qty = $product->qty - $qtys[$product->order_product_id];

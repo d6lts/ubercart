@@ -263,7 +263,7 @@ function uc_paypal_ec_review() {
  * Returns the form for the custom Review Payment screen for Express Checkout.
  */
 function uc_paypal_ec_review_form($form, &$form_state, $order) {
-  if (module_exists('uc_quote') && variable_get('uc_paypal_ec_review_shipping', TRUE) && $order->isShippable()) {
+  if (\Drupal::moduleHandler()->moduleExists('uc_quote') && variable_get('uc_paypal_ec_review_shipping', TRUE) && $order->isShippable()) {
     uc_checkout_pane_quotes('prepare', $order, NULL);
     $order->line_items = $order->getLineItems();
     $order->save();

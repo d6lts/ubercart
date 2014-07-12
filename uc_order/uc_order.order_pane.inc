@@ -640,7 +640,7 @@ function uc_order_edit_products_add($form, &$form_state) {
   $order->logChanges(array('add' => t('Added (@qty) @title to order.', array('@qty' => $product->qty, '@title' => $product->title))));
 
   // Decrement stock.
-  if (module_exists('uc_stock')) {
+  if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
     uc_stock_adjust_product_stock($product, 0, $order);
   }
 
@@ -656,7 +656,7 @@ function uc_order_edit_products_remove($form, &$form_state) {
 
   $order_product_id = intval($form_state['triggering_element']['#return_value']);
 
-  if (module_exists('uc_stock')) {
+  if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
     // Replace stock immediately.
     $product = entity_load('uc_order_product', $order_product_id);
     uc_stock_adjust($product->model, $product->qty);

@@ -124,7 +124,7 @@ function uc_reports_customers() {
  * Displays the product reports.
  */
 function uc_reports_products() {
-  $views_column = module_exists('statistics') && \Drupal::config('statistics.settings')->get('count_content_views');
+  $views_column = \Drupal::moduleHandler()->moduleExists('statistics') && \Drupal::config('statistics.settings')->get('count_content_views');
 
   $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
   $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
@@ -213,7 +213,7 @@ function uc_reports_products() {
     $rows[] = $row;
     $csv_rows[] = $csv_row;
 
-    if (module_exists('uc_attribute')) {
+    if (\Drupal::moduleHandler()->moduleExists('uc_attribute')) {
       // Get the SKUs from this product.
       $models = uc_reports_product_get_skus($product['nid']);
       // Add the product breakdown rows
@@ -321,7 +321,7 @@ function uc_reports_product_get_skus($nid) {
  * Displays the custom product report.
  */
 function uc_reports_products_custom() {
-  $views_column = module_exists('statistics') && \Drupal::config('statistics.settings')->get('count_content_views');
+  $views_column = \Drupal::moduleHandler()->moduleExists('statistics') && \Drupal::config('statistics.settings')->get('count_content_views');
 
   $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
   $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
@@ -404,7 +404,7 @@ function uc_reports_products_custom() {
     $gross_csv = empty($product['gross']) ? 0 : $product['gross'];
     $gross_cell = uc_currency_format($gross_csv);
 
-    if (module_exists('uc_attribute')) {
+    if (\Drupal::moduleHandler()->moduleExists('uc_attribute')) {
       $breakdown_product = $breakdown_sold = $breakdown_revenue = $breakdown_gross = '';
 
       // Get the SKUs from this product.

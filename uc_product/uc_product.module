@@ -516,7 +516,7 @@ function uc_product_view_product(array &$build, NodeInterface $node, EntityViewD
   if (\Drupal::routeMatch()->getRouteName() != 'comment.reply') {
     // Build the 'add to cart' form, and use the updated variant based on data
     // provided by the form (e.g. attribute default options).
-    if (module_exists('uc_cart') && $variant->id() && empty($variant->data['display_only'])) {
+    if (\Drupal::moduleHandler()->moduleExists('uc_cart') && $variant->id() && empty($variant->data['display_only'])) {
       $add_to_cart_form = drupal_get_form('\Drupal\uc_product\Form\AddToCartForm', $variant);
       if (\Drupal::config('uc_product.settings')->get('update_node_view')) {
         $variant = $add_to_cart_form['node']['#value'];
