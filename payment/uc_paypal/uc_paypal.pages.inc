@@ -254,7 +254,7 @@ function uc_paypal_ec_review() {
 
   $build['instructions'] = array('#markup' => t("Your order is almost complete!  Please fill in the following details and click 'Continue checkout' to finalize the purchase."));
 
-  $build['form'] = drupal_get_form('uc_paypal_ec_review_form', $order);
+  $build['form'] = \Drupal::formBuilder()->getForm('uc_paypal_ec_review_form', $order);
 
   return $build;
 }
@@ -391,7 +391,7 @@ function uc_paypal_ec_submit() {
 
   $build['instructions'] = array('#markup' => '<p>' . t("Your order is not complete until you click the 'Submit order' button below. Your PayPal account will be charged for the amount shown above once your order is placed. You will receive confirmation once your payment is complete.") . '</p>');
 
-  $build['submit_form'] = drupal_get_form('uc_paypal_ec_submit_form');
+  $build['submit_form'] = \Drupal::formBuilder()->getForm('uc_paypal_ec_submit_form');
 
   return $build;
 }

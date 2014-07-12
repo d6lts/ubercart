@@ -209,7 +209,7 @@ function uc_quote_uc_cart_pane($items) {
       return array();
     }
 
-    $body = drupal_get_form('uc_cart_pane_quotes', $items);
+    $body = \Drupal::formBuilder()->getForm('uc_cart_pane_quotes', $items);
   }
   else {
     $body = '';

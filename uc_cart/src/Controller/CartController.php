@@ -31,7 +31,7 @@ class CartController extends ControllerBase {
       );
     }
 
-    return drupal_get_form('Drupal\uc_cart\Form\CartForm', $items);
+    return \Drupal::formBuilder()->getForm('Drupal\uc_cart\Form\CartForm', $items);
   }
 
 }

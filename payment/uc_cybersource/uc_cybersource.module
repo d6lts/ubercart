@@ -39,7 +39,7 @@ function uc_cybersource_page_alter(&$page) {
     $order = uc_order_load($order_id);
 
     if ($order->getPaymentMethodId() == 'cybersource_hop') {
-      $page[$block->region]['system_main']['#form'] = drupal_get_form('uc_cybersource_hop_form', $order);
+      $page[$block->region]['system_main']['#form'] = \Drupal::formBuilder()->getForm('uc_cybersource_hop_form', $order);
     }
   }
 }

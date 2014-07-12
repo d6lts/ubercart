@@ -1057,7 +1057,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
 function uc_order_pane_update($op, $order, &$form = NULL, &$form_state = NULL) {
   switch ($op) {
     case 'view':
-      return drupal_get_form('uc_order_view_update_form', $order);
+      return \Drupal::formBuilder()->getForm('uc_order_view_update_form', $order);
   }
 }
 

@@ -27,7 +27,7 @@ function uc_order_address_book() {
   $type = $_POST['type'];
   $func = $_POST['func'];
 
-  $form = drupal_get_form('uc_order_address_book_form', $uid, $type, $func);
+  $form = \Drupal::formBuilder()->getForm('uc_order_address_book_form', $uid, $type, $func);
   print drupal_render($form);
   exit();
 }
@@ -163,7 +163,7 @@ function uc_order_select_customer($email = NULL) {
     }
   }
 
-  $build['customer_select_form'] = drupal_get_form('uc_order_select_customer_form', $options);
+  $build['customer_select_form'] = \Drupal::formBuilder()->getForm('uc_order_select_customer_form', $options);
 
   print drupal_render($build);
   exit();

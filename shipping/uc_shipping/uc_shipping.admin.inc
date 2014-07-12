@@ -1199,7 +1199,7 @@ function uc_shipping_make_shipment($order) {
           require_once($inc_file);
         }
       }
-      return drupal_get_form($method['ship']['callback'], $order, $package_ids);
+      return \Drupal::formBuilder()->getForm($method['ship']['callback'], $order, $package_ids);
     }
     else {
       $shipment = new stdClass();
@@ -1209,7 +1209,7 @@ function uc_shipping_make_shipment($order) {
         $package = uc_shipping_package_load($id);
         $shipment->packages[$id] = $package;
       }
-      return drupal_get_form('uc_shipping_shipment_edit', $order, $shipment);
+      return \Drupal::formBuilder()->getForm('uc_shipping_shipment_edit', $order, $shipment);
     }
   }
   else {

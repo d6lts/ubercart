@@ -152,7 +152,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
   $csv_data = uc_reports_store_csv('uc_tax_report', $csv_rows);
 
   // Build the page output holding the form, table, and CSV export link.
-  $build['form'] = drupal_get_form('uc_tax_report_params_form', $args, $args['status']);
+  $build['form'] = \Drupal::formBuilder()->getForm('uc_tax_report_params_form', $args, $args['status']);
   $build['report'] = array(
     '#theme' => 'table',
     '#header' => $header,

@@ -71,7 +71,7 @@ function uc_stock_report() {
   module_load_include('inc', 'uc_reports', 'uc_reports.admin');
   $csv_data = uc_reports_store_csv('uc_stock', $csv_rows);
 
-  $build['form'] = drupal_get_form('uc_stock_report_form');
+  $build['form'] = \Drupal::formBuilder()->getForm('uc_stock_report_form');
   $build['report'] = array(
     '#theme' => 'table',
     '#header' => $header,

@@ -226,5 +226,5 @@ function _uc_ajax_admin_build_checkout_form() {
       'weight' => 0
     )));
   }
-  return drupal_get_form('uc_cart_checkout_form', $order);
+  return \Drupal::formBuilder()->getForm('uc_cart_checkout_form', $order);
 }

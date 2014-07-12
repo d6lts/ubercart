@@ -461,7 +461,7 @@ function uc_reports_products_custom() {
   $csv_data = uc_reports_store_csv('uc_products', $csv_rows);
 
   // Build the page output holding the form, table, and CSV export link.
-  $build['form'] = drupal_get_form('uc_reports_products_custom_form', $args);
+  $build['form'] = \Drupal::formBuilder()->getForm('uc_reports_products_custom_form', $args);
   $build['report'] = array(
     '#theme' => 'table',
     '#header' => $header,
@@ -952,7 +952,7 @@ function uc_reports_sales_year() {
   $csv_data = uc_reports_store_csv('uc_sales_yearly', $csv_rows);
 
   // Build the page output holding the form, table, and CSV export link.
-  $build['form'] = drupal_get_form('uc_reports_sales_year_form', $year);
+  $build['form'] = \Drupal::formBuilder()->getForm('uc_reports_sales_year_form', $year);
   $build['report'] = array(
     '#theme' => 'table',
     '#header' => $header,
@@ -1126,7 +1126,7 @@ function uc_reports_sales_custom() {
   $csv_data = uc_reports_store_csv('uc_sales_custom', $csv_rows);
 
   // Build the page output holding the form, table, and CSV export link.
-  $build['form'] = drupal_get_form('uc_reports_sales_custom_form', $args, $args['status']);
+  $build['form'] = \Drupal::formBuilder()->getForm('uc_reports_sales_custom_form', $args, $args['status']);
   $build['report'] = array(
     '#theme' => 'table',
     '#header' => $header,

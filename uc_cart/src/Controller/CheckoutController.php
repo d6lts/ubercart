@@ -146,7 +146,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     \Drupal::moduleHandler()->invokeAll('uc_cart_checkout_start', array($order));
     // rules_invoke_event('uc_cart_checkout_start', $order);
 
-    return drupal_get_form('Drupal\uc_cart\Form\CheckoutForm', $order);
+    return \Drupal::formBuilder()->getForm('Drupal\uc_cart\Form\CheckoutForm', $order);
   }
 
   /**
@@ -186,7 +186,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     $build = array(
       '#theme' => 'uc_cart_checkout_review',
       '#panes' => $data,
-      '#form' => drupal_get_form('Drupal\uc_cart\Form\CheckoutReviewForm', $order),
+      '#form' => \Drupal::formBuilder()->getForm('Drupal\uc_cart\Form\CheckoutReviewForm', $order),
     );
 
     $build['#attached']['library'][] = 'system/drupal.system';

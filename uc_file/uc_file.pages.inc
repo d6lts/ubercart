@@ -172,7 +172,7 @@ function uc_file_user_downloads($account) {
   );
 
   if (\Drupal::currentUser()->hasPermission('administer users')) {
-    $build['admin'] = drupal_get_form('uc_file_user_form', $account);
+    $build['admin'] = \Drupal::formBuilder()->getForm('uc_file_user_form', $account);
   }
 
   return $build;

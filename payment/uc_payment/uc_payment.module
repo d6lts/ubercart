@@ -86,7 +86,7 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, &$form_state
 
   if (isset($definition['redirect'])) {
     unset($form['actions']['submit']);
-    $suffix = drupal_get_form($definition['redirect'], $order);
+    $suffix = \Drupal::formBuilder()->getForm($definition['redirect'], $order);
     $form['#suffix'] = drupal_render($suffix);
   }
 }
