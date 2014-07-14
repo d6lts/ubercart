@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cybersource\Controller;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
@@ -40,16 +41,16 @@ class HOPController extends ControllerBase {
     }
 
     // Assign posted variables to local variables.
-    $decision = check_plain($_POST['decision']);
-    $reason_code = check_plain($_POST['reasonCode']);
+    $decision = String::checkPlain($_POST['decision']);
+    $reason_code = String::checkPlain($_POST['reasonCode']);
     $reason = _parse_cs_reason_code($reason_code);
-    $payment_amount = check_plain($_POST['orderAmount']);
-    $payment_currency = check_plain($_POST['paymentCurrency']);
-    $request_id = check_plain($_POST['requestID']);
-    $request_token = check_plain($_POST['orderPage_requestToken']);
-    $reconciliation_id = check_plain($_POST['reconciliationID']);
-    $order_id = check_plain($_POST['orderNumber']);
-    $payer_email = check_plain($_POST['billTo_email']);
+    $payment_amount = String::checkPlain($_POST['orderAmount']);
+    $payment_currency = String::checkPlain($_POST['paymentCurrency']);
+    $request_id = String::checkPlain($_POST['requestID']);
+    $request_token = String::checkPlain($_POST['orderPage_requestToken']);
+    $reconciliation_id = String::checkPlain($_POST['reconciliationID']);
+    $order_id = String::checkPlain($_POST['orderNumber']);
+    $payer_email = String::checkPlain($_POST['billTo_email']);
     $order = uc_order_load($_POST['orderNumber']);
 
     switch ($decision) {

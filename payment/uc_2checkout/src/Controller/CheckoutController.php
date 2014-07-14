@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_2checkout\Controller;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -22,7 +23,7 @@ class CheckoutController extends ControllerBase {
   public function complete($cart_id = 0) {
     $cart_config = \Drupal::config('uc_cart.settings');
     $module_config = \Drupal::config('uc_2checkout.settings');
-    watchdog('2Checkout', 'Receiving new order notification for order !order_id.', array('!order_id' => check_plain($_REQUEST['merchant_order_id'])));
+    watchdog('2Checkout', 'Receiving new order notification for order !order_id.', array('!order_id' => String::checkPlain($_REQUEST['merchant_order_id'])));
 
     $order = uc_order_load($_REQUEST['merchant_order_id']);
 
@@ -71,11 +72,11 @@ class CheckoutController extends ControllerBase {
     $order->save();
 
     if (Unicode::strtolower($_REQUEST['email']) !== Unicode::strtolower($order->getEmail())) {
-      uc_order_comment_save($order->id(), 0, t('Customer used a different e-mail address during payment: !email', array('!email' => check_plain($_REQUEST['email']))), 'admin');
+      uc_order_comment_save($order->id(), 0, t('Customer used a different e-mail address during payment: !email', array('!email' => String::checkPlain($_REQUEST['email']))), 'admin');
     }
 
     if ($_REQUEST['credit_card_processed'] == 'Y' && is_numeric($_REQUEST['total'])) {
-      $comment = t('Paid by !type, 2Checkout.com order #!order.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('credit card') : t('echeck'), '!order' => check_plain($_REQUEST['order_number'])));
+      $comment = t('Paid by !type, 2Checkout.com order #!order.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('credit card') : t('echeck'), '!order' => String::checkPlain($_REQUEST['order_number'])));
       uc_payment_enter($order->id(), '2checkout', $_REQUEST['total'], 0, NULL, $comment);
     }
     else {

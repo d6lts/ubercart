@@ -8,6 +8,7 @@
  * classes for more specification.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -802,7 +803,7 @@ function uc_product_uc_cart_display($item) {
   $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
 
   $element['title'] = array(
-    '#markup' => $node->access('view') ? l($item->title, 'node/' . $node->id()) : check_plain($item->title),
+    '#markup' => $node->access('view') ? l($item->title, 'node/' . $node->id()) : String::checkPlain($item->title),
   );
 
   $element['#total'] = $item->price * $item->qty->value;

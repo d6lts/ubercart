@@ -7,6 +7,7 @@
  * Product kits are groups of products that are sold as a unit.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\NodeInterface;
 
@@ -99,7 +100,7 @@ function uc_product_kit_uc_form_alter(&$form, &$form_state, $form_id) {
 
     $form['products'] = array('#tree' => TRUE);
     foreach ($kit->products as $i => $product) {
-      $form['products'][$i] = array('#title' => check_plain($product->label()));
+      $form['products'][$i] = array('#title' => String::checkPlain($product->label()));
       $form['products'][$i]['nid'] = array('#type' => 'hidden', '#value' => $product->id());
       $form['products'][$i]['qty'] = array('#type' => 'hidden', '#value' => $product->qty);
     }
@@ -115,7 +116,7 @@ function uc_product_kit_uc_form_alter(&$form, &$form_state, $form_id) {
 
     $form['products'] = array('#tree' => TRUE);
     foreach ($node->products as $i => $product) {
-      $form['products'][$i] = array('#title' => check_plain($product->title));
+      $form['products'][$i] = array('#title' => String::checkPlain($product->title));
       $form['products'][$i]['nid'] = array('#type' => 'hidden', '#value' => $product->nid);
       $form['products'][$i]['qty'] = array('#type' => 'hidden', '#value' => $product->qty);
     }

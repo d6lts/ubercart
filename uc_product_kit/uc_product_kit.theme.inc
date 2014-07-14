@@ -5,6 +5,7 @@
  * Theme functions for the uc_product_kit module.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\node\NodeInterface;
 
 /**
@@ -21,7 +22,7 @@ function theme_uc_product_kit_list_item($variables) {
       $title = l($product->label(), 'node/' . $product->id());
     }
     else {
-      $title = check_plain($product->label());
+      $title = String::checkPlain($product->label());
     }
     $qty = $product->qty;
   }
@@ -31,7 +32,7 @@ function theme_uc_product_kit_list_item($variables) {
       $title = l($product->title, 'node/' . $product->nid->target_id);
     }
     else {
-      $title = check_plain($product->title);
+      $title = String::checkPlain($product->title);
     }
     $qty = $product->qty->value;
   }

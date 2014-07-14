@@ -11,6 +11,7 @@
 
 use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\uc_store\Address;
@@ -785,15 +786,15 @@ function uc_address_format($first_name, $last_name, $company, $street1, $street2
 
   $variables = array(
     "\r\n" => '<br />',
-    '!company' => check_plain($company),
-    '!first_name' => check_plain($first_name),
-    '!last_name' => check_plain($last_name),
-    '!street1' => check_plain($street1),
-    '!street2' => check_plain($street2),
-    '!city' => check_plain($city),
+    '!company' => String::checkPlain($company),
+    '!first_name' => String::checkPlain($first_name),
+    '!last_name' => String::checkPlain($last_name),
+    '!street1' => String::checkPlain($street1),
+    '!street2' => String::checkPlain($street2),
+    '!city' => String::checkPlain($city),
     '!zone_code' => $zone_data['zone_code'],
     '!zone_name' => $zone_data['zone_name'],
-    '!postal_code' => check_plain($postal_code),
+    '!postal_code' => String::checkPlain($postal_code),
     '!country_name' => t($country_data['country_name']),
     '!country_code2' => $country_data['country_iso_code_2'],
     '!country_code3' => $country_data['country_iso_code_3'],
@@ -1074,7 +1075,7 @@ function uc_select_address($uid, $type = 'billing', $onchange = '', $title = NUL
         (isset($addresses[$key + 1]) && $option == $addresses[$key + 1]['street1'])) {
       $option .= ' - ' . $address['first_name'] . ' ' . $address['last_name'];
     }
-    $options[Json::encode($address)] = check_plain($option);
+    $options[Json::encode($address)] = String::checkPlain($option);
   }
 
   $select = array(
@@ -1111,7 +1112,7 @@ function uc_select_addresses($uid, $type = 'billing') {
         (isset($addresses[$key + 1]) && $option == $addresses[$key + 1]['street1'])) {
       $option .= ' - ' . $address['first_name'] . ' ' . $address['last_name'];
     }
-    $options[$key] = check_plain($option);
+    $options[$key] = String::checkPlain($option);
   }
 
   $addresses['#options'] = $options;

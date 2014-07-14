@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_cart_links\Controller;
 
+use Drupal\Component\Utility\String;
+
 /**
  * Displays the Cart Links report.
  *
@@ -37,7 +39,7 @@ class CartLinksReports {
     $result = $query->execute();
     foreach ($result as $data) {
       $rows[] = array(
-        check_plain($data->cart_link_id),
+        String::checkPlain($data->cart_link_id),
         $data->clicks,
         format_date($data->last_click, 'short'),
       );

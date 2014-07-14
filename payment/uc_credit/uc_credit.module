@@ -5,6 +5,7 @@
  * Defines the credit card payment method and hooks in payment gateways.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\uc_store\Encryption;
 
@@ -310,7 +311,7 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
 
       $cc_data['cc_number'] = str_replace(' ', '', $cc_data['cc_number']);
 
-      array_walk($cc_data, 'check_plain');
+      array_walk($cc_data, '\Drupal\Component\Utility\String::checkPlain');
 
       // Recover cached CC data in
       // $form_state['values']['panes']['payment']['details'] if it exists.
@@ -417,10 +418,10 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
 
     case 'cart-review':
       if (variable_get('uc_credit_type_enabled', FALSE)) {
-        $review[] = array('title' => t('Card type'), 'data' => check_plain($order->payment_details['cc_type']));
+        $review[] = array('title' => t('Card type'), 'data' => String::checkPlain($order->payment_details['cc_type']));
       }
       if (variable_get('uc_credit_owner_enabled', FALSE)) {
-        $review[] = array('title' => t('Card owner'), 'data' => check_plain($order->payment_details['cc_owner']));
+        $review[] = array('title' => t('Card owner'), 'data' => String::checkPlain($order->payment_details['cc_owner']));
       }
       $review[] = array('title' => t('Card number'), 'data' => uc_credit_display_number($order->payment_details['cc_number']));
       if (variable_get('uc_credit_start_enabled', FALSE)) {
@@ -432,7 +433,7 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
         $review[] = array('title' => t('Issue number'), 'data' => $order->payment_details['cc_issue']);
       }
       if (variable_get('uc_credit_bank_enabled', FALSE)) {
-        $review[] = array('title' => t('Issuing bank'), 'data' => check_plain($order->payment_details['cc_bank']));
+        $review[] = array('title' => t('Issuing bank'), 'data' => String::checkPlain($order->payment_details['cc_bank']));
       }
       return $review;
 
@@ -445,11 +446,11 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
         $rows = array();
 
         if (!empty($order->payment_details['cc_type'])) {
-          $rows[] = t('Card type') . ': ' . check_plain($order->payment_details['cc_type']);
+          $rows[] = t('Card type') . ': ' . String::checkPlain($order->payment_details['cc_type']);
         }
 
         if (!empty($order->payment_details['cc_owner'])) {
-          $rows[] = t('Card owner') . ': ' . check_plain($order->payment_details['cc_owner']);
+          $rows[] = t('Card owner') . ': ' . String::checkPlain($order->payment_details['cc_owner']);
         }
 
         if (!empty($order->payment_details['cc_number'])) {
@@ -465,11 +466,11 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
         }
 
         if (!empty($order->payment_details['cc_issue'])) {
-          $rows[] = t('Issue number') . ': ' . check_plain($order->payment_details['cc_issue']);
+          $rows[] = t('Issue number') . ': ' . String::checkPlain($order->payment_details['cc_issue']);
         }
 
         if (!empty($order->payment_details['cc_bank'])) {
-          $rows[] = t('Issuing bank') . ': ' . check_plain($order->payment_details['cc_bank']);
+          $rows[] = t('Issuing bank') . ': ' . String::checkPlain($order->payment_details['cc_bank']);
         }
 
         $build['cc_info'] = array(

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_attribute\Controller;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
@@ -46,8 +47,8 @@ class AttributeController extends ControllerBase {
         $attr->label = $attr->name;
       }
       $rows[] = array(
-        check_plain($attr->name),
-        check_plain($attr->label),
+        String::checkPlain($attr->name),
+        String::checkPlain($attr->label),
         $attr->required == 1 ? t('Yes') : t('No'),
         $attr->ordering,
         $attr->options,

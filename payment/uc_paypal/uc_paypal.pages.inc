@@ -5,6 +5,7 @@
  * Paypal administration menu items.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -21,7 +22,7 @@ function uc_paypal_ipn() {
 
     // Sanitize order ID and cart ID
     $order_id = intval($order_id);
-    $cart_id  = check_plain($cart_id);
+    $cart_id  = String::checkPlain($cart_id);
 
     if (!empty($cart_id)) {
       // Needed later by uc_complete_sale to empty the correct cart
@@ -42,16 +43,16 @@ function uc_paypal_ipn() {
   }
 
   // Assign posted variables to local variables
-  $payment_status = check_plain($_POST['payment_status']);
-  $payment_amount = check_plain($_POST['mc_gross']);
-  $payment_currency = check_plain($_POST['mc_currency']);
-  $receiver_email = check_plain($_POST['business']);
+  $payment_status = String::checkPlain($_POST['payment_status']);
+  $payment_amount = String::checkPlain($_POST['mc_gross']);
+  $payment_currency = String::checkPlain($_POST['mc_currency']);
+  $receiver_email = String::checkPlain($_POST['business']);
   if ($receiver_email == '') {
-    $receiver_email = check_plain($_POST['receiver_email']);
+    $receiver_email = String::checkPlain($_POST['receiver_email']);
   }
-  $txn_id = check_plain($_POST['txn_id']);
-  $txn_type = check_plain($_POST['txn_type']);
-  $payer_email = check_plain($_POST['payer_email']);
+  $txn_id = String::checkPlain($_POST['txn_id']);
+  $txn_type = String::checkPlain($_POST['txn_type']);
+  $payer_email = String::checkPlain($_POST['payer_email']);
 
   // Express Checkout IPNs may not have the WPS email stored. But if it is,
   // make sure that the right account is being paid.
@@ -138,7 +139,7 @@ function uc_paypal_ipn() {
 
       case 'Pending':
         $order->setStatusId('paypal_pending')->save();
-        uc_order_comment_save($order_id, 0, t('Payment is pending at PayPal: @reason', array('@reason' => _uc_paypal_pending_message(check_plain($_POST['pending_reason'])))), 'admin');
+        uc_order_comment_save($order_id, 0, t('Payment is pending at PayPal: @reason', array('@reason' => _uc_paypal_pending_message(String::checkPlain($_POST['pending_reason'])))), 'admin');
         break;
 
       // You, the merchant, refunded the payment.
@@ -149,7 +150,7 @@ function uc_paypal_ipn() {
 
       case 'Reversed':
         watchdog('uc_paypal', 'PayPal has reversed a payment!', array(), WATCHDOG_ERROR);
-        uc_order_comment_save($order_id, 0, t('Payment has been reversed by PayPal: @reason', array('@reason' => _uc_paypal_reversal_message(check_plain($_POST['reason_code'])))), 'admin');
+        uc_order_comment_save($order_id, 0, t('Payment has been reversed by PayPal: @reason', array('@reason' => _uc_paypal_reversal_message(String::checkPlain($_POST['reason_code'])))), 'admin');
         break;
 
       case 'Processed':
@@ -213,7 +214,7 @@ function uc_paypal_ec_review() {
 
     $_SESSION['PAYERID'] = $nvp_response['PAYERID'];
 
-    $shipname = check_plain($nvp_response['SHIPTONAME']);
+    $shipname = String::checkPlain($nvp_response['SHIPTONAME']);
     if (strpos($shipname, ' ') > 0) {
       $order->delivery_first_name = substr($shipname, 0, strrpos(trim($shipname), ' '));
       $order->delivery_last_name = substr($shipname, strrpos(trim($shipname), ' ') + 1);
@@ -231,16 +232,16 @@ function uc_paypal_ec_review() {
       $zone_id = db_query("SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :id AND (zone_code = :code OR zone_name = :name)", array(':id' => $country_id, ':code' => $zone, ':name' => $zone))->fetchField();
     }
 
-    $order->delivery_street1 = check_plain($nvp_response['SHIPTOSTREET']);
-    $order->delivery_street2 = isset($nvp_response['SHIPTOSTREET2']) ? check_plain($nvp_response['SHIPTOSTREET2']) : '';
-    $order->delivery_city = check_plain($nvp_response['SHIPTOCITY']);
+    $order->delivery_street1 = String::checkPlain($nvp_response['SHIPTOSTREET']);
+    $order->delivery_street2 = isset($nvp_response['SHIPTOSTREET2']) ? String::checkPlain($nvp_response['SHIPTOSTREET2']) : '';
+    $order->delivery_city = String::checkPlain($nvp_response['SHIPTOCITY']);
     $order->delivery_zone = !empty($zone_id) ? $zone_id : 0;
-    $order->delivery_postal_code = check_plain($nvp_response['SHIPTOZIP']);
+    $order->delivery_postal_code = String::checkPlain($nvp_response['SHIPTOZIP']);
     $order->delivery_country = !empty($country_id) ? $country_id : 840;
 
-    $order->billing_first_name = check_plain($nvp_response['FIRSTNAME']);
-    $order->billing_last_name = check_plain($nvp_response['LASTNAME']);
-    $order->billing_street1 = check_plain($nvp_response['EMAIL']);
+    $order->billing_first_name = String::checkPlain($nvp_response['FIRSTNAME']);
+    $order->billing_last_name = String::checkPlain($nvp_response['LASTNAME']);
+    $order->billing_street1 = String::checkPlain($nvp_response['EMAIL']);
 
     if (!$order->getEmail()) {
       $order->setEmail($nvp_response['EMAIL']);

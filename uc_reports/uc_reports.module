@@ -10,6 +10,8 @@
  * number sold, and revenue produced.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * The maximum number of records.
  */
@@ -73,7 +75,7 @@ function uc_reports_help($path, $arg) {
     if ($include_statuses) {
       $statuses = array();
       foreach (uc_reports_order_statuses() as $status) {
-        $statuses[] = check_plain(entity_load('uc_order_status', $status)->name);
+        $statuses[] = String::checkPlain(entity_load('uc_order_status', $status)->name);
       }
       $order_statuses = t('<b>Order statuses used:</b> @statuses', array('@statuses' => implode(', ', array_filter($statuses))));
 

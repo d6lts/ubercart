@@ -5,6 +5,8 @@
  * Store administration forms for country and address handling.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * Imports settings from a country file.
  *
@@ -154,7 +156,7 @@ function uc_country_formats_form($form, &$form_state) {
     foreach ($countries as $country) {
       $form['countries'][$country->country_id] = array(
         '#type' => 'details',
-        '#title' => check_plain(t($country->country_name)),
+        '#title' => String::checkPlain(t($country->country_name)),
         '#group' => 'country',
       );
       $form['countries'][$country->country_id]['address_format'] = array(

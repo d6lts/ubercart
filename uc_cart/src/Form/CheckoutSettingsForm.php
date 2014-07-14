@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
@@ -172,7 +173,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       $form['checkout']['panes'][$id]['#attributes']['class'][] = 'draggable';
       $form['checkout']['panes'][$id]['status'] = array(
         '#type' => 'checkbox',
-        '#title' => check_plain($pane->getTitle()),
+        '#title' => String::checkPlain($pane->getTitle()),
         '#default_value' => $pane->isEnabled(),
       );
       $form['checkout']['panes'][$id]['weight'] = array(

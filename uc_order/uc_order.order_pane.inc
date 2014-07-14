@@ -10,6 +10,7 @@
  * default order panes are defined in uc_order_order_pane() in uc_order.module.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
@@ -47,7 +48,7 @@ function uc_order_pane_ship_to($op, $order, &$form = NULL, &$form_state = NULL) 
       }
     case 'view':
       $address = $order->getAddress('delivery');
-      $build = array('#markup' => $address . '<br />' . check_plain($address->phone));
+      $build = array('#markup' => $address . '<br />' . String::checkPlain($address->phone));
       return $build;
 
     case 'edit-form':
@@ -90,7 +91,7 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) 
     case 'view':
     case 'customer':
       $address = $order->getAddress('billing');
-      $build = array('#markup' => $address . '<br />' . check_plain($address->phone));
+      $build = array('#markup' => $address . '<br />' . String::checkPlain($address->phone));
       return $build;
 
     case 'edit-form':
@@ -240,13 +241,13 @@ function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL)
           '#qty' => $product->qty->value,
           '#cell_attributes' => array('class' => array('qty')),
         );
-        $title = $product->nid->entity && $product->nid->entity->access('view') ? l($product->title->value, 'node/' . $product->nid->target_id) : check_plain($product->title->value);
+        $title = $product->nid->entity && $product->nid->entity->access('view') ? l($product->title->value, 'node/' . $product->nid->target_id) : String::checkPlain($product->title->value);
         $build[$id]['product'] = array(
           '#markup' => $title . uc_product_get_description($product),
           '#cell_attributes' => array('class' => array('product')),
         );
         $build[$id]['model'] = array(
-          '#markup' => check_plain($product->model->value),
+          '#markup' => String::checkPlain($product->model->value),
           '#cell_attributes' => array('class' => array('sku')),
         );
         if ($account->hasPermission('administer products')) {
@@ -409,7 +410,7 @@ function uc_order_add_product_form($form, &$form_state, $order, $node) {
   }
   $node = uc_product_load_variant(intval($form_state['values']['product_controls']['nid']), $data);
   $form['title'] = array(
-    '#markup' => '<h3>' . check_plain($node->label()) . '</h3>',
+    '#markup' => '<h3>' . String::checkPlain($node->label()) . '</h3>',
   );
   $form['nid'] = array(
     '#type' => 'hidden',
@@ -730,7 +731,7 @@ function uc_order_pane_line_items($op, $order, &$form = NULL, &$form_state = NUL
         );
 
         $table_row['title'] = array(
-          '#markup' => check_plain($item['title']),
+          '#markup' => String::checkPlain($item['title']),
           '#prefix' => '<td class="li-title">',
           '#suffix' => '</td>',
         );
@@ -753,7 +754,7 @@ function uc_order_pane_line_items($op, $order, &$form = NULL, &$form_state = NUL
       $line_items = $order->line_items;
       foreach ($items as $item) {
         if (isset($item['add_list']) && $item['add_list'] === TRUE) {
-          $options[$item['id']] = check_plain($item['title']);
+          $options[$item['id']] = String::checkPlain($item['title']);
         }
         if (isset($item['display_only']) && $item['display_only'] == TRUE) {
           $result = $item['callback']('display', $order);
@@ -827,7 +828,7 @@ function uc_order_pane_line_items($op, $order, &$form = NULL, &$form_state = NUL
         }
         else {
           $form['line_items'][$item['line_item_id']]['title'] = array(
-            '#markup' => check_plain($item['title']),
+            '#markup' => String::checkPlain($item['title']),
           );
           $form['line_items'][$item['line_item_id']]['amount'] = array(
             '#theme' => 'uc_price',
@@ -950,8 +951,8 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
           array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
           array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
           array('data' => array('#theme' => 'image', '#uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon), 'class' => array('notified')),
-          array('data' => check_plain($statuses[$comment->order_status]->name), 'class' => array('status')),
-          array('data' => check_plain($comment->message), 'class' => array('message')),
+          array('data' => String::checkPlain($statuses[$comment->order_status]->name), 'class' => array('status')),
+          array('data' => String::checkPlain($comment->message), 'class' => array('message')),
         );
       }
       return $build;
@@ -969,8 +970,8 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
         foreach ($comments as $comment) {
           $rows[] = array(
             array('data' => format_date($comment->created, 'uc_store'), 'class' => array('date')),
-            array('data' => check_plain($statuses[$comment->order_status]->name), 'class' => array('status')),
-            array('data' => check_plain($comment->message), 'class' => array('message')),
+            array('data' => String::checkPlain($statuses[$comment->order_status]->name), 'class' => array('status')),
+            array('data' => String::checkPlain($comment->message), 'class' => array('message')),
           );
         }
       }

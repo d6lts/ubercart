@@ -10,6 +10,7 @@
  * displayed to customers.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
@@ -732,7 +733,7 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
   $site_config = \Drupal::config('system.site');
-  $head_title = array('name' => check_plain($site_config->get('name')));
+  $head_title = array('name' => String::checkPlain($site_config->get('name')));
   if ($site_config->get('slogan')) {
     $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_config->get('slogan')));
   }

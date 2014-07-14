@@ -5,6 +5,7 @@
  * Token hooks for the uc_shipping module.
  */
 
+use Drupal\Component\Utility\String;
 
 /**
  * Implements hook_token_info().
@@ -42,7 +43,7 @@ function uc_shipping_tokens($type, $tokens, $data = array(), $options = array())
             }
           }
           $tracking = implode(', ', $tracking_numbers);
-          $replacements[$original] = $sanitize ? check_plain($tracking) : $tracking;
+          $replacements[$original] = $sanitize ? String::checkPlain($tracking) : $tracking;
           break;
       }
     }

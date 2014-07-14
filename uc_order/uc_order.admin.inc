@@ -5,6 +5,8 @@
  * Order administration menu items.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * Creates a new order for the specified customer, ready for editing.
  */
@@ -121,7 +123,7 @@ function uc_order_select_customer($email = NULL) {
 
   // Check to see if the e-mail address for a new user is unique.
   if (arg(5) == 'check') {
-    $email = check_plain($_POST['email']);
+    $email = String::checkPlain($_POST['email']);
     $build['email'] = array('#markup' => '');
     $result = db_query("SELECT uid, mail FROM {users} WHERE mail = :mail", array(':mail' => $email));
     if ($user = $result->fetchObject()) {

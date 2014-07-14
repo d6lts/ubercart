@@ -10,6 +10,7 @@
  * https://drupal.org/node/1311198 for further information.
  */
 
+use Drupal\Component\Utility\String;
 
 /**
  * Implements hook_menu().
@@ -304,7 +305,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
         'success' => TRUE,
         'comment' => t('PayPal transaction ID: @transactionid', array('@transactionid' => $nvp_response['TRANSACTIONID'])),
         'message' => $message,
-        'data' => check_plain($nvp_response['TRANSACTIONID']),
+        'data' => String::checkPlain($nvp_response['TRANSACTIONID']),
         'uid' => $user->id(),
       );
 
@@ -368,7 +369,7 @@ function _uc_paypal_build_error_messages($nvp_response) {
   $code = 0;
   $message = '';
   while (array_key_exists('L_SEVERITYCODE' . $code, $nvp_response)) {
-    $message .= '<br /><b>' . check_plain($nvp_response['L_SEVERITYCODE' . $code]) . ':</b> ' . check_plain($nvp_response['L_ERRORCODE' . $code]) . ': ' . check_plain($nvp_response['L_LONGMESSAGE' . $code]);
+    $message .= '<br /><b>' . String::checkPlain($nvp_response['L_SEVERITYCODE' . $code]) . ':</b> ' . String::checkPlain($nvp_response['L_ERRORCODE' . $code]) . ': ' . String::checkPlain($nvp_response['L_LONGMESSAGE' . $code]);
     $code++;
   }
   return $message;

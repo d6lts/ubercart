@@ -5,6 +5,8 @@
  * Credit administration menu items.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * Credit card settings form.
  *
@@ -179,7 +181,7 @@ function uc_credit_settings_form($form, &$form_state) {
   foreach ($gateways as $id => $gateway) {
     $form['gateways'][$id] = array(
       '#type' => 'details',
-      '#title' => check_plain($gateway['title']),
+      '#title' => String::checkPlain($gateway['title']),
       '#group' => 'uc_credit',
       '#weight' => 5,
     );

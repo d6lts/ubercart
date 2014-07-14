@@ -50,7 +50,7 @@ function uc_roles_tokens($type, $tokens, $data = array(), $options = array()) {
           $replacements[$original] = format_date($object->expiration, 'medium');
           break;
         case 'name':
-          $replacements[$original] = $sanitize ? check_plain(_uc_roles_get_name($object->rid)) : _uc_roles_get_name($object->rid);
+          $replacements[$original] = $sanitize ? String::checkPlain(_uc_roles_get_name($object->rid)) : _uc_roles_get_name($object->rid);
           break;
       }
     }

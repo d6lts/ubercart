@@ -4,6 +4,7 @@
  * Theme functions for uc_product module.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -27,7 +28,7 @@ function theme_uc_product_model($variables) {
 
   $output = '<div ' . $attributes . '>';
   $output .= '<span class="product-info-label">' . t('SKU') . ':</span> ';
-  $output .= '<span class="product-info-value">' . check_plain($model) . '</span>';
+  $output .= '<span class="product-info-value">' . String::checkPlain($model) . '</span>';
   $output .= '</div>';
 
   return $output;

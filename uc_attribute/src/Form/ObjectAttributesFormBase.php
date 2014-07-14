@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_attribute\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
 
 /**
@@ -75,7 +76,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
         '#title_display' => 'invisible',
       );
       $form['attributes'][$aid]['name'] = array(
-        '#markup' => check_plain($attribute->name),
+        '#markup' => String::checkPlain($attribute->name),
       );
       $form['attributes'][$aid]['label'] = array(
         '#type' => 'textfield',
@@ -85,7 +86,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
         '#size' => 20,
       );
       $form['attributes'][$aid]['option'] = array(
-        '#markup' => $option ? (check_plain($option->name) . ' (' . uc_currency_format($option->price) . ')' ) : t('n/a'),
+        '#markup' => $option ? (String::checkPlain($option->name) . ' (' . uc_currency_format($option->price) . ')' ) : t('n/a'),
       );
       $form['attributes'][$aid]['required'] = array(
         '#type' => 'checkbox',

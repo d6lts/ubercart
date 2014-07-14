@@ -5,6 +5,8 @@
  * Token hooks for the uc_order module.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * Implements hook_token_info().
  */
@@ -149,7 +151,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
       switch ($name) {
         case 'new-username':
           if (isset($order->data->new_user_name)) {
-            $replacements[$original] = $sanitize ? check_plain($order->data->new_user_name) : $order->data->new_user_name;
+            $replacements[$original] = $sanitize ? String::checkPlain($order->data->new_user_name) : $order->data->new_user_name;
           }
           break;
 
@@ -210,7 +212,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
 
         case 'email':
         case 'mail':
-          $replacements[$original] = $sanitize ? check_plain($order->getEmail()) : $order->getEmail();
+          $replacements[$original] = $sanitize ? String::checkPlain($order->getEmail()) : $order->getEmail();
           break;
 
         case 'shipping-method':
@@ -232,7 +234,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'shipping-phone':
-          $replacements[$original] = check_plain($order->getAddress('delivery')->phone);
+          $replacements[$original] = String::checkPlain($order->getAddress('delivery')->phone);
           break;
 
         case 'billing-address':
@@ -242,31 +244,31 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'billing-phone':
-          $replacements[$original] = check_plain($order->getAddress('billing')->phone);
+          $replacements[$original] = String::checkPlain($order->getAddress('billing')->phone);
           break;
 
         case 'first-name':
           if (\Drupal::config('uc_store.settings')->get('customer_address') == 'shipping') {
-            $replacements[$original] = $sanitize ? check_plain($order->getAddress('delivery')->first_name) : $order->getAddress('delivery')->first_name;
+            $replacements[$original] = $sanitize ? String::checkPlain($order->getAddress('delivery')->first_name) : $order->getAddress('delivery')->first_name;
           }
           else {
-            $replacements[$original] = $sanitize ? check_plain($order->getAddress('billing')->first_name) : $order->getAddress('billing')->first_name;
+            $replacements[$original] = $sanitize ? String::checkPlain($order->getAddress('billing')->first_name) : $order->getAddress('billing')->first_name;
           }
           break;
 
         case 'last-name':
           if (\Drupal::config('uc_store.settings')->get('customer_address') == 'shipping') {
-            $replacements[$original] = $sanitize ? check_plain($order->getAddress('delivery')->last_name) : $order->getAddress('delivery')->last_name;
+            $replacements[$original] = $sanitize ? String::checkPlain($order->getAddress('delivery')->last_name) : $order->getAddress('delivery')->last_name;
           }
           else {
-            $replacements[$original] = $sanitize ? check_plain($order->getAddress('billing')->last_name) : $order->getAddress('billing')->last_name;
+            $replacements[$original] = $sanitize ? String::checkPlain($order->getAddress('billing')->last_name) : $order->getAddress('billing')->last_name;
           }
           break;
 
         case 'comments':
           $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid = :uid ORDER BY created DESC", 0, 1, array(':order_id' => $order->id(), ':uid' => 0))->fetchField();
           if ($sanitize) {
-            $result = check_plain($result);
+            $result = String::checkPlain($result);
           }
           $replacements[$original] = empty($result) ? t('<i>No comments left.</i>') : $result;
           break;
@@ -274,13 +276,13 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
         case 'last-comment':
           $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid > :uid ORDER BY created DESC", 0, 1, array(':order_id' => $order->id(), ':uid' => 0))->fetchField();
           if ($sanitize) {
-            $result = check_plain($result);
+            $result = String::checkPlain($result);
           }
           $replacements[$original] = empty($result) ? t('<i>No comment found.</i>') : $result;
           break;
 
         case 'order-status':
-          $replacements[$original] = $sanitize ? check_plain($order->getStatus()->name) : $order->getStatus()->name;
+          $replacements[$original] = $sanitize ? String::checkPlain($order->getStatus()->name) : $order->getStatus()->name;
           break;
 
         case 'customer':
@@ -305,7 +307,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
             $products[] = drupal_render($qty) . ' ' . $product->title->value;
           }
           if ($sanitize) {
-            $products = array_map('check_plain', $products);
+            $products = array_map('\Drupal\Component\Utility\String::checkPlain', $products);
           }
           $replacements[$original] = implode("<br />\n", $products);
           break;

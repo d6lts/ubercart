@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityViewBuilder;
 
 /**
@@ -27,13 +28,13 @@ class UcOrderProductViewBuilder extends EntityViewBuilder {
         '#cell_attributes' => array('class' => array('qty')),
       );
       $node = node_load($product->nid->target_id);
-      $title = $node->access('view') ? l($product->title->value, 'node/' . $product->nid->target_id) : check_plain($product->title->value);
+      $title = $node->access('view') ? l($product->title->value, 'node/' . $product->nid->target_id) : String::checkPlain($product->title->value);
       $product->content['product'] = array(
         '#markup' => $title . uc_product_get_description($product),
         '#cell_attributes' => array('class' => array('product')),
       );
       $product->content['model'] = array(
-        '#markup' => check_plain($product->model->value),
+        '#markup' => String::checkPlain($product->model->value),
         '#cell_attributes' => array('class' => array('sku')),
       );
       $account = \Drupal::currentUser();

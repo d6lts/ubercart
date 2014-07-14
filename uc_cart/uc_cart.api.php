@@ -5,6 +5,8 @@
  * Hooks provided by the Cart module.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * @addtogroup hooks
  * @{
@@ -125,7 +127,7 @@ function hook_uc_cart_display($item) {
   $element['remove'] = array('#type' => 'checkbox');
 
   $element['title'] = array(
-    '#markup' => $node->access('view') ? l($item->title, 'node/' . $item->nid) : check_plain($item->title),
+    '#markup' => $node->access('view') ? l($item->title, 'node/' . $item->nid) : String::checkPlain($item->title),
   );
 
 
@@ -342,7 +344,7 @@ function uc_checkout_pane_callback($op, $order, $form = NULL, &$form_state = NUL
       $review = NULL;
       $result = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()));
       if ($comment = $result->fetchObject()) {
-        $review[] = array('title' => t('Comment'), 'data' => check_plain($comment->message));
+        $review[] = array('title' => t('Comment'), 'data' => String::checkPlain($comment->message));
       }
       return $review;
   }

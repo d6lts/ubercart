@@ -6,6 +6,7 @@
  * product.
  */
 
+use Drupal\Component\Utility\String;
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
@@ -33,7 +34,7 @@ function uc_weightquote_form_node_form_alter(&$form, &$form_state, $form_id) {
       $unit = \Drupal::config('uc_store.settings')->get('units.weight');
       $form['shipping']['weightquote'][$method->mid] = array(
         '#type' => 'uc_price',
-        '#title' => check_plain($method->title),
+        '#title' => String::checkPlain($method->title),
         '#default_value' => isset($form['#node']->weightquote[$method->mid]) ? $form['#node']->weightquote[$method->mid] : '',
         '#description' => t('Default rate: %price per @unit', array('%price' => uc_currency_format($method->product_rate), '@unit' => $unit)),
         '#field_suffix' => t('per @unit', array('@unit' => $unit)),
@@ -191,8 +192,8 @@ function uc_weightquote_quote($products, $details, $method) {
 
     $quotes[] = array(
       'rate' => $rate,
-      'label' => check_plain($method->label),
-      'option_label' => check_plain($method->label),
+      'label' => String::checkPlain($method->label),
+      'option_label' => String::checkPlain($method->label),
     );
   }
 

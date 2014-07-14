@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_attribute\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
 
 /**
@@ -52,7 +53,7 @@ class AttributeOptionsForm extends FormBase {
     foreach ($attribute->options as $oid => $option) {
       $form['options'][$oid]['#attributes']['class'][] = 'draggable';
       $form['options'][$oid]['name'] = array(
-        '#markup' => check_plain($option->name),
+        '#markup' => String::checkPlain($option->name),
       );
       $form['options'][$oid]['cost'] = array(
         '#theme' => 'uc_price',

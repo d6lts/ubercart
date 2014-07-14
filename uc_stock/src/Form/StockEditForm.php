@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_stock\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
 use Drupal\node\NodeInterface;
 
@@ -46,7 +47,7 @@ class StockEditForm extends FormBase {
         '#default_value' => !empty($stock['active']) ? $stock['active'] : 0,
       );
       $form['stock'][$sku]['sku'] = array(
-        '#markup' => check_plain($sku),
+        '#markup' => String::checkPlain($sku),
       );
       $form['stock'][$sku]['stock'] = array(
         '#type' => 'textfield',

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
@@ -75,7 +76,7 @@ class PaymentMethodsForm extends ConfigFormBase {
       $form['methods'][$id]['#attributes']['class'][] = 'draggable';
       $form['methods'][$id]['status'] = array(
         '#type' => 'checkbox',
-        '#title' => check_plain($method['name']),
+        '#title' => String::checkPlain($method['name']),
         '#default_value' => $method['checkout'],
       );
       $form['methods'][$id]['weight'] = array(

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
+use Drupal\Component\Utility\String;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\UcOrderInterface;
 
@@ -64,7 +65,7 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
     $review = NULL;
     $result = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()));
     if ($comment = $result->fetchObject()) {
-      $review[] = array('title' => t('Comment'), 'data' => check_plain($comment->message));
+      $review[] = array('title' => t('Comment'), 'data' => String::checkPlain($comment->message));
     }
     return $review;
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_product\Controller;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 
@@ -31,8 +32,8 @@ class ProductController extends ControllerBase {
         $ops[] = l(t('delete'), 'admin/structure/types/manage/' . $class->type . '/delete');
       }
       $rows[] = array(
-        check_plain($class->type),
-        check_plain($class->name),
+        String::checkPlain($class->type),
+        String::checkPlain($class->name),
         Xss::filterAdmin($class->description),
         implode(' ', $ops),
       );

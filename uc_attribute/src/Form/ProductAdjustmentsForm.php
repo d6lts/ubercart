@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_attribute\Form;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
 use Drupal\node\NodeInterface;
 
@@ -72,7 +73,7 @@ class ProductAdjustmentsForm extends FormBase {
         ->orderBy("ao$i.name");
 
       ++$i;
-      $attribute_names .= '<th>' . check_plain($prod_attr->name) . '</th>';
+      $attribute_names .= '<th>' . String::checkPlain($prod_attr->name) . '</th>';
       $attribute_ids[] = $prod_attr->aid;
     }
     $num_prod_attr = count($attribute_ids);
@@ -111,8 +112,8 @@ class ProductAdjustmentsForm extends FormBase {
         $row_title = '';
         $comb_array = array();
         for ($j = 1; $j <= $num_prod_attr; ++$j) {
-          $cells .= '<td>' . check_plain($combo->{'name' . $j}) . '</td>';
-          $row_title .= check_plain($combo->{'name' . $j}) . ', ';
+          $cells .= '<td>' . String::checkPlain($combo->{'name' . $j}) . '</td>';
+          $row_title .= String::checkPlain($combo->{'name' . $j}) . ', ';
           $comb_array[$combo->{'aid' . $j}] = $combo->{'oid' . $j};
         }
         ksort($comb_array);

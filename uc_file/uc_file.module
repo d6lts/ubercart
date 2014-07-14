@@ -13,6 +13,7 @@
  * Development sponsored by the Ubercart project.  http://www.ubercart.org
  */
 
+use Drupal\Component\Utility\String;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -1439,7 +1440,7 @@ function uc_file_remove_user($user) {
     drupal_set_message(t('!user has had all of his/her downloadable files removed.', array(
       '!user' => theme('username', array(
         'account' => $user,
-        'name' => check_plain($user->name),
+        'name' => String::checkPlain($user->name),
         'link_path' => 'user/' . $user->id(),
       )),
     )));
@@ -1465,7 +1466,7 @@ function uc_file_remove_user_file_by_id($user, $fid) {
     drupal_set_message(t('!user has had %file removed from his/her downloadable file list.', array(
       '!user' => theme('username', array(
         'account' => $user,
-        'name' => check_plain($user->name),
+        'name' => String::checkPlain($user->name),
         'link_path' => 'user/' . $user->id(),
       )),
       '%file' => $file->filename,

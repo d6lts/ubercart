@@ -5,6 +5,8 @@
  * Roles administration menu items.
  */
 
+use Drupal\Component\Utility\String;
+
 /**
  * Creates the header for the table/pager.
  */
@@ -40,13 +42,13 @@ function uc_roles_expiration($form, &$form_state) {
   // Stick the expirations into the form.
   foreach ($result as $row) {
     $account = user_load($row->uid);
-    $name = check_plain(user_format_name($account));
+    $name = String::checkPlain(user_format_name($account));
     $form['name'][$row->uid . ' ' . $row->rid] = array(
       '#theme' => 'username',
       '#account' => $account,
       '#name' => $name,
     );
-    $form['role'][$row->uid . ' ' . $row->rid] = array('#markup' => check_plain(_uc_roles_get_name($row->rid)));
+    $form['role'][$row->uid . ' ' . $row->rid] = array('#markup' => String::checkPlain(_uc_roles_get_name($row->rid)));
     $form['expiration'][$row->uid . ' ' . $row->rid] = array('#markup' => format_date($row->expiration, 'short'));
     $form['edit'][$row->uid . ' ' . $row->rid] = array('#markup' => l(t('edit'), 'user/' . $row->uid . '/edit', array('fragment' => 'role-expiration-' . $row->rid, 'query' => array('destination' => 'admin/people/expiration'))));
     $form['delete'][$row->uid . ' ' . $row->rid] = array('#markup' => l(t('delete'), 'admin/people/expiration/delete/' . $row->uid . '/' . $row->rid));
@@ -115,7 +117,7 @@ function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
       t('Delete expiration of %role_name role for the user !user?', array(
         '!user' => theme('username', array(
           'account' => $account,
-          'name' => check_plain(user_format_name($account)),
+          'name' => String::checkPlain(user_format_name($account)),
           'link_path' => 'user/' . $account->id(),
         )),
         '%role_name' => $role_name,
@@ -124,7 +126,7 @@ function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
       t('Deleting the expiration will give !user privileges set by the %role_name role indefinitely unless manually removed.', array(
         '!user' => theme('username', array(
           'account' => $account,
-          'name' => check_plain(user_format_name($account)),
+          'name' => String::checkPlain(user_format_name($account)),
           'link_path' => 'user/' . $account->id(),
         )),
         '%role_name' => $role_name,

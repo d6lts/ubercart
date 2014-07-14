@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Json;
+use Drupal\Component\Utility\String;
 
 /**
  * Form step values.
@@ -84,11 +85,11 @@ function uc_file_admin_files_form_show_files($form, &$form_state) {
   foreach ($result as $file) {
     $options[$file->fid] = array(
       'filename' => array(
-        'data' => check_plain($file->filename),
+        'data' => String::checkPlain($file->filename),
         'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
       ),
       'title' => l($file->title, 'node/' . $file->nid),
-      'model' => check_plain($file->model),
+      'model' => String::checkPlain($file->model),
     );
   }
 

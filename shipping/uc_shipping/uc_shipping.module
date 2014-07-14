@@ -8,6 +8,7 @@
  */
 
 use Drupal\Component\Utility\Json;
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\uc_store\Address;
 
@@ -260,11 +261,11 @@ function template_preprocess_uc_packing_slip(&$variables) {
 
   $order = $variables['order'];
   $variables['order_link'] = l($order->id(), url('user/' . $order->getUserId() . '/orders/' . $order->id(), array('absolute' => TRUE)));
-  $variables['order_email'] = check_plain($order->getEmail());
+  $variables['order_email'] = String::checkPlain($order->getEmail());
   $variables['billing_address'] = $order->getAddress('billing');
-  $variables['billing_phone'] = check_plain($order->getAddress('billing')->phone);
+  $variables['billing_phone'] = String::checkPlain($order->getAddress('billing')->phone);
   $variables['shipping_address'] = $order->getAddress('delivery');
-  $variables['shipping_phone'] = check_plain($order->getAddress('delivery')->phone);
+  $variables['shipping_phone'] = String::checkPlain($order->getAddress('delivery')->phone);
 
   if (\Drupal::moduleHandler()->moduleExists('uc_payment')) {
     $variables['payment_method'] = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
@@ -274,8 +275,8 @@ function template_preprocess_uc_packing_slip(&$variables) {
   }
 
   $shipment = $variables['shipment'];
-  $variables['carrier'] = check_plain($shipment->carrier);
-  $variables['tracking_number'] = check_plain($shipment->tracking_number);
+  $variables['carrier'] = String::checkPlain($shipment->carrier);
+  $variables['tracking_number'] = String::checkPlain($shipment->tracking_number);
   $variables['packages'] = $shipment->packages;
 }
 
@@ -359,7 +360,7 @@ function uc_shipping_package_view($package) {
     }
   }
 
-  $rows[] = array(t('Package type:'), isset($pkg_type) ? $pkg_type : check_plain($package->pkg_type));
+  $rows[] = array(t('Package type:'), isset($pkg_type) ? $pkg_type : String::checkPlain($package->pkg_type));
 
   if ($package->length && $package->width && $package->height) {
     $rows[] = array(t('Dimensions:'), t('!l x !w x !h', array('!l' => uc_length_format($package->length), '!w' => uc_length_format($package->width), '!h' => uc_length_format($package->height))));
@@ -368,7 +369,7 @@ function uc_shipping_package_view($package) {
   $rows[] = array(t('Insured value:'), array('data' => array('#theme' => 'uc_price', '#price' => $package->value)));
 
   if ($package->tracking_number) {
-    $rows[] = array(t('Tracking number:'), check_plain($package->tracking_number));
+    $rows[] = array(t('Tracking number:'), String::checkPlain($package->tracking_number));
   }
 
   if ($shipment && isset($package->label_image) &&
@@ -652,13 +653,13 @@ function uc_shipping_order_pane_packages($op, $order) {
         $shipment = uc_shipping_shipment_load($shipment->sid);
         if ($shipment->tracking_number) {
           $tracking[$shipment->carrier]['data'] = $shipment->carrier;
-          $tracking[$shipment->carrier]['children'][] = check_plain($shipment->tracking_number);
+          $tracking[$shipment->carrier]['children'][] = String::checkPlain($shipment->tracking_number);
         }
         else {
           foreach ($shipment->packages as $package) {
             if ($package->tracking_number) {
               $tracking[$shipment->carrier]['data'] = $shipment->carrier;
-              $tracking[$shipment->carrier]['children'][] = check_plain($package->tracking_number);
+              $tracking[$shipment->carrier]['children'][] = String::checkPlain($package->tracking_number);
             }
           }
         }
