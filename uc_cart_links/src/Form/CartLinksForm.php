@@ -176,7 +176,7 @@ class CartLinksForm extends ConfirmFormBase {
               $rebuild_cart = TRUE;
             }
             else {
-              watchdog('uc_cart_link', 'Cart Link on %url tried to add an unpublished product to the cart.', array('%url' => $_SERVER['HTTP_REFERER']), WATCHDOG_ERROR);
+              watchdog('uc_cart_link', 'Cart Link on %url tried to add an unpublished product to the cart.', array('%url' => \Drupal::request()->server->get('HTTP_REFERER')), WATCHDOG_ERROR);
             }
           }
           break;
@@ -226,7 +226,7 @@ class CartLinksForm extends ConfirmFormBase {
         ->execute();
     }
 
-    $_SESSION['uc_cart_last_url'] = $_SERVER['HTTP_REFERER'];
+    $_SESSION['uc_cart_last_url'] = \Drupal::request()->server->get('HTTP_REFERER');
 
     $query = $this->getRequest()->query;
     if ($query->has('destination')) {
