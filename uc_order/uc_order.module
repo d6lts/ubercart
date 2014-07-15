@@ -660,15 +660,14 @@ function template_preprocess_uc_order_invoice(&$variables) {
 
   $variables['products'] = array();
   if (!empty($order->products)) {
-    $display = entity_view_multiple($order->products, 'full');
     foreach ($order->products as $id => $product) {
       $variables['products'][$id] = new stdClass;
       $variables['products'][$id]->title = $product->title->value;
       $variables['products'][$id]->qty = $product->qty->value;
       $variables['products'][$id]->model = $product->model->value;
-      $variables['products'][$id]->total_price = render($display[$product->order_product_id->value]['total']);
+      $variables['products'][$id]->total_price = uc_currency_format($product->price->value * $product->qty->value);
       if ($product->qty->value > 1) {
-        $variables['products'][$id]->individual_price = t('(!price each)', array('!price' => uc_currency_format($display[$product->order_product_id->value]['price']['#price'])));
+        $variables['products'][$id]->individual_price = t('(!price each)', array('!price' => uc_currency_format($product->price->value)));
       }
       else {
         $variables['products'][$id]->individual_price = '';
