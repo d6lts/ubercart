@@ -69,7 +69,7 @@
             {% if thank_you_message %}
             <p><b>{{ 'Thanks for your order, !order_first_name!'|t({'!order_first_name': order_first_name}) }}</b></p>
 
-            {% if order.data.new_user %}
+            {% if order.data.new_user_name %}
             <p><b>{{ 'An account has been created for you with the following details:'|t }}</b></p>
             <p><b>{{ 'Username:'|t }}</b> {{ order_new_username }}<br />
             <b>{{ 'Password:'|t }}</b> {{ order_new_password }}</p>
