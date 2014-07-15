@@ -517,8 +517,8 @@ class CartLinksTest extends UbercartTestBase {
     $total = 0;
     foreach ($tracking as $id => $clicks) {
       $total += $clicks;
-      $this->assertRaw(
-        t('<td>@id</td><td class="active">@clicks</td>', array('@id' => $id, '@clicks' => $clicks)),
+      $this->assertPattern(
+        t('#<td>@id</td>\s*<td>@clicks</td>#', array('@id' => $id, '@clicks' => $clicks)),
         t('Tracking ID @id received @clicks clicks.', array('@id' => $id, '@clicks' => $clicks))
       );
     }
