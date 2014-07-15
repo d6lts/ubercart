@@ -675,9 +675,9 @@ function template_preprocess_uc_order_invoice(&$variables) {
       }
 
       $variables['products'][$id]->details = array();
-      if (!empty($product->data['attributes'])) {
+      if (!empty($product->data->attributes)) {
         $attributes = array();
-        foreach ($product->data['attributes'] as $attribute => $option) {
+        foreach ($product->data->attributes as $attribute => $option) {
           $attributes[] = t('@attribute: @options', array('@attribute' => $attribute, '@options' => implode(', ', (array)$option)));
         }
         $variables['products'][$id]->details = array(

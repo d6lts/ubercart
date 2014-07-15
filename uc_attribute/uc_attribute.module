@@ -20,6 +20,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
+use Drupal\uc_cart\Entity\UcCartItem;
 
 /**
  * Implements hook_help().
@@ -317,15 +318,15 @@ function uc_attribute_uc_order_product_alter(&$product, $order) {
   // Convert the attribute and option ids to their current names. This
   // preserves the important data in case the attributes or options are
   // changed later.
-  if (!empty($product->data['attributes'])) {
-    $attributes_keys = array_keys($product->data['attributes']);
+  if (!empty($product->data->attributes)) {
+    $attributes_keys = array_keys($product->data->attributes);
     if (is_numeric(array_shift($attributes_keys))) {
       $attributes = array();
       $options = _uc_cart_product_get_options($product);
       foreach ($options as $option) {
         $attributes[$option['attribute']][$option['oid']] = $option['name'];
       }
-      $product->data['attributes'] = $attributes;
+      $product->data->attributes = $attributes;
     }
   }
 }
@@ -395,7 +396,7 @@ function uc_attribute_uc_product_description($product) {
   // Cart version of the product has numeric attribute => option values so we
   // need to retrieve the right ones.
   $weight = 0;
-  if (empty($product->order_id)) {
+  if ($product instanceof UcCartItem) {
     foreach (_uc_cart_product_get_options($product) as $option) {
       if (!isset($desc[$option['aid']])) {
         $desc[$option['aid']]['#attribute_name'] = $option['attribute'];
@@ -407,8 +408,8 @@ function uc_attribute_uc_product_description($product) {
       $desc[$option['aid']]['#weight'] = $weight++;
     }
   }
-  elseif (isset($product->data['attributes'])) {
-    foreach ($product->data['attributes'] as $attribute => $option) {
+  elseif (!empty($product->data->attributes)) {
+    foreach ($product->data->attributes as $attribute => $option) {
       $desc[] = array(
         '#attribute_name' => $attribute,
         '#options' => $option,
@@ -1013,30 +1014,26 @@ function uc_class_get_attributes($pcid) {
  * Gets the options chosen for a product that is in the cart.
  *
  * @param $item
- *   An element of the array returned by uc_cart_get_contents.
+ *   A product node, a cart item or an ordered product object.
  *
  * @return
  *   Array of options chosen by a customer, indexed by attribute ids. Each
  *   element stores the attribute name and the option object chosen.
  */
 function _uc_cart_product_get_options($item) {
-  $options = array();
-  if (empty($item->data)) {
-    return $options;
-  }
-  $data = $item->data;
-
-  // @todo The $item parameter can be many different objects, refactor this!
   if ($item instanceof NodeInterface) {
     $node = $item;
+    $attributes = $item->data['attributes'];
   }
   else {
-    $node = node_load(is_object($item->nid) ? $item->nid->target_id : $item->nid);
+    $node = $item->nid->entity;
+    $attributes = $item->data->attributes;
   }
 
+  $options = array();
   $index = 0;
-  if (!empty($data['attributes']) && is_array($data['attributes'])) {
-    foreach ($data['attributes'] as $aid => $selected) {
+  if (!empty($attributes)) {
+    foreach ($attributes as $aid => $selected) {
       if (isset($node->attributes[$aid])) {
         $attribute = $node->attributes[$aid];
         $name = _uc_attribute_get_name($attribute);
@@ -1066,9 +1063,6 @@ function _uc_cart_product_get_options($item) {
         $index++;
       }
     }
-  }
-  else {
-    $options = array();
   }
   return $options;
 }

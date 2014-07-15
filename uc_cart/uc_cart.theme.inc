@@ -49,7 +49,10 @@ function theme_uc_cart_review_table($variables) {
         ),
         'class' => array('qty'),
       ),
-      array('data' => $item->title->value, 'class' => array('products')),
+      array(
+        'data' => $item->title->value . uc_product_get_description($item),
+        'class' => array('products'),
+      ),
       array(
         'data' => array(
           '#theme' => 'uc_price',

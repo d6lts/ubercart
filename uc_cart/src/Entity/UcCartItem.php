@@ -74,7 +74,7 @@ class UcCartItem extends ContentEntityBase {
    */
   public static function postLoad(EntityStorageInterface $storage, array &$items) {
     foreach ($items as $item) {
-      $item->product = uc_product_load_variant($item->nid->target_id, $item->data);
+      $item->product = uc_product_load_variant($item->nid->target_id, $item->data->first()->toArray());
       if ($item->product) {
         $item->title = $item->product->label();
         $item->model = $item->product->model;
