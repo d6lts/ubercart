@@ -76,7 +76,7 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected function catalogBreadcrumb($node) {
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
     $breadcrumb[] = l(t('Catalog'), 'catalog');
-    if ($parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->value)) {
+    if ($parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->target_id)) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
         $breadcrumb[] = l($parent->label(), 'catalog/' . $parent->id());
