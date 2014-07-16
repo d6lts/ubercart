@@ -324,7 +324,7 @@ function uc_catalog_add_node_type($type) {
     $field->save();
   }
 
-  $instance = FieldInstanceConfig::loadByName('node', 'taxonomy_catalog', $type);
+  $instance = FieldInstanceConfig::loadByName('node', $type, 'taxonomy_catalog');
   if (!$instance) {
     $instance = entity_create('field_instance_config', array(
       'field_name' => 'taxonomy_catalog',
@@ -361,7 +361,7 @@ function uc_catalog_add_image_field() {
     $field->save();
   }
 
-  $instance = FieldInstanceConfig::loadByName('taxonomy_term', 'uc_catalog_image', 'catalog');
+  $instance = FieldInstanceConfig::loadByName('taxonomy_term', 'catalog', 'uc_catalog_image');
 
   // Only add the instance if it doesn't exist. Don't overwrite any changes.
   if (!$instance) {
