@@ -12,8 +12,8 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
@@ -1197,11 +1197,11 @@ function uc_product_node_type_update(NodeTypeInterface $type) {
  *   types get an instance of the field.
  */
 function uc_product_add_default_image_field($type = NULL) {
-  $field = FieldConfig::loadByName('node', 'uc_product_image');
+  $field = FieldStorageConfig::loadByName('node', 'uc_product_image');
 
   // Set up field if it doesn't exist.
   if (!$field) {
-    $field = entity_create('field_config', array(
+    $field = entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'name' => 'uc_product_image',
       'type' => 'image',

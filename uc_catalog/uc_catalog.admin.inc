@@ -5,7 +5,7 @@
  * Catalog administration menu items.
  */
 
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Displays links to all products that have not been categorized.
@@ -16,7 +16,7 @@ function uc_catalog_orphaned_products() {
   if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
     $product_types = uc_product_types();
-    $field = FieldConfig::loadByName('node', 'taxonomy_catalog');
+    $field = FieldStorageConfig::loadByName('node', 'taxonomy_catalog');
     $types = array_intersect($product_types, $field['bundles']['node']);
     $result = db_query("SELECT DISTINCT n.nid, n.title FROM {node} n LEFT JOIN (SELECT ti.nid, td.vid FROM {taxonomy_index} ti LEFT JOIN {taxonomy_term_data} td ON ti.tid = td.tid WHERE td.vid = :vid) txnome ON n.nid = txnome.nid WHERE n.type IN (:types) AND txnome.vid IS NULL", array(':vid' => $vid, ':types' => $types));
 

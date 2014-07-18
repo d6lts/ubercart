@@ -13,8 +13,8 @@
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\NodeTypeInterface;
 
 /**
@@ -141,7 +141,7 @@ function uc_catalog_preprocess_block(&$variables) {
  * listed in the catalog.
  */
 function uc_catalog_uc_store_status() {
-  $field = FieldConfig::loadByName('node', 'taxonomy_catalog');
+  $field = FieldStorageConfig::loadByName('node', 'taxonomy_catalog');
   if (!$field) {
     return array(array(
       'status' => 'error',
@@ -305,9 +305,9 @@ function uc_catalog_path($term) {
 function uc_catalog_add_node_type($type) {
   $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
 
-  $field = FieldConfig::loadByName('node', 'taxonomy_catalog');
+  $field = FieldStorageConfig::loadByName('node', 'taxonomy_catalog');
   if (!$field) {
-    $field = entity_create('field_config', array(
+    $field = entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'name' => 'taxonomy_catalog',
       'type' => 'taxonomy_term_reference',
@@ -350,10 +350,10 @@ function uc_catalog_add_node_type($type) {
  * Sets up a default image field on the Catalog vocabulary.
  */
 function uc_catalog_add_image_field() {
-  $field = FieldConfig::loadByName('taxonomy_term', 'uc_catalog_image');
+  $field = FieldStorageConfig::loadByName('taxonomy_term', 'uc_catalog_image');
 
   if (!$field) {
-    $field = entity_create('field_config', array(
+    $field = entity_create('field_storage_config', array(
       'entity_type' => 'taxonomy_term',
       'name' => 'uc_catalog_image',
       'type' => 'image',
