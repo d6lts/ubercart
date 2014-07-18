@@ -53,9 +53,11 @@ class BuyItNowForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
-    $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
-    $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'], $data, NULL, $msg);
+    if (empty($form_state['redirect'])) {
+      $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
+      $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
+      $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'], $data, NULL, $msg);
+    }
   }
 
 }
