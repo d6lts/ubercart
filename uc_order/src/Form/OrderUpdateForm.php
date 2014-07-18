@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\uc_order\UcOrderInterface;
 
 /**
  * Updates an order's status and optionally adds comments.
