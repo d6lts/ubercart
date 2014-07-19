@@ -511,7 +511,6 @@ class CartCheckoutTest extends UbercartTestBase {
           ))
         ->condition('order_id', $order_id)
         ->execute();
-      $old_order = uc_order_load($order_id);
 
       // Go to a different page, then back to order - verify that we are using a new order.
       $this->drupalGet('<front>');

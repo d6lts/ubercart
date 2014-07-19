@@ -67,7 +67,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
 
     // Load an order from the session, if available.
     if (isset($_SESSION['cart_order'])) {
-      $order = uc_order_load($_SESSION['cart_order']);
+      $order = uc_order_load($_SESSION['cart_order'], TRUE);
       if ($order) {
         // Don't use an existing order if it has changed status or owner, or if
         // there has been no activity for 10 minutes (to prevent identity theft).
@@ -157,7 +157,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       return $this->redirect('uc_cart.checkout');
     }
 
-    $order = uc_order_load($_SESSION['cart_order']);
+    $order = uc_order_load($_SESSION['cart_order'], TRUE);
 
     if (!$order || $order->getStateId() != 'in_checkout') {
       unset($_SESSION['uc_checkout'][$order->id()]['do_review']);
@@ -204,7 +204,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       return $this->redirect('uc_cart.cart');
     }
 
-    $order = uc_order_load(intval($_SESSION['cart_order']));
+    $order = uc_order_load($_SESSION['cart_order'], TRUE);
 
     if (empty($order)) {
       // Display messages to customers and the administrator if the order was lost.
