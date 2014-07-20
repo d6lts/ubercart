@@ -10,7 +10,7 @@
  * Google Analytics.
  */
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_enable().

@@ -5,7 +5,7 @@
  * File administration menu items.
  */
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 
 /**

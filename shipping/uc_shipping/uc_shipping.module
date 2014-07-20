@@ -7,7 +7,7 @@
  * and tracking numbers.
  */
 
-use Drupal\Component\Utility\Json;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\uc_store\Address;
