@@ -693,11 +693,11 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Implements hook_entity_extra_field_info().
  *
  * Adds the "Product information".
  */
-function uc_product_field_extra_fields() {
+function uc_product_entity_extra_field_info() {
   $extra = array();
 
   foreach (uc_product_types() as $type) {

@@ -206,9 +206,9 @@ function uc_order_permission() {
 }
 
 /**
- * Implements hook_field_extra_fields().
+ * Implements hook_entity_extra_field_info().
  */
-function uc_order_field_extra_fields() {
+function uc_order_entity_extra_field_info() {
   $panes = \Drupal::moduleHandler()->invokeAll('uc_order_pane');
   $extra = array();
 
