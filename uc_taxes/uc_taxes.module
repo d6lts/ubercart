@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\node\NodeInterface;
+use Drupal\uc_order\UcOrderInterface;
 
 /**
  * Implements hook_permission().
@@ -44,7 +45,7 @@ function uc_taxes_menu() {
  * calculations are made.
  */
 function uc_taxes_module_implements_alter(&$implementations, $hook) {
-  if (in_array($hook, array('uc_order', 'entity_view_alter'))) {
+  if (in_array($hook, array('uc_order_insert', 'uc_order_update', 'entity_view_alter'))) {
     $group = $implementations['uc_taxes'];
     unset($implementations['uc_taxes']);
     $implementations['uc_taxes'] = $group;
@@ -149,60 +150,63 @@ function uc_taxes_uc_line_item() {
 }
 
 /**
- * Implements hook_uc_order().
+ * Implements hook_uc_order_insert().
+ */
+function uc_taxes_uc_order_insert(UcOrderInterface $order) {
+  uc_taxes_uc_order_update($order);
+}
+
+/**
+ * Implements hook_uc_order_update().
  *
  * Updates and saves tax line items to the order.
  */
-function uc_taxes_uc_order($op, $order, $arg2) {
-  switch ($op) {
-    case 'save':
-      $changes = array();
-      $line_items = uc_taxes_calculate($order);
-      foreach ($line_items as $id => $tax) {
-        $line_items[$id] = _uc_taxes_to_line_item($tax);
-      }
+function uc_taxes_uc_order_update(UcOrderInterface $order) {
+  $changes = array();
+  $line_items = uc_taxes_calculate($order);
+  foreach ($line_items as $id => $tax) {
+    $line_items[$id] = _uc_taxes_to_line_item($tax);
+  }
 
-      // Loop through existing line items and update or delete as necessary.
-      if (is_array($order->line_items)) {
-        foreach ($order->line_items as $i => $line) {
-          if ($line['type'] == 'tax') {
-            $delete = TRUE;
-            foreach ($line_items as $id => $new_line) {
-              if ($new_line['data']['tax_id'] == $line['data']['tax_id']) {
-                if ($new_line['amount'] != $line['amount']) {
-                  uc_order_update_line_item($line['line_item_id'], $new_line['title'], $new_line['amount'], $new_line['data']);
-                  $order->line_items[$i]['amount'] = $new_line['amount'];
-                  $order->line_items[$i]['data'] = $new_line['data'];
-                  $changes[] = t('Changed %title to %amount.', array('%amount' => uc_currency_format($new_line['amount']), '%title' => $new_line['title']));
-                }
-                unset($line_items[$id]);
-                $delete = FALSE;
-                break;
-              }
+  // Loop through existing line items and update or delete as necessary.
+  if (is_array($order->line_items)) {
+    foreach ($order->line_items as $i => $line) {
+      if ($line['type'] == 'tax') {
+        $delete = TRUE;
+        foreach ($line_items as $id => $new_line) {
+          if ($new_line['data']['tax_id'] == $line['data']['tax_id']) {
+            if ($new_line['amount'] != $line['amount']) {
+              uc_order_update_line_item($line['line_item_id'], $new_line['title'], $new_line['amount'], $new_line['data']);
+              $order->line_items[$i]['amount'] = $new_line['amount'];
+              $order->line_items[$i]['data'] = $new_line['data'];
+              $changes[] = t('Changed %title to %amount.', array('%amount' => uc_currency_format($new_line['amount']), '%title' => $new_line['title']));
             }
-            if ($delete) {
-              uc_order_delete_line_item($line['line_item_id']);
-              unset($order->line_items[$i]);
-              $changes[] = t('Removed %title.', array('%title' => $line['title']));
-            }
+            unset($line_items[$id]);
+            $delete = FALSE;
+            break;
           }
         }
-      }
-
-      // Now add line items for any remaining new taxes.
-      if (is_array($line_items)) {
-        foreach ($line_items as $line) {
-          $order->line_items[] = uc_order_line_item_add($order->id(), 'tax', $line['title'], $line['amount'], $line['weight'], $line['data']);
-          $changes[] = t('Added %amount for %title.', array('%amount' => uc_currency_format($line['amount']), '%title' => $line['title']));
+        if ($delete) {
+          uc_order_delete_line_item($line['line_item_id']);
+          unset($order->line_items[$i]);
+          $changes[] = t('Removed %title.', array('%title' => $line['title']));
         }
       }
+    }
+  }
 
-      // And log the changes to the order.
-      if (count($changes)) {
-        $order->logChanges($changes);
-        usort($order->line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-      }
-    break;
+  // Now add line items for any remaining new taxes.
+  if (is_array($line_items)) {
+    foreach ($line_items as $line) {
+      $order->line_items[] = uc_order_line_item_add($order->id(), 'tax', $line['title'], $line['amount'], $line['weight'], $line['data']);
+      $changes[] = t('Added %amount for %title.', array('%amount' => uc_currency_format($line['amount']), '%title' => $line['title']));
+    }
+  }
+
+  // And log the changes to the order.
+  if (count($changes)) {
+    $order->logChanges($changes);
+    usort($order->line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
   }
 }
 

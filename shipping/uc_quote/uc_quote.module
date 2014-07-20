@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_store\Address;
 
 /**
@@ -257,35 +258,39 @@ function uc_quote_uc_order_pane() {
 }
 
 /**
- * Implements hook_uc_order().
+ * Implements hook_uc_order_load().
  */
-function uc_quote_uc_order($op, $order, $arg2) {
-  switch ($op) {
-    case 'save':
-      if (isset($order->quote['method'])) {
-        db_merge('uc_order_quotes')
-          ->key(array('order_id' => $order->id()))
-          ->fields(array(
-            'method' => $order->quote['method'],
-            'accessorials' => $order->quote['accessorials'],
-            'rate' => $order->quote['rate'],
-          ))
-          ->execute();
-      }
-      break;
-
-    case 'load':
-      $quote = db_query("SELECT method, accessorials, rate FROM {uc_order_quotes} WHERE order_id = :id", array(':id' => $order->id()))->fetchAssoc();
-      $order->quote = $quote;
-      $order->quote['accessorials'] = strval($quote['accessorials']);
-      break;
-
-    case 'delete':
-      db_delete('uc_order_quotes')
-        ->condition('order_id', $order->id())
-        ->execute();
-      break;
+function uc_quote_uc_order_load($orders) {
+  foreach ($orders as $order) {
+    $quote = db_query("SELECT method, accessorials, rate FROM {uc_order_quotes} WHERE order_id = :id", array(':id' => $order->id()))->fetchAssoc();
+    $order->quote = $quote;
+    $order->quote['accessorials'] = strval($quote['accessorials']);
   }
+}
+
+/**
+ * Implements hook_uc_order_update().
+ */
+function uc_quote_uc_order_update(UcOrderInterface $order) {
+  if (isset($order->quote['method'])) {
+    db_merge('uc_order_quotes')
+      ->key(array('order_id' => $order->id()))
+      ->fields(array(
+        'method' => $order->quote['method'],
+        'accessorials' => $order->quote['accessorials'],
+        'rate' => $order->quote['rate'],
+      ))
+      ->execute();
+  }
+}
+
+/**
+ * Implements hook_uc_order_delete().
+ */
+function uc_quote_uc_order_delete(UcOrderInterface $order) {
+  db_delete('uc_order_quotes')
+    ->condition('order_id', $order->id())
+    ->execute();
 }
 
 /**
@@ -737,7 +742,7 @@ function uc_quote_apply_quote_to_order($form, &$form_state) {
       }
 
       // Save selected shipping
-      uc_quote_uc_order('save', $order, '');
+      uc_quote_uc_order_update($order);
 
       // Update line items.
       $order->line_items = $order->getLineItems();

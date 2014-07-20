@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\uc_order\UcOrderInterface;
+
 /**
  * @file
  * Hooks provided by the Order module.
@@ -126,18 +128,6 @@ function hook_uc_line_item_data_alter(&$items) {
  *   This is the order object.
  * @param $arg2
  *   This is variable and is based on the value of $op:
- *   - new: Called when an order is created. $order is a reference to the new
- *     order object, so modules may add to or modify the order at creation.
- *   - presave: Before an order object is saved, the hook gets invoked with this
- *     op to let other modules alter order data before it is written to the
- *     database. $order is a reference to the order object.
- *   - save: When an order object is being saved, the hook gets invoked with
- *     this op to let other modules do any necessary saving. $order is a
- *     reference to the order object.
- *   - load: Called when an order is loaded after the order and product data has
- *     been loaded from the database. Passes $order as the reference to the
- *     order object, so modules may add to or modify the order object when it's
- *     loaded.
  *   - submit: When a sale is being completed and the customer has clicked the
  *     Submit order button from the checkout screen, the hook is invoked with
  *     this op. This gives modules a chance to determine whether or not the
@@ -152,13 +142,6 @@ function hook_uc_line_item_data_alter(&$items) {
  *         'message' => t('We were unable to process your credit card.'),
  *       ));
  *     @endcode
- *   - can_delete: Called before an order is deleted to verify that the order
- *     may be deleted. Returning FALSE will prevent a delete from happening.
- *     (For example, the payment module returns FALSE by default when an order
- *     has already received payments.)
- *   - delete: Called when an order is deleted and before the rest of the order
- *     information is removed from the database. Passes $order as the order
- *     object to let your module clean up it's tables.
  */
 function hook_uc_order($op, $order, $arg2) {
   switch ($op) {
@@ -214,6 +197,21 @@ function hook_uc_order_actions($order) {
  */
 function hook_uc_order_actions_alter(&$actions, $order) {
   $actions['view']['title'] = t('Display');
+}
+
+/**
+ * Verifies whether an order may be deleted.
+ *
+ * @param $order
+ *   An order object.
+ *
+ * @return bool
+ *   FALSE if the order should not be deleted.
+ */
+function hook_uc_order_can_delete(UcOrderInterface $order) {
+  if (uc_payment_load_payments($order->id()) !== FALSE) {
+    return FALSE;
+  }
 }
 
 /**

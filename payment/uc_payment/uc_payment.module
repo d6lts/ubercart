@@ -98,36 +98,6 @@ function uc_payment_uc_order($op, $order) {
   switch ($op) {
     case 'submit':
       return Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSubmit($order);
-
-    case 'load':
-      if ($order->getPaymentMethodId()) {
-        Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderLoad($order);
-      }
-      break;
-
-    case 'save':
-      if ($order->getPaymentMethodId()) {
-        Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSave($order);
-      }
-      break;
-
-    case 'can_delete':
-      if (uc_payment_load_payments($order->id()) !== FALSE) {
-        return FALSE;
-      }
-      break;
-
-    case 'delete':
-      db_delete('uc_payment_receipts')
-        ->condition('order_id', $order->id())
-        ->execute();
-
-      // Call each payment method to delete method-specific data from the
-      // database.
-      foreach (uc_payment_method_list() as $id => $method) {
-        Drupal::service('plugin.manager.uc_payment.method')->createInstance($id)->orderDelete($order);
-      }
-      break;
   }
 }
 
@@ -368,15 +338,52 @@ function uc_payment_uc_payment_entered(UcOrderInterface $order) {
 }
 
 /**
+ * Implements hook_uc_order_load().
+ */
+function uc_payment_uc_order_load($orders) {
+  foreach ($orders as $order) {
+    if ($order->getPaymentMethodId()) {
+      Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderLoad($order);
+    }
+  }
+}
+
+/**
  * Implements hook_uc_order_update().
- *
- * Move non-shippable orders from "payment received" to "completed".
- *
- * @todo Remove when Rules is available.
  */
 function uc_payment_uc_order_update(UcOrderInterface $order) {
+  if ($order->getPaymentMethodId()) {
+    Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSave($order);
+  }
+
+  // Move non-shippable orders from "payment received" to "completed".
+  // @todo Remove when Rules is available.
   if ($order->getStatusId() == 'payment_received' && !$order->isShippable()) {
     $order->setStatusId('completed')->save();
+  }
+}
+
+
+/**
+ * Implements hook_uc_order_can_delete().
+ */
+function uc_payment_uc_order_can_delete(UcOrderInterface $order) {
+  if (uc_payment_load_payments($order->id()) !== FALSE) {
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_uc_order_delete().
+ */
+function uc_payment_uc_order_delete(UcOrderInterface $order) {
+  db_delete('uc_payment_receipts')
+    ->condition('order_id', $order->id())
+    ->execute();
+
+  // Call each payment method to delete method-specific data from the database.
+  foreach (uc_payment_method_list() as $id => $method) {
+    Drupal::service('plugin.manager.uc_payment.method')->createInstance($id)->orderDelete($order);
   }
 }
 

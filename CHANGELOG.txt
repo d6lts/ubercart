@@ -28,6 +28,11 @@ Ubercart 4.x
     * uc_order_can_delete() => $order->access('delete')
     * uc_order_delete() => $order->delete()
     * uc_order_product_delete[_multiple]() => entity_delete_multiple('uc_order_product', ...)
+* hook_uc_order() has been split up:
+    * hook_uc_order('load') => hook_uc_order_load()
+    * hook_uc_order('save') => hook_uc_order_insert() and hook_uc_order_update()
+    * hook_uc_order('can_delete') => hook_uc_order_can_delete()
+    * hook_uc_order('delete') => hook_uc_order_delete()
 * Cart items are entities and old APIs have been removed:
     * uc_cart_update_item() => $item->save()
     * uc_cart_remove_item() => $item->delete()

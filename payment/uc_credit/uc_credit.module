@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_store\Encryption;
 
 /** Just authorize an amount on a credit card account. */
@@ -202,14 +203,6 @@ function uc_credit_uc_store_status() {
  * Implements hook_uc_order().
  */
 function uc_credit_uc_order($op, $order, $arg2) {
-  // Set up the encryption key and object for saving and loading.
-  if ($order->getPaymentMethodId() == 'credit' && ($op == 'save' || $op == 'load')) {
-    // Log an error if encryption isn't configured properly.
-    if (!uc_credit_encryption_key()) {
-      watchdog('uc_credit', 'Credit card encryption must be set up to process credit cards.');
-    }
-  }
-
   switch ($op) {
     case 'submit':
       if ($order->getPaymentMethodId() == 'credit') {
@@ -234,24 +227,32 @@ function uc_credit_uc_order($op, $order, $arg2) {
         }
       }
       break;
+  }
+}
 
-    case 'save':
-      if ($order->getPaymentMethodId() == 'credit' && !empty($order->payment_details)) {
-        _uc_credit_save_cc_data_to_order($order->payment_details, $order->id());
+/**
+ * Implements hook_uc_order_load().
+ */
+function uc_credit_uc_order_load($orders) {
+  foreach ($orders as $order) {
+    if ($order->getPaymentMethodId() == 'credit') {
+      // Load the CC details from the credit cache if available.
+      $order->payment_details = uc_credit_cache('load');
+
+      // Otherwise load any details that might be stored in the data array.
+      if (empty($order->payment_details) && isset($order->data->cc_data)) {
+        $order->payment_details = uc_credit_cache('save', $order->data->cc_data);
       }
-      break;
+    }
+  }
+}
 
-    case 'load':
-      if ($order->getPaymentMethodId() == 'credit') {
-        // Load the CC details from the credit cache if available.
-        $order->payment_details = uc_credit_cache('load');
-
-        // Otherwise load any details that might be stored in the data array.
-        if (empty($order->payment_details) && isset($order->data->cc_data)) {
-          $order->payment_details = uc_credit_cache('save', $order->data->cc_data);
-        }
-      }
-      break;
+/**
+ * Implements hook_uc_order_update().
+ */
+function uc_credit_uc_order_update(UcOrderInterface $order) {
+  if ($order->getPaymentMethodId() == 'credit' && !empty($order->payment_details)) {
+    _uc_credit_save_cc_data_to_order($order->payment_details, $order->id());
   }
 }
 

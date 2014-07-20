@@ -77,8 +77,6 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
     foreach ($orders as $id => $order) {
       $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $id));
 
-      uc_order_module_invoke('load', $order, NULL);
-
       // Load line items... has to be last after everything has been loaded.
       $order->line_items = $order->getLineItems();
     }
@@ -98,8 +96,6 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
     }
     $this->host->value = \Drupal::request()->getClientIp();
     $this->modified->value = REQUEST_TIME;
-
-    uc_order_module_invoke('presave', $this, NULL);
   }
 
   /**
@@ -111,8 +107,6 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       uc_order_product_save($this->id(), $product);
     }
 
-    uc_order_module_invoke('save', $this, NULL);
-
     // Record a log entry if the order status has changed.
     if ($update && $this->getStatusId() != $this->original->getStatusId()) {
       $this->logChanges(array(t('Order status') => array(
@@ -121,15 +115,6 @@ class UcOrder extends ContentEntityBase implements UcOrderInterface {
       )));
 
       // rules_invoke_event('uc_order_status_update', $this->original, $this);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function preDelete(EntityStorageInterface $storage, array $orders) {
-    foreach ($orders as $order) {
-      uc_order_module_invoke('delete', $order, NULL);
     }
   }
 

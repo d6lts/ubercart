@@ -166,11 +166,11 @@ function hook_uc_payment_method() {
  *   should clean up any extra data they stored related to the order.
  * - "order-details": Called when an order is being edited by an administrator.
  *   Return a string or a form array to be displayed to the administator.
- * - "order-load": Called from hook_uc_order('load') when this payment method
+ * - "order-load": Called from hook_uc_order_load() when this payment method
  *   is selected for the order.
  * - "order-process": Called when an order has been edited by an administrator.
  *   Process any form elements returned by the "order-details" op.
- * - "order-save": Called from hook_uc_order('save') when this payment method
+ * - "order-save": Called from hook_uc_order_update() when this payment method
  *   is selected for the order.
  * - "order-submit": Called from hook_uc_order('submit') when this payment
  *   method is selected for the order.

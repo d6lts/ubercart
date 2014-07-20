@@ -479,8 +479,6 @@ function uc_order_new($uid = 0, $state = 'in_checkout') {
 
   $order->save();
 
-  uc_order_module_invoke('new', $order, NULL);
-
   return $order;
 }
 
@@ -594,22 +592,6 @@ function uc_order_comment_save($order_id, $uid, $message, $type = 'admin', $stat
         'created' => REQUEST_TIME,
       ))
       ->execute();
-  }
-}
-
-/**
- * Invokes hook_uc_order() in every module.
- *
- * We cannot use module_invoke() for this, because the arguments need to
- * be passed by reference.
- */
-function uc_order_module_invoke($op, &$order, $edit) {
-  $module_handler = \Drupal::moduleHandler();
-  foreach ($module_handler->getImplementations('uc_order') as $module) {
-    $function = $module . '_uc_order';
-    if (function_exists($function)) {
-      $function($op, $order, $edit);
-    }
   }
 }
 
