@@ -39,7 +39,7 @@ class PaymentDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('uc_payments.order_payments', array('uc_order' => $this->payment->order_id));
   }
 

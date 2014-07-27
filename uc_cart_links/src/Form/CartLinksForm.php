@@ -32,7 +32,7 @@ class CartLinksForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return array();
   }
 

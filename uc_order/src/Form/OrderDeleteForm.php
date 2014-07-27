@@ -25,7 +25,7 @@ class OrderDeleteForm extends ContentEntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('view.uc_orders.page_1');
   }
 
