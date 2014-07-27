@@ -21,14 +21,14 @@ class ProductFeaturesController extends ControllerBase {
    * Displays the product features tab on a product node edit form.
    */
   public function featuresOverview(NodeInterface $node) {
-    $header = array(t('Type'), t('Description'), t('Operations'));
+    $header = array($this->t('Type'), $this->t('Description'), $this->t('Operations'));
     $rows = array();
 
     $features = uc_product_feature_load_multiple($node->id());
     foreach ($features as $feature) {
       $operations = array(
-        'edit' => array('title' => t('Edit'), 'href' => 'node/' . $node->id() . '/edit/features/' . $feature->fid . '/' . $feature->pfid),
-        'delete' => array('title' => t('Delete'), 'href' => 'node/' . $node->id() . '/edit/features/' . $feature->fid . '/' . $feature->pfid . '/delete'),
+        'edit' => array('title' => $this->t('Edit'), 'href' => 'node/' . $node->id() . '/edit/features/' . $feature->fid . '/' . $feature->pfid),
+        'delete' => array('title' => $this->t('Delete'), 'href' => 'node/' . $node->id() . '/edit/features/' . $feature->fid . '/' . $feature->pfid . '/delete'),
       );
       $rows[] = array(
         array('data' => uc_product_feature_data($feature->fid, 'title')),
@@ -45,7 +45,7 @@ class ProductFeaturesController extends ControllerBase {
       '#header' => $header,
       '#rows' => $rows,
       '#attributes' => array('class' => array('uc-product-features')),
-      '#empty' => t('No features found for this product.'),
+      '#empty' => $this->t('No features found for this product.'),
     );
 
     module_load_include('inc', 'uc_product', 'uc_product.admin');
