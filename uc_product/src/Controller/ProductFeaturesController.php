@@ -49,7 +49,7 @@ class ProductFeaturesController extends ControllerBase {
     );
 
     module_load_include('inc', 'uc_product', 'uc_product.admin');
-    $build['add_form'] = \Drupal::formBuilder()->getForm('Drupal\uc_product\Form\ProductFeatureAddForm', $node);
+    $build['add_form'] = $this->formBuilder()->getForm('Drupal\uc_product\Form\ProductFeatureAddForm', $node);
 
     return $build;
   }
@@ -60,7 +60,7 @@ class ProductFeaturesController extends ControllerBase {
   public function featureAdd(NodeInterface $node, $fid) {
     $func = uc_product_feature_data($fid, 'callback');
     $form_state['build_info']['args'] = array($node, NULL);
-    return drupal_build_form($func, $form_state);
+    return $this->formBuilder()->buildForm($func, $form_state);
   }
 
   /**
@@ -69,7 +69,7 @@ class ProductFeaturesController extends ControllerBase {
   public function featureEdit(NodeInterface $node, $fid, $pfid) {
     $func = uc_product_feature_data($fid, 'callback');
     $form_state['build_info']['args'] = array($node, uc_product_feature_load($pfid));
-    return drupal_build_form($func, $form_state);
+    return $this->formBuilder()->buildForm($func, $form_state);
   }
 
   /**
