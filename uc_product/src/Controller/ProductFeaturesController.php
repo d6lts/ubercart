@@ -48,7 +48,6 @@ class ProductFeaturesController extends ControllerBase {
       '#empty' => $this->t('No features found for this product.'),
     );
 
-    module_load_include('inc', 'uc_product', 'uc_product.admin');
     $build['add_form'] = $this->formBuilder()->getForm('Drupal\uc_product\Form\ProductFeatureAddForm', $node);
 
     return $build;
