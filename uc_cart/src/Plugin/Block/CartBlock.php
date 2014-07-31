@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Plugin\Block;
 
 use Drupal\block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides the shopping cart block.
@@ -34,7 +35,7 @@ class CartBlock extends BlockBase {
   /**
    * Overrides \Drupal\block\BlockBase::blockForm().
    */
-  public function blockForm($form, &$form_state) {
+  public function blockForm($form, FormStateInterface $form_state) {
     $form['hide_empty'] = array(
       '#type' => 'checkbox',
       '#title' => t('Hide block if cart is empty.'),
@@ -61,7 +62,7 @@ class CartBlock extends BlockBase {
   /**
    * Overrides \Drupal\block\BlockBase::blockSubmit().
    */
-  public function blockSubmit($form, &$form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['hide_empty'] = $form_state['values']['hide_empty'];
     $this->configuration['show_image'] = $form_state['values']['show_image'];
     $this->configuration['collapsible'] = $form_state['values']['collapsible'];

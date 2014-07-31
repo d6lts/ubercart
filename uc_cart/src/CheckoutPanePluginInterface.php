@@ -9,6 +9,7 @@ namespace Drupal\uc_cart;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**

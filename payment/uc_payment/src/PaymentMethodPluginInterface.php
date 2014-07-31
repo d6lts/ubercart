@@ -100,7 +100,7 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
    * @return array
    *   An array of changes to log against the order.
    */
-  public function orderEditProcess(UcOrderInterface $order, array $form, array $form_state);
+  public function orderEditProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state);
 
   /**
    * Called when an order is being loaded with this payment method.

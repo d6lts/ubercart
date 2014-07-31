@@ -60,7 +60,7 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
-  public function orderEditProcess(UcOrderInterface $order, array $form, array $form_state) {
+  public function orderEditProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     return array();
   }
 

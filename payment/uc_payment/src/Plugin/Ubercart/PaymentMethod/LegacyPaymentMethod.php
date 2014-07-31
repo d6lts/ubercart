@@ -54,7 +54,7 @@ class LegacyPaymentMethod extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function orderEditProcess(UcOrderInterface $order, array $form, array $form_state) {
+  public function orderEditProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     return $this->pluginDefinition['callback']('edit-process', $order, $form, $form_state);
   }
 
