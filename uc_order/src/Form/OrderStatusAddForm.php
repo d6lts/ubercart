@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Presents the form to create a custom order status.
@@ -24,7 +25,7 @@ class OrderStatusAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['id'] = array(
       '#type' => 'textfield',
       '#title' => t('Order status ID'),
@@ -73,7 +74,7 @@ class OrderStatusAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $id = strtolower(trim($form_state['values']['id']));
     if (strpos($id, ' ') !== FALSE || $id == 'all') {
       form_set_error('id', $form_state, t('You have entered an invalid status ID.'));
@@ -87,7 +88,7 @@ class OrderStatusAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     entity_create('uc_order_status', array(
       'id' => strtolower(trim($form_state['values']['id'])),
       'name' => $form_state['values']['name'],

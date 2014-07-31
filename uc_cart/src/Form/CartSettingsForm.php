@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure general shopping cart settings for this site.
@@ -24,7 +25,7 @@ class CartSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $cart_config = \Drupal::config('uc_cart.settings');
 
     $form['cart-settings'] = array(
@@ -180,7 +181,7 @@ class CartSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $cart_config = \Drupal::config('uc_cart.settings');
     $cart_config
       ->set('add_item_msg', $form_state['values']['uc_cart_add_item_msg'])

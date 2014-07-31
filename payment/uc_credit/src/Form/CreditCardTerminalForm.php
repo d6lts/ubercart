@@ -8,6 +8,7 @@
 namespace Drupal\uc_credit\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
@@ -30,7 +31,7 @@ class CreditCardTerminalForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, UcOrderInterface $uc_order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, UcOrderInterface $uc_order = NULL) {
     $this->order = $uc_order;
 
     // Get the transaction types available to our default gateway.
@@ -217,7 +218,7 @@ class CreditCardTerminalForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Get the data from the form and replace masked data from the order.
     $cc_data = $form_state['values']['cc_data'];
 

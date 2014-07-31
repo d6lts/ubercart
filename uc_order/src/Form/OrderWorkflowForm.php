@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Displays the order workflow form for order state and status customization.
@@ -24,7 +25,7 @@ class OrderWorkflowForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $states = uc_order_state_options_list();
     $statuses = entity_load_multiple('uc_order_status');
 
@@ -113,7 +114,7 @@ class OrderWorkflowForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('uc_order.settings');
     foreach ($form_state['values']['order_states'] as $key => $value) {
       $config->set("default_state.$key", $value['default']);

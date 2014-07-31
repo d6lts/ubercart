@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
@@ -39,7 +40,7 @@ class EmptyCartForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_cart_empty();
     $form_state['redirect_route']['route_name'] = 'uc_cart.cart';
   }

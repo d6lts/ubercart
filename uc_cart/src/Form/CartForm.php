@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Displays the contents of the customer's cart.
@@ -28,7 +29,7 @@ class CartForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $items = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $items = NULL) {
     $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
     $cart_config = \Drupal::config('uc_cart.settings');
 
@@ -160,7 +161,7 @@ class CartForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // If a remove button was clicked, set the quantity for that item to 0.
     if (substr($form_state['triggering_element']['#name'], 0, 7) == 'remove-') {
       $item = substr($form_state['triggering_element']['#name'], 7);
@@ -181,28 +182,28 @@ class CartForm extends FormBase {
   /**
    * Displays "cart updated" message for the cart form.
    */
-  public function displayUpdateMessage(array &$form, array &$form_state) {
+  public function displayUpdateMessage(array &$form, FormStateInterface $form_state) {
     drupal_set_message($this->t('Your cart has been updated.'));
   }
 
   /**
    * Continue shopping redirect for the cart form.
    */
-  public function continueShopping(array &$form, array &$form_state) {
+  public function continueShopping(array &$form, FormStateInterface $form_state) {
     $form_state['redirect'] = $this->continueShoppingUrl();
   }
 
   /**
    * Empty cart redirect for the cart form.
    */
-  public function emptyCart(array &$form, array &$form_state) {
+  public function emptyCart(array &$form, FormStateInterface $form_state) {
     $form_state['redirect_route']['route_name'] = 'uc_cart.empty';
   }
 
   /**
    * Checkout redirect for the cart form.
    */
-  public function checkout(array &$form, array &$form_state) {
+  public function checkout(array &$form, FormStateInterface $form_state) {
     $form_state['redirect_route']['route_name'] = 'uc_cart.checkout';
   }
 

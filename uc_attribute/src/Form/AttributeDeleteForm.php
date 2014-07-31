@@ -8,6 +8,7 @@
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
@@ -59,7 +60,7 @@ class AttributeDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $aid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $aid = NULL) {
     $this->attribute = uc_attribute_load($aid);
 
     return parent::buildForm($form, $form_state);
@@ -68,7 +69,7 @@ class AttributeDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $options = array_keys($this->attribute->options);
 
     if ($options) {

@@ -8,6 +8,7 @@
 namespace Drupal\uc_weightquote\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Confirms deletion of a weight-based shipping method.
@@ -57,7 +58,7 @@ class WeightquoteDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $mid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $mid = NULL) {
     $this->methodId = $mid;
 
     return parent::buildForm($form, $form_state);
@@ -66,7 +67,7 @@ class WeightquoteDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     db_delete('uc_weightquote_methods')
       ->condition('mid', $this->methodId)
       ->execute();

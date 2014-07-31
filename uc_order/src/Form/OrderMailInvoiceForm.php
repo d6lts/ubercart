@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
@@ -30,7 +31,7 @@ class OrderMailInvoiceForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, UcOrderInterface $uc_order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, UcOrderInterface $uc_order = NULL) {
     $this->order = $uc_order;
 
     $form['email'] = array(
@@ -51,7 +52,7 @@ class OrderMailInvoiceForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $recipient = $form_state['values']['email'];
     $params = array('order' => $this->order);
     drupal_mail('uc_order', 'invoice', $recipient, uc_store_mail_recipient_langcode($recipient), $params, uc_store_email_from());

@@ -8,6 +8,7 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
@@ -18,7 +19,7 @@ class UcOrderForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $order = $this->entity;
 
     $form['#order'] = $order;
@@ -49,7 +50,7 @@ class UcOrderForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $element = parent::actions($form, $form_state);
     $element['submit']['#value'] = $this->t('Save changes');
     $element['delete']['#access'] = $this->entity->access('delete');
@@ -59,7 +60,7 @@ class UcOrderForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     $order = $this->buildEntity($form, $form_state);
 
     if ($form_state['values']['order_modified'] != $order->modified->value) {
@@ -72,7 +73,7 @@ class UcOrderForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $order = parent::submit($form, $form_state);
     $original = clone $order;
 
@@ -142,7 +143,7 @@ class UcOrderForm extends ContentEntityForm {
    * @param array $form_state
    *   A reference to a keyed array containing the current state of the form.
    */
-  public function delete(array $form, array &$form_state) {
+  public function delete(array $form, FormStateInterface $form_state) {
     $form_state['redirect'] = 'admin/store/orders/' . $this->entity->id() . '/delete';
   }
 

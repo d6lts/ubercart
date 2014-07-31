@@ -10,6 +10,7 @@ namespace Drupal\uc_cart_links\Form;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -46,7 +47,7 @@ class CartLinksForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $actions = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $actions = NULL) {
     $cart_links_config = $this->config('uc_cart_links.settings');
 
     $this->actions = $actions;
@@ -88,7 +89,7 @@ class CartLinksForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $cart_links_config = $this->config('uc_cart_links.settings');
 
     $actions = explode('-', urldecode($this->actions));

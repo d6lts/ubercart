@@ -8,6 +8,7 @@
 namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure product settings for this site.
@@ -24,7 +25,7 @@ class ProductSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('uc_product.settings');
 
     $form['product-settings'] = array('#type' => 'vertical_tabs');
@@ -76,7 +77,7 @@ class ProductSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_product.settings')
       ->set('add_to_cart_qty', $form_state['values']['uc_product_add_to_cart_qty'])
       ->set('update_node_view', $form_state['values']['uc_product_update_node_view'])

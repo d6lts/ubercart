@@ -9,6 +9,7 @@ namespace Drupal\uc_attribute\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the class/product attributes overview form.
@@ -45,7 +46,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $attributes = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $attributes = NULL) {
     $form['attributes'] = array(
       '#type' => 'table',
       '#header' => array(
@@ -122,7 +123,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $changed = FALSE;
 
     foreach ($form_state['values']['attributes'] as $aid => $attribute) {

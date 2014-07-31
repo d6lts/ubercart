@@ -8,6 +8,7 @@
 namespace Drupal\uc_taxes\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
@@ -51,7 +52,7 @@ class TaxRateDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $tax_rate = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $tax_rate = NULL) {
     $this->rate = uc_taxes_rate_load($tax_rate);
 
     return parent::buildForm($form, $form_state);
@@ -60,7 +61,7 @@ class TaxRateDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_taxes_rate_delete($this->rate->id);
 
     drupal_set_message(t('Tax rate %name deleted.', array('%name' => $this->rate->name)));

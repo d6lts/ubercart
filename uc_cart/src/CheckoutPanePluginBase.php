@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\uc_order\UcOrderInterface;
 
@@ -88,13 +89,13 @@ abstract class CheckoutPanePluginBase extends PluginBase implements CheckoutPane
   /**
    * {@inheritdoc}
    */
-  public function prepare(UcOrderInterface $order, array $form, array &$form_state) {
+  public function prepare(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function process(UcOrderInterface $order, array $form, array &$form_state) {
+  public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     return TRUE;
   }
 

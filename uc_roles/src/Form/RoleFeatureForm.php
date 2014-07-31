@@ -8,6 +8,7 @@
 namespace Drupal\uc_roles\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -25,7 +26,7 @@ class RoleFeatureForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL, $feature = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL, $feature = NULL) {
     $models = uc_product_get_models($node->id());
 
     // Check if editing or adding to set default values.
@@ -205,7 +206,7 @@ class RoleFeatureForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Invalid quantity?
     if ($form_state['values']['expiration'] === 'abs') {
       $form_state['values']['uc_roles_expire_absolute'] = mktime(0, 0, 0,
@@ -239,7 +240,7 @@ class RoleFeatureForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $product_role = array(
       'pfid'        => isset($form_state['values']['pfid']) ? $form_state['values']['pfid'] : NULL,
       'rpid'        => isset($form_state['values']['rpid']) ? $form_state['values']['rpid'] : NULL,

@@ -9,6 +9,7 @@ namespace Drupal\uc_quote\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Settings for the shipping quote methods.
@@ -25,7 +26,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $quote_config = $this->config('uc_quote.settings');
     $form['methods'] = array(
       '#type' => 'table',
@@ -124,7 +125,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $enabled = array();
     $method_weight = array();
     foreach ($form_state['values']['methods'] as $id => $method) {

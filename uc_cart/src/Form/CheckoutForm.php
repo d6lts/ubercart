@@ -9,6 +9,7 @@ namespace Drupal\uc_cart\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -53,7 +54,7 @@ class CheckoutForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $order = NULL) {
     if ($processed = isset($form_state['storage']['order'])) {
       $order = $form_state['storage']['order'];
     }
@@ -127,7 +128,7 @@ class CheckoutForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $order = $form_state['storage']['order'];
 
     // Update the order "modified" time to prevent timeout on ajax requests.
@@ -150,7 +151,7 @@ class CheckoutForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state['checkout_valid'] === FALSE) {
       $form_state['redirect_route']['route_name'] = 'uc_cart.checkout';
     }
@@ -165,7 +166,7 @@ class CheckoutForm extends FormBase {
   /**
    * Submit handler for the "Cancel" button on the checkout form.
    */
-  public function cancel(array &$form, array &$form_state) {
+  public function cancel(array &$form, FormStateInterface $form_state) {
     $order = $form_state['storage']['order'];
     if (isset($_SESSION['cart_order']) && $_SESSION['cart_order'] == $order->id()) {
       uc_order_comment_save($_SESSION['cart_order'], 0, $this->t('Customer canceled this order from the checkout form.'));

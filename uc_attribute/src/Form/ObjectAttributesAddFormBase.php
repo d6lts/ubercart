@@ -8,6 +8,7 @@
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the class/product attributes add form.
@@ -44,7 +45,7 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $attributes = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $attributes = NULL) {
     $used_aids = array();
     foreach ($attributes as $attribute) {
       $used_aids[] = $attribute->aid;
@@ -76,7 +77,7 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach (array_filter($form_state['values']['add_attributes']) as $aid) {
       // Enable all options for added attributes.
       $attribute = uc_attribute_load($aid);

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
@@ -28,7 +29,7 @@ class Check extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartDetails(UcOrderInterface $order, array $form, array &$form_state) {
+  public function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $check_config = \Drupal::config('uc_check.settings');
 
     $build['instructions'] = array(
@@ -134,7 +135,7 @@ class Check extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $check_config = \Drupal::config('uc_check.settings');
 
     $form['check_address_info'] = array(

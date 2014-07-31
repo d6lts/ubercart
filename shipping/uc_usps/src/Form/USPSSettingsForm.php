@@ -8,6 +8,7 @@
 namespace Drupal\uc_usps\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configures USPS settings.
@@ -24,7 +25,7 @@ class USPSSettingsForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $usps_config = $this->config('uc_usps.settings');
 
     // Put fieldsets into vertical tabs
@@ -223,7 +224,7 @@ class USPSSettingsForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!is_numeric($form_state['values']['uc_usps_rate_markup'])) {
       form_set_error('uc_usps_rate_markup', $form_state, t('Rate markup must be a numeric value.'));
     }
@@ -237,7 +238,7 @@ class USPSSettingsForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $usps_config = $this->config('uc_usps.settings');
 
     $values = $form_state['values'];

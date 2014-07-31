@@ -8,6 +8,7 @@
 namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -26,7 +27,7 @@ class BuyItNowForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $form['nid'] = array(
       '#type' => 'value',
       '#value' => $node->id(),
@@ -52,7 +53,7 @@ class BuyItNowForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     if (empty($form_state['redirect'])) {
       $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
       $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');

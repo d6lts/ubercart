@@ -8,6 +8,7 @@
 namespace Drupal\uc_taxes\Form;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the tax rate edit form.
@@ -17,7 +18,7 @@ class TaxRateEditForm extends TaxRateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $tax_rate = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $tax_rate = NULL) {
     $rate = uc_taxes_rate_load($tax_rate);
 
     $form = parent::buildForm($form, $form_state);
@@ -40,7 +41,7 @@ class TaxRateEditForm extends TaxRateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $rate = parent::submitForm($form, $form_state);
 
     drupal_set_message(t('Tax rate %name saved.', array('%name' => $rate->name)));

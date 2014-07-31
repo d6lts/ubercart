@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure available payment methods for the store.
@@ -29,7 +30,7 @@ class PaymentMethodSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $method = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $method = NULL) {
     $definition = \Drupal::service('plugin.manager.uc_payment.method')->getDefinition($method);
     $form['#title'] = $this->t('!method settings', array('!method' => $definition['name']));
 
@@ -42,7 +43,7 @@ class PaymentMethodSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     form_state_values_clean($form_state);
     $this->instance->submitConfigurationForm($form, $form_state);
     parent::submitForm($form, $form_state);

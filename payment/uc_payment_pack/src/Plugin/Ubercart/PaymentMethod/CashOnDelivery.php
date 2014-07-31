@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
@@ -28,7 +29,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartDetails(UcOrderInterface $order, array $form, array &$form_state) {
+  public function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     $build['policy'] = array(
@@ -51,7 +52,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartProcess(UcOrderInterface $order, array $form, array &$form_state) {
+  public function cartProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     if ($cod_config->get('delivery_date')) {
@@ -179,7 +180,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     $form['uc_cod_policy'] = array(

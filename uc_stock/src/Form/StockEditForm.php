@@ -9,6 +9,7 @@ namespace Drupal\uc_stock\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -26,7 +27,7 @@ class StockEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $form['stock'] = array(
       '#type' => 'table',
       '#header' => array(
@@ -80,7 +81,7 @@ class StockEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach (element_children($form_state['values']['stock']) as $sku) {
       $stock = $form_state['values']['stock'][$sku];
 

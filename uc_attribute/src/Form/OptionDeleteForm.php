@@ -8,6 +8,7 @@
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
@@ -51,7 +52,7 @@ class OptionDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $aid = NULL, $oid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $aid = NULL, $oid = NULL) {
     $this->option = uc_attribute_option_load($oid);
 
     return parent::buildForm($form, $form_state);
@@ -60,7 +61,7 @@ class OptionDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $match = 'i:' . $this->option->aid . ';s:' . strlen($this->option->oid) . ':"' . $this->option->oid . '";';
 
     db_delete('uc_product_adjustments')

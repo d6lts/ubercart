@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_product\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -24,7 +25,7 @@ class AddToCartForm extends BuyItNowForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $form['node'] = array(
       '#type' => 'value',
       '#value' => isset($form_state['storage']['variant']) ? $form_state['storage']['variant'] : $node,
@@ -51,7 +52,7 @@ class AddToCartForm extends BuyItNowForm {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
     $form_state['storage']['variant'] = uc_product_load_variant($form_state['values']['nid'], $data);
   }

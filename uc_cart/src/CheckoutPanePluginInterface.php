@@ -26,7 +26,7 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface, Configu
    * @param array $form_state
    *   The checkout form state array.
    */
-  public function prepare(UcOrderInterface $order, array $form, array &$form_state);
+  public function prepare(UcOrderInterface $order, array $form, FormStateInterface $form_state);
 
   /**
    * Returns the contents of a checkout pane.
@@ -41,7 +41,7 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface, Configu
    * @return array
    *   A form array.
    */
-  public function view(UcOrderInterface $order, array $form, array &$form_state);
+  public function view(UcOrderInterface $order, array $form, FormStateInterface $form_state);
 
   /**
    * Processes a checkout pane.
@@ -56,7 +56,7 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface, Configu
    * @return bool
    *   TRUE if the pane is valid, FALSE otherwise..
    */
-  public function process(UcOrderInterface $order, array $form, array &$form_state);
+  public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state);
 
   /**
    * Returns the review contents of a checkout pane.

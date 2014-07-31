@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_taxes\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Defines the new tax rate form.
  */
@@ -15,7 +17,7 @@ class TaxRateAddForm extends TaxRateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['values']['id'] = 0;
     $rate = parent::submitForm($form, $form_state);
 

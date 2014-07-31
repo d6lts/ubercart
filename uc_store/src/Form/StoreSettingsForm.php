@@ -8,6 +8,7 @@
 namespace Drupal\uc_store\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure store settings for this site.
@@ -24,7 +25,7 @@ class StoreSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('uc_store.settings');
 
     $form['store'] = array('#type' => 'vertical_tabs');
@@ -192,7 +193,7 @@ class StoreSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_store.settings')
       ->set('name', $form_state['values']['uc_store_name'])
       ->set('mail', $form_state['values']['uc_store_email'])

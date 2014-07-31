@@ -9,6 +9,7 @@ namespace Drupal\uc_payment\Form;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -59,7 +60,7 @@ class OrderPaymentsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, UcOrderInterface $uc_order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, UcOrderInterface $uc_order = NULL) {
     $this->order = $uc_order;
 
     $form['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . '/css/uc_payment.css';
@@ -171,7 +172,7 @@ class OrderPaymentsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!is_numeric($form_state['values']['payments']['new']['amount'])) {
       form_set_error('payments][new][amount', $form_state, t('You must enter a number for the amount.'));
     }
@@ -180,7 +181,7 @@ class OrderPaymentsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     global $user;
 
     $payment = $form_state['values']['payments']['new'];

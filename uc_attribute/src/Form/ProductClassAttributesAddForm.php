@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_attribute\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeTypeInterface;
 
 /**
@@ -17,7 +18,7 @@ class ProductClassAttributesAddForm extends ObjectAttributesAddFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeTypeInterface $node_type = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeTypeInterface $node_type = NULL) {
     $this->attributeTable = 'uc_class_attributes';
     $this->optionTable = 'uc_class_attribute_options';
     $this->idField = 'pcid';
@@ -30,7 +31,7 @@ class ProductClassAttributesAddForm extends ObjectAttributesAddFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $form_state['redirect'] = 'admin/structure/types/manage/' . $this->idValue;
   }

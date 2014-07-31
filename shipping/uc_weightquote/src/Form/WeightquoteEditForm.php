@@ -8,6 +8,7 @@
 namespace Drupal\uc_weightquote\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configures the store default weight-based shipping rates.
@@ -24,7 +25,7 @@ class WeightquoteEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $mid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $mid = NULL) {
     if ($mid && ($method = db_query("SELECT * FROM {uc_weightquote_methods} WHERE mid = :mid", array(':mid' => $mid))->fetchObject())) {
       $form['mid'] = array(
         '#type' => 'value',
@@ -93,7 +94,7 @@ class WeightquoteEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     if (isset($form_state['values']['mid'])) {
       drupal_write_record('uc_weightquote_methods', $form_state['values'], 'mid');
       drupal_set_message(t('Weight quote shipping method was updated.'));
@@ -114,7 +115,7 @@ class WeightquoteEditForm extends FormBase {
   /**
    * Helper function to delete a weight quote method.
    */
-  public function delete(&$form, &$form_state) {
+  public function delete(&$form, FormStateInterface $form_state) {
     $form_state['redirect'] = 'admin/store/settings/quotes/methods/weightquote/' . $form_state['values']['mid'] . '/delete';
   }
 

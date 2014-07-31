@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\UcOrderInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -53,7 +54,7 @@ class PaymentDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, UcOrderInterface $uc_order = NULL, $payment = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, UcOrderInterface $uc_order = NULL, $payment = NULL) {
     $this->payment = uc_payment_load($payment);
 
     // Make sure the payment is for the specified order.
@@ -67,7 +68,7 @@ class PaymentDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_payment_delete($this->payment->receipt_id);
     drupal_set_message(t('Payment deleted.'));
     $form_state['redirect'] = 'admin/store/orders/' . $this->payment->order_id . '/payments';

@@ -8,6 +8,7 @@
 namespace Drupal\uc_taxes\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the tax rate add/edit form.
@@ -24,7 +25,7 @@ abstract class TaxRateFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Name'),
@@ -110,7 +111,7 @@ abstract class TaxRateFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!empty($form_state['values']['rate']) && (floatval($form_state['values']['rate']) < 0)) {
       form_set_error('rate', $form_state, t('Rate must be a positive number. No commas and only one decimal point.'));
     }
@@ -119,7 +120,7 @@ abstract class TaxRateFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Determine the decimal rate value.
     if (strpos($form_state['values']['rate'], '%')) {
       $form_state['values']['rate'] = floatval($form_state['values']['rate']) / 100;

@@ -8,6 +8,7 @@
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the attribute add/edit edit form.
@@ -24,7 +25,7 @@ abstract class AttributeFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Name'),

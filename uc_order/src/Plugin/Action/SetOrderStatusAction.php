@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Plugin\Action;
 
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Sets the status of an order.
@@ -43,7 +44,7 @@ class SetOrderStatusAction extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['status'] = array(
       '#type' => 'select',
       '#title' => t('Order status'),
@@ -61,7 +62,7 @@ class SetOrderStatusAction extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['status'] = $form_state['values']['status'];
     $this->configuration['notify'] = $form_state['values']['notify'];
   }

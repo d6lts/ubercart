@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\UcOrderInterface;
 
@@ -18,14 +19,14 @@ class LegacyCheckoutPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function prepare(UcOrderInterface $order, array $form, array &$form_state) {
+  public function prepare(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $this->pluginDefinition['callback']('prepare', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function view(UcOrderInterface $order, array $form, array &$form_state) {
+  public function view(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $pane = $this->pluginDefinition['callback']('view', $order, $form, $form_state);
 
     $build = $pane['contents'];
@@ -39,7 +40,7 @@ class LegacyCheckoutPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function process(UcOrderInterface $order, array $form, array &$form_state) {
+  public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $this->pluginDefinition['callback']('process', $order, $form, $form_state);
   }
 

@@ -8,6 +8,7 @@
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -18,7 +19,7 @@ class ProductOptionsForm extends ObjectOptionsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $this->attributeTable = 'uc_product_attributes';
     $this->optionTable = 'uc_product_options';
     $this->idField = 'nid';
@@ -31,7 +32,7 @@ class ProductOptionsForm extends ObjectOptionsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
     // Clear the page and block caches.

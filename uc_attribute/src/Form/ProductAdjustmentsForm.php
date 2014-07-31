@@ -9,6 +9,7 @@ namespace Drupal\uc_attribute\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -26,7 +27,7 @@ class ProductAdjustmentsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $nid = $node->id();
 
     // Populate table and such.
@@ -172,7 +173,7 @@ class ProductAdjustmentsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state['values']['body'] as $value) {
       if (!empty($value['model']) && $value['model'] != $form_state['values']['default']) {
         db_merge('uc_product_adjustments')

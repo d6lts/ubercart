@@ -8,6 +8,7 @@
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the attribute option add/edit edit form.
@@ -24,7 +25,7 @@ abstract class OptionFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $aid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $aid = NULL) {
     $form['aid'] = array('#type' => 'value', '#value' => $aid);
 
     $form['name'] = array(
@@ -84,7 +85,7 @@ abstract class OptionFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $pattern = '/^-?\d*(\.\d*)?$/';
     if (!is_numeric($form_state['values']['weight']) && !preg_match($pattern, $form_state['values']['weight'])) {
       form_set_error('weight', $form_state, $this->t('This must be in a valid number format. No commas and only one decimal point.'));

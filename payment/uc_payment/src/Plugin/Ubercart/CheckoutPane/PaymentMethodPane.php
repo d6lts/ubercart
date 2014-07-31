@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment\Plugin\Ubercart\CheckoutPane;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\UcOrderInterface;
@@ -62,7 +63,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function view(UcOrderInterface $order, array $form, array &$form_state) {
+  public function view(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $contents['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . '/css/uc_payment.css';
 
     if ($this->configuration['show_preview']) {
@@ -144,7 +145,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function process(UcOrderInterface $order, array $form, array &$form_state) {
+  public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     if (empty($form_state['values']['panes']['payment']['payment_method'])) {
       form_set_error('panes][payment][payment_method', $form_state, t('You cannot check out without selecting a payment method.'));
       return FALSE;

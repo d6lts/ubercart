@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Gives customers the option to finish checkout or revise their information.
@@ -24,7 +25,7 @@ class CheckoutReviewForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $order = NULL) {
     if (!isset($form_state['uc_order'])) {
       $form_state['uc_order'] = $order;
     }
@@ -47,7 +48,7 @@ class CheckoutReviewForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Invoke hook_uc_order($op = 'submit') to test to make sure the order can
     // be completed... used for auto payment in uc_credit.module.
     $order = $form_state['uc_order'];
@@ -90,7 +91,7 @@ class CheckoutReviewForm extends FormBase {
   /**
    * Returns the customer to the checkout page to edit their information.
    */
-  public function back(array &$form, array &$form_state) {
+  public function back(array &$form, FormStateInterface $form_state) {
     $form_state['redirect_route']['route_name'] = 'uc_cart.checkout';
   }
 

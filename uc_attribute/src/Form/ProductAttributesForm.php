@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_attribute\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -17,7 +18,7 @@ class ProductAttributesForm extends ObjectAttributesFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $this->attributeTable = 'uc_product_attributes';
     $this->optionTable = 'uc_product_options';
     $this->idField = 'nid';

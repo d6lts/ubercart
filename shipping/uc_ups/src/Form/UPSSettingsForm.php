@@ -8,6 +8,7 @@
 namespace Drupal\uc_ups\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configures UPS settings.
@@ -27,7 +28,7 @@ class UPSSettingsForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $ups_config = $this->config('uc_ups.settings');
 
     // Put fieldsets into vertical tabs
@@ -283,7 +284,7 @@ class UPSSettingsForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $old_password = $this->config('uc_ups.settings')->get('password');
     if (!$form_state['values']['uc_ups_password']) {
       if ($old_password) {
@@ -307,7 +308,7 @@ class UPSSettingsForm extends ConfigFormBase {
   /**
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $ups_config = $this->config('uc_ups.settings');
 
     $values = $form_state['values'];

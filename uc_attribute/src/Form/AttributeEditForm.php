@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_attribute\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Defines the attribute edit form.
  */
@@ -15,7 +17,7 @@ class AttributeEditForm extends AttributeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $aid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $aid = NULL) {
     $attribute = uc_attribute_load($aid);
 
     $form = parent::buildForm($form, $form_state);
@@ -36,7 +38,7 @@ class AttributeEditForm extends AttributeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_write_record('uc_attributes', $form_state['values'], 'aid');
     $form_state['redirect'] = 'admin/store/products/attributes';
   }

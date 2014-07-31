@@ -8,6 +8,7 @@
 namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -25,7 +26,7 @@ class ProductFeatureAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $form['#node'] = $node;
 
     foreach (\Drupal::moduleHandler()->invokeAll('uc_product_feature') as $feature) {
@@ -51,7 +52,7 @@ class ProductFeatureAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state['redirect'] = 'node/' . $form['#node']->id() . '/edit/features/' . $form_state['values']['feature'] . '/add';
   }
 

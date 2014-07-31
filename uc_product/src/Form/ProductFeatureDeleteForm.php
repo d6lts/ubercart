@@ -8,6 +8,7 @@
 namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
@@ -69,7 +70,7 @@ class ProductFeatureDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, NodeInterface $node = NULL, $fid = NULL, $pfid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL, $fid = NULL, $pfid = NULL) {
     $this->node = $node;
     $this->featureId = $fid;
     $this->feature = uc_product_feature_load($pfid);
@@ -80,7 +81,7 @@ class ProductFeatureDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_product_feature_delete($this->feature['pfid']);
     drupal_set_message(t('The product feature has been deleted.'));
     $form_state['redirect'] = 'node/' . $this->node->id() . '/edit/features';

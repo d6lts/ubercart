@@ -9,6 +9,7 @@ namespace Drupal\uc_attribute\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines the class/product attributes options form.
@@ -45,7 +46,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $attributes = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $attributes = NULL) {
     $form['attributes']['#tree'] = TRUE;
 
     foreach ($attributes as $aid => $attribute) {
@@ -164,7 +165,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     $error = FALSE;
 
     if (isset($form_state['values']['attributes'])) {
@@ -192,7 +193,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state['values']['attributes'] as $aid => $attribute) {
       if (isset($attribute['default'])) {
         db_update($this->attributeTable)

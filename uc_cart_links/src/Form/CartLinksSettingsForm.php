@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart_links\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure general shopping cart settings for this site.
@@ -24,7 +25,7 @@ class CartLinksSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $cart_links_config = $this->config('uc_cart_links.settings');
 
     $form['uc_cart_links_add_show'] = array(
@@ -69,7 +70,7 @@ class CartLinksSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state['values'];
 
     $cart_links_config = $this->config('uc_cart_links.settings');

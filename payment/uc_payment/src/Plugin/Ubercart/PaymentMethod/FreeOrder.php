@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment\Plugin\Ubercart\PaymentMethod;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
@@ -28,7 +29,7 @@ class FreeOrder extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartDetails(UcOrderInterface $order, array $form, array &$form_state) {
+  public function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     return array(
       '#markup' => t('Continue with checkout to complete your order.'),
     );

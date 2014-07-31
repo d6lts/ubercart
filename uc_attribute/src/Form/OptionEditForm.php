@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_attribute\Form;
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Defines the attribute option edit form.
  */
@@ -15,7 +17,7 @@ class OptionEditForm extends OptionFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $aid = NULL, $oid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $aid = NULL, $oid = NULL) {
     $option = uc_attribute_option_load($oid);
 
     $form = parent::buildForm($form, $form_state, $aid);
@@ -35,7 +37,7 @@ class OptionEditForm extends OptionFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_write_record('uc_attribute_options', $form_state['values'], array('aid', 'oid'));
     drupal_set_message(t('Updated option %option.', array('%option' => $form_state['values']['name'])));
     watchdog('uc_attribute', 'Updated option %option.', array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/products/attributes/' . $form_state['values']['aid'] . '/options/' . $form_state['values']['oid']);

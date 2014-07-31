@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
@@ -25,7 +26,7 @@ class OrderUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, UcOrderInterface $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, UcOrderInterface $order = NULL) {
     $form['order_comment_field'] = array(
       '#type' => 'details',
       '#title' => t('Add an order comment'),
@@ -83,7 +84,7 @@ class OrderUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $uid = \Drupal::currentUser()->id();
 
     if (!empty($form_state['values']['order_comment'])) {

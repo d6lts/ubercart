@@ -9,6 +9,7 @@ namespace Drupal\uc_attribute\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Displays options and the modifications to products they represent.
@@ -25,7 +26,7 @@ class AttributeOptionsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $aid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $aid = NULL) {
     $attribute = uc_attribute_load($aid);
 
     $form['#title'] = $this->t('Options for %name', array('%name' => $attribute->name));
@@ -100,7 +101,7 @@ class AttributeOptionsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state['values']['options'] as $oid => $option) {
       db_update('uc_attribute_options')
         ->fields(array(

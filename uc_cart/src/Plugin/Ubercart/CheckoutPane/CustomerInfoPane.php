@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\UcOrderInterface;
 
@@ -25,7 +26,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function view(UcOrderInterface $order, array $form, array &$form_state) {
+  public function view(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $user = \Drupal::currentUser();
     $cart_config = \Drupal::config('uc_cart.settings');
 
@@ -102,7 +103,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function process(UcOrderInterface $order, array $form, array &$form_state) {
+  public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     $user = \Drupal::currentUser();
     $cart_config = \Drupal::config('uc_cart.settings');
 

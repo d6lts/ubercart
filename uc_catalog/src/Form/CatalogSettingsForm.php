@@ -8,6 +8,7 @@
 namespace Drupal\uc_catalog\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Views;
 
 /**
@@ -25,7 +26,7 @@ class CatalogSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('uc_catalog.settings');
 
     $view = Views::getView('uc_catalog');
@@ -76,7 +77,7 @@ class CatalogSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_catalog.settings')
       ->set('display', $form_state['values']['uc_catalog_display'])
       ->set('vocabulary', $form_state['values']['uc_catalog_vid'])

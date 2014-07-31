@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment\Plugin\Ubercart\PaymentMethod;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
@@ -18,14 +19,14 @@ class LegacyPaymentMethod extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  function cartDetails(UcOrderInterface $order, array $form, array &$form_state) {
+  function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     return $this->pluginDefinition['callback']('cart-details', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  function cartProcess(UcOrderInterface $order, array $form, array &$form_state) {
+  function cartProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     return $this->pluginDefinition['callback']('cart-process', $order, $form, $form_state);
   }
 
@@ -95,7 +96,7 @@ class LegacyPaymentMethod extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $null = NULL;
     return $this->pluginDefinition['callback']('settings', $null, $form, $form_state);
   }
@@ -103,7 +104,7 @@ class LegacyPaymentMethod extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array $form, array &$form_state) {
+  public function submitConfigurationForm(array $form, FormStateInterface $form_state) {
     // @todo Refactor when uc_credit is moved to a separate plugin.
     if ($this->pluginId == 'credit') {
       \Drupal::config('uc_credit.settings')

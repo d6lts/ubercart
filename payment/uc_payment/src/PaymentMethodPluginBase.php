@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\uc_order\UcOrderInterface;
 
@@ -18,14 +19,14 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
-  public function cartDetails(UcOrderInterface $order, array $form, array &$form_state) {
+  public function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function cartProcess(UcOrderInterface $order, array $form, array &$form_state) {
+  public function cartProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     return TRUE;
   }
 
@@ -98,14 +99,14 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array $form, array &$form_state) {
+  public function submitConfigurationForm(array $form, FormStateInterface $form_state) {
   }
 
 }

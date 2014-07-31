@@ -10,6 +10,7 @@ namespace Drupal\uc_payment\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -59,7 +60,7 @@ class PaymentMethodsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['methods'] = array(
       '#type' => 'table',
       '#header' => array(t('Payment method'), t('List position'), t('Operations')),
@@ -136,7 +137,7 @@ class PaymentMethodsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_payment.settings')
       ->set('methods', $form_state['values']['methods'])
       ->save();

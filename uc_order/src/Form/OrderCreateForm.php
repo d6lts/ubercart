@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Creates a new order and redirect to its edit screen.
@@ -24,7 +25,7 @@ class OrderCreateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form['customer_type'] = array(
       '#type' => 'radios',
       '#options' => array(
@@ -209,7 +210,7 @@ class OrderCreateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     switch ($form_state['values']['customer_type']) {
       case 'search':
         if (empty($form_state['values']['customer']['uid'])) {
@@ -230,7 +231,7 @@ class OrderCreateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     global $user;
 
     switch ($form_state['values']['customer_type']) {

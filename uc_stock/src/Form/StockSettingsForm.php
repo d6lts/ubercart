@@ -8,6 +8,7 @@
 namespace Drupal\uc_stock\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure stock settings for this site.
@@ -24,7 +25,7 @@ class StockSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('uc_stock.settings');
     $mail = $this->config('uc_stock.mail');
 
@@ -67,7 +68,7 @@ class StockSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_stock.settings')
       ->set('notify', $form_state['values']['uc_stock_threshold_notification'])
       ->set('recipients', $form_state['values']['uc_stock_threshold_notification_recipients'])

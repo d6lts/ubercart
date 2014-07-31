@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
@@ -28,7 +29,7 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
    * @return array
    *   A form or render array.
    */
-  public function cartDetails(UcOrderInterface $order, array $form, array &$form_state);
+  public function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state);
 
   /**
    * Called when checkout is submitted with this payment method selected.
@@ -47,7 +48,7 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
    *   Return FALSE to abort the checkout process, or any other value to
    *   continue the checkout process.
    */
-  public function cartProcess(UcOrderInterface $order, array $form, array &$form_state);
+  public function cartProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state);
 
   /**
    * Returns the payment method title to be used on the checkout review page.
@@ -158,6 +159,6 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
    * @return array
    *   The settings form.
    */
-  public function settingsForm(array $form, array &$form_state);
+  public function settingsForm(array $form, FormStateInterface $form_state);
 
 }

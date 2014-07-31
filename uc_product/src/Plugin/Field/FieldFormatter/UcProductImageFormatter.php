@@ -8,6 +8,7 @@
 namespace Drupal\uc_product\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatterBase;
 
 /**
@@ -31,7 +32,7 @@ class UcProductImageFormatter extends ImageFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state) {
     $image_styles = image_style_options(FALSE);
     $element['first_image_style'] = array(
       '#title' => t('First image style'),
