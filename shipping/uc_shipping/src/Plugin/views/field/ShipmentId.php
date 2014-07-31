@@ -8,6 +8,7 @@
 namespace Drupal\uc_shipping\Plugin\views\field;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -44,7 +45,7 @@ class ShipmentId extends FieldPluginBase {
    *
    * Provides link to shipment administration page.
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::options_form($form, $form_state);
     $form['link_to_shipment'] = array(
       '#title' => t('Link this field to the shipment page'),

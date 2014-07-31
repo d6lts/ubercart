@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order\Plugin\views\field;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -46,7 +47,7 @@ class Order extends FieldPluginBase {
    *
    * Provide link to order option
    */
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_order'] = array(
       '#title' => t('Link this field to the order view page'),
       '#description' => t("Enable to override this field's links."),

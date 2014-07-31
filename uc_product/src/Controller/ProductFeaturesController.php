@@ -9,6 +9,7 @@ namespace Drupal\uc_product\Controller;
 
 use Drupal\Core\Access\AccessInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Form\FormState;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -58,6 +59,7 @@ class ProductFeaturesController extends ControllerBase {
    */
   public function featureAdd(NodeInterface $node, $fid) {
     $func = uc_product_feature_data($fid, 'callback');
+    $form_state = new FormState();
     $form_state['build_info']['args'] = array($node, NULL);
     return $this->formBuilder()->buildForm($func, $form_state);
   }
@@ -67,6 +69,7 @@ class ProductFeaturesController extends ControllerBase {
    */
   public function featureEdit(NodeInterface $node, $fid, $pfid) {
     $func = uc_product_feature_data($fid, 'callback');
+    $form_state = new FormState();
     $form_state['build_info']['args'] = array($node, uc_product_feature_load($pfid));
     return $this->formBuilder()->buildForm($func, $form_state);
   }

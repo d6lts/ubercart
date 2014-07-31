@@ -12,6 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\NodeInterface;
@@ -278,7 +279,7 @@ function uc_product_node_builder($entity_type, $entity, &$form, &$form_state) {
 /**
  * Implements hook_node_prepare_form().
  */
-function uc_product_node_prepare_form(NodeInterface $node, $operation, array &$form_state) {
+function uc_product_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
   if (!uc_product_is_product($node)) {
     return;
   }

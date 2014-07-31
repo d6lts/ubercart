@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Plugin\views\argument_validator;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
@@ -33,7 +34,7 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     return $options;
   }
 
-  public function buildOptionsForm(&$form, &$form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['type'] = array(
       '#type' => 'radios',
       '#title' => t('Type of user filter value to allow'),
