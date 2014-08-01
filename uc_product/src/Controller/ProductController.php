@@ -27,15 +27,27 @@ class ProductController extends ControllerBase {
     $header = array(t('Class ID'), t('Name'), t('Description'), t('Operations'));
     $rows = array();
     foreach ($classes as $class) {
-      $ops = array(l(t('edit'), 'admin/structure/types/manage/' . $class->type));
+      $links = array();
+      $links['edit'] = array(
+        'title' => t('Edit'),
+        'href' => 'admin/structure/types/manage/' . $class->type,
+      );
       if (!$class->isLocked()) {
-        $ops[] = l(t('delete'), 'admin/structure/types/manage/' . $class->type . '/delete');
+        $links['delete'] = array(
+          'title' => t('Delete'),
+          'href' => 'admin/structure/types/manage/' . $class->type . '/delete',
+        );
       }
       $rows[] = array(
         String::checkPlain($class->type),
         String::checkPlain($class->name),
         Xss::filterAdmin($class->description),
-        implode(' ', $ops),
+        array(
+          'data' => array(
+            '#type' => 'operations',
+            '#links' => $links,
+          )
+        ),
       );
     }
 
