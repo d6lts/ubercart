@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_store\Controller;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\system\Controller\SystemController;
 
 /**
@@ -40,7 +41,7 @@ class StoreController extends SystemController {
 
       $build['status'] = array(
         '#theme' => 'table',
-        '#caption' => '<h2>' . t('Store status') . '</h2>',
+        '#caption' => SafeMarkup::set('<h2>' . t('Store status') . '</h2>'),
         '#rows' => $rows,
         '#attributes' => array('class' => array('system-status-report')),
       );
