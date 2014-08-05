@@ -23,10 +23,6 @@ function uc_catalog_uninstall() {
     $vocab = taxonomy_vocabulary_load($vid);
     drupal_set_message(t('The Ubercart Catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', array('@url' => url('admin/structure/taxonomy/manage/' . $vocab->id() . '/edit'))), 'warning');
   }
-
-  db_delete('variable')
-    ->condition('name', 'uc_catalog_%', 'LIKE')
-    ->execute();
 }
 
 /**
