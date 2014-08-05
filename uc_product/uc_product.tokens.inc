@@ -125,24 +125,6 @@ function uc_product_token_info() {
 }
 
 /**
- * Implements hook_token_info_alter().
- *
- * Remove unwanted entity tokens.
- */
-function uc_product_token_info_alter(&$info) {
-  $tokens = array(
-    'model', 'list-price', 'cost', 'sell-price', 'weight', 'weight-units',
-    'length', 'width', 'height', 'length_units', 'pkg-qty', 'ordering', 'shippable',
-  );
-
-  foreach ($tokens as $token) {
-    if (!empty($info['tokens']['node'][$token]['entity-token'])) {
-      unset($info['tokens']['node'][$token]);
-    }
-  }
-}
-
-/**
  * Implements hook_tokens().
  */
 function uc_product_tokens($type, $tokens, $data = array(), $options = array()) {
