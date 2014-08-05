@@ -184,7 +184,7 @@ display:
           provider: field
         name:
           id: name
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           field: name
           relationship: none
           group_type: group
@@ -243,13 +243,13 @@ display:
       sorts:
         weight:
           id: weight
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           field: weight
           plugin_id: standard
           provider: views
         name:
           id: name
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           field: name
           relationship: none
           group_type: group
