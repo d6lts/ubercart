@@ -32,9 +32,11 @@ use Drupal\uc_store\Address;
  *     }
  *   },
  *   base_table = "uc_orders",
- *   uri_callback = "uc_order_uri",
  *   fieldable = TRUE,
  *   links = {
+ *     "canonical" = "uc_order.admin_view",
+ *     "delete-form" = "uc_order.admin_delete",
+ *     "edit-form" = "uc_order.admin_edit",
  *     "admin-form" = "uc_order.workflow"
  *   },
  *   entity_keys = {

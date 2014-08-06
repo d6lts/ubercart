@@ -135,16 +135,4 @@ class UcOrderForm extends ContentEntityForm {
     return $order;
   }
 
-  /**
-   * Form submission handler for the 'delete' action.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param array $form_state
-   *   A reference to a keyed array containing the current state of the form.
-   */
-  public function delete(array $form, FormStateInterface $form_state) {
-    $form_state['redirect'] = 'admin/store/orders/' . $this->entity->id() . '/delete';
-  }
-
 }
