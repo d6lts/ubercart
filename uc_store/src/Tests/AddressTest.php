@@ -99,21 +99,21 @@ class AddressTest extends UbercartTestBase {
 
     // Populate object with defaults.
     $address = new Address();
-    $address->first_name  = $this->randomName(6);
-    $address->last_name   = $this->randomName(12);
-    $address->company     = $this->randomName(10) . ', Inc.';
+    $address->first_name  = $this->randomMachineName(6);
+    $address->last_name   = $this->randomMachineName(12);
+    $address->company     = $this->randomMachineName(10) . ', Inc.';
     $address->street1     = mt_rand(100, 1000) . ' ' .
-                            $this->randomName(10) . ' ' .
+                            $this->randomMachineName(10) . ' ' .
                             array_rand($street);
     $address->street2     = 'Suite ' . mt_rand(100, 999);
-    $address->city        = $this->randomName(10);
+    $address->city        = $this->randomMachineName(10);
     $address->zone        = 23;
     $address->country     = 840;
     $address->postal_code = mt_rand(10000, 99999);
     $address->phone       = '(' . mt_rand(100, 999) . ') ' .
                             mt_rand(100, 999) . '-' . mt_rand(0, 9999);
-    $address->email       = $this->randomName(6) . '@' .
-                            $this->randomName(8) . '.com';
+    $address->email       = $this->randomMachineName(6) . '@' .
+                            $this->randomMachineName(8) . '.com';
 
     foreach ($settings as $property => $value) {
       $address->$property = $value;

@@ -25,14 +25,14 @@ class InclusiveTaxesTest extends UbercartTestBase {
     // Create a 20% inclusive tax rate.
     $rate = (object) array(
       'id' => 0, // TODO: should not have to set this
-      'name' => $this->randomName(8),
+      'name' => $this->randomMachineName(8),
       'rate' => 0.2,
       'taxed_product_types' => array('product'),
       'taxed_line_items' => array(),
       'weight' => 0,
       'shippable' => 0,
       'display_include' => 1,
-      'inclusion_text' => $this->randomName(6),
+      'inclusion_text' => $this->randomMachineName(6),
     );
     uc_taxes_rate_save($rate);
 
@@ -46,9 +46,9 @@ class InclusiveTaxesTest extends UbercartTestBase {
 
     // Create an attribute.
     $attribute = (object) array(
-      'name' => $this->randomName(8),
-      'label' => $this->randomName(8),
-      'description' => $this->randomName(8),
+      'name' => $this->randomMachineName(8),
+      'label' => $this->randomMachineName(8),
+      'description' => $this->randomMachineName(8),
       'required' => TRUE,
       'display' => 1,
       'ordering' => 0,
@@ -58,7 +58,7 @@ class InclusiveTaxesTest extends UbercartTestBase {
     // Create an option with a price adjustment of $5.
     $option = (object) array(
       'aid' => $attribute->aid,
-      'name' => $this->randomName(8),
+      'name' => $this->randomMachineName(8),
       'cost' => 0,
       'price' => 5,
       'weight' => 0,

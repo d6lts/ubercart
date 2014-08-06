@@ -438,7 +438,7 @@ class CartLinksTest extends UbercartTestBase {
     $messages = array();
     for ($i = 0; $i < 15; $i++) {
       $key = mt_rand(1, 999);
-      $messages[$key] = $key . '|' . $this->randomName(32);
+      $messages[$key] = $key . '|' . $this->randomMachineName(32);
     }
     $this->setCartLinksUIMessages($messages);
 
@@ -497,7 +497,7 @@ class CartLinksTest extends UbercartTestBase {
     // Create three tracking IDs
     $tracking = array();
     for ($i = 0; $i < 3; $i++) {
-      $tracking[$this->randomName(16)] = 0;
+      $tracking[$this->randomMachineName(16)] = 0;
     }
 
     // Click a number of links to create some statistics
@@ -688,7 +688,7 @@ class CartLinksTest extends UbercartTestBase {
       'type' => 'page',  // This is default anyway ...
       'body' => array(
         0 => array(
-          'value' => !empty($links) ? drupal_render($item_list) : $this->randomName(128),
+          'value' => !empty($links) ? drupal_render($item_list) : $this->randomMachineName(128),
           'format' => 'full_html',
         )
       ),
@@ -802,7 +802,7 @@ class CartLinksTest extends UbercartTestBase {
         // only 1 option allowed.  If checkbox, multiple are allowed.
         switch ($attribute->display) {
           case 0:  // textfield
-            $value = $this->randomName(12);  // Textfield
+            $value = $this->randomMachineName(12);  // Textfield
             $link_data[$key]['attributes'][$attribute->label][] = $value;
             $cart_links[$key] .= '_a' . $attribute->aid . 'o' . $value;
             break;

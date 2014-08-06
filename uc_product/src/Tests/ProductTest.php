@@ -44,9 +44,9 @@ class ProductTest extends UbercartTestBase {
 
     // Make a node with those fields.
     $edit = array(
-      $title_key => $this->randomName(32),
-      $body_key => $this->randomName(64),
-      'model' => $this->randomName(8),
+      $title_key => $this->randomMachineName(32),
+      $body_key => $this->randomMachineName(64),
+      'model' => $this->randomMachineName(8),
       'list_price' => mt_rand(1, 200),
       'cost' => mt_rand(0, 100),
       'sell_price' => mt_rand(1, 150),
@@ -87,9 +87,9 @@ class ProductTest extends UbercartTestBase {
 
     // Update the node fields.
     $edit = array(
-      $title_key => $this->randomName(32),
-      $body_key => $this->randomName(64),
-      'model' => $this->randomName(8),
+      $title_key => $this->randomMachineName(32),
+      $body_key => $this->randomMachineName(64),
+      'model' => $this->randomMachineName(8),
       'list_price' => mt_rand(1, 200),
       'cost' => mt_rand(0, 100),
       'sell_price' => mt_rand(1, 150),
@@ -132,11 +132,11 @@ class ProductTest extends UbercartTestBase {
 
   public function testProductClassForm() {
     // Try making a new product class.
-    $class = strtolower($this->randomName(12));
+    $class = strtolower($this->randomMachineName(12));
     $edit = array(
       'type' => $class,
       'name' => $class,
-      'description' => $this->randomName(32),
+      'description' => $this->randomMachineName(32),
       'settings[uc_product][product]' => 1,
     );
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
@@ -144,7 +144,7 @@ class ProductTest extends UbercartTestBase {
 
     // Make an existing node type a product class.
     $type = $this->drupalCreateContentType(array(
-      'description' => $this->randomName(),
+      'description' => $this->randomMachineName(),
     ));
     $edit = array(
       'settings[uc_product][product]' => 1,

@@ -49,7 +49,7 @@ class OrderTest extends UbercartTestBase {
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
-    $name = $this->randomName();
+    $name = $this->randomMachineName();
     $order = entity_create('uc_order', array(
       'uid' => $this->customer->id(),
       'order_status' => 'completed',
@@ -135,8 +135,8 @@ class OrderTest extends UbercartTestBase {
     $this->assertText(Unicode::strtoupper($address->first_name . ' ' . $address->last_name), 'Found customer name.');
 
     $edit = array(
-      'bill_to[first_name]' => $this->randomName(8),
-      'bill_to[last_name]' => $this->randomName(15),
+      'bill_to[first_name]' => $this->randomMachineName(8),
+      'bill_to[last_name]' => $this->randomMachineName(15),
     );
     $this->drupalPostForm('admin/store/orders/' . $order->id() . '/edit', $edit, t('Save changes'));
     $this->assertText(t('Order changes saved.'));
@@ -159,8 +159,8 @@ class OrderTest extends UbercartTestBase {
     $this->drupalGet('admin/store/settings/orders');
     $this->clickLink('Create custom order status');
     $edit = array(
-      'id' => strtolower($this->randomName()),
-      'name' => $this->randomName(),
+      'id' => strtolower($this->randomMachineName()),
+      'name' => $this->randomMachineName(),
       'state' => 'in_checkout',
       'weight' => -15,
     );
@@ -181,7 +181,7 @@ class OrderTest extends UbercartTestBase {
 
     // Update an order status label.
     $this->drupalGet('admin/store/settings/orders');
-    $title = $this->randomName();
+    $title = $this->randomMachineName();
     $edit = array(
       'order_statuses[in_checkout][name]' => $title,
     );
@@ -196,8 +196,8 @@ class OrderTest extends UbercartTestBase {
     $this->drupalGet('admin/store/settings/orders');
     $this->clickLink('Create custom order status');
     $edit = array(
-      'id' => strtolower($this->randomName()),
-      'name' => $this->randomName(),
+      'id' => strtolower($this->randomMachineName()),
+      'name' => $this->randomMachineName(),
       'state' => array_rand(uc_order_state_options_list()),
       'weight' => mt_rand(-10, 10),
     );
@@ -224,21 +224,21 @@ class OrderTest extends UbercartTestBase {
     $zones = uc_zone_option_list();
 
     $delivery_address = new Address();
-    $delivery_address->first_name = $this->randomName(12);
-    $delivery_address->last_name = $this->randomName(12);
-    $delivery_address->street1 = $this->randomName(12);
-    $delivery_address->street2 = $this->randomName(12);
-    $delivery_address->city = $this->randomName(12);
+    $delivery_address->first_name = $this->randomMachineName(12);
+    $delivery_address->last_name = $this->randomMachineName(12);
+    $delivery_address->street1 = $this->randomMachineName(12);
+    $delivery_address->street2 = $this->randomMachineName(12);
+    $delivery_address->city = $this->randomMachineName(12);
     $delivery_address->zone = array_rand($zones[$countries[$country]]);
     $delivery_address->postal_code = mt_rand(10000, 99999);
     $delivery_address->country = $country;
 
     $billing_address = new Address();
-    $billing_address->first_name = $this->randomName(12);
-    $billing_address->last_name = $this->randomName(12);
-    $billing_address->street1 = $this->randomName(12);
-    $billing_address->street2 = $this->randomName(12);
-    $billing_address->city = $this->randomName(12);
+    $billing_address->first_name = $this->randomMachineName(12);
+    $billing_address->last_name = $this->randomMachineName(12);
+    $billing_address->street1 = $this->randomMachineName(12);
+    $billing_address->street2 = $this->randomMachineName(12);
+    $billing_address->city = $this->randomMachineName(12);
     $billing_address->zone = array_rand($zones[$countries[$country]]);
     $billing_address->postal_code = mt_rand(10000, 99999);
     $billing_address->country = $country;

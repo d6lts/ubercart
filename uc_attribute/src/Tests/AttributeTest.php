@@ -789,7 +789,7 @@ class AttributeTest extends UbercartTestBase {
       }
       else {
         $option = new \stdClass();
-        $option->name = self::randomName();
+        $option->name = self::randomMachineName();
         $option->price = 0;
         $edit = array("attributes[$attribute->aid]" => $option->name);
       }
@@ -807,7 +807,7 @@ class AttributeTest extends UbercartTestBase {
    */
   public function createProductAdjustment($data) {
     $adjustment = $data + array(
-      'model' => $this->randomName(8),
+      'model' => $this->randomMachineName(8),
     );
     db_insert('uc_product_adjustments')
       ->fields($adjustment)

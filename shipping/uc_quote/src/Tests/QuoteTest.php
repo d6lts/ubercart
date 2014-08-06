@@ -37,8 +37,8 @@ class QuoteTest extends UbercartTestBase {
    */
   protected function createQuote($edit = array(), $condition = FALSE) {
     $edit += array(
-      'title' => $this->randomName(8),
-      'label' => $this->randomName(8),
+      'title' => $this->randomMachineName(8),
+      'label' => $this->randomMachineName(8),
       'base_rate' => mt_rand(1, 10),
       'product_rate' => mt_rand(1, 10),
     );

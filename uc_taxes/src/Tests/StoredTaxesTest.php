@@ -47,7 +47,7 @@ class StoredTaxesTest extends UbercartTestBase {
     // Create a 20% inclusive tax rate.
     $rate = (object) array(
       'id' => 0, // TODO: should not have to set this
-      'name' => $this->randomName(8),
+      'name' => $this->randomMachineName(8),
       'rate' => 0.2,
       'taxed_product_types' => array('product'),
       'taxed_line_items' => array(),

@@ -249,8 +249,8 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->drupalPostForm('admin/store/settings/checkout', $settings, t('Save configuration'));
     $this->drupalLogout();
 
-    $username = $this->randomName(20);
-    $password = $this->randomName(20);
+    $username = $this->randomMachineName(20);
+    $password = $this->randomMachineName(20);
 
     $this->addToCart($this->product);
     $this->checkout(array(
@@ -312,7 +312,7 @@ class CartCheckoutTest extends UbercartTestBase {
     // Test with an account that already exists.
     $this->addToCart($this->product);
     $edit = array(
-      'panes[customer][primary_email]' => $this->randomName(8) . '@example.com',
+      'panes[customer][primary_email]' => $this->randomMachineName(8) . '@example.com',
       'panes[customer][new_account][name]' => $this->adminUser->name->value,
     );
     $this->drupalPostForm('cart/checkout', $edit, 'Review order');
@@ -320,7 +320,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Let the account be automatically created instead.
     $edit = array(
-      'panes[customer][primary_email]' => $this->randomName(8) . '@example.com',
+      'panes[customer][primary_email]' => $this->randomMachineName(8) . '@example.com',
       'panes[customer][new_account][name]' => '',
     );
     $this->drupalPostForm('cart/checkout', $edit, 'Review order');
@@ -516,7 +516,7 @@ class CartCheckoutTest extends UbercartTestBase {
       $this->drupalGet('<front>');
       $this->drupalPostForm('cart', array(), 'Checkout');
       $this->assertNoRaw($oldname, 'Customer name was cleared after timeout.');
-      $newname = $this->randomName(10);
+      $newname = $this->randomMachineName(10);
       $edit['panes[delivery][first_name]'] = $newname;
       $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
       $new_order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $newname))->fetchField();
@@ -544,7 +544,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertText('E-mail address: ' . $mail);
 
     // Use the 'edit' link to change the email address on the account.
-    $new_mail = $this->randomName() . '@example.com';
+    $new_mail = $this->randomMachineName() . '@example.com';
     $this->clickLink('edit');
     $data = array(
       'current_pass' => $this->customer->pass_raw,

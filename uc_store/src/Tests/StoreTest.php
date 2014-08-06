@@ -25,20 +25,20 @@ class StoreTest extends UbercartTestBase {
     $this->assertText('Store status');
 
     $edit = array(
-      'uc_store_name' => $this->randomName(),
-      'uc_store_email' => $this->randomName() . '@example.com',
-      'uc_store_phone' => $this->randomName(),
-      'uc_store_fax' => $this->randomName(),
-      'uc_store_help_page' => $this->randomName(),
-      'uc_store_street1' => $this->randomName(),
-      'uc_store_street2' => $this->randomName(),
-      'uc_store_city' => $this->randomName(),
+      'uc_store_name' => $this->randomMachineName(),
+      'uc_store_email' => $this->randomMachineName() . '@example.com',
+      'uc_store_phone' => $this->randomMachineName(),
+      'uc_store_fax' => $this->randomMachineName(),
+      'uc_store_help_page' => $this->randomMachineName(),
+      'uc_store_street1' => $this->randomMachineName(),
+      'uc_store_street2' => $this->randomMachineName(),
+      'uc_store_city' => $this->randomMachineName(),
       'uc_store_zone' => mt_rand(1, 65),
-      'uc_store_postal_code' => $this->randomName(),
-      'uc_currency_code' => $this->randomName(3),
-      'uc_currency_sign' => $this->randomName(1),
-      'uc_currency_thou' => $this->randomName(1),
-      'uc_currency_dec' => $this->randomName(1),
+      'uc_store_postal_code' => $this->randomMachineName(),
+      'uc_currency_code' => $this->randomMachineName(3),
+      'uc_currency_sign' => $this->randomMachineName(1),
+      'uc_currency_thou' => $this->randomMachineName(1),
+      'uc_currency_dec' => $this->randomMachineName(1),
       'uc_currency_prec' => mt_rand(0, 2),
     );
     $this->drupalPostForm('admin/store/settings/store', $edit, 'Save configuration');

@@ -42,8 +42,8 @@ class ProductKitTest extends UbercartTestBase {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     $edit = array(
-      $title_key => $this->randomName(32),
-      $body_key => $this->randomName(64),
+      $title_key => $this->randomMachineName(32),
+      $body_key => $this->randomMachineName(64),
       'products[]' => array(
         $products[0]->id(),
         $products[1]->id(),
@@ -72,7 +72,7 @@ class ProductKitTest extends UbercartTestBase {
     }
     $kit = $this->drupalCreateNode(array(
       'type' => 'product_kit',
-      'title[0][value]' => $this->randomName(32),
+      'title[0][value]' => $this->randomMachineName(32),
       'products' => array(
         $products[0]->id(),
         $products[1]->id(),
@@ -142,7 +142,7 @@ class ProductKitTest extends UbercartTestBase {
     }
     $kit_data = array(
       'type' => 'product_kit',
-      'title[0][value]' => $this->randomName(32),
+      'title[0][value]' => $this->randomMachineName(32),
       'products' => array(
         $products[0]->id(),
         $products[1]->id(),

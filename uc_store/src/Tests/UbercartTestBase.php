@@ -75,7 +75,7 @@ abstract class UbercartTestBase extends WebTestBase {
     $length_units = array('in', 'ft', 'cm', 'mm');
     $product += array(
       'type' => 'product',
-      'model' => $this->randomName(8),
+      'model' => $this->randomMachineName(8),
       'list_price' => mt_rand(1, 9999),
       'cost' => mt_rand(1, 9999),
       'sell_price' => mt_rand(1, 9999),
@@ -102,9 +102,9 @@ abstract class UbercartTestBase extends WebTestBase {
    */
   protected function createAttribute($data = array(), $save = TRUE) {
     $attribute = $data + array(
-      'name' => $this->randomName(8),
-      'label' => $this->randomName(8),
-      'description' => $this->randomName(8),
+      'name' => $this->randomMachineName(8),
+      'label' => $this->randomMachineName(8),
+      'description' => $this->randomMachineName(8),
       'required' => mt_rand(0, 1) ? TRUE : FALSE,
       'display' => mt_rand(0, 3),
       'ordering' => mt_rand(-10, 10),
@@ -132,7 +132,7 @@ abstract class UbercartTestBase extends WebTestBase {
       ->fetchField();
     $option = $data + array(
       'aid' => $max_aid,
-      'name' => $this->randomName(8),
+      'name' => $this->randomMachineName(8),
       'cost' => mt_rand(-500, 500),
       'price' => mt_rand(-500, 500),
       'weight' => mt_rand(-500, 500),
@@ -159,11 +159,11 @@ abstract class UbercartTestBase extends WebTestBase {
    * Fix this after adding a proper API call for saving a product class.
    */
   protected function createProductClass($data = array()) {
-    $class = strtolower($this->randomName(12));
+    $class = strtolower($this->randomMachineName(12));
     $edit = $data + array(
       'type' => $class,
       'name' => $class,
-      'description' => $this->randomName(32),
+      'description' => $this->randomMachineName(32),
       'settings[uc_product][product]' => 1,
     );
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
@@ -184,10 +184,10 @@ abstract class UbercartTestBase extends WebTestBase {
       $country = empty($edit[$key]) ? \Drupal::config('uc_store.settings')->get('address.country') : $edit[$key];
       $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => $country))->fetchField();
       $edit += array(
-        $prefix . '[first_name]' => $this->randomName(10),
-        $prefix . '[last_name]' => $this->randomName(10),
-        $prefix . '[street1]' => $this->randomName(10),
-        $prefix . '[city]' => $this->randomName(10),
+        $prefix . '[first_name]' => $this->randomMachineName(10),
+        $prefix . '[last_name]' => $this->randomMachineName(10),
+        $prefix . '[street1]' => $this->randomMachineName(10),
+        $prefix . '[city]' => $this->randomMachineName(10),
         $prefix . '[zone]' => $zone_id,
         $prefix . '[postal_code]' => mt_rand(10000, 99999),
       );
@@ -196,7 +196,7 @@ abstract class UbercartTestBase extends WebTestBase {
     // If the email address has not been set, and the user has not logged in,
     // add a primary email address.
     if (!isset($edit['panes[customer][primary_email]']) && !$this->loggedInUser) {
-      $edit['panes[customer][primary_email]'] = $this->randomName(8) . '@example.com';
+      $edit['panes[customer][primary_email]'] = $this->randomMachineName(8) . '@example.com';
     }
 
     return $edit;

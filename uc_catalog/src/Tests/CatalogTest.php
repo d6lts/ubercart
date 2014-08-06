@@ -107,9 +107,9 @@ class CatalogTest extends UbercartTestBase {
    */
   function createTerm() {
     $term = entity_create('taxonomy_term', array(
-      'name' => $this->randomName(),
+      'name' => $this->randomMachineName(),
       'description' => array(
-        'value' => $this->randomName(),
+        'value' => $this->randomMachineName(),
         'format' => 'plain_text',
       ),
       'vid' => 'catalog',
