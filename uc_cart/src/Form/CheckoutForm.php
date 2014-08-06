@@ -153,10 +153,10 @@ class CheckoutForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state['checkout_valid'] === FALSE) {
-      $form_state['redirect_route']['route_name'] = 'uc_cart.checkout';
+      $form_state->setRedirect('uc_cart.checkout');
     }
     else {
-      $form_state['redirect_route']['route_name'] = 'uc_cart.checkout_review';
+      $form_state->setRedirect('uc_cart.checkout_review');
       $_SESSION['uc_checkout'][$form_state['storage']['order']->id()]['do_review'] = TRUE;
     }
 
@@ -174,7 +174,7 @@ class CheckoutForm extends FormBase {
     }
 
     unset($_SESSION['uc_checkout'][$order->id()]);
-    $form_state['redirect_route']['route_name'] = 'uc_cart.cart';
+    $form_state->setRedirect('uc_cart.cart');
   }
 
 }
