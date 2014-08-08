@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\UcOrderAccessController.
+ * Contains \Drupal\uc_order\UcOrderAccessControlHandler.
  */
 
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines the access controller for Ubercart orders.
+ * Defines the access control handler for Ubercart orders.
  */
-class UcOrderAccessController extends EntityAccessController {
+class UcOrderAccessControlHandler extends EntityAccessControlHandler {
 
   /**
    * {@inheritdoc}

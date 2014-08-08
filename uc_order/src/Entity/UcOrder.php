@@ -24,7 +24,7 @@ use Drupal\uc_store\Address;
  *   controllers = {
  *     "storage" = "Drupal\uc_order\UcOrderStorage",
  *     "view_builder" = "Drupal\uc_order\UcOrderViewBuilder",
- *     "access" = "Drupal\uc_order\UcOrderAccessController",
+ *     "access" = "Drupal\uc_order\UcOrderAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\uc_order\UcOrderForm",
  *       "delete" = "Drupal\uc_order\Form\OrderDeleteForm",
