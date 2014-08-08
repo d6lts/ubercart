@@ -84,7 +84,7 @@ class StoreSettingsForm extends ConfigFormBase {
         'uc_store_street2' => $config->get('address.street2'),
         'uc_store_city' => $config->get('address.city'),
         'uc_store_zone' => $config->get('address.zone'),
-        'uc_store_country' => isset($form_state['values']) ? $form_state['values']['uc_store_country'] : $config->get('address.country'),
+        'uc_store_country' => $form_state->hasValue('uc_store_country') ? $form_state->getValue('uc_store_country') : $config->get('address.country'),
         'uc_store_postal_code' => $config->get('address.postal_code'),
       ),
       '#required' => FALSE,
