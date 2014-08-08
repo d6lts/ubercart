@@ -37,7 +37,7 @@ class CartSettingsTest extends UbercartTestBase {
       t('Add to cart redirect field exists')
     );
 
-    $redirect = $this->randomMachineName(8);
+    $redirect = 'admin/store';
     $this->drupalPostForm(
       'admin/store/settings/cart',
       array('uc_add_item_redirect' => $redirect),
@@ -148,7 +148,7 @@ class CartSettingsTest extends UbercartTestBase {
     $settings = array(
       'uc_continue_shopping_type' => 'button',
       'uc_continue_shopping_use_last_url' => FALSE,
-      'uc_continue_shopping_url' => $this->randomMachineName(8),
+      'uc_continue_shopping_url' => 'admin/store',
     );
     $this->drupalPostForm(
       NULL,
@@ -183,7 +183,7 @@ class CartSettingsTest extends UbercartTestBase {
 
     $settings = array(
       'uc_cart_breadcrumb_text' => $this->randomMachineName(8),
-      'uc_cart_breadcrumb_url' => $this->randomMachineName(7),
+      'uc_cart_breadcrumb_url' => $this->randomMachineName(8),
     );
     $this->drupalPostForm(
       NULL,

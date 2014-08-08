@@ -9,8 +9,8 @@ namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Defines a simple form for adding a product to the cart.
@@ -57,7 +57,10 @@ class BuyItNowForm extends FormBase {
     if (empty($form_state['redirect'])) {
       $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
       $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
-      $form_state['redirect'] = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'], $data, NULL, $msg);
+      $redirect = uc_cart_add_item($form_state['values']['nid'], $form_state['values']['qty'], $data, NULL, $msg);
+      if ($redirect != '<none>') {
+        $form_state->setRedirectUrl(Url::createFromPath($redirect));
+      }
     }
   }
 

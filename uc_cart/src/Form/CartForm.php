@@ -9,6 +9,7 @@ namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Displays the contents of the customer's cart.
@@ -190,7 +191,7 @@ class CartForm extends FormBase {
    * Continue shopping redirect for the cart form.
    */
   public function continueShopping(array &$form, FormStateInterface $form_state) {
-    $form_state['redirect'] = $this->continueShoppingUrl();
+    $form_state->setRedirectUrl(Url::createFromPath($this->continueShoppingUrl()));
   }
 
   /**
