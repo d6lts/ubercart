@@ -299,7 +299,7 @@ class RoleFeatureForm extends FormBase {
       'description' => $description,
     );
 
-    $form_state['redirect'] = uc_product_feature_save($data);
+    uc_product_feature_save($data);
 
     $product_role['pfid'] = $data['pfid'];
 
@@ -314,6 +314,8 @@ class RoleFeatureForm extends FormBase {
     }
 
     drupal_write_record('uc_roles_products', $product_role, $key);
+
+    $form_state->setRedirect('uc_product.features', array('node' => $data['nid']));
   }
 
 }

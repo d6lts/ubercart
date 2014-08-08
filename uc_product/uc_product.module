@@ -1076,8 +1076,6 @@ function uc_product_feature_save(&$data) {
   else {
     drupal_set_message(t('The product feature was unable to be saved.'));
   }
-
-  return 'node/' . $data['nid'] . '/edit/features';
 }
 
 /**

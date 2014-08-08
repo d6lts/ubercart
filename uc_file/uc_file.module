@@ -805,7 +805,7 @@ function uc_file_feature_form_submit($form, &$form_state) {
     'description' => $description,
   );
 
-  $form_state['redirect'] = uc_product_feature_save($data);
+  uc_product_feature_save($data);
 
   $file_product['pfid'] = $data['pfid'];
 
@@ -817,6 +817,8 @@ function uc_file_feature_form_submit($form, &$form_state) {
   }
 
   drupal_write_record('uc_file_products', $file_product, $key);
+
+  $form_state->setRedirect('uc_product.features', array('node' => $data['nid']));
 }
 
 /**

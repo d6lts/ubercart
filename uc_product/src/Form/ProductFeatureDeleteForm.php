@@ -84,7 +84,7 @@ class ProductFeatureDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_product_feature_delete($this->feature['pfid']);
     drupal_set_message(t('The product feature has been deleted.'));
-    $form_state['redirect'] = 'node/' . $this->node->id() . '/edit/features';
+    $form_state->setRedirect('uc_product.features', array('node' => $this->node->id()));
   }
 
 }

@@ -53,7 +53,10 @@ class ProductFeatureAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['redirect'] = 'node/' . $form['#node']->id() . '/edit/features/' . $form_state['values']['feature'] . '/add';
+    $form_state->setRedirect('uc_product.feature_add', array(
+      'node' => $form['#node']->id(),
+      'fid' => $form_state['values']['feature'],
+    ));
   }
 
 }
