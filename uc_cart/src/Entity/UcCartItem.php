@@ -10,7 +10,7 @@ namespace Drupal\uc_cart\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines the cart item entity class.
@@ -93,30 +93,30 @@ class UcCartItem extends ContentEntityBase {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['cart_item_id'] = FieldDefinition::create('integer')
+    $fields['cart_item_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Cart item ID'))
       ->setDescription(t('The cart item ID.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
-    $fields['cart_id'] = FieldDefinition::create('string')
+    $fields['cart_id'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Cart ID'))
       ->setDescription(t('A user-specific cart ID. For authenticated users, their {users}.uid. For anonymous users, a token.'))
       ->setSetting('default_value', 0);
-    $fields['nid'] = FieldDefinition::create('entity_reference')
+    $fields['nid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Node ID'))
       ->setDescription(t('The node ID of the product.'))
       ->setSetting('target_type', 'node')
       ->setSetting('default_value', 0);
-    $fields['qty'] = FieldDefinition::create('integer')
+    $fields['qty'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Quantity'))
       ->setDescription(t('The number of this product in the cart.'))
       ->setSetting('default_value', 0)
       ->setSetting('unsigned', TRUE);
-    $fields['changed'] = FieldDefinition::create('integer')
+    $fields['changed'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Changed'))
       ->setDescription(t('The Unix timestamp indicating the time the product in the cart was changed.'))
       ->setSetting('default_value', 0);
-    $fields['data'] = FieldDefinition::create('map')
+    $fields['data'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
       ->setDescription(t('A serialized array of extra data.'));
 
