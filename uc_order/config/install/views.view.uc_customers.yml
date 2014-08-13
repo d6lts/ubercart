@@ -689,7 +689,8 @@ display:
         type: normal
         title: 'View customers'
         description: 'View and search customer information.'
-        name: admin
+        menu_name: admin
+        parent: uc_order.admin.store.customers
         weight: '-10'
         context: 0
 label: uc_customers

@@ -16,7 +16,8 @@ display:
         type: normal
         title: 'View orders'
         description: 'View and process the orders received through your website.'
-        name: admin
+        menu_name: admin
+        parent: uc_order.admin.store.orders
         weight: '-10'
         context: '0'
       display_description: ''
@@ -31,7 +32,8 @@ display:
         type: normal
         title: 'Search orders'
         description: 'Search existing orders.'
-        name: admin
+        menu_name: admin
+        parent: uc_order.admin.store.orders
         weight: '0'
         context: '0'
       display_description: ''

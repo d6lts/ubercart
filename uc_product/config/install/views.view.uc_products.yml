@@ -322,7 +322,8 @@ display:
         type: normal
         title: 'View products'
         description: 'View and search products available through your website.'
-        name: admin
+        menu_name: admin
+        parent: uc_product.admin.store.products
         weight: '-10'
         context: '0'
     new_id: admin_page
