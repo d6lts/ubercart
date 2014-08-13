@@ -83,6 +83,6 @@ class ReceiveCheckForm extends FormBase {
 
     drupal_set_message(t('Check received, expected clear date of @date.', array('@date' => uc_date_format($form_state['values']['clear_month'], $form_state['values']['clear_day'], $form_state['values']['clear_year']))));
 
-    $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'];
+    $form_state->setRedirect('uc_order.admin_view', array('uc_order' => $form_state->getValue('order_id')));
   }
 }

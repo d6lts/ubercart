@@ -96,7 +96,7 @@ class FlatrateEditForm extends FormBase {
     if (isset($form_state['values']['mid'])) {
       drupal_write_record('uc_flatrate_methods', $form_state['values'], 'mid');
       drupal_set_message(t('Flat rate shipping method was updated.'));
-      $form_state['redirect'] = 'admin/store/settings/quotes';
+      $form_state->setRedirect('uc_quote.methods');
     }
     else {
       drupal_write_record('uc_flatrate_methods', $form_state['values']);
@@ -105,7 +105,7 @@ class FlatrateEditForm extends FormBase {
       // entity_flush_caches();
 
       drupal_set_message(t('Created and enabled new flat rate shipping method.'));
-      $form_state['redirect'] = 'admin/store/settings/quotes';
+      $form_state->setRedirect('uc_quote.methods');
       //$form_state['redirect'] = 'admin/store/settings/quotes/manage/get_quote_from_flatrate_' . $form_state['values']['mid'];
     }
   }
@@ -114,7 +114,7 @@ class FlatrateEditForm extends FormBase {
    * Helper function to delete a flatrate method.
    */
   public function delete(&$form, FormStateInterface $form_state) {
-    $form_state['redirect'] = 'admin/store/settings/quotes/methods/flatrate/' . $form_state['values']['mid'] . '/delete';
+    $form_state->setRedirect('uc_flatrate.delete', array('mid' => $form_state->getValue('mid')));
   }
 
 }

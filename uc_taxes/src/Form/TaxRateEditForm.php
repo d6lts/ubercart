@@ -46,7 +46,7 @@ class TaxRateEditForm extends TaxRateFormBase {
 
     drupal_set_message(t('Tax rate %name saved.', array('%name' => $rate->name)));
 
-    $form_state['redirect'] = 'admin/store/settings/taxes';
+    $form_state->setRedirect('uc_taxes.overview');
   }
 
 }

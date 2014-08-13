@@ -267,7 +267,7 @@ class OrderCreateForm extends FormBase {
     $order = uc_order_new($uid, 'post_checkout');
     uc_order_comment_save($order->id(), $user->id(), t('Order created by the administration.'), 'admin');
 
-    $form_state['redirect'] = 'admin/store/orders/' . $order->id() . '/edit';
+    $form_state->setRedirect('uc_order.admin_edit', array('uc_order' => $order->id()));
   }
 
 }

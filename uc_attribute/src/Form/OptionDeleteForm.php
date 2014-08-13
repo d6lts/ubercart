@@ -88,7 +88,7 @@ class OptionDeleteForm extends ConfirmFormBase {
       ->condition('oid', $this->option->oid)
       ->execute();
 
-    $form_state['redirect'] = 'admin/store/products/attributes/' . $this->option->aid . '/options';
+    $form_state->setRedirect('uc_attribute.options', array('aid' => $this->option->aid));
   }
 
 }

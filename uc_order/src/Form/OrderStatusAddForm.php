@@ -98,7 +98,7 @@ class OrderStatusAddForm extends FormBase {
 
     drupal_set_message(t('Custom order status created.'));
 
-    $form_state['redirect'] = 'admin/store/settings/orders';
+    $form_state->setRedirect('uc_order.workflow');
   }
 
 }

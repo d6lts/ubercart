@@ -24,7 +24,7 @@ class TaxRateAddForm extends TaxRateFormBase {
     drupal_set_message(t('Tax rate %name created.', array('%name' => $rate->name)));
 
     //$form_state['redirect'] = 'admin/store/settings/taxes/manage/uc_taxes_' . $rate->id;
-    $form_state['redirect'] = 'admin/store/settings/taxes';
+    $form_state->setRedirect('uc_taxes.overview');
   }
 
 }

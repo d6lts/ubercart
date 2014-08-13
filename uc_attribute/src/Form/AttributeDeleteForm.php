@@ -106,7 +106,7 @@ class AttributeDeleteForm extends ConfirmFormBase {
 
     drupal_set_message($this->t('Product attribute deleted.'));
 
-    $form_state['redirect'] = 'admin/store/products/attributes';
+    $form_state->setRedirect('uc_attribute.overview');
   }
 
 }

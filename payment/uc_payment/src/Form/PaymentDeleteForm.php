@@ -71,7 +71,7 @@ class PaymentDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_payment_delete($this->payment->receipt_id);
     drupal_set_message(t('Payment deleted.'));
-    $form_state['redirect'] = 'admin/store/orders/' . $this->payment->order_id . '/payments';
+    $form_state->setRedirect('uc_payments.order_payments', array('uc_order' => $this->payment->order_id));
   }
 
 }

@@ -19,7 +19,7 @@ class AttributeAddForm extends AttributeFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_write_record('uc_attributes', $form_state['values']);
-    $form_state['redirect'] = 'admin/store/products/attributes/' . $form_state['values']['aid'] . '/options';
+    $form_state->setRedirect('uc_attribute.options', array('aid' => $form_state->getValue('aid')));
   }
 
 }
