@@ -47,18 +47,16 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
         '#default_value' => $email,
         '#required' => TRUE,
       );
-    }
 
-    if ($cart_config->get('email_validation') && $user->isAnonymous()) {
-      $contents['primary_email_confirm'] = array(
-        '#type' => 'email',
-        '#title' => t('Confirm e-mail address'),
-        '#default_value' => $email,
-        '#required' => TRUE,
-      );
-    }
+      if ($cart_config->get('email_validation')) {
+        $contents['primary_email_confirm'] = array(
+          '#type' => 'email',
+          '#title' => t('Confirm e-mail address'),
+          '#default_value' => $email,
+          '#required' => TRUE,
+        );
+      }
 
-    if ($user->isAnonymous()) {
       $contents['new_account'] = array();
 
       if ($cart_config->get('new_account_name')) {
@@ -87,13 +85,12 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
       }
 
       if (!empty($contents['new_account'])) {
-        $array = array(
+        $contents['new_account'] += array(
           '#type' => 'details',
           '#title' => t('New account details'),
           '#description' => $this->configuration['new_account_details'],
           '#open' => TRUE,
         );
-        $contents['new_account'] = array_merge($array, $contents['new_account']);
       }
     }
 
@@ -110,56 +107,66 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
     $pane = $form_state['values']['panes']['customer'];
     $order->setEmail($pane['primary_email']);
 
-    if ($cart_config->get('email_validation') && $user->isAnonymous() &&
-      $pane['primary_email'] !== $pane['primary_email_confirm']) {
-      form_set_error('panes][customer][primary_email_confirm', $form_state, t('The e-mail address did not match.'));
-    }
-
-    // Invalidate if an account already exists for this e-mail address, and the user is not logged into that account
-    if (!$cart_config->get('mail_existing') && $user->isAnonymous() && !empty($pane['primary_email'])) {
-      if (db_query("SELECT uid FROM {users} WHERE mail LIKE :mail", array(':mail' => $pane['primary_email']))->fetchField() > 0) {
-        form_set_error('panes][customer][primary_email', $form_state, t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
-      }
-    }
-
-    // If new users can specify names or passwords then...
-    if (($cart_config->get('new_account_name') ||
-        $cart_config->get('new_account_password')) &&
-      $user->isAnonymous()) {
-      // Skip if an account already exists for this e-mail address.
-      if ($cart_config->get('mail_existing') && db_query("SELECT uid FROM {users} WHERE mail LIKE :mail", array(':mail' => $pane['primary_email']))->fetchField() > 0) {
-        drupal_set_message(t('An account already exists for your e-mail address. The new account details you entered will be disregarded.'));
-      }
-      else {
-        // Validate the username.
-        if ($cart_config->get('new_account_name') && !empty($pane['new_account']['name'])) {
-          $message = user_validate_name($pane['new_account']['name']);
-          if (!empty($message)) {
-            form_set_error('panes][customer][new_account][name', $form_state, $message);
-          }
-          elseif (db_query("SELECT uid FROM {users} WHERE name LIKE :name", array(':name' => $pane['new_account']['name']))->fetchField()) {
-            form_set_error('panes][customer][new_account][name', $form_state, t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
-          }
-          else {
-            $order->data->new_user_name = $pane['new_account']['name'];
-
-          }
-        }
-        // Validate the password.
-        if ($cart_config->get('new_account_password')) {
-          if (strcmp($pane['new_account']['pass'], $pane['new_account']['pass_confirm'])) {
-            form_set_error('panes][customer][new_account][pass_confirm', $form_state, t('The passwords you entered did not match. Please try again.'));
-          }
-          if (!empty($pane['new_account']['pass'])) {
-            $order->data->new_user_hash = \Drupal::service('password')->hash(trim($pane['new_account']['pass']));
-          }
-        }
-      }
-    }
-
     if ($user->isAuthenticated()) {
       $order->setUserId($user->id());
     }
+    else {
+      // Check if the email address is already taken.
+      $mail_taken = (bool) \Drupal::entityQuery('user')
+        ->condition('mail', $pane['primary_email'])
+        ->range(0, 1)
+        ->count()
+        ->execute();
+
+      if ($cart_config->get('email_validation') && $pane['primary_email'] !== $pane['primary_email_confirm']) {
+        form_set_error('panes][customer][primary_email_confirm', $form_state, t('The e-mail address did not match.'));
+      }
+
+      // Invalidate if an account already exists for this e-mail address, and the user is not logged into that account
+      if (!$cart_config->get('mail_existing') && !empty($pane['primary_email']) && $mail_taken) {
+        form_set_error('panes][customer][primary_email', $form_state, t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
+      }
+
+      // If new users can specify names or passwords then...
+      if ($cart_config->get('new_account_name') || $cart_config->get('new_account_password')) {
+        // Skip if an account already exists for this e-mail address.
+        if ($cart_config->get('mail_existing') && $mail_taken) {
+          drupal_set_message(t('An account already exists for your e-mail address. The new account details you entered will be disregarded.'));
+        }
+        else {
+          // Validate the username.
+          if ($cart_config->get('new_account_name') && !empty($pane['new_account']['name'])) {
+            $message = user_validate_name($pane['new_account']['name']);
+            $name_taken = (bool) \Drupal::entityQuery('user')
+              ->condition('name', $pane['new_account']['name'])
+              ->range(0, 1)
+              ->count()
+              ->execute();
+
+            if (!empty($message)) {
+              form_set_error('panes][customer][new_account][name', $form_state, $message);
+            }
+            elseif ($name_taken) {
+              form_set_error('panes][customer][new_account][name', $form_state, t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
+            }
+            else {
+              $order->data->new_user_name = $pane['new_account']['name'];
+            }
+          }
+
+          // Validate the password.
+          if ($cart_config->get('new_account_password')) {
+            if (strcmp($pane['new_account']['pass'], $pane['new_account']['pass_confirm'])) {
+              form_set_error('panes][customer][new_account][pass_confirm', $form_state, t('The passwords you entered did not match. Please try again.'));
+            }
+            if (!empty($pane['new_account']['pass'])) {
+              $order->data->new_user_hash = \Drupal::service('password')->hash(trim($pane['new_account']['pass']));
+            }
+          }
+        }
+      }
+    }
+
     return TRUE;
   }
 
