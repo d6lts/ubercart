@@ -105,7 +105,7 @@ class OrderCreateForm extends FormBase {
 
       // Search for existing customer by e-mail address.
       if (isset($form_state['values']['customer']['email'])) {
-        $query = db_select('users', 'u')->distinct();
+        $query = db_select('users_field_data', 'u')->distinct();
         $query->leftJoin('uc_orders', 'o', 'u.uid = o.uid');
         $query->fields('u', array('uid', 'name', 'mail'))
           ->fields('o', array('billing_first_name', 'billing_last_name'))
