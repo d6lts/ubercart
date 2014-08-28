@@ -20,7 +20,7 @@ use Drupal\uc_order\UcOrderProductInterface;
  *   id = "uc_order_product",
  *   label = @Translation("Order product"),
  *   module = "uc_order",
- *   controllers = {
+ *   handlers = {
  *     "view_builder" = "Drupal\uc_order\UcOrderProductViewBuilder",
  *     "storage" = "Drupal\uc_order\UcOrderProductStorage"
  *   },

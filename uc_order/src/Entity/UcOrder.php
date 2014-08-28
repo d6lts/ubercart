@@ -21,7 +21,7 @@ use Drupal\uc_store\Address;
  *   id = "uc_order",
  *   label = @Translation("Order"),
  *   module = "uc_order",
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\uc_order\UcOrderStorage",
  *     "view_builder" = "Drupal\uc_order\UcOrderViewBuilder",
  *     "access" = "Drupal\uc_order\UcOrderAccessControlHandler",

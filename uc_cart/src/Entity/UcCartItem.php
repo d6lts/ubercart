@@ -19,7 +19,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   id = "uc_cart_item",
  *   label = @Translation("Cart item"),
  *   module = "uc_cart",
- *   controllers = {
+ *   handlers = {
  *     "storage" = "Drupal\uc_cart\UcCartItemStorage",
  *   },
  *   base_table = "uc_cart_products",
