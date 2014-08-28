@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_cart\Plugin\Block;
 
-use Drupal\block\BlockBase;
+use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -33,7 +33,7 @@ class CartBlock extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockForm().
+   * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
     $form['hide_empty'] = array(
@@ -60,7 +60,7 @@ class CartBlock extends BlockBase {
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockSubmit().
+   * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['hide_empty'] = $form_state['values']['hide_empty'];

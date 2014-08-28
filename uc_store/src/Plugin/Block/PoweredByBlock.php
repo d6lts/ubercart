@@ -7,8 +7,9 @@
 
 namespace Drupal\uc_store\Plugin\Block;
 
-use Drupal\block\BlockBase;
+use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a block to identify Ubercart as the store software on a site.
@@ -21,14 +22,7 @@ use Drupal\Core\Cache\Cache;
 class PoweredByBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::blockAccess().
-   */
-  public function blockAccess() {
-    return TRUE;
-  }
-
-  /**
-   * Overrides \Drupal\block\BlockBase::defaultConfiguration().
+   * {@inheritdoc}
    */
   public function defaultConfiguration() {
     return array(
@@ -42,7 +36,7 @@ class PoweredByBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function blockForm($form, &$form_state) {
+  public function blockForm($form, FormStateInterface $form_state) {
     $configuration = $this->configuration;
 
     $form['message'] = array(
@@ -62,7 +56,7 @@ class PoweredByBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, &$form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['message'] = $form_state['values']['message'];
   }
 

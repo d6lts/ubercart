@@ -7,7 +7,8 @@
 
 namespace Drupal\uc_catalog\Plugin\Block;
 
-use Drupal\block\BlockBase;
+use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_catalog\TreeNode;
 
 /**
@@ -46,7 +47,7 @@ class CatalogBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function blockForm($form, &$form_state) {
+  public function blockForm($form, FormStateInterface $form_state) {
     $form['link_title'] = array(
       '#type' => 'checkbox',
       '#title' => t('Make the block title a link to the top-level catalog page.'),
@@ -68,7 +69,7 @@ class CatalogBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function blockSubmit($form, &$form_state) {
+  public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['link_title'] = $form_state['values']['link_title'];
     $this->configuration['expanded'] = $form_state['values']['expanded'];
     $this->configuration['product_count'] = $form_state['values']['product_count'];
