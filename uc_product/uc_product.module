@@ -85,7 +85,7 @@ function uc_product_preprocess_field(&$variables) {
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function uc_product_form_node_form_alter(&$form, &$form_state) {
-  $node = $form_state['controller']->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
   if (uc_product_is_product($node)) {
     $form['base'] = array(
       '#type' => 'details',
@@ -635,7 +635,7 @@ function uc_product_preprocess_html(&$variables) {
  * Adds a default image field setting to product content types.
  */
 function uc_product_form_node_type_form_alter(&$form, &$form_state) {
-  $type = $form_state['controller']->getEntity();
+  $type = $form_state->getFormObject()->getEntity();
   $settings = $type->getModuleSettings('uc_product');
   $settings += array(
     'product' => FALSE,

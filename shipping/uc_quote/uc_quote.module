@@ -147,7 +147,7 @@ function uc_quote_form_node_form_alter(&$form, &$form_state, $form_id) {
   if (uc_product_is_product_form($form)) {
     // Get the shipping address.
 
-    $node = $form_state['controller']->getEntity();
+    $node = $form_state->getFormObject()->getEntity();
     if (isset($node->shipping_address)) {
       $address = $node->shipping_address;
     }
@@ -171,7 +171,7 @@ function uc_quote_form_node_form_alter(&$form, &$form_state, $form_id) {
       '#group' => 'additional_settings',
     );
 
-    $nid = $form_state['controller']->getEntity()->id();
+    $nid = $form_state->getFormObject()->getEntity()->id();
     $form['shipping']['shipping_type'] = array(
       '#type' => 'select',
       '#title' => t('Default product shipping type'),

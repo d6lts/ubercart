@@ -28,7 +28,7 @@ function uc_product_kit_page_build(&$page) {
  * Implements hook_form_FORM_ID_alter() for node_type_form().
  */
 function uc_product_kit_form_node_type_form_alter(&$form, &$form_state) {
-  $type = $form_state['controller']->getEntity();
+  $type = $form_state->getFormObject()->getEntity();
   if ($type->id() != 'product_kit') {
     return;
   }
@@ -525,7 +525,7 @@ function uc_product_kit_theme() {
  * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  */
 function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
-  $node = $form_state['controller']->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
   if ($node->getType() != 'product_kit') {
     return;
   }
