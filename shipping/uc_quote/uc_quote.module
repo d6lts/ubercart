@@ -14,18 +14,6 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\uc_order\UcOrderInterface;
-use Drupal\uc_store\Address;
-
-/**
- * Implements hook_permission().
- */
-function uc_quote_permission() {
-  return array(
-    'configure quotes' => array(
-      'title' => t('Configure quotes'),
-    ),
-  );
-}
 
 /**
  * Implements hook_theme().

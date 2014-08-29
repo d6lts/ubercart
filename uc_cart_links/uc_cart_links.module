@@ -22,20 +22,6 @@ function uc_cart_links_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function uc_cart_links_permission() {
-  return array(
-    'administer cart links' => array(
-      'title' => t('Administer cart links'),
-    ),
-    'view cart links report' => array(
-      'title' => t('View cart links report'),
-    ),
-  );
-}
-
-/**
  * Implements hook_uc_add_to_cart().
  */
 function uc_cart_links_uc_add_to_cart($nid, $qty, $data) {

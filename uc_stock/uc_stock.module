@@ -51,17 +51,6 @@ function uc_stock_menu() {
 }
 
 /**
- * Implements hook_permission().
- */
-function uc_stock_permission() {
-  return array(
-    'administer product stock' => array(
-      'title' => t('Administer product stock'),
-    )
-  );
-}
-
-/**
  * Implements hook_mail().
  */
 function uc_stock_mail($key, &$message, $params) {

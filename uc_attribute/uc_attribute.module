@@ -50,23 +50,6 @@ function uc_attribute_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function uc_attribute_permission() {
-  return array(
-    'administer attributes' => array(
-      'title' => t('Administer attributes'),
-    ),
-    'administer product attributes' => array(
-      'title' => t('Administer product attributes'),
-    ),
-    'administer product options' => array(
-      'title' => t('Administer product options'),
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_attribute_theme() {

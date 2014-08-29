@@ -229,21 +229,6 @@ function uc_store_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_permission().
- */
-function uc_store_permission() {
-  return array(
-    'administer store' => array(
-      'title' => t('Administer store'),
-      'restrict access' => TRUE,
-    ),
-    'view reports' => array(
-      'title' => t('View reports'),
-    ),
-  );
-}
-
-/**
  * Helper function for hook_entity_property_info() and hook_rules_data_info().
  *
  * Should be used by implementations of those hooks that wish to wrap address

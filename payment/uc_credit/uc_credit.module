@@ -68,24 +68,6 @@ function uc_credit_menu() {
 }
 
 /**
- * Implements hook_permission().
- */
-function uc_credit_permission() {
-  return array(
-    'administer credit cards' => array(
-      'title' => t('Administer credit cards'),
-      'restrict access' => TRUE,
-    ),
-    'process credit cards' => array(
-      'title' => t('Process credit cards'),
-    ),
-    'view cc details' => array(
-      'title' => t('View credit card details'),
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_credit_theme() {

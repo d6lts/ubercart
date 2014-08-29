@@ -18,24 +18,6 @@ require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
 
 
 /**
- * Implements hook_permission().
- */
-function uc_payment_permission() {
-  return array(
-    'view payments' => array(
-      'title' => t('View payments'),
-    ),
-    'manual payments' => array(
-      'title' => t('Manual payments'),
-      'description' => t('Enter payments manually.'),
-    ),
-    'delete payments' => array(
-      'title' => t('Delete payments'),
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_payment_theme() {

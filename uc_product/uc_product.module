@@ -27,28 +27,6 @@ function uc_product_page_build(&$page) {
 }
 
 /**
- * Implements hook_permission().
- */
-function uc_product_permission() {
-  $perms = array(
-    'administer products' => array(
-      'title' => t('Administer products'),
-    ),
-    'administer product classes' => array(
-      'title' => t('Administer product classes'),
-    ),
-    'administer product features' => array(
-      'title' => t('Administer product features'),
-    ),
-    'administer own product features' => array(
-      'title' => t('Administer own product features'),
-    ),
-  );
-
-  return $perms;
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_product_theme() {

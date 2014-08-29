@@ -99,17 +99,6 @@ function uc_roles_menu() {
 }
 
 /**
- * Implements hook_permission().
- */
-function uc_roles_permission() {
-  return array(
-    'view all role expirations' => array(
-      'title' => t('View all role expirations'),
-    )
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_roles_theme() {

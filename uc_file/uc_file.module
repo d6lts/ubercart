@@ -80,20 +80,6 @@ function uc_file_user_access($account) {
 }
 
 /**
- * Implements hook_permission().
- */
-function uc_file_permission() {
-  return array(
-    'download file' => array(
-      'title' => t('Download file'),
-    ),
-    'view all downloads' => array(
-      'title' => t('View all downloads'),
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_file_theme() {

@@ -14,17 +14,6 @@ use Drupal\node\NodeInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
- * Implements hook_permission().
- */
-function uc_taxes_permission() {
-  return array(
-    'configure taxes' => array(
-      'title' => t('Configure taxes'),
-    )
-  );
-}
-
-/**
  * Implements hook_menu().
  */
 function uc_taxes_menu() {
