@@ -41,7 +41,7 @@ class UcOrderForm extends ContentEntityForm {
 
     $form = parent::form($form, $form_state);
 
-    form_load_include($form_state, 'inc', 'uc_store', 'includes/uc_ajax_attach');
+    $form_state->loadInclude('uc_store', 'inc', 'includes/uc_ajax_attach');
     $form['#process'][] = 'uc_ajax_process_form';
 
     return $form;

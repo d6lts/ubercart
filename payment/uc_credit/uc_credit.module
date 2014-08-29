@@ -501,7 +501,7 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
       return t('Use the terminal available through the<br />%button button on the View tab to<br />process credit card payments.', array('%button' => t('Process card')));
 
     case 'settings':
-      form_load_include($form_state, 'inc', 'uc_credit', 'uc_credit.admin');
+      $form_state->loadInclude('uc_credit', 'admin.inc');
       return uc_credit_settings_form($form, $form_state);
   }
 }

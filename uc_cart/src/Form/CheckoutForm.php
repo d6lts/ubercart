@@ -117,7 +117,7 @@ class CheckoutForm extends FormBase {
       '#button_type' => 'primary',
     );
 
-    form_load_include($form_state, 'inc', 'uc_store', 'includes/uc_ajax_attach');
+    $form_state->loadInclude('uc_store', 'inc', 'includes/uc_ajax_attach');
     $form['#process'][] = 'uc_ajax_process_form';
 
     unset($_SESSION['uc_checkout'][$order->id()]);
