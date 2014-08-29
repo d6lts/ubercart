@@ -40,10 +40,10 @@
 /**
  * Toolbar icon.
  */
-.toolbar-icon-store:before {
+.toolbar-icon-uc-store-admin-store:before {
   background-image: url(../icons/787878/cart.svg);
 }
-.toolbar-icon-store:active:before,
-.toolbar-icon-store.active:before {
+.toolbar-icon-uc-store-admin-store:active:before,
+.toolbar-icon-uc-store-admin-store.active:before {
   background-image: url(../icons/000000/cart.svg);
 }
