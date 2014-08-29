@@ -197,25 +197,6 @@ function uc_store_element_info() {
     '#hidden' => FALSE,
   );
 
-  $config = \Drupal::config('uc_store.settings')->get('currency');
-  $sign_flag = $config['symbol_after'];
-  $currency_sign = $config['symbol'];
-
-  $types['uc_price'] = array(
-    '#input' => TRUE,
-    '#size' => 15,
-    '#maxlength' => 15,
-    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
-    '#pre_render' => array('form_pre_render_textfield'),
-    '#element_validate' => array('uc_store_validate_number'),
-    '#theme' => 'input__textfield',
-    '#theme_wrappers' => array('form_element'),
-    '#field_prefix' => $sign_flag ? '' : $currency_sign,
-    '#field_suffix' => $sign_flag ? $currency_sign : '',
-    '#allow_negative' => FALSE,
-    '#empty_zero' => TRUE,
-  );
-
   $types['uc_quantity'] = array(
     '#input' => TRUE,
     '#size' => 5,
@@ -414,34 +395,6 @@ function uc_store_pre_render_address_field($element) {
     unset($element['#required']);
   }
   return $element;
-}
-
-/**
- * Helper function to determine the value for a uc_price form element.
- */
-function form_type_uc_price_value($element, $input = FALSE) {
-  if ($input === FALSE && !empty($element['#default_value'])) {
-    return uc_store_format_price_field_value($element['#default_value']);
-  }
-  elseif (empty($input) && empty($element['#required']) && !empty($element['#empty_zero'])) {
-    // Empty non-required prices should be treated as zero.
-    return 0;
-  }
-}
-
-/**
- * Generic form element validation handler for numbers.
- */
-function uc_store_validate_number(&$element, &$form_state) {
-  $value = $element['#value'];
-  if ($value != '') {
-    if (!is_numeric($value)) {
-      form_error($element, $form_state, t('%name must be a number.', array('%name' => $element['#title'])));
-    }
-    elseif (empty($element['#allow_negative']) && $value < 0) {
-      form_error($element, $form_state, t('%name must not be negative.', array('%name' => $element['#title'])));
-    }
-  }
 }
 
 /**
@@ -1379,24 +1332,6 @@ function uc_store_default_country() {
 function uc_store_mail_recipient_langcode($address) {
   $account = user_load_by_mail(trim($address));
   return $account ? $account->getPreferredLangcode() : language_default()->id;
-}
-
-/**
- * Displays prices in forms with a minimum number of decimal places.
- *
- * @param $price
- *   The price to display as the #default_value in a form field.
- */
-function uc_store_format_price_field_value($price) {
-  $exact = rtrim(number_format($price, 6, '.', ''), '0');
-  $round = number_format($price, \Drupal::config('uc_store.settings')->get('currency.precision'), '.', '');
-
-  if ($exact == rtrim($round, '0')) {
-    return $round;
-  }
-  else {
-    return $exact;
-  }
 }
 
 /**
