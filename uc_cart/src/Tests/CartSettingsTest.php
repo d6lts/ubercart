@@ -201,7 +201,7 @@ class CartSettingsTest extends UbercartTestBase {
       0,
       t('The breadcrumb link text is set correctly.')
     );
-    $links = $this->xpath('//a[@href="' . url($settings['uc_cart_breadcrumb_url']) . '"]');
+    $links = $this->xpath('//a[@href="' . url($settings['uc_cart_breadcrumb_url'], array('absolute' => TRUE)) . '"]');
     $this->assertTrue(
       isset($links[0]),
       t('The breadcrumb link is set correctly.')

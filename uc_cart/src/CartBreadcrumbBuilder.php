@@ -8,16 +8,16 @@
 namespace Drupal\uc_cart;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
-use Drupal\Core\Routing\LinkGeneratorTrait;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 
 /**
  * Provides a custom breadcrumb builder for the cart page.
  */
 class CartBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
-  use LinkGeneratorTrait;
 
   /**
    * {@inheritdoc}
@@ -33,8 +33,10 @@ class CartBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function build(RouteMatchInterface $route_match) {
     $config = \Drupal::config('uc_cart.settings');
     $text = $config->get('breadcrumb_text');
-    $breadcrumb[] = $this->l($this->t('Home'), '<front>');
-    $breadcrumb[] = l($text, $config->get('breadcrumb_url'));
+    $url = url($config->get('breadcrumb_url'), array('absolute' => TRUE));
+
+    $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
+    $breadcrumb[] = new Link($text, Url::createFromPath($url));
 
     return $breadcrumb;
   }
