@@ -197,19 +197,6 @@ function uc_store_element_info() {
     '#hidden' => FALSE,
   );
 
-  $types['uc_quantity'] = array(
-    '#input' => TRUE,
-    '#size' => 5,
-    '#maxlength' => 6,
-    '#required' => TRUE,
-    '#process' => array('form_process_autocomplete', 'ajax_process_form', 'form_process_pattern'),
-    '#pre_render' => array('form_pre_render_textfield'),
-    '#element_validate' => array('uc_store_validate_uc_quantity'),
-    '#theme' => 'input__textfield',
-    '#theme_wrappers' => array('form_element'),
-    '#allow_zero' => FALSE,
-  );
-
   return $types;
 }
 
@@ -395,18 +382,6 @@ function uc_store_pre_render_address_field($element) {
     unset($element['#required']);
   }
   return $element;
-}
-
-/**
- * Form element validation handler for #type 'uc_quantity'.
- */
-function uc_store_validate_uc_quantity(&$element, &$form_state) {
-  if (!preg_match('/^\d+$/', $element['#value'])) {
-    form_error($element, $form_state, t('The quantity must be a number.'));
-  }
-  elseif (empty($element['#allow_zero']) && !$element['#value']) {
-    form_error($element, $form_state, t('The quantity cannot be zero.'));
-  }
 }
 
 /**
