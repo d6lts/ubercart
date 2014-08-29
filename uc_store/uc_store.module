@@ -10,11 +10,9 @@
  */
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\uc_store\Address;
 
 /**
  * Weight unit conversion constants, used by uc_weight_conversion().
