@@ -170,7 +170,7 @@ function uc_order_entity_bundle_info() {
   return $bundles;
 }
 
-o/**
+/**
  * Implements hook_entity_extra_field_info().
  */
 function uc_order_entity_extra_field_info() {
