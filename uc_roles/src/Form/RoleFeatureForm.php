@@ -216,24 +216,24 @@ class RoleFeatureForm extends FormBase {
       );
 
       if ($form_state['values']['uc_roles_expire_absolute'] <= REQUEST_TIME) {
-        form_set_error('uc_roles_expire_absolute', $form_state, t('The specified date !date has already occurred. Please choose another.', array('!date' => format_date($form_state['values']['uc_roles_expire_absolute']))));
+        $form_state->setErrorByName('uc_roles_expire_absolute', t('The specified date !date has already occurred. Please choose another.', array('!date' => format_date($form_state['values']['uc_roles_expire_absolute']))));
       }
     }
     else {
       if ($form_state['values']['uc_roles_expire_relative_granularity'] != 'never' && intval($form_state['values']['uc_roles_expire_relative_duration']) < 1) {
-        form_set_error('uc_roles_expire_relative_duration', $form_state, t('The amount of time must be a positive integer.'));
+        $form_state->setErrorByName('uc_roles_expire_relative_duration', t('The amount of time must be a positive integer.'));
       }
     }
 
     // No roles?
     if (empty($form_state['values']['uc_roles_role'])) {
-      form_set_error('uc_roles_role', $form_state, t('You must have a role to assign. You may need to <a href="!role_url">create a new role</a> or perhaps <a href="!feature_url">set role assignment defaults</a>.', array('!role_url' => url('admin/people/permissions/roles'), '!feature_url' => url('admin/store/settings/products'))));
+      $form_state->setErrorByName('uc_roles_role', t('You must have a role to assign. You may need to <a href="!role_url">create a new role</a> or perhaps <a href="!feature_url">set role assignment defaults</a>.', array('!role_url' => url('admin/people/permissions/roles'), '!feature_url' => url('admin/store/settings/products'))));
     }
 
     // This role already set on this SKU?
     if (!isset($form_state['values']['pfid']) && ($product_roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid AND model = :model AND rid = :rid", array(':nid' => $form_state['values']['nid'], ':model' => $form_state['values']['uc_roles_model'], ':rid' => $form_state['values']['uc_roles_role']))->fetchObject())) {
-      form_set_error('uc_roles_role', $form_state, t('The combination of SKU and role already exists for this product.'));
-      form_set_error('uc_roles_model', $form_state, ' ');
+      $form_state->setErrorByName('uc_roles_role', t('The combination of SKU and role already exists for this product.'));
+      $form_state->setErrorByName('uc_roles_model');
     }
   }
 

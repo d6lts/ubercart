@@ -113,7 +113,7 @@ abstract class TaxRateFormBase extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!empty($form_state['values']['rate']) && (floatval($form_state['values']['rate']) < 0)) {
-      form_set_error('rate', $form_state, t('Rate must be a positive number. No commas and only one decimal point.'));
+      $form_state->setErrorByName('rate', t('Rate must be a positive number. No commas and only one decimal point.'));
     }
   }
 

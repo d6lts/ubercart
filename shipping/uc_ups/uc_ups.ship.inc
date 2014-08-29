@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @see uc_ups_fulfill_order_submit()
  * @ingroup forms
  */
-function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
+function uc_ups_fulfill_order($form, FormStateInterface $form_state, $order, $package_ids) {
   $store_config = \Drupal::config('uc_store.settings');
   $pkg_types = \Drupal\uc_ups\UPSUtilities::packageTypes();
   $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
@@ -224,7 +225,7 @@ function uc_ups_fulfill_order($form, &$form_state, $order, $package_ids) {
  * @see uc_ups_fulfill_order()
  * @see uc_ups_confirm_shipment()
  */
-function uc_ups_fulfill_order_validate($form, &$form_state) {
+function uc_ups_fulfill_order_validate($form, FormStateInterface $form_state) {
 
   $ups_config = \Drupal::config('uc_ups.setttings');
   $errors = form_get_errors();
@@ -303,7 +304,7 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
     $error = $response->Response->Error;
     $error_msg = (string) $error->ErrorSeverity . ' Error ' . (string) $error->ErrorCode . ': ' . (string) $error->ErrorDescription;
     if (strpos((string) $error->ErrorSeverity, 'Hard') !== FALSE) {
-      form_set_error('', $form_state, $error_msg);
+      $form_state->setErrorByName('', $error_msg);
       return FALSE;
     }
     else {
@@ -331,7 +332,7 @@ function uc_ups_fulfill_order_validate($form, &$form_state) {
  * @see uc_ups_fulfill_order()
  * @see uc_ups_confirm_shipment()
  */
-function uc_ups_fulfill_order_submit($form, &$form_state) {
+function uc_ups_fulfill_order_submit($form, FormStateInterface $form_state) {
   $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/shipments/ups';
 }
 
@@ -545,7 +546,7 @@ $schema .= "</ShipmentConfirmRequest>";
  * @see theme_uc_ups_confirm_shipment()
  * @ingroup forms
  */
-function uc_ups_confirm_shipment($form, &$form_state, $order) {
+function uc_ups_confirm_shipment($form, FormStateInterface $form_state, $order) {
   $form['digest'] = array(
     '#type' => 'hidden',
     '#value' => $_SESSION['ups']['digest']
@@ -617,7 +618,7 @@ function theme_uc_ups_confirm_shipment($variables) {
  *
  * @see uc_ups_confirm_shipment()
  */
-function uc_ups_confirm_shipment_submit($form, &$form_state) {
+function uc_ups_confirm_shipment_submit($form, FormStateInterface $form_state) {
   $ups_config = \Drupal::config('uc_ups.setttings');
   // Request pickup using parameters in form.
   $order_id = $_SESSION['ups']['order_id'];

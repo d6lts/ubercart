@@ -226,13 +226,11 @@ class USPSSettingsForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!is_numeric($form_state['values']['uc_usps_rate_markup'])) {
-      form_set_error('uc_usps_rate_markup', $form_state, t('Rate markup must be a numeric value.'));
+      $form_state->setErrorByName('uc_usps_rate_markup', t('Rate markup must be a numeric value.'));
     }
     if (!is_numeric($form_state['values']['uc_usps_weight_markup'])) {
-      form_set_error('uc_usps_weight_markup', $form_state, t('Weight markup must be a numeric value.'));
+      $form_state->setErrorByName('uc_usps_weight_markup', t('Weight markup must be a numeric value.'));
     }
-
-    return parent::validateForm($form, $form_state);
   }
 
   /**

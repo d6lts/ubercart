@@ -14,6 +14,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -26,7 +27,7 @@ define('UC_FILE_LIMIT_SENTINEL', -1);
 /**
  * Implements hook_form_FORM_ID_alter() for uc_product_feature_settings_form().
  */
-function uc_file_form_uc_product_feature_settings_form_alter(&$form, &$form_state) {
+function uc_file_form_uc_product_feature_settings_form_alter(&$form, FormStateInterface $form_state) {
   $form['#submit'][] = 'uc_file_feature_settings_submit';
   $form['#validate'][] = 'uc_file_feature_settings_validate';
 }
@@ -131,7 +132,7 @@ function uc_file_user_cancel($edit, $account, $method) {
  * @see uc_file_user_form_validate()
  * @see uc_file_user_form_submit()
  */
-function uc_file_user_form($form, &$form_state, $account) {
+function uc_file_user_form($form, FormStateInterface $form_state, $account) {
   $form['file'] = array(
     '#type' => 'details',
     '#title' => t('Administration'),
@@ -262,7 +263,7 @@ function uc_file_user_form($form, &$form_state, $account) {
  * @see uc_file_user_form()
  * @see uc_file_user_form_submit()
  */
-function uc_file_user_form_validate($form, &$form_state) {
+function uc_file_user_form_validate($form, FormStateInterface $form_state) {
   $edit = $form_state['values'];
 
   // Determine if any downloads were modified.
@@ -275,11 +276,11 @@ function uc_file_user_form_validate($form, &$form_state) {
       }
 
       if ($download_modification['download_limit'] < 0) {
-        form_set_error('file_download][' . $key . '][download_limit', $form_state, t('A negative download limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
+        $form_state->setErrorByName('file_download][' . $key . '][download_limit', t('A negative download limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
       }
 
       if ($download_modification['address_limit'] < 0) {
-        form_set_error('file_download][' . $key . '][address_limit', $form_state, t('A negative address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
+        $form_state->setErrorByName('file_download][' . $key . '][address_limit', t('A negative address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
       }
 
       // Some expirations don't need any validation...
@@ -292,11 +293,11 @@ function uc_file_user_form_validate($form, &$form_state) {
       $new_expiration = _uc_file_expiration_date($download_modification, $download_modification['expiration']);
 
       if ($new_expiration <= REQUEST_TIME) {
-        form_set_error('file_download][' . $key . '][time_quantity', $form_state, t('The date %date has already occurred.', array('%date' => format_date($new_expiration, 'short'))));
+        $form_state->setErrorByName('file_download][' . $key . '][time_quantity', t('The date %date has already occurred.', array('%date' => format_date($new_expiration, 'short'))));
       }
 
       if ($download_modification['time_quantity'] < 0) {
-        form_set_error('file_download][' . $key . '][time_quantity', $form_state, t('A negative expiration quantity does not make sense. Use the polarity control to determine if the time should be added or subtracted.'));
+        $form_state->setErrorByName('file_download][' . $key . '][time_quantity', t('A negative expiration quantity does not make sense. Use the polarity control to determine if the time should be added or subtracted.'));
       }
     }
   }
@@ -308,7 +309,7 @@ function uc_file_user_form_validate($form, &$form_state) {
  * @see uc_file_user_form()
  * @see uc_file_user_form_validate()
  */
-function uc_file_user_form_submit($form, &$form_state) {
+function uc_file_user_form_submit($form, FormStateInterface $form_state) {
   $account = $form_state['build_info']['args'][0];
   $edit = $form_state['values'];
 
@@ -545,7 +546,7 @@ function uc_file_feature_delete($feature) {
  * @see uc_file_feature_form_submit()
  * @ingroup forms
  */
-function uc_file_feature_form($form, &$form_state, $node, $feature) {
+function uc_file_feature_form($form, FormStateInterface $form_state, $node, $feature) {
   $file_config = \Drupal::config('uc_file.settings');
   if (!is_dir($file_config->get('base_dir'))) {
     drupal_set_message(t('A file directory needs to be configured in <a href="@url">product settings</a> under the file download settings tab before a file can be selected.', array('@url' => url('admin/store/settings/products'))), 'error');
@@ -740,26 +741,26 @@ function uc_file_feature_form($form, &$form_state, $node, $feature) {
  * @see uc_file_feature_form()
  * @see uc_file_feature_form_submit()
  */
-function uc_file_feature_form_validate($form, &$form_state) {
+function uc_file_feature_form_validate($form, FormStateInterface $form_state) {
 
   // Ensure this is actually a file we control...
   if (!db_query("SELECT fid FROM {uc_files} WHERE filename = :name", array(':name' => $form_state['values']['uc_file_filename']))->fetchField()) {
-    form_set_error('uc_file_filename', $form_state, t('%file is not a valid file or directory inside file download directory.', array('%file' => $form_state['values']['uc_file_filename'])));
+    $form_state->setErrorByName('uc_file_filename', t('%file is not a valid file or directory inside file download directory.', array('%file' => $form_state['values']['uc_file_filename'])));
   }
 
   // If any of our overrides are set, then we make sure they make sense.
   if ($form_state['values']['download_override'] &&
       $form_state['values']['download_limit_number'] < 0) {
-    form_set_error('download_limit_number', $form_state, t('A negative download limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
+    $form_state->setErrorByName('download_limit_number', t('A negative download limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
   }
   if ($form_state['values']['location_override'] &&
       $form_state['values']['download_limit_addresses'] < 0) {
-    form_set_error('download_limit_addresses', $form_state, t('A negative IP address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
+    $form_state->setErrorByName('download_limit_addresses', t('A negative IP address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
   }
   if ($form_state['values']['time_override'] &&
       $form_state['values']['download_limit_duration_granularity'] != 'never' &&
       $form_state['values']['download_limit_duration_qty'] < 1) {
-    form_set_error('download_limit_duration_qty', $form_state, t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', array('%gran' => $form_state['values']['download_limit_duration_granularity'] . '(s)')));
+    $form_state->setErrorByName('download_limit_duration_qty', t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', array('%gran' => $form_state['values']['download_limit_duration_granularity'] . '(s)')));
   }
 }
 
@@ -769,7 +770,7 @@ function uc_file_feature_form_validate($form, &$form_state) {
  * @see uc_file_feature_form()
  * @see uc_file_feature_form_submit()
  */
-function uc_file_feature_form_submit($form, &$form_state) {
+function uc_file_feature_form_submit($form, FormStateInterface $form_state) {
   // Build the file_product object from the form values.
   $file = uc_file_get_by_name($form_state['values']['uc_file_filename']);
   $file_product = array(
@@ -835,7 +836,7 @@ function _uc_file_get_fpid($pfid) {
  * @see uc_file_feature_settings_submit()
  * @ingroup forms
  */
-function uc_file_feature_settings($form, &$form_state) {
+function uc_file_feature_settings($form, FormStateInterface $form_state) {
   $file_config = \Drupal::config('uc_file.settings');
   $form['uc_file_base_dir'] = array(
     '#type' => 'textfield',
@@ -905,27 +906,27 @@ function uc_file_feature_settings($form, &$form_state) {
  * @see uc_file_feature_settings()
  * @see uc_file_feature_settings_submit()
  */
-function uc_file_feature_settings_validate($form, &$form_state) {
+function uc_file_feature_settings_validate($form, FormStateInterface $form_state) {
   // Make sure our base directory is valid.
   if (!empty($form_state['values']['uc_file_base_dir']) && $form_state['values']['op'] == t('Save configuration') && !is_dir($form_state['values']['uc_file_base_dir'])) {
-    form_set_error('uc_file_base_dir', $form_state, t('%dir is not a valid file or directory', array('%dir' => $form_state['values']['uc_file_base_dir'])));
+    $form_state->setErrorByName('uc_file_base_dir', t('%dir is not a valid file or directory', array('%dir' => $form_state['values']['uc_file_base_dir'])));
   }
 
   // If the user selected a granularity, let's make sure they
   // also selected a duration.
   if ($form_state['values']['uc_file_download_limit_duration_granularity'] != 'never' &&
       $form_state['values']['uc_file_download_limit_duration_qty'] < 1) {
-    form_set_error('uc_file_download_limit_duration_qty', $form_state, t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', array('%gran' => $form_state['values']['uc_file_download_limit_duration_granularity'] . '(s)')));
+    $form_state->setErrorByName('uc_file_download_limit_duration_qty', t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', array('%gran' => $form_state['values']['uc_file_download_limit_duration_granularity'] . '(s)')));
   }
 
   // Make sure the download limit makes sense.
   if ($form_state['values']['uc_file_download_limit_number'] < 0) {
-    form_set_error('uc_file_download_limit_number', $form_state, t('A negative download limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
+    $form_state->setErrorByName('uc_file_download_limit_number', t('A negative download limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
   }
 
   // Make sure the address limit makes sense.
   if ($form_state['values']['uc_file_download_limit_addresses'] < 0) {
-    form_set_error('uc_file_download_limit_addresses', $form_state, t('A negative IP address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
+    $form_state->setErrorByName('uc_file_download_limit_addresses', t('A negative IP address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
   }
 }
 
@@ -935,7 +936,7 @@ function uc_file_feature_settings_validate($form, &$form_state) {
  * @see uc_file_feature_settings()
  * @see uc_file_feature_settings_validate()
  */
-function uc_file_feature_settings_submit($form, &$form_state) {
+function uc_file_feature_settings_submit($form, FormStateInterface $form_state) {
   // No directory now; truncate the file list.
   if (empty($form_state['values']['uc_file_base_dir'])) {
     uc_file_empty();

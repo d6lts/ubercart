@@ -390,7 +390,7 @@ function uc_order_product_select_form($form, &$form_state, $order) {
  */
 function uc_order_product_select_form_validate($form, &$form_state) {
   if (empty($form_state['values']['product_controls']['nid'])) {
-    form_set_error('product_controls][nid', $form_state, t('Please select a product.'));
+    $form_state->setErrorByName('product_controls][nid', t('Please select a product.'));
   }
 }
 

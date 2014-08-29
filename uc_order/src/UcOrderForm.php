@@ -64,7 +64,7 @@ class UcOrderForm extends ContentEntityForm {
     $order = $this->buildEntity($form, $form_state);
 
     if ($form_state['values']['order_modified'] != $order->modified->value) {
-      form_set_error('order_modified', $form_state, t('This order has been modified by another user, changes cannot be saved.'));
+      $form_state->setErrorByName('order_modified', t('This order has been modified by another user, changes cannot be saved.'));
     }
 
     parent::validate($form, $form_state);

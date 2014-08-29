@@ -5,7 +5,8 @@
  * UPS shipping quote module.
  */
 
-use Drupal\uc_store\Address;
+use Drupal\Core\Form\FormStateInterface;
+
 
 /******************************************************************************
  * Drupal Hooks                                                               *
@@ -89,7 +90,7 @@ function uc_ups_theme() {
  * @see uc_product_form()
  * @see uc_ups_product_alter_validate()
  */
-function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
+function uc_ups_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $ups_config = \Drupal::config('uc_ups.settings');
   $quote_config = \Drupal::config('uc_quote.settings');
   if (uc_product_is_product_form($form)) {
@@ -123,11 +124,11 @@ function uc_ups_form_node_form_alter(&$form, &$form_state, $form_id) {
  *
  * @see uc_ups_form_alter()
  */
-function uc_ups_product_alter_validate($form, &$form_state) {
+function uc_ups_product_alter_validate($form, FormStateInterface $form_state) {
   $ups_config = \Drupal::config('uc_ups.settings');
   if (isset($form_state['values']['shippable']) && ($form_state['values']['shipping_type'] == 'small_package' || (empty($form_state['values']['shipping_type']) && $ups_config->get('uc_store_shipping_type') == 'small_package'))) {
     if ($form_state['values']['ups']['pkg_type'] == '02' && (empty($form_state['values']['dim_length']) || empty($form_state['values']['dim_width']) || empty($form_state['values']['dim_height']))) {
-      form_set_error('base][dimensions', $form_state, t('Dimensions are required for custom packaging.'));
+      $form_state->setErrorByName('base][dimensions', t('Dimensions are required for custom packaging.'));
     }
   }
 }

@@ -11,6 +11,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_help().
@@ -131,7 +132,7 @@ function uc_roles_theme() {
 /**
  * Implements hook_form_user_profile_form_alter().
  */
-function uc_roles_form_user_profile_form_alter(&$form, &$form_state) {
+function uc_roles_form_user_profile_form_alter(&$form, FormStateInterface $form_state) {
   $account = $form_state['user'];
 
   if (!\Drupal::currentUser()->hasPermission('administer users')) {
@@ -237,13 +238,13 @@ function uc_roles_form_user_profile_form_alter(&$form, &$form_state) {
  *
  * @see uc_roles_form_user_profile_form_alter()
  */
-function uc_roles_user_validate($form, &$form_state) {
+function uc_roles_user_validate($form, FormStateInterface $form_state) {
   $edit = $form_state['values'];
 
   // Validate the amount of time for the expiration.
   if (!empty($edit['new_role'])) {
     if (intval($edit['new_role_add_qty']) < 1) {
-      form_set_error('new_role_add_qty', $form_state, t('The expiration length must be a positive integer'));
+      $form_state->setErrorByName('new_role_add_qty', t('The expiration length must be a positive integer'));
     }
   }
 
@@ -261,7 +262,7 @@ function uc_roles_user_validate($form, &$form_state) {
 
       $new_expiration = _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']);
       if (REQUEST_TIME > $new_expiration) {
-        form_set_error('qty', $form_state, t("The new expiration date, %date, has already occurred.", array('%date' => format_date($new_expiration, 'short'))));
+        $form_state->setErrorByName('qty', t("The new expiration date, %date, has already occurred.", array('%date' => format_date($new_expiration, 'short'))));
       }
     }
   }
@@ -438,7 +439,7 @@ function uc_roles_uc_store_status() {
  * @see uc_roles_feature_settings_submit()
  * @ingroup forms
  */
-function uc_roles_feature_settings($form, &$form_state) {
+function uc_roles_feature_settings($form, FormStateInterface $form_state) {
   $default_role_choices = user_role_names(TRUE);
   unset($default_role_choices[DRUPAL_AUTHENTICATED_RID]);
 
@@ -572,7 +573,7 @@ function uc_roles_feature_settings($form, &$form_state) {
  *
  * @see uc_roles_feature_settings()
  */
-function uc_roles_feature_settings_submit($form, &$form_state) {
+function uc_roles_feature_settings_submit($form, FormStateInterface $form_state) {
   variable_set('uc_roles_default_role', $form_state['values']['uc_roles_default_role']);
   variable_set('uc_roles_default_role_choices', $form_state['values']['uc_roles_default_role_choices']);
   variable_set('uc_roles_default_end_expiration', $form_state['values']['uc_roles_default_end_expiration']);

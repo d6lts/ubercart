@@ -179,7 +179,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
           }
         }
         if (!empty($selected_opts) && !in_array($attribute['default'], $selected_opts)) {
-          form_set_error($attribute['default'], $form_state);
+          $form_state->setErrorByName($attribute['default']);
           $error = TRUE;
         }
       }

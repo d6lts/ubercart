@@ -5,6 +5,8 @@
  * Displays sales tax report.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Displays the sales tax report form and table.
  */
@@ -240,9 +242,9 @@ function uc_tax_report_params_form($form, &$form_state, $values) {
  * @see uc_tax_report_params_form()
  * @see uc_tax_report_params_form_submit()
  */
-function uc_tax_report_params_form_validate($form, &$form_state) {
+function uc_tax_report_params_form_validate($form, FormStateInterface $form_state) {
   if (empty($form_state['values']['status'])) {
-    form_set_error('status', $form_state, t('You must select at least one order status.'));
+    $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
 

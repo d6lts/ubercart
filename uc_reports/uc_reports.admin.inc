@@ -5,6 +5,7 @@
  * Reports administration menu items.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -503,7 +504,7 @@ function uc_reports_products_custom() {
  * @see uc_reports_products_custom_form_submit()
  * @ingroup forms
  */
-function uc_reports_products_custom_form($form, &$form_state, $values) {
+function uc_reports_products_custom_form($form, FormStateInterface $form_state, $values) {
   $form['search'] = array(
     '#type' => 'details',
     '#title' => t('Customize product report parameters'),
@@ -552,9 +553,9 @@ function uc_reports_products_custom_form($form, &$form_state, $values) {
  * @see uc_reports_products_custom_form()
  * @see uc_reports_products_custom_form_submit()
  */
-function uc_reports_products_custom_form_validate($form, &$form_state) {
+function uc_reports_products_custom_form_validate($form, FormStateInterface $form_state) {
   if (empty($form_state['values']['status'])) {
-    form_set_error('status', $form_state, t('You must select at least one order status.'));
+    $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
 
@@ -564,7 +565,7 @@ function uc_reports_products_custom_form_validate($form, &$form_state) {
  * @see uc_reports_products_custom_form()
  * @see uc_reports_products_custom_form_submit()
  */
-function uc_reports_products_custom_form_submit($form, &$form_state) {
+function uc_reports_products_custom_form_submit($form, FormStateInterface $form_state) {
   $start_date = mktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']);
   $end_date = mktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']);
 
@@ -977,7 +978,7 @@ function uc_reports_sales_year() {
  * @see uc_reports_sales_year_form_submit()
  * @ingroup forms
  */
-function uc_reports_sales_year_form($form, &$form_state, $year) {
+function uc_reports_sales_year_form($form, FormStateInterface $form_state, $year) {
   $form['year'] = array(
     '#type' => 'textfield',
     '#title' => t('Sales year'),
@@ -1004,7 +1005,7 @@ function uc_reports_sales_year_form($form, &$form_state, $year) {
  *
  * @see uc_reports_sales_year_form()
  */
-function uc_reports_sales_year_form_submit($form, &$form_state) {
+function uc_reports_sales_year_form_submit($form, FormStateInterface $form_state) {
   $form_state['redirect'] = 'admin/store/reports/sales/year/' . $form_state['values']['year'];
 }
 
@@ -1151,7 +1152,7 @@ function uc_reports_sales_custom() {
  * @see uc_reports_sales_custom_form_submit()
  * @ingroup forms
  */
-function uc_reports_sales_custom_form($form, &$form_state, $values, $statuses) {
+function uc_reports_sales_custom_form($form, FormStateInterface $form_state, $values, $statuses) {
   $form['search'] = array(
     '#type' => 'details',
     '#title' => t('Customize sales report parameters'),
@@ -1223,9 +1224,9 @@ function uc_reports_sales_custom_form($form, &$form_state, $values, $statuses) {
  * @see uc_reports_sales_custom_form()
  * @see uc_reports_sales_custom_form_submit()
  */
-function uc_reports_sales_custom_form_validate($form, &$form_state) {
+function uc_reports_sales_custom_form_validate($form, FormStateInterface $form_state) {
   if (empty($form_state['values']['status'])) {
-    form_set_error('status', $form_state, t('You must select at least one order status.'));
+    $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
 
@@ -1235,7 +1236,7 @@ function uc_reports_sales_custom_form_validate($form, &$form_state) {
  * @see uc_reports_sales_custom_form()
  * @see uc_reports_sales_custom_form_validate()
  */
-function uc_reports_sales_custom_form_submit($form, &$form_state) {
+function uc_reports_sales_custom_form_submit($form, FormStateInterface $form_state) {
   // Build the start and end dates from the form.
   $start_date = mktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']);
   $end_date = mktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']);

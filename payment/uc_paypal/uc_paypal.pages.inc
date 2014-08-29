@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Processes Instant Payment Notifiations from PayPal.
@@ -263,7 +264,7 @@ function uc_paypal_ec_review() {
 /**
  * Returns the form for the custom Review Payment screen for Express Checkout.
  */
-function uc_paypal_ec_review_form($form, &$form_state, $order) {
+function uc_paypal_ec_review_form($form, FormStateInterface $form_state, $order) {
   if (\Drupal::moduleHandler()->moduleExists('uc_quote') && variable_get('uc_paypal_ec_review_shipping', TRUE) && $order->isShippable()) {
     uc_checkout_pane_quotes('prepare', $order, NULL);
     $order->line_items = $order->getLineItems();
@@ -319,13 +320,13 @@ function uc_paypal_ec_review_form($form, &$form_state, $order) {
   return $form;
 }
 
-function uc_paypal_ec_review_form_validate($form, &$form_state) {
+function uc_paypal_ec_review_form_validate($form, FormStateInterface $form_state) {
   if (!empty($form_state['values']['shippable']) && empty($form_state['values']['quotes']['quote_option'])) {
-    form_set_error('shipping', $form_state, t('You must calculate and select a shipping option.'));
+    $form_state->setErrorByName('shipping', t('You must calculate and select a shipping option.'));
   }
 }
 
-function uc_paypal_ec_review_form_submit($form, &$form_state) {
+function uc_paypal_ec_review_form_submit($form, FormStateInterface $form_state) {
   $order = uc_order_load($_SESSION['cart_order']);
 
   if (!empty($form_state['values']['shippable'])) {
@@ -400,7 +401,7 @@ function uc_paypal_ec_submit() {
 /**
  * Submits an order, calling the NVP API to send the order total to PayPal.
  */
-function uc_paypal_ec_submit_form($form, &$form_state) {
+function uc_paypal_ec_submit_form($form, FormStateInterface $form_state) {
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',

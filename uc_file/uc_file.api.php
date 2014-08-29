@@ -146,13 +146,13 @@ function hook_uc_file_action($op, $args) {
     case 'upload_validate':
       // Given a file path, function checks if file is valid JPEG.
       if (!_check_image($args['file_object']->uri)) {
-        form_set_error('upload', $form_state, t('Uploaded file is not a valid JPEG'));
+        $form_state->setErrorByName('upload', t('Uploaded file is not a valid JPEG'));
       }
     break;
     case 'validate':
       if ($args['form_values']['action'] == 'uc_image_watermark_add_mark') {
         if (empty($args['form_values']['watermark_text'])) {
-          form_set_error('watermark_text', $form_state, t('Must fill in text'));
+          $form_state->setErrorByName('watermark_text', t('Must fill in text'));
         }
       }
     break;

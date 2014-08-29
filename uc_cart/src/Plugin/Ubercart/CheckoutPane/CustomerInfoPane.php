@@ -119,12 +119,12 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
         ->execute();
 
       if ($cart_config->get('email_validation') && $pane['primary_email'] !== $pane['primary_email_confirm']) {
-        form_set_error('panes][customer][primary_email_confirm', $form_state, t('The e-mail address did not match.'));
+        $form_state->setErrorByName('panes][customer][primary_email_confirm', t('The e-mail address did not match.'));
       }
 
       // Invalidate if an account already exists for this e-mail address, and the user is not logged into that account
       if (!$cart_config->get('mail_existing') && !empty($pane['primary_email']) && $mail_taken) {
-        form_set_error('panes][customer][primary_email', $form_state, t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
+        $form_state->setErrorByName('panes][customer][primary_email', t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
       }
 
       // If new users can specify names or passwords then...
@@ -144,10 +144,10 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
               ->execute();
 
             if (!empty($message)) {
-              form_set_error('panes][customer][new_account][name', $form_state, $message);
+              $form_state->setErrorByName('panes][customer][new_account][name', $message);
             }
             elseif ($name_taken) {
-              form_set_error('panes][customer][new_account][name', $form_state, t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
+              $form_state->setErrorByName('panes][customer][new_account][name', t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
             }
             else {
               $order->data->new_user_name = $pane['new_account']['name'];
@@ -157,7 +157,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
           // Validate the password.
           if ($cart_config->get('new_account_password')) {
             if (strcmp($pane['new_account']['pass'], $pane['new_account']['pass_confirm'])) {
-              form_set_error('panes][customer][new_account][pass_confirm', $form_state, t('The passwords you entered did not match. Please try again.'));
+              $form_state->setErrorByName('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
             }
             if (!empty($pane['new_account']['pass'])) {
               $order->data->new_user_hash = \Drupal::service('password')->hash(trim($pane['new_account']['pass']));

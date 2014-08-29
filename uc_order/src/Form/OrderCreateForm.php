@@ -214,7 +214,7 @@ class OrderCreateForm extends FormBase {
     switch ($form_state['values']['customer_type']) {
       case 'search':
         if (empty($form_state['values']['customer']['uid'])) {
-          form_set_error('customer][uid', $form_state, t('Please select a customer.'));
+          $form_state->setErrorByName('customer][uid', t('Please select a customer.'));
         }
         break;
 
@@ -222,7 +222,7 @@ class OrderCreateForm extends FormBase {
         $email = trim($form_state['values']['customer']['email']);
         $uid = db_query('SELECT uid FROM {users} WHERE mail LIKE :mail', array(':mail' => $email))->fetchField();
         if ($uid) {
-          form_set_error('customer][mail', $form_state, t('An account already exists for that e-mail.'));
+          $form_state->setErrorByName('customer][mail', t('An account already exists for that e-mail.'));
         }
         break;
     }

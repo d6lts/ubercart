@@ -174,7 +174,7 @@ class OrderPaymentsForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!is_numeric($form_state['values']['payments']['new']['amount'])) {
-      form_set_error('payments][new][amount', $form_state, t('You must enter a number for the amount.'));
+      $form_state->setErrorByName('payments][new][amount', t('You must enter a number for the amount.'));
     }
   }
 

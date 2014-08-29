@@ -147,7 +147,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
    */
   public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
     if (empty($form_state['values']['panes']['payment']['payment_method'])) {
-      form_set_error('panes][payment][payment_method', $form_state, t('You cannot check out without selecting a payment method.'));
+      $form_state->setErrorByName('panes][payment][payment_method', t('You cannot check out without selecting a payment method.'));
       return FALSE;
     }
     $order->setPaymentMethodId($form_state['values']['panes']['payment']['payment_method']);
