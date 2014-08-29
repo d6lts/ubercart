@@ -150,11 +150,11 @@ function uc_product_form_node_form_alter(&$form, &$form_state) {
       '#weight' => 15,
     );
     $form['base']['weight']['weight'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Weight'),
       '#default_value' => $node->weight,
       '#size' => 10,
-      '#element_validate' => array('uc_store_validate_number'),
+      '#min' => 0,
     );
     $units = array(
       'lb' => t('Pounds'),
@@ -180,25 +180,25 @@ function uc_product_form_node_form_alter(&$form, &$form_state) {
       '#weight' => 20,
     );
     $form['base']['dimensions']['dim_length'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Length'),
       '#default_value' => $node->length,
       '#size' => 10,
-      '#element_validate' => array('uc_store_validate_number'),
+      '#min' => 0,
     );
     $form['base']['dimensions']['dim_width'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Width'),
       '#default_value' => $node->width,
       '#size' => 10,
-      '#element_validate' => array('uc_store_validate_number'),
+      '#min' => 0,
     );
     $form['base']['dimensions']['dim_height'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Height'),
       '#default_value' => $node->height,
       '#size' => 10,
-      '#element_validate' => array('uc_store_validate_number'),
+      '#min' => 0,
     );
     $form['base']['dimensions']['length_units'] = array(
       '#type' => 'select',
