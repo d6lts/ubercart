@@ -8,8 +8,8 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Entity\EntityViewDisplay;
 use Drupal\node\NodeInterface;
 use Drupal\uc_order\UcOrderInterface;
 
@@ -78,7 +78,7 @@ function uc_taxes_uc_product_alter(&$node) {
  *
  * Adds included taxes (VAT) to display price of applicable products.
  */
-function uc_taxes_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplay $display) {
+function uc_taxes_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
   switch ($entity->getEntityTypeId()) {
     case 'uc_cart_item':
       list($amount, $suffixes) = uc_taxes_get_included_tax($entity, isset($entity->order) ? $entity->order : NULL);
