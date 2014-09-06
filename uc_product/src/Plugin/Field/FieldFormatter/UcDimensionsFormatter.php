@@ -30,12 +30,15 @@ class UcDimensionsFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $dimensions = array(
-        uc_length_format($item->length, $item->units),
-        uc_length_format($item->width, $item->units),
-        uc_length_format($item->height, $item->units),
-      );
-      $elements[$delta] = array('#markup' => implode(' × ', $dimensions));
+      $dimensions = array();
+      foreach (array('length', 'width', 'height') as $dimension) {
+        if ($item->$dimension) {
+          $dimensions[] = uc_length_format($item->$dimension, $item->units);
+        }
+      }
+      if ($dimensions) {
+        $elements[$delta] = array('#markup' => implode(' × ', $dimensions));
+      }
     }
 
     return $elements;

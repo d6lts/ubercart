@@ -132,6 +132,36 @@ class ProductTest extends UbercartTestBase {
     $this->assertText(t('Product @title has been deleted.', array('@title' => $edit[$title_key])), 'Product deleted.');
   }
 
+  public function testZeroProductWeightAndDimensions() {
+    $edit = array(
+      'title[0][value]' => $this->randomMachineName(32),
+      'model[0][value]' => $this->randomMachineName(8),
+      'price[0][value]' => mt_rand(1, 150),
+      'shippable[value]' => mt_rand(0, 1),
+      'weight[0][value]' => 0,
+      'weight[0][units]' => array_rand(array(
+        'lb' => t('Pounds'),
+        'kg' => t('Kilograms'),
+        'oz' => t('Ounces'),
+        'g'  => t('Grams'),
+      )),
+      'dimensions[0][length]' => 0,
+      'dimensions[0][width]' => 0,
+      'dimensions[0][height]' => 0,
+      'dimensions[0][units]' => array_rand(array(
+        'in' => t('Inches'),
+        'ft' => t('Feet'),
+        'cm' => t('Centimeters'),
+        'mm' => t('Millimeters'),
+      )),
+    );
+    $this->drupalPostForm('node/add/product', $edit, 'Save');
+
+    $this->assertText(t('Product @title has been created.', array('@title' => $edit['title[0][value]'])), 'Product created.');
+    $this->assertNoText('Weight', 'Zero weight not shown.');
+    $this->assertNoText('Dimensions', 'Zero dimensions not shown.');
+  }
+
   public function testProductClassForm() {
     // Try making a new product class.
     $class = strtolower($this->randomMachineName(12));
@@ -194,4 +224,5 @@ class ProductTest extends UbercartTestBase {
     $this->addToCart($this->product, array('qty' => 1));
     $this->assertText('Your item(s) have been updated.');
   }
+
 }
