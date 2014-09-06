@@ -11,10 +11,13 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
@@ -31,20 +34,8 @@ function uc_product_page_build(&$page) {
  */
 function uc_product_theme() {
   return array(
-    'uc_product_model' => array(
-      'variables' => array('model' => '', 'view_mode' => 'full', 'attributes' => array()),
-      'file' => 'uc_product.theme.inc',
-    ),
     'uc_product_price' => array(
       'render element' => 'element',
-      'file' => 'uc_product.theme.inc',
-    ),
-    'uc_product_weight' => array(
-      'variables' => array('amount' => 0, 'units' => NULL, 'view_mode' => 'full', 'attributes' => array()),
-      'file' => 'uc_product.theme.inc',
-    ),
-    'uc_product_dimensions' => array(
-      'variables' => array('length' => 0, 'width' => 0, 'height' => 0, 'units' => NULL, 'view_mode' => 'full', 'attributes' => array()),
       'file' => 'uc_product.theme.inc',
     ),
   );
@@ -60,234 +51,6 @@ function uc_product_preprocess_field(&$variables) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for node_form().
- */
-function uc_product_form_node_form_alter(&$form, &$form_state) {
-  $node = $form_state->getFormObject()->getEntity();
-  if (uc_product_is_product($node)) {
-    $form['base'] = array(
-      '#type' => 'details',
-      '#title' => t('Product information'),
-      '#weight' => 0,
-      '#open' => TRUE,
-    );
-    $form['base']['model'] = array(
-      '#type' => 'textfield',
-      '#title' => t('SKU'),
-      '#required' => TRUE,
-      '#default_value' => $node->model,
-      '#description' => t('Product SKU/model.'),
-      '#weight' => 0,
-      '#size' => 32,
-    );
-
-    $form['base']['prices'] = array(
-      '#type' => 'container',
-      '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
-      '#weight' => 5,
-    );
-
-    $form['base']['prices']['list_price'] = array(
-      '#type' => 'uc_price',
-      '#title' => t('List price'),
-      '#default_value' => $node->list_price,
-      '#description' => t('The listed MSRP.'),
-      '#weight' => 0,
-    );
-    $form['base']['prices']['cost'] = array(
-      '#type' => 'uc_price',
-      '#title' => t('Cost'),
-      '#default_value' => $node->cost,
-      '#description' => t("Your store's cost."),
-      '#weight' => 1,
-    );
-    $form['base']['prices']['sell_price'] = array(
-      '#type' => 'uc_price',
-      '#title' => t('Sell price'),
-      '#required' => TRUE,
-      '#default_value' => $node->sell_price,
-      '#description' => t('Customer purchase price.'),
-      '#weight' => 2,
-    );
-
-    $form['base']['shippable'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Product is shippable.'),
-      '#default_value' => $node->shippable,
-      '#weight' => 10,
-    );
-
-    $form['base']['weight'] = array(
-      '#type' => 'container',
-      '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
-      '#states' => array(
-        'invisible' => array(
-          'input[name="shippable"]' => array('checked' => FALSE),
-        ),
-      ),
-      '#weight' => 15,
-    );
-    $form['base']['weight']['weight'] = array(
-      '#type' => 'number',
-      '#title' => t('Weight'),
-      '#default_value' => $node->weight,
-      '#size' => 10,
-      '#min' => 0,
-    );
-    $units = array(
-      'lb' => t('Pounds'),
-      'kg' => t('Kilograms'),
-      'oz' => t('Ounces'),
-      'g' => t('Grams'),
-    );
-    $form['base']['weight']['weight_units'] = array(
-      '#type' => 'select',
-      '#title' => t('Units'),
-      '#default_value' => $node->weight_units,
-      '#options' => $units,
-    );
-
-    $form['base']['dimensions'] = array(
-      '#type' => 'container',
-      '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
-      '#states' => array(
-        'invisible' => array(
-          'input[name="shippable"]' => array('checked' => FALSE),
-        ),
-      ),
-      '#weight' => 20,
-    );
-    $form['base']['dimensions']['dim_length'] = array(
-      '#type' => 'number',
-      '#title' => t('Length'),
-      '#default_value' => $node->length,
-      '#size' => 10,
-      '#min' => 0,
-    );
-    $form['base']['dimensions']['dim_width'] = array(
-      '#type' => 'number',
-      '#title' => t('Width'),
-      '#default_value' => $node->width,
-      '#size' => 10,
-      '#min' => 0,
-    );
-    $form['base']['dimensions']['dim_height'] = array(
-      '#type' => 'number',
-      '#title' => t('Height'),
-      '#default_value' => $node->height,
-      '#size' => 10,
-      '#min' => 0,
-    );
-    $form['base']['dimensions']['length_units'] = array(
-      '#type' => 'select',
-      '#title' => t('Units'),
-      '#options' => array(
-        'in' => t('Inches'),
-        'ft' => t('Feet'),
-        'cm' => t('Centimeters'),
-        'mm' => t('Millimeters'),
-      ),
-      '#default_value' => $node->length_units,
-    );
-    $form['base']['pkg_qty'] = array(
-      '#type' => 'uc_quantity',
-      '#title' => t('Maximum package quantity'),
-      '#default_value' => $node->pkg_qty,
-      '#description' => t('At most, how many of these items can fit in your largest box? Orders that exceed this value will be split into multiple packages when retrieving shipping quotes.'),
-      '#weight' => 25,
-      '#states' => array(
-        'invisible' => array(
-          'input[name="shippable"]' => array('checked' => FALSE),
-        ),
-      ),
-    );
-
-    if (\Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
-      $form['base']['default_qty'] = array(
-        '#type' => 'uc_quantity',
-        '#title' => t('Default quantity to add to cart'),
-        '#default_value' => $node->default_qty,
-        '#description' => t('Use 0 to disable the quantity field next to the add to cart button.'),
-        '#weight' => 27,
-        '#allow_zero' => TRUE,
-      );
-    }
-    else {
-      $form['base']['default_qty'] = array(
-        '#type' => 'value',
-        '#value' => $node->default_qty,
-      );
-    }
-
-    $form['base']['ordering'] = array(
-      '#type' => 'weight',
-      '#title' => t('List position'),
-      '#description' => t("Specify a value to set this product's position in product lists.<br />Products in the same position will be sorted alphabetically."),
-      '#delta' => 25,
-      '#default_value' => $node->ordering,
-      '#weight' => 30,
-    );
-
-    $form['#entity_builders'][] = 'uc_product_node_builder';
-  }
-}
-
-/**
- * Entity form builder to add product information to the node.
- *
- * @todo: Remove this in favor of an entity field.
- */
-function uc_product_node_builder($entity_type, $entity, &$form, &$form_state) {
-  $entity->model = $form_state['values']['model'];
-  $entity->list_price = $form_state['values']['list_price'];
-  $entity->cost = $form_state['values']['cost'];
-  $entity->sell_price = $form_state['values']['sell_price'];
-  $entity->weight = $form_state['values']['weight'];
-  $entity->weight_units = $form_state['values']['weight_units'];
-  $entity->length = $form_state['values']['dim_length'];
-  $entity->width = $form_state['values']['dim_width'];
-  $entity->height = $form_state['values']['dim_height'];
-  $entity->length_units = $form_state['values']['length_units'];
-  $entity->pkg_qty = $form_state['values']['pkg_qty'];
-  $entity->default_qty = $form_state['values']['default_qty'];
-  $entity->shippable = $form_state['values']['shippable'];
-  $entity->ordering = $form_state['values']['ordering'];
-}
-
-/**
- * Implements hook_node_prepare_form().
- */
-function uc_product_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
-  if (!uc_product_is_product($node)) {
-    return;
-  }
-
-  $settings = entity_load('node_type', $node->getType())->getModuleSettings('uc_product');
-  $defaults = array(
-    'model' => '',
-    'list_price' => 0,
-    'cost' => 0,
-    'sell_price' => 0,
-    'weight' => 0,
-    'weight_units' => \Drupal::config('uc_store.settings')->get('units.weight'),
-    'length' => 0,
-    'width' => 0,
-    'height' => 0,
-    'length_units' => \Drupal::config('uc_store.settings')->get('units.length'),
-    'pkg_qty' => 1,
-    'default_qty' => 1,
-    'shippable' => isset($settings['shippable']) ? $settings['shippable'] : TRUE,
-    'ordering' => 0,
-  );
-
-  foreach ($defaults as $key => $value) {
-    if (!isset($node->$key)) {
-      $node->$key = $value;
-    }
-  }
-}
-
-/**
  * Implements hook_node_insert().
  */
 function uc_product_node_insert($node) {
@@ -298,10 +61,15 @@ function uc_product_node_insert($node) {
   $record = new \stdClass();
   $record->vid = $node->getRevisionId();
   $record->nid = $node->id();
-  $fields = array('model', 'list_price', 'cost', 'sell_price', 'weight', 'weight_units', 'length', 'width', 'height', 'length_units', 'pkg_qty', 'default_qty', 'ordering', 'shippable');
+  $fields = array('model', 'cost', 'price', 'weight', 'pkg_qty', 'default_qty', 'shippable');
   foreach ($fields as $name) {
-    $record->$name = $node->$name;
+    $record->$name = $node->$name->value;
   }
+  $record->weight_units = $node->weight->units;
+  $record->length = $node->dimensions->length;
+  $record->width = $node->dimensions->width;
+  $record->height = $node->dimensions->height;
+  $record->length_units = $node->dimensions->units;
   drupal_write_record('uc_products', $record);
 }
 
@@ -316,10 +84,15 @@ function uc_product_node_update($node) {
   $record = new \stdClass();
   $record->vid = $node->getRevisionId();
   $record->nid = $node->id();
-  $fields = array('model', 'list_price', 'cost', 'sell_price', 'weight', 'weight_units', 'length', 'width', 'height', 'length_units', 'pkg_qty', 'default_qty', 'ordering', 'shippable');
+  $fields = array('model', 'cost', 'price', 'weight', 'pkg_qty', 'default_qty', 'shippable');
   foreach ($fields as $name) {
-    $record->$name = $node->$name;
+    $record->$name = $node->$name->value;
   }
+  $record->weight_units = $node->weight->units;
+  $record->length = $node->dimensions->length;
+  $record->width = $node->dimensions->width;
+  $record->height = $node->dimensions->height;
+  $record->length_units = $node->dimensions->units;
   if ($node->isNewRevision()) {
     drupal_write_record('uc_products', $record);
   }
@@ -340,14 +113,20 @@ function uc_product_node_load($nodes) {
   }
 
   if (!empty($vids)) {
-    $result = db_query('SELECT nid, model, list_price, cost, sell_price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, ordering, shippable FROM {uc_products} WHERE vid IN (:vids)', array(':vids' => $vids));
-    foreach ($result as $node) {
-      foreach ($node as $field => $value) {
-        $nodes[$node->nid]->$field = $value;
+    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids)', array(':vids' => $vids));
+    $fields = array('model', 'cost', 'price', 'weight', 'pkg_qty', 'default_qty', 'shippable');
+    foreach ($result as $record) {
+      foreach ($fields as $name) {
+        $nodes[$record->nid]->$name->value = $record->$name;
       }
-      $nodes[$node->nid]->price = $nodes[$node->nid]->sell_price;
-      $nodes[$node->nid]->display_price = $nodes[$node->nid]->sell_price;
-      $nodes[$node->nid]->display_price_suffixes = array();
+      $nodes[$record->nid]->weight->units = $record->weight_units;
+      $nodes[$record->nid]->dimensions->length = $record->length;
+      $nodes[$record->nid]->dimensions->width = $record->width;
+      $nodes[$record->nid]->dimensions->height = $record->height;
+      $nodes[$record->nid]->dimensions->units = $record->length_units;
+
+      $nodes[$record->nid]->display_price = $nodes[$record->nid]->price->value;
+      $nodes[$record->nid]->display_price_suffixes = array();
     }
   }
 }
@@ -515,62 +294,6 @@ function uc_product_view_product(array &$build, NodeInterface $node, EntityViewD
       ),
     ),
   );
-  $build['model'] = array(
-    '#theme' => 'uc_product_model',
-    '#model' => $variant->model,
-    '#view_mode' => $view_mode,
-  );
-  $build['list_price'] = array(
-    '#theme' => 'uc_product_price',
-    '#title' => t('List price:'),
-    '#value' => $variant->list_price,
-    '#attributes' => array(
-      'class' => array(
-        'list-price',
-      ),
-    ),
-  );
-  $build['cost'] = array(
-    '#theme' => 'uc_product_price',
-    '#title' => t('Cost:'),
-    '#value' => $variant->cost,
-    '#attributes' => array(
-      'class' => array(
-        'cost',
-        'uc-product-' . $node->id(),
-      ),
-    ),
-    '#access' => \Drupal::currentUser()->hasPermission('administer products'),
-  );
-  $build['sell_price'] = array(
-    '#theme' => 'uc_product_price',
-    '#title' => t('Price:'),
-    '#value' => $variant->sell_price,
-    '#attributes' => array(
-      'class' => array(
-        'sell-price',
-      ),
-    ),
-  );
-  $build['weight'] = array(
-    '#theme' => 'uc_product_weight',
-    '#amount' => $variant->weight,
-    '#units' => $variant->weight_units,
-    '#view_mode' => $view_mode,
-    '#attributes' => array(
-      'class' => array(
-        'uc-product-' . $node->id(),
-      ),
-    ),
-  );
-  $build['dimensions'] = array(
-    '#theme' => 'uc_product_dimensions',
-    '#length' => $variant->length,
-    '#width' => $variant->width,
-    '#height' => $variant->height,
-    '#units' => $variant->length_units,
-    '#view_mode' => $view_mode,
-  );
 
   if (isset($add_to_cart_form)) {
     $build['add_to_cart'] = $add_to_cart_form;
@@ -653,7 +376,7 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   // Image field.
   if (!empty($type->type)) {
     $options = array('' => t('None'));
-    $instances = \Drupal::entityManager()->getFieldDefinitions('node', $type->type);
+    $instances = \Drupal::entityManager()->getBaseFieldDefinitions('node', $type->type);
     foreach ($instances as $field_name => $instance) {
       if ($instance->getType() == 'image') {
         $options[$field_name] = $instance->label();
@@ -673,56 +396,17 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
 
 /**
  * Implements hook_entity_extra_field_info().
- *
- * Adds the "Product information".
  */
 function uc_product_entity_extra_field_info() {
   $extra = array();
 
   foreach (uc_product_types() as $type) {
     $extra['node'][$type] = array(
-      'form' => array(
-        'base' => array(
-          'label' => t('Product information'),
-          'description' => t('Product form elements.'),
-          'weight' => 0,
-        ),
-      ),
       'display' => array(
         'display_price' => array(
           'label' => t('Display price'),
           'description' => t('High-visibility sell price.'),
           'weight' => -1,
-        ),
-        'model' => array(
-          'label' => t('SKU'),
-          'description' => t('Product SKU/model.'),
-          'weight' => 0,
-        ),
-        'list_price' => array(
-          'label' => t('List price'),
-          'description' => t('The listed MSRP.'),
-          'weight' => 2,
-        ),
-        'cost' => array(
-          'label' => t('Cost'),
-          'description' => t("Your store's cost."),
-          'weight' => 3,
-        ),
-        'sell_price' => array(
-          'label' => t('Sell price'),
-          'description' => t('Customer purchase price.'),
-          'weight' => 4,
-        ),
-        'weight' => array(
-          'label' => t('Weight'),
-          'description' => t('Physical weight (lbs, kg, etc.).'),
-          'weight' => 5,
-        ),
-        'dimensions' => array(
-          'label' => t('Dimensions'),
-          'description' => t('Physical dimensions of the packaged product.'),
-          'weight' => 6,
         ),
         'add_to_cart' => array(
           'label' => t('Add to cart form'),
@@ -734,6 +418,140 @@ function uc_product_entity_extra_field_info() {
   }
 
   return $extra;
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  if ($entity_type->id() == 'node' && uc_product_is_product($bundle)) {
+    $settings = NodeType::load($bundle)->getModuleSettings('uc_product');
+    $settings += array(
+      'shippable' => TRUE,
+    );
+
+    $fields['model'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('SKU'))
+      ->setDescription(t('Product SKU/model.'))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => 1,
+        'settings' => array(
+          'size' => 32,
+        ),
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'string',
+        'label' => 'inline',
+        'weight' => 1,
+      ))
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['cost'] = BaseFieldDefinition::create('uc_price')
+      ->setLabel(t('Cost'))
+      ->setDescription(t("Your store's cost."))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDefaultValue('0.00')
+      ->setDisplayOptions('form', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['price'] = BaseFieldDefinition::create('uc_price')
+      ->setLabel(t('Price'))
+      ->setDescription(t('Customer purchase price.'))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDefaultValue('0.00')
+      ->setDisplayOptions('form', array(
+        'type' => 'uc_price',
+        'weight' => 2,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'uc_price',
+        'label' => 'inline',
+        'weight' => 2,
+      ))
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['shippable'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Shippable'))
+      ->setCustomStorage(TRUE)
+      ->setDefaultValue($settings['shippable'])
+      ->setSetting('on_label', t('Product is shippable'))
+      ->setSetting('off_label', t('Product is not shippable'))
+      ->setDisplayOptions('form', array(
+        'type' => 'boolean_checkbox',
+        'display_label' => TRUE,
+        'weight' => 3,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+
+    $fields['weight'] = BaseFieldDefinition::create('uc_weight')
+      ->setLabel(t('Weight'))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'uc_weight',
+        'weight' => 4,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'uc_weight',
+        'label' => 'inline',
+        'weight' => 4,
+      ))
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['dimensions'] = BaseFieldDefinition::create('uc_dimensions')
+      ->setLabel(t('Dimensions'))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'uc_dimensions',
+        'weight' => 5,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'uc_dimensions',
+        'label' => 'inline',
+        'weight' => 5,
+      ))
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['pkg_qty'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Maximum package quantity'))
+      ->setDescription(t('At most, how many of these items can fit in your largest box? Orders that exceed this value will be split into multiple packages when retrieving shipping quotes.'))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDefaultValue('1')
+      ->setDisplayOptions('form', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+
+    $fields['default_qty'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Default quantity to add to cart'))
+      ->setDescription(t('Use 0 to disable the quantity field next to the add to cart button.'))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDefaultValue('1')
+      ->setDisplayOptions('form', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+
+    return $fields;
+  }
 }
 
 /**
@@ -755,7 +573,7 @@ function uc_product_uc_product_types() {
 function uc_product_uc_store_status() {
   $settings = entity_load('node_type', 'product')->getModuleSettings('uc_product');
   $field = $settings['image_field'];
-  $instances = \Drupal::entityManager()->getFieldDefinitions('node', 'product');
+  $instances = \Drupal::entityManager()->getBaseFieldDefinitions('node', 'product');
 
   if (isset($instances[$field])) {
     $status = 'ok';
@@ -785,7 +603,7 @@ function uc_product_uc_cart_display($item) {
     '#markup' => $node->access('view') ? l($item->title, 'node/' . $node->id()) : String::checkPlain($item->title),
   );
 
-  $element['#total'] = $item->price * $item->qty->value;
+  $element['#total'] = $item->price->value * $item->qty->value;
   $element['#suffixes'] = array();
   $element['data'] = array('#type' => 'hidden', '#value' => serialize($item->data->first()->toArray()));
   $element['qty'] = array(
@@ -840,7 +658,7 @@ function uc_product_uc_add_to_cart_data($form_values) {
 
   $settings = entity_load('node_type', $type)->getModuleSettings('uc_product');
   return array(
-    'shippable' => isset($node) ? $node->shippable : $settings['shippable'],
+    'shippable' => isset($node) ? $node->shippable->value : $settings['shippable'],
     'type' => $type,
   );
 }
@@ -1124,9 +942,8 @@ function uc_product_node_type_insert(NodeTypeInterface $type) {
 
     $defaults = array(
       'model' => '',
-      'list_price' => 0,
       'cost' => 0,
-      'sell_price' => 0,
+      'price' => 0,
       'weight' => 0,
       'weight_units' => \Drupal::config('uc_store.settings')->get('units.weight'),
       'length' => 0,
@@ -1136,7 +953,6 @@ function uc_product_node_type_insert(NodeTypeInterface $type) {
       'pkg_qty' => 1,
       'default_qty' => 1,
       'shippable' => isset($settings['shippable']) ? $settings['shippable'] : TRUE,
-      'ordering' => 0,
     );
     $result = db_query("SELECT n.vid, n.nid FROM {node} n LEFT JOIN {uc_products} p ON n.vid = p.vid WHERE n.type = :type AND p.vid IS NULL", array(':type' => $type->id()));
     foreach ($result as $node) {

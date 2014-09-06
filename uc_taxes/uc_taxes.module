@@ -551,7 +551,7 @@ function uc_taxes_apply_item_tax($item, $tax) {
     $shippable = $item->weight > 0;
   }
   elseif ($node = node_load($nid)) { // Use current node.
-    $shippable = $node->shippable;
+    $shippable = $node->shippable->value;
   }
   else { // Use default for this node type.
     $settings = entity_load('node_type', $type)->getModuleSettings('uc_product');

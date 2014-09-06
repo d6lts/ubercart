@@ -187,7 +187,7 @@ function uc_weightquote_quote($products, $details, $method) {
         // Add the product-specific rate.
         $product_rate = $product->weightquote[$mid] * $product->qty->value;
       }
-      $rate += $product_rate  * $product->weight->value * uc_weight_conversion($product->weight_units->value);
+      $rate += $product_rate  * $product->weight->value * uc_weight_conversion($product->weight->units);
     }
 
     $quotes[] = array(

@@ -76,20 +76,23 @@ abstract class UbercartTestBase extends WebTestBase {
     $product += array(
       'type' => 'product',
       'model' => $this->randomMachineName(8),
-      'list_price' => mt_rand(1, 9999),
       'cost' => mt_rand(1, 9999),
-      'sell_price' => mt_rand(1, 9999),
-      'weight' => mt_rand(1, 9999),
-      'weight_units' => array_rand(array_flip($weight_units)),
+      'price' => mt_rand(1, 9999),
+      'weight' => array(0 => array(
+        'value' => mt_rand(1, 9999),
+        'units' => array_rand(array_flip($weight_units)),
+      )),
       'length' => mt_rand(1, 9999),
       'width' => mt_rand(1, 9999),
       'height' => mt_rand(1, 9999),
       'length_units' => array_rand(array_flip($length_units)),
       'pkg_qty' => mt_rand(1, 99),
       'default_qty' => 1,
-      'ordering' => mt_rand(-25, 25),
       'shippable' => TRUE,
     );
+
+    $product['model'] = array(array('value' => $product['model']));
+    $product['price'] = array(array('value' => $product['price']));
 
     return $this->drupalCreateNode($product);
   }
@@ -252,10 +255,9 @@ abstract class UbercartTestBase extends WebTestBase {
         'title' => $this->product->title->value,
         'model' => $this->product->model,
         'qty' => 1,
-        'cost' => $this->product->cost,
-        'price' => $this->product->sell_price,
+        'cost' => $this->product->cost->value,
+        'price' => $this->product->price->value,
         'weight' => $this->product->weight,
-        'weight_units' => $this->product->weight_units,
         'data' => array(),
       ));
     }

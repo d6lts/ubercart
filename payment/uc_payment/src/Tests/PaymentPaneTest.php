@@ -72,7 +72,7 @@ class PaymentPaneTest extends UbercartTestBase {
    * Tests free orders.
    */
   public function testFreeOrders() {
-    $free_product = $this->createProduct(array('sell_price' => 0));
+    $free_product = $this->createProduct(array('price' => 0));
     $edit = array('methods[check][status]' => TRUE);
     $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
 

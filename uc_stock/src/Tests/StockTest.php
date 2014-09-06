@@ -31,13 +31,14 @@ class StockTest extends UbercartTestBase {
   }
 
   public function testProductStock() {
-    $prefix = 'stock[' . $this->product->model . ']';
+    $sku = $this->product->model->value;
+    $prefix = 'stock[' . $sku . ']';
 
     $this->drupalGet('node/' . $this->product->id() . '/edit/stock');
     $this->assertText($this->product->label());
-    $this->assertText($this->product->model, 'Product SKU found.');
+    $this->assertText($this->product->model->value, 'Product SKU found.');
 
-    $this->assertNoFieldChecked('edit-stock-' . strtolower($this->product->model) . '-active', 'Stock tracking is not active.');
+    $this->assertNoFieldChecked('edit-stock-' . strtolower($sku) . '-active', 'Stock tracking is not active.');
     $this->assertFieldByName($prefix . '[stock]', '0', 'Default stock level found.');
     $this->assertFieldByName($prefix . '[threshold]', '0', 'Default stock threshold found.');
 
@@ -49,17 +50,17 @@ class StockTest extends UbercartTestBase {
     );
     $this->drupalPostForm(NULL, $edit, t('Save changes'));
     $this->assertText('Stock settings saved.');
-    $this->assertTrue(uc_stock_is_active($this->product->model));
-    $this->assertEqual($stock, uc_stock_level($this->product->model));
+    $this->assertTrue(uc_stock_is_active($sku));
+    $this->assertEqual($stock, uc_stock_level($sku));
 
     $stock = rand(1, 1000);
-    uc_stock_set($this->product->model, $stock);
+    uc_stock_set($sku, $stock);
     $this->drupalGet('node/' . $this->product->id() . '/edit/stock');
     $this->assertFieldByName($prefix . '[stock]', (string)$stock, 'Set stock level found.');
   }
 
   public function testStockDecrement() {
-    $prefix = 'stock[' . $this->product->model . ']';
+    $prefix = 'stock[' . $this->product->model->value . ']';
     $stock = rand(100, 1000);
     $edit = array(
       $prefix . '[active]' => 1,
@@ -77,11 +78,11 @@ class StockTest extends UbercartTestBase {
     $this->addToCart($this->product, $edit);
     $this->checkout();
 
-    $this->assertEqual($stock - $qty, uc_stock_level($this->product->model));
+    $this->assertEqual($stock - $qty, uc_stock_level($this->product->model->value));
   }
 
   public function testStockThresholdMail() {
-    $prefix = 'stock[' . $this->product->model . ']';
+    $prefix = 'stock[' . $this->product->model->value . ']';
 
     $edit = array('uc_stock_threshold_notification' => 1);
     $this->drupalPostForm('admin/store/settings/stock', $edit, 'Save configuration');
@@ -102,7 +103,7 @@ class StockTest extends UbercartTestBase {
     $this->assertEqual($mail['to'], uc_store_email(), 'Threshold mail recipient is correct.');
     $this->assertTrue(strpos($mail['subject'], 'Stock threshold limit reached') !== FALSE, 'Threshold mail subject is correct.');
     $this->assertTrue(strpos($mail['body'], $this->product->label()) !== FALSE, 'Mail body contains product title.');
-    $this->assertTrue(strpos($mail['body'], $this->product->model) !== FALSE, 'Mail body contains SKU.');
+    $this->assertTrue(strpos($mail['body'], $this->product->model->value) !== FALSE, 'Mail body contains SKU.');
     $this->assertTrue(strpos($mail['body'], 'has reached ' . $qty) !== FALSE, 'Mail body contains quantity.');
   }
 }

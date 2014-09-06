@@ -40,21 +40,6 @@ function uc_product_views_data() {
     ),
   );
 
-  $data['uc_products']['list_price'] = array(
-    'title' => t('List price'),
-    'help' => t("The manufacturer's suggested price."),
-    'field' => array(
-      'id' => 'uc_price',
-      'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-    'filter' => array(
-      'id' => 'numeric',
-    ),
-  );
-
   $data['uc_products']['cost'] = array(
     'title' => t('Cost'),
     'help' => t('The cost of the product to the store.'),
@@ -70,8 +55,8 @@ function uc_product_views_data() {
     ),
   );
 
-  $data['uc_products']['sell_price'] = array(
-    'title' => t('Sell price'),
+  $data['uc_products']['price'] = array(
+    'title' => t('Price'),
     'help' => t('The price for which the product is sold.'),
     'field' => array(
       'id' => 'uc_price',
@@ -172,21 +157,6 @@ function uc_product_views_data() {
     'field' => array(
       'id' => 'numeric',
       'click sortable' => TRUE,
-    ),
-    'sort' => array(
-      'id' => 'standard',
-    ),
-    'filter' => array(
-      'id' => 'numeric',
-    ),
-  );
-
-  $data['uc_products']['ordering'] = array(
-    'title' => t('List position'),
-    'help' => t('The default sort criteria in the catalog.'),
-    'field' => array(
-      'help' => t("The product list position."),
-      'id' => 'numeric',
     ),
     'sort' => array(
       'id' => 'standard',

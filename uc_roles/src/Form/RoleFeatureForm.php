@@ -73,7 +73,7 @@ class RoleFeatureForm extends FormBase {
       $default_role = variable_get('uc_roles_default_role', NULL);
       $default_qty = (variable_get('uc_roles_default_granularity', 'never') == 'never') ? NULL : variable_get('uc_roles_default_length', NULL);
       $default_granularity = variable_get('uc_roles_default_granularity', 'never');
-      $default_shippable = $node->shippable;
+      $default_shippable = $node->shippable->value;
       $default_by_quantity = variable_get('uc_roles_default_by_quantity', FALSE);
       $end_time = variable_get('uc_roles_default_end_time', array(
         'day' => date('j'),

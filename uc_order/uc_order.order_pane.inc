@@ -521,7 +521,7 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
       '#type' => 'select',
       '#title' => t('Units'),
       '#title_display' => 'invisible',
-      '#default_value' => $product->weight_units->value,
+      '#default_value' => $product->weight->units,
       '#options' => $units,
     );
     $form['products'][$i]['cost'] = array(
@@ -633,7 +633,7 @@ function uc_order_edit_products_add($form, &$form_state) {
 
   $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']['product_controls']));
   $product = uc_product_load_variant(intval($form_state['values']['product_controls']['nid']), $data);
-  $product->qty = isset($form_state['values']['product_controls']['qty']) ? $form_state['values']['product_controls']['qty'] : $product->default_qty;
+  $product->qty = $form_state['values']['product_controls']['qty'];
 
   \Drupal::moduleHandler()->alter('uc_order_product', $product, $order);
   uc_order_product_save($order->id(), $product);

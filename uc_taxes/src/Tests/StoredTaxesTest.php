@@ -31,7 +31,7 @@ class StoredTaxesTest extends UbercartTestBase {
 
   protected function assertTaxLineCorrect($line, $rate, $when) {
     $this->assertTrue($line, t('The tax line item was saved to the order ' . $when));
-    $this->assertTrue(number_format($rate * $this->product->sell_price, 2) == number_format($line['amount'], 2), t('Stored tax line item has the correct amount ' . $when));
+    $this->assertTrue(number_format($rate * $this->product->price->value, 2) == number_format($line['amount'], 2), t('Stored tax line item has the correct amount ' . $when));
     $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][li_id]', $line['line_item_id'], t('Found the tax line item ID ' . $when));
     $this->assertText($line['title'], t('Found the tax title ' . $when));
     $this->assertText(uc_currency_format($line['amount']), t('Tax display has the correct amount ' . $when));
@@ -73,14 +73,14 @@ class StoredTaxesTest extends UbercartTestBase {
       t('Viewed cart page: Billing pane has been displayed.')
     );
     $this->assertRaw($rate->name, t('Tax line item displayed.'));
-    $this->assertRaw(uc_currency_format($rate->rate * $this->product->sell_price), t('Correct tax amount displayed.'));
+    $this->assertRaw(uc_currency_format($rate->rate * $this->product->price->value), t('Correct tax amount displayed.'));
 
     // Submit the checkout page.
     $edit = $this->populateCheckoutForm();
     $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
     $this->assertRaw(t('Your order is almost complete.'));
     $this->assertRaw($rate->name, t('Tax line item displayed.'));
-    $this->assertRaw(uc_currency_format($rate->rate * $this->product->sell_price), t('Correct tax amount displayed.'));
+    $this->assertRaw(uc_currency_format($rate->rate * $this->product->price->value), t('Correct tax amount displayed.'));
 
     // Complete the review page.
     $this->drupalPostForm(NULL, array(), t('Submit order'));

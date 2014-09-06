@@ -82,8 +82,8 @@ class CartSettingsTest extends UbercartTestBase {
     );
 
     // Create two products, one below the minimum price, and one above the minimum price.
-    $product_below_limit = $this->createProduct(array('sell_price' => $minimum_subtotal - 1));
-    $product_above_limit = $this->createProduct(array('sell_price' => $minimum_subtotal + 1));
+    $product_below_limit = $this->createProduct(array('price' => $minimum_subtotal - 1));
+    $product_above_limit = $this->createProduct(array('price' => $minimum_subtotal + 1));
     $this->drupalLogout();
 
     // Check to see if the lower priced product triggers the minimum price logic.

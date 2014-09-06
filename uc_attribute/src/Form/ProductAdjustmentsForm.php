@@ -31,7 +31,7 @@ class ProductAdjustmentsForm extends FormBase {
     $nid = $node->id();
 
     // Populate table and such.
-    $model = $node->model;
+    $model = $node->model->value;
     $query = db_select('uc_product_attributes', 'pa');
     $query->leftJoin('uc_attributes', 'a', 'pa.aid = a.aid');
     $query->leftJoin('uc_attribute_options', 'ao', 'a.aid = ao.aid');

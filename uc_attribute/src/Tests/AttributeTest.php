@@ -359,13 +359,13 @@ class AttributeTest extends UbercartTestBase {
     $attribute->options[$option->oid] = $option;
     uc_attribute_subject_save($attribute, 'product', $product->id(), TRUE);
 
-    $qty = $product->default_qty;
+    $qty = $product->default_qty->value;
     if (!$qty) {
       $qty = 1;
     }
 
     $adjust_price = uc_currency_format($option->price * $qty);
-    $total_price = uc_currency_format(($product->sell_price + $option->price) * $qty);
+    $total_price = uc_currency_format(($product->price->value + $option->price) * $qty);
 
     $raw = array(
       'none' => $option->name . '</option>',
@@ -696,7 +696,7 @@ class AttributeTest extends UbercartTestBase {
     uc_attribute_subject_save($attribute, 'product', $product->id(), TRUE);
 
     $this->drupalGet('node/' . $product->id() . '/edit/adjustments');
-    $this->assertText('Default product SKU: ' . $product->model, 'Default product SKU found');
+    $this->assertText('Default product SKU: ' . $product->model->value, 'Default product SKU found');
     $this->assertRaw('<th>' . $attribute->name . '</th>', 'Attribute name found');
     foreach ($attribute->options as $option) {
       $this->assertRaw('<td>' . $option->name . '</td>', 'Option name found');
@@ -732,7 +732,7 @@ class AttributeTest extends UbercartTestBase {
     $this->assertText($attribute->label . ' field is required', 'Required attribute message found.');
 
     // Cart display.
-    $price = uc_currency_format($product->sell_price + $option->price);
+    $price = uc_currency_format($product->price->value + $option->price);
     $this->addToCart($product, array('attributes[' . $attribute->aid . ']' => $option->oid));
     $this->assertText($attribute->label . ': ' . $option->name, 'Attribute and selected option found in cart');
     $this->assertText($price, 'Adjusted price found in cart');
@@ -744,7 +744,7 @@ class AttributeTest extends UbercartTestBase {
     $this->checkout();
 
     // Admin order display.
-    $cost = uc_currency_format($product->cost + $option->cost);
+    $cost = uc_currency_format($product->cost->value + $option->cost);
     $this->drupalGet('admin/store/orders/1');
     $this->assertText($attribute->label . ': ' . $option->name, 'Attribute and selected option found in admin order display');
     $this->assertText($option->model, 'Adjusted SKU found in admin order display');
@@ -796,7 +796,7 @@ class AttributeTest extends UbercartTestBase {
 
       $this->addToCart($product, $edit);
       $this->assertText("$attribute->label: $option->name", t('Option selected on cart item.'));
-      $this->assertText(uc_currency_format($product->sell_price + $option->price), t('Product has adjusted price.'));
+      $this->assertText(uc_currency_format($product->price->value + $option->price), t('Product has adjusted price.'));
     }
   }
 

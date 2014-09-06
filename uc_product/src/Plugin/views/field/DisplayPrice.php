@@ -32,7 +32,7 @@ class DisplayPrice extends Price {
     if (!is_null($nid)) {
       // @todo Refactor to allow display price to be calculated.
       $node = node_load($nid);
-      return $node->sell_price;
+      return $node->price->value;
 
       // !TODO Refactor so that all variants are loaded at once in the pre_render hook.
       $node = node_view(node_load($nid), 'teaser');
@@ -42,7 +42,7 @@ class DisplayPrice extends Price {
 
   public function clickSort($order) {
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
-    $this->query->addOrderBy(NULL, NULL, $order, 'sell_price', $params);
+    $this->query->addOrderBy(NULL, NULL, $order, 'price', $params);
   }
 
 }

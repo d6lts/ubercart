@@ -28,16 +28,27 @@ class ProductTest extends UbercartTestBase {
     $this->assertText('Title');
     $this->assertText($this->product->getTitle());
     $this->assertText('Price');
-    $this->assertText(uc_currency_format($this->product->sell_price));
+    $this->assertText(uc_currency_format($this->product->price->value));
   }
 
   public function testProductNodeForm() {
     $this->drupalGet('node/add/product');
 
-    foreach (array('model', 'list_price', 'cost', 'sell_price', 'shippable', 'weight', 'weight_units', 'dim_length', 'dim_width', 'dim_height', 'length_units', 'pkg_qty', 'ordering') as $field) {
+    $fields = array(
+      'model[0][value]',
+      'price[0][value]',
+      'shippable[value]',
+      'weight[0][value]',
+      'weight[0][units]',
+      'dimensions[0][length]',
+      'dimensions[0][width]',
+      'dimensions[0][height]',
+      'dimensions[0][units]',
+      'files[uc_product_image_0][]',
+    );
+    foreach ($fields as $field) {
       $this->assertFieldByName($field, NULL);
     }
-    $this->assertFieldByName('files[uc_product_image_0][]', NULL);
 
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
@@ -46,41 +57,36 @@ class ProductTest extends UbercartTestBase {
     $edit = array(
       $title_key => $this->randomMachineName(32),
       $body_key => $this->randomMachineName(64),
-      'model' => $this->randomMachineName(8),
-      'list_price' => mt_rand(1, 200),
-      'cost' => mt_rand(0, 100),
-      'sell_price' => mt_rand(1, 150),
-      'shippable' => mt_rand(0, 1),
-      'weight' => mt_rand(1, 50),
-      'weight_units' => array_rand(array(
+      'model[0][value]' => $this->randomMachineName(8),
+      'price[0][value]' => mt_rand(1, 150),
+      'shippable[value]' => mt_rand(0, 1),
+      'weight[0][value]' => mt_rand(1, 50),
+      'weight[0][units]' => array_rand(array(
         'lb' => t('Pounds'),
         'kg' => t('Kilograms'),
         'oz' => t('Ounces'),
         'g'  => t('Grams'),
       )),
-      'dim_length' => mt_rand(1, 50),
-      'dim_width' => mt_rand(1, 50),
-      'dim_height' => mt_rand(1, 50),
-      'length_units' => array_rand(array(
+      'dimensions[0][length]' => mt_rand(1, 50),
+      'dimensions[0][width]' => mt_rand(1, 50),
+      'dimensions[0][height]' => mt_rand(1, 50),
+      'dimensions[0][units]' => array_rand(array(
         'in' => t('Inches'),
         'ft' => t('Feet'),
         'cm' => t('Centimeters'),
         'mm' => t('Millimeters'),
       )),
-      'pkg_qty' => 1,
     );
     $this->drupalPostForm('node/add/product', $edit, 'Save');
 
     $this->assertText(t('Product @title has been created.', array('@title' => $edit[$title_key])), 'Product created.');
     $this->assertText($edit[$body_key], 'Product body found.');
-    $this->assertText($edit['model'], 'Product model found.');
-    $this->assertText(uc_currency_format($edit['list_price']), 'Product list price found.');
-    $this->assertText(uc_currency_format($edit['cost']), 'Product cost found.');
-    $this->assertNoUniqueText(uc_currency_format($edit['sell_price']), 'Product sell price found.');
-    $this->assertText(uc_weight_format($edit['weight'], $edit['weight_units']), 'Product weight found.');
-    $this->assertText(uc_length_format($edit['dim_length'], $edit['length_units']), 'Product length found.');
-    $this->assertText(uc_length_format($edit['dim_width'], $edit['length_units']), 'Product width found.');
-    $this->assertText(uc_length_format($edit['dim_height'], $edit['length_units']), 'Product height found.');
+    $this->assertText($edit['model[0][value]'], 'Product model found.');
+    $this->assertNoUniqueText(uc_currency_format($edit['price[0][value]']), 'Product price found.');
+    $this->assertText(uc_weight_format($edit['weight[0][value]'], $edit['weight[0][units]']), 'Product weight found.');
+    $this->assertText(uc_length_format($edit['dimensions[0][length]'], $edit['dimensions[0][units]']), 'Product length found.');
+    $this->assertText(uc_length_format($edit['dimensions[0][width]'], $edit['dimensions[0][units]']), 'Product width found.');
+    $this->assertText(uc_length_format($edit['dimensions[0][height]'], $edit['dimensions[0][units]']), 'Product height found.');
 
     $elements = $this->xpath('//body[contains(@class, "uc-product-node")]');
     $this->assertEqual(count($elements), 1, t('Product page contains body CSS class.'));
@@ -89,22 +95,20 @@ class ProductTest extends UbercartTestBase {
     $edit = array(
       $title_key => $this->randomMachineName(32),
       $body_key => $this->randomMachineName(64),
-      'model' => $this->randomMachineName(8),
-      'list_price' => mt_rand(1, 200),
-      'cost' => mt_rand(0, 100),
-      'sell_price' => mt_rand(1, 150),
-      'shippable' => mt_rand(0, 1),
-      'weight' => mt_rand(1, 50),
-      'weight_units' => array_rand(array(
+      'model[0][value]' => $this->randomMachineName(8),
+      'price[0][value]' => mt_rand(1, 150),
+      'shippable[value]' => mt_rand(0, 1),
+      'weight[0][value]' => mt_rand(1, 50),
+      'weight[0][units]' => array_rand(array(
         'lb' => t('Pounds'),
         'kg' => t('Kilograms'),
         'oz' => t('Ounces'),
         'g'  => t('Grams'),
       )),
-      'dim_length' => mt_rand(1, 50),
-      'dim_width' => mt_rand(1, 50),
-      'dim_height' => mt_rand(1, 50),
-      'length_units' => array_rand(array(
+      'dimensions[0][length]' => mt_rand(1, 50),
+      'dimensions[0][width]' => mt_rand(1, 50),
+      'dimensions[0][height]' => mt_rand(1, 50),
+      'dimensions[0][units]' => array_rand(array(
         'in' => t('Inches'),
         'ft' => t('Feet'),
         'cm' => t('Centimeters'),
@@ -116,14 +120,12 @@ class ProductTest extends UbercartTestBase {
 
     $this->assertText(t('Product @title has been updated.', array('@title' => $edit[$title_key])), 'Product updated.');
     $this->assertText($edit[$body_key], 'Updated product body found.');
-    $this->assertText($edit['model'], 'Updated product model found.');
-    $this->assertText(uc_currency_format($edit['list_price']), 'Updated product list price found.');
-    $this->assertText(uc_currency_format($edit['cost']), 'Updated product cost found.');
-    $this->assertNoUniqueText(uc_currency_format($edit['sell_price']), 'Updated product sell price found.');
-    $this->assertText(uc_weight_format($edit['weight'], $edit['weight_units']), 'Product weight found.');
-    $this->assertText(uc_length_format($edit['dim_length'], $edit['length_units']), 'Product length found.');
-    $this->assertText(uc_length_format($edit['dim_width'], $edit['length_units']), 'Product width found.');
-    $this->assertText(uc_length_format($edit['dim_height'], $edit['length_units']), 'Product height found.');
+    $this->assertText($edit['model[0][value]'], 'Updated product model found.');
+    $this->assertNoUniqueText(uc_currency_format($edit['price[0][value]']), 'Updated product price found.');
+    $this->assertText(uc_weight_format($edit['weight[0][value]'], $edit['weight[0][units]']), 'Product weight found.');
+    $this->assertText(uc_length_format($edit['dimensions[0][length]'], $edit['dimensions[0][units]']), 'Product length found.');
+    $this->assertText(uc_length_format($edit['dimensions[0][width]'], $edit['dimensions[0][units]']), 'Product width found.');
+    $this->assertText(uc_length_format($edit['dimensions[0][height]'], $edit['dimensions[0][units]']), 'Product height found.');
 
     $this->clickLink('Delete');
     $this->drupalPostForm(NULL, array(), 'Delete');

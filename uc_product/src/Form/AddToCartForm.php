@@ -33,16 +33,16 @@ class AddToCartForm extends BuyItNowForm {
 
     $form = parent::buildForm($form, $form_state, $node);
 
-    if ($node->default_qty > 0) {
+    if ($node->default_qty->value > 0) {
       if (\Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
         $form['qty'] = array(
           '#type' => 'uc_quantity',
           '#title' => t('Quantity'),
-          '#default_value' => $node->default_qty,
+          '#default_value' => $node->default_qty->value,
         );
       }
       else {
-        $form['qty']['#value'] = $node->default_qty;
+        $form['qty']['#value'] = $node->default_qty->value;
       }
     }
 

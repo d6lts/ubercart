@@ -49,7 +49,7 @@ function uc_product_kit_schema() {
         'default' => 0,
       ),
       'discount' => array(
-        'description' => 'The adjustment to the {uc_products}.sell_price of the product.',
+        'description' => 'The adjustment to the price of the product.',
         'type' => 'float',
         'not null' => TRUE,
         'default' => 0.0,
@@ -62,7 +62,7 @@ function uc_product_kit_schema() {
         'default' => 0,
       ),
       'synchronized' => array(
-        'description' => 'A flag indicating that changes to the sell price of this product will change the total price of the kit. 1 => Yes. 0 => No.',
+        'description' => 'A flag indicating that changes to the price of this product will change the total price of the kit. 1 => Yes. 0 => No.',
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,

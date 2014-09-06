@@ -26,19 +26,14 @@ function uc_product_token_info() {
     'name' => t('SKU / Model'),
     'description' => t("The product's SKU or model number."),
   );
-  $product['list-price'] = array(
-    'name' => t('List price'),
-    'description' => t("The product's list price."),
-    'type' => 'uc_price',
-  );
   $product['cost'] = array(
     'name' => t('Cost'),
     'description' => t("The product's cost."),
     'type' => 'uc_price',
   );
-  $product['sell-price'] = array(
-    'name' => t('Sell price'),
-    'description' => t("The product's sell price."),
+  $product['price'] = array(
+    'name' => t('Price'),
+    'description' => t("The product's price."),
     'type' => 'uc_price',
   );
   $product['weight'] = array(
@@ -140,77 +135,68 @@ function uc_product_tokens($type, $tokens, $data = array(), $options = array()) 
           $replacements[$original] = $sanitize ? String::checkPlain($product->model) : $product->model;
           break;
 
-        case 'product:list-price':
-        case 'product:list-price:formatted':
-          $replacements[$original] = uc_currency_format($product->list_price);
-          break;
-
         case 'product:cost':
         case 'product:cost:formatted':
-          $replacements[$original] = uc_currency_format($product->cost);
+          $replacements[$original] = uc_currency_format($product->cost->value);
           break;
 
-        case 'product:sell-price':
-        case 'product:sell-price:formatted':
-          $replacements[$original] = uc_currency_format($product->sell_price);
-          break;
-
-        case 'product:list-price:raw':
-          $replacements[$original] = $product->list_price;
+        case 'product:price':
+        case 'product:price:formatted':
+          $replacements[$original] = uc_currency_format($product->price->value);
           break;
 
         case 'product:cost:raw':
-          $replacements[$original] = $product->cost;
+          $replacements[$original] = $product->cost->value;
           break;
 
-        case 'product:sell-price:raw':
-          $replacements[$original] = $product->sell_price;
+        case 'product:price:raw':
+          $replacements[$original] = $product->price->value;
           break;
 
         case 'product:weight':
         case 'product:weight:formatted':
-          $replacements[$original] = uc_weight_format($product->weight, $product->weight_units);
+          $replacements[$original] = uc_weight_format($product->weight->value, $product->weight->units);
           break;
 
         case 'product:weight:raw':
-          $replacements[$original] = $product->weight;
+          $replacements[$original] = $product->weight->value;
           break;
 
         case 'product:weight:units':
-          $replacements[$original] = $product->weight_units;
+          $replacements[$original] = $product->weight->units;
           break;
 
         case 'product:length':
         case 'product:length:formatted':
-          $replacements[$original] = uc_length_format($product->length, $product->length_units);
+          $replacements[$original] = uc_length_format($product->dimensions->length, $product->dimensions->units);
           break;
 
         case 'product:width':
         case 'product:width:formatted':
-          $replacements[$original] = uc_length_format($product->width, $product->length_units);
+          $replacements[$original] = uc_length_format($product->dimensions->width, $product->dimensions->units);
           break;
 
         case 'product:height':
         case 'product:height:formatted':
-          $replacements[$original] = uc_length_format($product->height, $product->length_units);
+          $replacements[$original] = uc_length_format($product->dimensions->height, $product->dimensions->units);
           break;
 
         case 'product:length:raw':
-          $replacements[$original] = $product->length;
+          $replacements[$original] = $product->dimensions->length;
           break;
 
         case 'product:width:raw':
-          $replacements[$original] = $product->width;
+          $replacements[$original] = $product->dimensions->width;
           break;
 
         case 'product:height:raw':
-          $replacements[$original] = $product->height;
+          $replacements[$original] = $product->dimensions->height;
           break;
 
         case 'product:length:units':
         case 'product:width:units':
         case 'product:height:units':
-          $replacements[$original] = $product->length_units;
+          $replacements[$original] = $product->dimensions->units;
           break;
       }
     }

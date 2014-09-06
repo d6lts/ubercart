@@ -34,7 +34,7 @@ class ProductKitTest extends UbercartTestBase {
 
     // Test the product kit fields.
     $this->drupalGet('node/add/product_kit');
-    foreach (array('mutable', 'products[]', 'ordering') as $field) {
+    foreach (array('mutable', 'products[]') as $field) {
       $this->assertFieldByName($field);
     }
 
@@ -49,7 +49,6 @@ class ProductKitTest extends UbercartTestBase {
         $products[1]->id(),
         $products[2]->id(),
       ),
-      'default_qty' => mt_rand(2, 100),
     );
     $this->drupalPostForm('node/add/product_kit', $edit, 'Save');
     $this->assertText(t('Product kit @title has been created.', array('@title' => $edit[$title_key])));
@@ -57,9 +56,8 @@ class ProductKitTest extends UbercartTestBase {
     $this->assertText('1 × ' . $products[0]->label(), 'Product 1 title found.');
     $this->assertText('1 × ' . $products[1]->label(), 'Product 2 title found.');
     $this->assertText('1 × ' . $products[2]->label(), 'Product 3 title found.');
-    $total = $products[0]->sell_price + $products[1]->sell_price + $products[2]->sell_price;
+    $total = $products[0]->price->value + $products[1]->price->value + $products[2]->price->value;
     $this->assertText(uc_currency_format($total), 'Product kit total found.');
-    $this->assertFieldByName('qty', $edit['default_qty']);
   }
 
   public function testProductKitDiscounts() {
@@ -79,8 +77,6 @@ class ProductKitTest extends UbercartTestBase {
         $products[2]->id(),
       ),
       'mutable' => UC_PRODUCT_KIT_UNMUTABLE_NO_LIST,
-      'default_qty' => 1,
-      'ordering' => 0,
     ));
 
     // Test the product kit extra fields available to configure discounts.
@@ -106,19 +102,19 @@ class ProductKitTest extends UbercartTestBase {
     $this->drupalPostForm('node/' . $kit->id() . '/edit', $edit, 'Save');
 
     // Check the discounted total.
-    $total = $products[0]->sell_price + $products[1]->sell_price + $products[2]->sell_price;
+    $total = $products[0]->price->value + $products[1]->price->value + $products[2]->price->value;
     $total += array_sum($discounts);
     $this->assertText(uc_currency_format($total), 'Discounted product kit total found.');
 
     // Check the discounts on the edit page.
     $this->drupalGet('node/' . $kit->id() . '/edit');
-    $this->assertText('Currently, the total sell price is ' . uc_currency_format($total), 'Discounted product kit total found.');
+    $this->assertText('Currently, the total price is ' . uc_currency_format($total), 'Discounted product kit total found.');
     $this->assertFieldByName('items[' . $products[0]->id() . '][discount]', $discounts[0]);
     $this->assertFieldByName('items[' . $products[1]->id() . '][discount]', $discounts[1]);
     $this->assertFieldByName('items[' . $products[2]->id() . '][discount]', $discounts[2]);
 
     // Set the kit total.
-    $total = 2 * ($products[0]->sell_price + $products[1]->sell_price + $products[2]->sell_price);
+    $total = 2 * ($products[0]->price->value + $products[1]->price->value + $products[2]->price->value);
     $this->drupalPostForm('node/' . $kit->id() . '/edit', array('kit_total' => $total), 'Save');
 
     // Check the fixed total.
@@ -127,9 +123,9 @@ class ProductKitTest extends UbercartTestBase {
     // Check the discounts on the edit page.
     $this->drupalGet('node/' . $kit->id() . '/edit');
     $this->assertFieldByName('kit_total', $total);
-    $this->assertFieldByName('items[' . $products[0]->id() . '][discount]', $products[0]->sell_price);
-    $this->assertFieldByName('items[' . $products[1]->id() . '][discount]', $products[1]->sell_price);
-    $this->assertFieldByName('items[' . $products[2]->id() . '][discount]', $products[2]->sell_price);
+    $this->assertFieldByName('items[' . $products[0]->id() . '][discount]', $products[0]->price->value);
+    $this->assertFieldByName('items[' . $products[1]->id() . '][discount]', $products[1]->price->value);
+    $this->assertFieldByName('items[' . $products[2]->id() . '][discount]', $products[2]->price->value);
   }
 
   public function testProductKitMutability() {
@@ -148,8 +144,6 @@ class ProductKitTest extends UbercartTestBase {
         $products[1]->id(),
         $products[2]->id(),
       ),
-      'default_qty' => 1,
-      'ordering' => 0,
     );
 
     // Test kits with no listing.
@@ -168,7 +162,7 @@ class ProductKitTest extends UbercartTestBase {
     $this->assertNoText($products[1]->label(), 'Product 2 title not shown.');
     $this->assertNoText($products[2]->label(), 'Product 3 title not shown.');
 
-    $total = $products[0]->sell_price + $products[1]->sell_price + $products[2]->sell_price;
+    $total = $products[0]->price->value + $products[1]->price->value + $products[2]->price->value;
     $this->assertText('Subtotal: ' . uc_currency_format($total), 'Product kit total found.');
 
     $qty = mt_rand(2, 10);
@@ -194,7 +188,7 @@ class ProductKitTest extends UbercartTestBase {
     $this->assertText($products[1]->label(), 'Product 2 title shown.');
     $this->assertText($products[2]->label(), 'Product 3 title shown.');
 
-    $total = $products[0]->sell_price + $products[1]->sell_price + $products[2]->sell_price;
+    $total = $products[0]->price->value + $products[1]->price->value + $products[2]->price->value;
     $this->assertText('Subtotal: ' . uc_currency_format($total), 'Product kit total found.');
 
     $qty = mt_rand(2, 10);
@@ -220,7 +214,7 @@ class ProductKitTest extends UbercartTestBase {
     $this->assertText($products[1]->label(), 'Product 2 title shown.');
     $this->assertText($products[2]->label(), 'Product 3 title shown.');
 
-    $total = $products[0]->sell_price + $products[1]->sell_price + $products[2]->sell_price;
+    $total = $products[0]->price->value + $products[1]->price->value + $products[2]->price->value;
     $this->assertText('Subtotal: ' . uc_currency_format($total), 'Product kit total found.');
 
     $qty = array(mt_rand(2, 10), mt_rand(2, 10), mt_rand(2, 10));
@@ -230,9 +224,9 @@ class ProductKitTest extends UbercartTestBase {
       'items[2][qty]' => $qty[2],
     );
     $this->drupalPostForm(NULL, $edit, 'Update cart');
-    $total = $products[0]->sell_price * $qty[0];
-    $total += $products[1]->sell_price * $qty[1];
-    $total += $products[2]->sell_price * $qty[2];
+    $total = $products[0]->price->value * $qty[0];
+    $total += $products[1]->price->value * $qty[1];
+    $total += $products[2]->price->value * $qty[2];
     $this->assertText('Subtotal: ' . uc_currency_format($total), 'Updated product kit total found.');
 
     $this->drupalPostForm(NULL, array(), 'Remove');

@@ -50,9 +50,9 @@ class CartBlockTest extends UbercartTestBase {
     $this->assertNoText('There are no products in your shopping cart.');
     $this->assertText('1 ×');
     $this->assertText($this->product->label());
-    $this->assertNoUniqueText(uc_currency_format($this->product->sell_price));
+    $this->assertNoUniqueText(uc_currency_format($this->product->price->value));
     $this->assertText('1 Item');
-    $this->assertText('Total: ' . uc_currency_format($this->product->sell_price));
+    $this->assertText('Total: ' . uc_currency_format($this->product->price->value));
     $this->assertLink('View cart');
     $this->assertLink('Checkout');
   }

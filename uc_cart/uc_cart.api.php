@@ -71,7 +71,7 @@ function hook_uc_add_to_cart($nid, $qty, $data) {
  */
 function hook_uc_add_to_cart_data($form_values) {
   $node = node_load($form_values['nid']);
-  return array('module' => 'uc_product', 'shippable' => $node->shippable);
+  return array('module' => 'uc_product', 'shippable' => $node->shippable->value);
 }
 
 /**

@@ -38,8 +38,8 @@ class CatalogTest extends UbercartTestBase {
     $this->clickLink($term->label());
     $this->assertTitle($term->label() . ' | Drupal');
     $this->assertLink($product->label(), 0, 'The product is listed in the catalog.');
-    $this->assertText($product->model, 'The product SKU is shown in the catalog.');
-    $this->assertText(uc_currency_format($product->sell_price), 'The product price is shown in the catalog.');
+    $this->assertText($product->model->value, 'The product SKU is shown in the catalog.');
+    $this->assertText(uc_currency_format($product->price->value), 'The product price is shown in the catalog.');
 
     $this->drupalPostForm(NULL, array(), 'Add to cart');
     $this->assertText($product->label() . ' added to your shopping cart.');

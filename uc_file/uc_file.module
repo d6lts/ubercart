@@ -588,7 +588,7 @@ function uc_file_feature_form($form, FormStateInterface $form_state, $node, $fea
     $default_model       = '';
     $default_filename    = '';
     $default_description = '';
-    $default_shippable   = $node->shippable;
+    $default_shippable   = $node->shippable->value;
 
     $download_status     = FALSE;
     $download_value      = NULL;

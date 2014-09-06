@@ -94,7 +94,7 @@ function uc_product_kit_views_data() {
 
   $data['uc_product_kits']['discount'] = array(
     'title' => t('Discount'),
-    'help' => t('The adjustment to the {uc_products}.sell_price of the product.'),
+    'help' => t('The adjustment to the price of the product.'),
     'field' => array(
       'id' => 'numeric',
       'click sortable' => TRUE,
@@ -132,7 +132,7 @@ function uc_product_kit_views_data() {
 
   $data['uc_product_kits']['synchronized'] = array(
     'title' => t('Synchronized'),
-    'help' => t('A flag indicating that changes to the sell price of this product will change the total price of the kit. 1 => Yes. 0 => No.'),
+    'help' => t('A flag indicating that changes to the price of this product will change the total price of the kit. 1 => Yes. 0 => No.'),
     'field' => array(
       'id' => 'boolean',
       'click sortable' => TRUE,

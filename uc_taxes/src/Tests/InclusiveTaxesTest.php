@@ -40,9 +40,7 @@ class InclusiveTaxesTest extends UbercartTestBase {
     // entity_flush_caches();
 
     // Create a $10 product.
-    $product = $this->createProduct(array(
-      'sell_price' => 10,
-    ));
+    $product = $this->createProduct(array('price' => 10));
 
     // Create an attribute.
     $attribute = (object) array(
@@ -75,7 +73,6 @@ class InclusiveTaxesTest extends UbercartTestBase {
       'type' => 'product_kit',
       'products' => array($product->id()),
       'default_qty' => 1,
-      'ordering' => 0,
       'mutable' => UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST,
     ));
 

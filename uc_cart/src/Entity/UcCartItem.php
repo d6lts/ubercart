@@ -56,7 +56,7 @@ class UcCartItem extends ContentEntityBase {
    * Converts a cart item into an order product.
    */
   public function toOrderProduct() {
-    return entity_create('uc_order_product', array(
+    $order_product = entity_create('uc_order_product', array(
       'nid' => $this->nid->target_id,
       'title' => $this->title,
       'model' => $this->model,
@@ -64,9 +64,10 @@ class UcCartItem extends ContentEntityBase {
       'cost' => $this->cost,
       'price' => $this->price,
       'weight' => $this->weight,
-      'weight_units' => $this->weight_units,
       'data' => $this->data,
     ));
+    $order_product->weight->units = $this->weight_units;
+    return $order_product;
   }
 
   /**
@@ -78,10 +79,10 @@ class UcCartItem extends ContentEntityBase {
       if ($item->product) {
         $item->title = $item->product->label();
         $item->model = $item->product->model;
-        $item->cost = $item->product->cost;
+        $item->cost = $item->product->cost->value;
         $item->price = $item->product->price;
-        $item->weight = $item->product->weight;
-        $item->weight_units = $item->product->weight_units;
+        $item->weight = $item->product->weight->value;
+        $item->weight_units = $item->product->weight->units;
       }
 
       $item->module = $item->data->module;

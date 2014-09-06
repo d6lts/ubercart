@@ -160,7 +160,7 @@ class QuoteTest extends UbercartTestBase {
     foreach (array($quote1, $quote2) as $quote) {
       $quote->amount = uc_currency_format($quote->base_rate + $quote->product_rate * $qty);
       $quote->option_text = $quote->label . ': ' . $quote->amount;
-      $quote->total = uc_currency_format($product->sell_price * $qty + $quote->base_rate + $quote->product_rate * $qty);
+      $quote->total = uc_currency_format($product->price->value * $qty + $quote->base_rate + $quote->product_rate * $qty);
     }
 
     // Add product to cart, update qty, and go to checkout page.

@@ -9,6 +9,8 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
@@ -139,8 +141,6 @@ function uc_product_kit_node_prepare_form(NodeInterface $node, $operation, FormS
   $defaults = array(
     'mutable' => isset($settings['mutable']) ? $settings['mutable'] : UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST,
     'products' => array(),
-    'default_qty' => 1,
-    'ordering' => 0,
   );
 
   foreach ($defaults as $key => $value) {
@@ -170,13 +170,11 @@ function uc_product_kit_node_insert($node) {
   $obj->vid = $node->getRevisionId();
   $obj->nid = $node->id();
   $obj->model = '';
-  $obj->list_price = 0;
   $obj->cost = 0;
-  $obj->sell_price = 0;
+  $obj->price = 0;
   $obj->weight = 0;
   $obj->weight_units = \Drupal::config('uc_store.settings')->get('units.weight');
-  $obj->default_qty = $node->default_qty;
-  $obj->ordering = $node->ordering;
+  $obj->default_qty = $node->default_qty->value;
   $obj->shippable = FALSE;
 
   foreach ($node->products as $product) {
@@ -195,12 +193,11 @@ function uc_product_kit_node_insert($node) {
 
     drupal_write_record('uc_product_kits', $kit);
 
-    $obj->model .= $product->model . ' / ';
-    $obj->list_price += $product->list_price;
-    $obj->cost += $product->cost;
-    $obj->sell_price += $product->sell_price;
-    $obj->weight += $product->weight * uc_weight_conversion($product->weight_units, $obj->weight_units);
-    if ($product->shippable) {
+    $obj->model .= $product->model->value . ' / ';
+    $obj->cost += $product->cost->value;
+    $obj->price += $product->price->value;
+    $obj->weight += $product->weight->value * uc_weight_conversion($product->weight->units, $obj->weight_units);
+    if ($product->shippable->value) {
       $obj->shippable = TRUE;
     }
   }
@@ -212,13 +209,11 @@ function uc_product_kit_node_insert($node) {
     ->fields(array(
       'nid' => $obj->nid,
       'model' => $obj->model,
-      'list_price' => $obj->list_price,
       'cost' => $obj->cost,
-      'sell_price' => $obj->sell_price,
+      'price' => $obj->price,
       'weight' => $obj->weight,
       'weight_units' => $obj->weight_units,
       'default_qty' => $obj->default_qty,
-      'ordering' => $obj->ordering,
       'shippable' => $obj->shippable ? 1 : 0,
     ))
     ->execute();
@@ -259,18 +254,16 @@ function uc_product_kit_node_update($node) {
   $obj->vid = $node->getRevisionId();
   $obj->nid = $node->id();
   $obj->model = '';
-  $obj->list_price = 0;
   $obj->cost = 0;
-  $obj->sell_price = 0;
+  $obj->price = 0;
   $obj->weight = 0;
   $obj->weight_units = \Drupal::config('uc_store.settings')->get('units.weight');
-  $obj->default_qty = $node->default_qty;
-  $obj->ordering = $node->ordering;
+  $obj->default_qty = $node->default_qty->value;
   $obj->shippable = FALSE;
 
-  if (!isset($node->kit_total) && isset($node->synchronized) && isset($node->sell_price)) {
+  if (!isset($node->kit_total) && isset($node->synchronized) && isset($node->price)) {
     $override_discounts = !$node->synchronized;
-    $node->kit_total = $node->sell_price;
+    $node->kit_total = $node->price;
   }
   else {
     $override_discounts = isset($node->kit_total) && is_numeric($node->kit_total);
@@ -299,7 +292,7 @@ function uc_product_kit_node_update($node) {
         $node->items[$nid]['discount'] = $product->discount;
         $node->items[$nid]['ordering'] = $product->ordering;
       }
-      $base_price += $product->sell_price * $node->items[$nid]['qty'];
+      $base_price += $product->price->value * $node->items[$nid]['qty'];
     }
   }
 
@@ -324,7 +317,7 @@ function uc_product_kit_node_update($node) {
     if ($override_discounts) {
       // After all the algebra that went into finding this formula, it's
       // surprising how simple it is.
-      $discount = ($node->kit_total - $base_price) * $product->sell_price / $base_price;
+      $discount = ($node->kit_total - $base_price) * $product->price->value / $base_price;
     }
     elseif (isset($node->items[$nid]['discount'])) {
       $discount = (float) $node->items[$nid]['discount'];
@@ -351,15 +344,14 @@ function uc_product_kit_node_update($node) {
     // Discounts are always saved, but they are only applied if the kit can't
     // be changed by the customer.
     if ($node->mutable != UC_PRODUCT_KIT_MUTABLE) {
-      $product->sell_price += $discount;
+      $product->price->value += $discount;
     }
 
-    $obj->model .= $product->model . ' / ';
-    $obj->list_price += $product->list_price * $product->qty;
-    $obj->cost += $product->cost * $product->qty;
-    $obj->sell_price += $product->sell_price * $product->qty;
-    $obj->weight += $product->weight * $product->qty * uc_weight_conversion($product->weight_units, $obj->weight_units);
-    if ($product->shippable) {
+    $obj->model .= $product->model->value . ' / ';
+    $obj->cost += $product->cost->value * $product->qty;
+    $obj->price += $product->price->value * $product->qty;
+    $obj->weight += $product->weight->value * $product->qty * uc_weight_conversion($product->weight->units, $obj->weight_units);
+    if ($product->shippable->value) {
       $obj->shippable = TRUE;
     }
 
@@ -391,13 +383,11 @@ function uc_product_kit_node_update($node) {
       ->key(array('vid' => $obj->vid))
       ->fields(array(
         'model' => $obj->model,
-        'list_price' => $obj->list_price,
         'cost' => $obj->cost,
-        'sell_price' => $obj->sell_price,
+        'price' => $obj->price,
         'weight' => $obj->weight,
         'weight_units' => $obj->weight_units,
         'default_qty' => $obj->default_qty,
-        'ordering' => $obj->ordering,
         'shippable' => $obj->shippable ? 1 : 0,
       ))
       ->execute();
@@ -485,12 +475,17 @@ function uc_product_kit_node_load($nodes) {
     }
 
     // Add product data to kits.
-    $result = db_query('SELECT nid, model, list_price, cost, sell_price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, ordering, shippable FROM {uc_products} WHERE vid IN (:vids)', array(':vids' => $vids));
+    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids)', array(':vids' => $vids));
     foreach ($result as $node) {
       foreach ($node as $field => $value) {
-        $nodes[$node->nid]->$field = $value;
+        if (is_object($nodes[$node->nid]->$field)) {
+          $nodes[$node->nid]->$field->value = $value;
+        }
+        else {
+          // @todo remove when all properties are converted to base fields
+          $nodes[$node->nid]->$field = $value;
+        }
       }
-      $nodes[$node->nid]->price = $nodes[$node->nid]->sell_price;
     }
   }
 }
@@ -609,22 +604,22 @@ function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
         '#type' => 'textfield',
         '#title' => t('Discount'),
         '#title_display' => 'invisible',
-        '#field_prefix' => uc_currency_format($product->sell_price) . ' + ',
+        '#field_prefix' => uc_currency_format($product->price->value) . ' + ',
         '#default_value' => isset($product->discount) ? number_format($product->discount, 3, '.', '') : 0,
         '#size' => 5,
       );
-      $total += $product->sell_price * $product->qty;
-      $base_total += $product->sell_price * $product->qty;
+      $total += $product->price->value * $product->qty;
+      $base_total += $product->price->value * $product->qty;
       if (isset($product->discount)) {
-        $total += $product->discount * $product->qty;
+        $base_total -= $product->discount * $product->qty;
       }
     }
-    if (!$node->synchronized && $node->sell_price != $total) {
+    if (!$node->synchronized && $node->price->value != $total) {
       // Component products have changed their prices. Recalculate discounts
       // to keep the same total.
       $total = $base_total;
       foreach ($node->products as $i => $product) {
-        $discount = ($node->sell_price - $base_total) * $product->sell_price / $base_total;
+        $discount = ($node->price->value - $base_total) * $product->price->value / $base_total;
         $total += $discount * $product->qty;
         $form['base']['items'][$i]['discount']['#default_value'] = number_format($discount, 3, '.', '');
       }
@@ -633,36 +628,10 @@ function uc_product_kit_form_node_form_alter(&$form, &$form_state) {
       '#type' => 'uc_price',
       '#title' => t('Total price'),
       '#default_value' => $node->synchronized ? '' : $total,
-      '#description' => t('If this field is set, the discounts of the individual products will be recalculated to equal this value. Currently, the total sell price is %price.', array('%price' => uc_currency_format($total))),
+      '#description' => t('If this field is set, the discounts of the individual products will be recalculated to equal this value. Currently, the total price is %price.', array('%price' => uc_currency_format($total))),
       '#empty_zero' => FALSE,
     );
   }
-
-  if (\Drupal::config('uc_product.settings')->get('add_to_cart_qty')) {
-    $form['base']['default_qty'] = array(
-      '#type' => 'uc_quantity',
-      '#title' => t('Default quantity to add to cart'),
-      '#default_value' => $node->default_qty,
-      '#description' => t('Use 0 to disable the quantity field next to the add to cart button.'),
-      '#weight' => 27,
-      '#allow_zero' => TRUE,
-    );
-  }
-  else {
-    $form['base']['default_qty'] = array(
-      '#type' => 'value',
-      '#value' => $node->default_qty,
-    );
-  }
-
-  $form['base']['ordering'] = array(
-    '#type' => 'weight',
-    '#title' => t('List position'),
-    '#description' => t("Specify a value to set this product's position in product lists.<br />Products in the same position will be sorted alphabetically."),
-    '#delta' => 25,
-    '#default_value' => $node->ordering,
-    '#weight' => 30,
-  );
 
   // Disable all shipping related functionality.
   $form['shipping']['#access'] = FALSE;
@@ -684,8 +653,6 @@ function uc_product_kit_node_builder($entity_type, $entity, &$form, &$form_state
   if (isset($form_state['values']['kit_total'])) {
     $entity->kit_total = $form_state['values']['kit_total'];
   }
-  $entity->default_qty = $form_state['values']['default_qty'];
-  $entity->ordering = $form_state['values']['ordering'];
 }
 
 /**
@@ -713,7 +680,7 @@ function uc_product_kit_node_view(array &$build, NodeInterface $node, EntityView
   }
   else {
     // For mutable, just use the price.
-    $display_price = $variant->price;
+    $display_price = $variant->price->value;
     $suffixes = array();
   }
 
@@ -884,7 +851,7 @@ function uc_product_kit_uc_product_alter(&$variant) {
     else {
       $discount = 0;
     }
-    $variant->price += $discount;
+    $variant->price->value += $discount;
     $variant->display_price += $discount;
     $variant->data['module'] = 'uc_product_kit';
   }
@@ -1038,5 +1005,47 @@ function uc_product_kit_uc_update_cart_item($nid, $data = array(), $qty, $cid = 
     foreach ($data as $p_nid => $data) {
       uc_product_uc_update_cart_item($p_nid, $data, $qty * $kit->products[$p_nid]->qty, $cid);
     }
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function uc_product_kit_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  if ($entity_type->id() == 'node' && $bundle == 'product_kit') {
+    $fields['price'] = BaseFieldDefinition::create('uc_price')
+      ->setLabel(t('Price'))
+      ->setDescription(t('Customer purchase price.'))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'uc_price',
+        'label' => 'inline',
+        'weight' => 2,
+      ))
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['shippable'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Shippable'))
+      ->setCustomStorage(TRUE)
+      ->setSetting('on_label', t('Product kit is shippable'))
+      ->setSetting('off_label', t('Product kit is not shippable'));
+
+    $fields['default_qty'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Default quantity to add to cart'))
+      ->setDescription(t('Use 0 to disable the quantity field next to the add to cart button.'))
+      ->setRequired(TRUE)
+      ->setCustomStorage(TRUE)
+      ->setDefaultValue('1')
+      ->setDisplayOptions('form', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', array(
+        'type' => 'hidden',
+      ))
+      ->setDisplayConfigurable('view', TRUE);
+
+    return $fields;
   }
 }
