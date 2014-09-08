@@ -7,14 +7,13 @@
 
 namespace Drupal\uc_order;
 
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 
 /**
  * Controller class for ordered products.
  */
-class UcOrderProductStorage extends ContentEntityDatabaseStorage {
+class UcOrderProductStorage extends SqlContentEntityStorage {
 
   /**
    * {@inheritdoc}

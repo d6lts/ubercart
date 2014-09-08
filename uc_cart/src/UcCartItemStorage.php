@@ -7,17 +7,16 @@
 
 namespace Drupal\uc_cart;
 
-use Drupal\Core\Entity\ContentEntityDatabaseStorage;
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 
 /**
  * Controller class for cart items.
  */
-class UcCartItemStorage extends ContentEntityDatabaseStorage {
+class UcCartItemStorage extends SqlContentEntityStorage {
 
   /**
-   * Overrides Drupal\Core\Entity\ContentEntityDatabaseStorage::save().
+   * Overrides Drupal\Core\Entity\Sql\SqlContentEntityStorage::save().
    *
    * Cart items are deleted if saved with a quantity of zero.
    */
