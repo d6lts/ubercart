@@ -29,8 +29,8 @@ class UcOrderProductStorage extends SqlContentEntityStorage {
   }
 
   /**
-    * {@inheritdoc}
-    */
+   * {@inheritdoc}
+   */
   public function getSchema() {
     $schema = parent::getSchema();
 

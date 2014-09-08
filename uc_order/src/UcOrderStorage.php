@@ -54,8 +54,8 @@ class UcOrderStorage extends SqlContentEntityStorage {
   }
 
   /**
-    * {@inheritdoc}
-    */
+   * {@inheritdoc}
+   */
   public function getSchema() {
     $schema = parent::getSchema();
     // @todo Create a numeric field type and use that instead.
