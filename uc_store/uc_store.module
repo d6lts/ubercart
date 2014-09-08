@@ -1528,8 +1528,8 @@ function uc_get_addresses($uid, $type = 'billing') {
  * $_POST.)
  */
 function uc_strip_form($html) {
-  $html = preg_replace('`</?form.*>`', '', $html);
-  $html = preg_replace('`<input.*name="form_(token|id)".*>`', '', $html);
+  $html = preg_replace('`</?form[^>]*>`', '', $html);
+  $html = preg_replace('`<input.*name="form_(token|id)"[^>]*>`', '', $html);
 
   return $html;
 }
