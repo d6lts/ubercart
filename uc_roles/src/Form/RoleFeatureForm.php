@@ -208,30 +208,30 @@ class RoleFeatureForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Invalid quantity?
-    if ($form_state['values']['expiration'] === 'abs') {
-      $form_state['values']['uc_roles_expire_absolute'] = mktime(0, 0, 0,
-        $form_state['values']['uc_roles_expire_absolute']['month'],
-        $form_state['values']['uc_roles_expire_absolute']['day'],
-        $form_state['values']['uc_roles_expire_absolute']['year']
-      );
+    if ($form_state->getValue('expiration') === 'abs') {
+      $form_state->setValue('uc_roles_expire_absolute', mktime(0, 0, 0,
+        $form_state->getValue('uc_roles_expire_absolute')['month'],
+        $form_state->getValue('uc_roles_expire_absolute')['day'],
+        $form_state->getValue('uc_roles_expire_absolute')['year']
+      ));
 
-      if ($form_state['values']['uc_roles_expire_absolute'] <= REQUEST_TIME) {
-        $form_state->setErrorByName('uc_roles_expire_absolute', t('The specified date !date has already occurred. Please choose another.', array('!date' => format_date($form_state['values']['uc_roles_expire_absolute']))));
+      if ($form_state->getValue('uc_roles_expire_absolute') <= REQUEST_TIME) {
+        $form_state->setErrorByName('uc_roles_expire_absolute', t('The specified date !date has already occurred. Please choose another.', array('!date' => format_date($form_state->getValue('uc_roles_expire_absolute')))));
       }
     }
     else {
-      if ($form_state['values']['uc_roles_expire_relative_granularity'] != 'never' && intval($form_state['values']['uc_roles_expire_relative_duration']) < 1) {
+      if ($form_state->getValue('uc_roles_expire_relative_granularity') != 'never' && intval($form_state->getValue('uc_roles_expire_relative_duration')) < 1) {
         $form_state->setErrorByName('uc_roles_expire_relative_duration', t('The amount of time must be a positive integer.'));
       }
     }
 
     // No roles?
-    if (empty($form_state['values']['uc_roles_role'])) {
+    if ($form_state->isValueEmpty('uc_roles_role')) {
       $form_state->setErrorByName('uc_roles_role', t('You must have a role to assign. You may need to <a href="!role_url">create a new role</a> or perhaps <a href="!feature_url">set role assignment defaults</a>.', array('!role_url' => url('admin/people/permissions/roles'), '!feature_url' => url('admin/store/settings/products'))));
     }
 
     // This role already set on this SKU?
-    if (!isset($form_state['values']['pfid']) && ($product_roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid AND model = :model AND rid = :rid", array(':nid' => $form_state['values']['nid'], ':model' => $form_state['values']['uc_roles_model'], ':rid' => $form_state['values']['uc_roles_role']))->fetchObject())) {
+    if (!$form_state->hasValue('pfid') && ($product_roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid AND model = :model AND rid = :rid", array(':nid' => $form_state->getValue('nid'), ':model' => $form_state->getValue('uc_roles_model'), ':rid' => $form_state->getValue('uc_roles_role')))->fetchObject())) {
       $form_state->setErrorByName('uc_roles_role', t('The combination of SKU and role already exists for this product.'));
       $form_state->setErrorByName('uc_roles_model');
     }
@@ -242,19 +242,19 @@ class RoleFeatureForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $product_role = array(
-      'pfid'        => isset($form_state['values']['pfid']) ? $form_state['values']['pfid'] : NULL,
-      'rpid'        => isset($form_state['values']['rpid']) ? $form_state['values']['rpid'] : NULL,
-      'nid'         => $form_state['values']['nid'],
-      'model'       => $form_state['values']['uc_roles_model'],
-      'rid'         => $form_state['values']['uc_roles_role'],
-      'duration'    => $form_state['values']['uc_roles_expire_relative_granularity'] != 'never' ? $form_state['values']['uc_roles_expire_relative_duration'] : NULL,
-      'granularity' => $form_state['values']['uc_roles_expire_relative_granularity'],
-      'by_quantity' => $form_state['values']['uc_roles_by_quantity'],
-      'shippable'   => $form_state['values']['uc_roles_shippable'],
+      'pfid'        => $form_state->getValue('pfid'),
+      'rpid'        => $form_state->getValue('rpid'),
+      'nid'         => $form_state->getValue('nid'),
+      'model'       => $form_state->getValue('uc_roles_model'),
+      'rid'         => $form_state->getValue('uc_roles_role'),
+      'duration'    => $form_state->getValue('uc_roles_expire_relative_granularity') != 'never' ? $form_state->getValue('uc_roles_expire_relative_duration') : NULL,
+      'granularity' => $form_state->getValue('uc_roles_expire_relative_granularity'),
+      'by_quantity' => $form_state->getValue('uc_roles_by_quantity'),
+      'shippable'   => $form_state->getValue('uc_roles_shippable'),
 
       // We should be setting NULL, but drupal_write_record() ...
-      'end_override' => $form_state['values']['end_override'],
-      'end_time'     => $form_state['values']['expiration'  ] === 'abs' ? $form_state['values']['uc_roles_expire_absolute'] : NULL,
+      'end_override' => $form_state->getValue('end_override'),
+      'end_time'     => $form_state->getValue('expiration'  ) === 'abs' ? $form_state->getValue('uc_roles_expire_absolute') : NULL,
     );
 
     $description = empty($product_role['model']) ? t('<strong>SKU:</strong> Any<br />') : t('<strong>SKU:</strong> !sku<br />', array('!sku' => $product_role['model']));

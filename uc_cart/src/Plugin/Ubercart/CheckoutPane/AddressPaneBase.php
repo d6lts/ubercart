@@ -99,15 +99,15 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       $contents['address']['#hidden'] = $cart_config->get('default_same_address');
     }
 
-    if (isset($form_state['triggering_element'])) {
-      $element = &$form_state['triggering_element'];
+    if ($element = $form_state->getTriggeringElement()) {
+      $input = $form_state->getUserInput();
 
       if ($element['#name'] == "panes[$pane][copy_address]") {
         $address = &$form_state->getValue(['panes', $source]);
         foreach ($address as $field => $value) {
           if (substr($field, 0, strlen($source)) == $source) {
             $field = str_replace($source, $pane, $field);
-            $form_state['input']['panes'][$pane][$field] = $value;
+            $input['panes'][$pane][$field] = $value;
             $order->$field = $value;
           }
         }
@@ -116,10 +116,12 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       if ($element['#name'] == "panes[$pane][select_address]") {
         $address = $addresses[$element['#value']];
         foreach ($address as $field => $value) {
-          $form_state['input']['panes'][$pane][$pane . '_' . $field] = $value;
+          $input['panes'][$pane][$pane . '_' . $field] = $value;
           $order->{$pane . '_' . $field} = $value;
         }
       }
+
+      $form_state->setUserInput($input);
 
       // Forget any previous Ajax submissions, as we send new default values.
       unset($form_state['uc_address']);
@@ -177,9 +179,10 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
   /**
    * Ajax callback to re-render the full address element.
    */
-  function ajaxRender($form, &$form_state) {
+  public function ajaxRender($form, FormStateInterface $form_state) {
     $element = &$form;
-    foreach (array_slice($form_state['triggering_element']['#array_parents'], 0, -1) as $field) {
+    $triggering_element = $form_state->getTriggeringElement();
+    foreach (array_slice($triggering_element['#array_parents'], 0, -1) as $field) {
       $element = &$element[$field];
     }
     return $element['address'];

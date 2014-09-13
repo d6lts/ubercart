@@ -710,9 +710,9 @@ function uc_product_kit_node_view(array &$build, NodeInterface $node, EntityView
  */
 function uc_product_kit_add_to_cart_form_validate($form, FormStateInterface $form_state) {
   $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValues()));
-  $form_state['storage']['variant'] = uc_product_load_variant($form_state->getValue('nid'), $data);
+  $form_state->set('variant', uc_product_load_variant($form_state->getValue('nid'), $data));
 
-  foreach ($form_state['storage']['variant']->products as &$product) {
+  foreach ($form_state->get('variant')->products as &$product) {
     $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValue(['products', $product->id()])));
     $data += $product->data;
     $qty = $product->qty;

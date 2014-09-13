@@ -239,9 +239,9 @@ function uc_product_node_delete($node) {
  *   (e.g. 'display_price').
  */
 function uc_product_view_ajax_commands(AjaxResponse $response, $form_state, $keys) {
-  if (\Drupal::config('uc_product.settings')->get('update_node_view') && !empty($form_state['storage']['variant'])) {
-    $node_div = '.uc-product-' . $form_state['storage']['variant']->nid;
-    $build = node_view($form_state['storage']['variant']);
+  if (\Drupal::config('uc_product.settings')->get('update_node_view') && $form_state->has('variant')) {
+    $node_div = '.uc-product-' . $form_state->get('variant')->nid;
+    $build = node_view($form_state->get('variant'));
     foreach ($keys as $key) {
       if (isset($build[$key])) {
         $id = $node_div . '.' . str_replace('_', '-', $key);

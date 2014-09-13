@@ -164,8 +164,9 @@ class CartForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // If a remove button was clicked, set the quantity for that item to 0.
-    if (substr($form_state['triggering_element']['#name'], 0, 7) == 'remove-') {
-      $item = substr($form_state['triggering_element']['#name'], 7);
+    $triggering_element = $form_state->getTriggeringElement();
+    if (substr($triggering_element['#name'], 0, 7) == 'remove-') {
+      $item = substr($triggering_element['#name'], 7);
       $form_state->setValue(['items', $item, 'qty'], 0);
       drupal_set_message($this->t('<strong>!product-title</strong> removed from your shopping cart.', array('!product-title' => $form['data'][$item]['title']['#value'])));
     }

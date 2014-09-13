@@ -26,8 +26,8 @@ class CheckoutReviewForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $order = NULL) {
-    if (!isset($form_state['uc_order'])) {
-      $form_state['uc_order'] = $order;
+    if (!$form_state->has('uc_order')) {
+      $form_state->set('uc_order', $order);
     }
 
     $form['actions'] = array('#type' => 'actions');
@@ -51,7 +51,7 @@ class CheckoutReviewForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Invoke hook_uc_order($op = 'submit') to test to make sure the order can
     // be completed... used for auto payment in uc_credit.module.
-    $order = $form_state['uc_order'];
+    $order = $form_state->get('uc_order');
     $error = FALSE;
 
     // Invoke it on a per-module basis instead of all at once.

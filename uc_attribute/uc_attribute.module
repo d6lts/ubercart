@@ -177,7 +177,7 @@ function uc_attribute_buy_it_now_form_validate(&$form, FormStateInterface $form_
     $form_state['redirect'] = 'node/' . $form_state->getValue('nid');
 
     // Prevent submit handlers from running.
-    $form_state['submit_handlers'] = array();
+    $form_state->setSubmitHandlers(array());
   }
 }
 
@@ -1054,11 +1054,12 @@ function _uc_cart_product_get_options($item) {
 /**
  * Ajax callback for attribute selection form elements.
  */
-function uc_attribute_option_ajax($form, $form_state) {
+function uc_attribute_option_ajax($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
 
-  $parents = $form_state['triggering_element']['#array_parents'];
-  $wrapper = '#' . $form_state['triggering_element']['#ajax']['wrapper'];
+  $triggering_element = $form_state->getTriggeringElement();
+  $parents = $triggering_element['#array_parents'];
+  $wrapper = '#' . $triggering_element['#ajax']['wrapper'];
   while ($key = array_pop($parents)) {
     if ($key == 'attributes') {
       array_push($parents, $key);

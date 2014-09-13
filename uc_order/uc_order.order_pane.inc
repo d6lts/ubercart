@@ -303,13 +303,13 @@ function uc_order_pane_products($op, $order, &$form = NULL, FormStateInterface $
 
       $controls = array();
 
-      if (isset($form_state['products_action'])) {
-        switch ($form_state['products_action']) {
+      if ($form_state->has('products_action')) {
+        switch ($form_state->get('products_action')) {
           case 'select':
             $controls = uc_order_product_select_form($form['product_controls'], $form_state, $order);
             break;
           case 'add_product':
-            $controls = uc_order_add_product_form($form['product_controls'], $form_state, $order, $form_state['node']);
+            $controls = uc_order_add_product_form($form['product_controls'], $form_state, $order, $form_state->get('node'));
             break;
         }
       }
@@ -336,7 +336,7 @@ function uc_order_pane_products($op, $order, &$form = NULL, FormStateInterface $
  * @ingroup forms
  */
 function uc_order_product_select_form($form, FormStateInterface $form_state, $order) {
-  $options = $form_state['product_select_options'];
+  $options = $form_state->get('product_select_options');
   $ajax = array(
     'callback' => 'uc_order_pane_products_ajax_callback',
     'wrapper' => 'product-controls',
@@ -579,40 +579,41 @@ function uc_order_pane_products_select($form, FormStateInterface $form_state) {
     $options[0] = t('No products found.');
   }
 
-  $form_state['products_action'] = 'select';
-  $form_state['product_select_options'] = $options;
-  unset($form_state['refresh_products']);
-  $form_state['rebuild'] = TRUE;
+  $form_state->set('products_action', 'select');
+  $form_state->set('product_select_options', $options);
+  $form_state->set('refresh_products', NULL);
+  $form_state->setRebuild();
 }
 
 /**
  * Sets the order pane to show the add product to order form.
  */
 function uc_order_pane_products_add($form, FormStateInterface $form_state) {
-  $form_state['products_action'] = 'add_product';
-  $form_state['node'] = node_load($form_state->getValue(['product_controls', 'nid']));
-  unset($form_state['refresh_products']);
-  $form_state['rebuild'] = TRUE;
+  $form_state->set('products_action', 'add_product');
+  $form_state->set('node', node_load($form_state->getValue(['product_controls', 'nid'])));
+  $form_state->set('refresh_products', NULL);
+  $form_state->setRebuild();
 }
 
 /**
  * Hides the form to add another product to the order.
  */
 function uc_order_pane_products_close($form, FormStateInterface $form_state) {
-  unset($form_state['products_action']);
-  unset($form_state['refresh_products']);
-  unset($form_state['product_select_options']);
-  $form_state['rebuild'] = TRUE;
+  $form_state->set('products_action', NULL);
+  $form_state->set('refresh_products', NULL);
+  $form_state->set('product_select_options', NULL);
+  $form_state->setRebuild();
 }
 
 /**
  * Form submit callback: add a blank line product to an order.
  */
 function uc_order_edit_products_add_blank($form, FormStateInterface $form_state) {
-  $form_state['refresh_products'] = TRUE;
-  $form_state['rebuild'] = TRUE;
+  $form_state->set('refresh_products', TRUE);
+  $form_state->setRebuild();
 
-  $order = $form_state['build_info']['args'][0];
+  $build_info = $form_state->getBuildInfo();
+  $order = $build_info['args'][0];
 
   $product = new stdClass();
   $product->qty = 1;
@@ -627,10 +628,12 @@ function uc_order_edit_products_add_blank($form, FormStateInterface $form_state)
  * Form submit callback: add a product to an order.
  */
 function uc_order_edit_products_add($form, FormStateInterface $form_state) {
-  $form_state['products_action'] = 'products_select';
-  $form_state['refresh_products'] = TRUE;
-  $form_state['rebuild'] = TRUE;
-  $order = $form_state['build_info']['args'][0];
+  $form_state->set('products_action', 'products_select');
+  $form_state->set('refresh_products', TRUE);
+  $form_state->setRebuild();
+
+  $build_info = $form_state->getBuildInfo();
+  $order = $build_info['args'][0];
 
   $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValue('product_controls')));
   $product = uc_product_load_variant(intval($form_state->getValue(['product_controls', 'nid'])), $data);
@@ -656,9 +659,10 @@ function uc_order_edit_products_add($form, FormStateInterface $form_state) {
  * Form submit callback: remove a product from an order.
  */
 function uc_order_edit_products_remove($form, FormStateInterface $form_state) {
-  $form_state['refresh_products'] = TRUE;
+  $form_state->set('refresh_products', TRUE);
 
-  $order_product_id = intval($form_state['triggering_element']['#return_value']);
+  $triggering_element = $form_state->getTriggeringElement();
+  $order_product_id = intval($triggering_element['#return_value']);
 
   if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
     // Replace stock immediately.
@@ -668,9 +672,10 @@ function uc_order_edit_products_remove($form, FormStateInterface $form_state) {
 
   entity_delete_multiple('uc_order_product', array($order_product_id));
 
-  $order = $form_state['build_info']['args'][0];
+  $build_info = $form_state->getBuildInfo();
+  $order = $build_info['args'][0];
   $matches = array();
-  preg_match('/products\[(\d+)\]/', $form_state['triggering_element']['#name'], $matches);
+  preg_match('/products\[(\d+)\]/', $triggering_element['#name'], $matches);
   $key = $matches[1];
 
   unset($order->products[$key]);
@@ -686,7 +691,7 @@ function uc_order_pane_products_ajax_callback($form, FormStateInterface $form_st
   $status_messages = array('#theme' => 'status_messages');
   $response->addCommand(new PrependCommand('#product-controls', drupal_render($status_messages)));
 
-  if (isset($form_state['refresh_products']) && $form_state['refresh_products']) {
+  if ($form_state->get('refresh_products')) {
     $response->addCommand(new ReplaceCommand('#order-edit-products', trim(drupal_render($form['products']))));
     $response->addCommand(new ReplaceCommand('#order-line-items', trim(drupal_render($form['line_items']))));
   }
@@ -893,26 +898,27 @@ function uc_order_pane_line_items_submit($form, FormStateInterface $form_state) 
  * Order pane submit callback: Add a line item to an order.
  */
 function uc_order_pane_line_items_add($form, FormStateInterface $form_state) {
-  $order = &$form_state['order'];
+  $order = &$form_state->get('order');
   $type = $form_state->getValue('li_type_select');
 
   uc_order_line_item_add($order->id(), $type, _uc_line_item_data($type, 'title'), 0);
   $order->line_items = $order->getLineItems();
 
-  $form_state['rebuild'] = TRUE;
+  $form_state->setRebuild();
 }
 
 /**
  * Order pane submit callback: Remove a line item from an order.
  */
 function uc_order_pane_line_items_remove($form, FormStateInterface $form_state) {
-  $order = &$form_state['order'];
-  $line_item_id = intval($form_state['triggering_element']['#return_value']);
+  $order = &$form_state->get('order');
+  $triggering_element = $form_state->getTriggeringElement();
+  $line_item_id = intval($triggering_element['#return_value']);
 
   uc_order_delete_line_item($line_item_id);
   $order->line_items = $order->getLineItems();
 
-  $form_state['rebuild'] = TRUE;
+  $form_state->setRebuild();
 }
 
 /**

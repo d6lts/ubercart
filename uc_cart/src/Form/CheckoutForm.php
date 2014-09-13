@@ -55,11 +55,11 @@ class CheckoutForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $order = NULL) {
-    if ($processed = isset($form_state['storage']['order'])) {
-      $order = $form_state['storage']['order'];
+    if ($processed = $form_state->has('order')) {
+      $order = $form_state->get('order');
     }
     else {
-      $form_state['storage']['order'] = $order;
+      $form_state->set('order', $order);
     }
 
     $form['#attributes']['class'][] = 'uc-cart-checkout-form';
@@ -78,9 +78,9 @@ class CheckoutForm extends FormBase {
     // Invoke the 'prepare' op of enabled panes, but only if their 'process' ops
     // have not been invoked on this request (i.e. when rebuilding after AJAX).
     foreach ($panes as $id => $pane) {
-      if (empty($form_state['storage']['panes'][$id]['prepared'])) {
+      if ($form_state->get(['panes', $id, 'prepared'])) {
         $pane->prepare($order, $form, $form_state);
-        $form_state['storage']['panes'][$id]['prepared'] = TRUE;
+        $form_state->set(['panes', $id, 'prepared'], TRUE);
         $processed = FALSE; // Make sure we save the updated order.
       }
     }
@@ -129,17 +129,17 @@ class CheckoutForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $order = $form_state['storage']['order'];
+    $order = $form_state->get('order');
 
     // Update the order "modified" time to prevent timeout on ajax requests.
     $order->modified->value = REQUEST_TIME;
 
     // Validate/process the cart panes.  A FALSE value results in failed checkout.
-    $form_state['checkout_valid'] = TRUE;
+    $form_state->set('checkout_valid', TRUE);
     foreach (element_children($form_state->getValue('panes')) as $id) {
       $pane = $this->checkoutPaneManager->createInstance($id);
       if ($pane->process($order, $form, $form_state) === FALSE) {
-        $form_state['checkout_valid'] = FALSE;
+        $form_state->set('checkout_valid', FALSE);
       }
     }
 
@@ -152,22 +152,22 @@ class CheckoutForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state['checkout_valid'] === FALSE) {
+    if ($form_state->get('checkout_valid') === FALSE) {
       $form_state->setRedirect('uc_cart.checkout');
     }
     else {
       $form_state->setRedirect('uc_cart.checkout_review');
-      $_SESSION['uc_checkout'][$form_state['storage']['order']->id()]['do_review'] = TRUE;
+      $_SESSION['uc_checkout'][$form_state->get('order')->id()]['do_review'] = TRUE;
     }
 
-    unset($form_state['checkout_valid']);
+    $form_state->set('checkout_valid', NULL);
   }
 
   /**
    * Submit handler for the "Cancel" button on the checkout form.
    */
   public function cancel(array &$form, FormStateInterface $form_state) {
-    $order = $form_state['storage']['order'];
+    $order = $form_state->get('order');
     if (isset($_SESSION['cart_order']) && $_SESSION['cart_order'] == $order->id()) {
       uc_order_comment_save($_SESSION['cart_order'], 0, $this->t('Customer canceled this order from the checkout form.'));
       unset($_SESSION['cart_order']);

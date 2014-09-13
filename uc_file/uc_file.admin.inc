@@ -7,6 +7,7 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form step values.
@@ -21,9 +22,9 @@ define('UC_FILE_FORM_ACTION', 1   );
  * @see uc_file_admin_files_form_action()
  * @ingroup forms
  */
-function uc_file_admin_files_form($form, &$form_state) {
+function uc_file_admin_files_form($form, FormStateInterface $form_state) {
 
-  if (isset($form_state['storage']['step']) && $form_state['storage']['step'] == UC_FILE_FORM_ACTION) {
+  if ($form_state->get('step') == UC_FILE_FORM_ACTION) {
       return array(
         '#validate' => array('uc_file_admin_files_form_action_validate'),
         '#submit'   => array('uc_file_admin_files_form_action_submit'),
@@ -50,7 +51,7 @@ function uc_file_admin_files_form($form, &$form_state) {
  * @see theme_uc_file_admin_files_form_show()
  * @ingroup forms
  */
-function uc_file_admin_files_form_show_files($form, &$form_state) {
+function uc_file_admin_files_form_show_files($form, FormStateInterface $form_state) {
   $form['#tree'] = TRUE;
 
   $header = array(
@@ -151,14 +152,14 @@ function uc_file_admin_files_form_show_files($form, &$form_state) {
  * @see uc_file_admin_files_form_show_files()
  * @see uc_file_admin_files_form_show_submit()
  */
-function uc_file_admin_files_form_show_validate($form, &$form_state) {
+function uc_file_admin_files_form_show_validate($form, FormStateInterface $form_state) {
 
-  switch ($form_state['values']['uc_file_action']['action']) {
+  switch ($form_state->getValue(['uc_file_action', 'action'])) {
 
     case 'uc_file_delete':
       $file_ids = array();
-      if (is_array($form_state['values']['file_select'])) {
-        foreach ($form_state['values']['file_select'] as $fid => $value) {
+      if (is_array($form_state->getValue('file_select'))) {
+        foreach ($form_state->getValue('file_select') as $fid => $value) {
           if ($value) {
             $file_ids[] = $fid;
           }
@@ -180,10 +181,10 @@ function uc_file_admin_files_form_show_validate($form, &$form_state) {
  * @see uc_file_admin_files_form_show_files()
  * @see uc_file_admin_files_form_show_validate()
  */
-function uc_file_admin_files_form_show_submit($form, &$form_state) {
+function uc_file_admin_files_form_show_submit($form, FormStateInterface $form_state) {
   // Increment the form step.
-  $form_state['storage']['step'] = UC_FILE_FORM_ACTION;
-  $form_state['rebuild'] = TRUE;
+  $form_state->set('step', UC_FILE_FORM_ACTION);
+  $form_state->setRebuild();
 }
 
 /**
@@ -217,15 +218,15 @@ function theme_uc_file_admin_files_form_show($variables) {
  * @see uc_file_admin_files_form_action_submit()
  * @ingroup forms
  */
-function uc_file_admin_files_form_action($form, &$form_state) {
-  $file_ids = array_filter($form_state['values']['file_select']);
+function uc_file_admin_files_form_action($form, FormStateInterface $form_state) {
+  $file_ids = array_filter($form_state->getValue('file_select'));
 
   $form['file_ids'] = array('#type' => 'value', '#value' => $file_ids);
-  $form['action'] = array('#type' => 'value', '#value' => $form_state['values']['uc_file_action']['action']);
+  $form['action'] = array('#type' => 'value', '#value' => $form_state->getValue(['uc_file_action', 'action']));
 
   $file_ids = _uc_file_sort_names(_uc_file_get_dir_file_ids($file_ids, FALSE));
 
-  switch ($form_state['values']['uc_file_action']['action']) {
+  switch ($form_state->getValue(['uc_file_action', 'action'])) {
 
     case 'uc_file_delete':
       $affected_list = _uc_file_build_js_file_display($file_ids);
@@ -339,7 +340,7 @@ function uc_file_admin_files_form_action($form, &$form_state) {
       $module_handler = \Drupal::moduleHandler();
       foreach ($module_handler->getImplementations('uc_file_action') as $module) {
         $name = $module . '_uc_file_action';
-        $result = $name('form', array('action' => $form_state['values']['uc_file_action']['action'], 'file_ids' => $file_ids));
+        $result = $name('form', array('action' => $form_state->getValue(['uc_file_action', 'action']), 'file_ids' => $file_ids));
         $form = (is_array($result)) ? array_merge($form, $result) : $form;
       }
 
@@ -355,9 +356,9 @@ function uc_file_admin_files_form_action($form, &$form_state) {
  * @see uc_file_admin_files_form_action()
  * @see uc_file_admin_files_form_action_submit()
  */
-function uc_file_admin_files_form_action_validate($form, &$form_state) {
+function uc_file_admin_files_form_action_validate($form, FormStateInterface $form_state) {
 
-  switch ($form_state['values']['action']) {
+  switch ($form_state->getValue('action')) {
 
     case 'uc_file_upload':
 
@@ -373,7 +374,7 @@ function uc_file_admin_files_form_action_validate($form, &$form_state) {
         }
 
         // Save the uploaded file for later processing.
-        $form_state['storage']['temp_file'] = $temp_file;
+        $form_state->set('temp_file', $temp_file);
       }
       else {
         $form_state->setErrorByName('', t('An error occurred while uploading the file'));
@@ -400,9 +401,9 @@ function uc_file_admin_files_form_action_validate($form, &$form_state) {
  *
  * @see uc_file_admin_files_form_action()
  */
-function uc_file_admin_files_form_action_submit($form, &$form_state) {
+function uc_file_admin_files_form_action_submit($form, FormStateInterface $form_state) {
 
-  switch ($form_state['values']['action']) {
+  switch ($form_state->getValue('action')) {
 
     case 'uc_file_delete':
 
@@ -410,7 +411,7 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
       $status = TRUE;
 
       // Delete the selected file(s), with recursion if selected.
-      $status = uc_file_remove_by_id($form_state['values']['file_ids'], !empty($form_state['values']['recurse_directories'])) && $status;
+      $status = uc_file_remove_by_id($form_state->getValue('file_ids'), !empty($form_state->getValue('recurse_directories'))) && $status;
 
       if ($status) {
         drupal_set_message(t('The selected file(s) have been deleted.'));
@@ -425,12 +426,11 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
 
       // Build the destination location. We start with the base directory,
       // then add any directory which was explicitly selected.
-      $dir = \Drupal::config('uc_file.settings')->get('base_dir') . '/';
-      $dir = (is_null($form_state['values']['upload_dir'])) ? $dir : $dir . $form_state['values']['upload_dir'];
+      $dir = \Drupal::config('uc_file.settings')->get('base_dir') . '/' . $form_state->getValue('upload_dir');
       if (is_dir($dir)) {
 
         // Retrieve our uploaded file.
-        $file_object = $form_state['storage']['temp_file'];
+        $file_object = $form_state->get('temp_file');
 
         // Copy the file to its final location.
         if (copy($file_object->uri, $dir . '/' . $file_object->filename)) {
@@ -470,7 +470,7 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
   }
 
   // Return to the original form state.
-  $form_state['rebuild'] = FALSE;
+  $form_state->setRebuild(FALSE);
   drupal_goto('admin/store/products/files');
 }
 

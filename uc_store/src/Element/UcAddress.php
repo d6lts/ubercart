@@ -70,9 +70,9 @@ class UcAddress extends Element\FormElement {
     $prefix = $element['#key_prefix'] ? ($element['#key_prefix'] . '_') : '';
     $config = \Drupal::config('uc_store.settings')->get("address_fields");
 
-    if (isset($form_state['uc_address'])) {
+    if ($form_state->has('uc_address')) {
       // Use submitted Ajax values.
-      $value = $form_state['uc_address'];
+      $value = $form_state->get('uc_address');
     }
     elseif (is_array($element['#value']) || is_object($element['#value'])) {
       // Use provided default value.
@@ -204,7 +204,7 @@ class UcAddress extends Element\FormElement {
    */
   public static function validateCountry($element, FormStateInterface $form_state) {
     $address = NestedArray::getValue($form_state->getValues(), array_slice($element['#parents'], 0, -1));
-    $form_state['uc_address'] = isset($form_state['uc_address']) ? array_merge($form_state['uc_address'], $address) : $address;
+    $form_state->set('uc_address', $form_state->has('uc_address') ? array_merge($form_state->get('uc_address'), $address) : $address);
   }
 
   /**
@@ -212,7 +212,8 @@ class UcAddress extends Element\FormElement {
    */
   public static function updateZone($form, FormStateInterface $form_state) {
     $element = &$form;
-    foreach (array_slice($form_state['triggering_element']['#array_parents'], 0, -1) as $field) {
+    $triggering_element = $form_state->getTriggeringElement();
+    foreach (array_slice($triggering_element['#array_parents'], 0, -1) as $field) {
       $element = &$element[$field];
     }
     $prefix = empty($element['#key_prefix']) ? '' : ($element['#key_prefix'] . '_');

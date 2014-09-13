@@ -150,7 +150,7 @@ function uc_roles_deletion_form($form, &$form_state, $account, $rid) {
  * @see uc_roles_deletion_form()
  */
 function uc_roles_deletion_form_submit($form, &$form_state) {
-  uc_roles_delete(user_load($form_state['values']['uid']), $form_state['values']['rid']);
+  uc_roles_delete(user_load($form_state->getValue('uid')), $form_state->getValue('rid'));
 
   drupal_goto('admin/people/expiration');
 }
