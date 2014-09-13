@@ -15,11 +15,12 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Handles the "Print button" order pane.
  */
-function uc_order_pane_print_button($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_print_button($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'customer':
       if ($order->access('invoice')) {
@@ -40,7 +41,7 @@ function uc_order_pane_print_button($op, $order, &$form = NULL, &$form_state = N
 /**
  * Handles the "Ship to" order pane.
  */
-function uc_order_pane_ship_to($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_ship_to($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'customer':
       if (!$order->isShippable()) {
@@ -74,7 +75,7 @@ function uc_order_pane_ship_to($op, $order, &$form = NULL, &$form_state = NULL) 
 
     case 'edit-process':
       $address = $order->getAddress('delivery');
-      foreach ($form_state['values']['ship_to'] as $key => $value) {
+      foreach ($form_state->getValue('ship_to') as $key => $value) {
         if (uc_address_field_enabled($key)) {
           $address->$key = $value;
         }
@@ -86,7 +87,7 @@ function uc_order_pane_ship_to($op, $order, &$form = NULL, &$form_state = NULL) 
 /**
  * Handles the "Bill to" order pane.
  */
-function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_bill_to($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
     case 'customer':
@@ -117,7 +118,7 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) 
 
     case 'edit-process':
       $address = $order->getAddress('billing');
-      foreach ($form_state['values']['bill_to'] as $key => $value) {
+      foreach ($form_state->getValue('bill_to') as $key => $value) {
         if (uc_address_field_enabled($key)) {
           $address->$key = $value;
         }
@@ -129,7 +130,7 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, &$form_state = NULL) 
 /**
  * Handles the "Customer Info" order pane.
  */
-function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_customer($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
       if ($order->getUserId()) {
@@ -185,15 +186,15 @@ function uc_order_pane_customer($op, $order, &$form = NULL, &$form_state = NULL)
       return $output;
 
     case 'edit-process':
-      $order->setUserId($form_state['values']['uid']);
-      $order->setEmail($form_state['values']['primary_email']);
+      $order->setUserId($form_state->getValue('uid'));
+      $order->setEmail($form_state->getValue('primary_email'));
   }
 }
 
 /**
  * Handles the "Products" order pane.
  */
-function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_products($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
     case 'customer':
@@ -334,7 +335,7 @@ function uc_order_pane_products($op, $order, &$form = NULL, &$form_state = NULL)
  *
  * @ingroup forms
  */
-function uc_order_product_select_form($form, &$form_state, $order) {
+function uc_order_product_select_form($form, FormStateInterface $form_state, $order) {
   $options = $form_state['product_select_options'];
   $ajax = array(
     'callback' => 'uc_order_pane_products_ajax_callback',
@@ -388,8 +389,8 @@ function uc_order_product_select_form($form, &$form_state, $order) {
 /**
  * Validation handler for uc_order_product_select_form().
  */
-function uc_order_product_select_form_validate($form, &$form_state) {
-  if (empty($form_state['values']['product_controls']['nid'])) {
+function uc_order_product_select_form_validate($form, FormStateInterface $form_state) {
+  if ($form_state->isValueEmpty(['product_controls', 'nid'])) {
     $form_state->setErrorByName('product_controls][nid', t('Please select a product.'));
   }
 }
@@ -400,15 +401,15 @@ function uc_order_product_select_form_validate($form, &$form_state) {
  * @see uc_order_add_product_form()
  * @ingroup forms
  */
-function uc_order_add_product_form($form, &$form_state, $order, $node) {
+function uc_order_add_product_form($form, FormStateInterface $form_state, $order, $node) {
   $data = array();
-  if (isset($form_state['values']['product_controls']['qty'])) {
-    $data += \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']['product_controls']));
+  if ($form_state->hasValue(['product_controls', 'qty'])) {
+    $data += \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValue('product_controls')));
   }
   if (!empty($node->data) && is_array($node->data)) {
     $data += $node->data;
   }
-  $node = uc_product_load_variant(intval($form_state['values']['product_controls']['nid']), $data);
+  $node = uc_product_load_variant(intval($form_state->getValue(['product_controls', 'nid'])), $data);
   $form['title'] = array(
     '#markup' => '<h3>' . String::checkPlain($node->label()) . '</h3>',
   );
@@ -454,7 +455,7 @@ function uc_order_add_product_form($form, &$form_state, $order, $node) {
 /**
  * Form to allow ordered products' data to be changed.
  */
-function uc_order_edit_products_form($form, &$form_state, $products) {
+function uc_order_edit_products_form($form, FormStateInterface $form_state, $products) {
   $form['products'] = array(
     '#type' => 'table',
     '#tree' => TRUE,
@@ -550,7 +551,7 @@ function uc_order_edit_products_form($form, &$form_state, $products) {
 /**
  * Sets the order pane to show the product selection form.
  */
-function uc_order_pane_products_select($form, &$form_state) {
+function uc_order_pane_products_select($form, FormStateInterface $form_state) {
   $types = uc_product_types();
   $options = array();
 
@@ -560,8 +561,8 @@ function uc_order_pane_products_select($form, &$form_state) {
     ->orderBy('n.title')
     ->addTag('node_access');
 
-  if (!empty($form_state['values']['product_controls']['product_search'])) {
-    $search = strtolower(str_replace('*', '%', $form_state['values']['product_controls']['product_search']));
+  if (!empty($form_state->getValue(['product_controls', 'product_search']))) {
+    $search = strtolower(str_replace('*', '%', $form_state->getValue(['product_controls', 'product_search'])));
     $query->leftJoin('uc_products', 'p', 'n.nid = p.nid');
     $query->condition(db_or()
             ->condition('n.title', $search, 'LIKE')
@@ -587,9 +588,9 @@ function uc_order_pane_products_select($form, &$form_state) {
 /**
  * Sets the order pane to show the add product to order form.
  */
-function uc_order_pane_products_add($form, &$form_state) {
+function uc_order_pane_products_add($form, FormStateInterface $form_state) {
   $form_state['products_action'] = 'add_product';
-  $form_state['node'] = node_load($form_state['values']['product_controls']['nid']);
+  $form_state['node'] = node_load($form_state->getValue(['product_controls', 'nid']));
   unset($form_state['refresh_products']);
   $form_state['rebuild'] = TRUE;
 }
@@ -597,7 +598,7 @@ function uc_order_pane_products_add($form, &$form_state) {
 /**
  * Hides the form to add another product to the order.
  */
-function uc_order_pane_products_close($form, &$form_state) {
+function uc_order_pane_products_close($form, FormStateInterface $form_state) {
   unset($form_state['products_action']);
   unset($form_state['refresh_products']);
   unset($form_state['product_select_options']);
@@ -607,7 +608,7 @@ function uc_order_pane_products_close($form, &$form_state) {
 /**
  * Form submit callback: add a blank line product to an order.
  */
-function uc_order_edit_products_add_blank($form, &$form_state) {
+function uc_order_edit_products_add_blank($form, FormStateInterface $form_state) {
   $form_state['refresh_products'] = TRUE;
   $form_state['rebuild'] = TRUE;
 
@@ -625,15 +626,15 @@ function uc_order_edit_products_add_blank($form, &$form_state) {
 /**
  * Form submit callback: add a product to an order.
  */
-function uc_order_edit_products_add($form, &$form_state) {
+function uc_order_edit_products_add($form, FormStateInterface $form_state) {
   $form_state['products_action'] = 'products_select';
   $form_state['refresh_products'] = TRUE;
   $form_state['rebuild'] = TRUE;
   $order = $form_state['build_info']['args'][0];
 
-  $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']['product_controls']));
-  $product = uc_product_load_variant(intval($form_state['values']['product_controls']['nid']), $data);
-  $product->qty = $form_state['values']['product_controls']['qty'];
+  $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValue('product_controls')));
+  $product = uc_product_load_variant(intval($form_state->getValue(['product_controls', 'nid'])), $data);
+  $product->qty = $form_state->getValue(['product_controls', 'qty']);
 
   \Drupal::moduleHandler()->alter('uc_order_product', $product, $order);
   uc_order_product_save($order->id(), $product);
@@ -646,13 +647,15 @@ function uc_order_edit_products_add($form, &$form_state) {
   }
 
   // Add this product to the form values for accurate tax calculations.
-  $form_state['values']['products'][] = (array) $product;
+  $products = $form_state->getValue('products');
+  $products[] = (array) $product;
+  $form_state->setValue('products', $products);
 }
 
 /**
  * Form submit callback: remove a product from an order.
  */
-function uc_order_edit_products_remove($form, &$form_state) {
+function uc_order_edit_products_remove($form, FormStateInterface $form_state) {
   $form_state['refresh_products'] = TRUE;
 
   $order_product_id = intval($form_state['triggering_element']['#return_value']);
@@ -677,7 +680,7 @@ function uc_order_edit_products_remove($form, &$form_state) {
 /**
  * AJAX callback to render the order product controls.
  */
-function uc_order_pane_products_ajax_callback($form, &$form_state) {
+function uc_order_pane_products_ajax_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#product-controls', trim(drupal_render($form['product_controls']))));
   $status_messages = array('#theme' => 'status_messages');
@@ -698,7 +701,7 @@ function uc_order_pane_products_ajax_callback($form, &$form_state) {
 /**
  * Handles the "Line Items" order pane.
  */
-function uc_order_pane_line_items($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_line_items($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
     case 'customer':
@@ -874,8 +877,8 @@ function theme_uc_order_pane_line_items($variables) {
 /**
  * Form submit callback: Update line items titles and amounts in an order.
  */
-function uc_order_pane_line_items_submit($form, &$form_state) {
-  $values = $form_state['values'];
+function uc_order_pane_line_items_submit($form, FormStateInterface $form_state) {
+  $values = $form_state->getValues();
 
   if (is_array($values['line_items'])) {
     foreach ($values['line_items'] as $line) {
@@ -889,9 +892,9 @@ function uc_order_pane_line_items_submit($form, &$form_state) {
 /**
  * Order pane submit callback: Add a line item to an order.
  */
-function uc_order_pane_line_items_add($form, &$form_state) {
+function uc_order_pane_line_items_add($form, FormStateInterface $form_state) {
   $order = &$form_state['order'];
-  $type = $form_state['values']['li_type_select'];
+  $type = $form_state->getValue('li_type_select');
 
   uc_order_line_item_add($order->id(), $type, _uc_line_item_data($type, 'title'), 0);
   $order->line_items = $order->getLineItems();
@@ -902,7 +905,7 @@ function uc_order_pane_line_items_add($form, &$form_state) {
 /**
  * Order pane submit callback: Remove a line item from an order.
  */
-function uc_order_pane_line_items_remove($form, &$form_state) {
+function uc_order_pane_line_items_remove($form, FormStateInterface $form_state) {
   $order = &$form_state['order'];
   $line_item_id = intval($form_state['triggering_element']['#return_value']);
 
@@ -915,7 +918,7 @@ function uc_order_pane_line_items_remove($form, &$form_state) {
 /**
  * AJAX callback to render the line items.
  */
-function uc_order_pane_line_items_update($form, &$form_state) {
+function uc_order_pane_line_items_update($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#order-line-items', trim(drupal_render($form['line_items']))));
   $status_messages = array('#theme' => 'status_messages');
@@ -927,7 +930,7 @@ function uc_order_pane_line_items_update($form, &$form_state) {
 /**
  * Handles the "Order Comments" order pane.
  */
-function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_order_comments($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
       $build = array(
@@ -989,7 +992,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, &$form_state =
 /**
  * Handles the "Admin Comments" order pane.
  */
-function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_admin_comments($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
       $build = array(
@@ -1044,9 +1047,9 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
       return $output;
 
     case 'edit-process':
-      if (!empty($form_state['values']['admin_comment'])) {
+      if (!$form_state->isValueEmpty('admin_comment')) {
         $uid = \Drupal::currentUser()->id();
-        uc_order_comment_save($form_state['values']['order_id'], $uid, $form_state['values']['admin_comment']);
+        uc_order_comment_save($form_state->getValue('order_id'), $uid, $form_state->getValue('admin_comment'));
       }
       return;
   }
@@ -1055,7 +1058,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, &$form_state =
 /**
  * Handles the "Update" order pane.
  */
-function uc_order_pane_update($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_update($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
       return \Drupal::formBuilder()->getForm('\Drupal\uc_order\Form\OrderUpdateForm', $order);

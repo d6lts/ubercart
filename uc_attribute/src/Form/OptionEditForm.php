@@ -38,9 +38,9 @@ class OptionEditForm extends OptionFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_write_record('uc_attribute_options', $form_state['values'], array('aid', 'oid'));
-    drupal_set_message(t('Updated option %option.', array('%option' => $form_state['values']['name'])));
-    watchdog('uc_attribute', 'Updated option %option.', array('%option' => $form_state['values']['name']), WATCHDOG_NOTICE, 'admin/store/products/attributes/' . $form_state['values']['aid'] . '/options/' . $form_state['values']['oid']);
+    drupal_write_record('uc_attribute_options', $form_state->getValues(), array('aid', 'oid'));
+    drupal_set_message(t('Updated option %option.', array('%option' => $form_state->getValue('name'))));
+    watchdog('uc_attribute', 'Updated option %option.', array('%option' => $form_state->getValue('name')), WATCHDOG_NOTICE, 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/' . $form_state->getValue('oid'));
     $form_state->setRedirect('uc_attribute.options', array('aid' => $form_state->getValue('aid')));
   }
 

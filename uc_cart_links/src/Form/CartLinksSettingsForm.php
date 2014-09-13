@@ -71,18 +71,16 @@ class CartLinksSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $values = $form_state['values'];
-
     $cart_links_config = $this->config('uc_cart_links.settings');
 
     $cart_links_config
       ->setData(array(
-        'add_show' => (boolean) $values['uc_cart_links_add_show'],
-        'track' => (boolean) $values['uc_cart_links_track'],
-        'empty' => (boolean) $values['uc_cart_links_empty'],
-        'messages' => (string) $values['uc_cart_links_messages'],
-        'restrictions' => (string) $values['uc_cart_links_restrictions'],
-        'invalid_page' => (string) $values['uc_cart_links_invalid_page'],
+        'add_show' => (boolean) $form_state->getValue('uc_cart_links_add_show'),
+        'track' => (boolean) $form_state->getValue('uc_cart_links_track'),
+        'empty' => (boolean) $form_state->getValue('uc_cart_links_empty'),
+        'messages' => (string) $form_state->getValue('uc_cart_links_messages'),
+        'restrictions' => (string) $form_state->getValue('uc_cart_links_restrictions'),
+        'invalid_page' => (string) $form_state->getValue('uc_cart_links_invalid_page'),
       ))
       ->save();
 

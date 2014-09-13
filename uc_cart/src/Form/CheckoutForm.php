@@ -136,7 +136,7 @@ class CheckoutForm extends FormBase {
 
     // Validate/process the cart panes.  A FALSE value results in failed checkout.
     $form_state['checkout_valid'] = TRUE;
-    foreach (element_children($form_state['values']['panes']) as $id) {
+    foreach (element_children($form_state->getValue('panes')) as $id) {
       $pane = $this->checkoutPaneManager->createInstance($id);
       if ($pane->process($order, $form, $form_state) === FALSE) {
         $form_state['checkout_valid'] = FALSE;

@@ -203,7 +203,7 @@ class UcAddress extends Element\FormElement {
    * Store the current address for use when rebuilding the form.
    */
   public static function validateCountry($element, FormStateInterface $form_state) {
-    $address = NestedArray::getValue($form_state['values'], array_slice($element['#parents'], 0, -1));
+    $address = NestedArray::getValue($form_state->getValues(), array_slice($element['#parents'], 0, -1));
     $form_state['uc_address'] = isset($form_state['uc_address']) ? array_merge($form_state['uc_address'], $address) : $address;
   }
 

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Creates a new order for the specified customer, ready for editing.
@@ -312,7 +313,7 @@ function theme_uc_order_edit_form($variables) {
  * @see uc_order_add_line_item_form_validate()
  * @see uc_order_add_line_item_submit()
  */
-function uc_order_add_line_item_form($form, &$form_state, $order, $line_item_id) {
+function uc_order_add_line_item_form($form, FormStateInterface $form_state, $order, $line_item_id) {
   $func = _uc_line_item_data($line_item_id, 'callback');
 
   if (!function_exists($func) || ($form = $func('form', $order->id())) == NULL) {
@@ -354,9 +355,9 @@ function uc_order_add_line_item_form($form, &$form_state, $order, $line_item_id)
  *
  * @see uc_order_add_line_item_form()
  */
-function uc_order_add_line_item_form_validate($form, &$form_state) {
-  $func = _uc_line_item_data($form_state['values']['line_item_id'], 'callback');
-  if (function_exists($func) && ($form = $func('form', $form_state['values']['order_id'])) != NULL) {
+function uc_order_add_line_item_form_validate($form, FormStateInterface $form_state) {
+  $func = _uc_line_item_data($form_state->getValue('line_item_id'), 'callback');
+  if (function_exists($func) && ($form = $func('form', $form_state->getValue('order_id'))) != NULL) {
     $func('validate', $form, $form_state);
   }
 }
@@ -366,15 +367,15 @@ function uc_order_add_line_item_form_validate($form, &$form_state) {
  *
  * @see uc_order_add_line_item_form()
  */
-function uc_order_add_line_item_form_submit($form, &$form_state) {
-  $func = _uc_line_item_data($form_state['values']['line_item_id'], 'callback');
-  if (function_exists($func) && ($form = $func('form', $form_state['values']['order_id'])) != NULL) {
+function uc_order_add_line_item_form_submit($form, FormStateInterface $form_state) {
+  $func = _uc_line_item_data($form_state->getValue('line_item_id'), 'callback');
+  if (function_exists($func) && ($form = $func('form', $form_state->getValue('order_id'))) != NULL) {
     $func('submit', $form, $form_state);
   }
   else {
-    uc_order_line_item_add($form_state['values']['order_id'], $form_state['values']['line_item_id'], $form_state['values']['title'], $form_state['values']['amount']);
+    uc_order_line_item_add($form_state->getValue('order_id'), $form_state->getValue('line_item_id'), $form_state->getValue('title'), $form_state->getValue('amount'));
     drupal_set_message(t('Line item added to order.'));
   }
 
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/edit';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/edit';
 }

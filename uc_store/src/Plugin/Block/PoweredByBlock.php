@@ -57,7 +57,7 @@ class PoweredByBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['message'] = $form_state['values']['message'];
+    $this->configuration['message'] = $form_state->getValue('message');
   }
 
   /**

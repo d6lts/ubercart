@@ -271,34 +271,34 @@ class CheckoutSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $cart_config = \Drupal::config('uc_cart.settings');
     $cart_config
-      ->set('checkout_enabled', $form_state['values']['uc_checkout_enabled']);
+      ->set('checkout_enabled', $form_state->getValue('uc_checkout_enabled'));
 
     if (!\Drupal::moduleHandler()->moduleExists('rules')) {
       $cart_config
-        ->set('checkout_email_customer', $form_state['values']['uc_checkout_email_customer'])
-        ->set('checkout_email_admin', $form_state['values']['uc_checkout_email_admin']);
+        ->set('checkout_email_customer', $form_state->getValue('uc_checkout_email_customer'))
+        ->set('checkout_email_admin', $form_state->getValue('uc_checkout_email_admin'));
     }
 
     $cart_config
-      ->set('checkout_anonymous', $form_state['values']['uc_checkout_anonymous'])
-      ->set('mail_existing', $form_state['values']['uc_cart_mail_existing'])
-      ->set('email_validation', $form_state['values']['uc_cart_email_validation'])
-      ->set('new_account_name', $form_state['values']['uc_cart_new_account_name'])
-      ->set('new_account_password', $form_state['values']['uc_cart_new_account_password'])
-      ->set('new_customer_email', $form_state['values']['uc_new_customer_email'])
-      ->set('new_customer_login', $form_state['values']['uc_new_customer_login'])
-      ->set('new_customer_status_active', $form_state['values']['uc_new_customer_status_active'])
-      ->set('default_same_address', $form_state['values']['uc_cart_default_same_address'])
-      ->set('delivery_not_shippable', $form_state['values']['uc_cart_delivery_not_shippable'])
-      ->set('checkout_complete_page', $form_state['values']['uc_cart_checkout_complete_page'])
-      ->set('panes', $form_state['values']['panes'])
+      ->set('checkout_anonymous', $form_state->getValue('uc_checkout_anonymous'))
+      ->set('mail_existing', $form_state->getValue('uc_cart_mail_existing'))
+      ->set('email_validation', $form_state->getValue('uc_cart_email_validation'))
+      ->set('new_account_name', $form_state->getValue('uc_cart_new_account_name'))
+      ->set('new_account_password', $form_state->getValue('uc_cart_new_account_password'))
+      ->set('new_customer_email', $form_state->getValue('uc_new_customer_email'))
+      ->set('new_customer_login', $form_state->getValue('uc_new_customer_login'))
+      ->set('new_customer_status_active', $form_state->getValue('uc_new_customer_status_active'))
+      ->set('default_same_address', $form_state->getValue('uc_cart_default_same_address'))
+      ->set('delivery_not_shippable', $form_state->getValue('uc_cart_delivery_not_shippable'))
+      ->set('checkout_complete_page', $form_state->getValue('uc_cart_checkout_complete_page'))
+      ->set('panes', $form_state->getValue('panes'))
       ->save();
 
     \Drupal::config('uc_cart.messages')
-      ->set('logged_in', $form_state['values']['uc_msg_order_logged_in'])
-      ->set('existing_user', $form_state['values']['uc_msg_order_existing_user'])
-      ->set('new_user', $form_state['values']['uc_msg_order_new_user'])
-      ->set('new_user_logged_in', $form_state['values']['uc_msg_order_new_user_logged_in'])
+      ->set('logged_in', $form_state->getValue('uc_msg_order_logged_in'))
+      ->set('existing_user', $form_state->getValue('uc_msg_order_existing_user'))
+      ->set('new_user', $form_state->getValue('uc_msg_order_new_user'))
+      ->set('new_user_logged_in', $form_state->getValue('uc_msg_order_new_user_logged_in'))
       ->save();
 
     parent::submitForm($form, $form_state);

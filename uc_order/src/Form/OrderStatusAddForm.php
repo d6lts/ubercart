@@ -75,7 +75,7 @@ class OrderStatusAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $id = strtolower(trim($form_state['values']['id']));
+    $id = strtolower(trim($form_state->getValue('id')));
     if (strpos($id, ' ') !== FALSE || $id == 'all') {
       $form_state->setErrorByName('id', t('You have entered an invalid status ID.'));
     }
@@ -90,10 +90,10 @@ class OrderStatusAddForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     entity_create('uc_order_status', array(
-      'id' => strtolower(trim($form_state['values']['id'])),
-      'name' => $form_state['values']['name'],
-      'state' => $form_state['values']['state'],
-      'weight' => (int) $form_state['values']['weight'],
+      'id' => strtolower(trim($form_state->getValue('id'))),
+      'name' => $form_state->getValue('name'),
+      'state' => $form_state->getValue('state'),
+      'weight' => (int) $form_state->getValue('weight'),
     ))->save();
 
     drupal_set_message(t('Custom order status created.'));

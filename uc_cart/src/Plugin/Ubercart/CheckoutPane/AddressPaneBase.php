@@ -92,8 +92,8 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       '#suffix' => '</div>',
     );
 
-    if (isset($form_state['values']['panes'][$pane]['copy_address'])) {
-      $contents['address']['#hidden'] = !empty($form_state['values']['panes'][$pane]['copy_address']);
+    if ($form_state->hasValue(['panes', $pane, 'copy_address'])) {
+      $contents['address']['#hidden'] = !$form_state->isValueEmpty(['panes', $pane, 'copy_address']);
     }
     elseif (isset($contents['copy_address'])) {
       $contents['address']['#hidden'] = $cart_config->get('default_same_address');
@@ -103,7 +103,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       $element = &$form_state['triggering_element'];
 
       if ($element['#name'] == "panes[$pane][copy_address]") {
-        $address = &$form_state['values']['panes'][$source];
+        $address = &$form_state->getValue(['panes', $source]);
         foreach ($address as $field => $value) {
           if (substr($field, 0, strlen($source)) == $source) {
             $field = str_replace($source, $pane, $field);
@@ -136,7 +136,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
     $source = $this->sourcePaneId();
 
     $address = new Address;
-    $panes = &$form_state['values']['panes'];
+    $panes = &$form_state->getValue('panes');
     foreach ($panes[$pane] as $field => $value) {
       if (isset($address->$field)) {
         if (!empty($panes[$pane]['copy_address'])) {

@@ -55,7 +55,7 @@ class ProductFeatureAddForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect('uc_product.feature_add', array(
       'node' => $form['#node']->id(),
-      'fid' => $form_state['values']['feature'],
+      'fid' => $form_state->getValue('feature'),
     ));
   }
 

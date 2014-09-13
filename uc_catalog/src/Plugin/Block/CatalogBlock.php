@@ -70,13 +70,13 @@ class CatalogBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['link_title'] = $form_state['values']['link_title'];
-    $this->configuration['expanded'] = $form_state['values']['expanded'];
-    $this->configuration['product_count'] = $form_state['values']['product_count'];
+    $this->configuration['link_title'] = $form_state->getValue('link_title');
+    $this->configuration['expanded'] = $form_state->getValue('expanded');
+    $this->configuration['product_count'] = $form_state->getValue('product_count');
 
     // @todo Remove when catalog block theming is fully converted.
-    variable_set('uc_catalog_expand_categories', $form_state['values']['expanded']);
-    variable_set('uc_catalog_block_nodecount', $form_state['values']['product_count']);
+    variable_set('uc_catalog_expand_categories', $form_state->getValue('expanded'));
+    variable_set('uc_catalog_block_nodecount', $form_state->getValue('product_count'));
   }
 
   /**

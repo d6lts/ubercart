@@ -53,7 +53,7 @@ class OrderMailInvoiceForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $recipient = $form_state['values']['email'];
+    $recipient = $form_state->getValue('email');
     $params = array('order' => $this->order);
     drupal_mail('uc_order', 'invoice', $recipient, uc_store_mail_recipient_langcode($recipient), $params, uc_store_email_from());
 

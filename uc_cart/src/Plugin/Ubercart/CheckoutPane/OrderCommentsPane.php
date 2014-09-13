@@ -52,8 +52,8 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
       ->condition('order_id', $order->id())
       ->execute();
 
-    if (strlen($form_state['values']['panes']['comments']['comments']) > 0) {
-      uc_order_comment_save($order->id(), 0, $form_state['values']['panes']['comments']['comments'], 'order', uc_order_state_default('post_checkout'), TRUE);
+    if (!$form_state->isValueEmpty(['panes', 'comments', 'comments'])) {
+      uc_order_comment_save($order->id(), 0, $form_state->getValue(['panes', 'comments', 'comments']), 'order', uc_order_state_default('post_checkout'), TRUE);
     }
 
     return TRUE;

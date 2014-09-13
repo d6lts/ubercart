@@ -168,20 +168,18 @@ abstract class ObjectOptionsFormBase extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $error = FALSE;
 
-    if (isset($form_state['values']['attributes'])) {
-      foreach ($form_state['values']['attributes'] as $attribute) {
-        $selected_opts = array();
-        if (isset($attribute['options'])) {
-          foreach ($attribute['options'] as $oid => $option) {
-            if ($option['select']) {
-              $selected_opts[] = $oid;
-            }
+    foreach ($form_state->getValue('attributes') as $attribute) {
+      $selected_opts = array();
+      if (isset($attribute['options'])) {
+        foreach ($attribute['options'] as $oid => $option) {
+          if ($option['select']) {
+            $selected_opts[] = $oid;
           }
         }
-        if (!empty($selected_opts) && !in_array($attribute['default'], $selected_opts)) {
-          $form_state->setErrorByName($attribute['default']);
-          $error = TRUE;
-        }
+      }
+      if (!empty($selected_opts) && !in_array($attribute['default'], $selected_opts)) {
+        $form_state->setErrorByName($attribute['default']);
+        $error = TRUE;
       }
     }
 
@@ -194,7 +192,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state['values']['attributes'] as $aid => $attribute) {
+    foreach ($form_state->getValue('attributes') as $aid => $attribute) {
       if (isset($attribute['default'])) {
         db_update($this->attributeTable)
           ->fields(array(

@@ -5,6 +5,8 @@
  * Stock administration menu items.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Displays a stock report for products with stock tracking enabled.
  */
@@ -111,7 +113,7 @@ function uc_stock_report() {
  * @see uc_stock_report_form_submit()
  * @ingroup forms
  */
-function uc_stock_report_form($form, &$form_state) {
+function uc_stock_report_form($form, FormStateInterface $form_state) {
   $form['threshold'] = array(
     '#type' => 'checkbox',
     '#title' => t('Only show SKUs that are below their threshold.'),
@@ -134,8 +136,8 @@ function uc_stock_report_form($form, &$form_state) {
  *
  * @see uc_stock_report_form()
  */
-function uc_stock_report_form_submit($form, &$form_state) {
-  if ($form_state['values']['threshold']) {
+function uc_stock_report_form_submit($form, FormStateInterface $form_state) {
+  if ($form_state->getValue('threshold')) {
     drupal_goto('admin/store/reports/stock/threshold');
   }
   else {

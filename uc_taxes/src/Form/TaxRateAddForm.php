@@ -18,7 +18,7 @@ class TaxRateAddForm extends TaxRateFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state['values']['id'] = 0;
+    $form_state->setValue('id', 0);
     $rate = parent::submitForm($form, $form_state);
 
     drupal_set_message(t('Tax rate %name created.', array('%name' => $rate->name)));

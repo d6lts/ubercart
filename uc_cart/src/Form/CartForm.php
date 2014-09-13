@@ -166,14 +166,14 @@ class CartForm extends FormBase {
     // If a remove button was clicked, set the quantity for that item to 0.
     if (substr($form_state['triggering_element']['#name'], 0, 7) == 'remove-') {
       $item = substr($form_state['triggering_element']['#name'], 7);
-      $form_state['values']['items'][$item]['qty'] = 0;
+      $form_state->setValue(['items', $item, 'qty'], 0);
       drupal_set_message($this->t('<strong>!product-title</strong> removed from your shopping cart.', array('!product-title' => $form['data'][$item]['title']['#value'])));
     }
 
     // Update the items in the shopping cart based on the form values, but only
     // if a qty has changed.
     $module_handler = \Drupal::moduleHandler();
-    foreach ($form_state['values']['items'] as $key => $item) {
+    foreach ($form_state->getValue('items') as $key => $item) {
       if (isset($form['items'][$key]['qty']['#default_value']) && $form['items'][$key]['qty']['#default_value'] != $item['qty']) {
         $module_handler->invoke($item['module'], 'uc_update_cart_item', array($item['nid'], unserialize($item['data']), $item['qty']));
       }

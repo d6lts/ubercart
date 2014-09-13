@@ -78,7 +78,7 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach (array_filter($form_state['values']['add_attributes']) as $aid) {
+    foreach (array_filter($form_state->getValue('add_attributes')) as $aid) {
       // Enable all options for added attributes.
       $attribute = uc_attribute_load($aid);
       $oid = 0;
@@ -109,7 +109,7 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
         ->execute();
     }
 
-    $num = count(array_filter($form_state['values']['add_attributes']));
+    $num = count(array_filter($form_state->getValue('add_attributes')));
     if ($num > 0) {
       $this->attributesAdded();
 

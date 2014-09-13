@@ -87,27 +87,27 @@ class OrderUpdateForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $uid = \Drupal::currentUser()->id();
 
-    if (!empty($form_state['values']['order_comment'])) {
-      uc_order_comment_save($form_state['values']['order_id'], $uid, $form_state['values']['order_comment'], 'order', $form_state['values']['status'], $form_state['values']['notify']);
+    if (!empty($form_state->getValue('order_comment'))) {
+      uc_order_comment_save($form_state->getValue('order_id'), $uid, $form_state->getValue('order_comment'), 'order', $form_state->getValue('status'), $form_state->getValue('notify'));
     }
 
-    if (!empty($form_state['values']['admin_comment'])) {
-      uc_order_comment_save($form_state['values']['order_id'], $uid, $form_state['values']['admin_comment']);
+    if (!empty($form_state->getValue('admin_comment'))) {
+      uc_order_comment_save($form_state->getValue('order_id'), $uid, $form_state->getValue('admin_comment'));
     }
 
-    if ($form_state['values']['status'] != $form_state['values']['current_status']) {
-      entity_load('uc_order', $form_state['values']['order_id'])
-        ->setStatusId($form_state['values']['status'])
+    if ($form_state->getValue('status') != $form_state->getValue('current_status')) {
+      entity_load('uc_order', $form_state->getValue('order_id'))
+        ->setStatusId($form_state->getValue('status'))
         ->save();
 
-      if (empty($form_state['values']['order_comment'])) {
-        uc_order_comment_save($form_state['values']['order_id'], $uid, '-', 'order', $form_state['values']['status'], $form_state['values']['notify']);
+      if (empty($form_state->getValue('order_comment'))) {
+        uc_order_comment_save($form_state->getValue('order_id'), $uid, '-', 'order', $form_state->getValue('status'), $form_state->getValue('notify'));
       }
     }
 
     // Let Rules send email if requested.
-    // if ($form_state['values']['notify']) {
-    //   $order = uc_order_load($form_state['values']['order_id']);
+    // if ($form_state->getValue('notify')) {
+    //   $order = uc_order_load($form_state->getValue('order_id'));
     //   rules_invoke_event('uc_order_status_email_update', $order);
     // }
 

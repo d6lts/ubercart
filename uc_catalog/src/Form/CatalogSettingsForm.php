@@ -79,9 +79,9 @@ class CatalogSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_catalog.settings')
-      ->set('display', $form_state['values']['uc_catalog_display'])
-      ->set('vocabulary', $form_state['values']['uc_catalog_vid'])
-      ->set('breadcrumb', $form_state['values']['uc_catalog_breadcrumb'])
+      ->set('display', $form_state->getValue('uc_catalog_display'))
+      ->set('vocabulary', $form_state->getValue('uc_catalog_vid'))
+      ->set('breadcrumb', $form_state->getValue('uc_catalog_breadcrumb'))
       ->save();
 
     parent::submitForm($form, $form_state);

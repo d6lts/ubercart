@@ -28,7 +28,7 @@ class AddToCartForm extends BuyItNowForm {
   public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $form['node'] = array(
       '#type' => 'value',
-      '#value' => isset($form_state['storage']['variant']) ? $form_state['storage']['variant'] : $node,
+      '#value' => $form_state->get('variant') ?: $node,
     );
 
     $form = parent::buildForm($form, $form_state, $node);
@@ -53,8 +53,8 @@ class AddToCartForm extends BuyItNowForm {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state['values']));
-    $form_state['storage']['variant'] = uc_product_load_variant($form_state['values']['nid'], $data);
+    $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValues()));
+    $form_state->set('variant', uc_product_load_variant($form_state->getValue('nid'), $data));
   }
 
 }

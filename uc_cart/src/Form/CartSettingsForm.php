@@ -184,19 +184,19 @@ class CartSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $cart_config = \Drupal::config('uc_cart.settings');
     $cart_config
-      ->set('add_item_msg', $form_state['values']['uc_cart_add_item_msg'])
-      ->set('add_item_redirect', $form_state['values']['uc_add_item_redirect'])
-      ->set('empty_button', $form_state['values']['uc_cart_empty_button'])
-      ->set('minimum_subtotal', $form_state['values']['uc_minimum_subtotal'])
-      ->set('anon_duration', $form_state['values']['uc_cart_anon_duration'])
-      ->set('anon_unit', $form_state['values']['uc_cart_anon_unit'])
-      ->set('auth_duration', $form_state['values']['uc_cart_auth_duration'])
-      ->set('auth_unit', $form_state['values']['uc_cart_auth_unit'])
-      ->set('continue_shopping_type', $form_state['values']['uc_continue_shopping_type'])
-      ->set('continue_shopping_use_last_url', $form_state['values']['uc_continue_shopping_use_last_url'])
-      ->set('continue_shopping_url', $form_state['values']['uc_continue_shopping_url'])
-      ->set('breadcrumb_text', $form_state['values']['uc_cart_breadcrumb_text'])
-      ->set('breadcrumb_url', $form_state['values']['uc_cart_breadcrumb_url'])
+      ->set('add_item_msg', $form_state->getValue('uc_cart_add_item_msg'))
+      ->set('add_item_redirect', $form_state->getValue('uc_add_item_redirect'))
+      ->set('empty_button', $form_state->getValue('uc_cart_empty_button'))
+      ->set('minimum_subtotal', $form_state->getValue('uc_minimum_subtotal'))
+      ->set('anon_duration', $form_state->getValue('uc_cart_anon_duration'))
+      ->set('anon_unit', $form_state->getValue('uc_cart_anon_unit'))
+      ->set('auth_duration', $form_state->getValue('uc_cart_auth_duration'))
+      ->set('auth_unit', $form_state->getValue('uc_cart_auth_unit'))
+      ->set('continue_shopping_type', $form_state->getValue('uc_continue_shopping_type'))
+      ->set('continue_shopping_use_last_url', $form_state->getValue('uc_continue_shopping_use_last_url'))
+      ->set('continue_shopping_url', $form_state->getValue('uc_continue_shopping_url'))
+      ->set('breadcrumb_text', $form_state->getValue('uc_cart_breadcrumb_text'))
+      ->set('breadcrumb_url', $form_state->getValue('uc_cart_breadcrumb_url'))
       ->save();
 
     parent::submitForm($form, $form_state);

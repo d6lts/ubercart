@@ -116,12 +116,12 @@ class OrderWorkflowForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('uc_order.settings');
-    foreach ($form_state['values']['order_states'] as $key => $value) {
+    foreach ($form_state->getValue('order_states') as $key => $value) {
       $config->set("default_state.$key", $value['default']);
     }
     $config->save();
 
-    foreach ($form_state['values']['order_statuses'] as $id => $value) {
+    foreach ($form_state->getValue('order_statuses') as $id => $value) {
       $status = entity_load('uc_order_status', $id);
       if (!$form['#locked'][$id] && $value['remove']) {
         $status->delete();

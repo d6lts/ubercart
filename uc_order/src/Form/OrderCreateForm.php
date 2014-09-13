@@ -50,8 +50,7 @@ class OrderCreateForm extends FormBase {
 
     // Create form elements needed for customer search.
     // Shown only when the 'Search for an existing customer.' radio is selected.
-    if (!isset($form_state['values']['customer_type']) ||
-        $form_state['values']['customer_type'] == 'search') {
+    if (!$form_state->hasValue('customer_type') || $form_state->getValue('customer_type') == 'search') {
 
       // Container for customer search fields.
       $form['customer'] += array(
@@ -104,7 +103,7 @@ class OrderCreateForm extends FormBase {
       );
 
       // Search for existing customer by e-mail address.
-      if (isset($form_state['values']['customer']['email'])) {
+      if ($form_state->getValue(['customer', 'email'])) {
         $query = db_select('users_field_data', 'u')->distinct();
         $query->leftJoin('uc_orders', 'o', 'u.uid = o.uid');
         $query->fields('u', array('uid', 'name', 'mail'))
@@ -112,17 +111,17 @@ class OrderCreateForm extends FormBase {
           ->condition('u.uid', 0, '>')
           ->condition(db_or()
             ->isNull('o.billing_first_name')
-            ->condition('o.billing_first_name', db_like(trim($form_state['values']['customer']['first_name'])) . '%', 'LIKE')
+            ->condition('o.billing_first_name', db_like(trim($form_state->getValue(['customer', 'first_name']))) . '%', 'LIKE')
           )
           ->condition(db_or()
             ->isNull('o.billing_last_name')
-            ->condition('o.billing_last_name', db_like(trim($form_state['values']['customer']['last_name'])) . '%', 'LIKE')
+            ->condition('o.billing_last_name', db_like(trim($form_state->getValue(['customer', 'last_name']))) . '%', 'LIKE')
           )
           ->condition(db_or()
-            ->condition('o.primary_email', db_like(trim($form_state['values']['customer']['email'])) . '%', 'LIKE')
-            ->condition('u.mail', db_like(trim($form_state['values']['customer']['email'])) . '%', 'LIKE')
+            ->condition('o.primary_email', db_like(trim($form_state->getValue(['customer', 'email']))) . '%', 'LIKE')
+            ->condition('u.mail', db_like(trim($form_state->getValue(['customer', 'email']))) . '%', 'LIKE')
           )
-          ->condition('u.name', db_like(trim($form_state['values']['customer']['username'])) . '%', 'LIKE')
+          ->condition('u.name', db_like(trim($form_state->getValue(['customer', 'username']))) . '%', 'LIKE')
           ->orderBy('o.created', 'DESC')
           ->range(0, $limit = 11);
 
@@ -164,7 +163,7 @@ class OrderCreateForm extends FormBase {
     }
     // Create form elements needed for new customer creation.
     // Shown only when the 'Create a new customer account.' radio is selected.
-    elseif ($form_state['values']['customer_type'] == 'create') {
+    elseif ($form_state->getValue('customer_type') == 'create') {
       // Container for new customer information.
       $form['customer'] += array(
         '#type'  => 'fieldset',
@@ -211,15 +210,15 @@ class OrderCreateForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    switch ($form_state['values']['customer_type']) {
+    switch ($form_state->getValue('customer_type')) {
       case 'search':
-        if (empty($form_state['values']['customer']['uid'])) {
+        if ($form_state->getValue(['customer', 'uid'])) {
           $form_state->setErrorByName('customer][uid', t('Please select a customer.'));
         }
         break;
 
       case 'create':
-        $email = trim($form_state['values']['customer']['email']);
+        $email = trim($form_state->getValue(['customer', 'email']));
         $uid = db_query('SELECT uid FROM {users} WHERE mail LIKE :mail', array(':mail' => $email))->fetchField();
         if ($uid) {
           $form_state->setErrorByName('customer][mail', t('An account already exists for that e-mail.'));
@@ -234,14 +233,14 @@ class OrderCreateForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     global $user;
 
-    switch ($form_state['values']['customer_type']) {
+    switch ($form_state->getValue('customer_type')) {
       case 'search':
-        $uid = $form_state['values']['customer']['uid'];
+        $uid = $form_state->getValue(['customer', 'uid']);
         break;
 
       case 'create':
         // Create new account.
-        $email = trim($form_state['values']['customer']['email']);
+        $email = trim($form_state->getValue(['customer', 'email']));
         $fields = array(
           'name' => uc_store_email_to_username($email),
           'mail' => $email,
@@ -252,7 +251,7 @@ class OrderCreateForm extends FormBase {
         $account->save();
         $uid = $account->id();
 
-        if ($form_state['values']['customer']['sendmail']) {
+        if ($form_state->getValue(['customer', 'sendmail'])) {
           // Manually set the password so it appears in the e-mail.
           $account->password = $fields['pass'];
           drupal_mail('user', 'register_admin_created', $email, uc_store_mail_recipient_langcode($email), array('account' => $account), uc_store_email_from());

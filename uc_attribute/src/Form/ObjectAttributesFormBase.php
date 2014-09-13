@@ -126,7 +126,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $changed = FALSE;
 
-    foreach ($form_state['values']['attributes'] as $aid => $attribute) {
+    foreach ($form_state->getValue('attributes') as $aid => $attribute) {
       if ($attribute['remove']) {
         $remove_aids[] = $aid;
       }

@@ -63,8 +63,8 @@ class SetOrderStatusAction extends ConfigurableActionBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['status'] = $form_state['values']['status'];
-    $this->configuration['notify'] = $form_state['values']['notify'];
+    $this->configuration['status'] = $form_state->getValue('status');
+    $this->configuration['notify'] = $form_state->getValue('notify');
   }
 
 }

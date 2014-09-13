@@ -86,7 +86,7 @@ class AddressFieldsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_store.settings')
-      ->set('address_fields', $form_state['values']['fields'])
+      ->set('address_fields', $form_state->getValue('fields'))
       ->save();
 
     parent::submitForm($form, $form_state);

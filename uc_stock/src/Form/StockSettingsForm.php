@@ -70,13 +70,13 @@ class StockSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_stock.settings')
-      ->set('notify', $form_state['values']['uc_stock_threshold_notification'])
-      ->set('recipients', $form_state['values']['uc_stock_threshold_notification_recipients'])
+      ->set('notify', $form_state->getValue('uc_stock_threshold_notification'))
+      ->set('recipients', $form_state->getValue('uc_stock_threshold_notification_recipients'))
       ->save();
 
     $this->config('uc_stock.mail')
-      ->set('threshold_notification.subject', $form_state['values']['uc_stock_threshold_notification_subject'])
-      ->set('threshold_notification.body', $form_state['values']['uc_stock_threshold_notification_message'])
+      ->set('threshold_notification.subject', $form_state->getValue('uc_stock_threshold_notification_subject'))
+      ->set('threshold_notification.body', $form_state->getValue('uc_stock_threshold_notification_message'))
       ->save();
 
     parent::submitForm($form, $form_state);

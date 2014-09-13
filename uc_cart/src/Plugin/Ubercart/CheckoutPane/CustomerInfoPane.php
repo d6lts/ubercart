@@ -104,7 +104,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
     $user = \Drupal::currentUser();
     $cart_config = \Drupal::config('uc_cart.settings');
 
-    $pane = $form_state['values']['panes']['customer'];
+    $pane = $form_state->getValue(['panes', 'customer']);
     $order->setEmail($pane['primary_email']);
 
     if ($user->isAuthenticated()) {

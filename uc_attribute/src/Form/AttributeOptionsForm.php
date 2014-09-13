@@ -102,7 +102,7 @@ class AttributeOptionsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state['values']['options'] as $oid => $option) {
+    foreach ($form_state->getValue('options') as $oid => $option) {
       db_update('uc_attribute_options')
         ->fields(array(
           'ordering' => $option['ordering'],

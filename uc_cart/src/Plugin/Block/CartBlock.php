@@ -63,10 +63,10 @@ class CartBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['hide_empty'] = $form_state['values']['hide_empty'];
-    $this->configuration['show_image'] = $form_state['values']['show_image'];
-    $this->configuration['collapsible'] = $form_state['values']['collapsible'];
-    $this->configuration['collapsed'] = $form_state['values']['collapsed'];
+    $this->configuration['hide_empty'] = $form_state->getValue('hide_empty');
+    $this->configuration['show_image'] = $form_state->getValue('show_image');
+    $this->configuration['collapsible'] = $form_state->getValue('collapsible');
+    $this->configuration['collapsed'] = $form_state->getValue('collapsed');
   }
 
   /**

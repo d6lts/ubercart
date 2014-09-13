@@ -39,7 +39,7 @@ class AttributeEditForm extends AttributeFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_write_record('uc_attributes', $form_state['values'], 'aid');
+    drupal_write_record('uc_attributes', $form_state->getValues(), 'aid');
     $form_state->setRedirect('uc_attribute.overview');
   }
 

@@ -79,8 +79,8 @@ class ProductSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_product.settings')
-      ->set('add_to_cart_qty', $form_state['values']['uc_product_add_to_cart_qty'])
-      ->set('update_node_view', $form_state['values']['uc_product_update_node_view'])
+      ->set('add_to_cart_qty', $form_state->getValue('uc_product_add_to_cart_qty'))
+      ->set('update_node_view', $form_state->getValue('uc_product_update_node_view'))
       ->save();
 
     parent::submitForm($form, $form_state);

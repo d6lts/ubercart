@@ -112,7 +112,8 @@ abstract class TaxRateFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!empty($form_state['values']['rate']) && (floatval($form_state['values']['rate']) < 0)) {
+    $rate = $form_state->getValue('rate');
+    if (!empty($rate) && floatval($rate) < 0) {
       $form_state->setErrorByName('rate', t('Rate must be a positive number. No commas and only one decimal point.'));
     }
   }
@@ -122,31 +123,32 @@ abstract class TaxRateFormBase extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Determine the decimal rate value.
-    if (strpos($form_state['values']['rate'], '%')) {
-      $form_state['values']['rate'] = floatval($form_state['values']['rate']) / 100;
+    $rate = $form_state->getValue('rate');
+    if (strpos($rate, '%')) {
+      $rate = floatval($rate) / 100;
     }
     else {
-      $form_state['values']['rate'] = floatval($form_state['values']['rate']);
+      $rate = floatval($rate);
     }
 
     // Build the rate object based on the form values and save it.
     $rate = (object) array(
-      'id' => $form_state['values']['id'],
-      'name' => $form_state['values']['name'],
-      'rate' => $form_state['values']['rate'],
-      'taxed_product_types' => array_filter($form_state['values']['taxed_product_types']),
-      'taxed_line_items' => array_filter($form_state['values']['taxed_line_items']),
-      'weight' => $form_state['values']['weight'],
-      'shippable' => $form_state['values']['shippable'],
-      'display_include' => $form_state['values']['display_include'],
-      'inclusion_text' => $form_state['values']['inclusion_text'],
+      'id' => $form_state->getValue('id'),
+      'name' => $form_state->getValue('name'),
+      'rate' => $rate,
+      'taxed_product_types' => array_filter($form_state->getValue('taxed_product_types')),
+      'taxed_line_items' => array_filter($form_state->getValue('taxed_line_items')),
+      'weight' => $form_state->getValue('weight'),
+      'shippable' => $form_state->getValue('shippable'),
+      'display_include' => $form_state->getValue('display_include'),
+      'inclusion_text' => $form_state->getValue('inclusion_text'),
     );
     return uc_taxes_rate_save($rate);
 
     // Update the name of the associated conditions.
-    // $conditions = rules_config_load('uc_taxes_' . $form_state['values']['id']);
+    // $conditions = rules_config_load('uc_taxes_' . $form_state->getValue('id'));
     // if ($conditions) {
-    //   $conditions->label = $form_state['values']['name'];
+    //   $conditions->label = $form_state->getValue('name');
     //   $conditions->save();
     // }
   }

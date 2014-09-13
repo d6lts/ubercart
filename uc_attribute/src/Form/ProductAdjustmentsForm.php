@@ -174,11 +174,11 @@ class ProductAdjustmentsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state['values']['body'] as $value) {
-      if (!empty($value['model']) && $value['model'] != $form_state['values']['default']) {
+    foreach ($form_state->getValue('body') as $value) {
+      if (!empty($value['model']) && $value['model'] != $form_state->getValue('default')) {
         db_merge('uc_product_adjustments')
           ->key(array(
-            'nid' => $form_state['values']['nid'],
+            'nid' => $form_state->getValue('nid'),
             'combination' => $value['combo_array'],
           ))
           ->fields(array(
@@ -188,7 +188,7 @@ class ProductAdjustmentsForm extends FormBase {
       }
       else {
         db_delete('uc_product_adjustments')
-          ->condition('nid', $form_state['values']['nid'])
+          ->condition('nid', $form_state->getValue('nid'))
           ->condition('combination', $value['combo_array'])
           ->execute();
       }

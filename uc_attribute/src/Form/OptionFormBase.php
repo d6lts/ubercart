@@ -87,7 +87,7 @@ abstract class OptionFormBase extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $pattern = '/^-?\d*(\.\d*)?$/';
-    if (!is_numeric($form_state['values']['weight']) && !preg_match($pattern, $form_state['values']['weight'])) {
+    if (!is_numeric($form_state->getValue('weight')) && !preg_match($pattern, $form_state->getValue('weight'))) {
       $form_state->setErrorByName('weight', $this->t('This must be in a valid number format. No commas and only one decimal point.'));
     }
   }

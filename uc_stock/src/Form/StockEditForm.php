@@ -82,8 +82,8 @@ class StockEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach (element_children($form_state['values']['stock']) as $sku) {
-      $stock = $form_state['values']['stock'][$sku];
+    foreach (element_children($form_state->getValue('stock')) as $sku) {
+      $stock = $form_state->getValue(['stock', $sku]);
 
       db_merge('uc_product_stock')
         ->key(array('sku' => $sku))
@@ -97,7 +97,7 @@ class StockEditForm extends FormBase {
           'active' => $stock['active'],
           'stock' => $stock['stock'],
           'threshold' => $stock['threshold'],
-          'nid' => $form_state['values']['nid'],
+          'nid' => $form_state->getValue('nid'),
         ))
         ->execute();
     }

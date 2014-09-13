@@ -26,7 +26,7 @@ class UcOrderForm extends ContentEntityForm {
     $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
     $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->getUserId());
 
-    $modified = isset($form_state['values']['order_modified']) ? $form_state['values']['order_modified'] : $order->modified->value;
+    $modified = $form_state->getValue('order_modified') ?: $order->modified->value;
     $form['order_modified'] = array('#type' => 'hidden', '#value' => $modified);
 
     $panes = _uc_order_pane_list('edit');
@@ -63,7 +63,7 @@ class UcOrderForm extends ContentEntityForm {
   public function validate(array $form, FormStateInterface $form_state) {
     $order = $this->buildEntity($form, $form_state);
 
-    if ($form_state['values']['order_modified'] != $order->modified->value) {
+    if ($form_state->getValue('order_modified') != $order->modified->value) {
       $form_state->setErrorByName('order_modified', t('This order has been modified by another user, changes cannot be saved.'));
     }
 
@@ -102,8 +102,8 @@ class UcOrderForm extends ContentEntityForm {
       }
     }
 
-    if (isset($form_state['values']['products']) && is_array($form_state['values']['products'])) {
-      foreach ($form_state['values']['products'] as $product) {
+    if (is_array($form_state->getValue('products'))) {
+      foreach ($form_state->getValue('products') as $product) {
         if (!isset($product['remove']) && intval($product['qty']) > 0) {
           foreach (array('qty', 'title', 'model', 'weight', 'weight_units', 'cost', 'price') as $field) {
             $order->products[$product['order_product_id']]->$field = $product[$field];
