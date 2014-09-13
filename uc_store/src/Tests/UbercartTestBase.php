@@ -167,7 +167,7 @@ abstract class UbercartTestBase extends WebTestBase {
       'type' => $class,
       'name' => $class,
       'description' => $this->randomMachineName(32),
-      'settings[uc_product][product]' => 1,
+      'uc_product[product]' => 1,
     );
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
 
