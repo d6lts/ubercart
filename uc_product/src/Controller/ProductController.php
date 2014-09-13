@@ -20,10 +20,9 @@ class ProductController extends ControllerBase {
    * Displays a list of product classes.
    */
   public function classOverview() {
-    $query = \Drupal::entityQuery('node_type')
-      ->condition('settings.uc_product.product', TRUE);
-    $result = $query->execute();
-    $classes = entity_load_multiple('node_type', $result);
+    $classes = entity_load_multiple_by_properties('node_type', array(
+      'third_party_settings.uc_product.product' => TRUE,
+    ));
     $header = array(t('Class ID'), t('Name'), t('Description'), t('Operations'));
     $rows = array();
     foreach ($classes as $class) {

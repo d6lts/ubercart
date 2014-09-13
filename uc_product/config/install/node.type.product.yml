@@ -1,21 +1,17 @@
 type: product
-uuid: e6c57fc4-7987-4c4d-a03b-594be41733a4
 name: Product
 description: 'Use <em>products</em> to represent items for sale on the website, including all the unique information that can be attributed to a specific model number.'
 help: ''
-title_label: Name
-settings:
-  node:
-    preview: 1
-    options:
-      status: true
-      promote: false
-      sticky: false
-      revision: false
-    submitted: false
-  uc_product:
-    product: 1
-    shippable: 1
-    image_field: uc_product_image
+new_revision: false
+preview_mode: 1
+display_submitted: false
 status: true
 langcode: en
+dependencies:
+  module:
+    - uc_product
+third_party_settings:
+  uc_product:
+    product: true
+    shippable: true
+    image_field: uc_product_image

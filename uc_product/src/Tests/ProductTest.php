@@ -169,7 +169,7 @@ class ProductTest extends UbercartTestBase {
       'type' => $class,
       'name' => $class,
       'description' => $this->randomMachineName(32),
-      'settings[uc_product][product]' => 1,
+      'uc_product[product]' => 1,
     );
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
     $this->assertTrue(uc_product_is_product($class), 'The new content type is a product class.');
@@ -179,7 +179,7 @@ class ProductTest extends UbercartTestBase {
       'description' => $this->randomMachineName(),
     ));
     $edit = array(
-      'settings[uc_product][product]' => 1,
+      'uc_product[product]' => 1,
     );
 
     $this->drupalPostForm('admin/structure/types/manage/' . $type->type, $edit, t('Save content type'));
@@ -194,7 +194,7 @@ class ProductTest extends UbercartTestBase {
 
     // Remove the product class again.
     $edit = array(
-      'settings[uc_product][product]' => 0,
+      'uc_product[product]' => 0,
     );
 
     $this->drupalPostForm('admin/structure/types/manage/' . $class, $edit, t('Save content type'));

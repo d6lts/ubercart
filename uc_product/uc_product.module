@@ -335,21 +335,15 @@ function uc_product_preprocess_html(&$variables) {
  *
  * Adds a default image field setting to product content types.
  */
-function uc_product_form_node_type_form_alter(&$form, &$form_state) {
+function uc_product_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\node\NodeTypeInterface $type */
   $type = $form_state->getFormObject()->getEntity();
-  $settings = $type->getModuleSettings('uc_product');
-  $settings += array(
-    'product' => FALSE,
-    'shippable' => TRUE,
-    'image_field' => '',
-  );
 
   $form['uc_product'] = array(
     '#type' => 'details',
     '#title' => t('Ubercart product settings'),
     '#group' => 'additional_settings',
     '#tree' => TRUE,
-    '#parents' => array('settings', 'uc_product'),
     '#attached' => array(
       'js' => array(
         'vertical-tabs' => drupal_get_path('module', 'uc_product') . '/js/uc_product.js',
@@ -360,7 +354,7 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   $form['uc_product']['product'] = array(
     '#type' => 'checkbox',
     '#title' => t('Content type is a product'),
-    '#default_value' => $settings['product'],
+    '#default_value' => $type->getThirdPartySetting('uc_product', 'product', FALSE),
     '#weight' => -10,
   );
 
@@ -368,7 +362,7 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   $form['uc_product']['shippable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Product is shippable'),
-    '#default_value' => $settings['shippable'],
+    '#default_value' => $type->getThirdPartySetting('uc_product', 'shippable', TRUE),
     '#description' => t('This setting can still be overridden on the node form.'),
     '#weight' => -5,
   );
@@ -376,7 +370,7 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
   // Image field.
   if (!empty($type->type)) {
     $options = array('' => t('None'));
-    $instances = \Drupal::entityManager()->getBaseFieldDefinitions('node', $type->type);
+    $instances = \Drupal::entityManager()->getFieldDefinitions('node', $type->type);
     foreach ($instances as $field_name => $instance) {
       if ($instance->getType() == 'image') {
         $options[$field_name] = $instance->label();
@@ -386,12 +380,25 @@ function uc_product_form_node_type_form_alter(&$form, &$form_state) {
     $form['uc_product']['image_field'] = array(
       '#type' => 'select',
       '#title' => t('Product image field'),
-      '#default_value' => $settings['image_field'],
+      '#default_value' => $type->getThirdPartySetting('uc_product', 'image_field', 'uc_product_image'),
       '#options' => $options,
       '#description' => t('The selected field will be used on Ubercart pages to represent the products of this content type.'),
       '#weight' => -4,
     );
   }
+
+  $form['#entity_builders'][] = 'uc_product_form_node_type_form_builder';
+}
+
+/**
+ * Entity builder for the node type form with product options.
+ *
+ * @see uc_product_form_node_type_form_alter().
+ */
+function uc_product_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
+  $type->setThirdPartySetting('uc_product', 'product', (bool) $form_state->getValue(array('uc_product', 'product')));
+  $type->setThirdPartySetting('uc_product', 'shippable', (bool) $form_state->getValue(array('uc_product', 'shippable')));
+  $type->setThirdPartySetting('uc_product', 'image_field', $form_state->getValue(array('uc_product', 'image_field')));
 }
 
 /**
@@ -425,11 +432,6 @@ function uc_product_entity_extra_field_info() {
  */
 function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
   if ($entity_type->id() == 'node' && uc_product_is_product($bundle)) {
-    $settings = NodeType::load($bundle)->getModuleSettings('uc_product');
-    $settings += array(
-      'shippable' => TRUE,
-    );
-
     $fields['model'] = BaseFieldDefinition::create('string')
       ->setLabel(t('SKU'))
       ->setDescription(t('Product SKU/model.'))
@@ -486,7 +488,7 @@ function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $
     $fields['shippable'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Shippable'))
       ->setCustomStorage(TRUE)
-      ->setDefaultValue($settings['shippable'])
+      ->setDefaultValue(NodeType::load($bundle)->getThirdPartySetting('uc_product', 'shippable', TRUE))
       ->setSetting('on_label', t('Product is shippable'))
       ->setSetting('off_label', t('Product is not shippable'))
       ->setDisplayOptions('form', array(
@@ -559,7 +561,7 @@ function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $
  */
 function uc_product_uc_product_types() {
   $query = Drupal::entityQuery('node_type')
-    ->condition('settings.uc_product.product', TRUE);
+    ->condition('third_party_settings.uc_product.product', TRUE);
   return $query->execute();
 }
 
@@ -571,9 +573,8 @@ function uc_product_uc_product_types() {
  * @see uc_product_image_defaults()
  */
 function uc_product_uc_store_status() {
-  $settings = entity_load('node_type', 'product')->getModuleSettings('uc_product');
-  $field = $settings['image_field'];
-  $instances = \Drupal::entityManager()->getBaseFieldDefinitions('node', 'product');
+  $instances = \Drupal::entityManager()->getFieldDefinitions('node', 'product');
+  $field = NodeType::load('product')->getThirdPartySetting('uc_product', 'image_field', 'uc_product_image');
 
   if (isset($instances[$field])) {
     $status = 'ok';
@@ -650,17 +651,17 @@ function uc_product_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL
 function uc_product_uc_add_to_cart_data($form_values) {
   if (isset($form_values['nid'])) {
     $node = node_load($form_values['nid']);
-    $type = $node->getType();
+    return array(
+      'shippable' => $node->shippable->value,
+      'type' => $node->getType(),
+    );
   }
   else {
-    $type = 'product';
+    return array(
+      'shippable' => NodeType::load('product')->getThirdPartySetting('uc_product', 'shippable', TRUE),
+      'type' => 'product',
+    );
   }
-
-  $settings = entity_load('node_type', $type)->getModuleSettings('uc_product');
-  return array(
-    'shippable' => isset($node) ? $node->shippable->value : $settings['shippable'],
-    'type' => $type,
-  );
 }
 
 /**
@@ -774,8 +775,7 @@ function uc_product_get_picture($nid, $style = 'uc_product') {
   if (!$product) {
     return array();
   }
-  $settings = entity_load('node_type', $product->getType())->getModuleSettings('uc_product');
-  $field_name = isset($settings['image_field']) ? $settings['image_field'] : 'uc_product_image';
+  $field_name = $product->type->entity->getThirdPartySetting('uc_product', 'image_field', 'uc_product_image');
   $output = array();
 
   if ($field_name && !empty($product->$field_name)) {
@@ -936,8 +936,7 @@ function uc_product_feature_delete($pfid) {
  * Implements hook_node_type_insert().
  */
 function uc_product_node_type_insert(NodeTypeInterface $type) {
-  $settings = $type->getModuleSettings('uc_product');
-  if (!empty($settings['product'])) {
+  if ($type->getThirdPartySetting('uc_product', 'product', FALSE)) {
     uc_product_add_default_image_field($type->id());
 
     $defaults = array(
@@ -952,7 +951,7 @@ function uc_product_node_type_insert(NodeTypeInterface $type) {
       'length_units' => \Drupal::config('uc_store.settings')->get('units.length'),
       'pkg_qty' => 1,
       'default_qty' => 1,
-      'shippable' => isset($settings['shippable']) ? $settings['shippable'] : TRUE,
+      'shippable' => $type->getThirdPartySetting('uc_product', 'shippable', TRUE),
     );
     $result = db_query("SELECT n.vid, n.nid FROM {node} n LEFT JOIN {uc_products} p ON n.vid = p.vid WHERE n.type = :type AND p.vid IS NULL", array(':type' => $type->id()));
     foreach ($result as $node) {
@@ -970,8 +969,7 @@ function uc_product_node_type_insert(NodeTypeInterface $type) {
  * Implements hook_node_type_update().
  */
 function uc_product_node_type_update(NodeTypeInterface $type) {
-  $original_settings = $type->original->getModuleSettings('uc_product');
-  if (empty($original_settings['product'])) {
+  if (!$type->original->getThirdPartySetting('uc_product', 'product', FALSE)) {
     uc_product_node_type_insert($type);
   }
 }
@@ -1006,13 +1004,6 @@ function uc_product_add_default_image_field($type = NULL) {
     $field->save();
   }
 
-  $label = t('Image');
-  $new_instance = array(
-    'entity_type' => 'node',
-    'label' => $label,
-    'weight' => -2,
-  );
-
   if ($type) {
     // Accept single or multiple types as input.
     $types = (array) $type;
@@ -1021,21 +1012,20 @@ function uc_product_add_default_image_field($type = NULL) {
     $types = uc_product_types();
   }
   foreach ($types as $type) {
-    $new_instance['bundle'] = $type;
-
-    $settings = entity_load('node_type', $type)->getModuleSettings('uc_product');
-    $field_name = !empty($settings['image_field']) ? $settings['image_field'] : 'uc_product_image';
-    $new_instance['field_name'] = $field_name;
-
-    $instance = FieldInstanceConfig::loadByName('node', $type, $field_name);
+    $field_name = NodeType::load($type)->getThirdPartySetting('uc_product', 'image_field', 'uc_product_image');
 
     // Only add the instance if it doesn't exist. Don't overwrite any changes.
-    if (!$instance) {
-      $instance = entity_create('field_instance_config', $new_instance);
-      $instance->save();
+    if (!FieldInstanceConfig::loadByName('node', $type, $field_name)) {
+      entity_create('field_instance_config', array(
+        'entity_type' => 'node',
+        'bundle' => $type,
+        'field_name' => $field_name,
+        'label' => t('Image'),
+        'weight' => -2,
+      ))->save();
 
-      \Drupal::config('node.type.' . $type)
-        ->set('settings.uc_product.image_field', $field_name)
+      NodeType::load($type)
+        ->setThirdPartySetting('uc_product', 'image_field', $field_name)
         ->save();
 
       entity_get_form_display('node', $type, 'default')
