@@ -561,7 +561,7 @@ function uc_order_pane_products_select($form, FormStateInterface $form_state) {
     ->orderBy('n.title')
     ->addTag('node_access');
 
-  if (!empty($form_state->getValue(['product_controls', 'product_search']))) {
+  if (!$form_state->isValueEmpty(['product_controls', 'product_search'])) {
     $search = strtolower(str_replace('*', '%', $form_state->getValue(['product_controls', 'product_search'])));
     $query->leftJoin('uc_products', 'p', 'n.nid = p.nid');
     $query->condition(db_or()

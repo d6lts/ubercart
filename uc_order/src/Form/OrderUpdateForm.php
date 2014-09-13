@@ -87,11 +87,11 @@ class OrderUpdateForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $uid = \Drupal::currentUser()->id();
 
-    if (!empty($form_state->getValue('order_comment'))) {
+    if (!$form_state->isValueEmpty('order_comment')) {
       uc_order_comment_save($form_state->getValue('order_id'), $uid, $form_state->getValue('order_comment'), 'order', $form_state->getValue('status'), $form_state->getValue('notify'));
     }
 
-    if (!empty($form_state->getValue('admin_comment'))) {
+    if (!$form_state->isValueEmpty('admin_comment')) {
       uc_order_comment_save($form_state->getValue('order_id'), $uid, $form_state->getValue('admin_comment'));
     }
 
@@ -100,7 +100,7 @@ class OrderUpdateForm extends FormBase {
         ->setStatusId($form_state->getValue('status'))
         ->save();
 
-      if (empty($form_state->getValue('order_comment'))) {
+      if ($form_state->isValueEmpty('order_comment')) {
         uc_order_comment_save($form_state->getValue('order_id'), $uid, '-', 'order', $form_state->getValue('status'), $form_state->getValue('notify'));
       }
     }
