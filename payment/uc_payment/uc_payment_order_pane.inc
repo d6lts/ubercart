@@ -14,11 +14,12 @@
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Handles the Payment order pane.
  */
-function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) {
+function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
       $build['balance'] = array('#markup' => t('Balance: @balance', array('@balance' => uc_currency_format(uc_payment_balance($order)))));
@@ -77,7 +78,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
         '#suffix' => '</div>',
       );
 
-      $method = isset($form_state['values']['payment_method']) ? $form_state['values']['payment_method'] : $order->getPaymentMethodId();
+      $method = $form_state->getValue('payment_method') ?: $order->getPaymentMethodId();
       if ($method && $details = Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderEditDetails($order)) {
         if (is_array($details)) {
           $form['payment']['payment_details'] += $details;
@@ -92,8 +93,8 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
       return drupal_render($form['payment']);
 
     case 'edit-process':
-      $changes['payment_method'] = $form_state['values']['payment_method'];
-      $changes['payment_details'] = isset($form_state['values']['payment_details']) ? $form_state['values']['payment_details'] : array();
+      $changes['payment_method'] = $form_state->getValue('payment_method');
+      $changes['payment_details'] = $form_state->getValue('payment_details') ?: array();
 
       $order->setPaymentMethodId($changes['payment_method']);
       $method = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
@@ -110,7 +111,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, &$form_state = NULL) 
 /**
  * AJAX callback to render the payment method pane.
  */
-function uc_payment_order_pane_ajax_callback($form, &$form_state) {
+function uc_payment_order_pane_ajax_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#payment-details', trim(drupal_render($form['payment']['payment_details']))));
   $status_messages = array('#theme' => 'status_messages');

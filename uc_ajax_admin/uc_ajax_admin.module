@@ -5,6 +5,7 @@
  * Configures Ajax behaviours on the Ubercart checkout page.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,7 +43,7 @@ function uc_ajax_admin_menu() {
  *   The form for which ajax behaviors are to be administered. Currently only
  *   'checkout' is supported.
  */
-function uc_ajax_admin_form($form, &$form_state, $target_form = 'checkout') {
+function uc_ajax_admin_form($form, FormStateInterface $form_state, $target_form = 'checkout') {
   module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
   switch ($target_form) {
     case 'checkout':
@@ -75,9 +76,9 @@ function uc_ajax_admin_form($form, &$form_state, $target_form = 'checkout') {
 /**
  * Submit handler for the uc_ajax_admin form.
  */
-function uc_ajax_admin_form_submit($form, &$form_state) {
+function uc_ajax_admin_form_submit($form, FormStateInterface $form_state) {
   $config = $form['#uc_ajax_config'];
-  foreach ($form_state['values']['table'] as $index => $entry) {
+  foreach ($form_state->getValue('table') as $index => $entry) {
     $key = $entry['key'];
     if ($index === '_new') {
       if (!empty($key) && !empty($entry['panes'])) {

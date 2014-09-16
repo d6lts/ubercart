@@ -56,7 +56,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     if ($cod_config->get('delivery_date')) {
-      $order->payment_details = $form_state['values']['panes']['payment']['details'];
+      $order->payment_details = $form_state->getValue(['panes', 'payment', 'details']);
     }
 
     return TRUE;

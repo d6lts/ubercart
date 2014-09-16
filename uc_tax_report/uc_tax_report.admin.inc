@@ -243,7 +243,7 @@ function uc_tax_report_params_form($form, &$form_state, $values) {
  * @see uc_tax_report_params_form_submit()
  */
 function uc_tax_report_params_form_validate($form, FormStateInterface $form_state) {
-  if (empty($form_state['values']['status'])) {
+  if (empty($form_state->getValue('status'))) {
     $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
@@ -256,13 +256,13 @@ function uc_tax_report_params_form_validate($form, FormStateInterface $form_stat
  */
 function uc_tax_report_params_form_submit($form, &$form_state) {
   // Build the start and end dates from the form.
-  $start_date = mktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']);
-  $end_date = mktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']);
+  $start_date = mktime(0, 0, 0, $form_state->getValue(['start_date', 'month']), $form_state->getValue(['start_date', 'day']), $form_state->getValue(['start_date', 'year']));
+  $end_date = mktime(23, 59, 59, $form_state->getValue(['end_date', 'month']), $form_state->getValue(['end_date', 'day']), $form_state->getValue(['end_date', 'year']));
 
   $args = array(
     $start_date,
     $end_date,
-    implode(',', array_keys($form_state['values']['status'])),
+    implode(',', array_keys($form_state->getValue('status'))),
   );
 
   $form_state['redirect'] = 'admin/store/reports/tax/' . implode('/', $args);

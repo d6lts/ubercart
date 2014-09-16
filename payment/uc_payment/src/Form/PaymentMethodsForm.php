@@ -139,7 +139,7 @@ class PaymentMethodsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('uc_payment.settings')
-      ->set('methods', $form_state['values']['methods'])
+      ->set('methods', $form_state->getValue('methods'))
       ->save();
 
     $this->paymentMethodManager->clearCachedDefinitions();

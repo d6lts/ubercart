@@ -554,7 +554,7 @@ function uc_reports_products_custom_form($form, FormStateInterface $form_state, 
  * @see uc_reports_products_custom_form_submit()
  */
 function uc_reports_products_custom_form_validate($form, FormStateInterface $form_state) {
-  if (empty($form_state['values']['status'])) {
+  if (empty($form_state->getValue('status'))) {
     $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
@@ -566,13 +566,13 @@ function uc_reports_products_custom_form_validate($form, FormStateInterface $for
  * @see uc_reports_products_custom_form_submit()
  */
 function uc_reports_products_custom_form_submit($form, FormStateInterface $form_state) {
-  $start_date = mktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']);
-  $end_date = mktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']);
+  $start_date = mktime(0, 0, 0, $form_state->getValue(['start_date', 'month']), $form_state->getValue(['start_date', 'day']), $form_state->getValue(['start_date', 'year']));
+  $end_date = mktime(23, 59, 59, $form_state->getValue(['end_date', 'month']), $form_state->getValue(['end_date', 'day']), $form_state->getValue(['end_date', 'year']));
 
   $args = array(
     $start_date,
     $end_date,
-    implode(',', array_keys(array_filter($form_state['values']['status']))),
+    implode(',', array_keys(array_filter($form_state->getValue('status')))),
   );
 
   $form_state['redirect'] = array('admin/store/reports/products/custom/' . implode('/', $args));
@@ -1006,7 +1006,7 @@ function uc_reports_sales_year_form($form, FormStateInterface $form_state, $year
  * @see uc_reports_sales_year_form()
  */
 function uc_reports_sales_year_form_submit($form, FormStateInterface $form_state) {
-  $form_state['redirect'] = 'admin/store/reports/sales/year/' . $form_state['values']['year'];
+  $form_state['redirect'] = 'admin/store/reports/sales/year/' . $form_state->getValue('year');
 }
 
 /**
@@ -1225,7 +1225,7 @@ function uc_reports_sales_custom_form($form, FormStateInterface $form_state, $va
  * @see uc_reports_sales_custom_form_submit()
  */
 function uc_reports_sales_custom_form_validate($form, FormStateInterface $form_state) {
-  if (empty($form_state['values']['status'])) {
+  if (empty($form_state->getValue('status'))) {
     $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
@@ -1238,15 +1238,15 @@ function uc_reports_sales_custom_form_validate($form, FormStateInterface $form_s
  */
 function uc_reports_sales_custom_form_submit($form, FormStateInterface $form_state) {
   // Build the start and end dates from the form.
-  $start_date = mktime(0, 0, 0, $form_state['values']['start_date']['month'], $form_state['values']['start_date']['day'], $form_state['values']['start_date']['year']);
-  $end_date = mktime(23, 59, 59, $form_state['values']['end_date']['month'], $form_state['values']['end_date']['day'], $form_state['values']['end_date']['year']);
+  $start_date = mktime(0, 0, 0, $form_state->getValue(['start_date', 'month']), $form_state->getValue(['start_date', 'day']), $form_state->getValue(['start_date', 'year']));
+  $end_date = mktime(23, 59, 59, $form_state->getValue(['end_date', 'month']), $form_state->getValue(['end_date', 'day']), $form_state->getValue(['end_date', 'year']));
 
   $args = array(
     $start_date,
     $end_date,
-    $form_state['values']['length'],
-    implode(',', array_keys(array_filter($form_state['values']['status']))),
-    $form_state['values']['detail'],
+    $form_state->getValue('length'),
+    implode(',', array_keys(array_filter($form_state->getValue('status')))),
+    $form_state->getValue('detail'),
   );
 
   $form_state['redirect'] = 'admin/store/reports/sales/custom/' . implode('/', $args);

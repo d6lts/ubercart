@@ -126,8 +126,8 @@ function uc_ups_form_node_form_alter(&$form, FormStateInterface $form_state) {
  */
 function uc_ups_product_alter_validate($form, FormStateInterface $form_state) {
   $ups_config = \Drupal::config('uc_ups.settings');
-  if (isset($form_state['values']['shippable']) && ($form_state['values']['shipping_type'] == 'small_package' || (empty($form_state['values']['shipping_type']) && $ups_config->get('uc_store_shipping_type') == 'small_package'))) {
-    if ($form_state['values']['ups']['pkg_type'] == '02' && (empty($form_state['values']['dim_length']) || empty($form_state['values']['dim_width']) || empty($form_state['values']['dim_height']))) {
+  if ($form_state->hasValue('shippable') && ($form_state->getValue('shipping_type') == 'small_package' || ($form_state->isValueEmpty('shipping_type') && $ups_config->get('uc_store_shipping_type') == 'small_package'))) {
+    if ($form_state->getValue(['ups', 'pkg_type']) == '02' && ($form_state->isValueEmpty('dim_length') || $form_state->isValueEmpty('dim_width')) || $form_state->isValueEmpty('dim_height')) {
       $form_state->setErrorByName('base][dimensions', t('Dimensions are required for custom packaging.'));
     }
   }

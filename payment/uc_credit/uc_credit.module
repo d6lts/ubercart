@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\uc_store\Encryption;
@@ -279,27 +280,27 @@ function uc_credit_uc_payment_method() {
 /**
  * Callback function for the Credit Card payment method.
  */
-function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NULL) {
+function uc_payment_method_credit($op, &$order, $form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'cart-details':
       $details = uc_payment_method_credit_form(array(), $form_state, $order);
       return $details;
 
     case 'cart-process':
-      if (!isset($form_state['values']['panes']['payment']['details']['cc_number'])) {
+      if (!$form_state->hasValue(['panes', 'payment', 'details', 'cc_number'])) {
         return;
       }
       // Fetch the CC details from the $_POST directly.
-      $cc_data = $form_state['values']['panes']['payment']['details'];
+      $cc_data = $form_state->getValue(['panes', 'payment', 'details']);
 
       $cc_data['cc_number'] = str_replace(' ', '', $cc_data['cc_number']);
 
       array_walk($cc_data, '\Drupal\Component\Utility\String::checkPlain');
 
       // Recover cached CC data in
-      // $form_state['values']['panes']['payment']['details'] if it exists.
-      if (isset($form_state['values']['panes']['payment']['details']['payment_details_data'])) {
-        $cache = uc_credit_cache('save', $form_state['values']['panes']['payment']['details']['payment_details_data']);
+      // $form_state->getValue(['panes', 'payment', 'details']) if it exists.
+      if ($form_state->hasValue(['panes', 'payment', 'details', 'payment_details_data'])) {
+        $cache = uc_credit_cache('save', $form_state->getValue(['panes', 'payment', 'details', 'payment_details_data']));
       }
 
       // Account for partial CC numbers when masked by the system.
@@ -493,8 +494,8 @@ function uc_payment_method_credit($op, &$order, $form = NULL, &$form_state = NUL
  */
 function uc_payment_method_credit_form($form, &$form_state, $order) {
   // Normally the CC data is posted in via AJAX.
-  if (!empty($form_state['values']['payment_details_data']) && \Drupal::routeMatch()->getRouteName() == 'uc_cart.cart') {
-    $order->payment_details = uc_credit_cache('save', $form_state['values']['payment_details_data']);
+  if ($form_state->hasValue('payment_details_data') && \Drupal::routeMatch()->getRouteName() == 'uc_cart.cart') {
+    $order->payment_details = uc_credit_cache('save', $form_state->getValue('payment_details_data'));
   }
 
   // But we have to accommodate failed checkout form validation here.
@@ -503,8 +504,8 @@ function uc_payment_method_credit_form($form, &$form_state, $order) {
     unset($_SESSION['sescrd']);
   }
 
-  if (!isset($order->payment_details) && isset($form_state['values']['panes']['payment']['details'])) {
-    $order->payment_details = $form_state['values']['panes']['payment']['details'];
+  if (!isset($order->payment_details) && $form_state->hasValue(['panes', 'payment', 'details'])) {
+    $order->payment_details = $form_state->getValue(['panes', 'payment', 'details']);
     $order->payment_details['cc_number'] = str_replace(' ', '', $order->payment_details['cc_number']);
   }
 
@@ -664,7 +665,7 @@ function uc_credit_order_view_form($form, &$form_state, $order_id) {
  * @see uc_credit_order_view_form()
  */
 function uc_credit_order_view_form_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/credit';
+  $form_state->setRedirect('uc_credit.terminal', array('uc_order' => $form_state->getValue('order_id')));
 }
 
 /**

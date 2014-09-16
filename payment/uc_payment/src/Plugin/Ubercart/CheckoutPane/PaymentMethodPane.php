@@ -78,7 +78,9 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
     // button should be selected after an ajax submission. This is
     // necessary because the previously selected value may have become
     // unavailable, which would result in an invalid selection.
-    unset($form_state['input']['panes']['payment']['payment_method']);
+    $input = $form_state->getUserInput();
+    unset($input['panes']['payment']['payment_method']);
+    $form_state->setUserInput($input);
 
     $options = array();
     foreach (uc_payment_method_list() as $id => $method) {
@@ -146,11 +148,11 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
-    if (empty($form_state['values']['panes']['payment']['payment_method'])) {
+    if (!$form_state->getValue(['panes', 'payment', 'payment_method'])) {
       $form_state->setErrorByName('panes][payment][payment_method', t('You cannot check out without selecting a payment method.'));
       return FALSE;
     }
-    $order->setPaymentMethodId($form_state['values']['panes']['payment']['payment_method']);
+    $order->setPaymentMethodId($form_state->getValue(['panes', 'payment', 'payment_method']));
     $result = $this->paymentMethodManager->createFromOrder($order)->cartProcess($order, $form, $form_state);
     return $result !== FALSE;
   }

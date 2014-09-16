@@ -155,7 +155,7 @@ class Check extends PaymentMethodPluginBase {
         'uc_check_mailing_street2' => $check_config->get('mailing_street2'),
         'uc_check_mailing_city' => $check_config->get('mailing_city'),
         'uc_check_mailing_zone' => $check_config->get('mailing_zone'),
-        'uc_check_mailing_country' => isset($form_state['values']['uc_check_mailing_country']) ? $form_state['values']['uc_check_mailing_country'] : $check_config->get('uc_check_mailing_country'),
+        'uc_check_mailing_country' => $form_state->getValue('uc_check_mailing_country') ?: $check_config->get('uc_check_mailing_country'),
         'uc_check_mailing_postal_code' => $check_config->get('mailing_postal_code'),
       ),
       '#required' => FALSE,

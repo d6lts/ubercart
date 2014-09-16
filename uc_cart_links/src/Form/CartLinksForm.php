@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -241,7 +242,7 @@ class CartLinksForm extends ConfirmFormBase {
     $options += array('absolute' => TRUE);
 
     // Form redirect is for confirmed links.
-    $form_state['redirect'] = array($path, $options);
+    $form_state->setRedirectUrl(Url::createFromPath($path));
 
     // RedirectResponse is for unconfirmed links.
     return new RedirectResponse(url($path, $options));

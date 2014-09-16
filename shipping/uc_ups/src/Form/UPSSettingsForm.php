@@ -286,7 +286,7 @@ class UPSSettingsForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $old_password = $this->config('uc_ups.settings')->get('password');
-    if (!$form_state['values']['uc_ups_password']) {
+    if (!$form_state->getValue('uc_ups_password')) {
       if ($old_password) {
         $form_state->setValueForElement($form['uc_ups_credentials']['uc_ups_password'], $old_password);
       }
@@ -295,10 +295,10 @@ class UPSSettingsForm extends ConfigFormBase {
       }
     }
 
-    if (!is_numeric($form_state['values']['uc_ups_rate_markup'])) {
+    if (!is_numeric($form_state->getValue('uc_ups_rate_markup'))) {
       $form_state->setErrorByName('uc_ups_rate_markup', t('Rate markup must be a numeric value.'));
     }
-    if (!is_numeric($form_state['values']['uc_ups_weight_markup'])) {
+    if (!is_numeric($form_state->getValue('uc_ups_weight_markup'))) {
       $form_state->setErrorByName('uc_ups_weight_markup', t('Weight markup must be a numeric value.'));
     }
   }
@@ -309,7 +309,7 @@ class UPSSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $ups_config = $this->config('uc_ups.settings');
 
-    $values = $form_state['values'];
+    $values = $form_state->getValues();
     $ups_config
       ->set('access_license', $values['uc_ups_access_license'])
       ->set('shipper_number', $values['uc_ups_shipper_number'])

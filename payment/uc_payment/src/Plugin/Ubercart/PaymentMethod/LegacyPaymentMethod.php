@@ -108,7 +108,7 @@ class LegacyPaymentMethod extends PaymentMethodPluginBase {
     // @todo Refactor when uc_credit is moved to a separate plugin.
     if ($this->pluginId == 'credit') {
       \Drupal::config('uc_credit.settings')
-        ->set('encryption_path', $form_state['values']['uc_credit_encryption_path'])
+        ->set('encryption_path', $form_state->getValue('uc_credit_encryption_path'))
         ->save();
     }
   }

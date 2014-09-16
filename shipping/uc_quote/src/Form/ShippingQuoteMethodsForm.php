@@ -128,7 +128,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $enabled = array();
     $method_weight = array();
-    foreach ($form_state['values']['methods'] as $id => $method) {
+    foreach ($form_state->getValue('methods') as $id => $method) {
       $enabled[$id] = $method['status'];
       $method_weight[$id] = $method['weight'];
     }
@@ -137,8 +137,8 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
     $quote_config
       ->set('enabled', $enabled)
       ->set('method_weight', $method_weight)
-      ->set('type_weight', $form_state['values']['uc_quote_type_weight'])
-      ->set('shipping_type', $form_state['values']['uc_store_shipping_type'])
+      ->set('type_weight', $form_state->getValue('uc_quote_type_weight'))
+      ->set('shipping_type', $form_state->getValue('uc_store_shipping_type'))
       ->save();
 
     drupal_set_message(t('The configuration options have been saved.'));

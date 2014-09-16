@@ -220,7 +220,7 @@ class CreditCardTerminalForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Get the data from the form and replace masked data from the order.
-    $cc_data = $form_state['values']['cc_data'];
+    $cc_data = $form_state->getValue('cc_data');
 
     if (strpos($cc_data['cc_number'], t('(Last 4) ')) === 0) {
       $cc_data['cc_number'] = $this->order->payment_details['cc_number'];
@@ -238,7 +238,7 @@ class CreditCardTerminalForm extends FormBase {
     // Build the data array passed on to the payment gateway.
     $data = array();
 
-    switch ($form_state['values']['op']) {
+    switch ($form_state->getValue('op')) {
       case t('Charge amount'):
         $data['txn_type'] = UC_CREDIT_AUTH_CAPTURE;
         break;
@@ -257,30 +257,30 @@ class CreditCardTerminalForm extends FormBase {
 
       case t('Capture amount to this authorization'):
         $data['txn_type'] = UC_CREDIT_PRIOR_AUTH_CAPTURE;
-        $data['auth_id'] = $form_state['values']['select_auth'];
+        $data['auth_id'] = $form_state->getValue('select_auth');
         break;
 
       case t('Void authorization'):
         $data['txn_type'] = UC_CREDIT_VOID;
-        $data['auth_id'] = $form_state['values']['select_auth'];
+        $data['auth_id'] = $form_state->getValue('select_auth');
         break;
 
       case t('Charge amount to this reference'):
         $data['txn_type'] = UC_CREDIT_REFERENCE_TXN;
-        $data['ref_id'] = $form_state['values']['select_ref'];
+        $data['ref_id'] = $form_state->getValue('select_ref');
         break;
 
       case t('Remove reference'):
         $data['txn_type'] = UC_CREDIT_REFERENCE_REMOVE;
-        $data['ref_id'] = $form_state['values']['select_ref'];
+        $data['ref_id'] = $form_state->getValue('select_ref');
         break;
 
       case t('Credit amount to this reference'):
         $data['txn_type'] = UC_CREDIT_REFERENCE_CREDIT;
-        $data['ref_id'] = $form_state['values']['select_ref'];
+        $data['ref_id'] = $form_state->getValue('select_ref');
     }
 
-    $result = uc_payment_process_payment('credit', $this->order->id(), $form_state['values']['amount'], $data, TRUE, NULL, FALSE);
+    $result = uc_payment_process_payment('credit', $this->order->id(), $form_state->getValue('amount'), $data, TRUE, NULL, FALSE);
     _uc_credit_save_cc_data_to_order(uc_credit_cache('load'), $this->order->id());
 
     if ($result) {

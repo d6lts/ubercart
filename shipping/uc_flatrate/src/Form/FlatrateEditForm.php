@@ -93,20 +93,20 @@ class FlatrateEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if (isset($form_state['values']['mid'])) {
-      drupal_write_record('uc_flatrate_methods', $form_state['values'], 'mid');
+    if ($form_state->hasValue('mid')) {
+      drupal_write_record('uc_flatrate_methods', $form_state->getValues(), 'mid');
       drupal_set_message(t('Flat rate shipping method was updated.'));
       $form_state->setRedirect('uc_quote.methods');
     }
     else {
-      drupal_write_record('uc_flatrate_methods', $form_state['values']);
+      drupal_write_record('uc_flatrate_methods', $form_state->getValues());
 
       // Ensure Rules picks up the new condition.
       // entity_flush_caches();
 
       drupal_set_message(t('Created and enabled new flat rate shipping method.'));
       $form_state->setRedirect('uc_quote.methods');
-      //$form_state['redirect'] = 'admin/store/settings/quotes/manage/get_quote_from_flatrate_' . $form_state['values']['mid'];
+      //$form_state['redirect'] = 'admin/store/settings/quotes/manage/get_quote_from_flatrate_' . $form_state->getValue('mid');
     }
   }
 

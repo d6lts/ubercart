@@ -173,7 +173,7 @@ class OrderPaymentsForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!is_numeric($form_state['values']['payments']['new']['amount'])) {
+    if (!is_numeric($form_state->getValue(['payments', 'new', 'amount']))) {
       $form_state->setErrorByName('payments][new][amount', t('You must enter a number for the amount.'));
     }
   }
@@ -184,7 +184,7 @@ class OrderPaymentsForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     global $user;
 
-    $payment = $form_state['values']['payments']['new'];
+    $payment = $form_state->getValue(['payments', 'new']);
     $received = strtotime($payment['received']['year'] . '-' . $payment['received']['month'] . '-' . $payment['received']['day'] . ' 00:00:00');
 
     // If the value entered is today, use the exact timestamp instead

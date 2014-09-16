@@ -271,12 +271,12 @@ function uc_order_form_views_exposed_form_alter(&$form, FormStateInterface $form
 }
 
 /**
- * Redirects if an order ID was entered in the exposed field.
+ * Redirects if a valid order ID was entered in the exposed field.
  */
 function uc_order_form_views_exposed_form_submit($form, FormStateInterface $form_state) {
   if (!$form_state->isValueEmpty('order_id') && entity_load('uc_order', $form_state->getValue('order_id'))) {
-    $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id');
-    $form_state['no_redirect'] = FALSE;
+    $form_state->setRedirect('uc_order.admin_view', array('uc_order' => $form_state->getValue('order_id')));
+    $form_state->disableRedirect(FALSE);
   }
 }
 

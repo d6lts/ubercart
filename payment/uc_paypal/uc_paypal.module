@@ -11,6 +11,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_menu().
@@ -599,8 +600,8 @@ function uc_payment_method_paypal_ec($op, &$order) {
 /**
  * Redirects if a customer selects PayPal Express Checkout as a payment method.
  */
-function uc_paypal_ec_checkout($form, &$form_state) {
-  if ($form_state['values']['panes']['payment']['payment_method'] != 'paypal_ec') {
+function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
+  if ($form_state->getValue(['panes', 'payment', 'payment_method']) != 'paypal_ec') {
     return;
   }
 
@@ -792,7 +793,7 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
   unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
   $_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_complete'] = TRUE;
 
-  $form_state['redirect'] = 'cart/checkout/complete';
+  $form_state->setRedirect('uc_cart.checkout_complete');
 }
 
 /**

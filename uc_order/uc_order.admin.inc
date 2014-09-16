@@ -41,7 +41,7 @@ function uc_order_address_book() {
  * @see uc_order_address_book()
  * @ingroup forms
  */
-function uc_order_address_book_form($form, &$form_state, $uid = 0, $type = 'billing', $func = '') {
+function uc_order_address_book_form($form, FormStateInterface $form_state, $uid = 0, $type = 'billing', $func = '') {
   $select = uc_select_address($uid, $type, $func);
 
   if ($uid == 0) {
@@ -178,7 +178,7 @@ function uc_order_select_customer($email = NULL) {
  * @see uc_order_select_customer()
  * @ingroup forms
  */
-function uc_order_select_customer_form($form, &$form_state, $options = NULL) {
+function uc_order_select_customer_form($form, FormStateInterface $form_state, $options = NULL) {
   if (is_null(arg(4))) {
     $form['desc'] = array(
       '#markup' => '<div>' . t('Search for a customer based on these fields.')
@@ -377,5 +377,5 @@ function uc_order_add_line_item_form_submit($form, FormStateInterface $form_stat
     drupal_set_message(t('Line item added to order.'));
   }
 
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/edit';
+  $form_state->setRedirect('uc_order.admin_edit', array('uc_order' => $form_state->getValue('order_id')));
 }

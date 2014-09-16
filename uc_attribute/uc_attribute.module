@@ -174,7 +174,7 @@ function uc_attribute_buy_it_now_form_validate(&$form, FormStateInterface $form_
   $attributes = uc_product_get_attributes($form_state->getValue('nid'));
   if (!empty($attributes)) {
     drupal_set_message(t('This product has options that need to be selected before purchase. Please select them in the form below.'), 'error');
-    $form_state['redirect'] = 'node/' . $form_state->getValue('nid');
+    $form_state->setRedirect('entity.node.canonical', array('node' => $form_state->getValue('nid')));
 
     // Prevent submit handlers from running.
     $form_state->setSubmitHandlers(array());

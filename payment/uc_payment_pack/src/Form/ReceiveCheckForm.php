@@ -72,16 +72,16 @@ class ReceiveCheckForm extends FormBase {
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    uc_payment_enter($form_state['values']['order_id'], 'check', $form_state['values']['amount'], \Drupal::currentUser()->id(), '', $form_state['values']['comment']);
+    uc_payment_enter($form_state->getValue('order_id'), 'check', $form_state->getValue('amount'), \Drupal::currentUser()->id(), '', $form_state->getValue('comment'));
 
     db_insert('uc_payment_check')
       ->fields(array(
-        'order_id' => $form_state['values']['order_id'],
-        'clear_date' => mktime(12, 0, 0, $form_state['values']['clear_month'], $form_state['values']['clear_day'], $form_state['values']['clear_year']),
+        'order_id' => $form_state->getValue('order_id'),
+        'clear_date' => mktime(12, 0, 0, $form_state->getValue('clear_month'), $form_state->getValue('clear_day'), $form_state->getValue('clear_year')),
       ))
       ->execute();
 
-    drupal_set_message(t('Check received, expected clear date of @date.', array('@date' => uc_date_format($form_state['values']['clear_month'], $form_state['values']['clear_day'], $form_state['values']['clear_year']))));
+    drupal_set_message(t('Check received, expected clear date of @date.', array('@date' => uc_date_format($form_state->getValue('clear_month'), $form_state->getValue('clear_day'), $form_state->getValue('clear_year')))));
 
     $form_state->setRedirect('uc_order.admin_view', array('uc_order' => $form_state->getValue('order_id')));
   }

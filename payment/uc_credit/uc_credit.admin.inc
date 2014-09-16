@@ -239,7 +239,7 @@ function uc_credit_settings_form($form, FormStateInterface $form_state) {
  */
 function uc_credit_settings_form_validate($form, FormStateInterface $form_state) {
   // Trim trailing whitespace and any trailing / or \ from the key path name.
-  $key_path = rtrim(trim($form_state['values']['uc_credit_encryption_path']), '/\\');
+  $key_path = rtrim(trim($form_state->getValue('uc_credit_encryption_path')), '/\\');
 
   // Test to see if a path was entered.
   if (empty($key_path)) {
@@ -261,7 +261,7 @@ function uc_credit_settings_form_validate($form, FormStateInterface $form_state)
         else {
           // Key file exists and is valid, save result of trim() back into
           // $form_state and proceed to submit handler.
-          $form_state['values']['uc_credit_encryption_path'] = $key_path;
+          $form_state->setValue('uc_credit_encryption_path', $key_path);
           return;
         }
       }
@@ -275,19 +275,19 @@ function uc_credit_settings_form_validate($form, FormStateInterface $form_state)
   if (is_dir($key_path)) {
     // The entered directory is valid and in need of a key file.
     // Flag this condition for the submit handler.
-    $form_state['uc_credit']['update_cc_encrypt_dir'] = TRUE;
+    $form_state->set('update_cc_encrypt_dir', TRUE);
 
     // Can we open for writing?
     $file = @fopen($key_path . '/encrypt.test', 'w');
     if ($file === FALSE) {
       $form_state->setErrorByName('uc_credit_encryption_path', t('Cannot write to directory, please verify the directory permissions.'));
-      unset($form_state['uc_credit']['update_cc_encrypt_dir']);
+      $form_state->set('update_cc_encrypt_dir', FALSE);
     }
     else {
       // Can we actually write?
       if (@fwrite($file, '0123456789') === FALSE) {
         $form_state->setErrorByName('uc_credit_encryption_path', t('Cannot write to directory, please verify the directory permissions.'));
-        unset($form_state['uc_credit']['update_cc_encrypt_dir']);
+        $form_state->set('update_cc_encrypt_dir', FALSE);
         fclose($file);
       }
       else {
@@ -296,7 +296,7 @@ function uc_credit_settings_form_validate($form, FormStateInterface $form_state)
         $file = @fopen($key_path . '/encrypt.test', 'r');
         if ($file === FALSE) {
           $form_state->setErrorByName('uc_credit_encryption_path', t('Cannot read from directory, please verify the directory permissions.'));
-          unset($form_state['uc_credit']['update_cc_encrypt_dir']);
+          $form_state->set('update_cc_encrypt_dir', FALSE);
         }
         else {
           fclose($file);
@@ -311,7 +311,7 @@ function uc_credit_settings_form_validate($form, FormStateInterface $form_state)
   }
 
   // If validation succeeds, save result of trim() back into $form_state.
-  $form_state['values']['uc_credit_encryption_path'] = $key_path;
+  $form_state->setValue('uc_credit_encryption_path', $key_path);
 }
 
 /**
@@ -322,10 +322,8 @@ function uc_credit_settings_form_validate($form, FormStateInterface $form_state)
  */
 function uc_credit_settings_form_submit($form, FormStateInterface $form_state) {
   // Check to see if we need to create a key file.
-  if (isset($form_state['uc_credit']['update_cc_encrypt_dir']) &&
-      $form_state['uc_credit']['update_cc_encrypt_dir'] === TRUE) {
-
-    $key_path = $form_state['values']['uc_credit_encryption_path'];
+  if ($form_state->get('update_cc_encrypt_dir')) {
+    $key_path = $form_state->getValue('uc_credit_encryption_path');
     $key_file = $key_path . '/' . UC_CREDIT_KEYFILE_NAME;
 
     if (!file_exists($key_file)) {

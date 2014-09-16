@@ -70,11 +70,12 @@
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Form process callback to allow multiple Ajax callbacks on form elements.
  */
-function uc_ajax_process_form($form, &$form_state) {
+function uc_ajax_process_form($form, FormStateInterface $form_state) {
   // When processing the top level form, add any variable-defined pane wrappers.
   if (isset($form['#form_id'])) {
     switch ($form['#form_id']) {
@@ -85,12 +86,12 @@ function uc_ajax_process_form($form, &$form_state) {
             $config[$key][$pane] = 'uc_ajax_replace_checkout_pane';
           }
         }
-        $form_state['uc_ajax']['uc_ajax'] = $config;
+        $form_state->set(['uc_ajax', 'uc_ajax'], $config);
         break;
     }
   }
 
-  if (!isset($form_state['uc_ajax'])) {
+  if (!$form_state->has('uc_ajax')) {
     return $form;
   }
 
@@ -118,7 +119,7 @@ function uc_ajax_process_form($form, &$form_state) {
     $key = implode('][', $parents);
 
     $callbacks = array();
-    foreach ($form_state['uc_ajax'] as $fields) {
+    foreach ($form_state->get('uc_ajax') as $fields) {
       if (!empty($fields[$key])) {
         if (is_array($fields[$key])) {
           $callbacks = array_merge($callbacks, $fields[$key]);
@@ -157,10 +158,10 @@ function uc_ajax_process_form($form, &$form_state) {
  *
  * Processes a set of Ajax commands attached to the triggering element.
  */
-function uc_ajax_multiplex($form, $form_state) {
+function uc_ajax_multiplex($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
 
-  $element = $form_state['triggering_element'];
+  $element = $form_state->getTriggeringElement();
   if (!empty($element['#ajax']['list'])) {
     $commands = array();
     foreach ($element['#ajax']['list'] as $wrapper => $callback) {
@@ -200,11 +201,12 @@ function uc_ajax_multiplex($form, $form_state) {
  *   the pane does not exist, or if the wrapper does not refer to a checkout
  *   pane, returns nothing.
  */
-function uc_ajax_replace_checkout_pane($form, $form_state, $wrapper = NULL) {
-  if (empty($wrapper) && !empty($form_state['triggering_element']['#ajax']['wrapper'])) {
+function uc_ajax_replace_checkout_pane($form, FormStateInterface $form_state, $wrapper = NULL) {
+  $element = $form_state->getTriggeringElement();
+  if (empty($wrapper) && !empty($element['#ajax']['wrapper'])) {
     // If $wrapper is absent, then we were not invoked by uc_ajax_multiplex,
     // so try to use the wrapper of the triggering element's #ajax array.
-    $wrapper = $form_state['triggering_element']['#ajax']['wrapper'];
+    $wrapper = $element['#ajax']['wrapper'];
   }
   if (!empty($wrapper)) {
     list($pane, $verify) = explode('-', $wrapper);

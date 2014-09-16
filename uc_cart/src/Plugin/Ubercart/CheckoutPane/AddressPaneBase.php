@@ -124,7 +124,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       $form_state->setUserInput($input);
 
       // Forget any previous Ajax submissions, as we send new default values.
-      unset($form_state['uc_address']);
+      $form_state->set('uc_address', NULL);
     }
 
     return $contents;

@@ -238,7 +238,7 @@ function uc_ups_fulfill_order_validate($form, FormStateInterface $form_state) {
   $origin = new stdClass();
   $destination = new stdClass();
   $packages = array();
-  foreach ($form_state['values'] as $key => $value) {
+  foreach ($form_state->getValues() as $key => $value) {
     if (substr($key, 0, 7) == 'pickup_') {
       $field = substr($key, 7);
       $origin->$field = $value;
@@ -252,18 +252,18 @@ function uc_ups_fulfill_order_validate($form, FormStateInterface $form_state) {
   // This is a total hack to work around changes made in the return value
   // from uc_shipping_address_form().  That function needs to be fixed, but
   // until then this should do the trick.
-  $origin        = $form_state['values']['pickup_address'];
-  $origin->phone = $form_state['values']['phone'];
-  $origin->first_name = $form_state['values']['first_name'];
-  $origin->last_name = $form_state['values']['last_name'];
-  $origin->company = $form_state['values']['company'];
-  $origin->street1 = $form_state['values']['street1'];
-  $origin->street2 = $form_state['values']['street2'];
-  $origin->city = $form_state['values']['city'];
-  $origin->zone = $form_state['values']['zone'];
-  $origin->country = $form_state['values']['country'];
-  $origin->postal_code = $form_state['values']['postal_code'];
-  $origin->email = $form_state['values']['pickup_email'];
+  $origin        = $form_state->getValue('pickup_address');
+  $origin->phone = $form_state->getValue('phone');
+  $origin->first_name = $form_state->getValue('first_name');
+  $origin->last_name = $form_state->getValue('last_name');
+  $origin->company = $form_state->getValue('company');
+  $origin->street1 = $form_state->getValue('street1');
+  $origin->street2 = $form_state->getValue('street2');
+  $origin->city = $form_state->getValue('city');
+  $origin->zone = $form_state->getValue('zone');
+  $origin->country = $form_state->getValue('country');
+  $origin->postal_code = $form_state->getValue('postal_code');
+  $origin->email = $form_state->getValue('pickup_email');
 
   $_SESSION['ups'] = array();
   $_SESSION['ups']['origin'] = $origin;
@@ -276,7 +276,7 @@ function uc_ups_fulfill_order_validate($form, FormStateInterface $form_state) {
   $destination->residential = $ups_config->get('residential_quotes');
 
   $_SESSION['ups']['destination'] = $destination;
-  foreach ($form_state['values']['packages'] as $id => $pkg_form) {
+  foreach ($form_state->getValue('packages') as $id => $pkg_form) {
     $package               = uc_shipping_package_load($id);
     $package->pkg_type     = $pkg_form['pkg_type'];
     $package->value        = $pkg_form['declared_value'];
@@ -289,13 +289,13 @@ function uc_ups_fulfill_order_validate($form, FormStateInterface $form_state) {
     $package->qty          = 1;
     $_SESSION['ups']['packages'][$id] = $package;
   }
-  $_SESSION['ups']['service']           = $form_state['values']['service'];
-  $_SESSION['ups']['paid']              = $form_state['values']['paid'];
-  $_SESSION['ups']['ship_date']         = $form_state['values']['ship_date'];
-  $_SESSION['ups']['expected_delivery'] = $form_state['values']['expected_delivery'];
-  $_SESSION['ups']['order_id'] = $form_state['values']['order_id'];
+  $_SESSION['ups']['service']           = $form_state->getValue('service');
+  $_SESSION['ups']['paid']              = $form_state->getValue('paid');
+  $_SESSION['ups']['ship_date']         = $form_state->getValue('ship_date');
+  $_SESSION['ups']['expected_delivery'] = $form_state->getValue('expected_delivery');
+  $_SESSION['ups']['order_id'] = $form_state->getValue('order_id');
 
-  $request = uc_ups_shipment_request($_SESSION['ups']['packages'], $origin, $destination, $form_state['values']['service']);
+  $request = uc_ups_shipment_request($_SESSION['ups']['packages'], $origin, $destination, $form_state->getValue('service'));
   $response_obj = \Drupal::httpClient()
     ->post($ups_config->get('connection_address') . 'ShipConfirm', NULL, $request)
     ->send();
@@ -333,7 +333,7 @@ function uc_ups_fulfill_order_validate($form, FormStateInterface $form_state) {
  * @see uc_ups_confirm_shipment()
  */
 function uc_ups_fulfill_order_submit($form, FormStateInterface $form_state) {
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/shipments/ups';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/shipments/ups';
 }
 
 /**
@@ -376,7 +376,7 @@ function uc_ups_shipment_request($packages, $origin, $destination, $ups_service)
   $shipfrom_country = $shipfrom_country[0]['country_iso_code_2'];
   $shipfrom_zip = $origin->postal_code;
 
-  $ups_units = $ups_config('unit_system');
+  $ups_units = $ups_config->get('unit_system');
 
   $package_schema = '';
   foreach ($packages as $package) {
@@ -623,7 +623,7 @@ function uc_ups_confirm_shipment_submit($form, FormStateInterface $form_state) {
   // Request pickup using parameters in form.
   $order_id = $_SESSION['ups']['order_id'];
   $packages = array_keys($_SESSION['ups']['packages']);
-  $request = uc_ups_request_pickup($form_state['values']['digest'], $order_id, $packages);
+  $request = uc_ups_request_pickup($form_state->getValue('digest'), $order_id, $packages);
   $result = \Drupal::httpClient()
     ->post($ups_config->get('connection_address') . 'ShipAccept', NULL, $request)
     ->send();

@@ -10,6 +10,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 use Drupal\uc_order\UcOrderInterface;
 
@@ -44,7 +45,7 @@ function uc_taxes_module_implements_alter(&$implementations, $hook) {
 /**
  * Implements hook_form_uc_order_edit_form_alter().
  */
-function uc_taxes_form_uc_order_edit_form_alter(&$form, &$form_state) {
+function uc_taxes_form_uc_order_edit_form_alter(&$form, FormStateInterface $form_state) {
   $order = $form['#order'];
   $line_items = $order->line_items;
   foreach ($line_items as $item) {

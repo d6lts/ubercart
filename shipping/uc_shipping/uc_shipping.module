@@ -10,8 +10,8 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
-use Drupal\uc_store\Address;
 
 /**
  * Implements hook_help().
@@ -714,7 +714,7 @@ function uc_shipping_select_address($addresses, $onchange = '', $title = NULL) {
  *
  * @ingroup forms
  */
-function uc_shipping_address_form($form, &$form_state, $addresses, $order) {
+function uc_shipping_address_form($form, FormStateInterface $form_state, $addresses, $order) {
   drupal_add_js(drupal_get_path('module', 'uc_shipping') . '/js/uc_shipping.js');
 
   $form['origin'] = array(
@@ -743,8 +743,8 @@ function uc_shipping_address_form($form, &$form_state, $addresses, $order) {
     '#title' => t('Destination address'),
     '#weight' => -1,
   );
-  if (isset($form_state['values']['delivery_country'])) {
-    $order->delivery_country = $form_state['values']['delivery_country'];
+  if ($form_state->hasValue('delivery_country')) {
+    $order->delivery_country = $form_state->getValue('delivery_country');
   }
   $form['destination']['delivery_email'] = array(
     '#type' => 'email',

@@ -321,7 +321,7 @@ function uc_paypal_ec_review_form($form, FormStateInterface $form_state, $order)
 }
 
 function uc_paypal_ec_review_form_validate($form, FormStateInterface $form_state) {
-  if (!empty($form_state['values']['shippable']) && empty($form_state['values']['quotes']['quote_option'])) {
+  if (!$form_state->isValueEmpty('shippable') && $form_state->isValueEmpty(['quotes', 'quote_option'])) {
     $form_state->setErrorByName('shipping', t('You must calculate and select a shipping option.'));
   }
 }
@@ -329,8 +329,8 @@ function uc_paypal_ec_review_form_validate($form, FormStateInterface $form_state
 function uc_paypal_ec_review_form_submit($form, FormStateInterface $form_state) {
   $order = uc_order_load($_SESSION['cart_order']);
 
-  if (!empty($form_state['values']['shippable'])) {
-    $quote_option = explode('---', $form_state['values']['quotes']['quote_option']);
+  if (!$form_state->isValueEmpty('shippable')) {
+    $quote_option = explode('---', $form_state->getValue(['quotes', 'quote_option']));
     $order->quote['method'] = $quote_option[0];
     $order->quote['accessorials'] = $quote_option[1];
     $methods = uc_quote_methods();
@@ -338,8 +338,8 @@ function uc_paypal_ec_review_form_submit($form, FormStateInterface $form_state) 
 
     $label = $method['quote']['accessorials'][$quote_option[1]];
 
-    $quote_option = $form_state['values']['quotes']['quote_option'];
-    $order->quote['rate'] = $form_state['values']['quotes'][$quote_option]['rate'];
+    $quote_option = $form_state->getValue(['quotes', 'quote_option']);
+    $order->quote['rate'] = $form_state->getValue(['quotes', $quote_option, 'rate']);
 
     $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
     if ($lid = $result->fetchField()) {
@@ -351,18 +351,18 @@ function uc_paypal_ec_review_form_submit($form, FormStateInterface $form_state) 
   }
 
   if (variable_get('uc_paypal_ec_review_company', TRUE)) {
-    $order->delivery_company = $form_state['values']['delivery_company'];
+    $order->delivery_company = $form_state->getValue('delivery_company');
   }
 
   if (variable_get('uc_paypal_ec_review_phone', TRUE)) {
-    $order->delivery_phone = $form_state['values']['delivery_phone'];
+    $order->delivery_phone = $form_state->getValue('delivery_phone');
   }
 
   if (variable_get('uc_paypal_ec_review_comment', TRUE)) {
     db_delete('uc_order_comments')
       ->condition('order_id', $order->id())
       ->execute();
-    uc_order_comment_save($order->id(), 0, $form_state['values']['order_comments'], 'order');
+    uc_order_comment_save($order->id(), 0, $form_state->getValue('order_comments'), 'order');
   }
 
   $order->save();

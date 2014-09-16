@@ -233,10 +233,10 @@ function theme_uc_shipping_new_package_fieldset($variables) {
  * @see uc_shipping_new_package_submit()
  */
 function uc_shipping_new_package_validate($form, FormStateInterface $form_state) {
-  if ($form_state['values']['op'] != t('Cancel')) {
+  if ($form_state->getValue('op') != t('Cancel')) {
     $empty = TRUE;
 
-    foreach ($form_state['values']['shipping_types'] as $shipping_type => $products) {
+    foreach ($form_state->getValue('shipping_types') as $shipping_type => $products) {
       foreach ($products as $product) {
         if ($product['checked'] != 0) {
           $empty = FALSE;
@@ -258,13 +258,13 @@ function uc_shipping_new_package_validate($form, FormStateInterface $form_state)
  * @see uc_shipping_new_package_validate()
  */
 function uc_shipping_new_package_submit($form, FormStateInterface $form_state) {
-  if ($form_state['values']['op'] != t('Cancel')) {
+  if ($form_state->getValue('op') != t('Cancel')) {
     $packages = array(0 => array());
 
-    foreach ($form_state['values']['shipping_types'] as $shipping_type => $products) {
+    foreach ($form_state->getValue('shipping_types') as $shipping_type => $products) {
       foreach ($products as $id => $product) {
         if ($product['checked']) {
-          if ($form_state['values']['op'] == t('Create one package')) {
+          if ($form_state->getValue('op') == t('Create one package')) {
             $product['package'] = 1;
           }
 
@@ -298,12 +298,12 @@ function uc_shipping_new_package_submit($form, FormStateInterface $form_state) {
     }
 
     foreach ($packages as $package) {
-      $package['order_id'] = $form_state['values']['order_id'];
+      $package['order_id'] = $form_state->getValue('order_id');
       uc_shipping_package_save($package);
     }
   }
 
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/packages';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/packages';
 }
 
 /**
@@ -405,8 +405,8 @@ function theme_uc_shipping_edit_package_fieldset($variables) {
  * @see uc_shipping_package_edit()
  */
 function uc_shipping_package_edit_submit($form, FormStateInterface $form_state) {
-  $package = uc_shipping_package_load($form_state['values']['package_id']);
-  foreach ($form_state['values']['products'] as $id => $product) {
+  $package = uc_shipping_package_load($form_state->getValue('package_id'));
+  foreach ($form_state->getValue('products') as $id => $product) {
     if ($product['checked']) {
       $package->products[$id] = (object)$product;
     }
@@ -414,7 +414,7 @@ function uc_shipping_package_edit_submit($form, FormStateInterface $form_state) 
       unset($package->products[$id]);
     }
   }
-  $package->shipping_type = $form_state['values']['shipping_type'];
+  $package->shipping_type = $form_state->getValue('shipping_type');
   uc_shipping_package_save($package);
 
   $form_state['redirect'] = 'admin/store/orders/' . $package->order_id . '/packages';
@@ -440,7 +440,7 @@ function uc_shipping_package_cancel_confirm($form, FormStateInterface $form_stat
  * @see uc_shipping_package_cancel_confirm()
  */
 function uc_shipping_package_cancel_confirm_submit($form, FormStateInterface $form_state) {
-  $package = uc_shipping_package_load($form_state['values']['package_id']);
+  $package = uc_shipping_package_load($form_state->getValue('package_id'));
   $shipment = uc_shipping_shipment_load($package->sid);
   $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
   if (isset($methods[$shipment->shipping_method]['cancel']) &&
@@ -468,7 +468,7 @@ function uc_shipping_package_cancel_confirm_submit($form, FormStateInterface $fo
       }
     }
   }
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/packages';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/packages';
 }
 
 /**
@@ -491,8 +491,8 @@ function uc_shipping_package_delete_confirm($form, FormStateInterface $form_stat
  * @see uc_shipping_package_delete_confirm()
  */
 function uc_shipping_package_delete_confirm_submit($form, FormStateInterface $form_state) {
-  uc_shipping_package_delete($form_state['values']['package_id']);
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/packages';
+  uc_shipping_package_delete($form_state->getValue('package_id'));
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/packages';
 }
 
 /**
@@ -670,7 +670,7 @@ function theme_uc_shipping_new_shipment($variables) {
  */
 function uc_shipping_new_shipment_submit($form, FormStateInterface $form_state) {
   $packages = array();
-  foreach ($form_state['values']['shipping_types'] as $shipping_type) {
+  foreach ($form_state->getValue('shipping_types') as $shipping_type) {
     if (is_array($shipping_type['packages'])) {
       foreach ($shipping_type['packages'] as $id => $input) {
         if ($input['checked']) {
@@ -679,7 +679,7 @@ function uc_shipping_new_shipment_submit($form, FormStateInterface $form_state) 
       }
     }
   }
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/ship/' . $form_state['values']['method'] . '/' . implode('/', $packages);
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/ship/' . $form_state->getValue('method') . '/' . implode('/', $packages);
 }
 
 /**
@@ -1035,7 +1035,7 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
  * @see uc_shipping_shipment_submit()
  */
 function uc_shipping_shipment_edit_validate($form, FormStateInterface $form_state) {
-  foreach ($form_state['values']['packages'] as $key => $package) {
+  foreach ($form_state->getValue('packages') as $key => $package) {
     foreach (array('length', 'width', 'height') as $property) {
       if (!empty($package['dimensions'][$property]) && (!is_numeric($package['dimensions'][$property]) || $package['dimensions'][$property] < 0)) {
         $form_state->setErrorByName('packages][' . $key . '][dimensions][' . $property, t('@property must be a positive number. No commas and only one decimal point.', array('@property' => Unicode::ucfirst($property))));
@@ -1052,20 +1052,20 @@ function uc_shipping_shipment_edit_validate($form, FormStateInterface $form_stat
  */
 function uc_shipping_shipment_edit_submit($form, FormStateInterface $form_state) {
   $shipment = new stdClass();
-  $shipment->order_id = $form_state['values']['order_id'];
-  if (isset($form_state['values']['sid'])) {
-    $shipment->sid = $form_state['values']['sid'];
+  $shipment->order_id = $form_state->getValue('order_id');
+  if ($form_state->hasValue('sid')) {
+    $shipment->sid = $form_state->getValue('sid');
   }
-  $shipment->origin = (object) $form_state['values']['pickup_address'];
+  $shipment->origin = (object) $form_state->getValue('pickup_address');
   $shipment->destination = new stdClass();
-  foreach ($form_state['values'] as $key => $value) {
+  foreach ($form_state->getValues() as $key => $value) {
     if (substr($key, 0, 9) == 'delivery_') {
       $field = substr($key, 9);
       $shipment->destination->$field = $value;
     }
   }
   $shipment->packages = array();
-  foreach ($form_state['values']['packages'] as $id => $pkg_form) {
+  foreach ($form_state->getValue('packages') as $id => $pkg_form) {
     $package = uc_shipping_package_load($id);
     $package->pkg_type = $pkg_form['pkg_type'];
     $package->value = $pkg_form['declared_value'];
@@ -1078,18 +1078,18 @@ function uc_shipping_shipment_edit_submit($form, FormStateInterface $form_state)
     $shipment->packages[$id] = $package;
   }
 
-  $shipment->shipping_method = $form_state['values']['shipping_method'];
-  $shipment->accessorials = $form_state['values']['accessorials'];
-  $shipment->carrier = $form_state['values']['carrier'];
-  $shipment->transaction_id = $form_state['values']['transaction_id'];
-  $shipment->tracking_number = $form_state['values']['tracking_number'];
-  $shipment->ship_date = gmmktime(12, 0, 0, $form_state['values']['ship_date']['month'], $form_state['values']['ship_date']['day'], $form_state['values']['ship_date']['year']);
-  $shipment->expected_delivery = gmmktime(12, 0, 0, $form_state['values']['expected_delivery']['month'], $form_state['values']['expected_delivery']['day'], $form_state['values']['expected_delivery']['year']);
-  $shipment->cost = $form_state['values']['cost'];
+  $shipment->shipping_method = $form_state->getValue('shipping_method');
+  $shipment->accessorials = $form_state->getValue('accessorials');
+  $shipment->carrier = $form_state->getValue('carrier');
+  $shipment->transaction_id = $form_state->getValue('transaction_id');
+  $shipment->tracking_number = $form_state->getValue('tracking_number');
+  $shipment->ship_date = gmmktime(12, 0, 0, $form_state->getValue(['ship_date', 'month']), $form_state->getValue(['ship_date', 'day']), $form_state->getValue(['ship_date', 'year']));
+  $shipment->expected_delivery = gmmktime(12, 0, 0, $form_state->getValue(['expected_delivery', 'month']), $form_state->getValue(['expected_delivery', 'day']), $form_state->getValue(['expected_delivery', 'year']));
+  $shipment->cost = $form_state->getValue('cost');
 
   uc_shipping_shipment_save($shipment);
 
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/shipments';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/shipments';
 }
 
 /**
@@ -1159,24 +1159,24 @@ function uc_shipping_shipment_delete_confirm($form, FormStateInterface $form_sta
  * @see uc_shipping_shipment_delete_confirm()
  */
 function uc_shipping_shipment_delete_confirm_submit($form, FormStateInterface $form_state) {
-  $shipment = uc_shipping_shipment_load($form_state['values']['sid']);
+  $shipment = uc_shipping_shipment_load($form_state->getValue('sid'));
   $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
   if ($shipment->tracking_number &&
       isset($methods[$shipment->shipping_method]['cancel']) &&
       function_exists($methods[$shipment->shipping_method]['cancel'])) {
     $result = call_user_func($methods[$shipment->shipping_method]['cancel'], $shipment->tracking_number);
     if ($result) {
-      uc_shipping_shipment_delete($form_state['values']['sid']);
+      uc_shipping_shipment_delete($form_state->getValue('sid'));
     }
     else {
       drupal_set_message(t('The shipment %tracking could not be canceled with %carrier. To delete it anyway, remove the tracking number and try again.', array('%tracking' => $shipment->tracking_number, '%carrier' => $shipment->carrier)));
     }
   }
   else {
-    uc_shipping_shipment_delete($form_state['values']['sid']);
+    uc_shipping_shipment_delete($form_state->getValue('sid'));
   }
 
-  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/shipments';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/shipments';
 }
 
 /**

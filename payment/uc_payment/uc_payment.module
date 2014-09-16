@@ -10,6 +10,7 @@
  * will be collected to complete the purchase.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\UcOrderInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\Xss;
@@ -48,7 +49,7 @@ function template_preprocess_uc_payment_totals(&$variables) {
  *
  * Adds express buttons for enabled payment modules directly to the cart page.
  */
-function uc_payment_form_uc_cart_view_form_alter(&$form, &$form_state) {
+function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $form_state) {
   foreach (uc_payment_method_list() as $id => $method) {
     if ($method['checkout'] && isset($method['express']) && $express = $method['express'](array(), $form_state)) {
       $form['actions']['checkout'][$id] = $express;
@@ -62,8 +63,8 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, &$form_state) {
  * If a payment method redirects off-site, add the required form to the review
  * page.
  */
-function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, &$form_state) {
-  $order = $form_state['uc_order'];
+function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
+  $order = $form_state->get('uc_order');
   $definition = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->getPluginDefinition();
 
   if (isset($definition['redirect'])) {

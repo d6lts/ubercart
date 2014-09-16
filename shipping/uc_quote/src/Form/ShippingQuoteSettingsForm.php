@@ -80,7 +80,7 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
     );
     $form['default_address']['address'] = array(
       '#type' => 'uc_address',
-      '#default_value' => isset($form_state['values']) ? $form_state['values'] : $address,
+      '#default_value' => $form_state->getValues() ?: $address,
       '#required' => FALSE,
     );
 
@@ -92,25 +92,25 @@ class ShippingQuoteSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $address = new Address();
-    $address->first_name = $form_state['values']['first_name'];
-    $address->last_name = $form_state['values']['last_name'];
-    $address->company = $form_state['values']['company'];
-    $address->phone = $form_state['values']['phone'];
-    $address->street1 = $form_state['values']['street1'];
-    $address->street2 = $form_state['values']['street2'];
-    $address->city = $form_state['values']['city'];
-    $address->zone = $form_state['values']['zone'];
-    $address->postal_code = $form_state['values']['postal_code'];
-    $address->country = $form_state['values']['country'];
+    $address->first_name = $form_state->getValue('first_name');
+    $address->last_name = $form_state->getValue('last_name');
+    $address->company = $form_state->getValue('company');
+    $address->phone = $form_state->getValue('phone');
+    $address->street1 = $form_state->getValue('street1');
+    $address->street2 = $form_state->getValue('street2');
+    $address->city = $form_state->getValue('city');
+    $address->zone = $form_state->getValue('zone');
+    $address->postal_code = $form_state->getValue('postal_code');
+    $address->country = $form_state->getValue('country');
 
     $quote_config = $this->config('uc_quote.settings');
     $quote_config
       ->set('store_default_address', (array) $address)
-      ->set('log_errors', $form_state['values']['uc_quote_log_errors'])
-      ->set('display_debug', $form_state['values']['uc_quote_display_debug'])
-      ->set('require_quote', $form_state['values']['uc_quote_require_quote'])
-      ->set('pane_description', $form_state['values']['uc_quote_pane_description']['text'])
-      ->set('error_message', $form_state['values']['uc_quote_error_message']['text'])
+      ->set('log_errors', $form_state->getValue('uc_quote_log_errors'))
+      ->set('display_debug', $form_state->getValue('uc_quote_display_debug'))
+      ->set('require_quote', $form_state->getValue('uc_quote_require_quote'))
+      ->set('pane_description', $form_state->getValue(['uc_quote_pane_description', 'text']))
+      ->set('error_message', $form_state->getValue(['uc_quote_error_message', 'text']))
       ->save();
 
     parent::submitForm($form, $form_state);

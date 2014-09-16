@@ -95,20 +95,20 @@ class WeightquoteEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if (isset($form_state['values']['mid'])) {
-      drupal_write_record('uc_weightquote_methods', $form_state['values'], 'mid');
+    if ($form_state->hasValue('mid')) {
+      drupal_write_record('uc_weightquote_methods', $form_state->getValues(), 'mid');
       drupal_set_message(t('Weight quote shipping method was updated.'));
       $form_state->setRedirect('uc_quote.methods');
     }
     else {
-      drupal_write_record('uc_weightquote_methods', $form_state['values']);
+      drupal_write_record('uc_weightquote_methods', $form_state->getValues());
 
       // Ensure Rules picks up the new condition.
       // entity_flush_caches();
 
       drupal_set_message(t('Created and enabled new weight quote shipping method.'));
       $form_state->setRedirect('uc_quote.methods');
-      //$form_state['redirect'] = 'admin/store/settings/quotes/manage/get_quote_from_weightquote_' . $form_state['values']['mid'];
+      //$form_state['redirect'] = 'admin/store/settings/quotes/manage/get_quote_from_weightquote_' . $form_state->getValue('mid');
     }
   }
 

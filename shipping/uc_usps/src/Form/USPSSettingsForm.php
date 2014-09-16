@@ -225,10 +225,10 @@ class USPSSettingsForm extends ConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::validateForm().
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!is_numeric($form_state['values']['uc_usps_rate_markup'])) {
+    if (!is_numeric($form_state->getValue('uc_usps_rate_markup'))) {
       $form_state->setErrorByName('uc_usps_rate_markup', t('Rate markup must be a numeric value.'));
     }
-    if (!is_numeric($form_state['values']['uc_usps_weight_markup'])) {
+    if (!is_numeric($form_state->getValue('uc_usps_weight_markup'))) {
       $form_state->setErrorByName('uc_usps_weight_markup', t('Weight markup must be a numeric value.'));
     }
   }
@@ -239,7 +239,7 @@ class USPSSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $usps_config = $this->config('uc_usps.settings');
 
-    $values = $form_state['values'];
+    $values = $form_state->getValues();
     $usps_config
       ->set('user_id', $values['uc_usps_user_id'])
       ->set('online_rates', $values['uc_usps_online_rates'])
