@@ -243,7 +243,7 @@ function uc_tax_report_params_form($form, &$form_state, $values) {
  * @see uc_tax_report_params_form_submit()
  */
 function uc_tax_report_params_form_validate($form, FormStateInterface $form_state) {
-  if (empty($form_state->getValue('status'))) {
+  if ($form_state->isValueEmpty('status')) {
     $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
