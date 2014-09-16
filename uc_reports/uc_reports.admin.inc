@@ -554,7 +554,7 @@ function uc_reports_products_custom_form($form, FormStateInterface $form_state, 
  * @see uc_reports_products_custom_form_submit()
  */
 function uc_reports_products_custom_form_validate($form, FormStateInterface $form_state) {
-  if (empty($form_state->getValue('status'))) {
+  if ($form_state->isValueEmpty('status')) {
     $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
@@ -1225,7 +1225,7 @@ function uc_reports_sales_custom_form($form, FormStateInterface $form_state, $va
  * @see uc_reports_sales_custom_form_submit()
  */
 function uc_reports_sales_custom_form_validate($form, FormStateInterface $form_state) {
-  if (empty($form_state->getValue('status'))) {
+  if ($form_state->isValueEmpty('status')) {
     $form_state->setErrorByName('status', t('You must select at least one order status.'));
   }
 }
