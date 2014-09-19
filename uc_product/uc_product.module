@@ -54,23 +54,7 @@ function uc_product_preprocess_field(&$variables) {
  * Implements hook_node_insert().
  */
 function uc_product_node_insert($node) {
-  if (!uc_product_is_product($node)) {
-    return;
-  }
-
-  $record = new \stdClass();
-  $record->vid = $node->getRevisionId();
-  $record->nid = $node->id();
-  $fields = array('model', 'cost', 'price', 'weight', 'pkg_qty', 'default_qty', 'shippable');
-  foreach ($fields as $name) {
-    $record->$name = $node->$name->value;
-  }
-  $record->weight_units = $node->weight->units;
-  $record->length = $node->dimensions->length;
-  $record->width = $node->dimensions->width;
-  $record->height = $node->dimensions->height;
-  $record->length_units = $node->dimensions->units;
-  drupal_write_record('uc_products', $record);
+  uc_product_node_update($node);
 }
 
 /**
@@ -81,24 +65,26 @@ function uc_product_node_update($node) {
     return;
   }
 
-  $record = new \stdClass();
-  $record->vid = $node->getRevisionId();
-  $record->nid = $node->id();
-  $fields = array('model', 'cost', 'price', 'weight', 'pkg_qty', 'default_qty', 'shippable');
-  foreach ($fields as $name) {
-    $record->$name = $node->$name->value;
-  }
-  $record->weight_units = $node->weight->units;
-  $record->length = $node->dimensions->length;
-  $record->width = $node->dimensions->width;
-  $record->height = $node->dimensions->height;
-  $record->length_units = $node->dimensions->units;
-  if ($node->isNewRevision()) {
-    drupal_write_record('uc_products', $record);
-  }
-  else {
-    drupal_write_record('uc_products', $record, 'vid');
-  }
+  db_merge('uc_products')
+    ->keys(array(
+      'vid' => $node->getRevisionId(),
+      'nid' => $node->id(),
+    ))
+    ->fields(array(
+      'model' => $node->model->value,
+      'cost' => $node->cost->value,
+      'price' => $node->price->value,
+      'weight' => $node->weight->value,
+      'weight_units' => $node->weight->units,
+      'length' => $node->dimensions->length,
+      'width' => $node->dimensions->width,
+      'height' => $node->dimensions->height,
+      'length_units' => $node->dimensions->units,
+      'pkg_qty' => $node->pkg_qty->value,
+      'default_qty' => $node->default_qty->value,
+      'shippable' => $node->shippable->value,
+    ))
+    ->execute();
 }
 
 /**

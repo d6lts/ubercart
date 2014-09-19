@@ -183,16 +183,16 @@ function uc_product_kit_node_insert($node) {
       $product = node_load($product);
     }
 
-    $kit = array(
-      'vid' => $node->getRevisionId(),
-      'nid' => $node->id(),
-      'product_id' => $product->id(),
-      'mutable' => $node->mutable,
-      'qty' => 1,
-      'synchronized' => 1,
-    );
-
-    drupal_write_record('uc_product_kits', $kit);
+    db_insert('uc_product_kits')
+      ->fields(array(
+        'vid' => $node->getRevisionId(),
+        'nid' => $node->id(),
+        'product_id' => $product->id(),
+        'mutable' => $node->mutable,
+        'qty' => 1,
+        'synchronized' => 1,
+      ))
+      ->execute();
 
     $obj->model .= $product->model->value . ' / ';
     $obj->cost += $product->cost->value;
@@ -376,23 +376,18 @@ function uc_product_kit_node_update($node) {
     drupal_set_message(t('Product kit discounts are not applied because the customer can remove components from their cart.'));
   }
 
-  if ($node->isNewRevision()) {
-    drupal_write_record('uc_products', $obj);
-  }
-  else {
-    db_merge('uc_products')
-      ->key(array('vid' => $obj->vid))
-      ->fields(array(
-        'model' => $obj->model,
-        'cost' => $obj->cost,
-        'price' => $obj->price,
-        'weight' => $obj->weight,
-        'weight_units' => $obj->weight_units,
-        'default_qty' => $obj->default_qty,
-        'shippable' => $obj->shippable ? 1 : 0,
-      ))
-      ->execute();
-  }
+  db_merge('uc_products')
+    ->key(array('vid' => $obj->vid))
+    ->fields(array(
+      'model' => $obj->model,
+      'cost' => $obj->cost,
+      'price' => $obj->price,
+      'weight' => $obj->weight,
+      'weight_units' => $obj->weight_units,
+      'default_qty' => $obj->default_qty,
+      'shippable' => $obj->shippable ? 1 : 0,
+    ))
+    ->execute();
 
   // When a kit is updated, remove matching kits from the cart, as there is no
   // simple way to handle product addition or removal at this point.

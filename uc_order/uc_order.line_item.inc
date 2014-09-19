@@ -100,9 +100,14 @@ function uc_order_line_item_add($order_id, $type, $title, $amount, $weight = NUL
     'title' => $title,
     'amount' => $amount,
     'weight' => $weight,
-    'data' => $data,
+    'data' => serialize($data),
   );
-  drupal_write_record('uc_order_line_items', $line_item);
+
+  $line_item['line_item_id'] = db_insert('uc_order_line_items')
+    ->fields($line_item)
+    ->execute();
+
+  $line_item['data'] = $data;
 
   return $line_item;
 }

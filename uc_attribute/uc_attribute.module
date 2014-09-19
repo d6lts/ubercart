@@ -17,6 +17,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeInterface;
@@ -573,12 +574,31 @@ function uc_attribute_load_product_attributes($nid) {
  *   The attribute object to save.
  *
  * @return
- *   The integer result from drupal_write_record().
+ *   The integer result from db_merge().
  */
 function uc_attribute_save(&$attribute) {
-  // Insert or update?
-  $key = empty($attribute->aid) ? array() : 'aid';
-  return drupal_write_record('uc_attributes', $attribute, $key);
+  $fields = array(
+    'name' => $attribute->name,
+    'label' => $attribute->label,
+    'ordering' => $attribute->ordering,
+    'required' => $attribute->required,
+    'display' => $attribute->display,
+    'description' => $attribute->description,
+  );
+
+  if (empty($attribute->aid)) {
+    $attribute->aid = db_insert('uc_attributes')
+      ->fields($fields)
+      ->execute();
+
+    return Merge::STATUS_INSERT;
+  }
+  else {
+    return db_merge('uc_attributes')
+      ->key('aid', $attribute->aid)
+      ->fields($fields)
+      ->execute();
+  }
 }
 
 /**
@@ -628,12 +648,31 @@ function uc_attribute_option_load($oid) {
  *   The attribute option object to save.
  *
  * @return
- *   The integer result from drupal_write_record().
+ *   The integer result from db_merge().
  */
 function uc_attribute_option_save(&$option) {
-  // Insert or update?
-  $key = empty($option->oid) ? array() : 'oid';
-  return drupal_write_record('uc_attribute_options', $option, $key);
+  $fields = array(
+    'aid' => $option->aid,
+    'name' => $option->name,
+    'cost' => $option->cost,
+    'price' => $option->price,
+    'weight' => $option->weight,
+    'ordering' => $option->ordering,
+  );
+
+  if (empty($option->oid)) {
+    $option->oid = db_insert('uc_attribute_options')
+      ->fields($fields)
+      ->execute();
+
+    return Merge::STATUS_INSERT;
+  }
+  else {
+    return db_merge('uc_attribute_options')
+      ->key('oid', $option->oid)
+      ->fields($fields)
+      ->execute();
+  }
 }
 
 /**
@@ -673,7 +712,7 @@ function uc_attribute_option_delete($oid) {
  *   Save the product/class attribute's options, too?
  *
  * @return
- *   The integer result from drupal_write_record().
+ *   The integer result from db_merge().
  */
 function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALSE) {
   $sql = uc_attribute_type_info($type);
@@ -702,11 +741,19 @@ function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALS
     }
   }
 
-  // Merge in the product/class attribute's ID and save.
-  $attribute->{$type == 'product' ? 'nid' : 'pcid'} = $id;
-  $result = drupal_write_record($sql['attr_table'], $attribute, $key);
-
-  return $result;
+  return db_merge($sql['attr_table'])
+    ->keys(array(
+      $sql['id'] => $id,
+      'aid' => $attribute->aid,
+    ))
+    ->fields(array(
+      'label' => $attribute->label,
+      'ordering' => $attribute->ordering,
+      'default_option' => $attribute->default_option,
+      'required' => $attribute->required,
+      'display' => $attribute->display,
+    ))
+    ->execute();
 }
 
 /**
@@ -797,19 +844,23 @@ function uc_attribute_subject_option_load($oid, $type, $id) {
  *   The product/class ID.
  *
  * @return
- *   The integer result from drupal_write_record().
+ *   The integer result from db_merge().
  */
 function uc_attribute_subject_option_save(&$option, $type, $id) {
   $sql = uc_attribute_type_info($type);
 
-  // Insert or update?
-  $key = uc_attribute_subject_option_exists($option->oid, $type, $id) ? array('oid', $sql['id']) : array();
-
-  // Merge in the product/class attribute option's ID, and save.
-  $option->{$type == 'product' ? 'nid' : 'pcid'} = $id;
-  $result = drupal_write_record($sql['opt_table'], $option, $key);
-
-  return $result;
+  return db_merge($sql['opt_table'])
+    ->keys(array(
+      $sql['id'] => $id,
+      'oid' => $option->oid,
+    ))
+    ->fields(array(
+      'cost' => $option->cost,
+      'price' => $option->price,
+      'weight' => $option->weight,
+      'ordering' => $option->ordering,
+    ))
+    ->execute();
 }
 
 /**
@@ -910,28 +961,6 @@ function uc_attribute_subject_exists($aid, $type, $id) {
   $query = db_select($sql['attr_table'], 'a')
     ->fields('a', array('aid'))
     ->condition('aid', $aid)
-    ->condition($sql['id'], $id);
-  return FALSE !== $query->execute()->fetchField();
-}
-
-/**
- * Checks if a product/class attribute option exists.
- *
- * @param $oid
- *   The base attribute option ID.
- * @param $id
- *   The product/class attribute option's ID.
- * @param $type
- *   Is this a product or a class?
- *
- * @return
- *   TRUE if the attribute option exists.
- */
-function uc_attribute_subject_option_exists($oid, $type, $id) {
-  $sql = uc_attribute_type_info($type);
-  $query = db_select($sql['opt_table'], 'o')
-    ->fields('o', array('oid'))
-    ->condition('oid', $oid)
     ->condition($sql['id'], $id);
   return FALSE !== $query->execute()->fetchField();
 }

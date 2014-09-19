@@ -314,13 +314,25 @@ function uc_line_item_tax_subtotal($op, $order) {
  *   The saved tax rate object including the rate ID for new rates.
  */
 function uc_taxes_rate_save($rate, $reset = TRUE) {
-  // Save it as a new rate if no ID is specified.
-  if (empty($rate->id)) {
-    drupal_write_record('uc_taxes', $rate);
+  $fields = array(
+    'name' => $rate->name,
+    'rate' => $rate->rate,
+    'shippable' => $rate->shippable,
+    'weight' => $rate->weight,
+    'display_include' => $rate->display_include,
+    'inclusion_text' => $rate->inclusion_text,
+  );
+
+  if (isset($rate->id)) {
+    db_merge('uc_taxes')
+      ->key('id', $rate->id)
+      ->fields($fields)
+      ->execute();
   }
-  // Otherwise update the existing tax rate's data.
   else {
-    drupal_write_record('uc_taxes', $rate, array('id'));
+    $rate->id = db_insert('uc_taxes')
+      ->fields($fields)
+      ->execute();
   }
 
   db_delete('uc_taxed_product_types')
