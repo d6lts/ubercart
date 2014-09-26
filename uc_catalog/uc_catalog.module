@@ -13,7 +13,7 @@
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\NodeTypeInterface;
 
@@ -291,9 +291,8 @@ function uc_catalog_path($term) {
 function uc_catalog_add_node_type($type) {
   $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
 
-  $field = FieldStorageConfig::loadByName('node', 'taxonomy_catalog');
-  if (!$field) {
-    $field = entity_create('field_storage_config', array(
+  if (!FieldStorageConfig::loadByName('node', 'taxonomy_catalog')) {
+    entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'name' => 'taxonomy_catalog',
       'type' => 'taxonomy_term_reference',
@@ -306,19 +305,16 @@ function uc_catalog_add_node_type($type) {
           ),
         ),
       ),
-    ));
-    $field->save();
+    ))->save();
   }
 
-  $instance = FieldInstanceConfig::loadByName('node', $type, 'taxonomy_catalog');
-  if (!$instance) {
-    $instance = entity_create('field_instance_config', array(
+  if (!FieldConfig::loadByName('node', $type, 'taxonomy_catalog')) {
+    entity_create('field_config', array(
       'field_name' => 'taxonomy_catalog',
       'entity_type' => 'node',
       'bundle' => $type,
       'label' => t('Catalog'),
-    ));
-    $instance->save();
+    ))->save();
 
     entity_get_form_display('node', $type, 'default')
       ->setComponent('taxonomy_catalog', array(
@@ -336,28 +332,22 @@ function uc_catalog_add_node_type($type) {
  * Sets up a default image field on the Catalog vocabulary.
  */
 function uc_catalog_add_image_field() {
-  $field = FieldStorageConfig::loadByName('taxonomy_term', 'uc_catalog_image');
-
-  if (!$field) {
-    $field = entity_create('field_storage_config', array(
+  if (!FieldStorageConfig::loadByName('taxonomy_term', 'uc_catalog_image')) {
+    entity_create('field_storage_config', array(
       'entity_type' => 'taxonomy_term',
       'name' => 'uc_catalog_image',
       'type' => 'image',
-    ));
-    $field->save();
+    ))->save();
   }
 
-  $instance = FieldInstanceConfig::loadByName('taxonomy_term', 'catalog', 'uc_catalog_image');
-
   // Only add the instance if it doesn't exist. Don't overwrite any changes.
-  if (!$instance) {
-    $instance = entity_create('field_instance_config', array(
+  if (!FieldConfig::loadByName('taxonomy_term', 'catalog', 'uc_catalog_image')) {
+    entity_create('field_config', array(
       'field_name' => 'uc_catalog_image',
       'entity_type' => 'taxonomy_term',
       'bundle' => 'catalog',
       'label' => t('Image'),
-    ));
-    $instance->save();
+    ))->save();
 
     entity_get_form_display('taxonomy_term', 'catalog', 'default')
       ->setComponent('uc_catalog_image', array(
