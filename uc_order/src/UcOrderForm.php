@@ -73,8 +73,10 @@ class UcOrderForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
-    $order = parent::submit($form, $form_state);
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
+    $order = $this->entity;
     $original = clone $order;
 
     // Build list of changes to be applied.
@@ -131,8 +133,6 @@ class UcOrderForm extends ContentEntityForm {
     $order->save();
 
     drupal_set_message(t('Order changes saved.'));
-
-    return $order;
   }
 
 }
