@@ -294,7 +294,7 @@ function uc_catalog_add_node_type($type) {
   if (!FieldStorageConfig::loadByName('node', 'taxonomy_catalog')) {
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'taxonomy_catalog',
+      'field_name' => 'taxonomy_catalog',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
@@ -335,7 +335,7 @@ function uc_catalog_add_image_field() {
   if (!FieldStorageConfig::loadByName('taxonomy_term', 'uc_catalog_image')) {
     entity_create('field_storage_config', array(
       'entity_type' => 'taxonomy_term',
-      'name' => 'uc_catalog_image',
+      'field_name' => 'uc_catalog_image',
       'type' => 'image',
     ))->save();
   }

@@ -980,7 +980,7 @@ function uc_product_add_default_image_field($type = NULL) {
   if (!$field) {
     $field = entity_create('field_storage_config', array(
       'entity_type' => 'node',
-      'name' => 'uc_product_image',
+      'field_name' => 'uc_product_image',
       'type' => 'image',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       'settings' => array(
