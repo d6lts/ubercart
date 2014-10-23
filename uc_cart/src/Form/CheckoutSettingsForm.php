@@ -221,7 +221,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#title' => t('Alternate checkout completion page'),
       '#description' => t('Leave blank to use the default completion page (recommended).'),
       '#default_value' => $cart_config->get('checkout_complete_page'),
-      '#field_prefix' => url(NULL, array('absolute' => TRUE)),
+      '#field_prefix' => \Drupal::url('<front>', [], ['absolute' => TRUE]),
       '#size' => 16,
     );
     $form['completion_messages']['uc_msg_order_logged_in'] = array(

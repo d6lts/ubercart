@@ -170,7 +170,7 @@ function uc_cart_preprocess_block(&$variables) {
  * Default template: uc-cart-block-title.html.twig.
  */
 function template_preprocess_uc_cart_block_title(&$variables) {
-  $variables['cart_url'] = url('cart');
+  $variables['cart_url'] = \Drupal::url('uc_cart.cart');
 }
 
 /**
@@ -485,7 +485,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     ));
     $item_entity->save();
     if ($msg) {
-      drupal_set_message(t('<strong>@product-title</strong> added to <a href="!url">your shopping cart</a>.', array('@product-title' => $node->label(), '!url' => url('cart'))));
+      drupal_set_message(t('<strong>@product-title</strong> added to <a href="!url">your shopping cart</a>.', array('@product-title' => $node->label(), '!url' => \Drupal::url('uc_cart.cart'))));
     }
   }
   else {

@@ -61,7 +61,7 @@ class CartLinksSettingsForm extends ConfigFormBase {
       '#description' => t('Enter the URL to redirect to when an invalid cart link is used.'),
       '#default_value' => $cart_links_config->get('invalid_page'),
       '#size' => 32,
-      '#field_prefix' => url(NULL, array('absolute' => TRUE)),
+      '#field_prefix' => \Drupal::url('<front>', [], ['absolute' => TRUE]),
     );
 
     return parent::buildForm($form, $form_state);

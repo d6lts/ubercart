@@ -409,7 +409,7 @@ function uc_roles_uc_store_status() {
     $message[] = array(
       'status' => 'warning',
       'title' => t('Roles'),
-      'desc' => t('There are no product role(s) that can be assigned upon product purchase. Set product roles in the <a href="!url">product settings</a> under the role assignment settings tab.', array('!url' => url('admin/store/settings/products'))),
+      'desc' => t('There are no product role(s) that can be assigned upon product purchase. Set product roles in the <a href="!url">product settings</a> under the role assignment settings tab.', array('!url' => \Drupal::url('uc_product.settings'))),
     );
   }
   else {
@@ -434,7 +434,7 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
 
   if (!count($default_role_choices)) {
     $form['no_roles'] = array(
-      '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', array('!url' => url('admin/people/permissions/roles', array('query' => array('destination' => 'admin/store/settings/products'))))),
+      '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', array('!url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']]))),
       '#prefix' => '<p>',
       '#suffix' => '</p>',
     );

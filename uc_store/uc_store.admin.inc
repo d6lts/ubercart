@@ -50,7 +50,7 @@ function uc_store_uc_store_status() {
     $messages[] = array(
       'status' => 'error',
       'title'  => t('Store settings'),
-      'desc'   => t('Store e-mail address has not been set. Please enter it <a href="@url">here</a>.', array('@url' => url('admin/store/settings/store'))),
+      'desc'   => t('Store e-mail address has not been set. Please enter it <a href="@url">here</a>.', array('@url' => \Drupal::url('uc_store.settings_form'))),
     );
   }
   else {

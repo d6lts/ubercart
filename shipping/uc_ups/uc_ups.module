@@ -300,7 +300,7 @@ function uc_ups_uc_store_status() {
     $messages[] = array(
       'status' => 'error',
       'title' => t('UPS Online Tools'),
-      'desc' => t('More information is needed to access UPS Online Tools. Please enter it <a href="!url">here</a>.', array('!url' => url('admin/store/settings/quotes/settings/ups'))),
+      'desc' => t('More information is needed to access UPS Online Tools. Please enter it <a href="!url">here</a>.', array('!url' => \Drupal::url('uc_ups.settings'))),
     );
   }
 

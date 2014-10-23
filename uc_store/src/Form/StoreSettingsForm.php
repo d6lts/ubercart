@@ -69,7 +69,7 @@ class StoreSettingsForm extends ConfigFormBase {
       '#description' => t('The Drupal page for the store help link.'),
       '#default_value' => $config->get('help_page'),
       '#size' => 32,
-      '#field_prefix' => url(NULL, array('absolute' => TRUE)),
+      '#field_prefix' => \Drupal::url('<front>', [], ['absolute' => TRUE]),
     );
 
     $form['address'] = array(

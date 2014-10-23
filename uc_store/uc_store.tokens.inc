@@ -74,7 +74,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'login-link':
-          $login_link = url('user', array('absolute' => TRUE));
+          $login_link = \Drupal::url('user.page', [], ['absolute' => TRUE]);
           $replacements[$original] = l($login_link, $login_link);
           break;
 

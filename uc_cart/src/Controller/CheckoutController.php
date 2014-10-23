@@ -60,9 +60,9 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     if ($user->isAnonymous() && !$cart_config->get('checkout_anonymous')) {
       drupal_set_message(t('You must login before you can proceed to checkout.'));
       if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-        drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => url('user/register', array('query' => drupal_get_destination())))));
+        drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => $this->url('user.register', [], ['query' => drupal_get_destination()]))));
       }
-      return new RedirectResponse(url('user', array('query' => drupal_get_destination(), 'absolute' => TRUE)));
+      return $this->redirect('user.page', [], ['query' => drupal_get_destination()]);
     }
 
     // Load an order from the session, if available.
