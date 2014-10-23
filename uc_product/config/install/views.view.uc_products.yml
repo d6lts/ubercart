@@ -64,11 +64,12 @@ display:
           default: changed
           empty_table: '0'
       row:
-        type: node
+        type: 'entity:node'
         options:
           build_mode: teaser
-          links: '1'
-          comments: '0'
+          comments: false
+          view_mode: teaser
+        provider: views
       fields:
         title:
           id: title
