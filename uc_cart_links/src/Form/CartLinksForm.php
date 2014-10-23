@@ -242,10 +242,10 @@ class CartLinksForm extends ConfirmFormBase {
     $options += array('absolute' => TRUE);
 
     // Form redirect is for confirmed links.
-    $form_state->setRedirectUrl(Url::createFromPath($path));
+    $form_state->setRedirectUrl(Url::fromUri($path, $options));
 
     // RedirectResponse is for unconfirmed links.
-    return new RedirectResponse(url($path, $options));
+    return new RedirectResponse(Url::fromUri($path, $options));
   }
 
 }

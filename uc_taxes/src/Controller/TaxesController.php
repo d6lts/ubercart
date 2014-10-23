@@ -9,6 +9,7 @@ namespace Drupal\uc_taxes\Controller;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 
 /**
  * Controller routines for tax routes.
@@ -30,10 +31,10 @@ class TaxesController extends ControllerBase {
         implode(', ', $rate->taxed_product_types),
         implode(', ', $rate->taxed_line_items),
         $rate->weight,
-        l(t('edit'), 'admin/store/settings/taxes/' . $rate_id . '/edit'),
+        $this->l(t('edit'), new Url('uc_taxes.rate_edit', ['tax_rate' => $rate_id])),
         // l(t('conditions'), 'admin/store/settings/taxes/manage/uc_taxes_' . $rate_id),
-        l(t('clone'), 'admin/store/settings/taxes/' . $rate_id . '/clone'),
-        l(t('delete'), 'admin/store/settings/taxes/' . $rate_id . '/delete'),
+        $this->l(t('clone'), new Url('uc_taxes.rate_clone', ['tax_rate' => $rate_id])),
+        $this->l(t('delete'), new Url('uc_taxes.rate_delete', ['tax_rate' => $rate_id])),
       );
     }
 

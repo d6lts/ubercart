@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart\Tests;
 
+use Drupal\Core\Url;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -49,7 +50,7 @@ class CartSettingsTest extends UbercartTestBase {
       array(),
       t('Add to cart')
     );
-    $url_pass = ($this->getUrl() == url($redirect, array('absolute' => TRUE)));
+    $url_pass = ($this->getUrl() == Url::fromUri($redirect, ['absolute' => TRUE])->toString());
     $this->assertTrue(
       $url_pass,
       t('Add to cart redirect takes user to the correct URL.')
@@ -62,7 +63,7 @@ class CartSettingsTest extends UbercartTestBase {
     );
 
     $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'), array('query' => array('test' => 'querystring')));
-    $url = url('node/' . $this->product->id(), array('absolute' => TRUE, 'query' => array('test' => 'querystring')));
+    $url = \Drupal::url('entity.node.canonical', ['node' => $this->product->id()], ['absolute' => TRUE, 'query' => ['test' => 'querystring']]);
     $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect works with a query string.');
   }
 
@@ -127,7 +128,7 @@ class CartSettingsTest extends UbercartTestBase {
       0,
       t('Continue shopping link appears on the page.')
     );
-    $links = $this->xpath('//a[@href="' . url('node/' . $this->product->id(), array('absolute' => FALSE)) . '"]');
+    $links = $this->xpath('//a[@href="' . \Drupal::url('entity.node.canonical', ['node' => $this->product->id()]) . '"]');
     $this->assertTrue(
       isset($links[0]),
       t('Continue shopping link returns to the product page.')
@@ -161,8 +162,7 @@ class CartSettingsTest extends UbercartTestBase {
       array(),
       t('Continue shopping')
     );
-    $url_pass = ($this->getUrl() == url($settings['uc_continue_shopping_url'],
-      array('absolute' => TRUE)));
+    $url_pass = ($this->getUrl() == Url::fromUri($settings['uc_continue_shopping_url'], ['absolute' => TRUE])->toString());
     $this->assertTrue(
       $url_pass,
       t('Continue shopping button takes the user to the correct URL.')
@@ -201,7 +201,7 @@ class CartSettingsTest extends UbercartTestBase {
       0,
       t('The breadcrumb link text is set correctly.')
     );
-    $links = $this->xpath('//a[@href="' . url($settings['uc_cart_breadcrumb_url'], array('absolute' => TRUE)) . '"]');
+    $links = $this->xpath('//a[@href="' . Url::fromUri($settings['uc_cart_breadcrumb_url'], array('absolute' => TRUE))->toString() . '"]');
     $this->assertTrue(
       isset($links[0]),
       t('The breadcrumb link is set correctly.')

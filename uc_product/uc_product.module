@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
@@ -587,7 +588,7 @@ function uc_product_uc_cart_display($item) {
   $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
 
   $element['title'] = array(
-    '#markup' => $node->access('view') ? l($item->title, 'node/' . $node->id()) : String::checkPlain($item->title),
+    '#markup' => $node->access('view') ? \Drupal::l($item->title, new Url('entity.node.canonical', ['node' => $node->id()])) : String::checkPlain($item->title),
   );
 
   $element['#total'] = $item->price->value * $item->qty->value;

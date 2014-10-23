@@ -33,10 +33,9 @@ class CartBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function build(RouteMatchInterface $route_match) {
     $config = \Drupal::config('uc_cart.settings');
     $text = $config->get('breadcrumb_text');
-    $url = url($config->get('breadcrumb_url'), array('absolute' => TRUE));
 
     $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $breadcrumb[] = new Link($text, Url::createFromPath($url));
+    $breadcrumb[] = new Link($text, Url::fromUri($config->get('breadcrumb_url'), array('absolute' => TRUE)));
 
     return $breadcrumb;
   }

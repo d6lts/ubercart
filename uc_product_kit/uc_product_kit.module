@@ -735,7 +735,7 @@ function uc_product_kit_add_to_cart_form_submit($form, FormStateInterface $form_
     drupal_set_message(t('<strong>@product-title</strong> added to <a href="!url">your shopping cart</a>.', array('@product-title' => $node->label(), '!url' => \Drupal::url('uc_cart.cart'))));
   }
   $path = uc_cart_add_item($form_state->getValue('nid'), $form_state->getValue('qty'), $form_state->getValues());
-  $form_state->setRedirectUrl(Url::createFromPath($path));
+  $form_state->setRedirectUrl(Url::fromUri($path));
 }
 
 /**
@@ -785,7 +785,7 @@ function uc_product_kit_buy_it_now_form_submit($form, FormStateInterface $form_s
   }
   $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
   $path = uc_cart_add_item($form_state->getValue('nid'), 1, $form_state->getValues(), NULL, $msg);
-  $form_state->setRedirectUrl(Url::createFromPath($path));
+  $form_state->setRedirectUrl(Url::fromUri($path));
 }
 
 /**

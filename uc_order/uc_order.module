@@ -113,7 +113,7 @@ function uc_order_page_build(&$page) {
     $page['#attached']['js'][] = array(
       'type' => 'setting',
       'data' => array('ucURL' => array(
-        'adminOrders' => url('admin/store/orders/'),
+        'adminOrders' => \Drupal::url('uc_order.order_admin') . '/',
       )),
     );
   }
