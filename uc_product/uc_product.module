@@ -425,7 +425,7 @@ function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $
       ->setRequired(TRUE)
       ->setCustomStorage(TRUE)
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'string_textfield',
         'weight' => 1,
         'settings' => array(
           'size' => 32,
