@@ -100,9 +100,9 @@ function uc_order_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments().
  */
-function uc_order_page_build(&$page) {
+function uc_order_page_attachments(&$page) {
   $path = drupal_get_path('module', 'uc_order');
   $page['#attached']['css'][$path . '/css/uc_order.css'] = array('every_page' => TRUE);
 

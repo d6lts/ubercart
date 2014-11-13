@@ -23,9 +23,9 @@ use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments().
  */
-function uc_product_page_build(&$page) {
+function uc_product_page_attachments(&$page) {
   $path = drupal_get_path('module', 'uc_product');
   $page['#attached']['css'][$path . '/css/uc_product.css'] = array('every_page' => TRUE);
 }
