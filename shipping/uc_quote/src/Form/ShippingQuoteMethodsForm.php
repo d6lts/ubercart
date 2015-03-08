@@ -26,6 +26,15 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'uc_quote.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $quote_config = $this->config('uc_quote.settings');
     $form['methods'] = array(

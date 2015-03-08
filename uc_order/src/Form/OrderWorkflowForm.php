@@ -25,6 +25,15 @@ class OrderWorkflowForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'uc_order.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $states = uc_order_state_options_list();
     $statuses = entity_load_multiple('uc_order_status');

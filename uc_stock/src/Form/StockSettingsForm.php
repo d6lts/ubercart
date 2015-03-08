@@ -25,6 +25,16 @@ class StockSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'uc_stock.settings',
+      'uc_stock.mail',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('uc_stock.settings');
     $mail = $this->config('uc_stock.mail');

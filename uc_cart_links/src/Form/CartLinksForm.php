@@ -48,6 +48,15 @@ class CartLinksForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'uc_cart_links.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, $actions = NULL) {
     $cart_links_config = $this->config('uc_cart_links.settings');
 

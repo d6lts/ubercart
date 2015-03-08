@@ -60,6 +60,16 @@ class CheckoutSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'uc_cart.settings',
+      'uc_cart.messages',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $cart_config = \Drupal::config('uc_cart.settings');
     $messages = \Drupal::config('uc_cart.messages');

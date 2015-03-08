@@ -23,6 +23,15 @@ class USPSSettingsForm extends ConfigFormBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return [
+      'uc_usps.settings',
+    ];
+  }
+
+  /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
