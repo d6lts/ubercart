@@ -85,8 +85,8 @@ function uc_quote_action_get_quote($order, $method) {
   ob_end_clean();
 
   if ($messages && \Drupal::config('uc_quote.settings')->get('log_errors')) {
-    watchdog('quote', '!messages', array('!messages' => $messages), WATCHDOG_WARNING);
-    watchdog('quote', '<pre>@data</pre>', array('@data' => print_r($quote_data, TRUE)), WATCHDOG_WARNING);
+    \Drupal::logger('quote')->warning('!messages', array('!messages' => $messages));
+    \Drupal::logger('quote')->warning('<pre>@data</pre>', array('@data' => print_r($quote_data, TRUE)));
   }
   return $quote_data;
 }

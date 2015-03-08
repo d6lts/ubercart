@@ -219,7 +219,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       $cc_type = _uc_paypal_card_type($order->payment_details['cc_number']);
       if ($cc_type === FALSE) {
         drupal_set_message(t('The credit card type did not pass validation.'), 'error');
-        watchdog('uc_paypal', 'Could not figure out cc type: @number / @type', array('@number' => $order->payment_details['cc_number'], '@type' => $order->payment_details['cc_type']), WATCHDOG_ERROR);
+        \Drupal::logger('uc_paypal')->error('Could not figure out cc type: @number / @type', array('@number' => $order->payment_details['cc_number'], '@type' => $order->payment_details['cc_type']));
         return array('success' => FALSE);
       }
     }
@@ -285,13 +285,12 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
 
   switch ($nvp_response['ACK']) {
     case 'SuccessWithWarning':
-      watchdog('uc_payment', '<b>@type succeeded with a warning.</b>!paypal_message',
+      \Drupal::logger('uc_payment')->warning('<b>@type succeeded with a warning.</b>!paypal_message',
         array(
           '!paypal_message' => _uc_paypal_build_error_messages($nvp_response),
           '@type' => $types[$data['txn_type']],
-        ),
-        WATCHDOG_WARNING,
-        l(t('view order'), 'admin/store/orders/' . $order_id)
+          'link' => l(t('view order'), 'admin/store/orders/' . $order_id),
+        )
       );
       // Fall through.
     case 'Success':
@@ -981,7 +980,7 @@ function uc_paypal_api_request($request, $server) {
     ->send();
 
   if ($response->isError()) {
-    watchdog('uc_paypal', '!error', array('!error' => $response-getReasonPhrase()), WATCHDOG_ERROR);
+    \Drupal::logger('uc_paypal')->error('!error', array('!error' => $response-getReasonPhrase()));
   }
 
   return _uc_paypal_nvp_to_array($response->getBody(TRUE));

@@ -20,22 +20,22 @@ class HOPController extends ControllerBase {
    */
   public static function post() {
     if (!uc_cybersource_hop_include()) {
-      watchdog('uc_cybersource_hop', 'Unable to receive HOP POST due to missing or unreadable HOP.php file.', array(), 'error');
+      \Drupal::logger('uc_cybersource_hop')->error('Unable to receive HOP POST due to missing or unreadable HOP.php file.');
       drupal_add_http_header('Status', '503 Service unavailable');
       print t('The site was unable to receive a HOP post because of a missing or unreadble HOP.php');
       exit();
     }
     $verify = VerifyTransactionSignature($_POST);
-    watchdog('uc_cybersource_hop', 'Receiving payment notification at URL for order @orderNumber',
+    \Drupal::logger('uc_cybersource_hop')->notice('Receiving payment notification at URL for order @orderNumber',
       array('@orderNumber' => $_POST['orderNumber'] ));
 
     if (!isset($_POST['orderNumber'])) {
-      watchdog('uc_cybersource_hop', 'CS HOP attempted with invalid order number.', array(), WATCHDOG_ERROR);
+      \Drupal::logger('uc_cybersource_hop')->error('CS HOP attempted with invalid order number.');
       return;
     }
 
     if (!$verify) {
-      watchdog('uc_cybersource_hop', 'Receiving invalid payment notification at URL for order @orderNumber. <pre>@debug</pre>',
+      \Drupal::logger('uc_cybersource_hop')->notice('Receiving invalid payment notification at URL for order @orderNumber. <pre>@debug</pre>',
       array('@orderNumber' => $_POST['orderNumber'], '@debug' => print_r($_POST, TRUE) ));
       return;
     }
@@ -55,10 +55,10 @@ class HOPController extends ControllerBase {
 
     switch ($decision) {
       case 'ACCEPT':
-        watchdog('uc_cybersource_hop', 'CyberSource verified successful payment.');
+        \Drupal::logger('uc_cybersource_hop')->notice('CyberSource verified successful payment.');
         $duplicate = (bool) db_query_range('SELECT 1 FROM {uc_payment_cybersource_hop_post} WHERE order_id = :order_id AND decision = :decision', 0, 1, array(':order_id' => $order_id, ':decision' => 'ACCEPT'))->fetchField();
         if ($duplicate) {
-          watchdog('uc_cybersource_hop', 'CS HOP transaction for order @order-id has been processed before.', array('@order_id' => $order_id), WATCHDOG_NOTICE);
+          \Drupal::logger('uc_cybersource_hop')->notice('CS HOP transaction for order @order-id has been processed before.', array('@order_id' => $order_id));
           return;
         }
         db_insert('uc_payment_cybersource_hop_post')

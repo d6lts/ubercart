@@ -1645,10 +1645,10 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
     drupal_write_record('uc_file_users', $file_user, $key);
 
     if ($key) {
-      watchdog('uc_file', '%user has had download privileges of %file renewed.', array('%user' => user_format_name($user), '%file' => $file_user['filename']));
+      \Drupal::logger('uc_file')->notice('%user has had download privileges of %file renewed.', array('%user' => user_format_name($user), '%file' => $file_user['filename']));
     }
     else {
-      watchdog('uc_file', '%user has been allowed to download %file.', array('%user' => user_format_name($user), '%file' => $file_user['filename']));
+      \Drupal::logger('uc_file')->notice('%user has been allowed to download %file.', array('%user' => user_format_name($user), '%file' => $file_user['filename']));
     }
 
     $result[] = (object)$file_user;

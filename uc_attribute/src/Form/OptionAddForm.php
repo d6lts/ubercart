@@ -33,7 +33,7 @@ class OptionAddForm extends OptionFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_write_record('uc_attribute_options', $form_state->getValues());
     drupal_set_message(t('Created new option %option.', array('%option' => $form_state->getValue('name'))));
-    watchdog('uc_attribute', 'Created new option %option.', array('%option' => $form_state->getValue('name')), WATCHDOG_NOTICE, 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/add');
+    \Drupal::logger('uc_attribute')->notice('Created new option %option.', array('%option' => $form_state->getValue('name'), 'link' => 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/add'));
     $form_state->setRedirect('uc_attribute.option_add', array('aid' => $form_state->getValue('aid')));
   }
 

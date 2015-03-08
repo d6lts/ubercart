@@ -23,7 +23,7 @@ class CheckoutController extends ControllerBase {
   public function complete($cart_id = 0) {
     $cart_config = \Drupal::config('uc_cart.settings');
     $module_config = \Drupal::config('uc_2checkout.settings');
-    watchdog('2Checkout', 'Receiving new order notification for order !order_id.', array('!order_id' => String::checkPlain($_REQUEST['merchant_order_id'])));
+    \Drupal::logger('2Checkout')->notice('Receiving new order notification for order !order_id.', array('!order_id' => String::checkPlain($_REQUEST['merchant_order_id'])));
 
     $order = uc_order_load($_REQUEST['merchant_order_id']);
 
@@ -40,12 +40,12 @@ class CheckoutController extends ControllerBase {
     }
 
     if ($_REQUEST['demo'] == 'Y' xor $module_config->get('demo')) {
-      watchdog('uc_2checkout', 'The 2checkout payment for order <a href="@order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
+      \Drupal::logger('uc_2checkout')->error('The 2checkout payment for order <a href="@order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
         '@order_url' => url('admin/store/orders/' . $order->id()),
         '@order_id' => $order->id(),
         '%flag' => $_REQUEST['demo'] == 'Y' ? 'Y' : 'N',
         '%mode' => $module_config->get('demo') ? 'Y' : 'N',
-      ), WATCHDOG_ERROR);
+      ));
 
       if (!$module_config->get('demo')) {
         throw new AccessDeniedHttpException();

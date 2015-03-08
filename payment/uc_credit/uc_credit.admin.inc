@@ -329,7 +329,7 @@ function uc_credit_settings_form_submit($form, FormStateInterface $form_state) {
     if (!file_exists($key_file)) {
       if (!$file = fopen($key_file, 'wb')) {
         drupal_set_message(t('Credit card encryption key file creation failed for file @file. Check your filepath settings and directory permissions.', array('@file' => $key_file)), 'error');
-        watchdog('uc_credit', 'Credit card encryption key file creation failed for file @file. Check your filepath settings and directory permissions.', array('@file' => $key_file), WATCHDOG_ERROR);
+        \Drupal::logger('uc_credit')->error('Credit card encryption key file creation failed for file @file. Check your filepath settings and directory permissions.', array('@file' => $key_file));
       }
       else {
         // Replacement key generation suggested by Barry Jaspan
@@ -338,7 +338,7 @@ function uc_credit_settings_form_submit($form, FormStateInterface $form_state) {
         fclose($file);
 
         drupal_set_message(t('Credit card encryption key file generated. Card data will now be encrypted.'));
-        watchdog('uc_credit', 'Credit card encryption key file generated. Card data will now be encrypted.');
+        \Drupal::logger('uc_credit')->notice('Credit card encryption key file generated. Card data will now be encrypted.');
       }
     }
   }

@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  */
 function uc_paypal_ipn() {
   if (!isset($_POST['invoice'])) {
-    watchdog('uc_paypal', 'IPN attempted with invalid order ID.', array(), WATCHDOG_ERROR);
+    \Drupal::logger('uc_paypal')->error('IPN attempted with invalid order ID.');
     return;
   }
 
@@ -34,12 +34,12 @@ function uc_paypal_ipn() {
     $order_id = intval($_POST['invoice']);
   }
 
-  watchdog('uc_paypal', 'Receiving IPN at URL for order @order_id. <pre>@debug</pre>', array('@order_id' => $order_id, '@debug' => variable_get('uc_paypal_wps_debug_ipn', FALSE) ? print_r($_POST, TRUE) : ''));
+  \Drupal::logger('uc_paypal')->notice('Receiving IPN at URL for order @order_id. <pre>@debug</pre>', array('@order_id' => $order_id, '@debug' => variable_get('uc_paypal_wps_debug_ipn', FALSE) ? print_r($_POST, TRUE) : ''));
 
   $order = uc_order_load($order_id);
 
   if ($order == FALSE) {
-    watchdog('uc_paypal', 'IPN attempted for non-existent order @order_id.', array('@order_id' => $order_id), WATCHDOG_ERROR);
+    \Drupal::logger('uc_paypal')->error('IPN attempted for non-existent order @order_id.', array('@order_id' => $order_id));
     return;
   }
 
@@ -59,7 +59,7 @@ function uc_paypal_ipn() {
   // make sure that the right account is being paid.
   $uc_paypal_wps_email = trim(variable_get('uc_paypal_wps_email', ''));
   if (!empty($uc_paypal_wps_email) && Unicode::strtolower($receiver_email) != Unicode::strtolower($uc_paypal_wps_email)) {
-    watchdog('uc_paypal', 'IPN for a different PayPal account attempted.', array(), WATCHDOG_ERROR);
+    \Drupal::logger('uc_paypal')->error('IPN for a different PayPal account attempted.');
     return;
   }
 
@@ -83,17 +83,17 @@ function uc_paypal_ipn() {
     ->send();
 
   if ($response->isError()) {
-    watchdog('uc_paypal', 'IPN failed with HTTP error @error, code @code.', array('@error' => $response->getReasonPhrase(), '@code' => $response->getStatusCode()), WATCHDOG_ERROR);
+    \Drupal::logger('uc_paypal')->error('IPN failed with HTTP error @error, code @code.', array('@error' => $response->getReasonPhrase(), '@code' => $response->getStatusCode()));
     return;
   }
 
   if (strcmp($response->getBody(TRUE), 'VERIFIED') == 0) {
-    watchdog('uc_paypal', 'IPN transaction verified.');
+    \Drupal::logger('uc_paypal')->notice('IPN transaction verified.');
 
     $duplicate = (bool) db_query_range('SELECT 1 FROM {uc_payment_paypal_ipn} WHERE txn_id = :id AND status <> :status', 0, 1, array(':id' => $txn_id, ':status' => 'Pending'))->fetchField();
     if ($duplicate) {
       if ($order->getPaymentMethodId() != 'credit') {
-        watchdog('uc_paypal', 'IPN transaction ID has been processed before.', array(), WATCHDOG_NOTICE);
+        \Drupal::logger('uc_paypal')->notice('IPN transaction ID has been processed before.');
       }
       return;
     }
@@ -118,7 +118,7 @@ function uc_paypal_ipn() {
 
       case 'Completed':
         if (abs($payment_amount - $order->getTotal()) > 0.01) {
-          watchdog('uc_paypal', 'Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->id()), WATCHDOG_WARNING, l(t('view'), 'admin/store/orders/' . $order->id()));
+          \Drupal::logger('uc_paypal')->warning('Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->id(), 'link' => l(t('view'), 'admin/store/orders/' . $order->id())));
         }
         $comment = t('PayPal transaction ID: @txn_id', array('@txn_id' => $txn_id));
         uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->getUserId(), NULL, $comment);
@@ -150,7 +150,7 @@ function uc_paypal_ipn() {
         break;
 
       case 'Reversed':
-        watchdog('uc_paypal', 'PayPal has reversed a payment!', array(), WATCHDOG_ERROR);
+        \Drupal::logger('uc_paypal')->error('PayPal has reversed a payment!');
         uc_order_comment_save($order_id, 0, t('Payment has been reversed by PayPal: @reason', array('@reason' => _uc_paypal_reversal_message(String::checkPlain($_POST['reason_code'])))), 'admin');
         break;
 
@@ -164,7 +164,7 @@ function uc_paypal_ipn() {
     }
   }
   elseif (strcmp($response->getBody(TRUE), 'INVALID') == 0) {
-    watchdog('uc_paypal', 'IPN transaction failed verification.', array(), WATCHDOG_ERROR);
+    \Drupal::logger('uc_paypal')->error('IPN transaction failed verification.');
     uc_order_comment_save($order_id, 0, t('An IPN transaction failed verification for this order.'), 'admin');
   }
 }

@@ -172,7 +172,7 @@ function _uc_stock_send_mail($order, $node, $stock) {
     $sent = drupal_mail('uc_stock', 'threshold', $email, uc_store_mail_recipient_langcode($email), array('body' => $body, 'subject' => $subject, 'order' => $order, 'stock' => $stock), $from);
 
     if (!$sent['result']) {
-      watchdog('uc_stock', 'Attempt to e-mail @email concerning stock level on sku @sku failed.', array('@email' => $email, '@sku' => $stock->sku), WATCHDOG_ERROR);
+      \Drupal::logger('uc_stock')->error('Attempt to e-mail @email concerning stock level on sku @sku failed.', array('@email' => $email, '@sku' => $stock->sku));
     }
   }
 }

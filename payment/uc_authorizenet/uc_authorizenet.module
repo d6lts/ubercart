@@ -499,14 +499,14 @@ function _uc_authorizenet_charge($order, $amount, $data) {
 
   // Log any errors to the watchdog.
   if ($result->isError()) {
-    watchdog('uc_authorizenet', '@error', array('@error' => $result->getReasonPhrase()), WATCHDOG_ERROR);
+    \Drupal::logger('uc_authorizenet')->error('@error', array('@error' => $result->getReasonPhrase()));
     return array('success' => FALSE);
   }
 
   $response = explode('|', $result->getBody(TRUE));
 
   if (variable_get('uc_authnet_response_debug', FALSE)) {
-    watchdog('uc_authorizenet', 'Debug response: !data', array('!data' => '<pre>' . String::checkPlain(print_r($response, TRUE)) . '</pre>'));
+    \Drupal::logger('uc_authorizenet')->notice('Debug response: !data', array('!data' => '<pre>' . String::checkPlain(print_r($response, TRUE)) . '</pre>'));
   }
 
   // Trim off the encapsulating character from the results.
@@ -618,7 +618,7 @@ function uc_authorizenet_xml_api($server, $xml) {
 
   // Log any errors to the watchdog.
   if ($response->isError()) {
-    watchdog('uc_authorizenet', '@error', array('@error' => $response->getReasonPhrase()), WATCHDOG_ERROR);
+    \Drupal::logger('uc_authorizenet')->error('@error', array('@error' => $response->getReasonPhrase()));
     return FALSE;
   }
 

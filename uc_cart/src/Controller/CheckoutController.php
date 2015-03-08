@@ -209,7 +209,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     if (empty($order)) {
       // Display messages to customers and the administrator if the order was lost.
       drupal_set_message(t("We're sorry.  An error occurred while processing your order that prevents us from completing it at this time. Please contact us and we will resolve the issue as soon as possible."), 'error');
-      watchdog('uc_cart', 'An empty order made it to checkout! Cart order ID: @cart_order', array('@cart_order' => $_SESSION['cart_order']), WATCHDOG_ERROR);
+      \Drupal::logger('uc_cart')->error('An empty order made it to checkout! Cart order ID: @cart_order', array('@cart_order' => $_SESSION['cart_order']));
       return $this->redirect('uc_cart.cart');
     }
 

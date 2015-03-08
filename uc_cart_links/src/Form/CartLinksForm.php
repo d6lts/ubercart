@@ -187,7 +187,7 @@ class CartLinksForm extends ConfirmFormBase {
               $rebuild_cart = TRUE;
             }
             else {
-              watchdog('uc_cart_link', 'Cart Link on %url tried to add an unpublished product to the cart.', array('%url' => \Drupal::request()->server->get('HTTP_REFERER')), WATCHDOG_ERROR);
+              \Drupal::logger('uc_cart_link')->error('Cart Link on %url tried to add an unpublished product to the cart.', array('%url' => \Drupal::request()->server->get('HTTP_REFERER')));
             }
           }
           break;

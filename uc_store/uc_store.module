@@ -979,7 +979,7 @@ function uc_store_encryption_errors(&$crypt, $module) {
     foreach ($errors as $message) {
       $items[] = $message;
     }
-    watchdog('encryption', 'Encryption failed. !messages', array('!messages' => theme('item_list', array('items' => $items))), WATCHDOG_ERROR);
+    \Drupal::logger('encryption')->error('Encryption failed. !messages', array('!messages' => theme('item_list', array('items' => $items))));
   }
 }
 

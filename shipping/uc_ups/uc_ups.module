@@ -54,7 +54,7 @@ function uc_ups_cron() {
   foreach ($files as $file) {
     if ($cutoff > filectime($file->uri)) {
       drupal_unlink($file->uri);
-      watchdog('uc_ups', 'Removed uc_ups label file @file.', array('@file' => $file->uri), WATCHDOG_NOTICE);
+      \Drupal::logger('uc_ups')->notice('Removed uc_ups label file @file.', array('@file' => $file->uri));
     }
   }
 }

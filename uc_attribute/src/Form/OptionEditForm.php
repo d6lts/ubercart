@@ -40,7 +40,7 @@ class OptionEditForm extends OptionFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_write_record('uc_attribute_options', $form_state->getValues(), array('aid', 'oid'));
     drupal_set_message(t('Updated option %option.', array('%option' => $form_state->getValue('name'))));
-    watchdog('uc_attribute', 'Updated option %option.', array('%option' => $form_state->getValue('name')), WATCHDOG_NOTICE, 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/' . $form_state->getValue('oid'));
+    \Drupal::logger('uc_attribute')->notice('Updated option %option.', array('%option' => $form_state->getValue('name'), 'link' => 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/' . $form_state->getValue('oid')));
     $form_state->setRedirect('uc_attribute.options', array('aid' => $form_state->getValue('aid')));
   }
 

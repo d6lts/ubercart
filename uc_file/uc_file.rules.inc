@@ -248,7 +248,7 @@ function uc_file_action_order_email($order, $file_expiration, $from, $addresses,
     $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $settings['from']);
 
     if (!$sent['result']) {
-      watchdog('uc_file', 'Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()), WATCHDOG_ERROR);
+      \Drupal::logger('uc_file')->error('Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()));
     }
   }
 }

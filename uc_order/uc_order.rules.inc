@@ -712,7 +712,7 @@ function uc_order_action_email($order, $from, $addresses, $subject, $message, $f
     $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
 
     if (!$sent['result']) {
-      watchdog('uc_order', 'Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()), WATCHDOG_ERROR);
+      \Drupal::logger('uc_order')->error('Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()));
     }
   }
 }
@@ -782,7 +782,7 @@ function uc_order_action_email_invoice($order, $from, $addresses, $subject, $tem
     $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
 
     if (!$sent['result']) {
-      watchdog('uc_order', 'Attempt to e-mail invoice for order @order_id to @email failed.', array('@email' => $email, '@order_id' => $order->id()), WATCHDOG_ERROR);
+      \Drupal::logger('uc_order')->error('Attempt to e-mail invoice for order @order_id to @email failed.', array('@email' => $email, '@order_id' => $order->id()));
     }
   }
 }

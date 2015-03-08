@@ -435,7 +435,7 @@ function uc_cybersource_charge($order_id, $amount, $data) {
     $cc_type = _uc_cybersource_card_type($order->payment_details['cc_number']);
     if ($cc_type === FALSE && in_array($data['txn_type'], array(UC_CREDIT_AUTH_ONLY, UC_CREDIT_AUTH_CAPTURE))) {
       drupal_set_message(t('The credit card type did not pass validation.'), 'error');
-      watchdog('uc_cybersource', 'Could not figure out cc type: @number / @type', array('@number' => $order->payment_details['cc_number'], '@type' => $order->payment_details['cc_type']), WATCHDOG_ERROR);
+      \Drupal::logger('uc_cybersource')->error('Could not figure out cc type: @number / @type', array('@number' => $order->payment_details['cc_number'], '@type' => $order->payment_details['cc_type']));
       return array('success' => FALSE);
     }
   }
@@ -541,7 +541,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
     ->send();
 
   if ($response->isError()) {
-    watchdog('uc_cybersource', '@error', array('@error' => $response->getReasonPhrase()), WATCHDOG_ERROR);
+    \Drupal::logger('uc_cybersource')->error('@error', array('@error' => $response->getReasonPhrase()));
   }
 
   if (preg_match_all('`name=".+" value=".+"`', $response->getBody(TRUE), $pairs) > 0) {
@@ -616,10 +616,10 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
     // To see the functions and types that the SOAP extension can automatically
     // generate from the WSDL file, uncomment this section and check the logs.
     // $functions = $soapClient->__getFunctions();
-    // watchdog('uc_cybersource', '<pre>' . print_r($functions, TRUE) . '</pre>');
+    // \Drupal::logger('uc_cybersource')->notice('<pre>' . print_r($functions, TRUE) . '</pre>');
 
     // $types = $soapClient->__getTypes();
-    // watchdog('uc_cybersource', '<pre>' . print_r($types, TRUE) . '</pre>');
+    // \Drupal::logger('uc_cybersource')->notice('<pre>' . print_r($types, TRUE) . '</pre>');
 
     $login = _uc_cybersource_soap_login_data();
 
@@ -771,7 +771,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
   }
   catch (SoapFault $exception) {
     // Log and display errors if Ubercart is unable to connect via SOAP.
-    watchdog('uc_cybersource', 'Unable to connect to CyberSource via SOAP.', array(), WATCHDOG_ERROR);
+    \Drupal::logger('uc_cybersource')->error('Unable to connect to CyberSource via SOAP.');
     drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href="@url">contact sales</a> to complete your order.', array('@url' => url('contact'))), 'error');
   }
 
@@ -1006,7 +1006,7 @@ function uc_cybersource_uc_calculate_tax($order) {
   }
   catch (SoapFault $exception) {
     // Log and display errors if Ubercart is unable to connect via SOAP.
-    watchdog('uc_cybersource', 'Unable to connect to CyberSource via SOAP.', array(), WATCHDOG_ERROR);
+    \Drupal::logger('uc_cybersource')->error('Unable to connect to CyberSource via SOAP.');
     drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href="@url">contact sales</a> to complete your order.', array('@url' => url('contact'))), 'error');
   }
 
@@ -1058,7 +1058,7 @@ function uc_cybersource_uc_calculate_tax($order) {
 
       // If it doesn't, log an error message and simply return the total.
       if ($total != floatval($reply->taxReply->totalTaxAmount)) {
-        watchdog('uc_cybersource', 'Tax calculation produced uneven results. Expected a total of @total, received the following: @dump', array('@total' => uc_currency_format($reply->taxReply->totalTaxAmount), '@dump' => '<pre>' . print_r($result, TRUE) . '</pre>'), WATCHDOG_ERROR);
+        \Drupal::logger('uc_cybersource')->error('Tax calculation produced uneven results. Expected a total of @total, received the following: @dump', array('@total' => uc_currency_format($reply->taxReply->totalTaxAmount), '@dump' => '<pre>' . print_r($result, TRUE) . '</pre>'));
 
         $result = array(
           'total' => (object)array(
@@ -1070,11 +1070,11 @@ function uc_cybersource_uc_calculate_tax($order) {
       }
     }
     else {
-      watchdog('uc_cybersource', 'Attempted to calculate taxes failed for order @order_id - reason @code', array('@order_id' => $order->id(), '@code' => $reply->reasonCode), WATCHDOG_ERROR);
+      \Drupal::logger('uc_cybersource')->error('Attempted to calculate taxes failed for order @order_id - reason @code', array('@order_id' => $order->id(), '@code' => $reply->reasonCode));
     }
   }
   else {
-    watchdog('uc_cybersource', 'Attempted to calculate taxes failed for order @order_id. No response returned from CyberSource.', array('@order_id' => $order->id()), WATCHDOG_ERROR);
+    \Drupal::logger('uc_cybersource')->error('Attempted to calculate taxes failed for order @order_id. No response returned from CyberSource.', array('@order_id' => $order->id()));
     $result = array();
   }
 
