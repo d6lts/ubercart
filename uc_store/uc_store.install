@@ -133,7 +133,8 @@ function uc_store_schema() {
  */
 function uc_store_install() {
   // Set mail handler for all Ubercart modules
-  \Drupal::config('system.mail')
+  $mail_config = \Drupal::configFactory()->getEditable('system.mail');
+  $mail_config
     ->set('interface.uc_cart',  'ubercart_mail')
     ->set('interface.uc_order', 'ubercart_mail')
     ->set('interface.uc_file',  'ubercart_mail')
@@ -240,7 +241,8 @@ function uc_store_update_8002() {
  * Reset mail handler for Ubercart modules.
  */
 function uc_store_update_8003() {
-  \Drupal::config('system.mail')
+  $mail_config = \Drupal::configFactory()->getEditable('system.mail');
+  $mail_config
     ->set('interface.uc_cart',  'ubercart_mail')
     ->set('interface.uc_order', 'ubercart_mail')
     ->set('interface.uc_file',  'ubercart_mail')
