@@ -106,14 +106,17 @@ function uc_roles_theme() {
     'uc_roles_expiration' => array(
       'render element' => 'form',
       'file' => 'uc_roles.admin.inc',
+      'function' => 'theme_uc_roles_expiration',
     ),
     'uc_roles_user_expiration' => array(
       'render element' => 'form',
       'file' => 'uc_roles.theme.inc',
+      'function' => 'theme_uc_roles_user_expiration',
     ),
     'uc_roles_user_new' => array(
       'render element' => 'form',
       'file' => 'uc_roles.theme.inc',
+      'function' => 'theme_uc_roles_user_new',
     ),
   );
 }

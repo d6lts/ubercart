@@ -64,14 +64,17 @@ function uc_cart_theme() {
     'uc_cart_review_table' => array(
       'variables' => array('items' => array(), 'show_subtotal' => TRUE),
       'file' => 'uc_cart.theme.inc',
+      'function' => 'theme_uc_cart_review_table',
     ),
     'uc_cart_checkout_review' => array(
       'variables' => array('panes' => NULL, 'form' => NULL),
       'file' => 'uc_cart.theme.inc',
+      'function' => 'theme_uc_cart_checkout_review',
     ),
     'uc_cart_complete_sale' => array(
       'variables' => array('message' => '', 'order' => NULL),
       'template' => 'uc-cart-complete-sale',
+      'function' => 'theme_uc_cart_complete_sale',
     ),
   );
 }

@@ -57,6 +57,7 @@ function uc_catalog_theme() {
     'uc_catalog_block' => array(
       'variables' => array('menu_tree' => NULL),
       'file' => 'uc_catalog.theme.inc',
+      'function' => 'theme_uc_catalog_block',
     ),
     'uc_catalog_item' => array(
       'variables' => array(
@@ -68,6 +69,7 @@ function uc_catalog_theme() {
         'count_children' => NULL,
       ),
       'file' => 'uc_catalog.theme.inc',
+      'function' => 'theme_uc_catalog_item',
     ),
   );
 }

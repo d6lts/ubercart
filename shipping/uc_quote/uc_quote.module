@@ -24,10 +24,12 @@ function uc_quote_theme() {
     'uc_cart_pane_quotes' => array(
       'render element' => 'form',
       'file' => 'uc_quote.theme.inc',
+      'function' => 'theme_uc_cart_pane_quotes',
     ),
     'uc_quote_returned_rates' => array(
       'render element' => 'form',
       'file' => 'uc_quote.theme.inc',
+      'function' => 'theme_uc_quote_returned_rates',
     ),
   );
 }

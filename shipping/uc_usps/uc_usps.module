@@ -23,6 +23,7 @@ function uc_usps_theme() {
         'packages' => NULL,
       ),
       'file' => 'uc_usps.theme.inc',
+      'function' => 'theme_uc_usps_option_label',
     ),
   );
 }

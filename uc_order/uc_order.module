@@ -125,7 +125,6 @@ function uc_order_page_attachments(&$page) {
 function uc_order_theme($existing, $type, $theme, $path) {
   $theme_hooks = array(
     'uc_order_invoice' => array(
-      'template' => 'uc-order-invoice',
       'variables' => array(
         'order' => NULL,
         'op' => 'view',
@@ -137,6 +136,7 @@ function uc_order_theme($existing, $type, $theme, $path) {
         'business_header' => FALSE,
         'shipping_method' => FALSE,
       ),
+      'template' => 'uc-order-invoice',
     ),
     'uc_order_invoice_page' => array(
       'variables' => array('content' => NULL),
@@ -145,17 +145,19 @@ function uc_order_theme($existing, $type, $theme, $path) {
     'uc_order_edit_form' => array(
       'render element' => 'form',
       'file' => 'uc_order.admin.inc',
+      'function' => 'theme_uc_order_edit_form',
     ),
     'uc_order_pane_line_items' => array(
       'render element' => 'form',
       'file' => 'uc_order.order_pane.inc',
+      'function' => 'theme_uc_order_pane_line_items',
     ),
   );
 
   $theme_hooks += array(
     'uc_order_invoice__admin' => array(
-      'template' => 'uc-order-invoice--admin',
       'variables' => $theme_hooks['uc_order_invoice']['variables'],
+      'template' => 'uc-order-invoice--admin',
     ),
   );
 

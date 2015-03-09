@@ -70,14 +70,17 @@ function uc_ups_theme() {
         'packages' => NULL,
       ),
       'file' => 'uc_ups.theme.inc',
+      'function' => 'theme_uc_ups_option_label',
     ),
     'uc_ups_confirm_shipment' => array(
       'render element' => 'form',
       'file' => 'uc_ups.ship.inc',
+      'function' => 'theme_uc_ups_confirm_shipment',
     ),
     'uc_ups_label_image' => array(
       'variables' => array(),
       'file' => 'uc_ups.ship.inc',
+      'function' => 'theme_uc_ups_label_image',
     ),
   );
 }

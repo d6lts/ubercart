@@ -38,6 +38,7 @@ function uc_product_theme() {
     'uc_product_price' => array(
       'render element' => 'element',
       'file' => 'uc_product.theme.inc',
+      'function' => 'theme_uc_product_price',
     ),
   );
 }

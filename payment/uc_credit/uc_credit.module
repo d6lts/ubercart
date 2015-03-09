@@ -76,6 +76,7 @@ function uc_credit_theme() {
     'uc_credit_cvv_help' => array(
       'variables' => array(),
       'file' => 'uc_credit.theme.inc',
+      'function' => 'theme_uc_credit_cvv_help',
     ),
   );
 }

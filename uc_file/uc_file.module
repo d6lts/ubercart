@@ -89,18 +89,22 @@ function uc_file_theme() {
     'uc_file_downloads_token' => array(
       'variables' => array('file_downloads' => NULL),
       'file' => 'uc_file.tokens.inc',
+      'function' => 'theme_uc_file_downloads_token',
     ),
     'uc_file_admin_files_form_show' => array(
       'render element' => 'form',
       'file' => 'uc_file.admin.inc',
+      'function' => 'theme_uc_file_admin_files_form_show',
     ),
     'uc_file_hook_user_file_downloads' => array(
       'render element' => 'form',
       'file' => 'uc_file.theme.inc',
+      'function' => 'theme_uc_file_hook_user_file_downloads',
     ),
     'uc_file_user_downloads' => array(
       'variables' => array('header' => NULL, 'files' => NULL),
       'file' => 'uc_file.pages.inc',
+      'function' => 'theme_uc_file_user_downloads',
     ),
   );
 }

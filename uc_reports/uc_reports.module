@@ -171,6 +171,7 @@ function uc_reports_theme() {
     'uc_reports_product_table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'empty' => ''),
       'file' => 'uc_reports.admin.inc',
+      'function' => 'theme_uc_reports_product_table',
     ),
   );
 }
