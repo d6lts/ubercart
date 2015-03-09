@@ -289,7 +289,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
         array(
           '!paypal_message' => _uc_paypal_build_error_messages($nvp_response),
           '@type' => $types[$data['txn_type']],
-          'link' => l(t('view order'), 'admin/store/orders/' . $order_id),
+          'link' => \Drupal::l(t('view order'), 'admin/store/orders/' . $order_id),
         )
       );
       // Fall through.

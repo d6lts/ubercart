@@ -13,6 +13,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Weight unit conversion constants, used by uc_weight_conversion().
@@ -215,8 +216,8 @@ function uc_store_help($route_name, RouteMatchInterface $route_match) {
       $output = '<h3>' . t('Ubercart') . '</h3>';
       $output .= '<p>' . t('Use the following links to find documentation and support:') . '</p>';
       $output .= '<ul>';
-      $output .= '<li>' . l(t("Ubercart User's Guide"), 'http://www.ubercart.org/docs/user') . '</li>';
-      $output .= '<li>' . l(t('Support Forums'), 'http://www.ubercart.org/forum') . '</li>';
+      $output .= '<li>' . \Drupal::l(t("Ubercart User's Guide"), Url::fromUri('http://www.ubercart.org/docs/user')) . '</li>';
+      $output .= '<li>' . \Drupal::l(t('Support Forums'), Url::fromUri('http://www.ubercart.org/forum')) . '</li>';
       $output .= '</ul>';
       return $output;
 
