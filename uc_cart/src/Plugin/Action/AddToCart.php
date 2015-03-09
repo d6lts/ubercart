@@ -8,6 +8,8 @@
 namespace Drupal\uc_cart\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides an action that can add a product to the cart.
@@ -19,6 +21,14 @@ use Drupal\Core\Action\ActionBase;
  * )
  */
 class AddToCart extends ActionBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::allowed();
+    return $return_as_object ? $result : $result->isAllowed();
+  }
 
   /**
    * {@inheritdoc}
