@@ -6,11 +6,12 @@
  */
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
  */
-function uc_2checkout_help($path, $arg) {
+function uc_2checkout_help($path, RouteMatchInterface $route_match) {
   switch ($path) {
     case 'admin/store/settings/payment/method/%':
       if ($arg[5] == '2checkout') {

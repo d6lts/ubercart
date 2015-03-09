@@ -11,12 +11,13 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\uc_order\UcOrderInterface;
 
 /**
  * Implements hook_help().
  */
-function uc_shipping_help($path, $arg) {
+function uc_shipping_help($path, RouteMatchInterface $route_match) {
   switch ($path) {
     case 'admin/store/orders/%/packages/new':
       return '<p>' . t('Organize products into packages. Package numbers in multiple shipping types are of the first shipping type they appear in. All packages are given a unique ID when they are saved. Choose the default package "Sep." to automatically create a package for each of the selected quantity of products in that row.') . '</p>';

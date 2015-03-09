@@ -11,6 +11,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * The maximum number of records.
@@ -21,7 +22,7 @@ define('UC_REPORTS_MAX_RECORDS', PHP_INT_MAX);
 /**
  * Implements hook_help().
  */
-function uc_reports_help($path, $arg) {
+function uc_reports_help($path, RouteMatchInterface $route_match) {
   $output =  '';
 
   if (strncmp($path, 'admin/store/reports/', 20) === 0) {
