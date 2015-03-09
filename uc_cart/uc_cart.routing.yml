@@ -17,7 +17,7 @@ uc_cart.checkout_settings:
 uc_cart.cart:
   path: '/cart'
   defaults:
-    _content: '\Drupal\uc_cart\Controller\CartController::listing'
+    _controller: '\Drupal\uc_cart\Controller\CartController::listing'
     _title: 'Shopping cart'
   requirements:
     _permission: 'access content'
@@ -26,7 +26,7 @@ uc_cart.checkout:
   path: '/cart/checkout'
   defaults:
     _title: 'Checkout'
-    _content: '\Drupal\uc_cart\Controller\CheckoutController::checkout'
+    _controller: '\Drupal\uc_cart\Controller\CheckoutController::checkout'
   requirements:
     _permission: 'access content'
 
@@ -34,7 +34,7 @@ uc_cart.checkout_review:
   path: '/cart/checkout/review'
   defaults:
     _title: 'Review order'
-    _content: '\Drupal\uc_cart\Controller\CheckoutController::review'
+    _controller: '\Drupal\uc_cart\Controller\CheckoutController::review'
   requirements:
     _permission: 'access content'
 
@@ -42,7 +42,7 @@ uc_cart.checkout_complete:
   path: '/cart/checkout/complete'
   defaults:
     _title: 'Order complete'
-    _content: '\Drupal\uc_cart\Controller\CheckoutController::complete'
+    _controller: '\Drupal\uc_cart\Controller\CheckoutController::complete'
   requirements:
     _permission: 'access content'
 

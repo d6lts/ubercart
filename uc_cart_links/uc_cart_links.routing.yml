@@ -9,7 +9,7 @@ uc_cart_links.settings:
 uc_cart_links.reports:
   path: '/admin/store/reports/cart-links'
   defaults:
-    _content: 'Drupal\uc_cart_links\Controller\CartLinksReports::buildReport'
+    _controller: 'Drupal\uc_cart_links\Controller\CartLinksReports::buildReport'
     _title: 'Cart links'
   requirements:
     _permission: 'view cart links report'

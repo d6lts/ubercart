@@ -1,7 +1,7 @@
 uc_order.customer_admin:
   path: '/admin/store/customers'
   defaults:
-    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Customers'
   requirements:
     _permission: 'access administration pages'
@@ -9,7 +9,7 @@ uc_order.customer_admin:
 uc_order.order_admin:
   path: '/admin/store/orders'
   defaults:
-    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Orders'
   requirements:
     _permission: 'access administration pages'
@@ -49,7 +49,7 @@ uc_order.admin_view:
 uc_order.admin_invoice:
   path: '/admin/store/orders/{uc_order}/invoice'
   defaults:
-    _content: '\Drupal\uc_order\Controller\OrderController::invoice'
+    _controller: '\Drupal\uc_order\Controller\OrderController::invoice'
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _permission: 'view all orders'
@@ -59,7 +59,7 @@ uc_order.admin_invoice:
 uc_order.admin_invoice_print:
   path: '/admin/store/orders/{uc_order}/invoice/print'
   defaults:
-    _content: '\Drupal\uc_order\Controller\OrderController::invoice'
+    _controller: '\Drupal\uc_order\Controller\OrderController::invoice'
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
     print: TRUE
   requirements:
@@ -91,7 +91,7 @@ uc_order.admin_delete:
 uc_order.admin_log:
   path: '/admin/store/orders/{uc_order}/log'
   defaults:
-    _content: '\Drupal\uc_order\Controller\OrderController::log'
+    _controller: '\Drupal\uc_order\Controller\OrderController::log'
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _permission: 'view all orders'
@@ -107,7 +107,7 @@ uc_order.user_view:
 uc_order.user_invoice_print:
   path: '/user/{user}/orders/{uc_order}/print'
   defaults:
-    _content: '\Drupal\uc_order\Controller\OrderController::invoice'
+    _controller: '\Drupal\uc_order\Controller\OrderController::invoice'
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
     print: TRUE
   requirements:

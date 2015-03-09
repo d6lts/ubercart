@@ -1,7 +1,7 @@
 uc_taxes.overview:
   path: '/admin/store/settings/taxes'
   defaults:
-    _content: 'Drupal\uc_taxes\Controller\TaxesController::overview'
+    _controller: 'Drupal\uc_taxes\Controller\TaxesController::overview'
   requirements:
     _permission: 'configure taxes'
 
@@ -22,7 +22,7 @@ uc_taxes.rate_edit:
 uc_taxes.rate_clone:
   path: '/admin/store/settings/taxes/{tax_rate}/clone'
   defaults:
-    _content: 'Drupal\uc_taxes\Controller\TaxesController::saveClone'
+    _controller: 'Drupal\uc_taxes\Controller\TaxesController::saveClone'
   requirements:
     _permission: 'configure taxes'
 

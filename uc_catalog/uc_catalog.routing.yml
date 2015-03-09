@@ -9,7 +9,7 @@ uc_catalog.settings:
 uc_catalog.repair:
   path: '/admin/store/settings/catalog/repair'
   defaults:
-    _content: '\Drupal\uc_catalog\Controller\CatalogController::repairField'
+    _controller: '\Drupal\uc_catalog\Controller\CatalogController::repairField'
     _title: 'Repair catalog field'
   requirements:
     _permission: 'administer catalog'

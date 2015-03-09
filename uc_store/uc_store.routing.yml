@@ -1,7 +1,7 @@
 uc_store.admin:
   path: '/admin/store'
   defaults:
-    _content: '\Drupal\uc_store\Controller\StoreController::overview'
+    _controller: '\Drupal\uc_store\Controller\StoreController::overview'
     _title: 'Store'
   requirements:
     _permission: 'access administration pages'
@@ -9,7 +9,7 @@ uc_store.admin:
 uc_store.reports:
   path: '/admin/store/reports'
   defaults:
-    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Reports'
   requirements:
     _permission: 'view reports'
@@ -17,7 +17,7 @@ uc_store.reports:
 uc_store.settings:
   path: '/admin/store/settings'
   defaults:
-    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Configuration'
   requirements:
     _permission: 'administer store'

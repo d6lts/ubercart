@@ -1,7 +1,7 @@
 uc_attribute.overview:
   path: '/admin/store/products/attributes'
   defaults:
-    _content: 'Drupal\uc_attribute\Controller\AttributeController::overview'
+    _controller: 'Drupal\uc_attribute\Controller\AttributeController::overview'
     _title: 'Attributes'
   requirements:
     _permission: 'administer attributes'

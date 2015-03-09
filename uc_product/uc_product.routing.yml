@@ -1,7 +1,7 @@
 uc_product.admin:
   path: '/admin/store/products'
   defaults:
-    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Products'
   requirements:
     _permission: 'access administration pages'
@@ -9,7 +9,7 @@ uc_product.admin:
 uc_product.classes:
   path: '/admin/store/products/classes'
   defaults:
-    _content: '\Drupal\uc_product\Controller\ProductController::classOverview'
+    _controller: '\Drupal\uc_product\Controller\ProductController::classOverview'
     _title: 'Product classes'
   requirements:
     _permission: 'administer product classes'
@@ -25,14 +25,14 @@ uc_product.settings:
 uc_product.image_defaults:
   path: '/admin/store/settings/products/defaults'
   defaults:
-    _content: '\Drupal\uc_product\Controller\ProductController::setImageDefaults'
+    _controller: '\Drupal\uc_product\Controller\ProductController::setImageDefaults'
   requirements:
     _permission: 'administer products'
 
 uc_product.features:
   path: '/node/{node}/edit/features'
   defaults:
-    _content: '\Drupal\uc_product\Controller\ProductFeaturesController::featuresOverview'
+    _controller: '\Drupal\uc_product\Controller\ProductFeaturesController::featuresOverview'
     _title: 'Product features'
   requirements:
     _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
@@ -42,7 +42,7 @@ uc_product.features:
 uc_product.feature_add:
   path: '/node/{node}/edit/features/{fid}/add'
   defaults:
-    _content: '\Drupal\uc_product\Controller\ProductFeaturesController::featureAdd'
+    _controller: '\Drupal\uc_product\Controller\ProductFeaturesController::featureAdd'
     _title: 'Add feature'
   requirements:
     _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
@@ -52,7 +52,7 @@ uc_product.feature_add:
 uc_product.feature_edit:
   path: '/node/{node}/edit/features/{fid}/{pfid}'
   defaults:
-    _content: '\Drupal\uc_product\Controller\ProductFeaturesController::featureEdit'
+    _controller: '\Drupal\uc_product\Controller\ProductFeaturesController::featureEdit'
     _title: 'Edit feature'
   requirements:
     pfid: \d+
