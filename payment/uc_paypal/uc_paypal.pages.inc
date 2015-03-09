@@ -381,7 +381,7 @@ function uc_paypal_ec_submit() {
     drupal_goto('cart');
   }
 
-  $build['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
+  $build['#attached']['library'][] = 'uc_cart/uc_cart.styles';
 
   $build['review'] = array(
     '#theme' => 'uc_cart_review_table',

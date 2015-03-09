@@ -103,19 +103,15 @@ function uc_order_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  * Implements hook_page_attachments().
  */
 function uc_order_page_attachments(&$page) {
-  $path = drupal_get_path('module', 'uc_order');
-  $page['#attached']['css'][$path . '/css/uc_order.css'] = array('every_page' => TRUE);
+  $page['#attached']['library'][] = 'uc_order/uc_order.styles';
 
   // Load uc_order.js on all order and customer admin pages.
   $route = \Drupal::routeMatch()->getRouteName();
-  if ($route == 'uc_order.admin_edit' || substr($route, 0, 15) == 'view.uc_orders.' || substr($route, 0, 18) == 'view.uc_customers.') {
-    $page['#attached']['js'][$path . '/js/uc_order.js'] = array('every_page' => TRUE);
-    $page['#attached']['js'][] = array(
-      'type' => 'setting',
-      'data' => array('ucURL' => array(
-        'adminOrders' => \Drupal::url('uc_order.order_admin') . '/',
-      )),
-    );
+  if ($route == 'uc_order.admin_edit' ||
+      substr($route, 0, 15) == 'view.uc_orders.' ||
+      substr($route, 0, 18) == 'view.uc_customers.') {
+    $page['#attached']['library'][] = 'uc_order/uc_order.scripts';
+    $page['#attached']['drupalSettings']['ucURL']['adminOrders'] = \Drupal::url('uc_order.order_admin');
   }
 }
 

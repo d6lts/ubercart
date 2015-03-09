@@ -126,7 +126,7 @@ class CartBlock extends BlockBase {
       );
 
       // Add the cart block CSS.
-      $build['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart_block.css';
+      $build['#attached']['library'][] = 'uc_cart/uc_cart_block.styles';
 
       // If the block is collapsible, add the appropriate JS.
       if ($this->configuration['collapsible']) {

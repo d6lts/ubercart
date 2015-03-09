@@ -1,0 +1,6 @@
+uc_credit.scripts:
+  js:
+    js/uc_credit.admin.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

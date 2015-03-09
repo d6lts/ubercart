@@ -25,8 +25,7 @@ define('UC_PRODUCT_KIT_MUTABLE', 1);
  * Implements hook_page_attachments().
  */
 function uc_product_kit_page_attachments(&$page) {
-  $path = drupal_get_path('module', 'uc_product_kit');
-  $page['#attached']['css'][$path . '/css/uc_product_kit.css'] = array('every_page' => TRUE);
+  $page['#attached']['library'][] = 'uc_product_kit/uc_product_kit.styles';
 }
 
 /**

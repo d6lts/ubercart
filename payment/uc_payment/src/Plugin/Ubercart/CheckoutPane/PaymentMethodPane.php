@@ -64,7 +64,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function view(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
-    $contents['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . '/css/uc_payment.css';
+    $contents['#attached']['library'][] = 'uc_payment/uc_payment.styles';
 
     if ($this->configuration['show_preview']) {
       $contents['line_items'] = array(

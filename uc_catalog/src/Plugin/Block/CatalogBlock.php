@@ -103,7 +103,7 @@ class CatalogBlock extends BlockBase {
       '#menu_tree' => $menu_tree,
     );
 
-    $build['#attached']['css'][] = drupal_get_path('module', 'uc_catalog') . '/css/uc_catalog.css';
+    $build['#attached']['library'][] = 'uc_catalog/uc_catalog.styles';
 
     return $build;
   }

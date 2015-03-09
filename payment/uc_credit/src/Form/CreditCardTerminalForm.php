@@ -210,7 +210,7 @@ class CreditCardTerminalForm extends FormBase {
       }
     }
 
-    $form['#attached']['css'][] = drupal_get_path('module', 'uc_payment') . '/css/uc_payment.css';
+    $form['#attached']['library'][] = 'uc_payment/uc_payment.styles';
 
     return $form;
   }

@@ -63,7 +63,7 @@ class CheckoutForm extends FormBase {
     }
 
     $form['#attributes']['class'][] = 'uc-cart-checkout-form';
-    $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
+    $form['#attached']['library'][] = 'uc_cart/uc_cart.styles';
     $form['panes'] = array('#tree' => TRUE);
 
     $filter = array('enabled' => FALSE);

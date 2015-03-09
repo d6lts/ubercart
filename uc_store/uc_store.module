@@ -175,8 +175,7 @@ function uc_store_menu() {
  * Implements hook_page_attachments().
  */
 function uc_store_page_attachments(&$page) {
-  $path = drupal_get_path('module', 'uc_store');
-  $page['#attached']['css'][$path . '/css/uc_store.css'] = array('every_page' => TRUE);
+  $page['#attached']['library'][] = 'uc_store/uc_store.styles';
 }
 
 /**

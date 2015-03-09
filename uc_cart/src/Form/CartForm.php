@@ -31,7 +31,7 @@ class CartForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $items = NULL) {
-    $form['#attached']['css'][] = drupal_get_path('module', 'uc_cart') . '/css/uc_cart.css';
+    $form['#attached']['library'][] = 'uc_cart/uc_cart.styles';
     $cart_config = \Drupal::config('uc_cart.settings');
 
     $form['items'] = array(

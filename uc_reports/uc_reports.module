@@ -182,8 +182,7 @@ function uc_reports_theme() {
  */
 function uc_reports_page_attachments(&$page) {
   if (arg(0) == 'admin' && arg(1) == 'store' && arg(2) == 'reports') {
-    $path = drupal_get_path('module', 'uc_reports');
-    $page['#attached']['css'][$path . '/css/uc_reports.css'] = array('every_page' => TRUE);
+    $page['#attached']['library'][] = 'uc_reports/uc_reports.styles';
   }
 }
 

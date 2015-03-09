@@ -427,7 +427,7 @@ function uc_cart_pane_quotes($form, FormStateInterface $form_state, $items) {
   $order->delivery_postal_code = $form_state->getValue('delivery_postal_code') ?: '';
   $order->products = $items;
 
-  $form['#attached']['css'][] = drupal_get_path('module', 'uc_quote') . '/css/uc_quote.css';
+  $form['#attached']['library'][] = 'uc_quote/uc_quote.styles';
 
   $form['address'] = array(
     '#type' => 'uc_address',

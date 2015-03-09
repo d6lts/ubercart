@@ -35,8 +35,8 @@ function uc_credit_settings_form($form, FormStateInterface $form_state) {
   $form['uc_credit'] = array(
     '#type' => 'vertical_tabs',
     '#attached' => array(
-      'js' => array(
-        'vertical-tabs' => drupal_get_path('module', 'uc_credit') . '/js/uc_credit.admin.js',
+      'library' => array(
+        'uc_credit/uc_credit.scripts',
       ),
     ),
   );

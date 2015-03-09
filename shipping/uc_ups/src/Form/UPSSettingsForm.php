@@ -44,8 +44,8 @@ class UPSSettingsForm extends ConfigFormBase {
     $form['ups-settings'] = array(
       '#type' => 'vertical_tabs',
       '#attached' => array(
-        'js' => array(
-          'vertical-tabs' => drupal_get_path('module', 'uc_ups') . '/js/uc_ups.admin.js',
+        'library' => array(
+          'uc_ups/uc_ups.scripts',
         ),
       ),
     );
