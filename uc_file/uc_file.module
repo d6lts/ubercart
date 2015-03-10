@@ -510,7 +510,7 @@ function uc_file_uc_store_status() {
     $message[] = array(
       'status' => 'warning',
       'title' => t('File downloads'),
-      'desc' => t('The file downloads directory is not valid or set. Set a valid directory in the <a href="!url">product settings</a> under the file download settings tab.', array('!url' => \Drupal::url('uc_product.settings'))),
+      'desc' => t('The file downloads directory is not valid or set. Set a valid directory in the <a href="@url">product settings</a> under the file download settings tab.', array('@url' => \Drupal::url('uc_product.settings'))),
     );
   }
   else {
