@@ -30,6 +30,15 @@ class PaymentMethodSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'uc_payment.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, $method = NULL) {
     $definition = \Drupal::service('plugin.manager.uc_payment.method')->getDefinition($method);
     $form['#title'] = $this->t('!method settings', array('!method' => $definition['name']));
