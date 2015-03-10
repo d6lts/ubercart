@@ -8,6 +8,7 @@
 namespace Drupal\uc_store;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\uc_store\EncryptionInterface;
 
 /**
  * Handles encryption of credit-card information.
@@ -25,7 +26,7 @@ use Drupal\Component\Utility\Unicode;
  * 4) To check for errors, use the errors method to return an array of errors.
  *    ex: $errors = $crypt->getErrors();
  */
-class Encryption {
+class Encryption implements EncryptionInterface {
 
   protected static $scramble1 = '! #$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`"abcdefghijklmnopqrstuvwxyz{|}~';
   protected static $scramble2 = 'f^jAE]okIOzU[2&q1{3`h5w_794p@6s8?BgP>dFV=m" D<TcS%Ze|r:lGK/uCy.Jx)HiQ!#$~(;Lt-R}Ma,NvW+Ynb*0X';
@@ -36,15 +37,7 @@ class Encryption {
 
 
   /**
-   * Decrypts cyphertext.
-   *
-   * @param $key
-   *   String key used for encryption.
-   * @param $source
-   *   Cyphertext. Text string containing encrypted $source.
-   *
-   * @return
-   *   Plaintext. Text string to be encrypted.
+   * {@inheritdoc}
    */
   public function decrypt($key, $source) {
     $this->errors = array();
@@ -88,18 +81,7 @@ class Encryption {
   }
 
   /**
-   * Encrypts plaintext.
-   *
-   * @param $key
-   *   String key used for encryption.
-   * @param $source
-   *   Plaintext. Text string to be encrypted.
-   * @param $sourcelen
-   *   Minimum plaintext length.  Plaintext $source which is shorter than
-   *   $sourcelen will be padded by appending spaces.
-   *
-   * @return
-   *   Cyphertext. Text string containing encrypted $source.
+   * {@inheritdoc}
    */
   public function encrypt($key, $source, $sourcelen = 0) {
     $this->errors = array();
@@ -146,14 +128,14 @@ class Encryption {
   }
 
   /**
-   * Accessor for errors property.
+   * {@inheritdoc}
    */
   public function getErrors() {
     return $this->errors;
   }
 
   /**
-   * Mutator for errors property.
+   * {@inheritdoc}
    */
   public function setErrors(array $errors) {
     $this->errors = $errors;
