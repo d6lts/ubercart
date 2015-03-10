@@ -74,7 +74,7 @@ class CartLinksForm extends ConfirmFormBase {
           $url = '<front>';
         }
         unset($_GET['destination']);
-        return new RedirectResponse(url($url, array('absolute' => TRUE)));
+        return new RedirectResponse(Url::fromUri($url, array('absolute' => TRUE)));
       }
     }
 

@@ -9,6 +9,7 @@ namespace Drupal\uc_store\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Configure store settings for this site.
@@ -108,7 +109,7 @@ class StoreSettingsForm extends ConfigFormBase {
     $form['currency']['uc_currency_code'] = array(
       '#type' => 'textfield',
       '#title' => t('Currency code'),
-      '#description' => t('While not used directly in formatting, the currency code is used by other modules as the primary currency for your site.  Enter here your three character <a href="!url">ISO 4217</a> currency code.', array('!url' => 'http://en.wikipedia.org/wiki/ISO_4217#Active_codes')),
+      '#description' => t('While not used directly in formatting, the currency code is used by other modules as the primary currency for your site.  Enter here your three character <a href="!url">ISO 4217</a> currency code.', array('!url' => Url::fromUri('http://en.wikipedia.org/wiki/ISO_4217#Active_codes')->toString())),
       '#default_value' => $config->get('currency.code'),
       '#maxlength' => 3,
       '#size' => 5,
