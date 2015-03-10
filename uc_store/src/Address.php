@@ -161,7 +161,7 @@ class Address {
       $variables['!country_code3_if'] = '';
     }
 
-    $format = variable_get('uc_address_format_' . $this->country, '');
+    $format = \Drupal::config('uc_country.formats')->get($this->country);
     if (empty($format)) {
       $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
     }

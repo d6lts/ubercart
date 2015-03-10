@@ -22,3 +22,8 @@ uc_store.admin.store.settings.store:
   route_name: uc_store.settings_form
   parent: uc_store.admin.store.settings
   weight: -1
+uc_store.admin.store.settings.countries:
+  title: Countries and addresses
+  description: 'Manage available countries and configure address formats.'
+  route_name: uc_countries.settings
+  parent: uc_store.admin.store.settings

@@ -18,7 +18,7 @@ function uc_store_uc_store_status() {
     $countries[t($country->country_name)] = $country;
   }
   uksort($countries, 'strnatcasecmp');
-  $files = _uc_country_import_list();
+  $files = uc_country_import_list();
 
   $updates = array();
   if (is_array($countries)) {

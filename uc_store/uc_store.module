@@ -98,81 +98,6 @@ define('MM_TO_CM', 0.1);
 
 
 /**
- * Implements hook_menu().
- */
-function uc_store_menu() {
-  $items['admin/store/settings/countries'] = array(
-    'title' => 'Countries and addresses',
-    'description' => 'Manage available countries and configure address formats.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_country_import_form'),
-    'access arguments' => array('administer store'),
-    'file' => 'uc_store.countries.inc',
-  );
-  $items['admin/store/settings/countries/import'] = array(
-    'title' => 'Countries',
-    'description' => 'Import and manage countries.',
-    'access arguments' => array('administer store'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'uc_store.countries.inc',
-  );
-  $items['admin/store/settings/countries/fields'] = array(
-    'title' => 'Address fields',
-    'description' => 'Edit the address field settings.',
-    'route_name' => 'uc_store.address_fields',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-  );
-  $items['admin/store/settings/countries/formats'] = array(
-    'title' => 'Address formats',
-    'description' => 'Edit country specific address format settings.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_country_formats_form'),
-    'access arguments' => array('administer store'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 1,
-    'file' => 'uc_store.countries.inc',
-  );
-  $items['admin/store/settings/countries/%/disable'] = array(
-    'title' => 'Disable a country',
-    'description' => 'Disable a country from use.',
-    'page callback' => 'uc_country_disable',
-    'page arguments' => array(4),
-    'access arguments' => array('administer store'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_store.countries.inc',
-  );
-  $items['admin/store/settings/countries/%/enable'] = array(
-    'title' => 'Enable a country',
-    'description' => 'Enable a disabled country.',
-    'page callback' => 'uc_country_enable',
-    'page arguments' => array(4),
-    'access arguments' => array('administer store'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_store.countries.inc',
-  );
-  $items['admin/store/settings/countries/%/remove'] = array(
-    'title' => 'Remove a country',
-    'description' => 'Remove an installed country.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_country_remove_form', 4),
-    'access arguments' => array('administer store'),
-    'file' => 'uc_store.countries.inc',
-  );
-  $items['admin/store/settings/countries/%/update/%'] = array(
-    'title' => 'Update a country',
-    'description' => 'Update an installed country.',
-    'page callback' => 'uc_country_update',
-    'page arguments' => array(4, 6),
-    'access arguments' => array('administer store'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_store.countries.inc',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_page_attachments().
  */
 function uc_store_page_attachments(&$page) {
@@ -408,7 +333,7 @@ function uc_date_format($month, $day, $year) {
  * Saves the address format for a country.
  */
 function uc_set_address_format($country_id, $format) {
-  variable_set('uc_address_format_' . intval($country_id), $format);
+  \Drupal::configFactory()->getEditable('uc_country.formats')->set(intval($country_id), $format)->save();
 }
 
 /**
@@ -455,7 +380,7 @@ function uc_address_format($first_name, $last_name, $company, $street1, $street2
     $variables['!country_code3_if'] = '';
   }
 
-  $format = variable_get('uc_address_format_' . $country, '');
+  $format = \Drupal::config('uc_country.formats')->get($country);
   if (empty($format)) {
     $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
   }
@@ -819,7 +744,7 @@ function uc_get_addresses($uid, $type = 'billing') {
 /**
  * Returns an array of country files that can be installed or updated.
  */
-function _uc_country_import_list() {
+function uc_country_import_list() {
   $dir = drupal_get_path('module', 'uc_store') . '/countries/';
 
   $countries = array();
@@ -1040,6 +965,7 @@ function uc_form_alter(&$form, &$form_state, $form_id) {
 
 /**
  * Temporary shim for removed variable_get().
+ * @TODO: Remove!
  */
 if (!function_exists('variable_get')) {
   function variable_get($name, $default = NULL) {
