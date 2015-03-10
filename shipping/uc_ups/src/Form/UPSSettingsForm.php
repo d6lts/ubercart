@@ -258,7 +258,7 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     $intervals = array(86400, 302400, 604800, 1209600, 2419200, 0);
-    $period = array_map(array(\Drupal::service('date'), 'formatInterval'), array_combine($intervals, $intervals));
+    $period = array_map(array(\Drupal::service('date.formatter'), 'formatInterval'), array_combine($intervals, $intervals));
     $period[0] = t('Forever');
 
     // Form to select how long labels stay on server
