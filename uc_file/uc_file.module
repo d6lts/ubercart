@@ -830,7 +830,7 @@ function _uc_file_get_fpid($pfid) {
  * @ingroup forms
  */
 function uc_file_feature_settings($form, FormStateInterface $form_state) {
-  $file_config = \Drupal::config('uc_file.settings');
+  $file_config = \Drupal::configFactory()->getEditable('uc_file.settings');
   $form['uc_file_base_dir'] = array(
     '#type' => 'textfield',
     '#title' => t('Files path'),
@@ -939,7 +939,7 @@ function uc_file_feature_settings_submit($form, FormStateInterface $form_state) 
     uc_file_refresh();
   }
 
-  \Drupal::config('uc_file.settings')
+  \Drupal::configFactory()->getEditable('uc_file.settings')
     ->set('base_dir', $form_state->getValue('uc_file_base_dir'))
     ->set('duplicate_warning', $form_state->getValue('uc_file_duplicate_warning'))
     ->set('download_limit_number', $form_state->getValue('uc_file_download_limit_number'))

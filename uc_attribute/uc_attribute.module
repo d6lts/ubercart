@@ -99,7 +99,7 @@ function uc_attribute_form_uc_product_settings_form_alter(&$form, FormStateInter
  * @see uc_attribute_form_uc_product_settings_form_alter()
  */
 function uc_attribute_uc_product_settings_form_submit($form, FormStateInterface $form_state) {
-  \Drupal::config('uc_attribute.settings')
+  \Drupal::configFactory()->getEditable('uc_attribute.settings')
     ->set('option_price_format', $form_state->getValue('uc_attribute_option_price_format'))
     ->save();
 
