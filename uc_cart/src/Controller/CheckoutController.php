@@ -222,7 +222,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
 
     $page = $cart_config->get('checkout_complete_page');
     if (!empty($page)) {
-      return new RedirectResponse(url($page, array('absolute' => TRUE)));
+      return new RedirectResponse(\Drupal::url($page));
     }
 
     return $build;

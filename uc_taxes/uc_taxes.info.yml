@@ -5,4 +5,4 @@ package: Ubercart - core (optional)
 core: 8.x
 dependencies:
   - uc_payment
-configure: admin/store/settings/taxes
+configure: uc_taxes.overview

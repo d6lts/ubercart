@@ -13,6 +13,7 @@
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\NodeTypeInterface;
@@ -27,7 +28,7 @@ function uc_catalog_help($route_name, RouteMatchInterface $route_match) {
 
     case 'uc_catalog.settings':
       if (!\Drupal::moduleHandler()->moduleExists('views_ui')) {
-        return '<p>' . t('<a href="@modules">Enable the Views UI module</a> to edit the catalog display.', array('@modules' => url('admin/modules', array('fragment' => 'edit-modules-views')))) . '</p>';
+        return '<p>' . t('<a href="@modules">Enable the Views UI module</a> to edit the catalog display.', array('@modules' => \Drupal::url('system.modules_list', array(), array('fragment' => 'edit-modules-views')))) . '</p>';
       }
       break;
   }
@@ -118,7 +119,7 @@ function uc_catalog_uri($category) {
  */
 function uc_catalog_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'uc_catalog' && $variables['label'] && $variables['configuration']['link_title']) {
-    $variables['label'] = l($variables['label'], 'catalog');
+    $variables['label'] = \Drupal::l($variables['label'], new Url('catalog'));
   }
 }
 
@@ -134,7 +135,7 @@ function uc_catalog_uc_store_status() {
     return array(array(
       'status' => 'error',
       'title' => t('Catalog field'),
-      'desc' => t('The catalog taxonomy reference field is missing. <a href="!url">Click here to create it</a>.', array('!url' => url('admin/store/settings/catalog/repair'))),
+      'desc' => t('The catalog taxonomy reference field is missing. <a href="!url">Click here to create it</a>.', array('!url' => \Drupal::url('uc_catalog.repair'))),
     ));
   }
 
@@ -144,8 +145,10 @@ function uc_catalog_uc_store_status() {
   if ($catalog) {
     // Don't display a status if the taxonomy_index table has no data.
     if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
-      $statuses[] = array('status' => 'ok', 'title' => t('Catalog vocabulary'),
-        'desc' => t('Vocabulary !name has been identified as the Ubercart catalog.', array('!name' => l($catalog->label(), 'admin/structure/taxonomy/manage/' . $catalog->vid)))
+      $statuses[] = array(
+        'status' => 'ok',
+        'title' => t('Catalog vocabulary'),
+        'desc' => t('Vocabulary !name has been identified as the Ubercart catalog.', array('!name' => \Drupal::l($catalog->label(), new Url('entity.taxonomy_vocabulary.edit_form', array('taxonomy_vocabulary' => $catalog->vid))))),
       );
 
       $product_types = uc_product_types();
@@ -153,13 +156,13 @@ function uc_catalog_uc_store_status() {
       $result = db_query("SELECT COUNT(DISTINCT n.nid) FROM {node} n LEFT JOIN {taxonomy_index} ti ON n.nid = ti.nid LEFT JOIN {taxonomy_term_data} td ON ti.tid = td.tid WHERE n.type IN (:types) AND ti.tid IS NULL AND td.vid = :vid", array(':types' => $types, ':vid' => $catalog->vid));
       if ($excluded = $result->fetchField()) {
         $description = \Drupal::translation()->formatPlural($excluded, 'There is 1 product not listed in the catalog.', 'There are @count products not listed in the catalog.')
-          . t('Products are listed by assigning a category from the <a href="!cat_url">Product Catalog</a> vocabulary to them.', array('!cat_url' => url('admin/structure/taxonomy/manage/' . $catalog->machine_name)));
+          . t('Products are listed by assigning a category from the <a href="!cat_url">Product Catalog</a> vocabulary to them.', array('!cat_url' => new Url('entity.taxonomy_vocabulary.edit_form', array('taxonomy_vocabulary' => $catalog->machine_name))));
         $terms = db_query("SELECT COUNT(1) FROM {taxonomy_term_data} WHERE vid = :vid", array(':vid' => $catalog->vid))->fetchField();
         if ($terms) {
-          $description .= ' ' . l(t('Find orphaned products here.'), 'admin/store/products/orphans');
+          $description .= ' ' . \Drupal::l(t('Find orphaned products here.'), new Url('uc_product.orphans'));
         }
         else {
-          $description .= ' ' . l(t('Add terms for the products to inhabit.'), 'admin/structure/taxonomy/manage/' . $catalog->vid . '/add');
+          $description .= ' ' . \Drupal::l(t('Add terms for the products to inhabit.'), new Url('entity.taxonomy_vocabulary.add_form', array('taxonomy_vocabulary' => $catalog->vid)));
         }
         $statuses[] = array(
           'status' => 'warning',
@@ -173,7 +176,7 @@ function uc_catalog_uc_store_status() {
     $statuses[] = array(
       'status' => 'error',
       'title' => t('Catalog vocabulary'),
-      'desc' => t('No vocabulary has been recognized as the Ubercart catalog. Choose one on <a href="!admin_catalog">this page</a> or add one on the <a href="!admin_vocab">taxonomy admin page</a> first, if needed.', array('!admin_catalog' => url('admin/store/settings/catalog'), '!admin_vocab' => url('admin/structure/taxonomy'))),
+      'desc' => t('No vocabulary has been recognized as the Ubercart catalog. Choose one on <a href="!admin_catalog">this page</a> or add one on the <a href="!admin_vocab">taxonomy admin page</a> first, if needed.', array('!admin_catalog' => \Drupal::url('uc_catalog.settings'), '!admin_vocab' => \Drupal::url('entity.taxonomy_vocabulary.collection'))),
     );
   }
 
@@ -265,7 +268,7 @@ function _uc_catalog_navigation($branch) {
   if (variable_get('uc_catalog_block_nodecount', TRUE)) {
     $num_text = ' (' . $num . ')';
   }
-  $link = l($branch->name . $num_text, $branch_path);
+  $link = \Drupal::l($branch->name . $num_text, new Url($branch_path));
 
   $output = theme('uc_catalog_item', array(
     'here' => $here,

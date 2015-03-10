@@ -9,6 +9,7 @@ namespace Drupal\uc_usps\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Configures USPS settings.
@@ -216,7 +217,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#value' => t('Save configuration'),
     );
     $form['actions']['cancel'] = array(
-      '#markup' => l(t('Cancel'), 'admin/store/settings/quotes'),
+      '#markup' => \Drupal::l(t('Cancel'), new Url('uc_quote.methods')),
     );
 
     if (!empty($_POST) && form_get_errors()) {

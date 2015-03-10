@@ -510,7 +510,7 @@ function uc_file_uc_store_status() {
     $message[] = array(
       'status' => 'warning',
       'title' => t('File downloads'),
-      'desc' => t('The file downloads directory is not valid or set. Set a valid directory in the <a href="!url">product settings</a> under the file download settings tab.', array('!url' => url('admin/store/settings/products'))),
+      'desc' => t('The file downloads directory is not valid or set. Set a valid directory in the <a href="!url">product settings</a> under the file download settings tab.', array('!url' => \Drupal::url('uc_product.settings'))),
     );
   }
   else {
@@ -542,7 +542,7 @@ function uc_file_feature_delete($feature) {
 function uc_file_feature_form($form, FormStateInterface $form_state, $node, $feature) {
   $file_config = \Drupal::config('uc_file.settings');
   if (!is_dir($file_config->get('base_dir'))) {
-    drupal_set_message(t('A file directory needs to be configured in <a href="@url">product settings</a> under the file download settings tab before a file can be selected.', array('@url' => url('admin/store/settings/products'))), 'error');
+    drupal_set_message(t('A file directory needs to be configured in <a href="@url">product settings</a> under the file download settings tab before a file can be selected.', array('@url' => \Drupal::url('uc_product.settings'))), 'error');
 
     unset($form['buttons']);
     return $form;

@@ -9,6 +9,7 @@ namespace Drupal\uc_attribute\Controller;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 
 /**
  * Controller routines for product attribute routes.
@@ -53,9 +54,9 @@ class AttributeController extends ControllerBase {
         $attr->ordering,
         $attr->options,
         $display_types[$attr->display],
-        l(t('edit'), 'admin/store/products/attributes/' . $attr->aid . '/edit'),
-        l(t('options'), 'admin/store/products/attributes/' . $attr->aid . '/options'),
-        l(t('delete'), 'admin/store/products/attributes/' . $attr->aid . '/delete'),
+        \Drupal::l(t('edit'), new Url('uc_attribute.edit', array('aid' => $attr->aid))),
+        \Drupal::l(t('options'), new Url('uc_attribute.options', array('aid' => $attr->aid))),
+        \Drupal::l(t('delete'), new Url('uc_attribute.delete', array('aid' => $attr->aid))),
       );
     }
 

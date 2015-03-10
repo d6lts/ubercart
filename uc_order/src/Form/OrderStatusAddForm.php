@@ -65,7 +65,7 @@ class OrderStatusAddForm extends FormBase {
       '#value' => t('Create'),
     );
     $form['actions']['cancel'] = array(
-      '#markup' => l(t('Cancel'), 'admin/store/settings/orders/workflow'),
+      '#markup' => \Drupal::l(t('Cancel'), new Url('uc_order.status_add')),
     );
 
     return $form;

@@ -9,6 +9,7 @@ namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines the attribute add/edit edit form.
@@ -71,7 +72,7 @@ abstract class AttributeFormBase extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
-      '#suffix' => l(t('Cancel'), 'admin/store/products/attributes'),
+      '#suffix' => \Drupal::l(t('Cancel'), new Url('uc_attribute.overview')),
     );
 
     return $form;

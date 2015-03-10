@@ -5,4 +5,4 @@ package: Ubercart - shipping
 core: 8.x
 dependencies:
   - uc_quote
-configure: admin/store/settings/quotes/methods
+configure: uc_quote.methods

@@ -9,6 +9,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Displays a list of an order's packaged products.
@@ -32,7 +33,7 @@ function uc_shipping_order_packages($order) {
     $row[] = '<ul><li>' . implode('</li><li>', $product_list) . '</li></ul>';
     $row[] = isset($shipping_type_options[$package->shipping_type]) ? $shipping_type_options[$package->shipping_type] : strtr($package->shipping_type, '_', ' ');
     $row[] = String::checkPlain($package->pkg_type);
-    $row[] = isset($package->sid) ? l($package->sid, 'admin/store/orders/' . $order->id() . '/shipments/' . $package->sid . '/view') : '';
+    $row[] = isset($package->sid) ? \Drupal::l($package->sid, new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/view', array('order_id' => $order->id(), 'shipment_id' => $package->sid))) : '';
     $row[] = isset($package->tracking_number) ? String::checkPlain($package->tracking_number) : '';
 
     if ($package->label_image && $image = file_load($package->label_image)) {
@@ -44,14 +45,14 @@ function uc_shipping_order_packages($order) {
 
     if (isset($package->sid) && isset($package->label_image)) {
       $method = db_query("SELECT shipping_method FROM {uc_shipments} WHERE sid = :sid", array(':sid' => $package->sid))->fetchField();
-      $row[] = l(
+      $row[] = \Drupal::l(
         theme('image_style', array(
           'style_name' => 'uc_thumbnail',
           'uri' => $package->label_image->uri,
           'alt' => t('Shipping label'),
           'title' => t('Shipping label'),
         )),
-        'admin/store/orders/' . $order->id() . '/shipments/labels/' . $method . '/' . $package->label_image->uri,
+        new Url('admin/store/orders/{order_id}/shipments/labels/{method}/{image_uri}', array('order_id' => $order->id(), 'method' => $method, 'image_uri' => $package->label_image->uri)),
         array('html' => TRUE)
       );
     }
@@ -59,12 +60,12 @@ function uc_shipping_order_packages($order) {
       $row[] = '';
     }
 
-    $row[] = l(t('edit'), 'admin/store/orders/' . $order->id() . '/packages/' . $package->package_id . '/edit');
-    $row[] = l(t('ship'), 'admin/store/orders/' . $order->id() . '/shipments/new', array('query' => array('pkgs' => array($package->package_id))));
-    $row[] = l(t('delete'), 'admin/store/orders/' . $order->id() . '/packages/' . $package->package_id . '/delete');
+    $row[] = \Drupal::l(t('edit'), new Url('admin/store/orders/{order_id}/packages/{package_id}/edit', array('order_id' => $order->id(), 'package_id' => $package->package_id)));
+    $row[] = \Drupal::l(t('ship'), new Url('admin/store/orders/{order_id}/shipments/new', array('order_id' => $order->id())), array('query' => array('pkgs' => array($package->package_id))));
+    $row[] = \Drupal::l(t('delete'), new Url('admin/store/orders/{order_id}/packages/{package_id}/delete', array('order_id' => $order->id(), 'package_id' => $package->package_id)));
 
     if ($package->sid) {
-      $row[] = l(t('cancel shipment'), 'admin/store/orders/' . $order->id() . '/packages/' . $package->package_id . '/cancel');
+      $row[] = \Drupal::l(t('cancel shipment'), new Url('admin/store/orders/{order_id}/packages/{package_id}/cancel', array('order_id' => $order->id(), 'package_id' => $package->package_id)));
     }
     else {
       $row[] = '';
@@ -515,11 +516,11 @@ function uc_shipping_order_shipments($order) {
     $row[] = format_date($shipment->ship_date, 'uc_store');
     $row[] = format_date($shipment->expected_delivery, 'uc_store');
     $row[] = is_null($shipment->tracking_number) ? t('n/a') : String::checkPlain($shipment->tracking_number);
-    $row[] = l(t('view'), 'admin/store/orders/' . $order->id() . '/shipments/' . $shipment->sid . '/view');
-    $row[] = l(t('edit'), 'admin/store/orders/' . $order->id() . '/shipments/' . $shipment->sid . '/edit');
-    $row[] = l(t('print'), 'admin/store/orders/' . $order->id() . '/shipments/' . $shipment->sid . '/print');
-    $row[] = l(t('packing slip'), 'admin/store/orders/' . $order->id() . '/shipments/' . $shipment->sid . '/packing_slip');
-    $row[] = l(t('delete'), 'admin/store/orders/' . $order->id() . '/shipments/' . $shipment->sid . '/delete');
+    $row[] = \Drupal::l(t('view'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/view', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
+    $row[] = \Drupal::l(t('edit'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/edit', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
+    $row[] = \Drupal::l(t('print'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/print', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
+    $row[] = \Drupal::l(t('packing slip'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/packing_slip', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
+    $row[] = \Drupal::l(t('delete'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/delete', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
     $rows[] = $row;
   }
 
@@ -1186,7 +1187,7 @@ function uc_shipping_make_shipment($order) {
   $args = func_get_args();
   if (count($args) > 2) {
     $breadcrumb = drupal_get_breadcrumb();
-    $breadcrumb[] = l(t('Shipments'), 'admin/store/orders/' . $order->id() . '/shipments');
+    $breadcrumb[] = \Drupal::l(t('Shipments'), new Url('admin/store/orders/{order_id}/shipments', array('order_id' => $order->id())));
     drupal_set_breadcrumb($breadcrumb);
 
     $order = array_shift($args);

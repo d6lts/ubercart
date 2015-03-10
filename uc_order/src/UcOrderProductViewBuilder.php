@@ -28,7 +28,7 @@ class UcOrderProductViewBuilder extends EntityViewBuilder {
         '#cell_attributes' => array('class' => array('qty')),
       );
       $node = node_load($product->nid->target_id);
-      $title = $node->access('view') ? l($product->title->value, 'node/' . $product->nid->target_id) : String::checkPlain($product->title->value);
+      $title = $node->access('view') ? \Drupal::l($product->title->value, new Url('entity.node.canonical', array('node' => $product->nid->target_id))) : String::checkPlain($product->title->value);
       $product->content['product'] = array(
         '#markup' => $title . uc_product_get_description($product),
         '#cell_attributes' => array('class' => array('product')),

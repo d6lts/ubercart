@@ -116,7 +116,7 @@ class CartForm extends FormBase {
       // Add the element to the form based on the element type.
       if ($cart_config->get('continue_shopping_type') == 'link') {
         $form['actions']['continue_shopping'] = array(
-          '#markup' => l($this->t('Continue shopping'), $this->continueShoppingUrl()),
+          '#markup' => \Drupal::l($this->t('Continue shopping'), new Url($this->continueShoppingUrl())),
         );
       }
       elseif ($cart_config->get('continue_shopping_type') == 'button') {

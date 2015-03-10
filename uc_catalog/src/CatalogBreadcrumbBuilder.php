@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 
 /**
  * Provides a custom breadcrumb builder for catalog node pages.
@@ -75,11 +76,11 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected function catalogBreadcrumb($node) {
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
-    $breadcrumb[] = l(t('Catalog'), 'catalog');
+    $breadcrumb[] = \Drupal::l(t('Catalog'), new Url('catalog'));
     if ($parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->target_id)) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = l($parent->label(), 'catalog/' . $parent->id());
+        $breadcrumb[] = \Drupal::l($parent->label(), new Url('catalog/' . $parent->id()));
       }
     }
     return $breadcrumb;
@@ -90,12 +91,12 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected function catalogTermBreadcrumb($tid) {
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
-    $breadcrumb[] = l(t('Catalog'), 'catalog');
+    $breadcrumb[] = \Drupal::l(t('Catalog'), new Url('catalog'));
     if ($parents = taxonomy_term_load_parents_all($tid)) {
       array_shift($parents);
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = l($parent->label(), 'catalog/' . $parent->id());
+        $breadcrumb[] = \Drupal::l($parent->label(), new Url('catalog/' . $parent->id()));
       }
     }
     return $breadcrumb;
