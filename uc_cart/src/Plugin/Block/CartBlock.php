@@ -131,7 +131,7 @@ class CartBlock extends BlockBase {
       // If the block is collapsible, add the appropriate JS.
       if ($this->configuration['collapsible']) {
         $build['#attached']['library'][] = 'system/drupal.system';
-        $build['#attached']['js'][] = drupal_get_path('module', 'uc_cart') . '/js/uc_cart_block.js';
+        $build['#attached']['library'][] = 'uc_cart/uc_cart_block.scripts';
       }
 
       return $build;

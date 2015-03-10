@@ -332,8 +332,8 @@ function uc_product_form_node_type_form_alter(&$form, FormStateInterface $form_s
     '#group' => 'additional_settings',
     '#tree' => TRUE,
     '#attached' => array(
-      'js' => array(
-        'vertical-tabs' => drupal_get_path('module', 'uc_product') . '/js/uc_product.js',
+      'library' => array(
+        'uc_product/uc_product.scripts',
       ),
     ),
   );
