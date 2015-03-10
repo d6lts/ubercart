@@ -41,15 +41,16 @@ function canada_install() {
   // because the Canada .cif file is loaded during the installation
   // of the uc_store module, before uc_set_address_format() is available
   // to use.
-  \Drupal::config()->getEditableConfig('uc_country.formats')
+  \Drupal::configFactory()->getEditable('uc_country.formats')
     ->set('124',
-    "!company\r\n".
-    "!first_name !last_name\r\n".
-    "!street1\r\n".
-    "!street2\r\n".
-    "!city !zone_code  !postal_code\r\n".
-    "!country_name_if"
-  );
+      "!company\r\n".
+      "!first_name !last_name\r\n".
+      "!street1\r\n".
+      "!street2\r\n".
+      "!city !zone_code  !postal_code\r\n".
+      "!country_name_if"
+    )
+    ->save();
 }
 
 function canada_update($version) {
