@@ -57,7 +57,7 @@ class TaxesController extends ControllerBase {
     $name = $rate->name;
 
     // Tweak the name and unset the rate ID.
-    $rate->name = t('Copy of !name', array('!name' => $rate->name));
+    $rate->name = t('Copy of !name', ['!name' => $rate->name]);
     $rate->id = NULL;
 
     // Save the new rate without clearing the Rules cache.
@@ -73,7 +73,7 @@ class TaxesController extends ControllerBase {
     // entity_flush_caches();
 
     // Display a message and redirect back to the overview.
-    drupal_set_message(t('Tax rate %name cloned.', array('%name' => $name)));
+    drupal_set_message(t('Tax rate %name cloned.', ['%name' => $name]));
 
     return $this->redirect('uc_taxes.overview');
   }

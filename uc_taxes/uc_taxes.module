@@ -35,7 +35,7 @@ function uc_taxes_menu() {
  * calculations are made.
  */
 function uc_taxes_module_implements_alter(&$implementations, $hook) {
-  if (in_array($hook, array('uc_order_insert', 'uc_order_update', 'entity_view_alter'))) {
+  if (in_array($hook, ['uc_order_insert', 'uc_order_update', 'entity_view_alter'])) {
     $group = $implementations['uc_taxes'];
     unset($implementations['uc_taxes']);
     $implementations['uc_taxes'] = $group;
@@ -169,7 +169,7 @@ function uc_taxes_uc_order_update(UcOrderInterface $order) {
               uc_order_update_line_item($line['line_item_id'], $new_line['title'], $new_line['amount'], $new_line['data']);
               $order->line_items[$i]['amount'] = $new_line['amount'];
               $order->line_items[$i]['data'] = $new_line['data'];
-              $changes[] = t('Changed %title to %amount.', array('%amount' => uc_currency_format($new_line['amount']), '%title' => $new_line['title']));
+              $changes[] = t('Changed %title to %amount.', ['%amount' => uc_currency_format($new_line['amount']), '%title' => $new_line['title']]);
             }
             unset($line_items[$id]);
             $delete = FALSE;
@@ -179,7 +179,7 @@ function uc_taxes_uc_order_update(UcOrderInterface $order) {
         if ($delete) {
           uc_order_delete_line_item($line['line_item_id']);
           unset($order->line_items[$i]);
-          $changes[] = t('Removed %title.', array('%title' => $line['title']));
+          $changes[] = t('Removed %title.', ['%title' => $line['title']]);
         }
       }
     }
@@ -189,7 +189,7 @@ function uc_taxes_uc_order_update(UcOrderInterface $order) {
   if (is_array($line_items)) {
     foreach ($line_items as $line) {
       $order->line_items[] = uc_order_line_item_add($order->id(), 'tax', $line['title'], $line['amount'], $line['weight'], $line['data']);
-      $changes[] = t('Added %amount for %title.', array('%amount' => uc_currency_format($line['amount']), '%title' => $line['title']));
+      $changes[] = t('Added %amount for %title.', ['%amount' => uc_currency_format($line['amount']), '%title' => $line['title']]);
     }
   }
 
@@ -249,7 +249,7 @@ function _uc_taxes_to_line_item($tax) {
     'id' => ($tax->summed ? 'tax' : 'tax_included'),
     'title' => !empty($tax->name) ? $tax->name : $tax->id,
     'amount' => $tax->amount,
-    'weight' => variable_get('uc_li_tax_weight', 9) + (!empty($tax->weight) ? $tax->weight / 10 : 0),
+    'weight' => \Drupal::config('uc_taxes.settings')->get('tax_line_item.weight') + (!empty($tax->weight) ? $tax->weight / 10 : 0),
     'data' => isset($tax->data) ? $tax->data : array(),
   );
   $line['data']['tax_id'] = $tax->id;
@@ -295,7 +295,7 @@ function uc_line_item_tax_subtotal($op, $order) {
           'id' => 'tax_subtotal',
           'title' => t('Subtotal excluding taxes'),
           'amount' => $amount,
-          'weight' => variable_get('uc_li_tax_subtotal_weight', 7),
+          'weight' => \Drupal::config('uc_taxes.settings')->get('tax_line_item.subtotal_weight'),
         ));
       }
       break;
@@ -450,7 +450,7 @@ function uc_taxes_rate_load($rate_id = NULL) {
       $rates[$rate->id] = $rate;
     }
 
-    foreach (array('taxed_product_types', 'taxed_line_items') as $field) {
+    foreach (['taxed_product_types', 'taxed_line_items'] as $field) {
       $result = db_select('uc_' . $field, 't')->fields('t', array('tax_id', 'type'))->execute();
       foreach ($result as $record) {
         $rates[$record->tax_id]->{$field}[] = $record->type;
@@ -503,7 +503,7 @@ function uc_taxes_rate_delete($rate_id) {
  */
 function uc_taxes_calculate($order) {
   // Find any taxes specified by enabled modules.
-  $taxes = \Drupal::moduleHandler()->invokeAll('uc_calculate_tax', array($order));
+  $taxes = \Drupal::moduleHandler()->invokeAll('uc_calculate_tax', [$order]);
 
   return $taxes;
 }

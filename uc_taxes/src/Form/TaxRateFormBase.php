@@ -9,6 +9,7 @@ namespace Drupal\uc_taxes\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines the tax rate add/edit form.
@@ -69,7 +70,7 @@ abstract class TaxRateFormBase extends FormBase {
 
     $options = array();
     foreach (_uc_line_item_list() as $id => $line_item) {
-      if (!in_array($id, array('subtotal', 'tax_subtotal', 'total', 'tax_display'))) {
+      if (!in_array($id, ['subtotal', 'tax_subtotal', 'total', 'tax_display'])) {
         $options[$id] = $line_item['title'];
       }
     }
@@ -102,7 +103,7 @@ abstract class TaxRateFormBase extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
-      '#suffix' => l(t('Cancel'), 'admin/store/settings/taxes'),
+      '#suffix' => \Drupal::l(t('Cancel'), new Url('uc_taxes.overview')),
     );
 
     return $form;

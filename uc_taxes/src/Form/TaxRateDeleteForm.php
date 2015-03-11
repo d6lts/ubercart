@@ -25,7 +25,7 @@ class TaxRateDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete @name?', array('@name' => $this->rate->name));
+    return $this->t('Are you sure you want to delete @name?', ['@name' => $this->rate->name]);
   }
 
   /**
@@ -64,7 +64,7 @@ class TaxRateDeleteForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_taxes_rate_delete($this->rate->id);
 
-    drupal_set_message(t('Tax rate %name deleted.', array('%name' => $this->rate->name)));
+    drupal_set_message(t('Tax rate %name deleted.', ['%name' => $this->rate->name]));
 
     $form_state->setRedirect('uc_taxes.overview');
   }

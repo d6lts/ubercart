@@ -1,0 +1,5 @@
+uc_taxes.admin.store.settings.taxes:
+  title: Taxes
+  description: 'Configure tax rates and rules.'
+  route_name: uc_taxes.overview
+  parent: uc_store.admin.store.settings

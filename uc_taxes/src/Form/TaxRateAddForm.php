@@ -20,7 +20,7 @@ class TaxRateAddForm extends TaxRateFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $rate = parent::submitForm($form, $form_state);
 
-    drupal_set_message(t('Tax rate %name created.', array('%name' => $rate->name)));
+    drupal_set_message(t('Tax rate %name created.', ['%name' => $rate->name]));
 
     //$form_state['redirect'] = 'admin/store/settings/taxes/manage/uc_taxes_' . $rate->id;
     $form_state->setRedirect('uc_taxes.overview');

@@ -44,7 +44,7 @@ class TaxRateEditForm extends TaxRateFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $rate = parent::submitForm($form, $form_state);
 
-    drupal_set_message(t('Tax rate %name saved.', array('%name' => $rate->name)));
+    drupal_set_message(t('Tax rate %name saved.', ['%name' => $rate->name]));
 
     $form_state->setRedirect('uc_taxes.overview');
   }

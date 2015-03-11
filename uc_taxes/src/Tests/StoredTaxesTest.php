@@ -16,8 +16,8 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class StoredTaxesTest extends UbercartTestBase {
 
-  public static $modules = array('uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_taxes');
-  public static $adminPermissions = array(/*'administer rules', */'configure taxes');
+  public static $modules = ['uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_taxes'];
+  public static $adminPermissions = [/*'administer rules', */'configure taxes'];
 
   protected function loadTaxLine($order_id) {
     $order = uc_order_load($order_id, TRUE);
@@ -84,10 +84,10 @@ class StoredTaxesTest extends UbercartTestBase {
     // Complete the review page.
     $this->drupalPostForm(NULL, array(), t('Submit order'));
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][first_name]']))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", [':name' => $edit['panes[delivery][first_name]']])->fetchField();
     if ($order_id) {
       $this->pass(
-        t('Order %order_id has been created', array('%order_id' => $order_id))
+        t('Order %order_id has been created', ['%order_id' => $order_id])
       );
 
       $this->drupalGet('admin/store/orders/' . $order_id . '/edit');
