@@ -77,10 +77,10 @@ class AjaxTest extends UbercartTestBase {
     $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
     // $this->addPaymentZoneCondition('other', '26');
 
-    // Speciy that the billing zone should update the payment pane.
+    // Specify that the billing zone should update the payment pane.
     $config = _uc_ajax_defaults('checkout');
     $config['panes][billing][address][zone'] = array('payment-pane' => 'payment-pane');
-    \Drupal::config('uc_cart.settings')
+    \Drupal::configFactory()->getEditable('uc_cart.settings')
       ->set('ajax.checkout', $config)
       ->save();
 

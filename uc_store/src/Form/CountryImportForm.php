@@ -55,15 +55,15 @@ class CountryImportForm extends ConfigFormBase {
 
         $ops = array();
         if ($country->version < 0) {
-          $ops[] = \Drupal::l(t('enable'), new Url('uc_countries.enable', array('country_id' => $country->country_id)));
+          $ops[] = \Drupal::l(t('enable'), new Url('uc_countries.enable', ['country_id' => $country->country_id]));
         }
         else {
-          $ops[] = \Drupal::l(t('disable'), new Url('uc_countries.disable', array('country_id' => $country->country_id)));
+          $ops[] = \Drupal::l(t('disable'), new Url('uc_countries.disable', ['country_id' => $country->country_id]));
         }
         if ($country->version < $files[$country->country_id]['version'] && $country->version > 0) {
-          $ops[] = \Drupal::l(t('update'), new Url('uc_countries.update', array('country_id' => $country->country_id, 'version' =>  $files[$country->country_id]['version'])));
+          $ops[] = \Drupal::l(t('update'), new Url('uc_countries.update', ['country_id' => $country->country_id, 'version' =>  $files[$country->country_id]['version']]));
         }
-        $ops[] = \Drupal::l(t('remove'), new Url('uc_countries.remove', array('country_id' => $country->country_id)));
+        $ops[] = \Drupal::l(t('remove'), new Url('uc_countries.remove', ['country_id' => $country->country_id]));
         $row[] = implode(' ', $ops);
 
         $rows[] = $row;
@@ -107,6 +107,7 @@ class CountryImportForm extends ConfigFormBase {
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
+      '#empty' => t('No countries installed.'),
     );
 
     return parent::buildForm($form, $form_state);

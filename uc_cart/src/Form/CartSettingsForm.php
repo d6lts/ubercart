@@ -35,7 +35,7 @@ class CartSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $cart_config = \Drupal::config('uc_cart.settings');
+    $cart_config = $this->config('uc_cart.settings');
 
     $form['cart-settings'] = array(
       '#type' => 'vertical_tabs',
@@ -191,7 +191,7 @@ class CartSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $cart_config = \Drupal::config('uc_cart.settings');
+    $cart_config = $this->config('uc_cart.settings');
     $cart_config
       ->set('add_item_msg', $form_state->getValue('uc_cart_add_item_msg'))
       ->set('add_item_redirect', $form_state->getValue('uc_add_item_redirect'))

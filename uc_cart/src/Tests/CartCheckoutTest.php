@@ -141,7 +141,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->addToCart($this->product);
     $this->drupalGet('cart');
     $this->assertNoText('Empty cart');
-    \Drupal::config('uc_cart.settings')->set('empty_button', TRUE)->save();
+    \Drupal::configFactory()->getEditable('uc_cart.settings')->set('empty_button', TRUE)->save();
     $this->drupalPostForm('cart', array(), t('Empty cart'));
     $this->drupalPostForm(NULL, array(), t('Confirm'));
     $this->assertText('There are no products in your shopping cart.');

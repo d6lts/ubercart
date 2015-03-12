@@ -21,8 +21,8 @@ use Drupal\uc_order\OrderProductInterface;
  *   label = @Translation("Order product"),
  *   module = "uc_order",
  *   handlers = {
+ *     "storage" = "Drupal\uc_order\OrderProductStorage",
  *     "view_builder" = "Drupal\uc_order\OrderProductViewBuilder",
- *     "storage" = "Drupal\uc_order\OrderProductStorage"
  *   },
  *   base_table = "uc_order_products",
  *   fieldable = TRUE,
@@ -33,13 +33,6 @@ use Drupal\uc_order\OrderProductInterface;
  * )
  */
 class OrderProduct extends ContentEntityBase implements OrderProductInterface {
-
-  /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
-   */
-  public function id() {
-    return $this->get('order_product_id')->value;
-  }
 
   /**
    * {@inheritdoc}

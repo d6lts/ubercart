@@ -11,6 +11,8 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -71,8 +73,8 @@ class CheckoutSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $cart_config = \Drupal::config('uc_cart.settings');
-    $messages = \Drupal::config('uc_cart.messages');
+    $cart_config = $this->config('uc_cart.settings');
+    $messages = $this->config('uc_cart.messages');
 
     $form['checkout-settings'] = array(
       '#type' => 'vertical_tabs',
@@ -260,7 +262,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
     $form['completion_messages']['uc_msg_order_new_user_logged_in'] = array(
       '#type' => 'textarea',
       '#title' => t('New logged in users'),
-      '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href="!user_login_setting_ur">checkout settings</a>.', array('!user_login_setting_ur' => 'admin/store/settings/checkout')),
+      '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href="!user_login_setting_ur">checkout settings</a>.', array('!user_login_setting_ur' => Url::fromRoute('uc_cart.checkout_settings')->toString())),
       '#default_value' => $messages->get('new_user_logged_in'),
       '#rows' => 3,
       '#states' => $anon_state,
@@ -279,7 +281,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $cart_config = \Drupal::config('uc_cart.settings');
+    $cart_config = $this->config('uc_cart.settings');
     $cart_config
       ->set('checkout_enabled', $form_state->getValue('uc_checkout_enabled'));
 
@@ -304,7 +306,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('panes', $form_state->getValue('panes'))
       ->save();
 
-    \Drupal::config('uc_cart.messages')
+    $this->config('uc_cart.messages')
       ->set('logged_in', $form_state->getValue('uc_msg_order_logged_in'))
       ->set('existing_user', $form_state->getValue('uc_msg_order_existing_user'))
       ->set('new_user', $form_state->getValue('uc_msg_order_new_user'))

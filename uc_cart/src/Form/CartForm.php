@@ -32,7 +32,7 @@ class CartForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $items = NULL) {
     $form['#attached']['library'][] = 'uc_cart/uc_cart.styles';
-    $cart_config = \Drupal::config('uc_cart.settings');
+    $cart_config = $this->config('uc_cart.settings');
 
     $form['items'] = array(
       '#type' => 'table',
@@ -216,7 +216,7 @@ class CartForm extends FormBase {
    *   The URL that will be used for the continue shopping element.
    */
   protected function continueShoppingUrl() {
-    $cart_config = \Drupal::config('uc_cart.settings');
+    $cart_config = $this->config('uc_cart.settings');
     $url = '';
 
     // Use the last URL if enabled and available.

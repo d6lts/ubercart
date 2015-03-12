@@ -46,13 +46,6 @@ class CartItem extends ContentEntityBase {
   public $changed;
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
-   */
-  public function id() {
-    return $this->cart_item_id->value;
-  }
-
-  /**
    * Converts a cart item into an order product.
    */
   public function toOrderProduct() {

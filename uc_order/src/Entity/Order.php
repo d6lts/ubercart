@@ -22,14 +22,14 @@ use Drupal\uc_store\Address;
  *   label = @Translation("Order"),
  *   module = "uc_order",
  *   handlers = {
- *     "storage" = "Drupal\uc_order\OrderStorage",
- *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",
  *     "access" = "Drupal\uc_order\OrderAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\uc_order\OrderForm",
  *       "delete" = "Drupal\uc_order\Form\OrderDeleteForm",
- *       "edit" = "Drupal\uc_order\OrderForm"
- *     }
+ *       "edit" = "Drupal\uc_order\OrderForm",
+ *     },
+ *     "storage" = "Drupal\uc_order\OrderStorage",
+ *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",
  *   },
  *   base_table = "uc_orders",
  *   fieldable = TRUE,
@@ -37,7 +37,7 @@ use Drupal\uc_store\Address;
  *     "canonical" = "uc_order.admin_view",
  *     "delete-form" = "uc_order.admin_delete",
  *     "edit-form" = "uc_order.admin_edit",
- *     "admin-form" = "uc_order.workflow"
+ *     "admin-form" = "uc_order.workflow",
  *   },
  *   entity_keys = {
  *     "id" = "order_id",
@@ -50,17 +50,10 @@ class Order extends ContentEntityBase implements OrderInterface {
   public $line_items = array();
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
-   */
-  public function id() {
-    return $this->get('order_id')->value;
-  }
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::label().
    */
   public function label($langcode = NULL) {
-    return t('Order @order_id', array('@order_id' => $this->id()));
+    return t('Order @order_id', ['@order_id' => $this->id()]);
   }
 
   /**
@@ -77,7 +70,7 @@ class Order extends ContentEntityBase implements OrderInterface {
     parent::postLoad($storage, $orders);
 
     foreach ($orders as $id => $order) {
-      $order->products = entity_load_multiple_by_properties('uc_order_product', array('order_id' => $id));
+      $order->products = entity_load_multiple_by_properties('uc_order_product', ['order_id' => $id]);
 
       // Load line items... has to be last after everything has been loaded.
       $order->line_items = $order->getLineItems();
@@ -147,7 +140,7 @@ class Order extends ContentEntityBase implements OrderInterface {
       uc_order_delete_line_item($order_id, TRUE);
 
       // Log the action in the database.
-      \Drupal::logger('uc_order')->notice('Order @order_id deleted by user @uid.', array('@order_id' => $order_id, '@uid' => $GLOBALS['user']->id()));
+      \Drupal::logger('uc_order')->notice('Order @order_id deleted by user @uid.', ['@order_id' => $order_id, '@uid' => $GLOBALS['user']->id()]);
     }
   }
 
@@ -157,7 +150,7 @@ class Order extends ContentEntityBase implements OrderInterface {
   public function getLineItems() {
     $items = array();
 
-    $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id", array(':id' => $this->id()));
+    $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id", [':id' => $this->id()]);
     foreach ($result as $row) {
       $item = array(
         'line_item_id' => $row->line_item_id,
@@ -414,7 +407,7 @@ class Order extends ContentEntityBase implements OrderInterface {
     if (!empty($changes)) {
       foreach ($changes as $key => $value) {
         if (is_array($value)) {
-          $items[] = t('@key changed from %old to %new.', array('@key' => $key, '%old' => $value['old'], '%new' => $value['new']));
+          $items[] = t('@key changed from %old to %new.', ['@key' => $key, '%old' => $value['old'], '%new' => $value['new']]);
         }
         elseif (is_string($value)) {
           $items[] = $value;
