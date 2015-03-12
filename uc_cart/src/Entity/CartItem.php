@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_cart\Entity\UcCartItem.
+ * Contains \Drupal\uc_cart\Entity\CartItem.
  */
 
 namespace Drupal\uc_cart\Entity;
@@ -20,7 +20,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   label = @Translation("Cart item"),
  *   module = "uc_cart",
  *   handlers = {
- *     "storage" = "Drupal\uc_cart\UcCartItemStorage",
+ *     "storage" = "Drupal\uc_cart\CartItemStorage",
  *   },
  *   base_table = "uc_cart_products",
  *   entity_keys = {
@@ -28,7 +28,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   }
  * )
  */
-class UcCartItem extends ContentEntityBase {
+class CartItem extends ContentEntityBase {
 
   public $product;
   public $title;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_cart\UcCartItemStorage.
+ * Contains \Drupal\uc_cart\CartItemStorage.
  */
 
 namespace Drupal\uc_cart;
@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 /**
  * Controller class for cart items.
  */
-class UcCartItemStorage extends SqlContentEntityStorage {
+class CartItemStorage extends SqlContentEntityStorage {
 
   /**
    * Overrides Drupal\Core\Entity\Sql\SqlContentEntityStorage::save().
