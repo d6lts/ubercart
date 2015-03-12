@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\UcOrderStorage.
+ * Contains \Drupal\uc_order\OrderStorage.
  */
 
 namespace Drupal\uc_order;
@@ -12,7 +12,7 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 /**
  * Controller class for orders.
  */
-class UcOrderStorage extends SqlContentEntityStorage {
+class OrderStorage extends SqlContentEntityStorage {
 
   /**
    * {@inheritdoc}

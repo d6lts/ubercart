@@ -8,7 +8,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Encryption;
 
 /** Just authorize an amount on a credit card account. */
@@ -234,7 +234,7 @@ function uc_credit_uc_order_load($orders) {
 /**
  * Implements hook_uc_order_update().
  */
-function uc_credit_uc_order_update(UcOrderInterface $order) {
+function uc_credit_uc_order_update(OrderInterface $order) {
   if ($order->getPaymentMethodId() == 'credit' && !empty($order->payment_details)) {
     _uc_credit_save_cc_data_to_order($order->payment_details, $order->id());
   }

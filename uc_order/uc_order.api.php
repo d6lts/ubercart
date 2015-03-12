@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * @file
@@ -208,7 +208,7 @@ function hook_uc_order_actions_alter(&$actions, $order) {
  * @return bool
  *   FALSE if the order should not be deleted.
  */
-function hook_uc_order_can_delete(UcOrderInterface $order) {
+function hook_uc_order_can_delete(OrderInterface $order) {
   if (uc_payment_load_payments($order->id()) !== FALSE) {
     return FALSE;
   }

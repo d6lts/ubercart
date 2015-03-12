@@ -11,7 +11,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\Xss;
 
@@ -311,7 +311,7 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
  *
  * @todo Remove when Rules is available.
  */
-function uc_payment_uc_payment_entered(UcOrderInterface $order) {
+function uc_payment_uc_payment_entered(OrderInterface $order) {
   if (uc_payment_balance($order) <= 0) {
     $state = $order->getStateId();
     if ($state == 'in_checkout' || $state == 'post_checkout') {
@@ -334,7 +334,7 @@ function uc_payment_uc_order_load($orders) {
 /**
  * Implements hook_uc_order_update().
  */
-function uc_payment_uc_order_update(UcOrderInterface $order) {
+function uc_payment_uc_order_update(OrderInterface $order) {
   if ($order->getPaymentMethodId()) {
     Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSave($order);
   }
@@ -350,7 +350,7 @@ function uc_payment_uc_order_update(UcOrderInterface $order) {
 /**
  * Implements hook_uc_order_can_delete().
  */
-function uc_payment_uc_order_can_delete(UcOrderInterface $order) {
+function uc_payment_uc_order_can_delete(OrderInterface $order) {
   if (uc_payment_load_payments($order->id()) !== FALSE) {
     return FALSE;
   }
@@ -359,7 +359,7 @@ function uc_payment_uc_order_can_delete(UcOrderInterface $order) {
 /**
  * Implements hook_uc_order_delete().
  */
-function uc_payment_uc_order_delete(UcOrderInterface $order) {
+function uc_payment_uc_order_delete(OrderInterface $order) {
   db_delete('uc_payment_receipts')
     ->condition('order_id', $order->id())
     ->execute();

@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -63,7 +63,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function view(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function view(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $contents['#attached']['library'][] = 'uc_payment/uc_payment.styles';
 
     if ($this->configuration['show_preview']) {
@@ -147,7 +147,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function process(OrderInterface $order, array $form, FormStateInterface $form_state) {
     if (!$form_state->getValue(['panes', 'payment', 'payment_method'])) {
       $form_state->setErrorByName('panes][payment][payment_method', t('You cannot check out without selecting a payment method.'));
       return FALSE;
@@ -160,7 +160,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function review(UcOrderInterface $order) {
+  public function review(OrderInterface $order) {
     $line_items = $order->getDisplayLineItems();
     foreach ($line_items as $line_item) {
       $review[] = array('title' => $line_item['title'], 'data' => uc_currency_format($line_item['amount']));

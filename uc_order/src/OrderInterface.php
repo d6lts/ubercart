@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\UcOrderInterface.
+ * Contains \Drupal\uc_order\OrderInterface.
  */
 
 namespace Drupal\uc_order;
@@ -13,7 +13,7 @@ use Drupal\uc_store\Address;
 /**
  * Provides an interface defining an Ubercart order entity.
  */
-interface UcOrderInterface extends ContentEntityInterface {
+interface OrderInterface extends ContentEntityInterface {
 
   /**
    * Returns an array containing an order's line items ordered by weight.
@@ -62,7 +62,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    * @param int $uid
    *   The user ID.
    *
-   * @return \Drupal\uc_order\UcOrderInterface
+   * @return \Drupal\uc_order\OrderInterface
    *   The called owner entity.
    */
   public function setUserId($uid);
@@ -89,7 +89,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    * @param string $status
    *   The order status ID.
    *
-   * @return \Drupal\uc_order\UcOrderInterface
+   * @return \Drupal\uc_order\OrderInterface
    *   The called owner entity.
    */
   public function setStatusId($status);
@@ -116,7 +116,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    * @param string $email
    *   The e-mail address.
    *
-   * @return \Drupal\uc_order\UcOrderInterface
+   * @return \Drupal\uc_order\OrderInterface
    *   The called owner entity.
    */
   public function setEmail($email);
@@ -167,7 +167,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    * @param string $payment_method
    *   The payment method ID.
    *
-   * @return \Drupal\uc_order\UcOrderInterface
+   * @return \Drupal\uc_order\OrderInterface
    *   The called owner entity.
    */
   public function setPaymentMethodId($payment_method);
@@ -191,7 +191,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    * @param \Drupal\uc_store\Address $address
    *   The address object.
    *
-   * @return \Drupal\uc_order\UcOrderInterface
+   * @return \Drupal\uc_order\OrderInterface
    *   The called owner entity.
    */
   public function setAddress($type, Address $address);
@@ -216,7 +216,7 @@ interface UcOrderInterface extends ContentEntityInterface {
    *   - string: A pre-formatted string describing the change. This is useful for
    *     logging details like payments.
    *
-   * @return \Drupal\uc_order\UcOrderInterface
+   * @return \Drupal\uc_order\OrderInterface
    *   The called owner entity.
    */
   public function logChanges($changes);

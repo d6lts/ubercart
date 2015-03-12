@@ -9,7 +9,7 @@ namespace Drupal\uc_order\Controller;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Controller routines for order routes.
@@ -19,7 +19,7 @@ class OrderController extends ControllerBase {
   /**
    * Displays an order invoice.
    */
-  public function invoice(UcOrderInterface $uc_order, $print = FALSE) {
+  public function invoice(OrderInterface $uc_order, $print = FALSE) {
     $build = array(
       '#theme' => 'uc_order_invoice',
       '#order' => $uc_order,
@@ -38,7 +38,7 @@ class OrderController extends ControllerBase {
   /**
    * Displays a log of changes made to an order.
    */
-  public function log(UcOrderInterface $uc_order) {
+  public function log(OrderInterface $uc_order) {
     $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", array(':id' => $uc_order->id()));
 
     $header = array(t('Time'), t('User'), t('Changes'));
@@ -62,11 +62,11 @@ class OrderController extends ControllerBase {
   }
 
   /**
-   * The title callback for the UcOrder view routes.
+   * The title callback for the Order view routes.
    *
-   * @param \Drupal\uc_order\UcOrderInterface $uc_order
+   * @param \Drupal\uc_order\OrderInterface $uc_order
    */
-  public function pageTitle(UcOrderInterface $uc_order) {
+  public function pageTitle(OrderInterface $uc_order) {
     return String::checkPlain($uc_order->label());
   }
 

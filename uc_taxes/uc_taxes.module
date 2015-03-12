@@ -12,7 +12,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Implements hook_menu().
@@ -142,7 +142,7 @@ function uc_taxes_uc_line_item() {
 /**
  * Implements hook_uc_order_insert().
  */
-function uc_taxes_uc_order_insert(UcOrderInterface $order) {
+function uc_taxes_uc_order_insert(OrderInterface $order) {
   uc_taxes_uc_order_update($order);
 }
 
@@ -151,7 +151,7 @@ function uc_taxes_uc_order_insert(UcOrderInterface $order) {
  *
  * Updates and saves tax line items to the order.
  */
-function uc_taxes_uc_order_update(UcOrderInterface $order) {
+function uc_taxes_uc_order_update(OrderInterface $order) {
   $changes = array();
   $line_items = uc_taxes_calculate($order);
   foreach ($line_items as $id => $tax) {

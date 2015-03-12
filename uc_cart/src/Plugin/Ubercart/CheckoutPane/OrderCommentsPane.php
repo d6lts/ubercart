@@ -10,7 +10,7 @@ namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Allows a customer to make comments on the order.
@@ -26,7 +26,7 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function view(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function view(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $build['#description'] = t('Use this area for special instructions or questions regarding your order.');
 
     if ($order->id()) {
@@ -47,7 +47,7 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function process(OrderInterface $order, array $form, FormStateInterface $form_state) {
     db_delete('uc_order_comments')
       ->condition('order_id', $order->id())
       ->execute();
@@ -62,7 +62,7 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function review(UcOrderInterface $order) {
+  public function review(OrderInterface $order) {
     $review = NULL;
     $result = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()));
     if ($comment = $result->fetchObject()) {

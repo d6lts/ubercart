@@ -9,7 +9,7 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Updates an order's status and optionally adds comments.
@@ -26,7 +26,7 @@ class OrderUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, UcOrderInterface $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
     $form['order_comment_field'] = array(
       '#type' => 'details',
       '#title' => t('Add an order comment'),

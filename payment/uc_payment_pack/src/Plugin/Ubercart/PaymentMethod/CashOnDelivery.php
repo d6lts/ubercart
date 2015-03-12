@@ -8,7 +8,7 @@
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
 /**
@@ -29,7 +29,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     $build['policy'] = array(
@@ -52,7 +52,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     if ($cod_config->get('delivery_date')) {
@@ -65,7 +65,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartReview(UcOrderInterface $order) {
+  public function cartReview(OrderInterface $order) {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     $review = array();
@@ -85,7 +85,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function orderView(UcOrderInterface $order) {
+  public function orderView(OrderInterface $order) {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     $build = array();
@@ -108,7 +108,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function orderEditDetails(UcOrderInterface $order) {
+  public function orderEditDetails(OrderInterface $order) {
     $cod_config = \Drupal::config('uc_cod.settings');
 
     $build = array();
@@ -123,7 +123,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function orderLoad(UcOrderInterface $order) {
+  public function orderLoad(OrderInterface $order) {
     $result = db_query('SELECT * FROM {uc_payment_cod} WHERE order_id = :id', array(':id' => $order->id()));
     if ($row = $result->fetchObject()) {
       $order->payment_details = array(
@@ -137,7 +137,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function orderSave(UcOrderInterface $order) {
+  public function orderSave(OrderInterface $order) {
     if (isset($order->payment_details['delivery_month']) &&
         isset($order->payment_details['delivery_day']) &&
         isset($order->payment_details['delivery_year'])) {
@@ -155,7 +155,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function orderSubmit(UcOrderInterface $order) {
+  public function orderSubmit(OrderInterface $order) {
     $cod_config = \Drupal::config('uc_cod.settings');
     $max = $cod_config->get('max_order');
 
@@ -171,7 +171,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function orderDelete(UcOrderInterface $order) {
+  public function orderDelete(OrderInterface $order) {
     db_delete('uc_payment_cod')
       ->condition('order_id', $order->id())
       ->execute();

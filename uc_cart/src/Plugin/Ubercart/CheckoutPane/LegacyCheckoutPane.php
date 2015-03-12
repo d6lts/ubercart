@@ -9,7 +9,7 @@ namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Defines a plugin implementation for legacy checkout panes.
@@ -19,14 +19,14 @@ class LegacyCheckoutPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function prepare(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function prepare(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $this->pluginDefinition['callback']('prepare', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function view(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function view(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $pane = $this->pluginDefinition['callback']('view', $order, $form, $form_state);
 
     $build = $pane['contents'];
@@ -40,14 +40,14 @@ class LegacyCheckoutPane extends CheckoutPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function process(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function process(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $this->pluginDefinition['callback']('process', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function review(UcOrderInterface $order) {
+  public function review(OrderInterface $order) {
     return $this->pluginDefinition['callback']('review', $order, NULL);
   }
 

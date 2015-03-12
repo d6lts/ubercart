@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\UcOrderProductViewBuilder.
+ * Contains \Drupal\uc_order\OrderProductViewBuilder.
  */
 
 namespace Drupal\uc_order;
@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityViewBuilder;
 /**
  * View builder for ordered products.
  */
-class UcOrderProductViewBuilder extends EntityViewBuilder {
+class OrderProductViewBuilder extends EntityViewBuilder {
 
   /**
    * {@inheritdoc}

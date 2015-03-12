@@ -8,7 +8,7 @@
 namespace Drupal\uc_payment\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
 /**
@@ -19,77 +19,77 @@ class LegacyPaymentMethod extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return $this->pluginDefinition['callback']('cart-details', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  function cartProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return $this->pluginDefinition['callback']('cart-process', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  function cartReview(UcOrderInterface $order) {
+  function cartReview(OrderInterface $order) {
     return $this->pluginDefinition['callback']('cart-review', $order);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderDelete(UcOrderInterface $order) {
+  public function orderDelete(OrderInterface $order) {
     return $this->pluginDefinition['callback']('order-delete', $order);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderEditDetails(UcOrderInterface $order) {
+  public function orderEditDetails(OrderInterface $order) {
     return $this->pluginDefinition['callback']('order-details', $order);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderEditProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function orderEditProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return $this->pluginDefinition['callback']('edit-process', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderLoad(UcOrderInterface $order) {
+  public function orderLoad(OrderInterface $order) {
     return $this->pluginDefinition['callback']('order-load', $order);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderSave(UcOrderInterface $order) {
+  public function orderSave(OrderInterface $order) {
     return $this->pluginDefinition['callback']('order-save', $order);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderSubmit(UcOrderInterface $order) {
+  public function orderSubmit(OrderInterface $order) {
     return $this->pluginDefinition['callback']('order-submit', $order);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderView(UcOrderInterface $order) {
+  public function orderView(OrderInterface $order) {
     return $this->pluginDefinition['callback']('order-view', $order);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function customerView(UcOrderInterface $order) {
+  public function customerView(OrderInterface $order) {
     return $this->pluginDefinition['callback']('customer-view', $order);
   }
 

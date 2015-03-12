@@ -8,7 +8,7 @@
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
 /**
@@ -29,7 +29,7 @@ class Check extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $check_config = \Drupal::config('uc_check.settings');
 
     $build['instructions'] = array(
@@ -71,7 +71,7 @@ class Check extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartReview(UcOrderInterface $order) {
+  public function cartReview(OrderInterface $order) {
     $check_config = \Drupal::config('uc_check.settings');
 
     if (!$check_config->get('mailing_street1')) {
@@ -103,7 +103,7 @@ class Check extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function orderView(UcOrderInterface $order) {
+  public function orderView(OrderInterface $order) {
     $build = array('#suffix' => '<br />');
 
     $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->id()));
@@ -120,7 +120,7 @@ class Check extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function customerView(UcOrderInterface $order) {
+  public function customerView(OrderInterface $order) {
     $build = array();
 
     $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->id()));

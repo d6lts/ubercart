@@ -11,7 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Plugin\Discovery\InfoHookDecorator;
 
 /**
@@ -83,13 +83,13 @@ class PaymentMethodManager extends DefaultPluginManager {
   /**
    * Returns an instance of the payment method plugin for a specific order.
    *
-   * @param \Drupal\uc_order\UcOrderInterface $order
+   * @param \Drupal\uc_order\OrderInterface $order
    *   The order from which the plugin should be instantiated.
    *
    * @return \Drupal\uc_payment\PaymentMethodPluginInterface
    *   A fully configured plugin instance.
    */
-  public function createFromOrder(UcOrderInterface $order) {
+  public function createFromOrder(OrderInterface $order) {
     return $this->createInstance($order->getPaymentMethodId());
   }
 

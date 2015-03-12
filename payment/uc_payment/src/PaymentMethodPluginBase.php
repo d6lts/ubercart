@@ -9,7 +9,7 @@ namespace Drupal\uc_payment;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Defines a base payment method plugin implementation.
@@ -19,14 +19,14 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
-  public function cartDetails(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function cartProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return TRUE;
   }
 
@@ -40,59 +40,59 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
-  public function cartReview(UcOrderInterface $order) {
+  public function cartReview(OrderInterface $order) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderDelete(UcOrderInterface $order) {
+  public function orderDelete(OrderInterface $order) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderEditDetails(UcOrderInterface $order) {
+  public function orderEditDetails(OrderInterface $order) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderEditProcess(UcOrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function orderEditProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderLoad(UcOrderInterface $order) {
+  public function orderLoad(OrderInterface $order) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderSave(UcOrderInterface $order) {
+  public function orderSave(OrderInterface $order) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderSubmit(UcOrderInterface $order) {
+  public function orderSubmit(OrderInterface $order) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function orderView(UcOrderInterface $order) {
+  public function orderView(OrderInterface $order) {
     return array();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function customerView(UcOrderInterface $order) {
+  public function customerView(OrderInterface $order) {
     return $this->orderView($order);
   }
 

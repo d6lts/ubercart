@@ -9,7 +9,7 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Defines a form to set the recipient of an invoice, then mails it.
@@ -31,7 +31,7 @@ class OrderMailInvoiceForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, UcOrderInterface $uc_order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL) {
     $this->order = $uc_order;
 
     $form['email'] = array(

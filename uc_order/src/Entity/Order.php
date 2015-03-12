@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\Entity\UcOrder.
+ * Contains \Drupal\uc_order\Entity\Order.
  */
 
 namespace Drupal\uc_order\Entity;
@@ -11,7 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Address;
 
 /**
@@ -22,13 +22,13 @@ use Drupal\uc_store\Address;
  *   label = @Translation("Order"),
  *   module = "uc_order",
  *   handlers = {
- *     "storage" = "Drupal\uc_order\UcOrderStorage",
- *     "view_builder" = "Drupal\uc_order\UcOrderViewBuilder",
- *     "access" = "Drupal\uc_order\UcOrderAccessControlHandler",
+ *     "storage" = "Drupal\uc_order\OrderStorage",
+ *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",
+ *     "access" = "Drupal\uc_order\OrderAccessControlHandler",
  *     "form" = {
- *       "default" = "Drupal\uc_order\UcOrderForm",
+ *       "default" = "Drupal\uc_order\OrderForm",
  *       "delete" = "Drupal\uc_order\Form\OrderDeleteForm",
- *       "edit" = "Drupal\uc_order\UcOrderForm"
+ *       "edit" = "Drupal\uc_order\OrderForm"
  *     }
  *   },
  *   base_table = "uc_orders",
@@ -44,7 +44,7 @@ use Drupal\uc_store\Address;
  *   }
  * )
  */
-class UcOrder extends ContentEntityBase implements UcOrderInterface {
+class Order extends ContentEntityBase implements OrderInterface {
 
   public $products = array();
   public $line_items = array();

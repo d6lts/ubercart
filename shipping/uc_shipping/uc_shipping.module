@@ -12,7 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Implements hook_help().
@@ -815,7 +815,7 @@ function uc_shipping_date_views_fields($field) {
  * a tracking number, unless the user has administrative privileges or the
  * "Unconditionally delete orders" permission.
  */
-function uc_shipping_uc_order_can_delete(UcOrderInterface $order) {
+function uc_shipping_uc_order_can_delete(OrderInterface $order) {
   // Find and check the shipments for tracking numbers.
   // {uc_shipments}.tracking_number is NOT NULL.
   $shipment_count = db_select('uc_shipments')
@@ -844,7 +844,7 @@ function uc_shipping_uc_order_can_delete(UcOrderInterface $order) {
 /**
  * Implements hook_uc_order_delete().
  */
-function uc_shipping_uc_order_delete(UcOrderInterface $order) {
+function uc_shipping_uc_order_delete(OrderInterface $order) {
   // Find and delete the shipments.
   $shipment_ids = db_select('uc_shipments')
     ->fields(NULL, array('sid'))

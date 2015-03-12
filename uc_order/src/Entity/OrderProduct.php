@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\Entity\UcOrderProduct.
+ * Contains \Drupal\uc_order\Entity\OrderProduct.
  */
 
 namespace Drupal\uc_order\Entity;
@@ -11,7 +11,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\uc_order\UcOrderProductInterface;
+use Drupal\uc_order\OrderProductInterface;
 
 /**
  * Defines the order product entity class.
@@ -21,8 +21,8 @@ use Drupal\uc_order\UcOrderProductInterface;
  *   label = @Translation("Order product"),
  *   module = "uc_order",
  *   handlers = {
- *     "view_builder" = "Drupal\uc_order\UcOrderProductViewBuilder",
- *     "storage" = "Drupal\uc_order\UcOrderProductStorage"
+ *     "view_builder" = "Drupal\uc_order\OrderProductViewBuilder",
+ *     "storage" = "Drupal\uc_order\OrderProductStorage"
  *   },
  *   base_table = "uc_order_products",
  *   fieldable = TRUE,
@@ -32,7 +32,7 @@ use Drupal\uc_order\UcOrderProductInterface;
  *   }
  * )
  */
-class UcOrderProduct extends ContentEntityBase implements UcOrderProductInterface {
+class OrderProduct extends ContentEntityBase implements OrderProductInterface {
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::id().

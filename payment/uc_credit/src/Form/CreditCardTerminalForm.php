@@ -9,7 +9,7 @@ namespace Drupal\uc_credit\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Displays the credit card terminal form for administrators.
@@ -31,7 +31,7 @@ class CreditCardTerminalForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, UcOrderInterface $uc_order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL) {
     $this->order = $uc_order;
 
     // Get the transaction types available to our default gateway.

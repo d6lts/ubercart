@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\UcOrderFormController.
+ * Contains \Drupal\uc_order\OrderFormController.
  */
 
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Form controller for the Ubercart order form.
  */
-class UcOrderForm extends ContentEntityForm {
+class OrderForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}

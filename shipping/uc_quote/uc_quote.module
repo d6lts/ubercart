@@ -14,7 +14,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\UcOrderInterface;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Implements hook_theme().
@@ -262,7 +262,7 @@ function uc_quote_uc_order_load($orders) {
 /**
  * Implements hook_uc_order_update().
  */
-function uc_quote_uc_order_update(UcOrderInterface $order) {
+function uc_quote_uc_order_update(OrderInterface $order) {
   if (isset($order->quote['method'])) {
     db_merge('uc_order_quotes')
       ->key(array('order_id' => $order->id()))
@@ -278,7 +278,7 @@ function uc_quote_uc_order_update(UcOrderInterface $order) {
 /**
  * Implements hook_uc_order_delete().
  */
-function uc_quote_uc_order_delete(UcOrderInterface $order) {
+function uc_quote_uc_order_delete(OrderInterface $order) {
   db_delete('uc_order_quotes')
     ->condition('order_id', $order->id())
     ->execute();
