@@ -20,6 +20,9 @@ use Drupal\views\ResultRow;
  */
 class Length extends Numeric {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -28,6 +31,9 @@ class Length extends Numeric {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -47,6 +53,9 @@ class Length extends Numeric {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function render(ResultRow $values) {
     if ($this->options['format'] == 'uc_length') {
       $value = $this->getValue($values);

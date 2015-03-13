@@ -20,7 +20,7 @@ use Drupal\views\ResultRow;
 class Status extends FieldPluginBase {
 
   /**
-   * Overrides FieldPluginBase::render().
+   * {@inheritdoc}
    */
   public function render(ResultRow $values) {
     $status = entity_load('uc_order_status', $this->getValue($values));

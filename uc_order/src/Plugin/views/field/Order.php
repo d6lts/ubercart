@@ -34,7 +34,7 @@ class Order extends FieldPluginBase {
   }
 
   /**
-   * Overrides FieldPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -86,7 +86,7 @@ class Order extends FieldPluginBase {
   }
 
   /**
-   * Overrides FieldPluginBase::render().
+   * {@inheritdoc}
    */
   public function render(ResultRow $values) {
     $value = $this->getValue($values);

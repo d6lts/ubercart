@@ -33,7 +33,7 @@ class FullName extends FieldPluginBase {
   }
 
   /**
-   * Overrides FieldPluginBase::defineOptions().
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -43,7 +43,7 @@ class FullName extends FieldPluginBase {
   }
 
   /**
-   * Overrides FieldPluginBase::buildOptionsForm().
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -82,7 +82,7 @@ class FullName extends FieldPluginBase {
   }
 
   /**
-   * Overrides FieldPluginBase::render().
+   * {@inheritdoc}
    */
   public function render(ResultRow $values) {
     $first = $this->getValue($values);

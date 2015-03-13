@@ -22,11 +22,11 @@ class Method extends InOperator {
    * Overrides InOperator::getValueOptions().
    */
   public function getValueOptions() {
-    if (!isset($this->value_options)) {
-      $this->value_options = array();
+    if (!isset($this->valueOptions)) {
+      $this->valueOptions = array();
 
       foreach (uc_payment_method_list() as $id => $method) {
-        $this->value_options[$id] = $method['name'];
+        $this->valueOptions[$id] = $method['name'];
       }
     }
   }

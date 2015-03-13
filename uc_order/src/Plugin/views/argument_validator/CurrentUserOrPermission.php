@@ -26,6 +26,9 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  */
 class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['type'] = array('default' => 'uid');
@@ -34,6 +37,9 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['type'] = array(
       '#type' => 'radios',
@@ -69,6 +75,9 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateArgument($argument) {
     $type = $this->options['type'];
     // is_numeric() can return false positives, so we ensure it's an integer.
@@ -123,6 +132,9 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function processSummaryArguments(&$args) {
     // If the validation says the input is an username, we should reverse the
     // argument so it works for example for generation summary urls.

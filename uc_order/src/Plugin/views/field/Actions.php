@@ -20,7 +20,7 @@ use Drupal\views\ResultRow;
 class Actions extends FieldPluginBase {
 
   /**
-   * Overrides FieldPluginBase::render().
+   * {@inheritdoc}
    */
   public function render(ResultRow $values) {
     $order_id = $this->getValue($values);

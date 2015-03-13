@@ -19,17 +19,17 @@ use Drupal\views\Plugin\views\filter\InOperator;
 class Status extends InOperator {
 
   /**
-   * Overrides InOperator::getValueOptions().
+   * {@inheritdoc}
    */
   public function getValueOptions() {
-    if (!isset($this->value_options)) {
-      $this->value_title = t('Order status');
-      $this->value_options = array_merge(array('_active' => t('Active')), uc_order_status_options_list());
+    if (!isset($this->valueOptions)) {
+      $this->valueTitle = t('Order status');
+      $this->valueOptions = array_merge(array('_active' => t('Active')), uc_order_status_options_list());
     }
   }
 
   /**
-   * Overrides InOperator::query().
+   * {@inheritdoc}
    */
   public function query() {
     if (is_array($this->value) && in_array('_active', $this->value)) {
