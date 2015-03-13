@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 
 /******************************************************************************
@@ -257,7 +258,7 @@ function uc_ups_uc_shipping_method() {
     'operations' => array(
       'configure' => array(
         'title' => t('configure'),
-        'href' => 'admin/store/settings/quotes/settings/ups',
+        'url' => Url::fromUri('base:admin/store/settings/quotes/settings/ups'),
       ),
     ),
     'quote' => array(

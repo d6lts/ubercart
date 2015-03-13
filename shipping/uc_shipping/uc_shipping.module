@@ -12,6 +12,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -313,14 +314,14 @@ function uc_shipping_uc_order_actions($order) {
     if ($result->fetchField()) {
       $actions['package'] = array(
         'title' => t('Package'),
-        'href' => 'admin/store/orders/' . $order->id() . '/packages',
+        'url' => Url::fromRoute('admin/store/orders/{uc_order}/packages', ['uc_order' => $order->id()]),
         'weight' => 12,
       );
       $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->id()));
       if ($result->fetchField()) {
         $actions['ship'] = array(
           'title' => t('Ship'),
-          'href' => 'admin/store/orders/' . $order->id() . '/shipments',
+          'url' => Url::fromRoute('admin/store/orders/{uc_order}/shipments', ['uc_order' => $order->id()]),
           'weight' => 13,
         );
       }

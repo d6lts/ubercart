@@ -15,6 +15,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 require_once dirname(__FILE__) . '/uc_order.order_pane.inc';
 require_once dirname(__FILE__) . '/uc_order.line_item.inc';
@@ -764,12 +765,12 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($user->hasPermission('view all orders')) {
     $actions['view'] = array(
       'title' => t('View'),
-      'href' => 'admin/store/orders/' . $order->id(),
+      'url' => Url::fromRoute('uc_order.admin_view', ['uc_order' => $order->id()]),
       'weight' => 0,
     );
     $actions['print'] = array(
       'title' => t('Print'),
-      'href' => 'admin/store/orders/' . $order->id() . '/invoice/print',
+      'url' => Url::fromRoute('uc_order.admin_invoice_print', ['uc_order' => $order->id()]),
       'weight' => 5,
     );
   }
@@ -777,14 +778,14 @@ function uc_order_actions($order, $icon_html = FALSE) {
     if ($order->access('view')) {
       $actions['view'] = array(
         'title' => t('View'),
-        'href' => 'user/' . $user->id() . '/orders/' . $order->id(),
+        'url' => Url::fromRoute('uc_order.user_view', ['user' => $user->id(), 'uc_order' => $order->id()]),
         'weight' => 0,
       );
     }
     if ($order->access('invoice')) {
       $actions['print'] = array(
         'title' => t('Print'),
-        'href' => 'user/' . $user->id() . '/orders/' . $order->id() . '/print',
+        'url' => Url::fromRoute('uc_order.user_invoice_print', ['uc_order' => $order->id()]),
         'weight' => 5,
       );
     }
@@ -793,7 +794,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($order->access('update')) {
     $actions['edit'] = array(
       'title' => t('Edit'),
-      'href' => 'admin/store/orders/' . $order->id() . '/edit',
+      'url' => Url::fromRoute('uc_order.admin_edit', ['uc_order' => $order->id()]),
       'weight' => 10,
     );
   }
@@ -801,7 +802,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($order->access('delete')) {
     $actions['delete'] = array(
       'title' => t('Delete'),
-      'href' => 'admin/store/orders/' . $order->id() . '/delete',
+      'url' => Url::fromRoute('uc_order.admin_delete', ['uc_order' => $order->id()]),
       'weight' => 20,
     );
   }

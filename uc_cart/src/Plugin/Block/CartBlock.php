@@ -9,6 +9,7 @@ namespace Drupal\uc_cart\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides the shopping cart block.
@@ -101,18 +102,18 @@ class CartBlock extends BlockBase {
       }
 
       // Build the cart links.
-      $summary_links[] = array(
+      $summary_links['view-cart'] = array(
         'title' => t('View cart'),
-        'href' => 'cart',
-        'attributes' => array('rel' => 'nofollow'),
+        'url' => Url::fromRoute('uc_cart.cart'),
+        'attributes' => array('rel' => ['nofollow']),
       );
 
       // Only add the checkout link if checkout is enabled.
       if (\Drupal::config('uc_cart.settings')->get('checkout_enabled')) {
-        $summary_links[] = array(
+        $summary_links['checkout'] = array(
           'title' => t('Checkout'),
-          'href' => 'cart/checkout',
-          'attributes' => array('rel' => 'nofollow'),
+          'url' => Url::fromRoute('uc_cart.checkout'),
+          'attributes' => array('rel' => ['nofollow']),
         );
       }
 

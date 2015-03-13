@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -118,20 +119,20 @@ class PaymentMethodsForm extends ConfigFormBase {
         if (is_array($method_settings)) {
           $links['settings'] = array(
             'title' => t('Settings'),
-            'href' => 'admin/store/settings/payment/method/' . $id,
+            'url' => Url::fromRoute('uc_payment.method_settings', ['method' => $id]),
           );
         }
       }
       elseif ($method['configurable']) {
         $links['settings'] = array(
           'title' => t('Settings'),
-          'href' => 'admin/store/settings/payment/method/' . $id,
+          'url' => Url::fromRoute('uc_payment.method_settings', ['method' => $id]),
         );
       }
 
       // $links['conditions'] = array(
       //   'title' => t('Conditions'),
-      //   'href' => 'admin/store/settings/payment/manage/uc_payment_method_' . $id,
+      //   'url' => Url::fromRoute('admin/store/settings/payment/manage/uc_payment_method_', ['method' => $id]),
       // );
 
       $form['methods'][$id]['settings'] = array(

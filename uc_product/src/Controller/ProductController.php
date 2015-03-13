@@ -10,6 +10,7 @@ namespace Drupal\uc_product\Controller;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 
 /**
  * Controller routines for product routes.
@@ -29,7 +30,7 @@ class ProductController extends ControllerBase {
       $links = array();
       $links['edit'] = array(
         'title' => t('Edit'),
-        'href' => 'admin/structure/types/manage/' . $class->type,
+        'url' => Url::fromRoute('entity.node_type.edit_form', ['node_type' =>$class->type]),
         'query' => array(
           'destination' => 'admin/store/products/classes',
         ),
@@ -37,7 +38,7 @@ class ProductController extends ControllerBase {
       if (!$class->isLocked()) {
         $links['delete'] = array(
           'title' => t('Delete'),
-          'href' => 'admin/structure/types/manage/' . $class->type . '/delete',
+          'url' => Url::fromRoute('entity.node_type.delete_form', ['node_type' => $class->type]),
           'query' => array(
             'destination' => 'admin/store/products/classes',
           ),

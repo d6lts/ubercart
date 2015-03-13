@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Url;
 use Drupal\uc_store\Address;
 
 /******************************************************************************
@@ -180,7 +181,7 @@ function uc_usps_uc_shipping_method() {
   $operations = array(
     'configure' => array(
       'title' => t('configure'),
-      'href' => 'admin/store/settings/quotes/settings/usps',
+      'url' => Url::fromUri('base:admin/store/settings/quotes/settings/usps'),
     ),
   );
 

@@ -10,6 +10,7 @@ namespace Drupal\uc_quote\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Settings for the shipping quote methods.
@@ -58,7 +59,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
         $operations = isset($method['operations']) ? $method['operations'] : array();
 //        $operations += array('conditions' => array(
 //          'title' => t('conditions'),
-//          'href' => 'admin/store/settings/quotes/manage/get_quote_from_' . $id,
+//          'url' => Url::fromRoute('admin/store/settings/quotes/manage/get_quote_from_', ['id' => $id]),
 //          'weight' => 5,
 //        ));
 

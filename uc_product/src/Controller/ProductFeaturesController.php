@@ -10,6 +10,7 @@ namespace Drupal\uc_product\Controller;
 use Drupal\Core\Access\AccessInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,8 +29,8 @@ class ProductFeaturesController extends ControllerBase {
     $features = uc_product_feature_load_multiple($node->id());
     foreach ($features as $feature) {
       $operations = array(
-        'edit' => array('title' => $this->t('Edit'), 'href' => 'node/' . $node->id() . '/edit/features/' . $feature->fid . '/' . $feature->pfid),
-        'delete' => array('title' => $this->t('Delete'), 'href' => 'node/' . $node->id() . '/edit/features/' . $feature->fid . '/' . $feature->pfid . '/delete'),
+        'edit' => array('title' => $this->t('Edit'), 'url' => Url::fromRoute('uc_product.feature_edit', ['node' => $node->id(), 'fid' => $feature->fid, 'pfid' => $feature->pfid])),
+        'delete' => array('title' => $this->t('Delete'), 'url' => Url::fromRoute('uc_product.feature_delete', ['node' => $node->id(), 'fid' => $feature->fid, 'pfid' => $feature->pfid])),
       );
       $rows[] = array(
         array('data' => uc_product_feature_data($feature->fid, 'title')),

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart_links\Tests;
 
+use Drupal\Core\Url;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -679,7 +680,7 @@ class CartLinksTest extends UbercartTestBase {
       foreach ($links as $link) {
         $item_list['#links'][] = array(
           'title' => t('Cart Link #@num', array('@num' => $i++)),
-          'href' => $link,
+          'url' => Url::fromUri('base:' . $link),
         );
       }
     }

@@ -7,6 +7,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
@@ -136,11 +137,11 @@ function uc_weightquote_uc_shipping_method() {
       'operations' => array(
         'edit' => array(
           'title' => t('edit'),
-          'href' => 'admin/store/settings/quotes/methods/weightquote/' . $method->mid,
+          'url' => Url::fromUri('base:admin/store/settings/quotes/methods/weightquote/'. $method->mid),
         ),
         'delete' => array(
           'title' => t('delete'),
-          'href' => 'admin/store/settings/quotes/weightquote/' . $method->mid . '/delete',
+          'url' => Url::fromUri('base:admin/store/settings/quotes/weightquote/' . $method->mid . '/delete'),
         ),
       ),
       'quote' => array(

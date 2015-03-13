@@ -10,6 +10,7 @@ namespace Drupal\uc_attribute\Form;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Displays options and the modifications to products they represent.
@@ -79,11 +80,11 @@ class AttributeOptionsForm extends FormBase {
         '#links' => array(
           'edit' => array(
             'title' => $this->t('Edit'),
-            'href' => 'admin/store/products/attributes/' . $attribute->aid . '/options/' . $oid . '/edit',
+            'url' => Url::fromRoute('uc_attribute.option_edit', ['aid' => $attribute->aid, 'oid' => $oid]),
           ),
           'delete' => array(
             'title' => $this->t('Delete'),
-            'href' => 'admin/store/products/attributes/' . $attribute->aid . '/options/' . $oid . '/delete',
+            'url' => Url::fromRoute('uc_attribute.option_delete', ['aid' => $attribute->aid, 'oid' => $oid]),
           ),
         ),
       );
