@@ -231,8 +231,6 @@ class OrderCreateForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    global $user;
-
     switch ($form_state->getValue('customer_type')) {
       case 'search':
         $uid = $form_state->getValue(['customer', 'uid']);
@@ -264,7 +262,7 @@ class OrderCreateForm extends FormBase {
     }
 
     $order = uc_order_new($uid, 'post_checkout');
-    uc_order_comment_save($order->id(), $user->id(), t('Order created by the administration.'), 'admin');
+    uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), t('Order created by the administration.'), 'admin');
 
     $form_state->setRedirect('uc_order.admin_edit', array('uc_order' => $order->id()));
   }

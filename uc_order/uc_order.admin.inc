@@ -12,10 +12,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Creates a new order for the specified customer, ready for editing.
  */
 function uc_order_create_for_user($account) {
-  global $user;
-
   $order = uc_order_new($account->uid, 'post_checkout');
-  uc_order_comment_save($order->id(), $user->id(), t('Order created by the administration.'), 'admin');
+  uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), t('Order created by the administration.'), 'admin');
 
   drupal_goto('admin/store/orders/' . $order->id() . '/edit');
 }

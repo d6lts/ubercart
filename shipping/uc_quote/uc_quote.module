@@ -417,10 +417,8 @@ function uc_quote_get_default_shipping_address($nid) {
  * @ingroup forms
  */
 function uc_cart_pane_quotes($form, FormStateInterface $form_state, $items) {
-  global $user;
-
   $order = entity_create('uc_order', array(
-    'uid' => $user->id(),
+    'uid' => \Drupal::currentUser()->id(),
   ));
   $order->delivery_country = $form_state->getValue('delivery_country') ?: uc_store_default_country();
   $order->delivery_zone = $form_state->getValue('delivery_zone') ?: '';
@@ -488,8 +486,6 @@ function uc_cart_pane_quotes($form, FormStateInterface $form_state, $items) {
  * @see uc_quote_checkout_pane_quotes_submit()
  */
 function uc_checkout_pane_quotes($op, &$order, $form = NULL, FormStateInterface $form_state = NULL) {
-  global $user;
-
   $quote_config = \Drupal::config('uc_quote.settings');
   switch ($op) {
     case 'view':
@@ -499,7 +495,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, FormStateInterface 
 
       $contents['uid'] = array(
         '#type' => 'hidden',
-        '#value' => $user->id(),
+        '#value' => \Drupal::currentUser()->id(),
       );
       $contents['quote_button'] = array(
         '#type' => 'submit',

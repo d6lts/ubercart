@@ -1265,9 +1265,9 @@ function uc_reports_sales_custom_form_submit($form, FormStateInterface $form_sta
  *   of the report and the CSV data itself.
  */
 function uc_reports_store_csv($report_id, $rows) {
-  global $user;
+  $account = \Drupal::currentUser();
   $csv_output = '';
-  $user_id = $user->isAnonymous() ? session_id() : $user->id();
+  $user_id = $account->isAnonymous() ? session_id() : $account->id();
   foreach ($rows as $row) {
     foreach ($row as $index => $column) {
       $row[$index] = '"' . str_replace('"', '""', $column) . '"';
@@ -1289,8 +1289,8 @@ function uc_reports_store_csv($report_id, $rows) {
  *   - sid: Equals session_id for anonymous users.
  */
 function uc_reports_get_csv($report_id, $user_id) {
-  global $user;
-  $user_check = $user->isAnonymous() ? session_id() : $user->id();
+  $account = \Drupal::currentUser();
+  $user_check = $account->isAnonymous() ? session_id() : $account->id();
   $csv_data = cache()->get('uc_reports_' . $report_id . '_' . $user_id);
 
   if (!$csv_data || $user_id != $user_check) {

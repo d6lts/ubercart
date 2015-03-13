@@ -327,10 +327,8 @@ function uc_roles_user_presave($account) {
  * Displays role expirations on the user account screen.
  */
 function uc_roles_user_view($account, $view_mode) {
-  global $user;
-
   // Kick out anonymous or other view modes.
-  if ($user->isAnonymous() || $view_mode != 'full') {
+  if (\Drupal::currentUser()->isAnonymous() || $view_mode != 'full') {
     return;
   }
 
@@ -656,8 +654,6 @@ function uc_roles_feature_delete($pfid) {
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
-  global $user;
-
   $query = db_delete('uc_roles_expirations')
     ->condition('uid', $account->id());
 
@@ -667,7 +663,7 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
 
   // Echo the deletion only if something was actually deleted.
   if ($query->execute() && !$silent) {
-    if ($user->id() == $account->id()) {
+    if (\Drupal::currentUser()->id() == $account->id()) {
       drupal_set_message(t('The expiration of your %role_name role has been deleted.', array('%role_name' => _uc_roles_get_name($rid))));
     }
     else {
@@ -701,8 +697,6 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_roles_revoke(&$account, $rid, $silent = FALSE) {
-  global $user;
-
   // Remove this role from the user's list.
   unset($account->roles[$rid]);
   $account->save();
@@ -713,7 +707,7 @@ function uc_roles_revoke(&$account, $rid, $silent = FALSE) {
   $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", array(':rid' => $rid))->fetchField();
 
   if (!$silent) {
-    if ($user->id() == $account->id()) {
+    if (\Drupal::currentUser()->id() == $account->id()) {
       drupal_set_message(t('Your %role role has been revoked.', array('%role' => $role_name)));
     }
     else {
@@ -752,8 +746,6 @@ function uc_roles_revoke(&$account, $rid, $silent = FALSE) {
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent = FALSE) {
-  global $user;
-
   // First, delete any previous record of this user/role association.
   uc_roles_delete($account, $rid, $silent);
 
@@ -782,7 +774,7 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
   if (!$silent) {
     $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", array(':rid' => $rid))->fetchField();
 
-    if ($user->id() == $account->id()) {
+    if (\Drupal::currentUser()->id() == $account->id()) {
       $message = t('You have been granted the %role role.', array('%role' => $role_name));
     }
     else {
@@ -823,8 +815,6 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
-  global $user;
-
   // If it doesn't expire, we'll remove our data associated with it.
   // After that, Drupal will take care of it.
   if (is_null($timestamp)) {
@@ -845,7 +835,7 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
 
   if (!$silent) {
     $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", array(':rid' => $rid))->fetchField();
-    if ($user->id() == $account->id()) {
+    if (\Drupal::currentUser()->id() == $account->id()) {
       $message = t('Your %role role has been renewed. It will expire on %date.', array('%role' => $role_name, '%date' => format_date($timestamp, 'short')));
     }
     else {

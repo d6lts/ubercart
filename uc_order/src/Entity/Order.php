@@ -140,7 +140,7 @@ class Order extends ContentEntityBase implements OrderInterface {
       uc_order_delete_line_item($order_id, TRUE);
 
       // Log the action in the database.
-      \Drupal::logger('uc_order')->notice('Order @order_id deleted by user @uid.', ['@order_id' => $order_id, '@uid' => $GLOBALS['user']->id()]);
+      \Drupal::logger('uc_order')->notice('Order @order_id deleted by user @uid.', ['@order_id' => $order_id, '@uid' => \Drupal::currentUser()->id()]);
     }
   }
 
@@ -402,7 +402,6 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function logChanges($changes) {
-    global $user;
 
     if (!empty($changes)) {
       foreach ($changes as $key => $value) {
@@ -422,7 +421,7 @@ class Order extends ContentEntityBase implements OrderInterface {
       db_insert('uc_order_log')
         ->fields(array(
           'order_id' => $this->id(),
-          'uid' => $user->id(),
+          'uid' => \Drupal::currentUser()->id(),
           'changes' => drupal_render($item_list),
           'created' => REQUEST_TIME,
         ))
