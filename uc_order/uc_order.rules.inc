@@ -709,7 +709,7 @@ function uc_order_action_email($order, $from, $addresses, $subject, $message, $f
   }
 
   foreach ($recipients as $email) {
-    $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
+    $sent = \Drupal::service('plugin.manager.mail')->mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
 
     if (!$sent['result']) {
       \Drupal::logger('uc_order')->error('Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()));
@@ -779,7 +779,7 @@ function uc_order_action_email_invoice($order, $from, $addresses, $subject, $tem
   $settings['message'] = drupal_render($message);
 
   foreach ($recipients as $email) {
-    $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
+    $sent = \Drupal::service('plugin.manager.mail')->mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
 
     if (!$sent['result']) {
       \Drupal::logger('uc_order')->error('Attempt to e-mail invoice for order @order_id to @email failed.', array('@email' => $email, '@order_id' => $order->id()));

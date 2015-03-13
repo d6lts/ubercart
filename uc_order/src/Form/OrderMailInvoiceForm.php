@@ -55,9 +55,9 @@ class OrderMailInvoiceForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $recipient = $form_state->getValue('email');
     $params = array('order' => $this->order);
-    drupal_mail('uc_order', 'invoice', $recipient, uc_store_mail_recipient_langcode($recipient), $params, uc_store_email_from());
+    \Drupal::service('plugin.manager.mail')->mail('uc_order', 'invoice', $recipient, uc_store_mail_recipient_langcode($recipient), $params, uc_store_email_from());
 
-    $message = t('Invoice e-mailed to @email.', array('@email' => $recipient));
+    $message = t('Invoice e-mailed to @email.', ['@email' => $recipient]);
     drupal_set_message($message);
     $this->order->logChanges(array($message));
   }

@@ -261,7 +261,7 @@ function uc_roles_action_order_email($order, $role_expiration, $from, $addresses
 
   // Send to each recipient.
   foreach ($recipients as $email) {
-    $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $settings['from']);
+    $sent = \Drupal::service('plugin.manager.mail')->mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $settings['from']);
 
     if (!$sent['result']) {
       \Drupal::logger('uc_roles')->error('Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()));
@@ -303,7 +303,7 @@ function uc_roles_action_user_email($account, $role_expiration, $from, $addresse
 
   // Send to each recipient.
   foreach ($recipients as $email) {
-    $sent = drupal_mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $settings['from']);
+    $sent = \Drupal::service('plugin.manager.mail')->mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $settings['from']);
 
     if (!$sent['result']) {
       \Drupal::logger('uc_roles')->error('Attempt to e-mail @email concerning role notification failed.', array('@email' => $email));

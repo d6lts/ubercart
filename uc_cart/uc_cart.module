@@ -321,7 +321,7 @@ function uc_cart_complete_sale_account($order) {
   // Send the customer their account details if enabled.
   if ($cart_config->get('new_customer_email')) {
     $type = $cart_config->get('new_customer_status_active') ? 'register_no_approval_required' : 'register_pending_approval';
-    drupal_mail('user', $type, $order->getEmail(), uc_store_mail_recipient_langcode($order->getEmail()), array('account' => $account), uc_store_email_from());
+    \Drupal::service('plugin.manager.mail')->mail('user', $type, $order->getEmail(), uc_store_mail_recipient_langcode($order->getEmail()), array('account' => $account), uc_store_email_from());
   }
 
   $order->setUserId($account->id());
