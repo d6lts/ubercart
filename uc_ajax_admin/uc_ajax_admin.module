@@ -13,90 +13,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Implements hook_help().
  */
 function uc_ajax_admin_help($path, RouteMatchInterface $route_match) {
-  if ($path == 'admin/store/settings/checkout/ajax') {
+  if ($path == 'uc_ajax_admin.settings') {
     $output = '<p>' . t('Use this page to configure Ajax behaviors on the form. The table below associates triggering form input elements with panes. The contents of each associated pane will be refreshed whenever the customer clicks on or changes the triggering form element. For example, you can cause the available payment methods to be refreshed when the customer changes their billing zone.') . '</p>';
     $output .= '<p>' . t("Note that the triggering elements you can choose are listed based on the form as it would be displayed to you right now. For example, if none of your shipping methods apply to the current cart contents, you won't see the shipping quote selection element. If you don't see the form element you wish to use as a trigger, try adding some products to the shopping cart or otherwise simulating the customer experience, and verify that those elements are present on the form itself.") . '</p>';
     return $output;
   }
-}
-
-/**
- * Implements hook_menu().
- */
-function uc_ajax_admin_menu() {
-  $items['admin/store/settings/checkout/ajax'] = array(
-    'title' => 'Ajax',
-    'description' => 'Administer ajax updates on checkout form.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_ajax_admin_form', 'checkout'),
-    'access arguments' => array('administer store'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 3,
-  );
-
-  return $items;
-}
-
-/**
- * Administration form for uc_ajax.
- *
- * @param $target_form
- *   The form for which ajax behaviors are to be administered. Currently only
- *   'checkout' is supported.
- */
-function uc_ajax_admin_form($form, FormStateInterface $form_state, $target_form = 'checkout') {
-  module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
-  switch ($target_form) {
-    case 'checkout':
-      $triggers = _uc_ajax_admin_checkout_trigger_options(_uc_ajax_admin_build_checkout_form());
-      $panes = \Drupal::service('plugin.manager.uc_cart.checkout_pane')->getDefinitions();
-      $wrappers = array();
-      foreach ($panes as $id => $pane) {
-        $wrappers["$id-pane"] = $pane['title'];
-      }
-      break;
-
-    default:
-      throw new NotFoundHttpException();
-  }
-  $form['#uc_ajax_target'] = $target_form;
-  $config = \Drupal::config('uc_cart.settings')->get('ajax.' . $target_form);
-  $form['#uc_ajax_config'] = $config ?: _uc_ajax_defaults($target_form);
-
-  $form['table'] = uc_ajax_admin_table($triggers, $wrappers, $form['#uc_ajax_config']);
-  $form['actions'] = array(
-    '#type' => 'actions',
-    'submit' => array(
-      '#type' => 'submit',
-      '#value' => t('Submit'),
-    ),
-  );
-  return $form;
-}
-
-/**
- * Submit handler for the uc_ajax_admin form.
- */
-function uc_ajax_admin_form_submit($form, FormStateInterface $form_state) {
-  $config = $form['#uc_ajax_config'];
-  foreach ($form_state->getValue('table') as $index => $entry) {
-    $key = $entry['key'];
-    if ($index === '_new') {
-      if (!empty($key) && !empty($entry['panes'])) {
-        $config[$key] = $entry['panes'];
-      }
-    }
-    elseif ($entry['remove'] || empty($entry['panes'])) {
-      unset($config[$key]);
-    }
-    else {
-      $config[$key] = $entry['panes'];
-    }
-  }
-  \Drupal::config('uc_cart.settings')
-    ->set('ajax.' . $form['#uc_ajax_target'], $config)
-    ->save();
-  drupal_set_message(t('Your changes have been saved.'));
 }
 
 /**
@@ -228,5 +149,5 @@ function _uc_ajax_admin_build_checkout_form() {
       'weight' => 0
     )));
   }
-  return \Drupal::formBuilder()->getForm('uc_cart_checkout_form', $order);
+  return \Drupal::formBuilder()->getForm('\Drupal\uc_cart\Form\CheckoutForm', $order);
 }
