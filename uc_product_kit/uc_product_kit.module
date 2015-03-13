@@ -457,7 +457,7 @@ function uc_product_kit_node_load($nodes) {
   }
 
   if (!empty($vids)) {
-    $result = db_query("SELECT nid, product_id, mutable, qty, discount, ordering, synchronized FROM {uc_product_kits} WHERE vid IN (:vids) ORDER BY nid, ordering", array(':vids' => $vids));
+    $result = db_query("SELECT nid, product_id, mutable, qty, discount, ordering, synchronized FROM {uc_product_kits} WHERE vid IN (:vids[]) ORDER BY nid, ordering", array(':vids[]' => $vids));
     while ($prod = $result->fetchObject()) {
       $nodes[$prod->nid]->mutable = $prod->mutable;
       $nodes[$prod->nid]->synchronized = $prod->synchronized;
@@ -477,7 +477,7 @@ function uc_product_kit_node_load($nodes) {
     }
 
     // Add product data to kits.
-    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids)', array(':vids' => $vids));
+    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids[])', array(':vids[]' => $vids));
     foreach ($result as $node) {
       foreach ($node as $field => $value) {
         if (is_object($nodes[$node->nid]->$field)) {

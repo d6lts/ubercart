@@ -91,9 +91,9 @@ function uc_quote_node_load($nodes) {
 
   $quote_config = \Drupal::config('uc_quote.settings');
   $shipping_type = $quote_config->get('shipping_type');
-  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => $nids))->fetchAllKeyed();
+  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", array(':type' => 'product', ':ids[]' => $nids))->fetchAllKeyed();
 
-  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids)", array(':nids' => $nids), array('fetch' => 'Address'))->fetchAllAssoc('nid');
+  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids[])", array(':nids[]' => $nids), array('fetch' => 'Address'))->fetchAllAssoc('nid');
 
   foreach ($nids as $nid) {
     if (isset($shipping_types[$nid])) {

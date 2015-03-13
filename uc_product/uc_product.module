@@ -100,7 +100,7 @@ function uc_product_node_load($nodes) {
   }
 
   if (!empty($vids)) {
-    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids)', array(':vids' => $vids));
+    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids[])', array(':vids[]' => $vids));
     $fields = array('model', 'cost', 'price', 'weight', 'pkg_qty', 'default_qty', 'shippable');
     foreach ($result as $record) {
       foreach ($fields as $name) {

@@ -95,7 +95,7 @@ function uc_weightquote_node_load($nodes) {
   }
 
   if ($vids) {
-    $result = db_query("SELECT nid, mid, rate FROM {uc_weightquote_products} WHERE vid IN (:vids)", array(':vids' => $vids));
+    $result = db_query("SELECT nid, mid, rate FROM {uc_weightquote_products} WHERE vid IN (:vids[])", array(':vids[]' => $vids));
     foreach ($result as $method) {
       $nodes[$method->nid]->weightquote[$method->mid] = $method->rate;
     }

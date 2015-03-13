@@ -184,7 +184,7 @@ function uc_ups_node_load($nodes) {
   $vids = array();
   $ups_config = \Drupal::config('uc_ups.settings');
   $shipping_type = $ups_config->get('uc_store_shipping_type');
-  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids)", array(':type' => 'product', ':ids' => $nids))->fetchAllKeyed();
+  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", array(':type' => 'product', ':ids[]' => $nids))->fetchAllKeyed();
 
   foreach ($nids as $nid) {
     if (isset($shipping_types[$nid])) {
@@ -200,7 +200,7 @@ function uc_ups_node_load($nodes) {
   }
 
   if ($vids) {
-    $result = db_query("SELECT * FROM {uc_ups_products} WHERE vid IN (:vids)", array(':vids' => $vids), array('fetch' => PDO::FETCH_ASSOC));
+    $result = db_query("SELECT * FROM {uc_ups_products} WHERE vid IN (:vids[])", array(':vids[]' => $vids), array('fetch' => PDO::FETCH_ASSOC));
     foreach ($result as $ups) {
       $nodes[$ups['nid']]->ups = $ups;
     }

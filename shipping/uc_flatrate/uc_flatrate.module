@@ -91,7 +91,7 @@ function uc_flatrate_node_load($nodes) {
   }
 
   if ($vids) {
-    $result = db_query("SELECT nid, mid, rate FROM {uc_flatrate_products} WHERE vid IN (:vids)", array(':vids' => $vids));
+    $result = db_query("SELECT nid, mid, rate FROM {uc_flatrate_products} WHERE vid IN (:vids[])", array(':vids[]' => $vids));
     foreach ($result as $method) {
       $nodes[$method->nid]->flatrate[$method->mid] = $method->rate;
     }

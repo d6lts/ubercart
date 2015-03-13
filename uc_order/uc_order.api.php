@@ -381,7 +381,7 @@ function hook_uc_order_product_alter(&$product, $order) {
  * @see hook_entity_load()
  */
 function hook_uc_order_product_load(array $order_products) {
-  $result = db_query('SELECT pid, foo FROM {mytable} WHERE pid IN(:ids)', array(':ids' => array_keys($entities)));
+  $result = db_query('SELECT pid, foo FROM {mytable} WHERE pid IN(:ids[])', array(':ids[]' => array_keys($entities)));
   foreach ($result as $record) {
     $entities[$record->pid]->foo = $record->foo;
   }
