@@ -24,10 +24,10 @@ class CartLinksTest extends UbercartTestBase {
     parent::setUp();
 
     // Set front page so we have someplace to redirect to for invalid Cart Links.
-    \Drupal::config('system.site')->set('page.front', 'node')->save();
+    \Drupal::configFactory()->getEditable('system.site')->set('page.front', 'node')->save();
 
     // System help block is needed to see output from hook_help().
-    $this->drupalPlaceBlock('system_help_block', array('region' => 'help'));
+    $this->drupalPlaceBlock('help_block', array('region' => 'help'));
 
     // Testing profile doesn't include a 'page' content type.
     // We will need this to create pages with links on them.

@@ -23,7 +23,7 @@ class StockTest extends UbercartTestBase {
     parent::setUp();
 
     // Ensure test mails are logged.
-    \Drupal::config('system.mail')
+    \Drupal::configFactory()->getEditable('system.mail')
       ->set('interface.uc_stock', 'test_mail_collector')
       ->save();
 
