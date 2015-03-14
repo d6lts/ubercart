@@ -197,7 +197,7 @@ function uc_shipping_new_package($form, FormStateInterface $form_state, $order) 
  * @see uc_shipping_new_package()
  * @ingroup themeable
  */
-function theme_uc_shipping_new_package_fieldset($variables) {
+function theme_uc_shipping_new_package_fieldset(array $variables) {
   $fieldset = $variables['fieldset'];
   drupal_add_js('misc/tableselect.js');
 
@@ -379,7 +379,7 @@ function uc_shipping_package_edit($form, FormStateInterface $form_state, $order,
  *
  * @ingroup themeable
  */
-function theme_uc_shipping_edit_package_fieldset($variables) {
+function theme_uc_shipping_edit_package_fieldset(array $variables) {
   $fieldset = $variables['fieldset'];
   drupal_add_js('misc/tableselect.js');
 
@@ -632,7 +632,7 @@ function uc_shipping_new_shipment($form, FormStateInterface $form_state, $order)
  * @see uc_shipping_new_shipment()
  * @ingroup themeable
  */
-function theme_uc_shipping_new_shipment($variables) {
+function theme_uc_shipping_new_shipment(array $variables) {
   $form = $variables['form'];
   drupal_add_js('misc/tableselect.js');
 
@@ -1114,7 +1114,7 @@ function uc_shipping_shipment_print($order, $shipment, $labels = TRUE) {
  *
  * @ingroup themeable
  */
-function theme_uc_shipping_shipment_print($variables) {
+function theme_uc_shipping_shipment_print(array $variables) {
   $order = $variables['order'];
   $shipment = $variables['shipment'];
   $labels = $variables['labels'];

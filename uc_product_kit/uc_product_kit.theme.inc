@@ -13,7 +13,7 @@ use Drupal\node\NodeInterface;
  *
  * @ingroup themeable
  */
-function theme_uc_product_kit_list_item($variables) {
+function theme_uc_product_kit_list_item(array $variables) {
   $product = $variables['product'];
 
   if ($product instanceof NodeInterface) {

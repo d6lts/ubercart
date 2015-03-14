@@ -8,13 +8,13 @@
 /**
  * Displays the formatted quote cart pane.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
-function theme_uc_cart_pane_quotes($variables) {
+function theme_uc_cart_pane_quotes(array $variables) {
   $form = $variables['form'];
 
   $output = '<p class="quote-title">' . t('Estimated shipping cost:') . '</p>';
@@ -26,13 +26,13 @@ function theme_uc_cart_pane_quotes($variables) {
 /**
  * Displays the returned shipping rates.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
-function theme_uc_quote_returned_rates($variables) {
+function theme_uc_quote_returned_rates(array $variables) {
   $form = $variables['form'];
   $output = '';
 

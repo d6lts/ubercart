@@ -32,7 +32,7 @@ define('UC_FILE_ERROR_HOOK_ERROR'             , 7);
 /**
  * Themes user file downloads page.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - header: Table header array, in format required by theme_table().
  *   - files: Associative array of downloadable files, containing:
@@ -47,7 +47,7 @@ define('UC_FILE_ERROR_HOOK_ERROR'             , 7);
  * @see theme_table()
  * @ingroup themeable
  */
-function theme_uc_file_user_downloads($variables) {
+function theme_uc_file_user_downloads(array $variables) {
   $header = $variables['header'];
   $files = $variables['files'];
 

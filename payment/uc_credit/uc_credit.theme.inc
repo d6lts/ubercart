@@ -8,7 +8,7 @@
 /**
  * Themes the credit card CVV help link.
  */
-function theme_uc_credit_cvv_help($variables) {
+function theme_uc_credit_cvv_help(array $variables) {
   $output = '<div class="uc-credit-cvv-help">';
   $image = array(
     '#theme' => 'image',

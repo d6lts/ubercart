@@ -11,7 +11,7 @@
  * @see theme_uc_catalog_item()
  * @ingroup themeable
  */
-function theme_uc_catalog_block($variables) {
+function theme_uc_catalog_block(array $variables) {
   $menu_tree = $variables['menu_tree'];
 
   $output = '<ul class="catalog menu">';
@@ -31,7 +31,7 @@ function theme_uc_catalog_block($variables) {
  *
  * @ingroup themeable
  */
-function theme_uc_catalog_item($variables) {
+function theme_uc_catalog_item(array $variables) {
   $here = $variables['here'];
   $link = $variables['link'];
   $lis = $variables['lis'];

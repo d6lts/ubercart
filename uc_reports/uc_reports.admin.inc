@@ -586,7 +586,7 @@ function uc_reports_products_custom_form_submit($form, FormStateInterface $form_
  * @see theme_table()
  * @ingroup themeable
  */
-function theme_uc_reports_product_table($variables) {
+function theme_uc_reports_product_table(array $variables) {
   $header = $variables['header'];
   $rows = $variables['rows'];
   $attributes = $variables['attributes'];

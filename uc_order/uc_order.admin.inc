@@ -281,7 +281,7 @@ function uc_order_select_customer_form($form, FormStateInterface $form_state, $o
  * @see uc_order_edit_form_submit()
  * @ingroup themeable
  */
-function theme_uc_order_edit_form($variables) {
+function theme_uc_order_edit_form(array $variables) {
   $form = $variables['form'];
   $output = '';
 

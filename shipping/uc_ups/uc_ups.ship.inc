@@ -567,7 +567,7 @@ function uc_ups_confirm_shipment($form, FormStateInterface $form_state, $order) 
  * @see uc_ups_confirm_shipment()
  * @ingroup themeable
  */
-function theme_uc_ups_confirm_shipment($variables) {
+function theme_uc_ups_confirm_shipment(array $variables) {
   $form = $variables['form'];
 
   $output = '<div class="shipping-address"><b>' . t('Ship from:') . '</b><br />';

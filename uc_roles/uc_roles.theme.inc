@@ -10,13 +10,13 @@ use Drupal\Component\Utility\String;
 /**
  * Themes the roles dialog on the account edit page.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
-function theme_uc_roles_user_new($variables) {
+function theme_uc_roles_user_new(array $variables) {
   $form = $variables['form'];
 
   // Render the expiration tables first.
@@ -36,13 +36,13 @@ function theme_uc_roles_user_new($variables) {
 /**
  * Themes the role expiration table on the account edit page.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
-function theme_uc_roles_user_expiration($variables) {
+function theme_uc_roles_user_expiration(array $variables) {
   $form = $variables['form'];
 
   $header = array(

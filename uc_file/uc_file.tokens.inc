@@ -48,7 +48,7 @@ function uc_file_tokens($type, $tokens, $data = array(), $options = array()) {
  *
  * @ingroup themeable
  */
-function theme_uc_file_downloads_token($variables) {
+function theme_uc_file_downloads_token(array $variables) {
   $file_downloads = $variables['file_downloads'];
 
   $output = '';

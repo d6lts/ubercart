@@ -8,14 +8,14 @@
 /**
  * Displays a price in the standard format and with consistent markup.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - price: A numerical price value.
  *   - suffixes: An array of suffixes to be attached to this price.
  *
  * @ingroup themeable
  */
-function theme_uc_price($variables) {
+function theme_uc_price(array $variables) {
   $output = '<span class="uc-price">' . uc_currency_format($variables['price']) . '</span>';
   if (!empty($variables['suffixes'])) {
     $output .= '<span class="price-suffixes">' . implode(' ', $variables['suffixes']) . '</span>';
@@ -35,26 +35,26 @@ function theme_uc_qty_label() {
 /**
  * Displays a quantity.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - qty: The quantity to display.
  *
  * @ingroup themeable
  */
-function theme_uc_qty($variables) {
+function theme_uc_qty(array $variables) {
   return $variables['qty'] . ' ×';
 }
 
 /**
  * Displays a username in the standard format and with consistent markup.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - uid: A user ID value.
  *
  * @ingroup themeable
  */
-function theme_uc_uid($variables) {
+function theme_uc_uid(array $variables) {
   if ($variables['uid']) {
     $username = array(
       '#theme' => 'username',

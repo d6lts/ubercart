@@ -859,7 +859,7 @@ function uc_order_pane_line_items($op, $order, &$form = NULL, FormStateInterface
 /**
  * @ingroup themeable
  */
-function theme_uc_order_pane_line_items($variables) {
+function theme_uc_order_pane_line_items(array $variables) {
   $form = $variables['form'];
 
   $output = '<table class="line-item-table">';

@@ -8,13 +8,13 @@
 /**
  * Themes the download table at the user account page.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
-function theme_uc_file_hook_user_file_downloads($variables) {
+function theme_uc_file_hook_user_file_downloads(array $variables) {
   $form = $variables['form'];
 
   $header = array(

@@ -8,7 +8,7 @@
 /**
  * Returns a themed set of attribute options for use in order displays.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - attributes: An associative array containing the set of attributes,
  *     with each element keyed by attribute ID:
@@ -21,7 +21,7 @@
  *
  * @ingroup themeable
  */
-function theme_uc_product_attributes($variables) {
+function theme_uc_product_attributes(array $variables) {
   $attributes = $variables['attributes'];
 
   $option_rows = array();
@@ -35,7 +35,7 @@ function theme_uc_product_attributes($variables) {
         $optionstr .= $option;
       }
       else {
-        $optionstr .= t(', !option', array('!option' => $option));
+        $optionstr .= t(', !option', ['!option' => $option]);
       }
     }
 

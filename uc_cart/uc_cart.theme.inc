@@ -9,7 +9,7 @@
 /**
  * Formats the cart contents table on the checkout page.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - show_subtotal: TRUE or FALSE indicating if you want a subtotal row
  *     displayed in the table.
@@ -24,7 +24,7 @@
  *
  * @ingroup themeable
  */
-function theme_uc_cart_review_table($variables) {
+function theme_uc_cart_review_table(array $variables) {
   $items = $variables['items'];
   $show_subtotal = $variables['show_subtotal'];
 
@@ -97,7 +97,7 @@ function theme_uc_cart_review_table($variables) {
 /**
  * Themes the checkout review order page.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form, that by default includes
  *     the 'Back' and 'Submit order' buttons at the bottom of the review page.
@@ -111,7 +111,7 @@ function theme_uc_cart_review_table($variables) {
  *
  * @ingroup themeable
  */
-function theme_uc_cart_checkout_review($variables) {
+function theme_uc_cart_checkout_review(array $variables) {
   $panes = $variables['panes'];
   $form = $variables['form'];
 

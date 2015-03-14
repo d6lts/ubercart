@@ -9,7 +9,7 @@ use Drupal\Core\Template\Attribute;
 /**
  * Formats a product's price.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array render element containing:
  *     - #value: Price to be formatted.
@@ -18,7 +18,7 @@ use Drupal\Core\Template\Attribute;
  *
  * @ingroup themeable
  */
-function theme_uc_product_price($variables) {
+function theme_uc_product_price(array $variables) {
   $element = $variables['element'];
   $price = $element['#value'];
   $attributes = new Attribute($element['#attributes']);

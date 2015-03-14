@@ -9,7 +9,7 @@
  * Theme function to format the USPS service name and rate amount line-item
  * shown to the customer.
  *
- * @param $variables
+ * @param array $variables
  *   Associative array containing information needed to theme a quote.
  *   Contains two keys:
  *   - service: The USPS service name.
@@ -17,7 +17,7 @@
  *
  * @ingroup themeable
  */
-function theme_uc_usps_option_label($variables) {
+function theme_uc_usps_option_label(array $variables) {
   $service = $variables['service'];
   $packages = $variables['packages'];
 

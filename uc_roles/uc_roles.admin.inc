@@ -60,13 +60,13 @@ function uc_roles_expiration($form, &$form_state) {
 /**
  * Themes user role expiration page.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
  * @ingroup themeable
  */
-function theme_uc_roles_expiration($variables) {
+function theme_uc_roles_expiration(array $variables) {
   $form = $variables['form'];
 
   $header = _uc_roles_expiration_header();
