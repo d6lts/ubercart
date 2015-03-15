@@ -20,7 +20,7 @@ use Drupal\views\ResultRow;
 class AddToCart extends FieldPluginBase {
 
   /**
-   * Overrides FieldPluginBase::render().
+   * {@inheritdoc}
    */
   public function render(ResultRow $values) {
     $nid = $this->getValue($values);

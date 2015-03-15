@@ -36,7 +36,7 @@ class ProductFeatureDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete this %feature?', array('%feature' => uc_product_feature_data($this->featureId, 'title')));
+    return $this->t('Are you sure you want to delete this %feature?', ['%feature' => uc_product_feature_data($this->featureId, 'title')]);
   }
 
   /**
@@ -57,7 +57,7 @@ class ProductFeatureDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_product.features', array('node' => $this->node->id()));
+    return new Url('uc_product.features', ['node' => $this->node->id()]);
   }
 
   /**

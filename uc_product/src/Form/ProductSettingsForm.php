@@ -66,10 +66,10 @@ class ProductSettingsForm extends ConfigFormBase {
       if (isset($feature['settings']) && function_exists($feature['settings'])) {
         $form[$feature['id']] = array(
           '#type' => 'details',
-          '#title' => t('@feature settings', array('@feature' => $feature['title'])),
+          '#title' => t('@feature settings', ['@feature' => $feature['title']]),
           '#group' => 'product-settings',
         );
-        $form[$feature['id']] += $feature['settings'](array(), $form_state);
+        $form[$feature['id']] += $feature['settings']([], $form_state);
 
         if (function_exists($feature['settings'] . '_validate')) {
           $form['#validate'][] = $feature['settings'] . '_validate';

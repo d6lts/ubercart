@@ -19,6 +19,9 @@ use Drupal\views\ResultRow;
  */
 class DisplayPrice extends Price {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -27,6 +30,9 @@ class DisplayPrice extends Price {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValue(ResultRow $values, $field = NULL) {
     $nid = parent::getValue($values, $field);
     if (!is_null($nid)) {
@@ -40,6 +46,9 @@ class DisplayPrice extends Price {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function clickSort($order) {
     $params = $this->options['group_type'] != 'group' ? array('function' => $this->options['group_type']) : array();
     $this->query->addOrderBy(NULL, NULL, $order, 'price', $params);

@@ -27,11 +27,11 @@ class UcDimensionsFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
-    $elements = array();
+    $elements = [];
 
     foreach ($items as $delta => $item) {
-      $dimensions = array();
-      foreach (array('length', 'width', 'height') as $dimension) {
+      $dimensions = [];
+      foreach (['length', 'width', 'height'] as $dimension) {
         if ($item->$dimension) {
           $dimensions[] = uc_length_format($item->$dimension, $item->units);
         }

@@ -25,12 +25,12 @@ class ProductController extends ControllerBase {
       'third_party_settings.uc_product.product' => TRUE,
     ));
     $header = array(t('Class ID'), t('Name'), t('Description'), t('Operations'));
-    $rows = array();
+    $rows = [];
     foreach ($classes as $class) {
-      $links = array();
+      $links = [];
       $links['edit'] = array(
         'title' => t('Edit'),
-        'url' => Url::fromRoute('entity.node_type.edit_form', ['node_type' =>$class->type]),
+        'url' => Url::fromRoute('entity.node_type.edit_form', ['node_type' =>$class->id()]),
         'query' => array(
           'destination' => 'admin/store/products/classes',
         ),
@@ -38,16 +38,16 @@ class ProductController extends ControllerBase {
       if (!$class->isLocked()) {
         $links['delete'] = array(
           'title' => t('Delete'),
-          'url' => Url::fromRoute('entity.node_type.delete_form', ['node_type' => $class->type]),
+          'url' => Url::fromRoute('entity.node_type.delete_form', ['node_type' => $class->id()]),
           'query' => array(
             'destination' => 'admin/store/products/classes',
           ),
         );
       }
       $rows[] = array(
-        String::checkPlain($class->type),
-        String::checkPlain($class->name),
-        Xss::filterAdmin($class->description),
+        String::checkPlain($class->id()),
+        String::checkPlain($class->label()),
+        Xss::filterAdmin($class->getDescription()),
         array(
           'data' => array(
             '#type' => 'operations',

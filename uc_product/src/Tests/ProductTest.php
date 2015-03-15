@@ -79,7 +79,7 @@ class ProductTest extends UbercartTestBase {
     );
     $this->drupalPostForm('node/add/product', $edit, 'Save');
 
-    $this->assertText(t('Product @title has been created.', array('@title' => $edit[$title_key])), 'Product created.');
+    $this->assertText(t('Product @title has been created.', ['@title' => $edit[$title_key]]), 'Product created.');
     $this->assertText($edit[$body_key], 'Product body found.');
     $this->assertText($edit['model[0][value]'], 'Product model found.');
     $this->assertNoUniqueText(uc_currency_format($edit['price[0][value]']), 'Product price found.');
@@ -118,7 +118,7 @@ class ProductTest extends UbercartTestBase {
     $this->clickLink('Edit');
     $this->drupalPostForm(NULL, $edit, 'Save');
 
-    $this->assertText(t('Product @title has been updated.', array('@title' => $edit[$title_key])), 'Product updated.');
+    $this->assertText(t('Product @title has been updated.', ['@title' => $edit[$title_key]]), 'Product updated.');
     $this->assertText($edit[$body_key], 'Updated product body found.');
     $this->assertText($edit['model[0][value]'], 'Updated product model found.');
     $this->assertNoUniqueText(uc_currency_format($edit['price[0][value]']), 'Updated product price found.');
@@ -128,8 +128,8 @@ class ProductTest extends UbercartTestBase {
     $this->assertText(uc_length_format($edit['dimensions[0][height]'], $edit['dimensions[0][units]']), 'Product height found.');
 
     $this->clickLink('Delete');
-    $this->drupalPostForm(NULL, array(), 'Delete');
-    $this->assertText(t('Product @title has been deleted.', array('@title' => $edit[$title_key])), 'Product deleted.');
+    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->assertText(t('Product @title has been deleted.', ['@title' => $edit[$title_key]]), 'Product deleted.');
   }
 
   public function testZeroProductWeightAndDimensions() {
@@ -157,7 +157,7 @@ class ProductTest extends UbercartTestBase {
     );
     $this->drupalPostForm('node/add/product', $edit, 'Save');
 
-    $this->assertText(t('Product @title has been created.', array('@title' => $edit['title[0][value]'])), 'Product created.');
+    $this->assertText(t('Product @title has been created.', ['@title' => $edit['title[0][value]']]), 'Product created.');
     $this->assertNoText('Weight', 'Zero weight not shown.');
     $this->assertNoText('Dimensions', 'Zero dimensions not shown.');
   }

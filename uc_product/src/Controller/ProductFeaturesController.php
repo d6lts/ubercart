@@ -24,7 +24,7 @@ class ProductFeaturesController extends ControllerBase {
    */
   public function featuresOverview(NodeInterface $node) {
     $header = array($this->t('Type'), $this->t('Description'), $this->t('Operations'));
-    $rows = array();
+    $rows = [];
 
     $features = uc_product_feature_load_multiple($node->id());
     foreach ($features as $feature) {

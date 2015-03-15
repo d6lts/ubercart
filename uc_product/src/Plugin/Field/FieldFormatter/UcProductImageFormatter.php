@@ -68,7 +68,7 @@ class UcProductImageFormatter extends ImageFormatterBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
 
     $image_styles = image_style_options(FALSE);
     // Unset possible 'No defined styles' option.
@@ -79,13 +79,13 @@ class UcProductImageFormatter extends ImageFormatterBase {
     if (!isset($image_styles[$image_style_setting])) {
       $image_styles[$image_style_setting] = t('Original image');
     }
-    $summary[] = t('First image style: @style', array('@style' => $image_styles[$image_style_setting]));
+    $summary[] = t('First image style: @style', ['@style' => $image_styles[$image_style_setting]]);
 
     $image_style_setting = $this->getSetting('other_image_style');
     if (!isset($image_styles[$image_style_setting])) {
       $image_styles[$image_style_setting] = t('Original image');
     }
-    $summary[] = t('Subsequent image style: @style', array('@style' => $image_styles[$image_style_setting]));
+    $summary[] = t('Subsequent image style: @style', ['@style' => $image_styles[$image_style_setting]]);
 
     $link_types = array(
       'content' => t('Linked to content'),
@@ -104,7 +104,7 @@ class UcProductImageFormatter extends ImageFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items) {
-    $elements = array();
+    $elements = [];
 
     $image_link_setting = $this->getSetting('image_link');
     // Check if the formatter involves a link.
@@ -123,7 +123,7 @@ class UcProductImageFormatter extends ImageFormatterBase {
           $image_uri = $item->entity->getFileUri();
           $uri = array(
             'path' => file_create_url($image_uri),
-            'options' => array(),
+            'options' => [],
           );
         }
         $elements[$delta] = array(
