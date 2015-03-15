@@ -491,7 +491,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, FormStateInterface 
     case 'view':
       $description = Xss::filterAdmin($quote_config->get('pane_description'));
 
-      $contents['#attached']['css'][] = drupal_get_path('module', 'uc_quote') . '/css/uc_quote.css';
+      $contents['#attached']['library'][] = 'uc_quote/uc_quote.styles';
 
       $contents['uid'] = array(
         '#type' => 'hidden',
