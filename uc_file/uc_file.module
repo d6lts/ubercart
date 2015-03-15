@@ -136,7 +136,7 @@ function uc_file_user_form($form, FormStateInterface $form_state, $account) {
     $form['file']['file_message'] = array(
       '#markup' => '<p>' . t(
         'You must add files at the <a href="!url">Ubercart file download administration page</a> in order to attach them to a user.',
-        array('!url' => url('admin/store/products/files', array('query' => array('destination' => 'user/' . $account->id() . '/edit'))))
+        array('!url' => \Drupal::url('admin/store/products/files', [], ['query' => ['destination' => 'user/' . $account->id() . '/edit']]))
       ) . '</p>',
     );
 
@@ -236,7 +236,7 @@ function uc_file_user_form($form, FormStateInterface $form_state, $account) {
       '#multiple' => TRUE,
       '#size' => 6,
       '#title' => t('Add file'),
-      '#description' => t('Select a file to add as a download. Newly added files will inherit the settings at the !url.', array('!url' => l(t('Ubercart product settings page'), 'admin/store/settings/products'))),
+      '#description' => t('Select a file to add as a download. Newly added files will inherit the settings at the !url.', array('!url' => \Drupal::l(t('Ubercart product settings page'), new Url('admin/store/settings/products')))),
       '#options' => $available_files,
       '#tree' => TRUE,
     );
@@ -369,7 +369,7 @@ function uc_file_user_view(array &$build, UserInterface $account, EntityViewDisp
   $build['uc_file_download'] = array(
     '#type' => 'item',
     '#title' => t('File downloads'),
-    '#markup' => l(t('Click here to view your file downloads.'), 'user/' . $account->id() . '/purchased-files'),
+    '#markup' => \Drupal::l(t('Click here to view your file downloads.'), new Url('user/' . $account->id() . '/purchased-files')),
   );
 }
 
@@ -553,7 +553,7 @@ function uc_file_feature_form($form, FormStateInterface $form_state, $node, $fea
     $form['file']['file_message'] = array(
       '#markup' => t(
         'You must add files at the <a href="@url">Ubercart file download administration page</a> in order to attach them to a model.',
-        array('@url' => url('admin/store/products/files', array('query' => array('destination' => 'node/' . $node->id() . '/edit/features/file/add'))))
+        array('@url' => \Drupal::url('admin/store/products/files', [], ['query' => ['destination' => 'node/' . $node->id() . '/edit/features/file/add']]))
       ),
     );
 
@@ -646,7 +646,7 @@ function uc_file_feature_form($form, FormStateInterface $form_state, $node, $fea
 
   $form['uc_file_limits'] = array(
     '#type' => 'fieldset',
-    '#description' => t('Use these options to override any global download limits set at the !url.', array('!url' => l(t('Ubercart product settings page'), 'admin/store/settings/products', array('query' => array('destination' => 'node/' . $node->id() . '/edit/features/file/add'))))),
+    '#description' => t('Use these options to override any global download limits set at the !url.', array('!url' => \Drupal::l(t('Ubercart product settings page'), new Url('uc_product.settings', ['query' => ['destination' => 'node/' . $node->id() . '/edit/features/file/add']]))),
     '#title' => t('File limitations'),
   );
 

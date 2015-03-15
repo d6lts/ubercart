@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Encryption;
 
@@ -176,7 +177,7 @@ function uc_credit_uc_store_status() {
     $statuses[] = array(
       'status' => 'error',
       'title' => t('Credit card encryption'),
-      'desc' => t('You must review your <a href="@url">credit card security settings</a> and enable encryption before you can accept credit card payments.', array('@url' => \Drupal::url('uc_payment.method_settings', array('method' => 'credit')))),
+      'desc' => t('You must review your <a href="@url">credit card security settings</a> and enable encryption before you can accept credit card payments.', array('@url' => \Drupal::url('uc_payment.method_settings', ['method' => 'credit']))),
     );
   }
 

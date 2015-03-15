@@ -164,19 +164,19 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'url':
-          $replacements[$original] = url($path, array('absolute' => TRUE));
+          $replacements[$original] = \Drupal::url($path, [], ['absolute' => TRUE]);
           break;
 
         case 'link':
-          $replacements[$original] = l($order->id(), url($path, array('absolute' => TRUE)));
+          $replacements[$original] = \Drupal::l($order->id(), Url::fromUri($path, ['absolute' => TRUE]));
           break;
 
         case 'admin-url':
-          $replacements[$original] = url($admin_path, array('absolute' => TRUE));
+          $replacements[$original] = \Drupal::url($admin_path, [], ['absolute' => TRUE]);
           break;
 
         case 'admin-link':
-          $replacements[$original] = l($order->id(), url($admin_path, array('absolute' => TRUE)));
+          $replacements[$original] = \Drupal::l($order->id(), Url::fromUri($admin_path, array('absolute' => TRUE)));
           break;
 
         case 'subtotal':

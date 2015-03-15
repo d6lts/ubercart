@@ -30,7 +30,7 @@ function uc_order_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('Order statuses with a list position below zero are considered inactive when filtering lists of orders.') . '</p>';
     case 'field_ui.overview_uc_order':
       return '<p>' . t('Attach fields to order product entities.  These entities represent the product line items that appear in orders.  Fields attached here are not visible in the current version of Ubercart, but they are available in Views.  A ')
-        . l(t('Computed Field'), 'http://drupal.org/project/computed_field')
+        . \Drupal::l(t('Computed Field'), new Url('http://drupal.org/project/computed_field'))
         . t(' is useful for attaching custom data to each product as it is ordered.') . '</p>';
   }
 }
@@ -208,7 +208,7 @@ function uc_order_user_view($account, $view_mode) {
     $account->content['orders'] = array(
       '#type' => 'item',
       '#title' => t('Orders'),
-      '#markup' => l(t('Click here to view your order history.'), 'user/' . $account->id() . '/orders'),
+      '#markup' => \Drupal::l(t('Click here to view your order history.'), new Url('user/' . $account->id() . '/orders', ['user' => $account->id()])),
     );
   }
 }
@@ -794,7 +794,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($order->access('update')) {
     $actions['edit'] = array(
       'title' => t('Edit'),
-      'url' => Url::fromRoute('uc_order.admin_edit', ['uc_order' => $order->id()]),
+      'url' => Url::fromRoute('entity.uc_order.edit_form', ['uc_order' => $order->id()]),
       'weight' => 10,
     );
   }
@@ -802,7 +802,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($order->access('delete')) {
     $actions['delete'] = array(
       'title' => t('Delete'),
-      'url' => Url::fromRoute('uc_order.admin_delete', ['uc_order' => $order->id()]),
+      'url' => Url::fromRoute('entity.uc_order.delete_form', ['uc_order' => $order->id()]),
       'weight' => 20,
     );
   }

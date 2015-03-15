@@ -5,6 +5,8 @@
  * Token hooks for the uc_store module.
  */
 
+use Drupal\Core\Url;
+
 /**
  * Implements hook_token_info().
  */
@@ -75,7 +77,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
       switch ($name) {
         case 'login-link':
           $login_link = \Drupal::url('user.page', [], ['absolute' => TRUE]);
-          $replacements[$original] = l($login_link, $login_link);
+          $replacements[$original] = \Drupal::l($login_link, Url::fromUri($login_link));
           break;
 
         case 'logo':
@@ -103,7 +105,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'link':
-          $replacements[$original] = l(uc_store_name(), '<front>', array('absolute' => TRUE));
+          $replacements[$original] = \Drupal::l(uc_store_name(), new Url('<front>', [], ['absolute' => TRUE]));
           break;
 
         case 'email':
@@ -123,7 +125,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'help-url':
-          $replacements[$original] = url($config->get('help_page'), array('absolute' => TRUE));
+          $replacements[$original] = \Drupal::url($config->get('help_page'), [], ['absolute' => TRUE]);
           break;
       }
     }

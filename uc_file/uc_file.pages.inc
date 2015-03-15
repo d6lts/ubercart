@@ -140,7 +140,7 @@ function uc_file_user_downloads($account) {
 
     // Expiration set to 'never'
     if ($file->expiration == FALSE) {
-      $file_link = l(drupal_basename($file->filename), 'download/' . $file->fid, $onclick);
+      $file_link = \Drupal::l(drupal_basename($file->filename), 'download/' . $file->fid, $onclick);
     }
 
     // Expired.

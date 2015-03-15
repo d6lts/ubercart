@@ -342,7 +342,7 @@ function uc_order_add_line_item_form($form, FormStateInterface $form_state, $ord
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Add line item'),
-    '#suffix' => l(t('Cancel'), 'admin/store/orders/' . $order->id() . '/edit'),
+    '#suffix' => \Drupal::l(t('Cancel'), new Url('entity.uc_order.edit_form', ['uc_order' => $order->id()])),
   );
 
   return $form;
