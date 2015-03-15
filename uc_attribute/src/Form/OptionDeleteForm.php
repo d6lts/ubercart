@@ -25,7 +25,7 @@ class OptionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the option %name?', array('%name' => $this->option->name));
+    return $this->t('Are you sure you want to delete the option %name?', ['%name' => $this->option->name]);
   }
 
   /**
@@ -39,7 +39,7 @@ class OptionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_attribute.options', array('aid' => $this->option->aid));
+    return new Url('uc_attribute.options', ['aid' => $this->option->aid]);
   }
 
   /**
@@ -88,7 +88,7 @@ class OptionDeleteForm extends ConfirmFormBase {
       ->condition('oid', $this->option->oid)
       ->execute();
 
-    $form_state->setRedirect('uc_attribute.options', array('aid' => $this->option->aid));
+    $form_state->setRedirect('uc_attribute.options', ['aid' => $this->option->aid]);
   }
 
 }

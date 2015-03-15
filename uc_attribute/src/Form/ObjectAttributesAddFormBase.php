@@ -51,7 +51,7 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
       $used_aids[] = $attribute->aid;
     }
 
-    $unused_attributes = array();
+    $unused_attributes = [];
     $result = db_query("SELECT a.aid, a.name, a.label FROM {uc_attributes} a LEFT JOIN {uc_attribute_options} ao ON a.aid = ao.aid GROUP BY a.aid, a.name, a.label ORDER BY a.name");
     foreach ($result as $attribute) {
       if (!in_array($attribute->aid, $used_aids)) {
@@ -78,6 +78,7 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+
     foreach (array_filter($form_state->getValue('add_attributes')) as $aid) {
       // Enable all options for added attributes.
       $attribute = uc_attribute_load($aid);
@@ -85,8 +86,11 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
       if (isset($attribute->options)) {
         foreach ($attribute->options as $option) {
           $option->{$this->idField} = $this->idValue;
-          drupal_write_record($this->optionTable, $option);
-          $option->aid = $aid;
+          unset($option->name);
+          unset($option->aid);
+          db_insert($this->optionTable)
+            ->fields((array)$option)
+            ->execute();
         }
         // Make the first option (if any) the default.
         if ($option = reset($attribute->options)) {

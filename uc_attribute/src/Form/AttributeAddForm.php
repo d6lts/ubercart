@@ -18,8 +18,19 @@ class AttributeAddForm extends AttributeFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_write_record('uc_attributes', $form_state->getValues());
-    $form_state->setRedirect('uc_attribute.options', array('aid' => $form_state->getValue('aid')));
+
+    // Remove Form API elements from $form_state
+    $form_state->cleanValues();
+    $aid = db_insert('uc_attributes')->fields($form_state->getValues())->execute();
+
+    if ($form_state->getValue('display') == 0) {
+      // No options needed/allowed for Textfield display type.
+      $form_state->setRedirect('uc_attribute.overview', ['aid' => $aid]);
+    }
+    else {
+      // All other display types we redirect to add options.
+      $form_state->setRedirect('uc_attribute.option_add', ['aid' => $aid]);
+    }
   }
 
 }

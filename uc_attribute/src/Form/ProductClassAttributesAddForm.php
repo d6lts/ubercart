@@ -33,7 +33,7 @@ class ProductClassAttributesAddForm extends ObjectAttributesAddFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    $form_state->setRedirect('entity.node_type.edit_form', array('node_type' => $this->idValue));
+    $form_state->setRedirect('entity.node_type.edit_form', ['node_type' => $this->idValue]);
   }
 
 }

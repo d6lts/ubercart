@@ -58,7 +58,7 @@ class ProductAdjustmentsForm extends FormBase {
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->limit(20);
 
-    $attribute_ids = array();
+    $attribute_ids = [];
     foreach ($result as $prod_attr) {
       if ($i > 1) {
         $query->join('uc_product_options', "po$i");
@@ -81,12 +81,12 @@ class ProductAdjustmentsForm extends FormBase {
 
     if ($num_prod_attr) {
       // Get previous values
-      $old_vals = db_query("SELECT * FROM {uc_product_adjustments} WHERE nid = :nid", array(':nid' => $nid))->fetchAll();
+      $old_vals = db_query("SELECT * FROM {uc_product_adjustments} WHERE nid = :nid", [':nid' => $nid])->fetchAll();
 
       $result = $query->execute();
 
       $form['original'] = array(
-        '#markup' => '<p><b>' . t('Default product SKU: @sku', array('@sku' => $model)) . '</b></p>',
+        '#markup' => '<p><b>' . t('Default product SKU: @sku', ['@sku' => $model]) . '</b></p>',
       );
       $form['default'] = array(
         '#type' => 'value',
@@ -111,7 +111,7 @@ class ProductAdjustmentsForm extends FormBase {
       while ($combo = $result->fetchObject()) {
         $cells = '';
         $row_title = '';
-        $comb_array = array();
+        $comb_array = [];
         for ($j = 1; $j <= $num_prod_attr; ++$j) {
           $cells .= '<td>' . String::checkPlain($combo->{'name' . $j}) . '</td>';
           $row_title .= String::checkPlain($combo->{'name' . $j}) . ', ';

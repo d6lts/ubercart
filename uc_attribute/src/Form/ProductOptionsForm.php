@@ -36,7 +36,7 @@ class ProductOptionsForm extends ObjectOptionsFormBase {
     parent::submitForm($form, $form_state);
 
     // Clear the page and block caches.
-    Cache::invalidateTags(array('content' => TRUE));
+    Cache::invalidateTags(['content']);
   }
 
   /**

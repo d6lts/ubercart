@@ -22,7 +22,7 @@ class OptionEditForm extends OptionFormBase {
 
     $form = parent::buildForm($form, $form_state, $aid);
 
-    $form['#title'] = $this->t('Edit option: %name', array('%name' => $option->name));
+    $form['#title'] = $this->t('Edit option: %name', ['%name' => $option->name]);
 
     $form['oid'] = array('#type' => 'value', '#value' => $option->oid);
     $form['name']['#default_value'] = $option->name;
@@ -38,10 +38,15 @@ class OptionEditForm extends OptionFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_write_record('uc_attribute_options', $form_state->getValues(), array('aid', 'oid'));
-    drupal_set_message(t('Updated option %option.', array('%option' => $form_state->getValue('name'))));
-    \Drupal::logger('uc_attribute')->notice('Updated option %option.', array('%option' => $form_state->getValue('name'), 'link' => 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/' . $form_state->getValue('oid')));
-    $form_state->setRedirect('uc_attribute.options', array('aid' => $form_state->getValue('aid')));
+    // Remove Form API elements from $form_state
+    $form_state->cleanValues();
+    db_merge('uc_attribute_options')
+      ->key(array('aid' => $form_state->getValue('aid'), 'oid' => $form_state->getValue('oid')))
+      ->fields($form_state->getValues())
+      ->execute();
+    drupal_set_message(t('Updated option %option.', ['%option' => $form_state->getValue('name')]));
+    \Drupal::logger('uc_attribute')->notice('Updated option %option.', ['%option' => $form_state->getValue('name'), 'link' => 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/' . $form_state->getValue('oid')]);
+    $form_state->setRedirect('uc_attribute.options', ['aid' => $form_state->getValue('aid')]);
   }
 
 }

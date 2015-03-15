@@ -323,7 +323,7 @@ class AttributeTest extends UbercartTestBase {
     $this->assertRaw('<td>' . ($edit['required'] ? t('Yes') : t('No')) . '</td>', t('Verify required field.'));
     $this->assertRaw('<td>' . $edit['ordering'] . '</td>', t('Verify ordering field.'));
     $types = _uc_attribute_display_types();
-    $this->assertRaw('<td>' . $types[$edit['display']] . '</td>', t('Verify ordering field.'));
+    $this->assertRaw('<td>' . $types[$edit['display']] . '</td>', t('Verify display field.'));
 
     $aid = db_query("SELECT aid FROM {uc_attributes} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
     $this->assertTrue($aid, t('Attribute was created.'));

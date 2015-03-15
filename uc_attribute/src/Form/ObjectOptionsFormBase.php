@@ -169,7 +169,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
     $error = FALSE;
 
     foreach ($form_state->getValue('attributes') as $attribute) {
-      $selected_opts = array();
+      $selected_opts = [];
       if (isset($attribute['options'])) {
         foreach ($attribute['options'] as $oid => $option) {
           if ($option['select']) {
@@ -211,10 +211,13 @@ abstract class ObjectOptionsFormBase extends FormBase {
 
         foreach ($attribute['options'] as $oid => $option) {
           if ($option['select']) {
+            unset($option['select']);
             $option[$this->idField] = $this->idValue;
             $option['oid'] = $oid;
 
-            drupal_write_record($this->optionTable, $option);
+            db_insert($this->optionTable)
+              ->fields($option)
+              ->execute();
           }
           else {
             $this->optionRemoved($aid, $oid);

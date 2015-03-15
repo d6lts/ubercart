@@ -131,9 +131,11 @@ abstract class ObjectAttributesFormBase extends FormBase {
         $remove_aids[] = $aid;
       }
       else {
-        $attribute['aid'] = $aid;
-        $attribute[$this->idField] = $this->idValue;
-        drupal_write_record($this->attributeTable, $attribute, array('aid', $this->idField));
+        unset($attribute['remove']);
+        db_merge($this->attributeTable)
+          ->key('aid', $aid)
+          ->fields($attribute)
+          ->execute();
         $changed = TRUE;
       }
     }

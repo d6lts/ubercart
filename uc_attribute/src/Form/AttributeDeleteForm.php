@@ -25,14 +25,14 @@ class AttributeDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the attribute %name?', array('%name' => $this->attribute->name));
+    return $this->t('Are you sure you want to delete the attribute %name?', ['%name' => $this->attribute->name]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    $count = db_query("SELECT COUNT(*) FROM {uc_product_attributes} WHERE aid = :aid", array(':aid' => $this->attribute->aid))->fetchField();
+    $count = db_query("SELECT COUNT(*) FROM {uc_product_attributes} WHERE aid = :aid", [':aid' => $this->attribute->aid])->fetchField();
     return \Drupal::translation()->formatPlural($count, 'There is 1 product with this attribute.', 'There are @count products with this attribute.');
   }
 
@@ -82,7 +82,7 @@ class AttributeDeleteForm extends ConfirmFormBase {
         ->execute();
     }
 
-    if ($nodes = db_query("SELECT nid FROM {uc_product_attributes} WHERE aid = :aid", array(':aid' => $this->attribute->aid))->fetchCol()) {
+    if ($nodes = db_query("SELECT nid FROM {uc_product_attributes} WHERE aid = :aid", [':aid' => $this->attribute->aid])->fetchCol()) {
       db_delete('uc_product_adjustments')
         ->condition('nid', $nodes, 'IN')
         ->execute();

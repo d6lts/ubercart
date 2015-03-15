@@ -52,7 +52,7 @@ function theme_uc_product_attributes(array $variables) {
         'class' => array('product-description'),
       ),
     );
-    return drupal_render($item_list);
+    return \Drupal::service('renderer')->render($item_list);
   }
 
   return '';

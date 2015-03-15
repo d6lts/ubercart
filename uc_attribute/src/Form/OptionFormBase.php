@@ -76,7 +76,7 @@ abstract class OptionFormBase extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
-      '#suffix' => \Drupal::l(t('Cancel'), new Url('uc_attribute.options', array('aid' => $aid))),
+      '#suffix' => \Drupal::l(t('Cancel'), new Url('uc_attribute.options', ['aid' => $aid])),
       '#weight' => 10,
     );
 
