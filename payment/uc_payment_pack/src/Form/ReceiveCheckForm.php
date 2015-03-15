@@ -55,9 +55,9 @@ class ReceiveCheckForm extends FormBase {
       '#title' => t('Expected clear date'),
       '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
     );
-    $form['clear']['clear_month'] = uc_select_month(NULL, format_date(REQUEST_TIME, 'custom', 'n'));
-    $form['clear']['clear_day'] = uc_select_day(NULL, format_date(REQUEST_TIME, 'custom', 'j'));
-    $form['clear']['clear_year'] = uc_select_year(NULL, format_date(REQUEST_TIME, 'custom', 'Y'), format_date(REQUEST_TIME, 'custom', 'Y'), format_date(REQUEST_TIME, 'custom', 'Y') + 1);
+    $form['clear']['clear_month'] = uc_select_month(NULL, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'n'));
+    $form['clear']['clear_day'] = uc_select_day(NULL, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'j'));
+    $form['clear']['clear_year'] = uc_select_year(NULL, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y'), \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y'), \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y') + 1);
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(

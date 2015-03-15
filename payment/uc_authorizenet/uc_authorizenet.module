@@ -260,7 +260,7 @@ function _uc_authorizenet_cim_profile_create_request($order) {
     'refId' => substr($order->id() . '-' . REQUEST_TIME, 0, 20),
     'profile' => array(
       'merchantCustomerId' => substr($order->getUserId(), 0, 20),
-      'description' => substr(t('Order @order taking place at @date', array('@order' => $order->id(), '@date' => format_date(REQUEST_TIME))), 0, 255),
+      'description' => substr(t('Order @order taking place at @date', array('@order' => $order->id(), '@date' => \Drupal::service('date.formatter')->format(REQUEST_TIME))), 0, 255),
       'email' => substr($order->getEmail(), 0, 255),
       'paymentProfiles' => array(
         'billTo' => _uc_authorize_cim_xml_billto($order),

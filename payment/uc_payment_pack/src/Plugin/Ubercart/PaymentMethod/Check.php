@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
@@ -108,10 +109,10 @@ class Check extends PaymentMethodPluginBase {
 
     $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->id()));
     if ($clear_date = $result->fetchField()) {
-      $build['#markup'] = t('Clear Date:') . ' ' . format_date($clear_date, 'uc_store');
+      $build['#markup'] = t('Clear Date:') . ' ' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');
     }
     else {
-      $build['#markup'] = l(t('Receive Check'), 'admin/store/orders/' . $order->id() . '/receive_check');
+      $build['#markup'] = \Drupal::l(t('Receive Check'), new Url('uc_payment_pack.check.receive', ['uc_order' => $order->id()]));
     }
 
     return $build;
@@ -126,7 +127,7 @@ class Check extends PaymentMethodPluginBase {
     $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->id()));
     if ($clear_date = $result->fetchField()) {
       $build['#markup'] = t('Check received') . '<br />' .
-        t('Expected clear date:') . '<br />' . format_date($clear_date, 'uc_store');
+        t('Expected clear date:') . '<br />' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');
     }
 
     return $build;

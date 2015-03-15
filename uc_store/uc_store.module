@@ -326,7 +326,7 @@ function uc_length_conversion($from_units, $to_units = NULL) {
  */
 function uc_date_format($month, $day, $year) {
   $time = strtotime($month . '/' . $day . '/' . $year);
-  return format_date($time, 'uc_store');
+  return \Drupal::service('date.formatter')->format($time, 'uc_store');
 }
 
 /**

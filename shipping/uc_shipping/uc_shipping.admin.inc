@@ -513,8 +513,8 @@ function uc_shipping_order_shipments($order) {
     $row[] = String::checkPlain($shipment->d_first_name) . ' ' . String::checkPlain($shipment->d_last_name);
     $row[] = String::checkPlain($shipment->d_company);
     $row[] = String::checkPlain($shipment->d_city) . ', ' . uc_get_zone_code($shipment->d_zone) . ' ' . String::checkPlain($shipment->d_postal_code);
-    $row[] = format_date($shipment->ship_date, 'uc_store');
-    $row[] = format_date($shipment->expected_delivery, 'uc_store');
+    $row[] = \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store');
+    $row[] = \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store');
     $row[] = is_null($shipment->tracking_number) ? t('n/a') : String::checkPlain($shipment->tracking_number);
     $row[] = \Drupal::l(t('view'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/view', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
     $row[] = \Drupal::l(t('edit'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/edit', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
@@ -696,8 +696,8 @@ function uc_shipping_shipment_view($order, $shipment) {
   $build['delivery_address'] = array('#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . t('Delivery Address:') . '</div>' . $destination . '</div>');
 
   $rows = array();
-  $rows[] = array(t('Ship date:'), format_date($shipment->ship_date, 'uc_store'));
-  $rows[] = array(t('Expected delivery:'), format_date($shipment->expected_delivery, 'uc_store'));
+  $rows[] = array(t('Ship date:'), \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store'));
+  $rows[] = array(t('Expected delivery:'), \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store'));
 
   $build['schedule'] = array(
     '#theme' => 'table',

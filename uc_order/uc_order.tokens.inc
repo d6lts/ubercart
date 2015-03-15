@@ -290,11 +290,11 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'created':
-          $replacements[$original] = format_date($order->created->value, 'short');
+          $replacements[$original] = \Drupal::service('date.formatter')->format($order->created->value, 'short');
           break;
 
         case 'modified':
-          $replacements[$original] = format_date($order->modified->value, 'short');
+          $replacements[$original] = \Drupal::service('date.formatter')->format($order->modified->value, 'short');
           break;
 
         case 'products':

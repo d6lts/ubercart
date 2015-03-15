@@ -49,7 +49,7 @@ function uc_roles_expiration($form, &$form_state) {
       '#name' => $name,
     );
     $form['role'][$row->uid . ' ' . $row->rid] = array('#markup' => String::checkPlain(_uc_roles_get_name($row->rid)));
-    $form['expiration'][$row->uid . ' ' . $row->rid] = array('#markup' => format_date($row->expiration, 'short'));
+    $form['expiration'][$row->uid . ' ' . $row->rid] = array('#markup' => \Drupal::service('date.formatter')->format($row->expiration, 'short'));
     $form['edit'][$row->uid . ' ' . $row->rid] = array('#markup' => l(t('edit'), 'user/' . $row->uid . '/edit', array('fragment' => 'role-expiration-' . $row->rid, 'query' => array('destination' => 'admin/people/expiration'))));
     $form['delete'][$row->uid . ' ' . $row->rid] = array('#markup' => l(t('delete'), 'admin/people/expiration/delete/' . $row->uid . '/' . $row->rid));
   }

@@ -207,16 +207,16 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * Collect additional information for the "Cash on Delivery" payment method.
    */
   protected function deliveryDateForm($order) {
-    $month = !empty($order->payment_details['delivery_month']) ? $order->payment_details['delivery_month'] : format_date(REQUEST_TIME, 'custom', 'n');
-    $day   = !empty($order->payment_details['delivery_day'])   ? $order->payment_details['delivery_day']   : format_date(REQUEST_TIME, 'custom', 'j');
-    $year  = !empty($order->payment_details['delivery_year'])  ? $order->payment_details['delivery_year']  : format_date(REQUEST_TIME, 'custom', 'Y');
+    $month = !empty($order->payment_details['delivery_month']) ? $order->payment_details['delivery_month'] : \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'n');
+    $day   = !empty($order->payment_details['delivery_day'])   ? $order->payment_details['delivery_day']   : \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'j');
+    $year  = !empty($order->payment_details['delivery_year'])  ? $order->payment_details['delivery_year']  : \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y');
 
     $form['description'] = array(
       '#markup' => '<div>' . t('Enter a desired delivery date:') . '</div>',
     );
     $form['delivery_month'] = uc_select_month(NULL, $month);
     $form['delivery_day']   = uc_select_day(NULL, $day);
-    $form['delivery_year']  = uc_select_year(NULL, $year, format_date(REQUEST_TIME, 'custom', 'Y'), format_date(REQUEST_TIME, 'custom', 'Y') + 1);
+    $form['delivery_year']  = uc_select_year(NULL, $year, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y'), \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y') + 1);
 
     return $form;
   }

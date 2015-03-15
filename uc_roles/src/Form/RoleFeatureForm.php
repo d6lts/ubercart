@@ -216,7 +216,7 @@ class RoleFeatureForm extends FormBase {
       ));
 
       if ($form_state->getValue('uc_roles_expire_absolute') <= REQUEST_TIME) {
-        $form_state->setErrorByName('uc_roles_expire_absolute', t('The specified date !date has already occurred. Please choose another.', array('!date' => format_date($form_state->getValue('uc_roles_expire_absolute')))));
+        $form_state->setErrorByName('uc_roles_expire_absolute', t('The specified date !date has already occurred. Please choose another.', array('!date' => \Drupal::service('date.formatter')->format($form_state->getValue('uc_roles_expire_absolute')))));
       }
     }
     else {
@@ -262,7 +262,7 @@ class RoleFeatureForm extends FormBase {
 
     if ($product_role['end_override']) {
       if ($product_role['end_time']) {
-        $description .= t('<strong>Expiration:</strong> !date<br />', array('!date' => format_date($product_role['end_time'])));
+        $description .= t('<strong>Expiration:</strong> !date<br />', array('!date' => \Drupal::service('date.formatter')->format($product_role['end_time'])));
       }
       else {
         switch ($product_role['granularity']) {

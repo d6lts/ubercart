@@ -107,7 +107,7 @@ class CreditCardTerminalForm extends FormBase {
     if (isset($this->order->data->cc_txns['authorizations'])) {
       foreach ($this->order->data->cc_txns['authorizations'] as $auth_id => $data) {
         if (empty($data['captured'])) {
-          $options[$auth_id] = t('@auth_id - @date - @amount authorized', array('@auth_id' => strtoupper($auth_id), '@date' => format_date($data['authorized'], 'short'), '@amount' => uc_currency_format($data['amount'])));
+          $options[$auth_id] = t('@auth_id - @date - @amount authorized', array('@auth_id' => strtoupper($auth_id), '@date' => \Drupal::service('date.formatter')->format($data['authorized'], 'short'), '@amount' => uc_currency_format($data['amount'])));
         }
       }
     }
@@ -159,7 +159,7 @@ class CreditCardTerminalForm extends FormBase {
 
     if (isset($this->order->data->cc_txns['references'])) {
       foreach ($this->order->data->cc_txns['references'] as $ref_id => $data) {
-        $options[$ref_id] = t('@ref_id - @date - (Last 4) @card', array('@ref_id' => strtoupper($ref_id), '@date' => format_date($data['created'], 'short'), '@card' => $data['card']));
+        $options[$ref_id] = t('@ref_id - @date - (Last 4) @card', array('@ref_id' => strtoupper($ref_id), '@date' => \Drupal::service('date.formatter')->format($data['created'], 'short'), '@card' => $data['card']));
       }
     }
 

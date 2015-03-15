@@ -255,7 +255,7 @@ function uc_roles_user_validate($form, FormStateInterface $form_state) {
 
       $new_expiration = _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']);
       if (REQUEST_TIME > $new_expiration) {
-        $form_state->setErrorByName('qty', t("The new expiration date, %date, has already occurred.", array('%date' => format_date($new_expiration, 'short'))));
+        $form_state->setErrorByName('qty', t("The new expiration date, %date, has already occurred.", array('%date' => \Drupal::service('date.formatter')->format($new_expiration, 'short'))));
       }
     }
   }
@@ -345,7 +345,7 @@ function uc_roles_user_view($account, $view_mode) {
     $form[$expiration->rid] = array(
       '#type' => 'item',
       '#title' => String::checkPlain(_uc_roles_get_name($expiration->rid)),
-      '#markup' => t('This role will expire on !date', array('!date' => format_date($expiration->expiration, 'short'))),
+      '#markup' => t('This role will expire on !date', array('!date' => \Drupal::service('date.formatter')->format($expiration->expiration, 'short'))),
     );
   }
 
@@ -789,7 +789,7 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
     }
 
     if ($timestamp) {
-      $message .= ' ' . t('It will expire on %date', array('%date' => format_date($timestamp, 'short')));
+      $message .= ' ' . t('It will expire on %date', array('%date' => \Drupal::service('date.formatter')->format($timestamp, 'short')));
     }
 
     drupal_set_message($message);
@@ -836,7 +836,7 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
   if (!$silent) {
     $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", array(':rid' => $rid))->fetchField();
     if (\Drupal::currentUser()->id() == $account->id()) {
-      $message = t('Your %role role has been renewed. It will expire on %date.', array('%role' => $role_name, '%date' => format_date($timestamp, 'short')));
+      $message = t('Your %role role has been renewed. It will expire on %date.', array('%role' => $role_name, '%date' => \Drupal::service('date.formatter')->format($timestamp, 'short')));
     }
     else {
       $message = t("!user's %role role has been renewed. It will expire on %date.", array(
@@ -846,7 +846,7 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
           'link_path' => 'user/' . $account->id(),
         )),
         '%role' => $role_name,
-        '%date' => format_date($timestamp, 'short'),
+        '%date' => \Drupal::service('date.formatter')->format($timestamp, 'short'),
       ));
     }
 

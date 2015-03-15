@@ -66,7 +66,7 @@ function theme_uc_roles_user_expiration(array $variables) {
     $rows[] = array(
       array('data' => drupal_render($data['remove'])),
       array('data' => String::checkPlain($data['name']['#value'])),
-      array('data' => format_date($data['expiration']['#value'], 'short')),
+      array('data' => \Drupal::service('date.formatter')->format($data['expiration']['#value'], 'short')),
 
       // Options to adjust the expiration.
       array('data' => '<a name="role-expiration-' . $rid . '">' .

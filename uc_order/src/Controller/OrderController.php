@@ -45,7 +45,7 @@ class OrderController extends ControllerBase {
     $rows = array();
     foreach ($result as $change) {
       $rows[] = array(
-        format_date($change->created, 'short'),
+        \Drupal::service('date.formatter')->format($change->created, 'short'),
         theme('uc_uid', array('uid' => $change->uid)),
         $change->changes,
       );

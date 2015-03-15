@@ -197,18 +197,18 @@ function uc_tax_report_params_form($form, &$form_state, $values) {
     '#type' => 'date',
     '#title' => t('Start date'),
     '#default_value' => array(
-      'month' => format_date($values['start_date'], 'custom', 'n'),
-      'day' => format_date($values['start_date'], 'custom', 'j'),
-      'year' => format_date($values['start_date'], 'custom', 'Y'),
+      'month' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'n'),
+      'day' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'j'),
+      'year' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'Y'),
     ),
   );
   $form['params']['end_date'] = array(
     '#type' => 'date',
     '#title' => t('End date'),
     '#default_value' => array(
-      'month' => format_date($values['end_date'], 'custom', 'n'),
-      'day' => format_date($values['end_date'], 'custom', 'j'),
-      'year' => format_date($values['end_date'], 'custom', 'Y'),
+      'month' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'n'),
+      'day' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'j'),
+      'year' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'Y'),
     ),
   );
 

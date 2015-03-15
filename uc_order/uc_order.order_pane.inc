@@ -16,6 +16,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Handles the "Print button" order pane.
@@ -957,7 +958,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, FormStateInter
       foreach ($comments as $comment) {
         $icon = $comment->notified ? 'true-icon.gif' : 'false-icon.gif';
         $build['#rows'][] = array(
-          array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
+          array('data' => \Drupal::service('date.formatter')->format($comment->created, 'short'), 'class' => array('date')),
           array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
           array('data' => array('#theme' => 'image', '#uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon), 'class' => array('notified')),
           array('data' => String::checkPlain($statuses[$comment->order_status]->name), 'class' => array('status')),
@@ -971,14 +972,14 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, FormStateInter
       $statuses = entity_load_multiple('uc_order_status');
       $header = array(t('Date'), t('Status'), t('Message'));
       $rows[] = array(
-        array('data' => format_date($order->created->value, 'uc_store'), 'class' => array('date')),
+        array('data' => \Drupal::service('date.formatter')->format($order->created->value, 'uc_store'), 'class' => array('date')),
         array('data' => '-', 'class' => array('status')),
         array('data' => t('Order created.'), 'class' => array('message')),
       );
       if (count($comments) > 0) {
         foreach ($comments as $comment) {
           $rows[] = array(
-            array('data' => format_date($comment->created, 'uc_store'), 'class' => array('date')),
+            array('data' => \Drupal::service('date.formatter')->format($comment->created, 'uc_store'), 'class' => array('date')),
             array('data' => String::checkPlain($statuses[$comment->order_status]->name), 'class' => array('status')),
             array('data' => String::checkPlain($comment->message), 'class' => array('message')),
           );
@@ -1015,7 +1016,7 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, FormStateInter
       $comments = uc_order_comments_load($order->id(), TRUE);
       foreach ($comments as $comment) {
         $build['#rows'][] = array(
-          array('data' => format_date($comment->created, 'short'), 'class' => array('date')),
+          array('data' => \Drupal::service('date.formatter')->format($comment->created, 'short'), 'class' => array('date')),
           array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
           array('data' => Xss::filterAdmin($comment->message), 'class' => array('message')),
         );

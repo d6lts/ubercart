@@ -515,18 +515,18 @@ function uc_reports_products_custom_form($form, FormStateInterface $form_state, 
     '#type' => 'date',
     '#title' => t('Start date'),
     '#default_value' => array(
-      'month' => format_date($values['start_date'], 'custom', 'n'),
-      'day' => format_date($values['start_date'], 'custom', 'j'),
-      'year' => format_date($values['start_date'], 'custom', 'Y'),
+      'month' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'n'),
+      'day' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'j'),
+      'year' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'Y'),
     ),
   );
   $form['search']['end_date'] = array(
     '#type' => 'date',
     '#title' => t('End date'),
     '#default_value' => array(
-      'month' => format_date($values['end_date'], 'custom', 'n'),
-      'day' => format_date($values['end_date'], 'custom', 'j'),
-      'year' => format_date($values['end_date'], 'custom', 'Y'),
+      'month' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'n'),
+      'day' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'j'),
+      'year' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'Y'),
     ),
   );
 
@@ -742,7 +742,7 @@ function uc_reports_sales_summary() {
   $today = uc_reports_get_sales($today_start);
 
   $rows[] = array(
-    l(t('Today, !date', array('!date' => format_date($today_start, 'uc_store'))), 'admin/store/orders/search/results/0/0/0/0/0/0/' . $today_start . '/' . $today_end),
+    l(t('Today, !date', array('!date' => \Drupal::service('date.formatter')->format($today_start, 'uc_store'))), 'admin/store/orders/search/results/0/0/0/0/0/0/' . $today_start . '/' . $today_end),
     $today['total'],
     array('data' => array('#theme' => 'uc_price', '#price' => $today['income'])),
     array('data' => array('#theme' => 'uc_price', '#price' => $today['average'])),
@@ -752,7 +752,7 @@ function uc_reports_sales_summary() {
   $yesterday = uc_reports_get_sales($today_start - 86400);
 
   $rows[] = array(
-    l(t('Yesterday, !date', array('!date' => format_date($today_start - 86400, 'uc_store'))), 'admin/store/orders/search/results/0/0/0/0/0/0/' . ($today_start - 86400) . '/' . ($today_end - 86400)),
+    l(t('Yesterday, !date', array('!date' => \Drupal::service('date.formatter')->format($today_start - 86400, 'uc_store'))), 'admin/store/orders/search/results/0/0/0/0/0/0/' . ($today_start - 86400) . '/' . ($today_end - 86400)),
     $yesterday['total'],
     array('data' => array('#theme' => 'uc_price', '#price' => $yesterday['income'])),
     array('data' => array('#theme' => 'uc_price', '#price' => $yesterday['average'])),
@@ -760,7 +760,7 @@ function uc_reports_sales_summary() {
 
   // Get the sales report for the month.
   $month = uc_reports_get_sales($month_start, 'month');
-  $month_title = format_date($month_start, 'custom', 'M Y');
+  $month_title = \Drupal::service('date.formatter')->format($month_start, 'custom', 'M Y');
 
   // Add the month-to-date details to the report table.
   $rows[] = array(
@@ -1049,10 +1049,10 @@ function uc_reports_sales_custom() {
 
     // Create the date title for the subreport.
     if ($args['length'] == 'day') {
-      $date = format_date($subreport['start'], 'uc_store');
+      $date = \Drupal::service('date.formatter')->format($subreport['start'], 'uc_store');
     }
     else {
-      $date = format_date($subreport['start'], 'uc_store') . ' - ' . format_date($subreport['end'], 'uc_store');
+      $date = \Drupal::service('date.formatter')->format($subreport['start'], 'uc_store') . ' - ' . \Drupal::service('date.formatter')->format($subreport['end'], 'uc_store');
     }
 
     // Build the order data for the subreport.
@@ -1163,18 +1163,18 @@ function uc_reports_sales_custom_form($form, FormStateInterface $form_state, $va
     '#type' => 'date',
     '#title' => t('Start date'),
     '#default_value' => array(
-      'month' => format_date($values['start_date'], 'custom', 'n'),
-      'day' => format_date($values['start_date'], 'custom', 'j'),
-      'year' => format_date($values['start_date'], 'custom', 'Y'),
+      'month' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'n'),
+      'day' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'j'),
+      'year' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'Y'),
     ),
   );
   $form['search']['end_date'] = array(
     '#type' => 'date',
     '#title' => t('End date'),
     '#default_value' => array(
-      'month' => format_date($values['end_date'], 'custom', 'n'),
-      'day' => format_date($values['end_date'], 'custom', 'j'),
-      'year' => format_date($values['end_date'], 'custom', 'Y'),
+      'month' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'n'),
+      'day' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'j'),
+      'year' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'Y'),
     ),
   );
 

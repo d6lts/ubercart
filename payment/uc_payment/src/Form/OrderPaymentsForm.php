@@ -85,7 +85,7 @@ class OrderPaymentsForm extends FormBase {
     if ($payments !== FALSE) {
       foreach ($payments as $payment) {
         $form['payments'][$payment->receipt_id]['received'] = array(
-          '#markup' => format_date($payment->received, 'short'),
+          '#markup' => \Drupal::service('date.formatter')->format($payment->received, 'short'),
         );
         $form['payments'][$payment->receipt_id]['user'] = array(
           '#markup' => theme('uc_uid', array('uid' => $payment->uid)),
@@ -129,9 +129,9 @@ class OrderPaymentsForm extends FormBase {
       $form['payments']['new']['received'] = array(
         '#type' => 'date',
         '#default_value' => array(
-          'month' => format_date(REQUEST_TIME, 'custom', 'n'),
-          'day' => format_date(REQUEST_TIME, 'custom', 'j'),
-          'year' => format_date(REQUEST_TIME, 'custom', 'Y'),
+          'month' => \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'n'),
+          'day' => \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'j'),
+          'year' => \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y'),
         ),
       );
       $form['payments']['new']['user'] = array(

@@ -41,7 +41,7 @@ class CartLinksReports {
       $rows[] = array(
         String::checkPlain($data->cart_link_id),
         $data->clicks,
-        format_date($data->last_click, 'short'),
+        \Drupal::service('date.formatter')->format($data->last_click, 'short'),
       );
     }
 
