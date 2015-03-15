@@ -86,7 +86,7 @@ function uc_cart_cron() {
   $cart_config = \Drupal::config('uc_cart.settings');
   // Empty anonymous carts.
   $time = strtotime($cart_config->get('anon_duration') . ' ' . $cart_config->get('anon_unit') . ' ago');
-  $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= :changed", array(':changed' => $time));
+  $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= :changed", [':changed' => $time]);
   foreach ($result as $row) {
     if (strlen($row->cart_id) >= 22) {
       uc_cart_empty($row->cart_id);
@@ -95,7 +95,7 @@ function uc_cart_cron() {
 
   // Empty authenticated carts.
   $time = strtotime($cart_config->get('auth_duration') . ' ' . $cart_config->get('auth_unit') . ' ago');
-  $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= :changed", array(':changed' => $time));
+  $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= :changed", [':changed' => $time]);
   foreach ($result as $row) {
     if (strlen($row->cart_id) < 22) {
       uc_cart_empty($row->cart_id);
@@ -104,7 +104,7 @@ function uc_cart_cron() {
 
   // Update status of abandoned orders.
   $result = db_query("SELECT order_id FROM {uc_orders} WHERE order_status = :status AND modified < :time",
-    array(':status' => 'in_checkout', ':time' => REQUEST_TIME - UC_CART_ORDER_TIMEOUT))->fetchCol();
+    [':status' => 'in_checkout', ':time' => REQUEST_TIME - UC_CART_ORDER_TIMEOUT])->fetchCol();
   foreach ($result as $order_id) {
     entity_load('uc_order', $order_id)
       ->setStatusId('abandoned')
@@ -218,7 +218,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
 
   // Ensure we have the latest order data.
   // @todo Remove this once uc_payment_enter() can modify order objects.
-  $order->data = unserialize(db_query("SELECT data FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField());
+  $order->data = unserialize(db_query("SELECT data FROM {uc_orders} WHERE order_id = :order_id", [':order_id' => $order->id()])->fetchField());
 
   // Ensure that user creation and triggers are only run once.
   if (empty($order->data->complete_sale)) {
@@ -310,7 +310,7 @@ function uc_cart_complete_sale_account($order) {
 
   // Override the password, if specified.
   if (isset($order->data->new_user_hash)) {
-    db_query("UPDATE {users_field_data} SET pass = :hash WHERE uid = :uid", array(':hash' => $order->data->new_user_hash, ':uid' => $account->id()));
+    db_query("UPDATE {users_field_data} SET pass = :hash WHERE uid = :uid", [':hash' => $order->data->new_user_hash, ':uid' => $account->id()]);
     $account->password = t('Your password');
   }
   else {
@@ -340,12 +340,12 @@ function uc_cart_uc_checkout_complete($order) {
 
     $cart_config = \Drupal::config('uc_cart.settings');
     if ($cart_config->get('checkout_email_customer')) {
-      $subject = t('Your Order at !store', array('!store' => uc_store_name()));
+      $subject = t('Your Order at !store', ['!store' => uc_store_name()]);
       uc_order_action_email_invoice($order, uc_store_email_from(), $order->getEmail(), $subject, 'customer', 'checkout-mail');
     }
 
     if ($cart_config->get('checkout_email_admin')) {
-      $subject = t('New Order at !store', array('!store' => uc_store_name()));
+      $subject = t('New Order at !store', ['!store' => uc_store_name()]);
       uc_order_action_email_invoice($order, uc_store_email_from(), uc_store_email(), $subject, 'admin', 'admin-mail');
     }
   }
@@ -458,7 +458,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
             if (isset($_GET['destination'])) {
               drupal_goto();
             }
-            $_SESSION['uc_cart_last_url'] = current_path();
+            $_SESSION['uc_cart_last_url'] = Url::fromRoute('<current>')->toString();
             $cart_config = \Drupal::config('uc_cart.settings');
             return $cart_config->get('add_item_redirect');
           }
@@ -467,7 +467,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
           drupal_set_message($message, 'error');
         }
         $query = Drupal::request()->query;
-        return array(current_path(), array('query' => UrlHelper::filterQueryParameters($query->all())));
+        return array(Url::fromRoute('<current>')->toString(), array('query' => UrlHelper::filterQueryParameters($query->all())));
       }
     }
   }
@@ -488,7 +488,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     ));
     $item_entity->save();
     if ($msg) {
-      drupal_set_message(t('<strong>@product-title</strong> added to <a href="!url">your shopping cart</a>.', array('@product-title' => $node->label(), '!url' => \Drupal::url('uc_cart.cart'))));
+      drupal_set_message(t('<strong>@product-title</strong> added to <a href="@url">your shopping cart</a>.', ['@product-title' => $node->label(), '@url' => \Drupal::url('uc_cart.cart')]));
     }
   }
   else {
@@ -511,7 +511,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
       drupal_goto();
     }
 
-    $_SESSION['uc_cart_last_url'] = current_path();
+    $_SESSION['uc_cart_last_url'] = Url::fromRoute('<current>')->toString();
     $cart_config = \Drupal::config('uc_cart.settings');
     return $cart_config->get('add_item_redirect');
   }
