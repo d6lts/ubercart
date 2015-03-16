@@ -9,6 +9,7 @@ namespace Drupal\uc_weightquote\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Confirms deletion of a weight-based shipping method.

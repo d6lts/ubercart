@@ -26,7 +26,7 @@ class FlatrateEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $mid = NULL) {
-    if ($mid && ($method = db_query("SELECT * FROM {uc_flatrate_methods} WHERE mid = :mid", array(':mid' => $mid))->fetchObject())) {
+    if ($mid && ($method = db_query("SELECT * FROM {uc_flatrate_methods} WHERE mid = :mid", [':mid' => $mid])->fetchObject())) {
       $form['mid'] = array(
         '#type' => 'value',
         '#value' => $mid,
@@ -93,13 +93,19 @@ class FlatrateEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $form_state->cleanValues();
     if ($form_state->hasValue('mid')) {
-      drupal_write_record('uc_flatrate_methods', $form_state->getValues(), 'mid');
+      db_merge('uc_flatrate_methods')
+        ->key(array('mid' => $form_state->getValue('mid')))
+        ->fields($form_state->getValues())
+        ->execute();
       drupal_set_message(t('Flat rate shipping method was updated.'));
       $form_state->setRedirect('uc_quote.methods');
     }
     else {
-      drupal_write_record('uc_flatrate_methods', $form_state->getValues());
+      db_insert('uc_flatrate_methods')
+        ->fields($form_state->getValues())
+        ->execute();
 
       // Ensure Rules picks up the new condition.
       // entity_flush_caches();
@@ -114,7 +120,7 @@ class FlatrateEditForm extends FormBase {
    * Helper function to delete a flatrate method.
    */
   public function delete(&$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('uc_flatrate.delete', array('mid' => $form_state->getValue('mid')));
+    $form_state->setRedirect('uc_flatrate.delete', ['mid' => $form_state->getValue('mid')]);
   }
 
 }
