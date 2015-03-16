@@ -375,5 +375,5 @@ function uc_order_add_line_item_form_submit($form, FormStateInterface $form_stat
     drupal_set_message(t('Line item added to order.'));
   }
 
-  $form_state->setRedirect('uc_order.admin_edit', array('uc_order' => $form_state->getValue('order_id')));
+  $form_state->setRedirect('entity.uc_order.edit_form', array('uc_order' => $form_state->getValue('order_id')));
 }

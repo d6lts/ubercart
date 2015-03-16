@@ -134,7 +134,7 @@ class OrderWorkflowForm extends ConfigFormBase {
       $status = entity_load('uc_order_status', $id);
       if (!$form['#locked'][$id] && $value['remove']) {
         $status->delete();
-        drupal_set_message(t('Order status %status removed.', array('%status' => $status->name)));
+        drupal_set_message(t('Order status %status removed.', ['%status' => $status->name]));
       }
       else {
         $status->name = $value['name'];

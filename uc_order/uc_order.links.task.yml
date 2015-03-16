@@ -8,8 +8,8 @@ uc_order.admin_view:
   base_route: uc_order.admin_view
   title: View
 
-uc_order.admin_edit:
-  route_name: uc_order.admin_edit
+entity.uc_order.edit_form:
+  route_name: entity.uc_order.edit_form
   base_route: uc_order.admin_view
   title: Edit
   weight: 1

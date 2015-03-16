@@ -148,7 +148,7 @@ class OrderCreateForm extends FormBase {
           $form['customer']['uid'] += array(
             '#type' => 'radios',
             '#title' => t('Select customer'),
-            '#description' => $max ? t('More than !limit results found. Refine your search to find other customers.', array('!limit' => $limit - 1)) : '',
+            '#description' => $max ? t('More than !limit results found. Refine your search to find other customers.', ['!limit' => $limit - 1]) : '',
             '#options' => $options,
             '#default_value' => key($options),
           );
@@ -264,7 +264,7 @@ class OrderCreateForm extends FormBase {
     $order = uc_order_new($uid, 'post_checkout');
     uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), t('Order created by the administration.'), 'admin');
 
-    $form_state->setRedirect('uc_order.admin_edit', array('uc_order' => $order->id()));
+    $form_state->setRedirect('entity.uc_order.edit_form', array('uc_order' => $order->id()));
   }
 
 }

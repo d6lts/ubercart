@@ -30,14 +30,15 @@ use Drupal\uc_store\Address;
  *     },
  *     "storage" = "Drupal\uc_order\OrderStorage",
  *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",
+ *     "views_data" = "Drupal\uc_order\OrderViewsData",
  *   },
  *   base_table = "uc_orders",
  *   fieldable = TRUE,
  *   links = {
- *     "canonical" = "uc_order.admin_view",
- *     "delete-form" = "uc_order.admin_delete",
- *     "edit-form" = "uc_order.admin_edit",
- *     "admin-form" = "uc_order.workflow",
+ *     "canonical" = "/user/{user}/orders",
+ *     "delete-form" = "/admin/store/orders/{uc_order}/delete",
+ *     "edit-form" = "/admin/store/orders/{uc_order}/edit",
+ *     "admin-form" = "/admin/store/orders",
  *   },
  *   entity_keys = {
  *     "id" = "order_id",
@@ -46,6 +47,9 @@ use Drupal\uc_store\Address;
  */
 class Order extends ContentEntityBase implements OrderInterface {
 
+// *     "route_provider" = {
+// *       "html" = "Drupal\uc_order\Entity\OrderRouteProvider",
+// *     },
   public $products = array();
   public $line_items = array();
 

@@ -108,7 +108,7 @@ function uc_order_page_attachments(&$page) {
 
   // Load uc_order.js on all order and customer admin pages.
   $route = \Drupal::routeMatch()->getRouteName();
-  if ($route == 'uc_order.admin_edit' ||
+  if ($route == 'entity.uc_order.edit_form' ||
       substr($route, 0, 15) == 'view.uc_orders.' ||
       substr($route, 0, 18) == 'view.uc_customers.') {
     $page['#attached']['library'][] = 'uc_order/uc_order.scripts';

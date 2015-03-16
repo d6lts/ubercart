@@ -20,7 +20,7 @@ class OrderDeleteForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete order @order_id?', array('@order_id' => $this->entity->id()));
+    return $this->t('Are you sure you want to delete order @order_id?', ['@order_id' => $this->entity->id()]);
   }
 
   /**
@@ -42,7 +42,7 @@ class OrderDeleteForm extends ContentEntityConfirmFormBase {
    */
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
-    drupal_set_message(t('Order @order_id completely removed from the database.', array('@order_id' => $this->entity->id())));
+    drupal_set_message(t('Order @order_id completely removed from the database.', ['@order_id' => $this->entity->id()]));
     $form_state->setRedirect('view.uc_orders.page_1');
   }
 

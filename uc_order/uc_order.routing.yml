@@ -73,7 +73,7 @@ uc_order.admin_invoice_mail:
   requirements:
     _permission: 'view all orders'
 
-uc_order.admin_edit:
+entity.uc_order.edit_form:
   path: '/admin/store/orders/{uc_order}/edit'
   defaults:
     _entity_form: 'uc_order.edit'
@@ -81,7 +81,7 @@ uc_order.admin_edit:
   requirements:
     _permission: 'edit orders'
 
-uc_order.admin_delete:
+entity.uc_order.delete_form:
   path: '/admin/store/orders/{uc_order}/delete'
   defaults:
     _entity_form: 'uc_order.delete'
