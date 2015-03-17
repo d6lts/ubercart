@@ -22,7 +22,7 @@ class CountryController extends ControllerBase {
    *   The ISO 3166-1 numeric country code.
    */
   public function enable($country_id) {
-    $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", array(':id' => $country_id));
+    $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", [':id' => $country_id]);
     if ($country = $result->fetchObject()) {
       if ($country->version < 0) {
         db_update('uc_countries')
@@ -31,10 +31,10 @@ class CountryController extends ControllerBase {
           ))
           ->condition('country_id', $country_id)
           ->execute();
-        drupal_set_message(t('@country enabled.', array('@country' => t($country->country_name))));
+        drupal_set_message(t('@country enabled.', ['@country' => t($country->country_name)]));
       }
       else {
-        drupal_set_message(t('@country is already enabled.', array('@country' => t($country->country_name))), 'error');
+        drupal_set_message(t('@country is already enabled.', ['@country' => t($country->country_name)]), 'error');
       }
     }
     else {
@@ -50,7 +50,7 @@ class CountryController extends ControllerBase {
    *   The ISO 3166-1 numeric country code.
    */
   public function disable($country_id) {
-    $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", array(':id' => $country_id));
+    $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", [':id' => $country_id]);
     if ($country = $result->fetchObject()) {
       if ($country->version > 0) {
         db_update('uc_countries')
@@ -59,10 +59,10 @@ class CountryController extends ControllerBase {
           ))
           ->condition('country_id', $country_id)
           ->execute();
-        drupal_set_message(t('@country disabled.', array('@country' => t($country->country_name))));
+        drupal_set_message(t('@country disabled.', ['@country' => t($country->country_name)]));
       }
       else {
-        drupal_set_message(t('@country is already disabled.', array('@country' => t($country->country_name))), 'error');
+        drupal_set_message(t('@country is already disabled.', ['@country' => t($country->country_name)]), 'error');
       }
     }
     else {
@@ -80,7 +80,7 @@ class CountryController extends ControllerBase {
    *   Version number of CIF file.
    */
   public function update($country_id, $version) {
-    $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", array(':id' => $country_id));
+    $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", [':id' => $country_id]);
     if (!($country = $result->fetchObject())) {
       drupal_set_message(t('Attempted to update an invalid country.'));
       return $this->redirect('uc_countries.settings');
@@ -91,7 +91,7 @@ class CountryController extends ControllerBase {
       return $this->redirect('uc_countries.settings');
     }
 
-    $func_base = importInclude($country_id, $version);
+    $func_base = self::importInclude($country_id, $version);
     if ($func_base !== FALSE) {
       $func = $func_base . '_update';
       if (function_exists($func)) {
@@ -154,7 +154,7 @@ class CountryController extends ControllerBase {
    * @return
    *   A string containing the portion of the filename holding the country name.
    */
-  protected function importInclude($country_id, $version) {
+  public static function importInclude($country_id, $version) {
     $dir = drupal_get_path('module', 'uc_store') . '/countries/';
     $match = '_' . $country_id . '_' . $version . '.cif';
     $matchlen = strlen($match);

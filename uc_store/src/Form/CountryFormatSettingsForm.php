@@ -67,7 +67,7 @@ class CountryFormatSettingsForm extends ConfigFormBase {
       '#suffix' => '<p>' . t('Adding _if to any country variable will make it display only for addresses whose country is different than the default store country.') . '</p></div>',
     );
 
-    $countries = array();
+    $countries = [];
     $result = db_query("SELECT * FROM {uc_countries}");
     foreach ($result as $country) {
       $countries[t($country->country_name)] = $country;
@@ -87,7 +87,7 @@ class CountryFormatSettingsForm extends ConfigFormBase {
         );
         $form['countries'][$country->country_id]['address_format'] = array(
           '#type' => 'textarea',
-          '#title' => t('@country address format', array('@country' => t($country->country_name))),
+          '#title' => t('@country address format', ['@country' => t($country->country_name)]),
           '#default_value' => $formats->get($country->country_id),
           '#description' => t('Use the variables mentioned in the instructions to format an address for this country.'),
           '#rows' => 7,

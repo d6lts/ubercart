@@ -79,7 +79,7 @@ class AddressFieldsForm extends ConfigFormBase {
       );
       $form['fields'][$field]['weight'] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $label)),
+        '#title' => t('Weight for @title', ['@title' => $label]),
         '#title_display' => 'invisible',
         '#default_value' => $config[$field]['weight'],
         '#attributes' => array('class' => array('uc-store-address-fields-weight')),

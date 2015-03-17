@@ -34,7 +34,7 @@ function uc_store_uc_store_status() {
     $messages[] = array(
       'status' => 'warning',
       'title'  => t('Countries'),
-      'desc'   => t('Updates are available for the following installed countries: %countries. You may update these countries on the <a href="@url">country settings</a> page.', array('%countries' => implode(', ', $updates), '@url' => url('admin/store/settings/countries'))),
+      'desc'   => t('Updates are available for the following installed countries: %countries. You may update these countries on the <a href="@url">country settings</a> page.', array('%countries' => implode(', ', $updates), '@url' => \Drupal::url('uc_countries.settings'))),
     );
   }
   else {

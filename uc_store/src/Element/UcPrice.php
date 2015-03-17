@@ -77,13 +77,13 @@ class UcPrice extends Element\FormElement {
 
     // Ensure the input is numeric.
     if (!is_numeric($value)) {
-      $form_state->setError($element, t('%name must be a number.', array('%name' => $name)));
+      $form_state->setError($element, t('%name must be a number.', ['%name' => $name]));
       return;
     }
 
     // Ensure that the input is not negative, if specified.
     if (empty($element['#allow_negative']) && $value < 0) {
-      $form_state->setError($element, t('%name must not be negative.', array('%name' => $name)));
+      $form_state->setError($element, t('%name must not be negative.', ['%name' => $name]));
     }
   }
 

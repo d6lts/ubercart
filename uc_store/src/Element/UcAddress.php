@@ -82,7 +82,7 @@ class UcAddress extends Element\FormElement {
       $value = array();
     }
 
-    $countries = db_query("SELECT country_id, country_name FROM {uc_countries} WHERE version > :version", array(':version' => 0))->fetchAllKeyed();
+    $countries = db_query("SELECT country_id, country_name FROM {uc_countries} WHERE version > :version", [':version' => 0])->fetchAllKeyed();
     foreach ($countries as $country_id => $country_name) {
       $countries[$country_id] = t($country_name);
     }
@@ -137,7 +137,7 @@ class UcAddress extends Element\FormElement {
           );
 
           $country_id = is_object($value) ? $value->{$prefix . 'country'} : $value[$prefix . 'country'];
-          $zones = db_query("SELECT zone_id, zone_name FROM {uc_zones} WHERE zone_country_id = :country", array(':country' => $country_id))->fetchAllKeyed();
+          $zones = db_query("SELECT zone_id, zone_name FROM {uc_zones} WHERE zone_country_id = :country", [':country' => $country_id])->fetchAllKeyed();
           if (!empty($zones)) {
             natcasesort($zones);
             $subelement += array(

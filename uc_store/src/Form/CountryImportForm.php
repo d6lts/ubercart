@@ -35,7 +35,7 @@ class CountryImportForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $countries = array();
+    $countries = [];
     $result = db_query("SELECT * FROM {uc_countries}");
     foreach ($result as $country) {
       $countries[t($country->country_name)] = $country;
@@ -44,34 +44,55 @@ class CountryImportForm extends ConfigFormBase {
     $files = uc_country_import_list();
 
     $header = array(t('Country'), t('Code'), t('Version'), t('Operations'));
-    $rows = array();
+    $rows = [];
     if (is_array($countries)) {
       foreach ($countries as $country) {
+        // Each row has country name, ISO code, version, and enable/disable/remove/update operations.
         $row = array(
-          t($country->country_name),
-          $country->country_iso_code_3,
-          array('data' => abs($country->version), 'align' => 'center')
+          'country' => t($country->country_name),
+          'country_iso_3' => $country->country_iso_code_3,
+          'version' => array('data' => abs($country->version), 'align' => 'center')
         );
 
-        $ops = array();
+        $ops = [];
+        if ($country->version < $files[$country->country_id]['version'] && $country->version > 0) {
+          // Provide visual indicator that version needs to be updated.
+          $row['version']['data'] .= '*';
+          $caption = t('An asterisk "*" next to the version indicates the country file is not current and should be updated.');
+          $ops['update'] = array(
+            'title' => $this->t('Update'),
+            'url' => Url::fromRoute('uc_countries.update', ['country_id' => $country->country_id, 'version' =>  $files[$country->country_id]['version']]),
+          );
+        }
         if ($country->version < 0) {
-          $ops[] = \Drupal::l(t('enable'), new Url('uc_countries.enable', ['country_id' => $country->country_id]));
+          $ops['enable'] = array(
+            'title' => $this->t('Enable'),
+            'url' => Url::fromRoute('uc_countries.enable', ['country_id' => $country->country_id]),
+          );
         }
         else {
-          $ops[] = \Drupal::l(t('disable'), new Url('uc_countries.disable', ['country_id' => $country->country_id]));
+          $ops['disable'] = array(
+            'title' => $this->t('Disable'),
+            'url' => Url::fromRoute('uc_countries.disable', ['country_id' => $country->country_id]),
+          );
         }
-        if ($country->version < $files[$country->country_id]['version'] && $country->version > 0) {
-          $ops[] = \Drupal::l(t('update'), new Url('uc_countries.update', ['country_id' => $country->country_id, 'version' =>  $files[$country->country_id]['version']]));
-        }
-        $ops[] = \Drupal::l(t('remove'), new Url('uc_countries.remove', ['country_id' => $country->country_id]));
-        $row[] = implode(' ', $ops);
+        $ops['remove'] = array(
+          'title' => $this->t('Remove'),
+          'url' => Url::fromRoute('uc_countries.remove', ['country_id' => $country->country_id]),
+        );
+        $row[] = array(
+          'data' => array(
+            '#type' => 'operations',
+            '#links' => $ops,
+          ),
+        );
 
         $rows[] = $row;
         unset($files[$country->country_id]);
       }
     }
 
-    $import_list = array();
+    $import_list = [];
     foreach ($files as $file) {
       $import_list[$file['file']] = $file['file'];
     }
@@ -87,7 +108,7 @@ class CountryImportForm extends ConfigFormBase {
       );
 
       $form['country_import']['text'] = array(
-        '#markup' => '<p>' . t('To import new country data, select it in the list and click the import button. If you are using a custom or contributed import file, it must be placed in the Ubercart folder uc_store/countries.') . '</p>',
+        '#markup' => '<p>' . t('To import new country data, select it in the list and click the import button. If you hold down the Ctrl key, you may select and install more than one country at a time.') . '</p>',
       );
       $form['country_import']['import_file'] = array(
         '#type' => 'select',
@@ -107,6 +128,7 @@ class CountryImportForm extends ConfigFormBase {
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
+      '#caption' => isset($caption) ? $caption : NULL,
       '#empty' => t('No countries installed.'),
     );
 
@@ -122,10 +144,10 @@ class CountryImportForm extends ConfigFormBase {
     foreach ($files as $file) {
       $controller = new CountryController();
       if ($controller->import($file)) {
-        drupal_set_message(t('Country file @file imported.', array('@file' => $file)));
+        drupal_set_message(t('Country file @file imported.', ['@file' => $file]));
       }
       else {
-        drupal_set_message(t('Country file @file could not import or had no install function.', array('@file' => $file)), 'error');
+        drupal_set_message(t('Country file @file could not import or had no install function.', ['@file' => $file]), 'error');
       }
     }
 

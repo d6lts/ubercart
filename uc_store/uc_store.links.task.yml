@@ -1,0 +1,14 @@
+uc_countries.settings:
+  route_name: uc_countries.settings
+  title: 'Countries'
+  base_route: uc_countries.settings
+uc_countries.fields:
+  route_name: uc_countries.fields
+  title: 'Address fields'
+  base_route: uc_countries.settings
+  weight: 10
+uc_countries.formats:
+  route_name: uc_countries.formats
+  title: 'Address formats'
+  base_route: uc_countries.settings
+  weight: 20

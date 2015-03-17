@@ -7,20 +7,16 @@
 
 namespace Drupal\uc_store\Tests;
 
+/**
+ * Import, edit, and remove countries and their settings.
+ *
+ * @group Ubercart
+ */
 class CountryTest extends UbercartTestBase {
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Country functionality',
-      'description' => 'Import, edit, and remove countries and their settings.',
-      'group' => 'Ubercart',
-    );
-  }
 
   /**
    * Test import/enable/disable/remove of Country information files.
    */
-  /*
   public function testCountries() {
     $import_file = 'belgium_56_3.cif';
     $country_name = 'Belgium';
@@ -43,7 +39,7 @@ class CountryTest extends UbercartTestBase {
       t('Import')
     );
     $this->assertText(
-      t('Country file @file imported.', array('@file' => $import_file)),
+      t('Country file @file imported.', ['@file' => $import_file]),
       t('Country was imported successfully.')
     );
     $this->assertText(
@@ -56,31 +52,31 @@ class CountryTest extends UbercartTestBase {
     );
 
     // Have to pick the right one here!
-    $this->clickLink(t('disable'));
+    $this->clickLink(t('Disable'));
     $this->assertText(
-      t('@name disabled.', array('@name' => $country_name)),
+      t('@name disabled.', ['@name' => $country_name]),
       t('Country was disabled.')
     );
 
-    $this->clickLink(t('enable'));
+    $this->clickLink(t('Enable'));
     $this->assertText(
-      t('@name enabled.', array('@name' => $country_name)),
+      t('@name enabled.', ['@name' => $country_name]),
       t('Country was enabled.')
     );
 
-    $this->clickLink(t('remove'));
+    $this->clickLink(t('Remove'));
     $this->assertText(
-      t('Are you sure you want to remove @name from the system?', array('@name' => $country_name)),
+      t('Are you sure you want to remove @name from the system?', ['@name' => $country_name]),
       t('Confirm form is displayed.')
     );
 
     $this->drupalPostForm(
       'admin/store/settings/countries/56/remove',
-      array(),
+      [],
       t('Remove')
     );
     $this->assertText(
-      t('@name removed.', array('@name' => $country_name)),
+      t('@name removed.', ['@name' => $country_name]),
       t('Country removed.')
     );
     $this->assertRaw(
@@ -92,5 +88,4 @@ class CountryTest extends UbercartTestBase {
       t('Country does not appear in imported countries table.')
     );
   }
-  */
 }

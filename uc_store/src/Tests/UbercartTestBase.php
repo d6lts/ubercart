@@ -19,6 +19,13 @@ abstract class UbercartTestBase extends WebTestBase {
    */
   public static $modules = array('uc_cart');
 
+  /**
+   * Don't check for or validate config schema.
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
   /** User with privileges to do everything. */
   protected $adminUser;
 
@@ -52,7 +59,7 @@ abstract class UbercartTestBase extends WebTestBase {
 
     // Collect admin permissions.
     $class = get_class($this);
-    $adminPermissions = array();
+    $adminPermissions = [];
     while ($class) {
       if (property_exists($class, 'adminPermissions')) {
         $adminPermissions = array_merge($adminPermissions, $class::$adminPermissions);
@@ -70,7 +77,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Creates a new product.
    */
-  protected function createProduct($product = array()) {
+  protected function createProduct($product = []) {
     // Set the default required fields.
     $weight_units = array('lb', 'kg', 'oz', 'g');
     $length_units = array('in', 'ft', 'cm', 'mm');
@@ -106,7 +113,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $data
    * @param $save
    */
-  protected function createAttribute($data = array(), $save = TRUE) {
+  protected function createAttribute($data = [], $save = TRUE) {
     $attribute = $data + array(
       'name' => $this->randomMachineName(8),
       'label' => $this->randomMachineName(8),
@@ -129,7 +136,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $data
    * @param $save
    */
-  protected function createAttributeOption($data = array(), $save = TRUE) {
+  protected function createAttributeOption($data = [], $save = TRUE) {
     $max_aid = db_select('uc_attributes', 'a')
       ->fields('a', array('aid'))
       ->orderBy('aid', 'DESC')
@@ -155,7 +162,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Adds a product to the cart.
    */
-  protected function addToCart($product, $options = array()) {
+  protected function addToCart($product, $options = []) {
     $this->drupalPostForm('node/' . $product->id(), $options, 'Add to cart');
   }
 
@@ -164,7 +171,7 @@ abstract class UbercartTestBase extends WebTestBase {
    *
    * Fix this after adding a proper API call for saving a product class.
    */
-  protected function createProductClass($data = array()) {
+  protected function createProductClass($data = []) {
     $class = strtolower($this->randomMachineName(12));
     $edit = $data + array(
       'type' => $class,
@@ -183,12 +190,12 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param $edit
    *   The form-values array to which to add required fields.
    */
-  protected function populateCheckoutForm($edit = array()) {
+  protected function populateCheckoutForm($edit = []) {
     foreach (array('billing', 'delivery') as $pane) {
       $prefix = 'panes[' . $pane . ']';
       $key =  $prefix . '[country]';
       $country = empty($edit[$key]) ? \Drupal::config('uc_store.settings')->get('address.country') : $edit[$key];
-      $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, array('country' => $country))->fetchField();
+      $zone_id = db_query_range('SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, ['country' => $country])->fetchField();
       $edit += array(
         $prefix . '[first_name]' => $this->randomMachineName(10),
         $prefix . '[last_name]' => $this->randomMachineName(10),
@@ -211,8 +218,8 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Executes the checkout process.
    */
-  protected function checkout($edit = array()) {
-    $this->drupalPostForm('cart', array(), 'Checkout');
+  protected function checkout($edit = []) {
+    $this->drupalPostForm('cart', [], 'Checkout');
     $this->assertText(
       t('Enter your billing address and information here.'),
       t('Viewed cart page: Billing pane has been displayed.')
@@ -225,12 +232,12 @@ abstract class UbercartTestBase extends WebTestBase {
     $this->assertRaw(t('Your order is almost complete.'));
 
     // Complete the review page.
-    $this->drupalPostForm(NULL, array(), t('Submit order'));
+    $this->drupalPostForm(NULL, [], t('Submit order'));
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE billing_first_name = :name", array(':name' => $edit['panes[billing][first_name]']))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE billing_first_name = :name", [':name' => $edit['panes[billing][first_name]']])->fetchField();
     if ($order_id) {
       $this->pass(
-        t('Order %order_id has been created', array('%order_id' => $order_id))
+        t('Order %order_id has been created', ['%order_id' => $order_id])
       );
       $order = uc_order_load($order_id);
     }
@@ -245,7 +252,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Creates a new order directly, without going through checkout.
    */
-  protected function createOrder($edit = array()) {
+  protected function createOrder($edit = []) {
     if (empty($edit['primary_email'])) {
       $edit['primary_email'] = $this->randomString() . '@example.org';
     }
@@ -261,7 +268,7 @@ abstract class UbercartTestBase extends WebTestBase {
         'cost' => $this->product->cost->value,
         'price' => $this->product->price->value,
         'weight' => $this->product->weight,
-        'data' => array(),
+        'data' => [],
       ));
     }
 
@@ -307,7 +314,7 @@ abstract class UbercartTestBase extends WebTestBase {
       }
     }
     if (!$message) {
-      $message = String::format('Expected text not found in @field of email message: "@expected".', array('@field' => $field_name, '@expected' => $string));
+      $message = String::format('Expected text not found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $string]);
     }
     return $this->assertFalse($string_found, $message, $group);
   }
@@ -327,7 +334,7 @@ abstract class UbercartTestBase extends WebTestBase {
    *
    * @see WebTestBase::drupalPostAjaxForm()
    */
-  protected function ucPostAjax($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
+  protected function ucPostAjax($path, $edit, $triggering_element, $ajax_path = NULL, array $options = [], array $headers = [], $form_html_id = NULL, $ajax_settings = NULL) {
     $commands = parent::drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path, $options, $headers, $form_html_id, $ajax_settings);
     $dom = new \DOMDocument();
     @$dom->loadHTML($this->drupalGetContent());
