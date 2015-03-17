@@ -1,7 +1,7 @@
 uc_cart.cart_settings:
   path: '/admin/store/settings/cart'
   defaults:
-    _form: 'Drupal\uc_cart\Form\CartSettingsForm'
+    _form: '\Drupal\uc_cart\Form\CartSettingsForm'
     _title: 'Cart settings'
   requirements:
     _permission: 'administer store'
@@ -9,7 +9,7 @@ uc_cart.cart_settings:
 uc_cart.checkout_settings:
   path: '/admin/store/settings/checkout'
   defaults:
-    _form: 'Drupal\uc_cart\Form\CheckoutSettingsForm'
+    _form: '\Drupal\uc_cart\Form\CheckoutSettingsForm'
     _title: 'Checkout settings'
   requirements:
     _permission: 'administer store'

@@ -1,7 +1,7 @@
 uc_catalog.settings:
   path: '/admin/store/settings/catalog'
   defaults:
-    _form: 'Drupal\uc_catalog\Form\CatalogSettingsForm'
+    _form: '\Drupal\uc_catalog\Form\CatalogSettingsForm'
     _title: 'Catalog settings'
   requirements:
     _permission: 'administer catalog'

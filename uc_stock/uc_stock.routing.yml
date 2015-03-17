@@ -1,14 +1,16 @@
 uc_stock.settings:
   path: '/admin/store/settings/stock'
   defaults:
-    _form: 'Drupal\uc_stock\Form\StockSettingsForm'
+    _form: '\Drupal\uc_stock\Form\StockSettingsForm'
   requirements:
     _permission: 'administer product stock'
+#    'title' => 'Stock notifications',
+#    'description' => 'Enable or disable stock level notifications.',
 
 uc_stock.edit:
   path: '/node/{node}/edit/stock'
   defaults:
-    _form: 'Drupal\uc_stock\Form\StockEditForm'
+    _form: '\Drupal\uc_stock\Form\StockEditForm'
   requirements:
     _uc_product_is_product: 'TRUE'
     _entity_access: 'node.update'

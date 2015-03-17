@@ -1,20 +1,22 @@
 uc_cybersource.hop.post:
   path: '/cybersource/hop-post'
   defaults:
-    _controller: 'Drupal\uc_cybersource\Controller\HOPController::post'
+    _controller: '\Drupal\uc_cybersource\Controller\HOPController::post'
   requirements:
-    _permission: true 
+#    'title' => 'Payment received',
 
 uc_cybersource.hop.complete:
   path: '/cybersource/hop-complete/{uc_order}'
   defaults:
-    _controller: 'Drupal\uc_cybersource\Controller\HOPController::complete'
+    _controller: '\Drupal\uc_cybersource\Controller\HOPController::complete'
   requirements:
     _permission: 'access content'
+#    'title' => 'CyberSource payment complete',
 
 uc_cybersource.tax:
   path: '/admin/store/orders/{uc_order}/cs_tax'
   defaults:
-    _controller: 'Drupal\uc_cybersource\Controller\TaxController::calculate'
+    _controller: '\Drupal\uc_cybersource\Controller\TaxController::calculate'
   requirements:
     _permission: 'administer store'
+#    'title' => 'Order Taxes',

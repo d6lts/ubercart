@@ -1,7 +1,7 @@
 uc_credit.terminal:
   path: '/admin/store/orders/{uc_order}/credit'
   defaults:
-    _form: 'Drupal\uc_credit\Form\CreditCardTerminalForm'
+    _form: '\Drupal\uc_credit\Form\CreditCardTerminalForm'
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _permission: 'process credit cards'
