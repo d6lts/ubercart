@@ -109,7 +109,7 @@ class StoredTaxesTest extends UbercartTestBase {
 
       // Change taxable products and ensure order doesn't change.
       $class = $this->createProductClass();
-      $rate->taxed_product_types = array($class->id());
+      $rate->taxed_product_types = array($class->getEntityTypeId());
       uc_taxes_rate_save($rate);
       // entity_flush_caches();
       $this->drupalPostForm('admin/store/orders/' . $order_id . '/edit', array(), t('Save changes'));

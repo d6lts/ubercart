@@ -205,12 +205,12 @@ function uc_taxes_uc_order_update(OrderInterface $order) {
  *
  * Ensure taxed product type are synchronised if the content type is updated.
  */
-function uc_taxes_node_type_update($info) {
-  $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
+function uc_taxes_node_type_update(EntityInterface $info) {
+  $existing_type = !empty($info->getOriginalId()) ? $info->getOriginalId() : $info->getEntityTypeId();
 
   db_update('uc_taxed_product_types')
     ->fields(array(
-      'type' => $info->type,
+      'type' => $info->getEntityTypeId(),
     ))
     ->condition('type', $existing_type)
     ->execute();
