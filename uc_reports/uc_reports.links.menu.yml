@@ -1,0 +1,17 @@
+uc_reports.customers:
+  title: 'Customer reports'
+  description: 'View reports for store customers.'
+  route_name: uc_reports.customers
+  parent: uc_store.admin.store.reports
+
+uc_reports.products:
+  title: 'Product reports'
+  description: 'View reports for store products.'
+  route_name: uc_reports.products
+  parent: uc_store.admin.store.reports
+
+uc_reports.sales:
+  title: 'Sales reports'
+  description: 'View reports for store sales.'
+  route_name: uc_reports.sales
+  parent: uc_store.admin.store.reports
