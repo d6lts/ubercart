@@ -68,7 +68,7 @@ class PoweredByBlock extends BlockBase {
     $id = $this->configuration['message'];
 
     // Figure out what page is being viewed.
-    $path = \Drupal::service('path.alias_manager.cached')->getSystemPath(current_path());
+    $path = \Drupal::routeMatch()->getRouteName();
 
     $messages = $this->options();
 
@@ -101,7 +101,7 @@ class PoweredByBlock extends BlockBase {
    * {@inheritdoc}
    */
   protected function getRequiredCacheContexts() {
-    return array('cache_context.url');
+    return array('url');
   }
 
 }
