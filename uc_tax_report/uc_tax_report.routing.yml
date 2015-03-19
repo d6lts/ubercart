@@ -1,0 +1,7 @@
+uc_tax_report.reports:
+  path: '/admin/store/reports/tax'
+  defaults:
+    _controller: '\Drupal\uc_tax_report\Controller\SalesTaxReport::report'
+    _title: 'Sales tax report'
+  requirements:
+    _permission: 'view reports'

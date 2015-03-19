@@ -266,5 +266,5 @@ function uc_tax_report_params_form_submit($form, &$form_state) {
     implode(',', array_keys($form_state->getValue('status'))),
   );
 
-  $form_state['redirect'] = 'admin/store/reports/tax/' . implode('/', $args);
+  $form_state->setRedirect('admin/store/reports/tax/' . implode('/', $args));
 }
