@@ -69,26 +69,26 @@ class OrderTest extends UbercartTestBase {
   }
 
   public function testEntityHooks() {
-    \Drupal::moduleHandler()->install(array('entity_crud_hook_test'));
+    \Drupal::service('module_installer')->install(array('entity_crud_hook_test'));
 
-    $_SESSION['entity_crud_hook_test'] = array();
+    $GLOBALS['entity_crud_hook_test'] = [];
     $order = uc_order_new();
 
     $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type uc_order');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type uc_order');
 
-    $_SESSION['entity_crud_hook_test'] = array();
+    $GLOBALS['entity_crud_hook_test'] = [];
     $order = uc_order_load($order->id());
 
     $this->assertHookMessage('entity_crud_hook_test_entity_load called for type uc_order');
 
-    $_SESSION['entity_crud_hook_test'] = array();
+    $GLOBALS['entity_crud_hook_test'] = [];
     $order->save();
 
     $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type uc_order');
     $this->assertHookMessage('entity_crud_hook_test_entity_update called for type uc_order');
 
-    $_SESSION['entity_crud_hook_test'] = array();
+    $GLOBALS['entity_crud_hook_test'] = [];
     $order->delete();
 
     $this->assertHookMessage('entity_crud_hook_test_entity_delete called for type uc_order');
@@ -273,6 +273,6 @@ class OrderTest extends UbercartTestBase {
     if (!isset($message)) {
       $message = $text;
     }
-    return $this->assertTrue(array_search($text, $_SESSION['entity_crud_hook_test']) !== FALSE, $message, $group);
+    return $this->assertTrue(array_search($text, $GLOBALS['entity_crud_hook_test']) !== FALSE, $message, $group);
   }
 }

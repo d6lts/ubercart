@@ -88,11 +88,11 @@ class CartCheckoutTest extends UbercartTestBase {
     uc_cart_empty();
 
     $items = uc_cart_get_contents();
-    $this->assertEqual($items, array(), 'Cart is emptied correctly.');
+    $this->assertEqual($items, [], 'Cart is emptied correctly.');
   }
 
   public function testCart() {
-    \Drupal::moduleHandler()->install(array('uc_cart_entity_test'));
+    \Drupal::service('module_installer')->install(array('uc_cart_entity_test'), FALSE);
 
     // Test the empty cart.
     $this->drupalGet('cart');
