@@ -67,8 +67,9 @@ class StockSettingsForm extends ConfigFormBase {
     );
 
     if (\Drupal::moduleHandler()->moduleExists('token')) {
+      module_load_include('inc', 'token', 'token.pages');
       $form['token_tree'] = array(
-        '#markup' => theme('token_tree', array('token_types' => array('uc_order', 'uc_stock', 'node', 'site', 'store'))),
+        '#markup' => theme_token_tree(array('token_types' => array('uc_order', 'uc_stock', 'node', 'site', 'store'))),
       );
     }
 

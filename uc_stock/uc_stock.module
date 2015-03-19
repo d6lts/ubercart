@@ -32,11 +32,6 @@ function uc_stock_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_menu().
  */
 function uc_stock_menu() {
-  $items['admin/store/settings/stock'] = array(
-    'title' => 'Stock notifications',
-    'description' => 'Enable or disable stock level notifications.',
-    'route_name' => 'uc_stock.settings',
-  );
   if (\Drupal::moduleHandler()->moduleExists('uc_reports')) {
     $items['admin/store/reports/stock'] = array(
       'title' => 'Stock reports',
@@ -73,7 +68,7 @@ function uc_stock_mail($key, &$message, $params) {
  *   If FALSE, don't check if stock tracking is active for this SKU.
  */
 function uc_stock_adjust($sku, $qty, $check_active = TRUE) {
-  $stock = db_query("SELECT active, stock FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $sku))->fetchObject();
+  $stock = db_query("SELECT active, stock FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchObject();
 
   if ($check_active) {
     if (!$stock || !$stock->active) {
@@ -114,7 +109,7 @@ function uc_stock_set($sku, $qty) {
  *   The SKU's stock level, or FALSE if not active.
  */
 function uc_stock_level($sku) {
-  $stock = db_query("SELECT active, stock FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $sku))->fetchObject();
+  $stock = db_query("SELECT active, stock FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchObject();
 
   if ($stock && $stock->active) {
     return $stock->stock;
@@ -133,7 +128,7 @@ function uc_stock_level($sku) {
  *   Boolean indicating whether or not the sku has an active stock record.
  */
 function uc_stock_is_active($sku) {
-  return (bool) db_query("SELECT active FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $sku))->fetchField();
+  return (bool) db_query("SELECT active FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchField();
 }
 
 /**
@@ -150,7 +145,7 @@ function uc_stock_is_active($sku) {
  *   The result of \Drupal::service('plugin.manager.mail')->mail().
  */
 function _uc_stock_send_mail($order, $node, $stock) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $account = $order->getUser();
   $token_filters = array('uc_order' => $order, 'user' => $account, 'uc_stock' => $stock, 'node' => $node);
@@ -172,7 +167,7 @@ function _uc_stock_send_mail($order, $node, $stock) {
     $sent = \Drupal::service('plugin.manager.mail')->mail('uc_stock', 'threshold', $email, uc_store_mail_recipient_langcode($email), array('body' => $body, 'subject' => $subject, 'order' => $order, 'stock' => $stock), $from);
 
     if (!$sent['result']) {
-      \Drupal::logger('uc_stock')->error('Attempt to e-mail @email concerning stock level on sku @sku failed.', array('@email' => $email, '@sku' => $stock->sku));
+      \Drupal::logger('uc_stock')->error('Attempt to e-mail @email concerning stock level on sku @sku failed.', ['@email' => $email, '@sku' => $stock->sku]);
     }
   }
 }
@@ -213,7 +208,7 @@ function uc_stock_adjust_product_stock($product, $key, $order) {
   uc_stock_adjust($product->model->value, -$product->qty->value);
 
   // Load the new stock record.
-  $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $product->model->value))->fetchObject();
+  $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $product->model->value])->fetchObject();
 
   // Should we notify?
   if (\Drupal::config('uc_stock.settings')->get('notify') && $stock->stock <= $stock->threshold) {
@@ -222,7 +217,7 @@ function uc_stock_adjust_product_stock($product, $key, $order) {
   }
 
   // Save a comment about the stock level.
-  uc_order_comment_save($order->id(), 0, t('The stock level for %model_name has been !action to !qty.', array('%model_name' => $product->model->value, '!qty' => $stock->stock, '!action' => (-$product->qty->value <= 0) ? t('decreased') : t('increased') )));
+  uc_order_comment_save($order->id(), 0, t('The stock level for %model_name has been !action to !qty.', ['%model_name' => $product->model->value, '!qty' => $stock->stock, '!action' => (-$product->qty->value <= 0) ? t('decreased') : t('increased')]));
 }
 
 /**

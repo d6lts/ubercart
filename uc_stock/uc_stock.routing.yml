@@ -17,3 +17,10 @@ uc_stock.edit:
     _permission: 'administer product stock'
   options:
     _admin_route: TRUE
+
+uc_stock.reports:
+  path: '/admin/store/reports/stock'
+  defaults:
+    _controller: '\Drupal\uc_stock\Controller\StockReports::report'
+  requirements:
+    _permission: 'view reports'

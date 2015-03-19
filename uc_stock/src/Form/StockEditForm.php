@@ -31,7 +31,7 @@ class StockEditForm extends FormBase {
     $form['stock'] = array(
       '#type' => 'table',
       '#header' => array(
-        array('data' => '&nbsp;&nbsp;' . $this->t('Active'), 'class' => array('select-all')),
+        array('data' => ' ' . $this->t('Active'), 'class' => array('select-all', 'nowrap')),
         $this->t('SKU'),
         $this->t('Stock'),
         $this->t('Threshold'),
@@ -41,7 +41,7 @@ class StockEditForm extends FormBase {
 
     $skus = uc_product_get_models($node->id(), FALSE);
     foreach ($skus as $sku) {
-      $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", array(':sku' => $sku))->fetchAssoc();
+      $stock = db_query("SELECT * FROM {uc_product_stock} WHERE sku = :sku", [':sku' => $sku])->fetchAssoc();
 
       $form['stock'][$sku]['active'] = array(
         '#type' => 'checkbox',
