@@ -47,10 +47,10 @@ class CartSettingsTest extends UbercartTestBase {
 
     $this->drupalPostForm(
       'node/' . $this->product->id(),
-      array(),
+      [],
       t('Add to cart')
     );
-    $url_pass = ($this->getUrl() == Url::fromUri($redirect, ['absolute' => TRUE])->toString());
+    $url_pass = ($this->getUrl() == Url::fromUri('base:' . $redirect, ['absolute' => TRUE])->toString());
     $this->assertTrue(
       $url_pass,
       t('Add to cart redirect takes user to the correct URL.')
@@ -161,10 +161,10 @@ debug($this->getUrl());
 
     $this->drupalPostForm(
       'cart',
-      array(),
+      [],
       t('Continue shopping')
     );
-    $url_pass = ($this->getUrl() == Url::fromUri($settings['uc_continue_shopping_url'], ['absolute' => TRUE])->toString());
+    $url_pass = ($this->getUrl() == Url::fromUri('base:' . $settings['uc_continue_shopping_url'], ['absolute' => TRUE])->toString());
     $this->assertTrue(
       $url_pass,
       t('Continue shopping button takes the user to the correct URL.')
@@ -203,7 +203,7 @@ debug($this->getUrl());
       0,
       t('The breadcrumb link text is set correctly.')
     );
-    $links = $this->xpath('//a[@href="' . Url::fromUri($settings['uc_cart_breadcrumb_url'], array('absolute' => TRUE))->toString() . '"]');
+    $links = $this->xpath('//a[@href="' . Url::fromUri('internal:' . $settings['uc_cart_breadcrumb_url'], ['absolute' => TRUE])->toString() . '"]');
     $this->assertTrue(
       isset($links[0]),
       t('The breadcrumb link is set correctly.')
