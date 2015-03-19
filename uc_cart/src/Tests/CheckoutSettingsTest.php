@@ -32,7 +32,7 @@ class CheckoutSettingsTest extends UbercartTestBase {
 
     $this->drupalPostForm(
       'node/' . $this->product->id(),
-      array(),
+      [],
       t('Add to cart')
     );
     $this->assertNoRaw(t('Checkout'));
@@ -60,12 +60,14 @@ class CheckoutSettingsTest extends UbercartTestBase {
     $this->drupalLogout();
     $this->drupalPostForm(
       'node/' . $this->product->id(),
-      array(),
+      [],
       t('Add to cart')
     );
     $this->drupalPostForm(
       'cart',
-      array(), 'Checkout');
+      [],
+      t('Checkout')
+    );
     $this->assertNoText(
       'Enter your billing address and information here.',
       t('The checkout page is not displayed.')

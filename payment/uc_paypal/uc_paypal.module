@@ -12,6 +12,7 @@
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_menu().
@@ -92,7 +93,7 @@ function uc_paypal_form_uc_cart_checkout_review_form_alter(&$form, &$form_state,
  */
 function uc_paypal_uc_payment_gateway() {
   if (!\Drupal::moduleHandler()->moduleExists('uc_credit')) {
-    drupal_set_message(t('You must <a href="@modules">enable the Credit Card module</a> to use PayPal Website Payments Pro.', array('@modules' => url('admin/modules', array('fragment' => 'edit-modules-ubercart-payment')))), 'warning');
+    drupal_set_message(t('You must <a href="@modules">enable the Credit Card module</a> to use PayPal Website Payments Pro.', array('@modules' => \Drupal::url('system.modules_list', [], ['fragment' => 'edit-modules-ubercart-payment']))), 'warning');
     return;
   }
 
@@ -257,7 +258,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'DESC' => substr($desc, 0, 127),
       'INVNUM' => $order_id . '-' . REQUEST_TIME,
       'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
-      'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
+      'NOTIFYURL' => \Drupal::url(new Url('uc_paypal/ipn/', ['uc_order' => $order->id()], array['absolute' => TRUE])),
       'EMAIL' => substr($order->getEmail(), 0, 127),
       'PHONENUM' => substr($order->billing_phone, 0, 20),
     );
@@ -525,7 +526,7 @@ function uc_payment_method_paypal_ec($op, &$order) {
       $form['api'] = array(
         '#type' => 'fieldset',
         '#title' => t('API credentials'),
-        '#description' => t('!link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', array('!link' => l(t('Click here'), 'https://www.paypal.com/IntegrationCenter/ic_certificate.html'))),
+        '#description' => t('!link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', array('!link' => \Drupal::l(t('Click here'), Url::fromUri('https://www.paypal.com/IntegrationCenter/ic_certificate.html')))),
       );
       $form['api']['uc_paypal_api_username'] = array(
         '#type' => 'textfield',
@@ -622,8 +623,8 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
 
   $nvp_request = array(
     'METHOD' => 'SetExpressCheckout',
-    'RETURNURL' => url('cart/echeckout/selected', array('absolute' => TRUE)),
-    'CANCELURL' => url('uc_paypal/wps/cancel', array('absolute' => TRUE)),
+    'RETURNURL' => \Drupal::url('cart/echeckout/selected', [], ['absolute' => TRUE]),
+    'CANCELURL' => \Drupal::url('uc_paypal/wps/cancel', [], ['absolute' => TRUE]),
     'AMT' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
     'CURRENCYCODE' => variable_get('uc_paypal_wpp_currency', 'USD'),
     'PAYMENTACTION' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture') == 'authorize' ? 'Authorization' : 'Sale',
@@ -632,7 +633,7 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'ADDROVERRIDE' => 1,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
+    'NOTIFYURL' => \Drupal::url('uc_paypal/ipn/', ['uc_order => $order->id()], ['absolute' => TRUE]),
     'SHIPTONAME' => substr($order->delivery_first_name . ' ' . $order->delivery_last_name, 0, 32),
     'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
     'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
@@ -703,8 +704,8 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
 
   $nvp_request = array(
     'METHOD' => 'SetExpressCheckout',
-    'RETURNURL' => url('cart/echeckout/review', array('absolute' => TRUE)),
-    'CANCELURL' => url('uc_paypal/wps/cancel', array('absolute' => TRUE)),
+    'RETURNURL' => \Drupal::url('cart/echeckout/review', [], ['absolute' => TRUE]),
+    'CANCELURL' => \Drupal::url('uc_paypal/wps/cancel', [], ['absolute' => TRUE]),
     'AMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
     'CURRENCYCODE' => variable_get('uc_paypal_wpp_currency', 'USD'),
     'PAYMENTACTION' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture') == 'authorize' ? 'Authorization' : 'Sale',
@@ -712,7 +713,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
     'INVNUM' => $order->id() . '-' . REQUEST_TIME,
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
+    'NOTIFYURL' => \Drupal::url('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE]),
     'LANDINGPAGE' => variable_get('uc_paypal_ec_landingpage_style', 'Billing'),
   );
 
@@ -780,7 +781,7 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
     'DESC' => substr($desc, 0, 127),
     'INVNUM' => $order->id() . '-' . REQUEST_TIME,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
+    'NOTIFYURL' => \Drupal::url('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE]),
     'ITEMAMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
     'SHIPPINGAMT' => uc_currency_format($shipping, FALSE, FALSE, '.'),
     'TAXAMT' => uc_currency_format($tax, FALSE, FALSE, '.'),
@@ -854,13 +855,13 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
     'charset' => 'utf-8',
 
     // IPN control notify URL.
-    'notify_url' => url('uc_paypal/ipn/' . $order->id(), array('absolute' => TRUE)),
+    'notify_url' => \Drupal::url('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE]),
 
     // Display information.
-    'cancel_return' => url('uc_paypal/wps/cancel', array('absolute' => TRUE)),
+    'cancel_return' => \Drupal::url('uc_paypal/wps/cancel', [], ['absolute' => TRUE]),
     'no_note' => 1,
     'no_shipping' => variable_get('uc_paypal_wps_no_shipping', 1),
-    'return' => url('uc_paypal/wps/complete/' . $order->id(), array('absolute' => TRUE)),
+    'return' => \Drupal::url('uc_paypal/wps/complete/', ['uc_order' => $order->id()], ['absolute' => TRUE]),
     'rm' => 1,
 
     // Transaction information.

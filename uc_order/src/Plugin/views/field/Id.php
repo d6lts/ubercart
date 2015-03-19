@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\Plugin\views\field\Order.
+ * Contains \Drupal\uc_order\Plugin\views\field\Id.
  */
 
 namespace Drupal\uc_order\Plugin\views\field;
@@ -43,9 +43,7 @@ class Order extends FieldPluginBase {
   }
 
   /**
-   * Overrides FieldPluginBase::buildOptionsForm().
-   *
-   * Provide link to order option
+   * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_order'] = array(

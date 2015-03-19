@@ -119,10 +119,3 @@ function uc_payment_pack_schema() {
 
   return $schema;
 }
-
-/**
- * Implements hook_update_last_removed().
- */
-function uc_payment_pack_update_last_removed() {
-  return 6000;
-}

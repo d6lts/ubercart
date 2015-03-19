@@ -31,7 +31,7 @@ class RoleFeatureForm extends FormBase {
 
     // Check if editing or adding to set default values.
     if (!empty($feature)) {
-      $product_role = db_query("SELECT * FROM {uc_roles_products} WHERE pfid = :pfid", array(':pfid' => $feature['pfid']))->fetchObject();
+      $product_role = db_query("SELECT * FROM {uc_roles_products} WHERE pfid = :pfid", [':pfid' => $feature['pfid']])->fetchObject();
 
       $default_model = $product_role->model;
       $default_role = $product_role->rid;
@@ -90,7 +90,7 @@ class RoleFeatureForm extends FormBase {
       unset($form['buttons']);
 
       $form['no_roles'] = array(
-        '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', array('!url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']]))),
+        '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', ['!url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']])]),
         '#prefix' => '<p>',
         '#suffix' => '</p>',
       );
@@ -125,7 +125,7 @@ class RoleFeatureForm extends FormBase {
 
     $form['end_override'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Override the <a href="!url">default role expiration</a>.', array('!url' => \Drupal::url('uc_product.settings'))),
+      '#title' => t('Override the <a href="!url">default role expiration</a>.', ['!url' => \Drupal::url('uc_product.settings')]),
       '#default_value' => $default_end_override,
     );
 
@@ -216,7 +216,7 @@ class RoleFeatureForm extends FormBase {
       ));
 
       if ($form_state->getValue('uc_roles_expire_absolute') <= REQUEST_TIME) {
-        $form_state->setErrorByName('uc_roles_expire_absolute', t('The specified date !date has already occurred. Please choose another.', array('!date' => \Drupal::service('date.formatter')->format($form_state->getValue('uc_roles_expire_absolute')))));
+        $form_state->setErrorByName('uc_roles_expire_absolute', t('The specified date !date has already occurred. Please choose another.', ['!date' => \Drupal::service('date.formatter')->format($form_state->getValue('uc_roles_expire_absolute'))]));
       }
     }
     else {
@@ -227,11 +227,11 @@ class RoleFeatureForm extends FormBase {
 
     // No roles?
     if ($form_state->isValueEmpty('uc_roles_role')) {
-      $form_state->setErrorByName('uc_roles_role', t('You must have a role to assign. You may need to <a href="!role_url">create a new role</a> or perhaps <a href="!feature_url">set role assignment defaults</a>.', array('!role_url' => \Drupal::url('user.role_add'), '!feature_url' => \Drupal::url('uc_product.settings'))));
+      $form_state->setErrorByName('uc_roles_role', t('You must have a role to assign. You may need to <a href="!role_url">create a new role</a> or perhaps <a href="!feature_url">set role assignment defaults</a>.', ['!role_url' => \Drupal::url('user.role_add'), '!feature_url' => \Drupal::url('uc_product.settings')]));
     }
 
     // This role already set on this SKU?
-    if (!$form_state->hasValue('pfid') && ($product_roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid AND model = :model AND rid = :rid", array(':nid' => $form_state->getValue('nid'), ':model' => $form_state->getValue('uc_roles_model'), ':rid' => $form_state->getValue('uc_roles_role')))->fetchObject())) {
+    if (!$form_state->hasValue('pfid') && ($product_roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid AND model = :model AND rid = :rid", [':nid' => $form_state->getValue('nid'), ':model' => $form_state->getValue('uc_roles_model'), ':rid' => $form_state->getValue('uc_roles_role')])->fetchObject())) {
       $form_state->setErrorByName('uc_roles_role', t('The combination of SKU and role already exists for this product.'));
       $form_state->setErrorByName('uc_roles_model');
     }
@@ -257,12 +257,12 @@ class RoleFeatureForm extends FormBase {
       'end_time'     => $form_state->getValue('expiration'  ) === 'abs' ? $form_state->getValue('uc_roles_expire_absolute') : NULL,
     );
 
-    $description = empty($product_role['model']) ? t('<strong>SKU:</strong> Any<br />') : t('<strong>SKU:</strong> !sku<br />', array('!sku' => $product_role['model']));
-    $description .=  t('<strong>Role:</strong> @role_name<br />', array('@role_name' => _uc_roles_get_name($product_role['rid'])));
+    $description = empty($product_role['model']) ? t('<strong>SKU:</strong> Any<br />') : t('<strong>SKU:</strong> !sku<br />', ['!sku' => $product_role['model']]);
+    $description .=  t('<strong>Role:</strong> @role_name<br />', ['@role_name' => _uc_roles_get_name($product_role['rid'])]);
 
     if ($product_role['end_override']) {
       if ($product_role['end_time']) {
-        $description .= t('<strong>Expiration:</strong> !date<br />', array('!date' => \Drupal::service('date.formatter')->format($product_role['end_time'])));
+        $description .= t('<strong>Expiration:</strong> !date<br />', ['!date' => \Drupal::service('date.formatter')->format($product_role['end_time'])]);
       }
       else {
         switch ($product_role['granularity']) {
@@ -270,16 +270,16 @@ class RoleFeatureForm extends FormBase {
             $description .= t('<strong>Expiration:</strong> never<br />');
             break;
           case 'day':
-            $description .= t('<strong>Expiration:</strong> !qty day(s)<br />', array('!qty' => $product_role['duration']));
+            $description .= t('<strong>Expiration:</strong> !qty day(s)<br />', ['!qty' => $product_role['duration']]);
             break;
           case 'week':
-            $description .= t('<strong>Expiration:</strong> !qty week(s)<br />', array('!qty' => $product_role['duration']));
+            $description .= t('<strong>Expiration:</strong> !qty week(s)<br />', ['!qty' => $product_role['duration']]);
             break;
           case 'month':
-            $description .= t('<strong>Expiration:</strong> !qty month(s)<br />', array('!qty' => $product_role['duration']));
+            $description .= t('<strong>Expiration:</strong> !qty month(s)<br />', ['!qty' => $product_role['duration']]);
             break;
           case 'year':
-            $description .= t('<strong>Expiration:</strong> !qty year(s)<br />', array('!qty' => $product_role['duration']));
+            $description .= t('<strong>Expiration:</strong> !qty year(s)<br />', ['!qty' => $product_role['duration']]);
             break;
           default:
             break;
@@ -287,7 +287,8 @@ class RoleFeatureForm extends FormBase {
       }
     }
     else {
-      $description .= t('<strong>Expiration:</strong> !link (not overridden)<br />', array('!link' => l(t('Global expiration'), 'admin/store/settings/products')));
+      $description .= t('<strong>Expiration:</strong> !link (not overridden)<br />', ['!link' => \
+Drupal::l(t('Global expiration'), new Url('uc_product.settings'))]);
     }
     $description .= $product_role['shippable'] ? t('<strong>Shippable:</strong> Yes<br />') : t('<strong>Shippable:</strong> No<br />');
     $description .= $product_role['by_quantity'] ? t('<strong>Multiply by quantity:</strong> Yes') : t('<strong>Multiply by quantity:</strong> No');
@@ -304,7 +305,7 @@ class RoleFeatureForm extends FormBase {
     $product_role['pfid'] = $data['pfid'];
 
     // Insert or update uc_file_product table.
-    foreach (array('duration', 'granularity', 'end_time') as $property) {
+    foreach (['duration', 'granularity', 'end_time'] as $property) {
       $product_role[$property] = $product_role[$property] === NULL ? 0 : $product_role[$property];
     }
 
@@ -315,7 +316,7 @@ class RoleFeatureForm extends FormBase {
 
     drupal_write_record('uc_roles_products', $product_role, $key);
 
-    $form_state->setRedirect('uc_product.features', array('node' => $data['nid']));
+    $form_state->setRedirect('uc_product.features', ['node' => $data['nid']]);
   }
 
 }

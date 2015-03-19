@@ -274,7 +274,7 @@ function uc_order_form_views_exposed_form_alter(&$form, FormStateInterface $form
  */
 function uc_order_form_views_exposed_form_submit($form, FormStateInterface $form_state) {
   if (!$form_state->isValueEmpty('order_id') && entity_load('uc_order', $form_state->getValue('order_id'))) {
-    $form_state->setRedirect('uc_order.admin_view', array('uc_order' => $form_state->getValue('order_id')));
+    $form_state->setRedirect('uc_order.admin_view', ['uc_order' => $form_state->getValue('order_id')]);
     $form_state->disableRedirect(FALSE);
   }
 }

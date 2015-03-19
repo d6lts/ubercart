@@ -587,7 +587,7 @@ function uc_product_kit_form_node_form_alter(&$form, FormStateInterface $form_st
       $form['base']['items'][$i]['#attributes']['class'][] = 'draggable';
       $form['base']['items'][$i]['link'] = array(
         '#type' => 'item',
-        '#markup' => l($product->label(), 'node/' . $i),
+        '#markup' => \Drupal::l($product->label(), new Url('entity.node.canonical', ['node' => $i])),
       );
       $form['base']['items'][$i]['qty'] = array(
         '#type' => 'uc_quantity',
@@ -769,7 +769,7 @@ function uc_product_kit_buy_it_now_form_submit($form, FormStateInterface $form_s
     $attributes = uc_product_get_attributes($node->nid);
     if (!empty($attributes)) {
       drupal_set_message(t('This product has options that need to be selected before purchase. Please select them in the form below.'), 'error');
-      $form_state->setRedirect('entity.node.canonical', array('node' => $form_state->getValue('nid')));
+      $form_state->setRedirect('entity.node.canonical', ['node' => $form_state->getValue('nid')]);
       return;
     }
     if (is_array($node->products)) {
@@ -777,7 +777,7 @@ function uc_product_kit_buy_it_now_form_submit($form, FormStateInterface $form_s
         $attributes = uc_product_get_attributes($nid);
         if (!empty($attributes)) {
           drupal_set_message(t('This product has options that need to be selected before purchase. Please select them in the form below.'), 'error');
-          $form_state->setRedirect('entity.node.canonical', array('node' => $form_state->getValue('nid')));
+          $form_state->setRedirect('entity.node.canonical', ['node' => $form_state->getValue('nid')]);
           return;
         }
       }
@@ -929,7 +929,7 @@ function uc_product_kit_uc_cart_display($item) {
       $element['nid'] = array('#type' => 'value', '#value' => $kit->id());
       $element['module'] = array('#type' => 'value', '#value' => 'uc_product_kit');
       $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
-      $element['title'] = array('#markup' => l($kit->label(), 'node/' . $kit->id()));
+      $element['title'] = array('#markup' => \Drupal::l($kit->label(), new Url('entity.node.canonical', ['node' => $kit->id()])));
       $element['qty'] = array(
         '#type' => 'uc_quantity',
         '#title' => t('Quantity'),

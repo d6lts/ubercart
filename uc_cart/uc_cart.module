@@ -12,7 +12,9 @@
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Time in seconds after which a cart order is deemed abandoned.
@@ -265,7 +267,7 @@ function uc_cart_complete_sale($order, $login = FALSE) {
  * Default template: uc-cart-complete-sale.html.twig.
  */
 function template_preprocess_uc_cart_complete_sale(&$variables) {
-  $variables['front_page'] = url();
+  $variables['front_page'] = \Drupal::url('<front>');
 }
 
 /**

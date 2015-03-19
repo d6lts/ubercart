@@ -45,7 +45,7 @@ class OrderTest extends UbercartTestBase {
   }
 
   public function testOrderEntity() {
-    $order = entity_create('uc_order', array());
+    $order = entity_create('uc_order', []);
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
@@ -108,8 +108,8 @@ class OrderTest extends UbercartTestBase {
     $this->assertText(t('Order created by the administration.'), 'Order created by the administration.');
     $this->assertFieldByName('uid_text', $this->customer->id(), 'The customer UID appears on the page.');
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE uid = :uid", array(':uid' => $this->customer->id()))->fetchField();
-    $this->assertTrue($order_id, t('Found order ID @order_id', array('@order_id' => $order_id)));
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE uid = :uid", [':uid' => $this->customer->id()])->fetchField();
+    $this->assertTrue($order_id, t('Found order ID @order_id', ['@order_id' => $order_id]));
 
     $this->drupalGet('admin/store/orders/view');
     $this->assertLinkByHref('admin/store/orders/' . $order_id, 0, 'View link appears on order list.');
@@ -216,8 +216,8 @@ class OrderTest extends UbercartTestBase {
     $order = uc_order_new($customer->id());
     uc_order_comment_save($order->id(), 0, t('Order created programmatically.'), 'admin');
 
-    $order_exists = db_query("SELECT 1 FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchField();
-    $this->assertTrue($order_exists, t('Found order ID @order_id', array('@order_id' => $order->id())));
+    $order_exists = db_query("SELECT 1 FROM {uc_orders} WHERE order_id = :order_id", [':order_id' => $order->id()])->fetchField();
+    $this->assertTrue($order_exists, t('Found order ID @order_id', ['@order_id' => $order->id()]));
 
     $countries = uc_country_option_list();
     $country = array_rand($countries);
@@ -247,7 +247,7 @@ class OrderTest extends UbercartTestBase {
       ->setAddress('billing', $billing_address)
       ->save();
 
-    $db_order = db_query("SELECT * FROM {uc_orders} WHERE order_id = :order_id", array(':order_id' => $order->id()))->fetchObject();
+    $db_order = db_query("SELECT * FROM {uc_orders} WHERE order_id = :order_id", [':order_id' => $order->id()])->fetchObject();
     $this->assertEqual($delivery_address->first_name, $db_order->delivery_first_name);
     $this->assertEqual($delivery_address->last_name, $db_order->delivery_last_name);
     $this->assertEqual($delivery_address->street1, $db_order->delivery_street1);

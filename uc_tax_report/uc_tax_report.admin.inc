@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Displays the sales tax report form and table.
@@ -43,7 +44,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
 
   // Query to get the tax line items in this date range
 
-  $result = db_query("SELECT ucoli.amount, ucoli.title, ucoli.data FROM {uc_orders} ucord LEFT JOIN {uc_order_statuses} ON order_status_id = order_status LEFT JOIN {uc_order_line_items} ucoli ON ucord.order_id = ucoli.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses) AND ucoli.type = :type", array(':start' => $args['start_date'], ':end' => $args['end_date'], ':statuses' => $order_statuses, ':type' => 'tax'));
+  $result = db_query("SELECT ucoli.amount, ucoli.title, ucoli.data FROM {uc_orders} ucord LEFT JOIN {uc_order_statuses} ON order_status_id = order_status LEFT JOIN {uc_order_line_items} ucoli ON ucord.order_id = ucoli.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[]) AND ucoli.type = :type", array(':start' => $args['start_date'], ':end' => $args['end_date'], ':statuses[]' => $order_statuses, ':type' => 'tax'));
 
   // add up the amounts by jurisdiction
   $totals = array();
@@ -171,7 +172,7 @@ function uc_tax_report_report_page($start_date = NULL, $end_date = NULL, $status
   }
 
   $build['export_csv'] = array(
-    '#markup' => l(t('Export to CSV file.'), 'admin/store/reports/getcsv/' . $csv_data['report'] . '/' . $csv_data['user']),
+    '#markup' => \Drupal::l(t('Export to CSV file.'), new Url('admin/store/reports/getcsv/' . $csv_data['report'] . '/' . $csv_data['user'])),
     '#prefix' => '<div class="uc-reports-links">',
     '#suffix' => '</div>',
   );

@@ -10,6 +10,7 @@ namespace Drupal\uc_store\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a block to identify Ubercart as the store software on a site.
@@ -87,7 +88,7 @@ class PoweredByBlock extends BlockBase {
    * Returns the default message options.
    */
   protected function options() {
-    $url = array('!url' => 'http://www.ubercart.org/');
+    $url = array('!url' => Url::fromUri('http://www.ubercart.org/')->toString());
     return array(
       1 => t('<a href="!url">Powered by Ubercart</a>', $url),
       2 => t('<a href="!url">Drupal e-commerce</a> provided by Ubercart.', $url),

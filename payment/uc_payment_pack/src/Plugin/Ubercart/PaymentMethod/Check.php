@@ -107,7 +107,7 @@ class Check extends PaymentMethodPluginBase {
   public function orderView(OrderInterface $order) {
     $build = array('#suffix' => '<br />');
 
-    $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->id()));
+    $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', [':id' => $order->id()]);
     if ($clear_date = $result->fetchField()) {
       $build['#markup'] = t('Clear Date:') . ' ' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');
     }
@@ -124,7 +124,7 @@ class Check extends PaymentMethodPluginBase {
   public function customerView(OrderInterface $order) {
     $build = array();
 
-    $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', array(':id' => $order->id()));
+    $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', [':id' => $order->id()]);
     if ($clear_date = $result->fetchField()) {
       $build['#markup'] = t('Check received') . '<br />' .
         t('Expected clear date:') . '<br />' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');

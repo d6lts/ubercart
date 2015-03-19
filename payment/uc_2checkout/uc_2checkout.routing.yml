@@ -3,4 +3,3 @@ uc_2checkout.complete:
   defaults:
     _controller: '\Drupal\uc_2checkout\Controller\CheckoutController::complete'
   requirements:
-    _permission: TRUE

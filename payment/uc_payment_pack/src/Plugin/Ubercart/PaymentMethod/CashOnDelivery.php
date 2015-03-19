@@ -124,7 +124,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderLoad(OrderInterface $order) {
-    $result = db_query('SELECT * FROM {uc_payment_cod} WHERE order_id = :id', array(':id' => $order->id()));
+    $result = db_query('SELECT * FROM {uc_payment_cod} WHERE order_id = :id', [':id' => $order->id()]);
     if ($row = $result->fetchObject()) {
       $order->payment_details = array(
         'delivery_month' => $row->delivery_month,

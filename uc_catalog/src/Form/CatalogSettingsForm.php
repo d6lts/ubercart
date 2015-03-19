@@ -74,12 +74,12 @@ class CatalogSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('vocabulary'),
       '#options' => $vocabs,
     );
+
     $form['uc_catalog_breadcrumb'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display the catalog breadcrumb'),
       '#default_value' => $config->get('breadcrumb'),
     );
-
     return parent::buildForm($form, $form_state);
   }
 

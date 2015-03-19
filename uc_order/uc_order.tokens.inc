@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_token_info().
@@ -134,12 +135,12 @@ function uc_order_token_info() {
 /**
  * Implements hook_tokens().
  */
-function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
+function uc_order_tokens($type, $tokens, $data = [], $options = []) {
   $token_service = Drupal::token();
 
   $sanitize = !empty($options['sanitize']);
 
-  $replacements = array();
+  $replacements = [];
 
   if ($type == 'uc_order' && !empty($data['uc_order'])) {
 
@@ -266,7 +267,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'comments':
-          $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid = :uid ORDER BY created DESC", 0, 1, array(':order_id' => $order->id(), ':uid' => 0))->fetchField();
+          $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid = :uid ORDER BY created DESC", 0, 1, [':order_id' => $order->id(), ':uid' => 0])->fetchField();
           if ($sanitize) {
             $result = String::checkPlain($result);
           }
@@ -274,7 +275,7 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'last-comment':
-          $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid > :uid ORDER BY created DESC", 0, 1, array(':order_id' => $order->id(), ':uid' => 0))->fetchField();
+          $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid > :uid ORDER BY created DESC", 0, 1, [':order_id' => $order->id(), ':uid' => 0])->fetchField();
           if ($sanitize) {
             $result = String::checkPlain($result);
           }
@@ -316,23 +317,23 @@ function uc_order_tokens($type, $tokens, $data = array(), $options = array()) {
 
     // Handles chaining for tokens that have 'type' defined in hook_token_info()
     if ($link_tokens = $token_service->findWithPrefix($tokens, 'url')) {
-      $replacements += $token_service->generate('url', $link_tokens, array('path' => $path), $options);
+      $replacements += $token_service->generate('url', $link_tokens, ['path' => $path], $options);
     }
 
     if ($link_tokens = $token_service->findWithPrefix($tokens, 'admin-url')) {
-      $replacements += $token_service->generate('url', $link_tokens, array('path' => $admin_path), $options);
+      $replacements += $token_service->generate('url', $link_tokens, ['path' => $admin_path], $options);
     }
 
     if ($customer_tokens = $token_service->findWithPrefix($tokens, 'customer')) {
-      $replacements += $token_service->generate('user', $customer_tokens, array('user' => $order->getUser()), $options);
+      $replacements += $token_service->generate('user', $customer_tokens, ['user' => $order->getUser()], $options);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $created_tokens, array('date' => $order->created->value), $options);
+      $replacements += $token_service->generate('date', $created_tokens, ['date' => $order->created->value], $options);
     }
 
     if ($changed_tokens = $token_service->findWithPrefix($tokens, 'modified')) {
-      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $order->modified->value), $options);
+      $replacements += $token_service->generate('date', $changed_tokens, ['date' => $order->modified->value], $options);
     }
   }
 

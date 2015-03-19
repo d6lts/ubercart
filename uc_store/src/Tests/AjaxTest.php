@@ -18,9 +18,12 @@ class AjaxTest extends UbercartTestBase {
   public static $adminPermissions = array(/*'administer rules', 'bypass rules access'*/);
 
   public function setUp() {
-    module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
     parent::setUp();
     $this->drupalLogin($this->adminUser);
+
+    // module_load_include() has to be called after parent::setUp()
+    // because the moduler_handler service isn't initialized yet.
+    module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
   }
 
   /**

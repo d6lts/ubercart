@@ -31,9 +31,9 @@ function uc_attribute_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     // Help messages for the attributes overview on products and classes.
     case 'uc_attribute.product_attributes':
-      return '<p>' . t('Add attributes to this product using the <a href="!url">add attributes form</a>. You may then adjust the settings for these attributes on this page and go on to configure their options in the <em>Options</em> tab.', array('!url' => \Drupal::url('uc_attribute.product_attributes_add', ['node' => 3]))) . '</p>';
+      return '<p>' . t('Add attributes to this product using the <a href="!url">add attributes form</a>. You may then adjust the settings for these attributes on this page and go on to configure their options in the <em>Options</em> tab.', array('!url' => \Drupal::url('uc_attribute.product_attributes_add', ['node' => $route_match->getRawParameter('node')]))) . '</p>';
     case 'uc_attribute.product_class_attributes':
-      return '<p>' . t('Add attributes to the product class using the <a href="!url">add attributes form</a>. You may then adjust the settings for these attributes on this page and go on to configure their options in the <em>Options</em> tab.', array('!url' => \Drupal::url('uc_attribute.product_class_attributes_add', ['node_type' => $route_match->getPArameter('node_type')]))) . '</p>';
+      return '<p>' . t('Add attributes to the product class using the <a href="!url">add attributes form</a>. You may then adjust the settings for these attributes on this page and go on to configure their options in the <em>Options</em> tab.', array('!url' => \Drupal::url('uc_attribute.product_class_attributes_add', ['node_type' => $route_match->getRawParameter('node_type')]))) . '</p>';
 
     // Help message for adding an attribute to a product or class.
     case 'uc_attribute.product_attributes_add':
@@ -176,7 +176,7 @@ function uc_attribute_buy_it_now_form_validate(&$form, FormStateInterface $form_
   $attributes = uc_product_get_attributes($form_state->getValue('nid'));
   if (!empty($attributes)) {
     drupal_set_message(t('This product has options that need to be selected before purchase. Please select them in the form below.'), 'error');
-    $form_state->setRedirect('entity.node.canonical', array('node' => $form_state->getValue('nid')));
+    $form_state->setRedirect('entity.node.canonical', ['node' => $form_state->getValue('nid')]);
 
     // Prevent submit handlers from running.
     $form_state->setSubmitHandlers(array());

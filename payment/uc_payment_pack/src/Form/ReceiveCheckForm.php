@@ -24,7 +24,7 @@ class ReceiveCheckForm extends FormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    *
    * Receives a check for an order and put in a clear date.
    */
@@ -69,7 +69,7 @@ class ReceiveCheckForm extends FormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_payment_enter($form_state->getValue('order_id'), 'check', $form_state->getValue('amount'), \Drupal::currentUser()->id(), '', $form_state->getValue('comment'));
@@ -81,8 +81,8 @@ class ReceiveCheckForm extends FormBase {
       ))
       ->execute();
 
-    drupal_set_message(t('Check received, expected clear date of @date.', array('@date' => uc_date_format($form_state->getValue('clear_month'), $form_state->getValue('clear_day'), $form_state->getValue('clear_year')))));
+    drupal_set_message(t('Check received, expected clear date of @date.', ['@date' => uc_date_format($form_state->getValue('clear_month'), $form_state->getValue('clear_day'), $form_state->getValue('clear_year'))]));
 
-    $form_state->setRedirect('uc_order.admin_view', array('uc_order' => $form_state->getValue('order_id')));
+    $form_state->setRedirect('uc_order.admin_view', ['uc_order' => $form_state->getValue('order_id')]);
   }
 }

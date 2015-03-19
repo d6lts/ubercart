@@ -29,7 +29,7 @@ class AttributeAddForm extends AttributeFormBase {
     }
     else {
       // All other display types we redirect to add options.
-      $form_state->setRedirect('uc_attribute.option_add', ['aid' => $aid]);
+      $form_state->setRedirect('uc_attribute.options', ['aid' => $aid]);
     }
   }
 

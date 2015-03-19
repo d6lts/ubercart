@@ -23,8 +23,8 @@ class CartSettingsTest extends UbercartTestBase {
     $this->addToCart($this->product);
     $this->assertText($this->product->getTitle() . ' added to your shopping cart.');
 
-    $this->drupalPostForm('cart', array(), 'Remove');
-    $this->drupalPostForm('admin/store/settings/cart', array('uc_cart_add_item_msg' => FALSE), 'Save configuration');
+    $this->drupalPostForm('cart', [], 'Remove');
+    $this->drupalPostForm('admin/store/settings/cart', ['uc_cart_add_item_msg' => FALSE], 'Save configuration');
 
     $this->addToCart($this->product);
     $this->assertNoText($this->product->getTitle() . ' added to your shopping cart.');
@@ -62,8 +62,10 @@ class CartSettingsTest extends UbercartTestBase {
       t('Save configuration')
     );
 
-    $this->drupalPostForm('node/' . $this->product->id(), array(), t('Add to cart'), array('query' => array('test' => 'querystring')));
+    $this->drupalPostForm('node/' . $this->product->id(), [], t('Add to cart'), ['query' => ['test' => 'querystring']]);
     $url = \Drupal::url('entity.node.canonical', ['node' => $this->product->id()], ['absolute' => TRUE, 'query' => ['test' => 'querystring']]);
+debug($url);
+debug($this->getUrl());
     $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect works with a query string.');
   }
 
@@ -90,11 +92,11 @@ class CartSettingsTest extends UbercartTestBase {
     // Check to see if the lower priced product triggers the minimum price logic.
     $this->drupalPostForm(
       'node/' . $product_below_limit->id(),
-      array(),
+      [],
       t('Add to cart')
     );
     $this->drupalPostForm('cart',
-      array(),
+      [],
       t('Checkout')
     );
     $this->assertRaw(
@@ -105,12 +107,12 @@ class CartSettingsTest extends UbercartTestBase {
     // Add another product to the cart, and verify that we land on the checkout page.
     $this->drupalPostForm(
       'node/' . $product_above_limit->id(),
-      array(),
+      [],
       t('Add to cart')
     );
     $this->drupalPostForm(
       'cart',
-      array(),
+      [],
       t('Checkout')
     );
     $this->assertText('Enter your billing address and information here.');
@@ -120,7 +122,7 @@ class CartSettingsTest extends UbercartTestBase {
     // Continue shopping link should take you back to the product page.
     $this->drupalPostForm(
       'node/' . $this->product->id(),
-      array(),
+      [],
       t('Add to cart')
     );
     $this->assertLink(
@@ -193,7 +195,7 @@ class CartSettingsTest extends UbercartTestBase {
 
     $this->drupalPostForm(
       'node/' . $this->product->id(),
-      array(),
+      [],
       t('Add to cart')
     );
     $this->assertLink(

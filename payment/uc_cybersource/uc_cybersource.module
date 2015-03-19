@@ -405,8 +405,6 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
  * Charges card.
  */
 function uc_cybersource_charge($order_id, $amount, $data) {
-  global $user;
-
   $order = uc_order_load($order_id);
 
   $amount = uc_currency_format($amount, FALSE, FALSE, '.');
@@ -561,14 +559,14 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
       $o_comment .= t('<br /><b>CVV:</b> !cvv', array('!cvv' => \Drupal\uc_cybersource\CybersourceUtilities::cvvResponse($nvp['ccAuthReply_cvCode'])));
       $p_comment .= t(', CVV: @cvv', array('@cvv' => $nvp['ccAuthReply_cvCode']));
     }
-    uc_order_comment_save($order->id(), $user->id(), $o_comment, 'admin');
+    uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), $o_comment, 'admin');
 
     if ($nvp['decision'] == 'ACCEPT') {
       $result = array(
         'success' => TRUE,
         'comment' => $p_comment,
         'message' => $o_comment,
-        'uid' => $user->id(),
+        'uid' => \Drupal::currentUser()->id(),
       );
     }
     else {
@@ -576,7 +574,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
         'success' => FALSE,
         'comment' => $p_comment,
         'message' => $o_comment,
-        'uid' => $user->id(),
+        'uid' => \Drupal::currentUser()->id(),
       );
     }
   }
@@ -594,8 +592,6 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
  * Handles the SOAP charge request and Ubercart order save.
  */
 function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country) {
-  global $user;
-
   // Set the URL for the CyberSource SOAP Toolkit API WSDL.
   if (variable_get('uc_cybersource_server', 'test') == 'test') {
     $url = 'https://ics2wstest.ic3.com/commerce/1.x/transactionProcessor/CyberSourceTransaction_1.38.wsdl';
@@ -791,7 +787,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
       $o_comment .= '<br />' . t('<b>CVV:</b> @cvv', array('@cvv' => \Drupal\uc_cybersource\CybersourceUtilities::cvvResponse($reply->ccAuthReply->cvCode)));
       $p_comment .= t(', CVV: @cvv', array('@cvv' => $reply->ccAuthReply->cvCode));
     }
-    uc_order_comment_save($order->id(), $user->id(), $o_comment, 'admin');
+    uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), $o_comment, 'admin');
 
     // Store the subscription ID if one was created.
     if (isset($reply->paySubscriptionCreateReply)) {
@@ -814,7 +810,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
         'success' => TRUE,
         'comment' => $p_comment,
         'message' => $o_comment,
-        'uid' => $user->id(),
+        'uid' => \Drupal::currentUser()->id(),
         'data' => array('module' => 'uc_cybersource', 'txn_type' => $data['txn_type'], 'request_id' => $reply->requestID),
       );
 
@@ -841,7 +837,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
         'success' => FALSE,
         'comment' => $p_comment,
         'message' => $o_comment,
-        'uid' => $user->id(),
+        'uid' => \Drupal::currentUser()->id(),
       );
     }
   }
@@ -881,8 +877,6 @@ function uc_cybersource_uc_calculate_tax($order) {
   if (!is_object($order)) {
     return array();
   }
-
-  global $user;
 
   // Set the URL for the CyberSource SOAP Toolkit API WSDL.
   if (variable_get('uc_cybersource_server', 'test') == 'test') {

@@ -314,8 +314,16 @@ class AttributeTest extends UbercartTestBase {
     $edit = (array) $this->createAttribute(array(), FALSE);
 
     $this->drupalPostForm('admin/store/products/attributes/add', $edit, t('Submit'));
-    $this->assertText('Options for ' . $edit['name']);
-    $this->assertText('No options for this attribute have been added yet.');
+    if ($edit['display'] != 0) {
+      // We redirect to add options page ONLY for non-textfield attributes.
+      $this->assertText('Options for ' . $edit['name']);
+      $this->assertText('No options for this attribute have been added yet.');
+    }
+    else {
+      // For textfield attributes we redirect to attribute list.
+      $this->assertText('Attribute name created ' . $edit['name']);
+      $this->assertText('Attribute label created ' . $edit['label']);
+    }
 
     $this->drupalGet('admin/store/products/attributes');
     $this->assertRaw('<td>' . $edit['name'] . '</td>', t('Verify name field.'));

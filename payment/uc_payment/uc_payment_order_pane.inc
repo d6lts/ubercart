@@ -15,6 +15,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Handles the Payment order pane.
@@ -22,18 +23,18 @@ use Drupal\Core\Form\FormStateInterface;
 function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
-      $build['balance'] = array('#markup' => t('Balance: @balance', array('@balance' => uc_currency_format(uc_payment_balance($order)))));
+      $build['balance'] = array('#markup' => t('Balance: @balance', ['@balance' => uc_currency_format(uc_payment_balance($order))]));
 
       $account = \Drupal::currentUser();
       if ($account->hasPermission('view payments')) {
         $build['view_payments'] = array(
-          '#markup' => ' (' . l(t('View'), 'admin/store/orders/' . $order->id() . '/payments') . ')',
+          '#markup' => ' (' . \Drupal::l(t('View'), new Url('uc_payments.order_payments', ['uc_order' => $order->id()])) . ')',
         );
       }
 
-      $method = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+      $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
       $build['method'] = array(
-        '#markup' => t('Method: @payment_method', array('@payment_method' => $method->cartReviewTitle())),
+        '#markup' => t('Method: @payment_method', ['@payment_method' => $method->cartReviewTitle()]),
         '#prefix' => '<br />',
       );
 
@@ -47,8 +48,8 @@ function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $f
       return $build;
 
     case 'customer':
-      $method = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
-      $build['method'] = array('#markup' => t('Method: @payment_method', array('@payment_method' => $method->cartReviewTitle())));
+      $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+      $build['method'] = array('#markup' => t('Method: @payment_method', ['@payment_method' => $method->cartReviewTitle()]));
 
       $method_output = $method->customerView($order);
       if (!empty($method_output)) {
@@ -79,7 +80,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $f
       );
 
       $method = $form_state->getValue('payment_method') ?: $order->getPaymentMethodId();
-      if ($method && $details = Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderEditDetails($order)) {
+      if ($method && $details = \Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderEditDetails($order)) {
         if (is_array($details)) {
           $form['payment']['payment_details'] += $details;
         }
@@ -97,7 +98,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $f
       $changes['payment_details'] = $form_state->getValue('payment_details') ?: array();
 
       $order->setPaymentMethodId($changes['payment_method']);
-      $method = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+      $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
       $return = $method->orderEditProcess($order, $form, $form_state);
       if (is_array($return)) {
         $changes['payment_details'] = array_merge($changes['payment_details'], $return);

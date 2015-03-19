@@ -124,7 +124,6 @@ class OrderCreateForm extends FormBase {
           ->condition('u.name', db_like(trim($form_state->getValue(['customer', 'username']))) . '%', 'LIKE')
           ->orderBy('o.created', 'DESC')
           ->range(0, $limit = 11);
-
         $result = $query->execute();
 
         $options = array();
@@ -264,7 +263,7 @@ class OrderCreateForm extends FormBase {
     $order = uc_order_new($uid, 'post_checkout');
     uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), t('Order created by the administration.'), 'admin');
 
-    $form_state->setRedirect('entity.uc_order.edit_form', array('uc_order' => $order->id()));
+    $form_state->setRedirect('entity.uc_order.edit_form', ['uc_order' => $order->id()]);
   }
 
 }

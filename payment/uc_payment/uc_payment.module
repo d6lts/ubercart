@@ -14,6 +14,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\Xss;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
 
 require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
 
@@ -115,7 +117,7 @@ function uc_payment_uc_order_state() {
 /**
  * Implements hook_uc_payment_method_checkout_alter().
  */
-function uc_payment_uc_payment_method_checkout_alter(&$methods, $order) {
+function uc_payment_uc_payment_method_checkout_alter(array &$methods, OrderInterface $order) {
   if (isset($methods['free_order'])) {
     if ($order->getTotal() < 0.01) {
       // Unset all other payment methods if this is a free order.
@@ -223,7 +225,7 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
   }
   else {
     // Otherwise display the failure message in the logs.
-    \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message', array('@order_id' => $order_id, '@message' => $result['message'], 'link' => l(t('view order'), 'admin/store/orders/' . $order_id)));
+    \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message', ['@order_id' => $order_id, '@message' => $result['message'], 'link' => \Drupal::l(t('view order'), new Url('uc_order.admin_view', ['uc_order' => $order_id]))]);
   }
 
   // If we have a message for display and aren't simply charging with the
@@ -234,7 +236,7 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
 
   // Head back to the order if a redirect was specified.
   if ($redirect) {
-    drupal_goto('admin/store/orders/' . $order_id);
+    return new RedirectResponse(\Drupal::url('uc_order.admin_view', ['uc_order' => $order_id]));
   }
 
   return $result['success'];

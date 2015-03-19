@@ -813,14 +813,14 @@ function uc_file_feature_form_submit($form, FormStateInterface $form_state) {
 
   drupal_write_record('uc_file_products', $file_product, $key);
 
-  $form_state->setRedirect('uc_product.features', array('node' => $data['nid']));
+  $form_state->setRedirect('uc_product.features', ['node' => $data['nid']]);
 }
 
 /**
  * Gets a file_product id from a product feature id.
  */
 function _uc_file_get_fpid($pfid) {
-  return db_query("SELECT fpid FROM {uc_file_products} WHERE pfid = :pfid", array(':pfid' => $pfid))->fetchField();
+  return db_query("SELECT fpid FROM {uc_file_products} WHERE pfid = :pfid", [':pfid' => $pfid])->fetchField();
 }
 
 /**
@@ -903,14 +903,14 @@ function uc_file_feature_settings($form, FormStateInterface $form_state) {
 function uc_file_feature_settings_validate($form, FormStateInterface $form_state) {
   // Make sure our base directory is valid.
   if (!$form_state->isValueEmpty('uc_file_base_dir') && $form_state->getValue('op') == t('Save configuration') && !is_dir($form_state->getValue('uc_file_base_dir'))) {
-    $form_state->setErrorByName('uc_file_base_dir', t('%dir is not a valid file or directory', array('%dir' => $form_state->getValue('uc_file_base_dir'))));
+    $form_state->setErrorByName('uc_file_base_dir', t('%dir is not a valid file or directory', ['%dir' => $form_state->getValue('uc_file_base_dir')]));
   }
 
   // If the user selected a granularity, let's make sure they
   // also selected a duration.
   if ($form_state->getValue('uc_file_download_limit_duration_granularity') != 'never' &&
       $form_state->getValue('uc_file_download_limit_duration_qty') < 1) {
-    $form_state->setErrorByName('uc_file_download_limit_duration_qty', t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', array('%gran' => $form_state->getValue('uc_file_download_limit_duration_granularity') . '(s)')));
+    $form_state->setErrorByName('uc_file_download_limit_duration_qty', t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', ['%gran' => $form_state->getValue('uc_file_download_limit_duration_granularity') . '(s)']));
   }
 
   // Make sure the download limit makes sense.
@@ -1041,11 +1041,11 @@ function _uc_file_accumulate_limits(&$file_user, $file_limits, $force_overwrite)
  *   Sends string containing javascript array of matched files.
  */
 function _uc_file_autocomplete_filename() {
-  $matches = array();
+  $matches = [];
 
   // Catch "/" characters that drupal autocomplete doesn't escape.
   $url = explode('_autocomplete_file/', request_uri());
-  $files = db_query("SELECT filename FROM {uc_files} WHERE filename LIKE :name ORDER BY filename ASC", array(':name' => '%' . db_like($url[1]) . '%'));
+  $files = db_query("SELECT filename FROM {uc_files} WHERE filename LIKE :name ORDER BY filename ASC", [':name' => '%' . db_like($url[1]) . '%']);
   while ($filename = $files->fetchField()) {
     $matches[$filename] = $filename;
   }
@@ -1104,7 +1104,7 @@ function uc_file_empty() {
  * Removes all db entries associated with a given $fid.
  */
 function _uc_file_prune_db($fid) {
-  $pfids = db_query("SELECT pfid FROM {uc_file_products} WHERE fid = :fid", array(':fid' => $fid));
+  $pfids = db_query("SELECT pfid FROM {uc_file_products} WHERE fid = :fid", [':fid' => $fid]);
   while ($pfid = $pfids->fetchField()) {
     db_delete('uc_product_features')
       ->condition('pfid', $pfid)
@@ -1165,12 +1165,12 @@ function _uc_file_gather_files() {
     $fid = NULL;
 
     // Insert new entries.
-    if ($file_dir != '.' && !db_query("SELECT fid FROM {uc_files} WHERE filename = :name", array(':name' => $file_dir . '/'))->fetchField()) {
+    if ($file_dir != '.' && !db_query("SELECT fid FROM {uc_files} WHERE filename = :name", [':name' => $file_dir . '/'])->fetchField()) {
       $fid = db_insert('uc_files')
         ->fields(array('filename' => $file_dir . '/'))
         ->execute();
     }
-    if (!db_query("SELECT fid FROM {uc_files} WHERE filename = :name", array(':name' => $filename))->fetchField()) {
+    if (!db_query("SELECT fid FROM {uc_files} WHERE filename = :name", [':name' => $filename])->fetchField()) {
       $fid = db_insert('uc_files')
         ->fields(array('filename' => $filename))
         ->execute();
@@ -1228,7 +1228,7 @@ function uc_file_remove_by_id($fid, $recur) {
     $remove_fields = FALSE;
 
     // Qualify the path for I/O, and delete the files/dirs.
-    $filename = db_query("SELECT filename FROM {uc_files} WHERE fid = :fid", array(':fid' => $fid))->fetchField();
+    $filename = db_query("SELECT filename FROM {uc_files} WHERE fid = :fid", [':fid' => $fid])->fetchField();
     $dir = uc_file_qualify_file($filename);
     if (is_dir($dir)) {
 
@@ -1237,16 +1237,16 @@ function uc_file_remove_by_id($fid, $recur) {
       if (empty($dir_contents)) {
 
         if (rmdir($dir)) {
-          drupal_set_message(t('The directory %dir was deleted.', array('%dir' => $filename)));
+          drupal_set_message(t('The directory %dir was deleted.', ['%dir' => $filename]));
           $remove_fields = TRUE;
         }
         else {
-          drupal_set_message(t('The directory %dir could not be deleted.', array('%dir' => $filename)));
+          drupal_set_message(t('The directory %dir could not be deleted.', ['%dir' => $filename]));
           $result = FALSE;
         }
       }
       else {
-        drupal_set_message(t('The directory %dir could not be deleted because it is not empty.', array('%dir' => $filename)));
+        drupal_set_message(t('The directory %dir could not be deleted because it is not empty.', ['%dir' => $filename]));
         $result = FALSE;
       }
     }
@@ -1254,10 +1254,10 @@ function uc_file_remove_by_id($fid, $recur) {
 
       if (unlink($dir)) {
         $remove_fields = TRUE;
-        drupal_set_message(t('The file %dir was deleted.', array('%dir' => $filename)));
+        drupal_set_message(t('The file %dir was deleted.', ['%dir' => $filename)]);
       }
       else {
-        drupal_set_message(t('The file %dir could not be deleted.', array('%dir' => $filename)));
+        drupal_set_message(t('The file %dir could not be deleted.', ['%dir' => $filename]));
         $result = FALSE;
       }
     }
@@ -1284,7 +1284,7 @@ function uc_file_remove_by_id($fid, $recur) {
  *   Else returns FALSE.
  */
 function _uc_file_get_dir_file_ids($fids, $recursive = FALSE) {
-  $result = array();
+  $result = [];
 
   // Handle an array or just a single.
   if (!is_array($fids)) {
@@ -1299,7 +1299,7 @@ function _uc_file_get_dir_file_ids($fids, $recursive = FALSE) {
     }
 
     $base_name = $base->filename . (is_dir(uc_file_qualify_file($base->filename)) ? '%' : '');
-    $files = db_query("SELECT * FROM {uc_files} WHERE filename LIKE :name", array(':name' => $base_name));
+    $files = db_query("SELECT * FROM {uc_files} WHERE filename LIKE :name", [':name' => $base_name]);
 
     // PHP str_replace() can't replace only N matches, so we use regex. First
     // we escape our file slashes, though, ... using str_replace().
@@ -1500,7 +1500,7 @@ function &uc_file_get_by_name($filename) {
   $cache = _uc_file_get_cache();
 
   if (!isset($cache[$filename])) {
-    $cache[$filename] = db_query("SELECT * FROM {uc_files} WHERE filename = :name", array(':name' => $filename))->fetchObject();
+    $cache[$filename] = db_query("SELECT * FROM {uc_files} WHERE filename = :name", [':name' => $filename])->fetchObject();
   }
 
   return $cache[$filename];
@@ -1519,7 +1519,7 @@ function &uc_file_get_by_id($fid) {
   $cache = _uc_file_get_cache();
 
   if (!isset($cache[$fid])) {
-    $cache[$fid] = db_query("SELECT * FROM {uc_files} WHERE fid = :fid", array(':fid' => $fid))->fetchObject();
+    $cache[$fid] = db_query("SELECT * FROM {uc_files} WHERE fid = :fid", [':fid' => $fid])->fetchObject();
   }
 
   return $cache[$fid];
@@ -1564,7 +1564,7 @@ function &uc_file_get_by_uid($uid, $fid) {
   if (!isset($cache[$uid][$fid])) {
     $cache[$uid][$fid] = db_query("SELECT * FROM {uc_file_users} ufu " .
       "LEFT JOIN {uc_files} uf ON uf.fid = ufu.fid " .
-      "WHERE ufu.fid = :fid AND ufu.uid = :uid", array(':uid' => $uid, ':fid' => $fid))->fetchObject();
+      "WHERE ufu.fid = :fid AND ufu.uid = :uid", [':uid' => $uid, ':fid' => $fid])->fetchObject();
     if ($cache[$uid][$fid]) {
       $cache[$uid][$fid]->addresses = unserialize($cache[$uid][$fid]->addresses);
     }
@@ -1650,10 +1650,10 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
     drupal_write_record('uc_file_users', $file_user, $key);
 
     if ($key) {
-      \Drupal::logger('uc_file')->notice('%user has had download privileges of %file renewed.', array('%user' => user_format_name($user), '%file' => $file_user['filename']));
+      \Drupal::logger('uc_file')->notice('%user has had download privileges of %file renewed.', ['%user' => user_format_name($user), '%file' => $file_user['filename']]);
     }
     else {
-      \Drupal::logger('uc_file')->notice('%user has been allowed to download %file.', array('%user' => user_format_name($user), '%file' => $file_user['filename']));
+      \Drupal::logger('uc_file')->notice('%user has been allowed to download %file.', ['%user' => user_format_name($user), '%file' => $file_user['filename']]);
     }
 
     $result[] = (object)$file_user;
@@ -1665,7 +1665,7 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
  * Retrieves a file_user object by user and fid.
  */
 function _uc_file_user_get($user, $fid) {
-  $file_user = db_query("SELECT * FROM {uc_file_users} WHERE uid = :uid AND fid = :fid", array(':uid' => $user->id(), ':fid' => $fid))->fetchObject();
+  $file_user = db_query("SELECT * FROM {uc_file_users} WHERE uid = :uid AND fid = :fid", [':uid' => $user->id(), ':fid' => $fid])->fetchObject();
 
   if ($file_user) {
     $file_user->addresses = unserialize($file_user->addresses);

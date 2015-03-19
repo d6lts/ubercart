@@ -27,7 +27,7 @@ class InclusiveTaxesTest extends UbercartTestBase {
       'name' => $this->randomMachineName(8),
       'rate' => 0.2,
       'taxed_product_types' => array('product'),
-      'taxed_line_items' => array(),
+      'taxed_line_items' => [],
       'weight' => 0,
       'shippable' => 0,
       'display_include' => 1,
@@ -98,7 +98,7 @@ class InclusiveTaxesTest extends UbercartTestBase {
     return;
 
     // Make sure that the subtotal is also correct on the checkout page.
-    $this->drupalPostForm('cart', array(), 'Checkout');
+    $this->drupalPostForm('cart', [], 'Checkout');
     $this->assertText('Subtotal: $16.80', 'Order subtotal is correct on checkout page.');
 
     // Manually proceed to checkout review.
@@ -111,7 +111,7 @@ class InclusiveTaxesTest extends UbercartTestBase {
     $this->assertText('$16.80' . $rate->inclusion_text, 'Tax inclusive price appears in cart pane on checkout review page');
 
     // Ensure the tax-inclusive price is listed on the order admin page.
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][first_name]']))->fetchField();
+    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", [':name' => $edit['panes[delivery][first_name]']])->fetchField();
     $this->assertTrue($order_id, 'Order was created successfully');
     $this->drupalGet('admin/store/orders/' . $order_id);
     $this->assertText('$16.80' . $rate->inclusion_text, 'Tax inclusive price appears on the order view page.');

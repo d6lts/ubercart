@@ -77,7 +77,7 @@ class CatalogTest extends UbercartTestBase {
     $this->assertFieldByName('taxonomy_catalog', NULL, 'Catalog taxonomy field is shown on product node form.');
 
     // Check that product kits get the catalog taxonomy.
-    \Drupal::moduleHandler()->install(array('uc_product_kit'));
+    \Drupal::service('module_installer')->install(array('uc_product_kit'), FALSE);
 
     $this->drupalGet('admin/structure/types/manage/product_kit/fields');
     $this->assertText('taxonomy_catalog', 'Catalog taxonomy term reference field exists for product kits.');

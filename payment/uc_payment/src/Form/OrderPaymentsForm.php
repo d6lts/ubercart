@@ -10,6 +10,7 @@ namespace Drupal\uc_payment\Form;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -106,8 +107,7 @@ class OrderPaymentsForm extends FormBase {
           '#markup' => ($payment->comment == '') ? '-' : Xss::filterAdmin($payment->comment),
         );
         if ($account->hasPermission('delete payments')) {
-          $action_value = l(t('Delete'), 'admin/store/orders/' . $this->order->id() . '/payments/'
-                            . $payment->receipt_id . '/delete');
+          $action_value = \Drupal::l(t('Delete'), new Url('uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id]));
         }
         else {
           $action_value = '-';
@@ -182,8 +182,6 @@ class OrderPaymentsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    global $user;
-
     $payment = $form_state->getValue(['payments', 'new']);
     $received = strtotime($payment['received']['year'] . '-' . $payment['received']['month'] . '-' . $payment['received']['day'] . ' 00:00:00');
 
@@ -194,7 +192,7 @@ class OrderPaymentsForm extends FormBase {
       $received = REQUEST_TIME;
     }
 
-    uc_payment_enter($this->order->id(), $payment['method'], $payment['amount'], $user->id(), '', $payment['comment'], $received);
+    uc_payment_enter($this->order->id(), $payment['method'], $payment['amount'], \Drupal::currentUser()->id(), '', $payment['comment'], $received);
 
     drupal_set_message(t('Payment entered.'));
   }

@@ -5,6 +5,8 @@
  * Theme functions for the uc_credit module.
  */
 
+use Drupal\Core\Url;
+
 /**
  * Themes the credit card CVV help link.
  */
