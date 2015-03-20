@@ -7,15 +7,18 @@
 
 namespace Drupal\uc_catalog;
 
+use \Drupal\taxonomy\TermInterface;
+
 /**
  * Data structure to mimic Drupal's menu system.
  */
 class TreeNode {
-  public $tid = 0;
-  public $name = 'Catalog';
-  public $children = array();
-  public $depth = -1;
-  public $sequence = 0;
+
+  protected $tid = 0;
+  protected $name = 'Catalog';
+  protected $children = [];
+  protected $depth = -1;
+  protected $sequence = 0;
 
   /**
    * Constructor.
@@ -39,7 +42,7 @@ class TreeNode {
    * deeper than $this, it should be passed to the last child of $this.
    */
   public function add_child(&$child) {
-    if ($child->depth - $this->depth == 1) {
+    if ($child->getDepth() - $this->getDepth() == 1) {
       $this->children[] = $child;
     }
     else {
@@ -47,4 +50,120 @@ class TreeNode {
       $last_child->add_child($child);
     }
   }
+
+  /**
+   * Gets the tid of the term.
+   *
+   * @return string
+   *   The tid of the term.
+   */
+  public function getTid() {
+    return $this->tid;
+  }
+
+  /**
+   * Sets the tid of the term.
+   *
+   * @param string $tid
+   *   The node's tid.
+   *
+   * @return $this
+   */
+  public function setTid(string $tid) {
+    $this->tid = $tid;
+    return $this;
+  }
+
+  /**
+   * Gets the name of the term.
+   *
+   * @return string
+   *   The name of the term.
+   */
+  public function getName() {
+    return $this->name;
+  }
+
+  /**
+   * Sets the name of the term.
+   *
+   * @param string $name
+   *   The node's name.
+   *
+   * @return $this
+   */
+  public function setName(string $name) {
+    $this->name = $name;
+    return $this;
+  }
+
+  /**
+   * Gets the children of the term.
+   *
+   * @return array
+   *   The children of the term.
+   */
+  public function getChildren() {
+    return $this->children;
+  }
+
+  /**
+   * Sets the children of the term.
+   *
+   * @param array $children
+   *   The node's children.
+   *
+   * @return $this
+   */
+  public function setChildren(array $children) {
+    $this->children = $children;
+    return $this;
+  }
+
+  /**
+   * Gets the depth of the term.
+   *
+   * @return string
+   *   The name of the term.
+   */
+  public function getDepth() {
+    return $this->depth;
+  }
+
+  /**
+   * Sets the depth of the term.
+   *
+   * @param string $depth
+   *   The node's name.
+   *
+   * @return $this
+   */
+  public function setDepth(string $depth) {
+    $this->depth = $depth;
+    return $this;
+  }
+
+  /**
+   * Gets the name of the term.
+   *
+   * @return string
+   *   The name of the term.
+   */
+  public function getSequence() {
+    return $this->sequence;
+  }
+
+  /**
+   * Sets the name of the term.
+   *
+   * @param string $name
+   *   The node's name.
+   *
+   * @return $this
+   */
+  public function setSequence(string $sequence) {
+    $this->sequence = $sequence;
+    return $this;
+  }
+
 }

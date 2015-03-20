@@ -58,7 +58,7 @@ class CatalogSettingsForm extends ConfigFormBase {
       $catalog = entity_load('taxonomy_vocabulary', $vid);
 
       $form['catalog_vid'] = array(
-        '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => url('admin/structure/taxonomy/manage/' . $catalog->id()), '%name' => $catalog->label())) . '</p>',
+        '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => \Drupal::url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()]), '%name' => $catalog->label())) . '</p>',
       );
     }
 

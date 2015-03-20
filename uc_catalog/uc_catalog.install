@@ -21,21 +21,9 @@ function uc_catalog_install() {
 function uc_catalog_uninstall() {
   if ($vid = \Drupal::config('uc_catalog.settings')->get('vocabulary')) {
     $vocab = taxonomy_vocabulary_load($vid);
-    drupal_set_message(t('The Ubercart Catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', array('@url' => url('admin/structure/taxonomy/manage/' . $vocab->id() . '/edit'))), 'warning');
+    drupal_set_message(t('The Ubercart Catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', array('@url' => \Drupal::url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $vocab->id()]))), 'warning');
   }
 }
-
-/**
- * Implements hook_update_last_removed().
- */
-function uc_catalog_update_last_removed() {
-  return 7006;
-}
-
-/**
- * @addtogroup updates-7.x-to-8.x
- * @{
- */
 
 /**
  * Moves catalog settings from variable to config.
@@ -47,8 +35,3 @@ function uc_catalog_update_8000() {
     'uc_catalog_breadcrumb' => 'breadcrumb',
   ));
 }
-
-/**
- * @} End of "defgroup updates-7.x-to-8.x".
- * The next series of updates should start at 9000.
- */

@@ -16,7 +16,7 @@ function theme_uc_catalog_block(array $variables) {
 
   $output = '<ul class="catalog menu">';
 
-  foreach ($menu_tree->children as $branch) {
+  foreach ($menu_tree->getChildren() as $branch) {
     list($inpath, $html) = _uc_catalog_navigation($branch);
     $output .= $html;
   }

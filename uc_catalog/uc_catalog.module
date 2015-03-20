@@ -23,31 +23,15 @@ use Drupal\node\NodeTypeInterface;
  */
 function uc_catalog_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    case 'admin/store/products/orphans':
+    case 'uc_catalog.orphans':
       return '<p>' . t('Orphaned products are products that you have created but not yet assigned to a category in your product catalog. All such products will appear as links below that you can follow to edit the product listings to assign them to categories.') . '</p>';
 
     case 'uc_catalog.settings':
       if (!\Drupal::moduleHandler()->moduleExists('views_ui')) {
-        return '<p>' . t('<a href="@modules">Enable the Views UI module</a> to edit the catalog display.', array('@modules' => \Drupal::url('system.modules_list', array(), array('fragment' => 'edit-modules-views')))) . '</p>';
+        return '<p>' . t('<a href="@modules">Enable the Views UI module</a> to edit the catalog display.', array('@modules' => \Drupal::url('system.modules_list', [], ['fragment' => 'edit-modules-views']))) . '</p>';
       }
       break;
   }
-}
-
-/**
- * Implements hook_menu().
- */
-function uc_catalog_menu() {
-  $items['admin/store/products/orphans'] = array(
-    'title' => 'Find orphaned products',
-    'description' => 'Find products that have not been categorized.',
-    'page callback' => 'uc_catalog_orphaned_products',
-    'access arguments' => array('administer catalog'),
-    'weight' => -4,
-    'file' => 'uc_catalog.admin.inc',
-  );
-
-  return $items;
 }
 
 /**
@@ -119,7 +103,7 @@ function uc_catalog_uri($category) {
  */
 function uc_catalog_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'uc_catalog' && $variables['label'] && $variables['configuration']['link_title']) {
-    $variables['label'] = \Drupal::l($variables['label'], new Url('catalog'));
+    $variables['label'] = \Drupal::l($variables['label'], new Url('uc_catalog.settings'));
   }
 }
 
@@ -135,34 +119,34 @@ function uc_catalog_uc_store_status() {
     return array(array(
       'status' => 'error',
       'title' => t('Catalog field'),
-      'desc' => t('The catalog taxonomy reference field is missing. <a href="@url">Click here to create it</a>.', array('@url' => \Drupal::url('uc_catalog.repair'))),
+      'desc' => t('The catalog taxonomy reference field is missing. <a href="@url">Click here to create it</a>.', ['@url' => \Drupal::url('uc_catalog.repair')]),
     ));
   }
 
   $statuses = array();
   $cat_id = \Drupal::config('uc_catalog.settings')->get('vocabulary');
-  $catalog = taxonomy_vocabulary_load($cat_id);
+  $catalog = \Drupal\taxonomy\Entity\Vocabulary::load($cat_id);
   if ($catalog) {
     // Don't display a status if the taxonomy_index table has no data.
     if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
       $statuses[] = array(
         'status' => 'ok',
         'title' => t('Catalog vocabulary'),
-        'desc' => t('Vocabulary @name has been identified as the Ubercart catalog.', array('@name' => \Drupal::l($catalog->label(), new Url('entity.taxonomy_vocabulary.edit_form', array('taxonomy_vocabulary' => $catalog->vid))))),
+        'desc' => t('Vocabulary @name has been identified as the Ubercart catalog.', ['@name' => \Drupal::l($catalog->label(), new Url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()]))]),
       );
 
       $product_types = uc_product_types();
       $types = array_intersect($product_types, $field->getBundles());
-      $result = db_query("SELECT COUNT(DISTINCT n.nid) FROM {node} n LEFT JOIN {taxonomy_index} ti ON n.nid = ti.nid LEFT JOIN {taxonomy_term_data} td ON ti.tid = td.tid WHERE n.type IN (:types[]) AND ti.tid IS NULL AND td.vid = :vid", array(':types[]' => $types, ':vid' => $catalog->vid));
+      $result = db_query("SELECT COUNT(DISTINCT n.nid) FROM {node} n LEFT JOIN {taxonomy_index} ti ON n.nid = ti.nid LEFT JOIN {taxonomy_term_data} td ON ti.tid = td.tid WHERE n.type IN (:types[]) AND ti.tid IS NULL AND td.vid = :vid", [':types[]' => $types, ':vid' => $catalog->id()]);
       if ($excluded = $result->fetchField()) {
         $description = \Drupal::translation()->formatPlural($excluded, 'There is 1 product not listed in the catalog.', 'There are @count products not listed in the catalog.')
           . t('Products are listed by assigning a category from the <a href="@cat_url">Product Catalog</a> vocabulary to them.', array('@cat_url' => new Url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->machine_name])));
-        $terms = db_query("SELECT COUNT(1) FROM {taxonomy_term_data} WHERE vid = :vid", array(':vid' => $catalog->vid))->fetchField();
+        $terms = db_query("SELECT COUNT(1) FROM {taxonomy_term_data} WHERE vid = :vid", [':vid' => $catalog->id()])->fetchField();
         if ($terms) {
           $description .= ' ' . \Drupal::l(t('Find orphaned products here.'), new Url('uc_product.orphans'));
         }
         else {
-          $description .= ' ' . \Drupal::l(t('Add terms for the products to inhabit.'), new Url('entity.taxonomy_vocabulary.add_form', array('taxonomy_vocabulary' => $catalog->vid)));
+          $description .= ' ' . \Drupal::l(t('Add terms for the products to inhabit.'), new Url('entity.taxonomy_vocabulary.add_form', array('taxonomy_vocabulary' => $catalog->id())));
         }
         $statuses[] = array(
           'status' => 'warning',
@@ -199,7 +183,7 @@ function uc_catalog_node_type_insert(NodeTypeInterface $type) {
  * Emulates Drupal's menu system, but based around the catalog taxonomy.
  *
  * @param $branch
- *   A treeNode object. Determines if the URL points to itself, or possibly one
+ *   A TreeNode object. Determines if the URL points to itself, or possibly one
  *   of its children, if present. If the URL points to itself or one of its
  *   products, it displays its name and expands to show its children, otherwise
  *   displays a link and a count of the products in it. If the URL points to
@@ -207,7 +191,7 @@ function uc_catalog_node_type_insert(NodeTypeInterface $type) {
  *   still be expanded. Otherwise, it is collapsed and a link.
  *
  * @return
- *   An array whose first element is true if the treeNode is in hierarchy of
+ *   An array whose first element is true if the TreeNode is in hierarchy of
  *   the URL path. The second element is the HTML of the list item of itself
  *   and its children.
  */
@@ -221,13 +205,13 @@ function _uc_catalog_navigation($branch) {
   $query = Drupal::entityQuery('node')
     ->condition('type', $types)
     ->condition('status', 1) // Don't include unpublished products.
-    ->condition('taxonomy_catalog.target_id', $branch->tid)
+    ->condition('taxonomy_catalog.target_id', $branch->getTid())
     ->count();
   $num = $query->execute();
 
   $branch_path = uc_catalog_path($branch);
   // Determine if the URL points to this term.
-  $here = current_path() == $branch_path;
+  $here = Url::fromRoute('<current>')->toString() == $branch_path;
 
   // Determine whether to expand menu item.
   $inpath = $here;
@@ -236,9 +220,9 @@ function _uc_catalog_navigation($branch) {
     $node = $request->attributes->get('node');
     if (isset($node->taxonomy_catalog)) {
       $inpath = FALSE;
-      $parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->value);
+      $parents = \Drupal::entityManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->value);
       foreach ($parents as $parent) {
-        if ($parent->id() == $branch->tid) {
+        if ($parent->id() == $branch->getTid()) {
           $inpath = TRUE;
         }
       }
@@ -247,8 +231,8 @@ function _uc_catalog_navigation($branch) {
 
   $lis = array();
   $expand = variable_get('uc_catalog_expand_categories', FALSE);
-  if ($expand || count($branch->children)) {
-    foreach ($branch->children as $twig) {
+  if ($expand || count($branch->getChildren())) {
+    foreach ($branch->getChildren() as $twig) {
       // Expand if children are in the menu path. Capture their output.
       list($child_in_path, $lis[], $child_num) = _uc_catalog_navigation($twig);
       $num += $child_num;
@@ -268,7 +252,7 @@ function _uc_catalog_navigation($branch) {
   if (variable_get('uc_catalog_block_nodecount', TRUE)) {
     $num_text = ' (' . $num . ')';
   }
-  $link = \Drupal::l($branch->name . $num_text, new Url($branch_path));
+  $link = \Drupal::l($branch->getName() . $num_text, new Url($branch_path));
 
   $output = theme('uc_catalog_item', array(
     'here' => $here,
@@ -276,7 +260,7 @@ function _uc_catalog_navigation($branch) {
     'lis' => $lis,
     'expand' => $expand,
     'inpath' => $inpath,
-    'count_children' => count($branch->children),
+    'count_children' => count($branch->getChildren()),
   ));
 
   // Tell parent category your status, and pass on output.
@@ -287,7 +271,7 @@ function _uc_catalog_navigation($branch) {
  * Creates paths to the catalog from taxonomy term.
  */
 function uc_catalog_path($term) {
-  return 'catalog/' . $term->tid;
+  return 'catalog/' . $term->getTid();
 }
 
 /**

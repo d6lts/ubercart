@@ -75,8 +75,12 @@ class CatalogBlock extends BlockBase {
     $this->configuration['product_count'] = $form_state->getValue('product_count');
 
     // @todo Remove when catalog block theming is fully converted.
-    variable_set('uc_catalog_expand_categories', $form_state->getValue('expanded'));
-    variable_set('uc_catalog_block_nodecount', $form_state->getValue('product_count'));
+    $catalog_config = \Drupal::configFactory()->getEditable('uc_catalog.settings');
+    
+    $catalog_config
+      ->set('expand_categories', $form_state->getValue('expanded'))
+      ->set('block_nodecount', $form_state->getValue('product_count'))
+      ->save();
   }
 
   /**
@@ -85,7 +89,7 @@ class CatalogBlock extends BlockBase {
   public function build() {
     // Get the vocabulary tree information.
     $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
-    $tree = taxonomy_get_tree($vid);
+    $tree = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vid);
 
     // Then convert it into an actual tree structure.
     $seq = 0;
