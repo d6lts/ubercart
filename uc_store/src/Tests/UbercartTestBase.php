@@ -99,7 +99,7 @@ abstract class UbercartTestBase extends WebTestBase {
       )),
       'pkg_qty' => mt_rand(1, 99),
       'default_qty' => 1,
-      'shippable' => TRUE,
+      'shippable' => 1,
     );
 
     $product['model'] = array(array('value' => $product['model']));
