@@ -355,7 +355,8 @@ function uc_product_form_node_type_form_alter(&$form, FormStateInterface $form_s
   );
 
   // Image field.
-  if (!empty($type->getEntityType())) {
+  $entity_type = $type->getEntityType();
+  if (!empty($entity_type)) {
     $options = array('' => t('None'));
     $instances = \Drupal::entityManager()->getFieldDefinitions('node', $type->getEntityTypeId());
     foreach ($instances as $field_name => $instance) {
