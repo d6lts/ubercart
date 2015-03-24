@@ -46,14 +46,6 @@ function uc_file_menu() {
     'access arguments' => array('administer product features'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/store/products/files'] = array(
-    'title' => 'View file downloads',
-    'description' => 'View all file download features on products.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_file_admin_files_form'),
-    'access arguments' => array('administer products'),
-    'file' => 'uc_file.admin.inc',
-  );
   $items['user/%user/purchased-files'] = array(
     'title' => 'Files',
     'description' => 'View your purchased files.',
@@ -62,13 +54,6 @@ function uc_file_menu() {
     'access callback' => 'uc_file_user_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_file.pages.inc',
-  );
-  $items['download/%'] = array(
-    'page callback' => '_uc_file_download',
-    'page arguments' => array(1),
-    'access arguments' => array('download file'),
-    'type' => MENU_CALLBACK,
     'file' => 'uc_file.pages.inc',
   );
   return $items;
@@ -136,7 +121,7 @@ function uc_file_user_form($form, FormStateInterface $form_state, $account) {
     $form['file']['file_message'] = array(
       '#markup' => '<p>' . t(
         'You must add files at the <a href="!url">Ubercart file download administration page</a> in order to attach them to a user.',
-        array('!url' => \Drupal::url('admin/store/products/files', [], ['query' => ['destination' => 'user/' . $account->id() . '/edit']]))
+        array('!url' => \Drupal::url('uc_file.downloads', [], ['query' => ['destination' => 'user/' . $account->id() . '/edit']]))
       ) . '</p>',
     );
 
@@ -236,7 +221,7 @@ function uc_file_user_form($form, FormStateInterface $form_state, $account) {
       '#multiple' => TRUE,
       '#size' => 6,
       '#title' => t('Add file'),
-      '#description' => t('Select a file to add as a download. Newly added files will inherit the settings at the !url.', array('!url' => \Drupal::l(t('Ubercart product settings page'), new Url('admin/store/settings/products')))),
+      '#description' => t('Select a file to add as a download. Newly added files will inherit the settings at the !url.', array('!url' => \Drupal::l(t('Ubercart product settings page'), new Url('uc_product.settings')))),
       '#options' => $available_files,
       '#tree' => TRUE,
     );
@@ -553,7 +538,7 @@ function uc_file_feature_form($form, FormStateInterface $form_state, $node, $fea
     $form['file']['file_message'] = array(
       '#markup' => t(
         'You must add files at the <a href="@url">Ubercart file download administration page</a> in order to attach them to a model.',
-        array('@url' => \Drupal::url('admin/store/products/files', [], ['query' => ['destination' => 'node/' . $node->id() . '/edit/features/file/add']]))
+        array('@url' => \Drupal::url('uc_file.downloads', [], ['query' => ['destination' => 'node/' . $node->id() . '/edit/features/file/add']]))
       ),
     );
 
@@ -646,7 +631,7 @@ function uc_file_feature_form($form, FormStateInterface $form_state, $node, $fea
 
   $form['uc_file_limits'] = array(
     '#type' => 'fieldset',
-    '#description' => t('Use these options to override any global download limits set at the !url.', array('!url' => \Drupal::l(t('Ubercart product settings page'), new Url('uc_product.settings', ['query' => ['destination' => 'node/' . $node->id() . '/edit/features/file/add']]))),
+    '#description' => t('Use these options to override any global download limits set at the !url.', ['!url' => \Drupal::l(t('Ubercart product settings page'), new Url('uc_product.settings', ['query' => ['destination' => 'node/' . $node->id() . '/edit/features/file/add']]))]),
     '#title' => t('File limitations'),
   );
 
@@ -1254,7 +1239,7 @@ function uc_file_remove_by_id($fid, $recur) {
 
       if (unlink($dir)) {
         $remove_fields = TRUE;
-        drupal_set_message(t('The file %dir was deleted.', ['%dir' => $filename)]);
+        drupal_set_message(t('The file %dir was deleted.', ['%dir' => $filename]));
       }
       else {
         drupal_set_message(t('The file %dir could not be deleted.', ['%dir' => $filename]));
@@ -1650,10 +1635,10 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
     drupal_write_record('uc_file_users', $file_user, $key);
 
     if ($key) {
-      \Drupal::logger('uc_file')->notice('%user has had download privileges of %file renewed.', ['%user' => user_format_name($user), '%file' => $file_user['filename']]);
+      \Drupal::logger('uc_file')->notice('%user has had download privileges of %file renewed.', ['%user' => $user->getUsername(), '%file' => $file_user['filename']]);
     }
     else {
-      \Drupal::logger('uc_file')->notice('%user has been allowed to download %file.', ['%user' => user_format_name($user), '%file' => $file_user['filename']]);
+      \Drupal::logger('uc_file')->notice('%user has been allowed to download %file.', ['%user' => $user->getUsername(), '%file' => $file_user['filename']]);
     }
 
     $result[] = (object)$file_user;

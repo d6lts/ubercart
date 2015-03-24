@@ -1,0 +1,34 @@
+uc_file.downloads:
+  path: '/admin/store/products/files'
+  defaults:
+    _form: '\Drupal\uc_file\Form\AdministerFiles'
+    _title: 'View file downloads'
+  requirements:
+    _permission: 'administer products'
+
+uc_file.show:
+  path: '/admin/store/products/files/show'
+  defaults:
+    _form: '\Drupal\uc_file\Form\ShowForm'
+    _title: 'View file downloads'
+  requirements:
+    _permission: 'administer products'
+
+uc_file.action:
+  path: '/admin/store/products/files/action'
+  defaults:
+    _form: '\Drupal\uc_file\Form\ActionForm'
+    _title: 'View file downloads'
+  requirements:
+    _permission: 'administer products'
+
+uc_file.download_file:
+  path: '/download/{file}'
+  defaults:
+    _controller: '\Drupal\uc_file\Controller\DownloadController'
+    _title: 'Download file'
+  requirements:
+    _permission: 'download file'
+#    'page callback' => '_uc_file_download',
+#    'type' => MENU_CALLBACK,
+#    'file' => 'uc_file.pages.inc',
