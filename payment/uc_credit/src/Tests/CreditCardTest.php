@@ -151,7 +151,7 @@ class CreditCardTest extends UbercartTestBase {
 
     // Try to submit settings form without a key file path.
     // Save current variable, reset to its value when first installed.
-    $config = \Drupal::config('uc_credit.settings');
+    $config = \Drupal::configFactory()->getEditable('uc_credit.settings');
     $temp_variable = $config->get('encryption_path');
     $config->set('encryption_path', '')->save();
 

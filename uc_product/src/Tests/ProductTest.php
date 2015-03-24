@@ -182,15 +182,15 @@ class ProductTest extends UbercartTestBase {
       'uc_product[product]' => 1,
     );
 
-    $this->drupalPostForm('admin/structure/types/manage/' . $type->type, $edit, t('Save content type'));
-    $this->assertTrue(uc_product_is_product($type->type), 'The updated content type is a product class.');
+    $this->drupalPostForm('admin/structure/types/manage/' . $type->getOriginalId(), $edit, t('Save content type'));
+    $this->assertTrue(uc_product_is_product($type->getOriginalId()), 'The updated content type is a product class.');
 
     // Check the product classes page
     $this->drupalGet('admin/store/products/classes');
-    $this->assertText($type->type, 'Product class is listed.');
-    $this->assertText($type->description, 'Product class description is listed.');
-    $this->assertLinkByHref('admin/structure/types/manage/' . $type->type, 0, 'Product class edit link is shown.');
-    $this->assertLinkByHref('admin/structure/types/manage/' . $type->type . '/delete', 0, 'Product class delete link is shown.');
+    $this->assertText($type->getOriginalId(), 'Product class is listed.');
+    $this->assertText($type->getDescription(), 'Product class description is listed.');
+    $this->assertLinkByHref('admin/structure/types/manage/' . $type->getOriginalId(), 0, 'Product class edit link is shown.');
+    $this->assertLinkByHref('admin/structure/types/manage/' . $type->getOriginalId() . '/delete', 0, 'Product class delete link is shown.');
 
     // Remove the product class again.
     $edit = array(

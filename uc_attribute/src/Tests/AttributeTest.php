@@ -50,7 +50,7 @@ class AttributeTest extends UbercartTestBase {
     uc_attribute_subject_save($attribute, 'product', $product->id());
 
     // Confirm the database is correct.
-    $this->assertEqual($attribute->aid, db_query("SELECT aid FROM {uc_product_attributes} WHERE nid = :nid", array(':nid' => $product->id()))->fetchField(), t('Attribute was attached to a product properly.'));
+    $this->assertEqual($attribute->aid, db_query("SELECT aid FROM {uc_product_attributes} WHERE nid = :nid", [':nid' => $product->id()])->fetchField(), t('Attribute was attached to a product properly.'));
     $this->assertTrue(uc_attribute_subject_exists($attribute->aid, 'product', $product->id()));
 
     // Test retrieval.
@@ -68,7 +68,7 @@ class AttributeTest extends UbercartTestBase {
     uc_attribute_subject_delete($attribute->aid, 'product', $product->id());
 
     // Confirm again.
-    $this->assertFalse(db_query("SELECT aid FROM {uc_product_attributes} WHERE nid = :nid", array(':nid' => $product->id()))->fetchField(), t('Attribute was detached from a product properly.'));
+    $this->assertFalse(db_query("SELECT aid FROM {uc_product_attributes} WHERE nid = :nid", [':nid' => $product->id()])->fetchField(), t('Attribute was detached from a product properly.'));
     $this->assertFalse(uc_attribute_subject_exists($attribute->aid, 'product', $product->id()));
 
     // Add a product class.
@@ -78,7 +78,7 @@ class AttributeTest extends UbercartTestBase {
     uc_attribute_subject_save($attribute, 'class', $product_class->id());
 
     // Confirm the database is correct.
-    $this->assertEqual($attribute->aid, db_query("SELECT aid FROM {uc_class_attributes} WHERE pcid = :pcid", array(':pcid' => $product_class->id()))->fetchField(), t('Attribute was attached to a product class properly.'));
+    $this->assertEqual($attribute->aid, db_query("SELECT aid FROM {uc_class_attributes} WHERE pcid = :pcid", [':pcid' => $product_class->id()])->fetchField(), t('Attribute was attached to a product class properly.'));
     $this->assertTrue(uc_attribute_subject_exists($attribute->aid, 'class', $product_class->id()));
 
     // Test retrieval.
@@ -96,7 +96,7 @@ class AttributeTest extends UbercartTestBase {
     uc_attribute_subject_delete($attribute->aid, 'class', $product_class->id());
 
     // Confirm again.
-    $this->assertFalse(db_query("SELECT aid FROM {uc_class_attributes} WHERE pcid = :pcid", array(':pcid' => $product_class->id()))->fetchField(), t('Attribute was detached from a product class properly.'));
+    $this->assertFalse(db_query("SELECT aid FROM {uc_class_attributes} WHERE pcid = :pcid", [':pcid' => $product_class->id()])->fetchField(), t('Attribute was detached from a product class properly.'));
     $this->assertFalse(uc_attribute_subject_exists($attribute->aid, 'class', $product_class->id()));
 
     // Create a few more.
@@ -246,11 +246,11 @@ class AttributeTest extends UbercartTestBase {
     $this->assertFalse(uc_attribute_load($attribute->aid), t('Attribute was deleted properly.'));
 
     // Sanity check!
-    $this->assertFalse(db_query("SELECT aid FROM {uc_attributes} WHERE aid = :aid", array(':aid' => $attribute->aid))->fetchField(), t('Attribute was seriously deleted properly!'));
+    $this->assertFalse(db_query("SELECT aid FROM {uc_attributes} WHERE aid = :aid", [':aid' => $attribute->aid])->fetchField(), t('Attribute was seriously deleted properly!'));
 
     // Test that options were deleted properly.
     foreach ($options as $option) {
-      $this->assertFalse(db_query("SELECT oid FROM {uc_attribute_options} WHERE oid = :oid", array(':oid' => $option->oid))->fetchField(), t('Make sure options are deleted properly.'));
+      $this->assertFalse(db_query("SELECT oid FROM {uc_attribute_options} WHERE oid = :oid", [':oid' => $option->oid])->fetchField(), t('Make sure options are deleted properly.'));
     }
 
     // Test the deletion applied to products too.
@@ -333,7 +333,7 @@ class AttributeTest extends UbercartTestBase {
     $types = _uc_attribute_display_types();
     $this->assertRaw('<td>' . $types[$edit['display']] . '</td>', t('Verify display field.'));
 
-    $aid = db_query("SELECT aid FROM {uc_attributes} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
+    $aid = db_query("SELECT aid FROM {uc_attributes} WHERE name = :name", [':name' => $edit['name']])->fetchField();
     $this->assertTrue($aid, t('Attribute was created.'));
 
     $attribute = uc_attribute_load($aid);
@@ -397,7 +397,7 @@ class AttributeTest extends UbercartTestBase {
     $attribute = $this->createAttribute();
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/edit');
-    $this->assertText(t('Edit attribute: @name', array('@name' => $attribute->name)), t('Attribute edit form working.'));
+    $this->assertText(t('Edit attribute: @name', ['@name' => $attribute->name]), t('Attribute edit form working.'));
 
     $edit = (array) $this->createAttribute(array(), FALSE);
     $this->drupalPostForm('admin/store/products/attributes/' . $attribute->aid . '/edit', $edit, t('Submit'));
@@ -425,7 +425,7 @@ class AttributeTest extends UbercartTestBase {
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/delete');
 
-    $this->assertText(t('Are you sure you want to delete the attribute @name?', array('@name' => $attribute->name)), t('Attribute delete form working.'));
+    $this->assertText(t('Are you sure you want to delete the attribute @name?', ['@name' => $attribute->name]), t('Attribute delete form working.'));
 
     $edit = (array) $this->createAttribute();
     unset($edit['aid']);
@@ -446,7 +446,7 @@ class AttributeTest extends UbercartTestBase {
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/options');
 
-    $this->assertText(t('Options for @name', array('@name' => $attribute->name)), t('Attribute options form working.'));
+    $this->assertText(t('Options for @name', ['@name' => $attribute->name]), t('Attribute options form working.'));
   }
 
   /**
@@ -457,14 +457,14 @@ class AttributeTest extends UbercartTestBase {
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/options/add');
 
-    $this->assertText(t('Options for @name', array('@name' => $attribute->name)), t('Attribute options add form working.'));
+    $this->assertText(t('Options for @name', ['@name' => $attribute->name]), t('Attribute options add form working.'));
 
     $edit = (array) $this->createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($edit['aid']);
 
     $this->drupalPostForm('admin/store/products/attributes/' . $attribute->aid . '/options/add', $edit, t('Submit'));
 
-    $option = db_query("SELECT * FROM {uc_attribute_options} WHERE aid = :aid", array(':aid' => $attribute->aid))->fetchObject();
+    $option = db_query("SELECT * FROM {uc_attribute_options} WHERE aid = :aid", [':aid' => $attribute->aid])->fetchObject();
 
     $fields_ok = TRUE;
     foreach ($edit as $field => $value) {
@@ -490,7 +490,7 @@ class AttributeTest extends UbercartTestBase {
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/options/' . $option->oid . '/edit');
 
-    $this->assertText(t('Edit option: @name', array('@name' => $option->name)), t('Attribute options edit form working.'));
+    $this->assertText(t('Edit option: @name', ['@name' => $option->name]), t('Attribute options edit form working.'));
 
     $edit = (array) $this->createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($edit['aid']);
@@ -522,7 +522,7 @@ class AttributeTest extends UbercartTestBase {
 
     $this->drupalGet('admin/store/products/attributes/' . $attribute->aid . '/options/' . $option->oid . '/delete');
 
-    $this->assertText(t('Are you sure you want to delete the option @name?', array('@name' => $option->name)), t('Attribute options delete form working.'));
+    $this->assertText(t('Are you sure you want to delete the option @name?', ['@name' => $option->name]), t('Attribute options delete form working.'));
 
     $this->drupalPostForm('admin/store/products/attributes/' . $attribute->aid . '/options/' . $option->oid . '/delete', array(), t('Delete'));
 
@@ -586,7 +586,7 @@ class AttributeTest extends UbercartTestBase {
 
     $this->drupalGet('admin/structure/types/manage/' . $class->id() . '/attributes/add');
 
-    $this->assertRaw(t('@attribute</label>', array('@attribute' => $attribute->name)), t('Class attribute add form working.'));
+    $this->assertRaw(t('@attribute</label>', ['@attribute' => $attribute->name]), t('Class attribute add form working.'));
 
     $edit['add_attributes[' . $attribute->aid . ']'] = 1;
 
@@ -607,7 +607,7 @@ class AttributeTest extends UbercartTestBase {
 
     $this->drupalGet('admin/structure/types/manage/' . $class->id() . '/options');
 
-    $this->assertRaw(t('@option</label>', array('@option' => $option->name)), t('Class attribute option form working.'));
+    $this->assertRaw(t('@option</label>', ['@option' => $option->name]), t('Class attribute option form working.'));
 
     $o = (array) $this->createAttributeOption(array('aid' => $attribute->aid), FALSE);
     unset($o['name'], $o['aid']);
