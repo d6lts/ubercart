@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\OrderInterface;
@@ -174,7 +174,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
    * {@inheritdoc}
    */
   public function review(OrderInterface $order) {
-    $review[] = array('title' => t('E-mail'), 'data' => String::checkPlain($order->getEmail()));
+    $review[] = array('title' => t('E-mail'), 'data' => SafeMarkup::checkPlain($order->getEmail()));
     return $review;
   }
 

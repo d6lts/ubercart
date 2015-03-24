@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_cart_links\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Displays the Cart Links report.
@@ -39,7 +39,7 @@ class CartLinksReports {
     $result = $query->execute();
     foreach ($result as $data) {
       $rows[] = array(
-        String::checkPlain($data->cart_link_id),
+        SafeMarkup::checkPlain($data->cart_link_id),
         $data->clicks,
         \Drupal::service('date.formatter')->format($data->last_click, 'short'),
       );

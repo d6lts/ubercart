@@ -5,7 +5,7 @@
  * Order administration menu items.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -122,7 +122,7 @@ function uc_order_select_customer($email = NULL) {
 
   // Check to see if the e-mail address for a new user is unique.
   if (arg(5) == 'check') {
-    $email = String::checkPlain($_POST['email']);
+    $email = SafeMarkup::checkPlain($_POST['email']);
     $build['email'] = array('#markup' => '');
     $result = db_query("SELECT uid, mail FROM {users_field_data} WHERE mail = :mail", [':mail' => $email]);
     if ($user_field_data = $result->fetchObject()) {

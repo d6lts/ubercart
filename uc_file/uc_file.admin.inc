@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -86,11 +86,11 @@ function uc_file_admin_files_form_show_files($form, FormStateInterface $form_sta
   foreach ($result as $file) {
     $options[$file->fid] = array(
       'filename' => array(
-        'data' => String::checkPlain($file->filename),
+        'data' => SafeMarkup::checkPlain($file->filename),
         'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
       ),
       'title' => \Drupal::l($file->title, new Url('entity.node.canonical', ['node' => $file->nid])),
-      'model' => String::checkPlain($file->model),
+      'model' => SafeMarkup::checkPlain($file->model),
     );
   }
 

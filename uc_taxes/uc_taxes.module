@@ -7,7 +7,7 @@
  * Allows tax rules to be set up and applied to orders.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -53,7 +53,7 @@ function uc_taxes_form_uc_order_edit_form_alter(&$form, FormStateInterface $form
     // the user.
     if ($item['type'] == 'tax') {
       $form['line_items'][$item['line_item_id']]['title'] = array(
-        '#markup' => String::checkPlain($item['title']),
+        '#markup' => SafeMarkup::checkPlain($item['title']),
       );
       $form['line_items'][$item['line_item_id']]['amount'] = array(
         '#theme' => 'uc_price',

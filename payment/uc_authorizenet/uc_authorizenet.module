@@ -5,7 +5,7 @@
  * Processes payments using Authorize.net. Supports AIM and ARB.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\uc_store\Encryption;
 
 define('UC_AUTHORIZENET_TEST_GATEWAY_URL', 'https://test.authorize.net/gateway/transact.dll');
@@ -506,7 +506,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   $response = explode('|', $result->getBody(TRUE));
 
   if (variable_get('uc_authnet_response_debug', FALSE)) {
-    \Drupal::logger('uc_authorizenet')->notice('Debug response: !data', array('!data' => '<pre>' . String::checkPlain(print_r($response, TRUE)) . '</pre>'));
+    \Drupal::logger('uc_authorizenet')->notice('Debug response: !data', array('!data' => '<pre>' . SafeMarkup::checkPlain(print_r($response, TRUE)) . '</pre>'));
   }
 
   // Trim off the encapsulating character from the results.

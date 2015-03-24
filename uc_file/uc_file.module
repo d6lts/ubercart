@@ -13,7 +13,7 @@
  * Development sponsored by the Ubercart project.  http://www.ubercart.org
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -1420,7 +1420,7 @@ function uc_file_remove_user($user) {
     drupal_set_message(t('!user has had all of his/her downloadable files removed.', array(
       '!user' => theme('username', array(
         'account' => $user,
-        'name' => String::checkPlain($user->name),
+        'name' => SafeMarkup::checkPlain($user->name),
         'link_path' => 'user/' . $user->id(),
       )),
     )));
@@ -1446,7 +1446,7 @@ function uc_file_remove_user_file_by_id($user, $fid) {
     drupal_set_message(t('!user has had %file removed from his/her downloadable file list.', array(
       '!user' => theme('username', array(
         'account' => $user,
-        'name' => String::checkPlain($user->name),
+        'name' => SafeMarkup::checkPlain($user->name),
         'link_path' => 'user/' . $user->id(),
       )),
       '%file' => $file->filename,

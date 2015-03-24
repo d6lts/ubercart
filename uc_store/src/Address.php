@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_store;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -136,15 +136,15 @@ class Address {
 
     $variables = array(
       "\r\n" => '<br />',
-      '!company' => String::checkPlain($this->company),
-      '!first_name' => String::checkPlain($this->first_name),
-      '!last_name' => String::checkPlain($this->last_name),
-      '!street1' => String::checkPlain($this->street1),
-      '!street2' => String::checkPlain($this->street2),
-      '!city' => String::checkPlain($this->city),
+      '!company' => SafeMarkup::checkPlain($this->company),
+      '!first_name' => SafeMarkup::checkPlain($this->first_name),
+      '!last_name' => SafeMarkup::checkPlain($this->last_name),
+      '!street1' => SafeMarkup::checkPlain($this->street1),
+      '!street2' => SafeMarkup::checkPlain($this->street2),
+      '!city' => SafeMarkup::checkPlain($this->city),
       '!zone_code' => $zone_data['zone_code'],
       '!zone_name' => $zone_data['zone_name'],
-      '!postal_code' => String::checkPlain($this->postal_code),
+      '!postal_code' => SafeMarkup::checkPlain($this->postal_code),
       '!country_name' => t($country_data['country_name']),
       '!country_code2' => $country_data['country_iso_code_2'],
       '!country_code3' => $country_data['country_iso_code_3'],

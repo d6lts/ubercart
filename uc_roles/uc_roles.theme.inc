@@ -5,7 +5,7 @@
  * Theme functions for the uc_roles module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Themes the roles dialog on the account edit page.
@@ -65,7 +65,7 @@ function theme_uc_roles_user_expiration(array $variables) {
 
     $rows[] = array(
       array('data' => drupal_render($data['remove'])),
-      array('data' => String::checkPlain($data['name']['#value'])),
+      array('data' => SafeMarkup::checkPlain($data['name']['#value'])),
       array('data' => \Drupal::service('date.formatter')->format($data['expiration']['#value'], 'short')),
 
       // Options to adjust the expiration.

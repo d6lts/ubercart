@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_attribute\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 
@@ -43,20 +43,20 @@ class AttributeController extends ControllerBase {
 
     $result = $query->execute();
     foreach ($result as $attr) {
-      $attr->options = db_query('SELECT COUNT(*) FROM {uc_attribute_options} WHERE aid = :aid', array(':aid' => $attr->aid))->fetchField();
+      $attr->options = db_query('SELECT COUNT(*) FROM {uc_attribute_options} WHERE aid = :aid', [':aid' => $attr->aid])->fetchField();
       if (empty($attr->label)) {
         $attr->label = $attr->name;
       }
       $rows[] = array(
-        String::checkPlain($attr->name),
-        String::checkPlain($attr->label),
+        SafeMarkup::checkPlain($attr->name),
+        SafeMarkup::checkPlain($attr->label),
         $attr->required == 1 ? t('Yes') : t('No'),
         $attr->ordering,
         $attr->options,
         $display_types[$attr->display],
-        \Drupal::l(t('edit'), new Url('uc_attribute.edit', array('aid' => $attr->aid))),
-        \Drupal::l(t('options'), new Url('uc_attribute.options', array('aid' => $attr->aid))),
-        \Drupal::l(t('delete'), new Url('uc_attribute.delete', array('aid' => $attr->aid))),
+        \Drupal::l(t('edit'), new Url('uc_attribute.edit', ['aid' => $attr->aid])),
+        \Drupal::l(t('options'), new Url('uc_attribute.options', ['aid' => $attr->aid])),
+        \Drupal::l(t('delete'), new Url('uc_attribute.delete', ['aid' => $attr->aid])),
       );
     }
 

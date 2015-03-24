@@ -5,7 +5,7 @@
  * Token hooks for the uc_product module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Implements hook_token_info().
@@ -132,7 +132,7 @@ function uc_product_tokens($type, $tokens, $data = array(), $options = array()) 
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'product:model':
-          $replacements[$original] = $sanitize ? String::checkPlain($product->model) : $product->model;
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($product->model) : $product->model;
           break;
 
         case 'product:cost':

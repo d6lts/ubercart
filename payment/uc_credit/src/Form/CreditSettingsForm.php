@@ -5,7 +5,7 @@
  * Credit administration menu items.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -182,7 +182,7 @@ function uc_credit_settings_form($form, FormStateInterface $form_state) {
   foreach ($gateways as $id => $gateway) {
     $form['gateways'][$id] = array(
       '#type' => 'details',
-      '#title' => String::checkPlain($gateway['title']),
+      '#title' => SafeMarkup::checkPlain($gateway['title']),
       '#group' => 'uc_credit',
       '#weight' => 5,
     );

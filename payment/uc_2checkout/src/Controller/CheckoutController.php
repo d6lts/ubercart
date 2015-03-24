@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_2checkout\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -23,7 +23,7 @@ class CheckoutController extends ControllerBase {
   public function complete($cart_id = 0) {
     $cart_config = \Drupal::config('uc_cart.settings');
     $module_config = \Drupal::config('uc_2checkout.settings');
-    \Drupal::logger('2Checkout')->notice('Receiving new order notification for order !order_id.', array('!order_id' => String::checkPlain($_REQUEST['merchant_order_id'])));
+    \Drupal::logger('2Checkout')->notice('Receiving new order notification for order !order_id.', array('!order_id' => SafeMarkup::checkPlain($_REQUEST['merchant_order_id'])));
 
     $order = uc_order_load($_REQUEST['merchant_order_id']);
 
@@ -58,12 +58,12 @@ class CheckoutController extends ControllerBase {
     $order->billing_postal_code = $_REQUEST['zip'];
     $order->billing_phone = $_REQUEST['phone'];
 
-    $zone_id = db_query("SELECT zone_id FROM {uc_zones} WHERE zone_code LIKE :code", array(':code' => $_REQUEST['state']))->fetchField();
+    $zone_id = db_query("SELECT zone_id FROM {uc_zones} WHERE zone_code LIKE :code", [':code' => $_REQUEST['state']])->fetchField();
     if (!empty($zone_id)) {
       $order->billing_zone = $zone_id;
     }
 
-    $country_id = db_query("SELECT country_id FROM {uc_countries} WHERE country_name LIKE :name", array(':name' => $_REQUEST['country']))->fetchField();
+    $country_id = db_query("SELECT country_id FROM {uc_countries} WHERE country_name LIKE :name", [':name' => $_REQUEST['country']])->fetchField();
     if (!empty($country_id)) {
       $order->billing_country = $country_id;
     }
@@ -72,11 +72,11 @@ class CheckoutController extends ControllerBase {
     $order->save();
 
     if (Unicode::strtolower($_REQUEST['email']) !== Unicode::strtolower($order->getEmail())) {
-      uc_order_comment_save($order->id(), 0, t('Customer used a different e-mail address during payment: !email', array('!email' => String::checkPlain($_REQUEST['email']))), 'admin');
+      uc_order_comment_save($order->id(), 0, t('Customer used a different e-mail address during payment: !email', array('!email' => SafeMarkup::checkPlain($_REQUEST['email']))), 'admin');
     }
 
     if ($_REQUEST['credit_card_processed'] == 'Y' && is_numeric($_REQUEST['total'])) {
-      $comment = t('Paid by !type, 2Checkout.com order #!order.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('credit card') : t('echeck'), '!order' => String::checkPlain($_REQUEST['order_number'])));
+      $comment = t('Paid by !type, 2Checkout.com order #!order.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('credit card') : t('echeck'), '!order' => SafeMarkup::checkPlain($_REQUEST['order_number'])));
       uc_payment_enter($order->id(), '2checkout', $_REQUEST['total'], 0, NULL, $comment);
     }
     else {

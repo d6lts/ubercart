@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_cybersource\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
@@ -41,16 +41,16 @@ class HOPController extends ControllerBase {
     }
 
     // Assign posted variables to local variables.
-    $decision = String::checkPlain($_POST['decision']);
-    $reason_code = String::checkPlain($_POST['reasonCode']);
+    $decision = SafeMarkup::checkPlain($_POST['decision']);
+    $reason_code = SafeMarkup::checkPlain($_POST['reasonCode']);
     $reason = _parse_cs_reason_code($reason_code);
-    $payment_amount = String::checkPlain($_POST['orderAmount']);
-    $payment_currency = String::checkPlain($_POST['paymentCurrency']);
-    $request_id = String::checkPlain($_POST['requestID']);
-    $request_token = String::checkPlain($_POST['orderPage_requestToken']);
-    $reconciliation_id = String::checkPlain($_POST['reconciliationID']);
-    $order_id = String::checkPlain($_POST['orderNumber']);
-    $payer_email = String::checkPlain($_POST['billTo_email']);
+    $payment_amount = SafeMarkup::checkPlain($_POST['orderAmount']);
+    $payment_currency = SafeMarkup::checkPlain($_POST['paymentCurrency']);
+    $request_id = SafeMarkup::checkPlain($_POST['requestID']);
+    $request_token = SafeMarkup::checkPlain($_POST['orderPage_requestToken']);
+    $reconciliation_id = SafeMarkup::checkPlain($_POST['reconciliationID']);
+    $order_id = SafeMarkup::checkPlain($_POST['orderNumber']);
+    $payer_email = SafeMarkup::checkPlain($_POST['billTo_email']);
     $order = uc_order_load($_POST['orderNumber']);
 
     switch ($decision) {

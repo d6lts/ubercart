@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_taxes\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -23,7 +23,7 @@ class TaxRateEditForm extends TaxRateFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
-    $form['#title'] = String::checkPlain($rate->name);
+    $form['#title'] = SafeMarkup::checkPlain($rate->name);
 
     $form['id'] = array('#type' => 'value', '#value' => $tax_rate);
     $form['name']['#default_value'] = $rate->name;

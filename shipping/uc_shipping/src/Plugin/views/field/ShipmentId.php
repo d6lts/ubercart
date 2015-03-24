@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_shipping\Plugin\views\field;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -83,7 +83,7 @@ class ShipmentId extends FieldPluginBase {
    * Overrides views_handler_field::render().
    */
   public function render($values) {
-    return $this->render_link(String::checkPlain($values->{$this->field_alias}), $values);
+    return $this->render_link(SafeMarkup::checkPlain($values->{$this->field_alias}), $values);
   }
 
 }

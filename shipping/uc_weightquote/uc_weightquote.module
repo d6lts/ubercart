@@ -6,7 +6,7 @@
  * product.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -35,7 +35,7 @@ function uc_weightquote_form_node_form_alter(&$form, &$form_state, $form_id) {
       $unit = \Drupal::config('uc_store.settings')->get('units.weight');
       $form['shipping']['weightquote'][$method->mid] = array(
         '#type' => 'uc_price',
-        '#title' => String::checkPlain($method->title),
+        '#title' => SafeMarkup::checkPlain($method->title),
         '#default_value' => isset($form['#node']->weightquote[$method->mid]) ? $form['#node']->weightquote[$method->mid] : '',
         '#description' => t('Default rate: %price per @unit', array('%price' => uc_currency_format($method->product_rate), '@unit' => $unit)),
         '#field_suffix' => t('per @unit', array('@unit' => $unit)),
@@ -193,8 +193,8 @@ function uc_weightquote_quote($products, $details, $method) {
 
     $quotes[] = array(
       'rate' => $rate,
-      'label' => String::checkPlain($method->label),
-      'option_label' => String::checkPlain($method->label),
+      'label' => SafeMarkup::checkPlain($method->label),
+      'option_label' => SafeMarkup::checkPlain($method->label),
     );
   }
 

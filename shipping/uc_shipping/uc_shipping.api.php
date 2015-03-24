@@ -5,7 +5,7 @@
  * Hooks provided by the Shipping module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * @addtogroup hooks
@@ -57,12 +57,12 @@ function hook_uc_shipment($op, $shipment) {
             foreach ($package->products as $product) {
               $xml_data .= '<item-shipping-information>';
               $xml_data .= '<item-id>';
-              $xml_data .= '<merchant-item-id>' . String::checkPlain($product->nid . '|' . $product->model) . '</merchant-item-id>';
+              $xml_data .= '<merchant-item-id>' . SafeMarkup::checkPlain($product->nid . '|' . $product->model) . '</merchant-item-id>';
               $xml_data .= '</item-id>';
               $xml_data .= '<tracking-data-list>';
               $xml_data .= '<tracking-data>';
-              $xml_data .= '<carrier>' . String::checkPlain($shipment->carrier) . '</carrier>';
-              $xml_data .= '<tracking-number>' . String::checkPlain($tracking_number) . '</tracking-number>';
+              $xml_data .= '<carrier>' . SafeMarkup::checkPlain($shipment->carrier) . '</carrier>';
+              $xml_data .= '<tracking-number>' . SafeMarkup::checkPlain($tracking_number) . '</tracking-number>';
               $xml_data .= '</tracking-data>';
               $xml_data .= '</tracking-data-list>';
               $xml_data .= '</item-shipping-information>';
@@ -86,7 +86,7 @@ function hook_uc_shipment($op, $shipment) {
       if ($google_order_number) {
         foreach ($shipment->packages as $package) {
           foreach ($package->products as $product) {
-            $reset_ids[] = String::checkPlain($product->nid . '|' . $product->model);
+            $reset_ids[] = SafeMarkup::checkPlain($product->nid . '|' . $product->model);
           }
         }
         $request = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";

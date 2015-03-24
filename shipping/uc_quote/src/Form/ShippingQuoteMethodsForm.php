@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_quote\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -71,7 +71,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
 
         $form['methods'][$id]['status'] = array(
           '#type' => 'checkbox',
-          '#title' => String::checkPlain($method['title']),
+          '#title' => SafeMarkup::checkPlain($method['title']),
           '#default_value' => $method['enabled'],
         );
         $form['methods'][$id]['description'] = array(

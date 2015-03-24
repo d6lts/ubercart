@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_order\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\OrderInterface;
 
@@ -67,7 +67,7 @@ class OrderController extends ControllerBase {
    * @param \Drupal\uc_order\OrderInterface $uc_order
    */
   public function pageTitle(OrderInterface $uc_order) {
-    return String::checkPlain($uc_order->label());
+    return SafeMarkup::checkPlain($uc_order->label());
   }
 
 }

@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_product\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
@@ -45,8 +45,8 @@ class ProductController extends ControllerBase {
         );
       }
       $rows[] = array(
-        String::checkPlain($class->id()),
-        String::checkPlain($class->label()),
+        SafeMarkup::checkPlain($class->id()),
+        SafeMarkup::checkPlain($class->label()),
         Xss::filterAdmin($class->getDescription()),
         array(
           'data' => array(

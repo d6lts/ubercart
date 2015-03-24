@@ -8,7 +8,7 @@
  * classes for more specification.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -589,7 +589,7 @@ function uc_product_uc_cart_display($item) {
   $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
 
   $element['title'] = array(
-    '#markup' => $node->access('view') ? \Drupal::l($item->title, new Url('entity.node.canonical', ['node' => $node->id()])) : String::checkPlain($item->title),
+    '#markup' => $node->access('view') ? \Drupal::l($item->title, new Url('entity.node.canonical', ['node' => $node->id()])) : SafeMarkup::checkPlain($item->title),
   );
 
   $element['#total'] = $item->price->value * $item->qty->value;

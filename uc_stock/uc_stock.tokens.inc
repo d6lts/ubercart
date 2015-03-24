@@ -5,7 +5,7 @@
  * Token hooks for the uc_stock module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Implements hook_token_info().
@@ -54,7 +54,7 @@ function uc_stock_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'model':
-          $replacements[$original] = $sanitize ? String::checkPlain($object->sku) : $object->sku;
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($object->sku) : $object->sku;
           break;
 
         case 'threshold':

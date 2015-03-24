@@ -10,7 +10,7 @@
  * number sold, and revenue produced.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -76,7 +76,7 @@ function uc_reports_help($path, RouteMatchInterface $route_match) {
     if ($include_statuses) {
       $statuses = array();
       foreach (uc_reports_order_statuses() as $status) {
-        $statuses[] = String::checkPlain(entity_load('uc_order_status', $status)->name);
+        $statuses[] = SafeMarkup::checkPlain(entity_load('uc_order_status', $status)->name);
       }
       $order_statuses = t('<b>Order statuses used:</b> @statuses', array('@statuses' => implode(', ', array_filter($statuses))));
 

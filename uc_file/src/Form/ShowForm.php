@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Form step values.
@@ -70,11 +70,11 @@ class ShowForm extends FormBase {
     foreach ($result as $file) {
       $options[$file->fid] = array(
         'filename' => array(
-          'data' => String::checkPlain($file->filename),
+          'data' => SafeMarkup::checkPlain($file->filename),
           'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
         ),
         'title' => \Drupal::l($file->title, new Url('entity.node.canonical', ['node' => $file->nid])),
-        'model' => String::checkPlain($file->model),
+        'model' => SafeMarkup::checkPlain($file->model),
       );
     }
 

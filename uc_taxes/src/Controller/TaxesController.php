@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_taxes\Controller;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 
@@ -25,7 +25,7 @@ class TaxesController extends ControllerBase {
     $rows = array();
     foreach (uc_taxes_rate_load() as $rate_id => $rate) {
       $rows[] = array(
-        String::checkPlain($rate->name),
+        SafeMarkup::checkPlain($rate->name),
         $rate->rate * 100 . '%',
         $rate->shippable ? t('Shippable products') : t('Any product'),
         implode(', ', $rate->taxed_product_types),

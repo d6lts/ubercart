@@ -50,7 +50,7 @@ function uc_roles_tokens($type, $tokens, $data = array(), $options = array()) {
           $replacements[$original] = \Drupal::service('date.formatter')->format($object->expiration, 'medium');
           break;
         case 'name':
-          $replacements[$original] = $sanitize ? String::checkPlain(_uc_roles_get_name($object->rid)) : _uc_roles_get_name($object->rid);
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain(_uc_roles_get_name($object->rid)) : _uc_roles_get_name($object->rid);
           break;
       }
     }

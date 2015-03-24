@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_order\Plugin\views\argument_validator;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
@@ -128,7 +128,7 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     }
 
     $this->argument->argument = $account->id();
-    $this->argument->validated_title = String::checkPlain($account->hasPermission($account));
+    $this->argument->validated_title = SafeMarkup::checkPlain($account->hasPermission($account));
     return TRUE;
   }
 

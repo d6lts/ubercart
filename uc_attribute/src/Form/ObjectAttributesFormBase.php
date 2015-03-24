@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_attribute\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -77,7 +77,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
         '#title_display' => 'invisible',
       );
       $form['attributes'][$aid]['name'] = array(
-        '#markup' => String::checkPlain($attribute->name),
+        '#markup' => SafeMarkup::checkPlain($attribute->name),
       );
       $form['attributes'][$aid]['label'] = array(
         '#type' => 'textfield',
@@ -87,7 +87,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
         '#size' => 20,
       );
       $form['attributes'][$aid]['option'] = array(
-        '#markup' => $option ? (String::checkPlain($option->name) . ' (' . uc_currency_format($option->price) . ')' ) : t('n/a'),
+        '#markup' => $option ? (SafeMarkup::checkPlain($option->name) . ' (' . uc_currency_format($option->price) . ')' ) : t('n/a'),
       );
       $form['attributes'][$aid]['required'] = array(
         '#type' => 'checkbox',

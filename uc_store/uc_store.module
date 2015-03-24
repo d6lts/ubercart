@@ -10,7 +10,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -355,15 +355,15 @@ function uc_address_format($first_name, $last_name, $company, $street1, $street2
 
   $variables = array(
     "\r\n" => '<br />',
-    '!company' => String::checkPlain($company),
-    '!first_name' => String::checkPlain($first_name),
-    '!last_name' => String::checkPlain($last_name),
-    '!street1' => String::checkPlain($street1),
-    '!street2' => String::checkPlain($street2),
-    '!city' => String::checkPlain($city),
+    '!company' => SafeMarkup::checkPlain($company),
+    '!first_name' => SafeMarkup::checkPlain($first_name),
+    '!last_name' => SafeMarkup::checkPlain($last_name),
+    '!street1' => SafeMarkup::checkPlain($street1),
+    '!street2' => SafeMarkup::checkPlain($street2),
+    '!city' => SafeMarkup::checkPlain($city),
     '!zone_code' => $zone_data['zone_code'],
     '!zone_name' => $zone_data['zone_name'],
-    '!postal_code' => String::checkPlain($postal_code),
+    '!postal_code' => SafeMarkup::checkPlain($postal_code),
     '!country_name' => t($country_data['country_name']),
     '!country_code2' => $country_data['country_iso_code_2'],
     '!country_code3' => $country_data['country_iso_code_3'],
@@ -539,7 +539,7 @@ function uc_select_address($uid, $type = 'billing', $onchange = '', $title = NUL
         (isset($addresses[$key + 1]) && $option == $addresses[$key + 1]['street1'])) {
       $option .= ' - ' . $address['first_name'] . ' ' . $address['last_name'];
     }
-    $options[Json::encode($address)] = String::checkPlain($option);
+    $options[Json::encode($address)] = SafeMarkup::checkPlain($option);
   }
 
   $select = array(
@@ -576,7 +576,7 @@ function uc_select_addresses($uid, $type = 'billing') {
         (isset($addresses[$key + 1]) && $option == $addresses[$key + 1]['street1'])) {
       $option .= ' - ' . $address['first_name'] . ' ' . $address['last_name'];
     }
-    $options[$key] = String::checkPlain($option);
+    $options[$key] = SafeMarkup::checkPlain($option);
   }
 
   $addresses['#options'] = $options;

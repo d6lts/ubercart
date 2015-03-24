@@ -5,7 +5,7 @@
  * Theme functions for the uc_product_kit module.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
@@ -23,7 +23,7 @@ function theme_uc_product_kit_list_item(array $variables) {
       $title = \Drupal::l($product->label(), new Url('entity.node.canonical', ['node' => $product->id()]));
     }
     else {
-      $title = String::checkPlain($product->label());
+      $title = SafeMarkup::checkPlain($product->label());
     }
     $qty = $product->qty;
   }
@@ -33,7 +33,7 @@ function theme_uc_product_kit_list_item(array $variables) {
       $title = \Drupal::l($product->title, new Url('entity.node.canonical', ['node' => $product->nid->target_id]));
     }
     else {
-      $title = String::checkPlain($product->title);
+      $title = SafeMarkup::checkPlain($product->title);
     }
     $qty = $product->qty->value;
   }

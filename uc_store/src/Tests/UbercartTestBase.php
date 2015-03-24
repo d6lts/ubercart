@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_store\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 
 abstract class UbercartTestBase extends WebTestBase {
@@ -289,7 +289,7 @@ abstract class UbercartTestBase extends WebTestBase {
    *   Number of emails to search for string, starting with most recent.
    * @param $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use String::format() to embed variables in the message text, not
+   *   messages: use SafeMarkup::format() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    * @param $group
    *   (optional) The group this message is in, which is displayed in a column
@@ -315,7 +315,7 @@ abstract class UbercartTestBase extends WebTestBase {
       }
     }
     if (!$message) {
-      $message = String::format('Expected text not found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $string]);
+      $message = SafeMarkup::format('Expected text not found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $string]);
     }
     return $this->assertFalse($string_found, $message, $group);
   }

@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_cart\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
@@ -97,7 +97,7 @@ class CheckoutForm extends FormBase {
       $form['panes'][$id] = $pane->view($order, $form, $form_state);
       $form['panes'][$id] += array(
         '#type' => 'details',
-        '#title' => String::checkPlain($pane->getTitle()),
+        '#title' => SafeMarkup::checkPlain($pane->getTitle()),
         '#id' => $id . '-pane',
         '#open' => TRUE,
       );

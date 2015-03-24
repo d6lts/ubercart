@@ -12,7 +12,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
@@ -1221,7 +1221,7 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
       // Select options are sanitized, but radio button labels are not.
       $build = array(
         '#theme' => 'uc_attribute_option',
-        '#option' => $attribute->display == 2 ? String::checkPlain($option->name) : $option->name,
+        '#option' => $attribute->display == 2 ? SafeMarkup::checkPlain($option->name) : $option->name,
         '#price' => $display_price,
       );
       $options[$option->oid] = drupal_render($build);
@@ -1277,7 +1277,7 @@ function _uc_attribute_alter_form($id, &$product, $use_ajax) {
 
     $name = _uc_attribute_get_name($attribute, FALSE);
     if (!is_null($name)) {
-      $form_attributes[$attribute->aid]['#title'] = String::checkPlain($name);
+      $form_attributes[$attribute->aid]['#title'] = SafeMarkup::checkPlain($name);
     }
 
     $form_attributes[$attribute->aid]['#description'] = Xss::filter($attribute->description);

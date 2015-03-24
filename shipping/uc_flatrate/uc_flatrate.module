@@ -5,7 +5,7 @@
  * Shipping quote module that defines a flat shipping rate for each product.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -32,7 +32,7 @@ function uc_flatrate_form_node_form_alter(&$form, &$form_state, $form_id) {
       }
       $form['shipping']['flatrate'][$method->mid] = array(
         '#type' => 'uc_price',
-        '#title' => String::checkPlain($method->title),
+        '#title' => SafeMarkup::checkPlain($method->title),
         '#default_value' => isset($form['#node']->flatrate[$method->mid]) ? $form['#node']->flatrate[$method->mid] : '',
         '#description' => t('Default rate: %price', array('%price' => uc_currency_format($method->product_rate))),
         '#weight' => $weight['flatrate_' . $method->mid],
@@ -188,8 +188,8 @@ function uc_flatrate_quote($products, $details, $method) {
 
     $quotes[] = array(
       'rate' => $rate,
-      'label' => String::checkPlain($method->label),
-      'option_label' => String::checkPlain($method->label),
+      'label' => SafeMarkup::checkPlain($method->label),
+      'option_label' => SafeMarkup::checkPlain($method->label),
     );
   }
 

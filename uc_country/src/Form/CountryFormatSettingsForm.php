@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_country\Form;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -82,7 +82,7 @@ class CountryFormatSettingsForm extends ConfigFormBase {
       foreach ($countries as $country) {
         $form['countries'][$country->country_id] = array(
           '#type' => 'details',
-          '#title' => String::checkPlain(t($country->country_name)),
+          '#title' => SafeMarkup::checkPlain(t($country->country_name)),
           '#group' => 'country',
         );
         $form['countries'][$country->country_id]['address_format'] = array(

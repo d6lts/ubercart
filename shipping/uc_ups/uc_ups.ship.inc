@@ -5,7 +5,7 @@
  * UPS functions for label generation.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -572,37 +572,37 @@ function theme_uc_ups_confirm_shipment(array $variables) {
 
   $output = '<div class="shipping-address"><b>' . t('Ship from:') . '</b><br />';
   $output .= uc_address_format(
-    String::checkPlain($_SESSION['ups']['origin']->first_name),
-    String::checkPlain($_SESSION['ups']['origin']->last_name),
-    String::checkPlain($_SESSION['ups']['origin']->company),
-    String::checkPlain($_SESSION['ups']['origin']->street1),
-    String::checkPlain($_SESSION['ups']['origin']->street2),
-    String::checkPlain($_SESSION['ups']['origin']->city),
-    String::checkPlain($_SESSION['ups']['origin']->zone),
-    String::checkPlain($_SESSION['ups']['origin']->postal_code),
-    String::checkPlain($_SESSION['ups']['origin']->country)
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->first_name),
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->last_name),
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->company),
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->street1),
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->street2),
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->city),
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->zone),
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->postal_code),
+    SafeMarkup::checkPlain($_SESSION['ups']['origin']->country)
   );
-  $output .= '<br />' . String::checkPlain($_SESSION['ups']['origin']->email);
+  $output .= '<br />' . SafeMarkup::checkPlain($_SESSION['ups']['origin']->email);
   $output .= '</div>';
 
   $output .= '<div class="shipping-address"><b>' . t('Ship to:') . '</b><br />';
   $output .= uc_address_format(
-    String::checkPlain($_SESSION['ups']['destination']->first_name),
-    String::checkPlain($_SESSION['ups']['destination']->last_name),
-    String::checkPlain($_SESSION['ups']['destination']->company),
-    String::checkPlain($_SESSION['ups']['destination']->street1),
-    String::checkPlain($_SESSION['ups']['destination']->street2),
-    String::checkPlain($_SESSION['ups']['destination']->city),
-    String::checkPlain($_SESSION['ups']['destination']->zone),
-    String::checkPlain($_SESSION['ups']['destination']->postal_code),
-    String::checkPlain($_SESSION['ups']['destination']->country)
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->first_name),
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->last_name),
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->company),
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->street1),
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->street2),
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->city),
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->zone),
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->postal_code),
+    SafeMarkup::checkPlain($_SESSION['ups']['destination']->country)
   );
-  $output .= '<br />' . String::checkPlain($_SESSION['ups']['destination']->email);
+  $output .= '<br />' . SafeMarkup::checkPlain($_SESSION['ups']['destination']->email);
   $output .= '</div>';
   $output .= '<div class="shipment-data">';
   $method = uc_ups_uc_shipping_method();
   $output .= '<b>' . $method['ups']['quote']['accessorials'][$_SESSION['ups']['service']] . '</b><br />';
-  $output .= '<i>' . String::checkPlain($_SESSION['ups']['rate']['type']) . '</i>: ' . theme('uc_price', array('price' => $_SESSION['ups']['rate']['amount'])) . ' (' . String::checkPlain($_SESSION['ups']['rate']['currency']) . ') -- ';
+  $output .= '<i>' . SafeMarkup::checkPlain($_SESSION['ups']['rate']['type']) . '</i>: ' . theme('uc_price', array('price' => $_SESSION['ups']['rate']['amount'])) . ' (' . SafeMarkup::checkPlain($_SESSION['ups']['rate']['currency']) . ') -- ';
   $output .= '<i>' . t('Paid') . '</i>: ' . $_SESSION['ups']['paid'] . '<br />';
   $ship_date = $_SESSION['ups']['ship_date'];
   $output .= 'Ship date: ' . \Drupal::service('date.formatter')->format(gmmktime(12, 0, 0, $ship_date['month'], $ship_date['day'], $ship_date['year']), 'uc_store');

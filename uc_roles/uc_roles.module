@@ -10,7 +10,7 @@
  * expire/need to be renewed/etc.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -317,7 +317,7 @@ function uc_roles_user_view($account, $view_mode) {
   foreach ($expirations as $expiration) {
     $form[$expiration->rid] = array(
       '#type' => 'item',
-      '#title' => String::checkPlain(_uc_roles_get_name($expiration->rid)),
+      '#title' => SafeMarkup::checkPlain(_uc_roles_get_name($expiration->rid)),
       '#markup' => t('This role will expire on !date', ['!date' => \Drupal::service('date.formatter')->format($expiration->expiration, 'short')]),
     );
   }
@@ -643,7 +643,7 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
       drupal_set_message(t('The expiration of %role_name role for the user !user has been deleted.', array(
         '!user' => theme('username', array(
           'account' => $account,
-          'name' => String::checkPlain($account->getUsername()),
+          'name' => SafeMarkup::checkPlain($account->getUsername()),
           'link_path' => 'user/' . $account->id(),
         )),
         '%role_name' => _uc_roles_get_name($rid),
@@ -687,7 +687,7 @@ function uc_roles_revoke(&$account, $rid, $silent = FALSE) {
       drupal_set_message(t('!user has had the %role role revoked.', array(
         '!user' => theme('username', array(
           'account' => $account,
-          'name' => String::checkPlain($account->getUsername()),
+          'name' => SafeMarkup::checkPlain($account->getUsername()),
           'link_path' => 'user/' . $account->id(),
         )),
         '%role' => $role_name,
@@ -754,7 +754,7 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
       $message = t('!user has been granted the %role role.', array(
         '!user' => theme('username', array(
           'account' => $account,
-          'name' => String::checkPlain($account->getUsername()),
+          'name' => SafeMarkup::checkPlain($account->getUsername()),
           'link_path' => 'user/' . $account->id(),
         )),
         '%role' => $role_name,
@@ -815,7 +815,7 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
       $message = t("!user's %role role has been renewed. It will expire on %date.", array(
         '!user' => theme('username', array(
           'account' => $account,
-          'name' => String::checkPlain($account->getUsername()),
+          'name' => SafeMarkup::checkPlain($account->getUsername()),
           'link_path' => 'user/' . $account->id(),
         )),
         '%role' => $role_name,

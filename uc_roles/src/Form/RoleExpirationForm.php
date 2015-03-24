@@ -10,7 +10,7 @@ namespace Drupal\uc_roles\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Menu callback for viewing expirations.
@@ -63,8 +63,8 @@ class RoleExpirationForm extends FormBase {
 
       // Each row has user name, role , expiration date, and edit/delete operations.
       $row = array(
-        'username' => String::checkPlain($account->getUsername()),
-        'role' => String::checkPlain(_uc_roles_get_name($result->rid)),
+        'username' => SafeMarkup::checkPlain($account->getUsername()),
+        'role' => SafeMarkup::checkPlain(_uc_roles_get_name($result->rid)),
         'expiration' => \Drupal::service('date.formatter')->format($result->expiration, 'short'),
       );
 

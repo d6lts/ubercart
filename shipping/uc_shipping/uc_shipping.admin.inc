@@ -5,7 +5,7 @@
  * Shipping administration menu items.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
@@ -27,14 +27,14 @@ function uc_shipping_order_packages($order) {
     $product_list = array();
     $result2 = db_query("SELECT op.order_product_id, pp.qty, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id", array(':id' => $package->package_id));
     foreach ($result2 as $product) {
-      $product_list[] = $product->qty . ' x ' . String::checkPlain($product->model);
+      $product_list[] = $product->qty . ' x ' . SafeMarkup::checkPlain($product->model);
     }
 
     $row[] = '<ul><li>' . implode('</li><li>', $product_list) . '</li></ul>';
     $row[] = isset($shipping_type_options[$package->shipping_type]) ? $shipping_type_options[$package->shipping_type] : strtr($package->shipping_type, '_', ' ');
-    $row[] = String::checkPlain($package->pkg_type);
+    $row[] = SafeMarkup::checkPlain($package->pkg_type);
     $row[] = isset($package->sid) ? \Drupal::l($package->sid, new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/view', array('order_id' => $order->id(), 'shipment_id' => $package->sid))) : '';
-    $row[] = isset($package->tracking_number) ? String::checkPlain($package->tracking_number) : '';
+    $row[] = isset($package->tracking_number) ? SafeMarkup::checkPlain($package->tracking_number) : '';
 
     if ($package->label_image && $image = file_load($package->label_image)) {
       $package->label_image = $image;
@@ -136,7 +136,7 @@ function uc_shipping_new_package($form, FormStateInterface $form_state, $order) 
           '#default_value' => 0,
         );
         $product_row['model'] = array(
-          '#markup' => String::checkPlain($product->model)
+          '#markup' => SafeMarkup::checkPlain($product->model)
         );
         $product_row['name'] = array(
           '#markup' => Xss::filterAdmin($product->title)
@@ -341,7 +341,7 @@ function uc_shipping_package_edit($form, FormStateInterface $form_state, $order,
     if ($product->qty > 0) {
       $product_row = array();
       $product_row['checked'] = array('#type' => 'checkbox', '#default_value' => isset($package->products[$product->order_product_id]));
-      $product_row['model'] = array('#markup' => String::checkPlain($product->model));
+      $product_row['model'] = array('#markup' => SafeMarkup::checkPlain($product->model));
       $product_row['name'] = array('#markup' => Xss::filterAdmin($product->title));
       $range = range(1, $product->qty);
       $product_row['qty'] = array(
@@ -510,12 +510,12 @@ function uc_shipping_order_shipments($order) {
   foreach ($result as $shipment) {
     $row = array();
     $row[] = $shipment->sid;
-    $row[] = String::checkPlain($shipment->d_first_name) . ' ' . String::checkPlain($shipment->d_last_name);
-    $row[] = String::checkPlain($shipment->d_company);
-    $row[] = String::checkPlain($shipment->d_city) . ', ' . uc_get_zone_code($shipment->d_zone) . ' ' . String::checkPlain($shipment->d_postal_code);
+    $row[] = SafeMarkup::checkPlain($shipment->d_first_name) . ' ' . SafeMarkup::checkPlain($shipment->d_last_name);
+    $row[] = SafeMarkup::checkPlain($shipment->d_company);
+    $row[] = SafeMarkup::checkPlain($shipment->d_city) . ', ' . uc_get_zone_code($shipment->d_zone) . ' ' . SafeMarkup::checkPlain($shipment->d_postal_code);
     $row[] = \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store');
     $row[] = \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store');
-    $row[] = is_null($shipment->tracking_number) ? t('n/a') : String::checkPlain($shipment->tracking_number);
+    $row[] = is_null($shipment->tracking_number) ? t('n/a') : SafeMarkup::checkPlain($shipment->tracking_number);
     $row[] = \Drupal::l(t('view'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/view', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
     $row[] = \Drupal::l(t('edit'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/edit', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
     $row[] = \Drupal::l(t('print'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/print', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
@@ -596,7 +596,7 @@ function uc_shipping_new_shipment($form, FormStateInterface $form_state, $order)
       $package_row['package_id'] = array('#markup' => $package->package_id);
       $product_list = array();
       foreach ($package->products as $product) {
-        $product_list[] = $product->qty . ' x ' . String::checkPlain($product->model);
+        $product_list[] = $product->qty . ' x ' . SafeMarkup::checkPlain($product->model);
       }
       $package_row['products'] = array('#markup' => '<ul><li>' . implode('</li><li>', $product_list) . '</li></ul>');
       $package_row['weight'] = array('#markup' => uc_weight_format($package->weight, $units));
@@ -708,14 +708,14 @@ function uc_shipping_shipment_view($order, $shipment) {
   );
 
   $rows = array();
-  $rows[] = array(t('Carrier:'), String::checkPlain($shipment->carrier));
+  $rows[] = array(t('Carrier:'), SafeMarkup::checkPlain($shipment->carrier));
 
   if ($shipment->transaction_id) {
-    $rows[] = array(t('Transaction ID:'), String::checkPlain($shipment->transaction_id));
+    $rows[] = array(t('Transaction ID:'), SafeMarkup::checkPlain($shipment->transaction_id));
   }
 
   if ($shipment->tracking_number) {
-    $rows[] = array(t('Tracking number:'), String::checkPlain($shipment->tracking_number));
+    $rows[] = array(t('Tracking number:'), SafeMarkup::checkPlain($shipment->tracking_number));
   }
 
   $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
@@ -816,7 +816,7 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
     $product_list = array();
     $declared_value = 0;
     foreach ($package->products as $product) {
-      $product_list[]  = $product->qty . ' x ' . String::checkPlain($product->model);
+      $product_list[]  = $product->qty . ' x ' . SafeMarkup::checkPlain($product->model);
       $declared_value += $product->qty * $product->price;
     }
     $pkg_form = array(
