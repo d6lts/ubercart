@@ -1,6 +1,6 @@
 name: Ubercart
 mail: ''
-mail_include_name: 1
+mail_include_name: true
 phone: ''
 fax: ''
 help_page: ''
@@ -13,49 +13,49 @@ address:
   postal_code: ''
 address_fields:
   first_name:
-    required: 1
-    status: 1
+    required: true
+    status: true
     weight: 0
   last_name:
-    required: 1
-    status: 1
+    required: true
+    status: true
     weight: 1
   company:
-    required: 0
-    status: 1
+    required: false
+    status: true
     weight: 2
   street1:
-    required: 1
-    status: 1
+    required: true
+    status: true
     weight: 3
   street2:
-    required: 0
-    status: 1
+    required: false
+    status: true
     weight: 4
   city:
-    required: 1
-    status: 1
+    required: true
+    status: true
     weight: 5
   zone:
-    required: 1
-    status: 1
+    required: true
+    status: true
     weight: 6
   country:
-    required: 1
-    status: 1
+    required: true
+    status: true
     weight: 7
   postal_code:
-    required: 1
-    status: 1
+    required: true
+    status: true
     weight: 8
   phone:
-    required: 0
-    status: 0
+    required: false
+    status: false
     weight: 9
 currency:
   code: USD
   symbol: $
-  symbol_after: 0
+  symbol_after: false
   thousands_marker: ','
   decimal_marker: .
   precision: 2
@@ -63,5 +63,5 @@ units:
   weight: lb
   length: in
 customer_address: billing
-capitalize_address: 1
-footer_message: 0
+capitalize_address: true
+footer_message: false
