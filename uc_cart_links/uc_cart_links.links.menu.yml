@@ -1,11 +1,11 @@
 uc_cart_links.settings:
-  title: 'Cart links'
+  title: 'Cart Links'
   description: 'Configure and craft special links to add products directly to the cart.'
   route_name: uc_cart_links.settings
   parent: uc_store.admin.store.settings
 
 uc_cart_links.reports:
-  title: 'Cart links'
+  title: 'Cart Links'
   description: 'Track clicks through Cart Links.'
   route_name: uc_cart_links.reports
   parent: uc_store.admin.store.reports

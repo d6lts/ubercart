@@ -2,7 +2,7 @@ uc_cart_links.settings:
   path: '/admin/store/settings/cart-links'
   defaults:
     _form: '\Drupal\uc_cart_links\Form\CartLinksSettingsForm'
-    _title: 'Cart links settings'
+    _title: 'Cart Links settings'
   requirements:
     _permission: 'administer cart links'
 
@@ -10,7 +10,7 @@ uc_cart_links.reports:
   path: '/admin/store/reports/cart-links'
   defaults:
     _controller: '\Drupal\uc_cart_links\Controller\CartLinksReports::buildReport'
-    _title: 'Cart links'
+    _title: 'Cart Links'
   requirements:
     _permission: 'view cart links report'
 
