@@ -1,8 +1,3 @@
-uc_attribute.product_view:
-  route_name: entity.node.edit_form
-  parent_id: entity.node.edit_form
-  title: Product
-  weight: 0
 uc_attribute.product_attributes:
   route_name: uc_attribute.product_attributes
   parent_id: entity.node.edit_form

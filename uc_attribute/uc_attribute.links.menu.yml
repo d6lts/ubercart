@@ -3,4 +3,3 @@ uc_attribute.admin.store.products.attributes:
   description: 'Create and edit product attributes and options.'
   route_name: uc_attribute.overview
   parent: uc_product.admin.store.products
-  weight: -8
