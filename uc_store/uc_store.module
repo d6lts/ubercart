@@ -340,11 +340,11 @@ function uc_set_address_format($country_id, $format) {
  * Formats an address for display based on a country's address format.
  */
 function uc_address_format($first_name, $last_name, $company, $street1, $street2, $city, $zone, $postal_code, $country) {
-  $result = db_query("SELECT * FROM {uc_zones} WHERE zone_id = :id", array(':id' => $zone));
+  $result = db_query("SELECT * FROM {uc_zones} WHERE zone_id = :id", [':id' => $zone]);
   if (!($zone_data = $result->fetchAssoc())) {
     $zone_data = array('zone_code' => t('N/A'), 'zone_name' => t('Unknown'));
   }
-  $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", array(':id' => $country));
+  $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", [':id' => $country]);
   if (!($country_data = $result->fetchAssoc())) {
     $country_data = array(
       'country_name' => t('Unknown'),
@@ -403,10 +403,10 @@ function uc_get_zone_code($zone = NULL) {
   }
 
   if (is_numeric($zone)) {
-    $result = db_query("SELECT zone_code FROM {uc_zones} WHERE zone_id = :id", array(':id' => $zone));
+    $result = db_query("SELECT zone_code FROM {uc_zones} WHERE zone_id = :id", [':id' => $zone]);
   }
   else {
-    $result = db_query("SELECT zone_code FROM {uc_zones} WHERE zone_name = :name", array(':name' => $zone));
+    $result = db_query("SELECT zone_code FROM {uc_zones} WHERE zone_name = :name", [':name' => $zone]);
   }
 
   if ($row = $result->fetchObject()) {
@@ -456,111 +456,6 @@ function uc_get_country_data($match = array(), $sort = 'country_name') {
  */
 function uc_address_field_enabled($field = NULL) {
   return (bool) \Drupal::config('uc_store.settings')->get("address_fields.$field.status");
-}
-
-/**
- * Retrieves a zone's name from the database, using its ID.
- *
- * @param $id
- *   The zone's ID.
- */
-function uc_zone_get_by_id($id) {
-  return db_query("SELECT zone_name FROM {uc_zones} WHERE zone_id = :id", array(':id' => $id))->fetchField();
-}
-
-/**
- * Creates a zone select box for a form.
- *
- * @param $title
- *   The label for the field.
- * @param $default
- *   The default zone ID.
- * @param $country_id
- *   The country ID
- * @param array $options
- *   An associative array of additional options, with the following elements:
- *   - 'description': The description for the field (defaults to none).
- *   - 'display': The values to display, either 'name' (default) or 'code'.
- *   - 'required': TRUE if the field is required (defaults to FALSE).
- *
- * @return
- *   A Form API select element.
- */
-function uc_zone_select($title = '', $default = NULL, $country_id = NULL, $options = array()) {
-  $options += array(
-    'description' => NULL,
-    'display' => 'name',
-    'required' => FALSE,
-  );
-
-  if (empty($country_id)) {
-    $country_id = uc_store_default_country();
-  }
-
-  $order_by = ($options['display'] == 'code') ? 'zone_code' : 'zone_name';
-  $result = db_query('SELECT * FROM {uc_zones} WHERE zone_country_id = :id ORDER BY :field', array(':id' => $country_id, ':field' => $order_by));
-
-  $zones = array('' => t('Please select'));
-  foreach ($result as $zone) {
-    $zones[$zone->zone_id] = $zone->$order_by;
-  }
-  if (count($zones) == 1) {
-    $zones = array(-1 => t('Not applicable'));
-  }
-
-  $select = array(
-    '#type' => 'select',
-    '#title' => $title,
-    '#description' => $options['description'],
-    '#options' => $zones,
-    '#default_value' => $default,
-    '#required' => $options['required'],
-    '#disabled' => isset($zones[-1]),
-  );
-
-  return $select;
-}
-
-/**
- * Helper function to return zone options, grouped by country.
- */
-function uc_zone_option_list() {
-  $result = db_query("SELECT z.*, c.country_name FROM {uc_zones} z LEFT JOIN {uc_countries} c ON z.zone_country_id = c.country_id ORDER BY c.country_name, z.zone_name");
-
-  foreach ($result as $zone) {
-    $options[t($zone->country_name)][$zone->zone_id] = $zone->zone_name;
-  }
-  uksort($options, 'strnatcasecmp');
-
-  return $options;
-}
-
-/**
- * Retrieves a country's name from the database, using its ID.
- *
- * @param $id
- *   The country's ISO 3166-1 numeric identifier.
- */
-function uc_country_get_by_id($id) {
-  return db_query("SELECT country_name FROM {uc_countries} WHERE country_id = :id", array(':id' => $id))->fetchField();
-}
-
-/**
- * Returns a list of available countries.
- */
-function uc_country_option_list() {
-  $result = db_query("SELECT * FROM {uc_countries} WHERE version > :version", array(':version' => 0));
-
-  $options = array();
-  while ($country = $result->fetchAssoc()) {
-    $options[$country['country_id']] = t($country['country_name']);
-  }
-  if (count($options) == 0) {
-    $options[] = t('No countries found.');
-  }
-  natcasesort($options);
-
-  return $options;
 }
 
 /**
@@ -742,44 +637,6 @@ function uc_get_addresses($uid, $type = 'billing') {
 }
 
 /**
- * Returns an array of country files that can be installed or updated.
- */
-function uc_country_import_list() {
-  $dir = drupal_get_path('module', 'uc_store') . '/countries/';
-
-  $countries = array();
-  if (is_dir($dir)) {
-    if ($dh = opendir($dir)) {
-      while (($file = readdir($dh)) !== FALSE) {
-        switch (filetype($dir . $file)) {
-          case 'file':
-            if (substr($file, -4, 4) == '.cif') {
-              $pieces = explode('_', substr($file, 0, strlen($file) - 4));
-              $country_id = intval($pieces[count($pieces) - 2]);
-              $version = $pieces[count($pieces) - 1];
-
-              if (!isset($countries[$country_id])) {
-                $countries[$country_id]['version'] = $version;
-                $countries[$country_id]['file'] = $file;
-              }
-              else {
-                if ($version > $countries[$country_id]['version']) {
-                  $countries[$country_id]['version'] = $version;
-                  $countries[$country_id]['file'] = $file;
-                }
-              }
-            }
-            break;
-        }
-      }
-      closedir($dh);
-    }
-  }
-
-  return $countries;
-}
-
-/**
  * Returns the store name.
  */
 function uc_store_name() {
@@ -908,7 +765,7 @@ function uc_store_encryption_errors(&$crypt, $module) {
     foreach ($errors as $message) {
       $items[] = $message;
     }
-    \Drupal::logger('encryption')->error('Encryption failed. !messages', array('!messages' => theme('item_list', array('items' => $items))));
+    \Drupal::logger('encryption')->error('Encryption failed. !messages', ['!messages' => theme('item_list', array('items' => $items))]);
   }
 }
 
@@ -924,9 +781,9 @@ function uc_store_default_country() {
 
   $default = \Drupal::config('uc_store.settings')->get('address.country');
 
-  $result = db_query("SELECT COUNT(*) FROM {uc_countries} WHERE country_id = :id AND version > :version", array(':id' => $default, ':version' => 0))->fetchField();
+  $result = db_query("SELECT COUNT(*) FROM {uc_countries} WHERE country_id = :id AND version > :version", [':id' => $default, ':version' => 0])->fetchField();
   if ($result == 0) {
-    $default = db_query_range("SELECT country_id FROM {uc_countries} WHERE version > :version", 0, 1, array(':version' => 0))->fetchField();
+    $default = db_query_range("SELECT country_id FROM {uc_countries} WHERE version > :version", 0, 1, [':version' => 0])->fetchField();
   }
 
   return $default;

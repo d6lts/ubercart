@@ -121,11 +121,11 @@ class Address {
    *   A formatted string containing the address.
    */
   public function __toString() {
-    $result = db_query('SELECT * FROM {uc_zones} WHERE zone_id = :id', array(':id' => $this->zone));
+    $result = db_query('SELECT * FROM {uc_zones} WHERE zone_id = :id', [':id' => $this->zone]);
     if (!($zone_data = $result->fetchAssoc())) {
       $zone_data = array('zone_code' => t('N/A'), 'zone_name' => t('Unknown'));
     }
-    $result = db_query('SELECT * FROM {uc_countries} WHERE country_id = :id', array(':id' => $this->country));
+    $result = db_query('SELECT * FROM {uc_countries} WHERE country_id = :id', [':id' => $this->country]);
     if (!($country_data = $result->fetchAssoc())) {
       $country_data = array(
         'country_name' => t('Unknown'),

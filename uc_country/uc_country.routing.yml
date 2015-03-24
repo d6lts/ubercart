@@ -1,0 +1,62 @@
+uc_country.settings:
+  path: '/admin/store/settings/country'
+  defaults:
+    _form: '\Drupal\uc_country\Form\CountryImportForm'
+    _title: 'Countries and addresses'
+  requirements:
+    _permission: 'administer countries'
+#    'description' => 'Import and manage countries.',
+
+uc_country.fields:
+  path: '/admin/store/settings/country/fields'
+  defaults:
+    _form: '\Drupal\uc_country\Form\AddressFieldsForm'
+    _title: 'Address fields'
+  requirements:
+    _permission: 'administer countries'
+#    'description' => 'Edit the address field settings.',
+
+uc_country.formats:
+  path: '/admin/store/settings/country/formats'
+  defaults:
+    _form: '\Drupal\uc_country\Form\CountryFormatSettingsForm'
+    _title: 'Address formats'
+  requirements:
+    _permission: 'administer countries'
+#   'description' => 'Edit country specific address format settings.',
+
+uc_country.remove:
+  path: '/admin/store/settings/country/{country_id}/remove'
+  defaults:
+    _form: '\Drupal\uc_country\Form\CountryRemoveForm'
+    _title: 'Remove a country'
+  requirements:
+    _permission: 'administer countries'
+#   'description' => 'Remove an installed country.',
+
+uc_country.enable:
+  path: '/admin/store/settings/country/{country_id}/enable'
+  defaults:
+    _controller: '\Drupal\uc_country\Controller\CountryController::enable'
+    _title: 'Enable a country'
+  requirements:
+    _permission: 'administer countries'
+#   'description' => 'Enable a disabled country.',
+
+uc_country.disable:
+  path: '/admin/store/settings/country/{country_id}/disable'
+  defaults:
+    _controller: '\Drupal\uc_country\Controller\CountryController::disable'
+    _title: 'Disable a country'
+  requirements:
+    _permission: 'administer countries'
+#   'description' => 'Disable a country from use.',
+
+uc_country.update:
+  path: '/admin/store/settings/country/{country_id}/update/{version}'
+  defaults:
+    _controller: '\Drupal\uc_country\Controller\CountryController::update'
+    _title: 'Update a country'
+  requirements:
+    _permission: 'administer countries'
+#   'description' => 'Update an installed country.',

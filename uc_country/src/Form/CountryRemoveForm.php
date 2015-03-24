@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\uc_store\Form\CountryRemoveForm.
+ * Contains \Drupal\uc_country\Form\CountryRemoveForm.
  */
 
-namespace Drupal\uc_store\Form;
+namespace Drupal\uc_country\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\uc_store\Controller\CountryController;
+use Drupal\uc_country\Controller\CountryController;
 
 /**
  * Form to completely remove a country.
@@ -66,7 +66,7 @@ class CountryRemoveForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_countries.settings');
+    return new Url('uc_country.settings');
   }
 
   /**
@@ -87,7 +87,7 @@ class CountryRemoveForm extends ConfirmFormBase {
     $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", [':id' => $this->country_id]);
     if (!($country = $result->fetchObject())) {
       drupal_set_message(t('Attempted to remove an invalid country.'), 'error');
-      $form_state->setRedirect('uc_countries.settings');
+      $form_state->setRedirect('uc_country.settings');
       return;
     }
 
@@ -110,6 +110,6 @@ class CountryRemoveForm extends ConfirmFormBase {
     }
 
     drupal_set_message(t('@country removed.', ['@country' => t($country->country_name)]));
-    $form_state->setRedirect('uc_countries.settings');
+    $form_state->setRedirect('uc_country.settings');
   }
 }

@@ -33,6 +33,7 @@ abstract class UbercartTestBase extends WebTestBase {
   public static $adminPermissions = array(
     'access administration pages',
     'administer store',
+    'administer countries',
     'administer order workflow',
     'administer product classes',
     'administer product features',

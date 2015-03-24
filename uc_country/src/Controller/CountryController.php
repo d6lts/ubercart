@@ -2,10 +2,10 @@
  
 /**
  * @file
- * Contains \Drupal\uc_store\Controller\CountryController.
+ * Contains \Drupal\uc_country\Controller\CountryController.
  */
  
-namespace Drupal\uc_store\Controller;
+namespace Drupal\uc_country\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
@@ -40,7 +40,7 @@ class CountryController extends ControllerBase {
     else {
       drupal_set_message(t('Attempted to enable an invalid country.'), 'error');
     }
-    return $this->redirect('uc_countries.settings');
+    return $this->redirect('uc_country.settings');
   }
  
   /**
@@ -68,7 +68,7 @@ class CountryController extends ControllerBase {
     else {
       drupal_set_message(t('Attempted to disable an invalid country.'), 'error');
     }
-    return $this->redirect('uc_countries.settings');
+    return $this->redirect('uc_country.settings');
   }
 
   /**
@@ -83,12 +83,12 @@ class CountryController extends ControllerBase {
     $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", [':id' => $country_id]);
     if (!($country = $result->fetchObject())) {
       drupal_set_message(t('Attempted to update an invalid country.'));
-      return $this->redirect('uc_countries.settings');
+      return $this->redirect('uc_country.settings');
     }
 
     if ($version < $country->version) {
       drupal_set_message(t('You cannot update to a previous version.'));
-      return $this->redirect('uc_countries.settings');
+      return $this->redirect('uc_country.settings');
     }
 
     $func_base = self::importInclude($country_id, $version);
@@ -112,7 +112,7 @@ class CountryController extends ControllerBase {
       drupal_set_message(t('Attempted to update an invalid country.'));
     }
 
-    return $this->redirect('uc_countries.settings');
+    return $this->redirect('uc_country.settings');
   }
 
   /**
@@ -125,7 +125,7 @@ class CountryController extends ControllerBase {
    *   TRUE or FALSE indicating whether or not the country was imported.
    */
   public function import($file) {
-    require_once(drupal_get_path('module', 'uc_store') . '/countries/' . $file);
+    require_once(drupal_get_path('module', 'uc_country') . '/countries/' . $file);
 
     $pieces = explode('_', substr($file, 0, strlen($file) - 4));
 
@@ -155,7 +155,7 @@ class CountryController extends ControllerBase {
    *   A string containing the portion of the filename holding the country name.
    */
   public static function importInclude($country_id, $version) {
-    $dir = drupal_get_path('module', 'uc_store') . '/countries/';
+    $dir = drupal_get_path('module', 'uc_country') . '/countries/';
     $match = '_' . $country_id . '_' . $version . '.cif';
     $matchlen = strlen($match);
 

@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\uc_store\Form\CountryImportForm.
+ * Contains \Drupal\uc_country\Form\CountryImportForm.
  */
 
-namespace Drupal\uc_store\Form;
+namespace Drupal\uc_country\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\uc_store\Controller\CountryController;
+use Drupal\uc_country\Controller\CountryController;
 
 /**
  * Imports settings from a country file.
@@ -61,24 +61,24 @@ class CountryImportForm extends ConfigFormBase {
           $caption = t('An asterisk "*" next to the version indicates the country file is not current and should be updated.');
           $ops['update'] = array(
             'title' => $this->t('Update'),
-            'url' => Url::fromRoute('uc_countries.update', ['country_id' => $country->country_id, 'version' =>  $files[$country->country_id]['version']]),
+            'url' => Url::fromRoute('uc_country.update', ['country_id' => $country->country_id, 'version' =>  $files[$country->country_id]['version']]),
           );
         }
         if ($country->version < 0) {
           $ops['enable'] = array(
             'title' => $this->t('Enable'),
-            'url' => Url::fromRoute('uc_countries.enable', ['country_id' => $country->country_id]),
+            'url' => Url::fromRoute('uc_country.enable', ['country_id' => $country->country_id]),
           );
         }
         else {
           $ops['disable'] = array(
             'title' => $this->t('Disable'),
-            'url' => Url::fromRoute('uc_countries.disable', ['country_id' => $country->country_id]),
+            'url' => Url::fromRoute('uc_country.disable', ['country_id' => $country->country_id]),
           );
         }
         $ops['remove'] = array(
           'title' => $this->t('Remove'),
-          'url' => Url::fromRoute('uc_countries.remove', ['country_id' => $country->country_id]),
+          'url' => Url::fromRoute('uc_country.remove', ['country_id' => $country->country_id]),
         );
         $row[] = array(
           'data' => array(

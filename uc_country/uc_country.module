@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @file
+ * Contains global Ubercart functions and store administration functionality.
+ */
+
+
+/**
+ * Returns an array of country files that can be installed or updated.
+ */
+function uc_country_import_list() {
+  $dir = drupal_get_path('module', 'uc_country') . '/countries/';
+
+  $countries = array();
+  if (is_dir($dir)) {
+    if ($dh = opendir($dir)) {
+      while (($file = readdir($dh)) !== FALSE) {
+        switch (filetype($dir . $file)) {
+          case 'file':
+            if (substr($file, -4, 4) == '.cif') {
+              $pieces = explode('_', substr($file, 0, strlen($file) - 4));
+              $country_id = intval($pieces[count($pieces) - 2]);
+              $version = $pieces[count($pieces) - 1];
+
+              if (!isset($countries[$country_id])) {
+                $countries[$country_id]['version'] = $version;
+                $countries[$country_id]['file'] = $file;
+              }
+              else {
+                if ($version > $countries[$country_id]['version']) {
+                  $countries[$country_id]['version'] = $version;
+                  $countries[$country_id]['file'] = $file;
+                }
+              }
+            }
+            break;
+        }
+      }
+      closedir($dh);
+    }
+  }
+
+  return $countries;
+}
+
+/*
+ * Retrieves a country's name from the database, using its ID.
+ *
+ * @param $id
+ *   The country's ISO 3166-1 numeric identifier.
+ */
+function uc_country_get_by_id($id) {
+  return db_query("SELECT country_name FROM {uc_countries} WHERE country_id = :id", [':id' => $id])->fetchField();
+}
+
+/**
+ * Returns a list of available countries.
+ */
+function uc_country_option_list() {
+  $result = db_query("SELECT * FROM {uc_countries} WHERE version > :version", [':version' => 0]);
+
+  $options = array();
+  while ($country = $result->fetchAssoc()) {
+    $options[$country['country_id']] = t($country['country_name']);
+  }
+  if (count($options) == 0) {
+    $options[] = t('No countries found.');
+  }
+  natcasesort($options);
+
+  return $options;
+}
+
+/**
+ * Retrieves a zone's name from the database, using its ID.
+ *
+ * @param $id
+ *   The zone's ID.
+ */
+function uc_zone_get_by_id($id) {
+  return db_query("SELECT zone_name FROM {uc_zones} WHERE zone_id = :id", [':id' => $id])->fetchField();
+}
+
+/**
+ * Creates a zone select box for a form.
+ *
+ * @param $title
+ *   The label for the field.
+ * @param $default
+ *   The default zone ID.
+ * @param $country_id
+ *   The country ID
+ * @param array $options
+ *   An associative array of additional options, with the following elements:
+ *   - 'description': The description for the field (defaults to none).
+ *   - 'display': The values to display, either 'name' (default) or 'code'.
+ *   - 'required': TRUE if the field is required (defaults to FALSE).
+ *
+ * @return
+ *   A Form API select element.
+ */
+function uc_zone_select($title = '', $default = NULL, $country_id = NULL, $options = array()) {
+  $options += array(
+    'description' => NULL,
+    'display' => 'name',
+    'required' => FALSE,
+  );
+
+  if (empty($country_id)) {
+    $country_id = uc_store_default_country();
+  }
+
+  $order_by = ($options['display'] == 'code') ? 'zone_code' : 'zone_name';
+  $result = db_query('SELECT * FROM {uc_zones} WHERE zone_country_id = :id ORDER BY :field', [':id' => $country_id, ':field' => $order_by]);
+
+  $zones = array('' => t('Please select'));
+  foreach ($result as $zone) {
+    $zones[$zone->zone_id] = $zone->$order_by;
+  }
+  if (count($zones) == 1) {
+    $zones = array(-1 => t('Not applicable'));
+  }
+
+  $select = array(
+    '#type' => 'select',
+    '#title' => $title,
+    '#description' => $options['description'],
+    '#options' => $zones,
+    '#default_value' => $default,
+    '#required' => $options['required'],
+    '#disabled' => isset($zones[-1]),
+  );
+
+  return $select;
+}
+
+/**
+ * Helper function to return zone options, grouped by country.
+ */
+function uc_zone_option_list() {
+  $result = db_query("SELECT z.*, c.country_name FROM {uc_zones} z LEFT JOIN {uc_countries} c ON z.zone_country_id = c.country_id ORDER BY c.country_name, z.zone_name");
+
+  foreach ($result as $zone) {
+    $options[t($zone->country_name)][$zone->zone_id] = $zone->zone_name;
+  }
+  uksort($options, 'strnatcasecmp');
+
+  return $options;
+}

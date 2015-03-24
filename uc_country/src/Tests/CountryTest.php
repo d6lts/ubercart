@@ -2,10 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\uc_store\Tests\CountryTest.
+ * Contains \Drupal\uc_country\Tests\CountryTest.
  */
 
-namespace Drupal\uc_store\Tests;
+namespace Drupal\uc_country\Tests;
+
+use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Import, edit, and remove countries and their settings.
@@ -24,7 +26,7 @@ class CountryTest extends UbercartTestBase {
 
     $this->drupalLogin($this->adminUser);
 
-    $this->drupalGet('admin/store/settings/countries');
+    $this->drupalGet('admin/store/settings/country');
     $this->assertRaw(
       '<option value="' . $import_file . '">' . $import_file . '</option>',
       t('Ensure country file is not imported yet.')
@@ -34,7 +36,7 @@ class CountryTest extends UbercartTestBase {
       'import_file[]' => array($import_file => $import_file),
     );
     $this->drupalPostForm(
-      'admin/store/settings/countries',
+      'admin/store/settings/country',
       $edit,
       t('Import')
     );
@@ -71,7 +73,7 @@ class CountryTest extends UbercartTestBase {
     );
 
     $this->drupalPostForm(
-      'admin/store/settings/countries/56/remove',
+      'admin/store/settings/country/56/remove',
       [],
       t('Remove')
     );

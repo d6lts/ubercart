@@ -219,14 +219,3 @@ uc_store.settings:
     footer_message:
       type: boolean
       label: 'Display footer message'
-
-uc_country.formats:
-  type: mapping
-  label: 'Country address formats'
-  mapping:
-    840:
-      type: string
-      label: 'US address format string'
-    124:
-      type: string
-      label: 'Canada address format string'

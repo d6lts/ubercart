@@ -1,0 +1,5 @@
+uc_country.admin.store.settings.countries:
+  title: Countries and addresses
+  description: 'Manage available countries and configure address formats.'
+  route_name: uc_country.settings
+  parent: uc_store.admin.store.settings

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_store\Form\CountryFormatSettingsForm.
+ * Contains \Drupal\uc_country\Form\CountryFormatSettingsForm.
  */
 
-namespace Drupal\uc_store\Form;
+namespace Drupal\uc_country\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\ConfigFormBase;
