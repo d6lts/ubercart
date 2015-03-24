@@ -8,7 +8,7 @@
 namespace Drupal\uc_store\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\field\Numeric;
+use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\ResultRow;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\views\ResultRow;
  *
  * @ViewsField("uc_length")
  */
-class Length extends Numeric {
+class Length extends NumericField {
 
   /**
    * {@inheritdoc}
