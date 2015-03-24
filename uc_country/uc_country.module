@@ -148,3 +148,60 @@ function uc_zone_option_list() {
 
   return $options;
 }
+
+/**
+ * Returns the code abbreviation for a zone based on the zone ID or name.
+ */
+function uc_get_zone_code($zone = NULL) {
+  if (empty($zone)) {
+    return FALSE;
+  }
+
+  if (is_numeric($zone)) {
+    $result = db_query("SELECT zone_code FROM {uc_zones} WHERE zone_id = :id", [':id' => $zone]);
+  }
+  else {
+    $result = db_query("SELECT zone_code FROM {uc_zones} WHERE zone_name = :name", [':name' => $zone]);
+  }
+
+  if ($row = $result->fetchObject()) {
+    return $row->zone_code;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Returns country data based on the supplied criteria.
+ *
+ * @param $match
+ *   An associative array of fields to match.
+ * @param $sort
+ *   The field to sort by.
+ */
+function uc_get_country_data($match = array(), $sort = 'country_name') {
+  $valid_fields = array('country_id', 'country_name', 'country_iso_code_2', 'country_iso_code_3', 'version');
+
+  if (!is_array($match)) {
+    $match = array();
+  }
+  if (!in_array($sort, $valid_fields)) {
+    $sort = 'country_name';
+  }
+
+  $query = db_select('uc_countries')
+    ->fields('uc_countries')
+    ->orderBy($sort);
+  if (count($match) > 0) {
+    foreach ($match as $key => $value) {
+      if (!in_array($key, $valid_fields)) {
+        continue;
+      }
+      $query->condition($key, $value);
+    }
+  }
+
+  $countries = $query->execute()->fetchAll(PDO::FETCH_ASSOC);
+
+  return empty($countries) ? FALSE : $countries;
+}
