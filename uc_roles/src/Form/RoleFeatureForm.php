@@ -27,6 +27,7 @@ class RoleFeatureForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL, $feature = NULL) {
+    $roles_config = \Drupal::config('uc_roles.settings');
     $models = uc_product_get_models($node->id());
 
     // Check if editing or adding to set default values.
@@ -70,17 +71,13 @@ class RoleFeatureForm extends FormBase {
     }
     else {
       $default_model = 0;
-      $default_role = variable_get('uc_roles_default_role', NULL);
-      $default_qty = (variable_get('uc_roles_default_granularity', 'never') == 'never') ? NULL : variable_get('uc_roles_default_length', NULL);
-      $default_granularity = variable_get('uc_roles_default_granularity', 'never');
+      $default_role = $roles_config->get('default_role');
+      $default_qty = ($roles_config->get('default_granularity') == 'never') ? NULL : $roles_config->get('default_length');
+      $default_granularity = $roles_config->get('default_granularity');
       $default_shippable = $node->shippable->value;
-      $default_by_quantity = variable_get('uc_roles_default_by_quantity', FALSE);
-      $end_time = variable_get('uc_roles_default_end_time', array(
-        'day' => date('j'),
-        'month' => date('n'),
-        'year' => date('Y'),
-      ));
-      $default_end_type = variable_get('uc_roles_default_end_expiration', 'rel');
+      $default_by_quantity = $roles_config->get('default_by_quantity');
+      $end_time = $roles_config->get('default_end_time');
+      $default_end_type = $roles_config->get('default_end_expiration');
       $default_end_override = FALSE;
     }
 
