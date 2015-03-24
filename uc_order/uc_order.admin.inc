@@ -124,13 +124,13 @@ function uc_order_select_customer($email = NULL) {
   if (arg(5) == 'check') {
     $email = String::checkPlain($_POST['email']);
     $build['email'] = array('#markup' => '');
-    $result = db_query("SELECT uid, mail FROM {users} WHERE mail = :mail", array(':mail' => $email));
-    if ($user = $result->fetchObject()) {
+    $result = db_query("SELECT uid, mail FROM {users_field_data} WHERE mail = :mail", [':mail' => $email]);
+    if ($user_field_data = $result->fetchObject()) {
       $build['email']['#markup'] .= t('An account already exists for that e-mail.') . '<br /><br />';
       $build['email']['#markup'] .= '<b>' . t('Use this account now?') . '</b><br />'
-        . t('User @uid - @mail', array('@uid' => $user->uid, '@mail' => $user->mail)) . ' <input type="button" '
-        . 'onclick="select_existing_customer(' . $user->uid . ', \''
-        . $user->mail . '\');" value="' . t('Apply') . '" /><br /><br /><hr /><br/>';
+        . t('User @uid - @mail', ['@uid' => $user_field_data->uid, '@mail' => $user_field_data->mail])
+        . ' <input type="button" onclick="select_existing_customer(' . $user_field_data->uid . ', \''
+        . $user_field_data->mail . '\');" value="' . t('Apply') . '" /><br /><br /><hr /><br/>';
     }
     else {
       $name = uc_store_email_to_username($email);

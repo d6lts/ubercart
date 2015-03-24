@@ -84,12 +84,12 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     // However, is_integer() will always fail, since $argument is a string.
     if (is_numeric($argument) && $argument == (int)$argument) {
       if ($type == 'uid' || $type == 'either') {
-        if ($argument == $GLOBALS['user']->id()) {
+        if ($argument == \Drupal::currentUser()->id()) {
           // If you assign an object to a variable in PHP, the variable
           // automatically acts as a reference, not a copy, so we use
           // clone to ensure that we don't actually mess with the
           // real global $user object.
-          $account = clone $GLOBALS['user'];
+          $account = clone \Drupal::currentUser();
         }
         $condition = 'uid';
       }
@@ -123,7 +123,7 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
 
     // If the current user is not the account specified by the argument
     // and doesn't have the correct permission, validation fails.
-    if ($GLOBALS['user']->id() != $account->id() && !$account->hasPermission($this->options['perm'])) {
+    if (\Drupal::currentUser()->id() != $account->id() && !$account->hasPermission($this->options['perm'])) {
       return FALSE;
     }
 

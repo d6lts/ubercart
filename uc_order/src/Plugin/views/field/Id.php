@@ -18,9 +18,9 @@ use Drupal\views\ViewExecutable;
  *
  * @ingroup views_field_handlers
  *
- * @ViewsField("uc_order")
+ * @ViewsField("uc_order_id")
  */
-class Order extends FieldPluginBase {
+class Id extends FieldPluginBase {
 
   /**
    * Override init function to provide generic option to link to user.

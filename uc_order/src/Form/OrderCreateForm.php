@@ -194,14 +194,15 @@ class OrderCreateForm extends FormBase {
   /**
    * Ajax callback: updates the customer selection fields.
    */
-  public function customerSelect($form, &$form_state) {
+  public function customerSelect($form, FormStateInterface $form_state) {
+drupal_set_message('callback');
     return $form['customer'];
   }
 
   /**
    * Ajax callback: updates the customer search results.
    */
-  public function customerSearch($form, &$form_state) {
+  public function customerSearch($form, FormStateInterface $form_state) {
     return $form['customer']['uid'];
   }
 
@@ -211,14 +212,14 @@ class OrderCreateForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     switch ($form_state->getValue('customer_type')) {
       case 'search':
-        if ($form_state->getValue(['customer', 'uid'])) {
+        if (!$form_state->hasValue(['customer', 'uid'])) {
           $form_state->setErrorByName('customer][uid', t('Please select a customer.'));
         }
         break;
 
       case 'create':
         $email = trim($form_state->getValue(['customer', 'email']));
-        $uid = db_query('SELECT uid FROM {users} WHERE mail LIKE :mail', array(':mail' => $email))->fetchField();
+        $uid = db_query('SELECT uid FROM {users_field_data} WHERE mail LIKE :mail', [':mail' => $email])->fetchField();
         if ($uid) {
           $form_state->setErrorByName('customer][mail', t('An account already exists for that e-mail.'));
         }

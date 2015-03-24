@@ -242,25 +242,8 @@ function uc_order_schema() {
 }
 
 /**
- * Implements hook_update_last_removed().
- */
-function uc_order_update_last_removed() {
-  return 7302;
-}
-
-/**
- * @addtogroup updates-7.x-to-8.x
- * @{
- */
-
-/**
  * Remove unused variables.
  */
 function uc_order_update_8000() {
   update_variable_del('uc_cust_order_invoice_template');
 }
-
-/**
- * @} End of "defgroup updates-7.x-to-8.x".
- * The next series of updates should start at 9000.
- */
