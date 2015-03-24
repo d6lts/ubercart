@@ -258,7 +258,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'DESC' => substr($desc, 0, 127),
       'INVNUM' => $order_id . '-' . REQUEST_TIME,
       'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
-      'NOTIFYURL' => \Drupal::url(new Url('uc_paypal/ipn/', ['uc_order' => $order->id()], array['absolute' => TRUE])),
+      'NOTIFYURL' => \Drupal::url(new Url('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE])),
       'EMAIL' => substr($order->getEmail(), 0, 127),
       'PHONENUM' => substr($order->billing_phone, 0, 20),
     );
@@ -633,7 +633,7 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'ADDROVERRIDE' => 1,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => \Drupal::url('uc_paypal/ipn/', ['uc_order => $order->id()], ['absolute' => TRUE]),
+    'NOTIFYURL' => \Drupal::url('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE]),
     'SHIPTONAME' => substr($order->delivery_first_name . ' ' . $order->delivery_last_name, 0, 32),
     'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
     'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
