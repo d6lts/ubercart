@@ -164,7 +164,7 @@ class ProductAdjustmentsForm extends FormBase {
     }
 
     $form['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
 
     return $form;

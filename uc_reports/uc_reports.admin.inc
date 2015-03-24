@@ -97,7 +97,7 @@ function uc_reports_customers() {
     '#empty' => t('No customers found'),
   );
   $build['pager'] = array(
-    '#theme' => 'pager',
+    '#type' => 'pager',
   );
   $build['links'] = array(
     '#prefix' => '<div class="uc-reports-links">',
@@ -267,7 +267,7 @@ function uc_reports_products() {
     '#empty' => t('No products found'),
   );
   $build['pager'] = array(
-    '#theme' => 'pager',
+    '#type' => 'pager',
   );
 
   $build['links'] = array(
@@ -471,7 +471,7 @@ function uc_reports_products_custom() {
     '#empty' => t('No products found'),
   );
   $build['pager'] = array(
-    '#theme' => 'pager',
+    '#type' => 'pager',
   );
   $build['links'] = array(
     '#prefix' => '<div class="uc-reports-links">',

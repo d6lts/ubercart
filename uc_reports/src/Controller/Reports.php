@@ -102,7 +102,7 @@ class Reports {
       '#empty' => t('No customers found'),
     );
     $build['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
     $build['links'] = array(
       '#prefix' => '<div class="uc-reports-links">',
@@ -272,7 +272,7 @@ class Reports {
       '#empty' => t('No products found'),
     );
     $build['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
 
     $build['links'] = array(
@@ -476,7 +476,7 @@ class Reports {
       '#empty' => t('No products found'),
     );
     $build['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
     $build['links'] = array(
       '#prefix' => '<div class="uc-reports-links">',

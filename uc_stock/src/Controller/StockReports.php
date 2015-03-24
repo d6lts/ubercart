@@ -94,7 +94,7 @@ class StockReports {
       '#attributes' => array('width' => '100%', 'class' => array('uc-stock-table')),
     );
     $build['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
 
     $build['links'] = array(

@@ -67,7 +67,7 @@ class AttributeController extends ControllerBase {
       '#empty' => t('No product attributes have been added yet.'),
     );
     $build['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
     );
 
     return $build;

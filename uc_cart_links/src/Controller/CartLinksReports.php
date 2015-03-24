@@ -52,7 +52,7 @@ class CartLinksReports {
       '#empty' => t('No Cart Links have been tracked yet.'),
     );
     $build['pager'] = array(
-      '#theme' => 'pager',
+      '#type' => 'pager',
       '#element' => 1,
     );
 
