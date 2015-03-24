@@ -52,7 +52,7 @@ function uc_shipping_order_packages($order) {
           'alt' => t('Shipping label'),
           'title' => t('Shipping label'),
         )),
-        new Url('admin/store/orders/{order_id}/shipments/labels/{method}/{image_uri}', ['order_id' => $order->id(), 'method' => $method, 'image_uri' => $package->label_image->uri]),
+        new Url('admin/store/orders/{order_id}/shipments/labels/{method}/{image_uri}', ['order_id' => $order->id(), 'method' => $method, 'image_uri' => $package->label_image->uri])
       );
     }
     else {
