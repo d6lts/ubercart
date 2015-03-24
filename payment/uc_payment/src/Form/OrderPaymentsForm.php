@@ -88,8 +88,9 @@ class OrderPaymentsForm extends FormBase {
         $form['payments'][$payment->receipt_id]['received'] = array(
           '#markup' => \Drupal::service('date.formatter')->format($payment->received, 'short'),
         );
+        $markup = array('#theme' => 'uc_uid', '#uid' => $payment->uid);
         $form['payments'][$payment->receipt_id]['user'] = array(
-          '#markup' => theme('uc_uid', array('uid' => $payment->uid)),
+          '#markup' => drupal_render($markup),
         );
         $form['payments'][$payment->receipt_id]['method'] = array(
           '#markup' => ($payment->method == '') ? t('Unknown') : $payment->method,

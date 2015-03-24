@@ -154,7 +154,7 @@ function uc_credit_exit() {
   // Make sure sensitive checkout session data doesn't persist on other pages.
   if (isset($_SESSION['sescrd'])) {
     // Separate the args ourself since the arg() function may not be loaded.
-    $args = explode('/', current_path());
+    $args = explode('/', Url::fromRoute('<current>')->toString());
     if (!isset($args[1]) || $args[1] != 'checkout') {
       unset($_SESSION['sescrd']);
     }

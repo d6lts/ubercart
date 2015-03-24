@@ -8,27 +8,6 @@
 use Drupal\uc_store\Encryption;
 
 /**
- * Implements hook_menu().
- */
-function uc_cybersource_menu() {
-  $items['cybersource/hop-post'] = array(
-    'title' => 'Payment received',
-    'route_name' => 'uc_cybersource.hop.post',
-  );
-  // Callback functions for Website Payments Standard.
-  $items['cybersource/hop-complete/%uc_order'] = array(
-    'title' => 'CyberSource payment complete',
-    'route_name' => 'uc_cybersource.hop.complete',
-  );
-  $items['admin/store/orders/%uc_order/cs_tax'] = array(
-    'title' => 'Order Taxes',
-    'route_name' => 'uc_cybersource.tax',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_page_alter().
  */
 function uc_cybersource_page_alter(&$page) {
