@@ -1,0 +1,7 @@
+uc_attribute.settings:
+  type: mapping
+  label: 'Product attribute settings'
+  mapping:
+    option_price_format:
+      type: string
+      label: 'Option price format'

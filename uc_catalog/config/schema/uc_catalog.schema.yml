@@ -1,0 +1,13 @@
+uc_catalog.settings:
+  type: mapping
+  label: 'Product catalog settings'
+  mapping:
+    breadcrumb:
+      type: boolean
+      label: ''
+    display:
+      type: string
+      label: 'Path string'
+    vocabulary:
+      type: string
+      label: 'Vocabulary name'

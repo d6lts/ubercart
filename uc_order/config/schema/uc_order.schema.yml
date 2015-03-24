@@ -23,3 +23,17 @@ uc_order.status.*:
     langcode:
       type: string
       label: 'Default language'
+
+
+uc_order.settings:
+  type: mapping
+  label: 'Order settings'
+  mapping:
+    default_state:
+      type: mapping
+      label: 'Default order state'
+      mapping:
+        canceled:
+          type: string
+          label: 'Order state label'
+

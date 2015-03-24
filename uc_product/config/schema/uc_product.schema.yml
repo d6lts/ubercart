@@ -1,0 +1,10 @@
+uc_product.settings:
+  type: mapping
+  label: 'Ubercart Product settings'
+  mapping:
+    add_to_cart_qty:
+      type: boolean
+      label: ''
+    update_node_view:
+      type: boolean
+      label: ''
