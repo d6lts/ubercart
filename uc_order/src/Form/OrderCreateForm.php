@@ -50,8 +50,8 @@ class OrderCreateForm extends FormBase {
 
     // Create form elements needed for customer search.
     // Shown only when the 'Search for an existing customer.' radio is selected.
-    if (!$form_state->hasValue('customer_type') || $form_state->getValue('customer_type') == 'search') {
-
+    if (!$form_state->hasValue('customer_type') ||
+        $form_state->getValue('customer_type') == 'search') {
       // Container for customer search fields.
       $form['customer'] += array(
         '#type' => 'fieldset',
@@ -89,7 +89,7 @@ class OrderCreateForm extends FormBase {
       $form['customer']['search'] = array(
         '#type' => 'button',
         '#value' => t('Search'),
-        '#validate' => array(),
+        '#limit_validation_errors' => array(),
         '#submit' => array(),
         '#ajax' => array(
           'callback' => array($this, 'customerSearch'),
@@ -103,7 +103,7 @@ class OrderCreateForm extends FormBase {
       );
 
       // Search for existing customer by e-mail address.
-      if ($form_state->getValue(['customer', 'email'])) {
+      if ($form_state->getValue('customer')) {
         $query = db_select('users_field_data', 'u')->distinct();
         $query->leftJoin('uc_orders', 'o', 'u.uid = o.uid');
         $query->fields('u', array('uid', 'name', 'mail'))
@@ -194,15 +194,14 @@ class OrderCreateForm extends FormBase {
   /**
    * Ajax callback: updates the customer selection fields.
    */
-  public function customerSelect($form, FormStateInterface $form_state) {
-drupal_set_message('callback');
+  public function customerSelect(array $form, FormStateInterface $form_state) {
     return $form['customer'];
   }
 
   /**
    * Ajax callback: updates the customer search results.
    */
-  public function customerSearch($form, FormStateInterface $form_state) {
+  public function customerSearch(array $form, FormStateInterface $form_state) {
     return $form['customer']['uid'];
   }
 
