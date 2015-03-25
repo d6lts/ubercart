@@ -1029,7 +1029,7 @@ function _uc_file_autocomplete_filename() {
   $matches = [];
 
   // Catch "/" characters that drupal autocomplete doesn't escape.
-  $url = explode('_autocomplete_file/', request_uri());
+  $url = explode('_autocomplete_file/', \Drupal::request()->getRequestUri());
   $files = db_query("SELECT filename FROM {uc_files} WHERE filename LIKE :name ORDER BY filename ASC", [':name' => '%' . db_like($url[1]) . '%']);
   while ($filename = $files->fetchField()) {
     $matches[$filename] = $filename;
