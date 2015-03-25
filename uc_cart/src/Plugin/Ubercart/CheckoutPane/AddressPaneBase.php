@@ -179,7 +179,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
   /**
    * Ajax callback to re-render the full address element.
    */
-  public function ajaxRender($form, FormStateInterface $form_state) {
+  public function ajaxRender(array $form, FormStateInterface $form_state) {
     $element = &$form;
     $triggering_element = $form_state->getTriggeringElement();
     foreach (array_slice($triggering_element['#array_parents'], 0, -1) as $field) {

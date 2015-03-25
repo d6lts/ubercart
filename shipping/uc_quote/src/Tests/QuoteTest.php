@@ -124,7 +124,7 @@ class QuoteTest extends UbercartTestBase {
    * Verifies shipping pane is hidden when there are no shippable items.
    */
   public function testNoQuote() {
-    $product = $this->createProduct(array('shippable' => FALSE));
+    $product = $this->createProduct(array('shippable' => 0));
     $quote = $this->createQuote();
     $this->addToCart($product);
     $this->drupalPostForm('cart', array('items[0][qty]' => 1), t('Checkout'));
