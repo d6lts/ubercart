@@ -79,7 +79,7 @@ class QuoteTest extends UbercartTestBase {
         $options->item($i)->removeAttribute('selected');
       }
     }
-    $this->drupalSetContent($dom->saveHTML());
+    $this->setRawContent($dom->saveHTML());
     return $this->drupalPostAjaxForm(NULL, array(), 'panes[delivery][country]');
   }
 
@@ -113,7 +113,7 @@ class QuoteTest extends UbercartTestBase {
       }
       $i++;
     }
-    $this->drupalSetContent($dom->saveHTML());
+    $this->setRawContent($dom->saveHTML());
 
     // Post the selection via Ajax.
     $option = array('panes[quotes][quotes][quote_option]' => $selected);

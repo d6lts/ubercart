@@ -87,7 +87,7 @@ class AjaxTest extends UbercartTestBase {
       ->set('ajax.checkout', $config)
       ->save();
 
-    // Go to the checkout page, veriy that the conditional payment method is
+    // Go to the checkout page, verify that the conditional payment method is
     // not available.
     $product = $this->createProduct(array('shippable' => 0));
     $this->addToCart($product);
@@ -95,7 +95,7 @@ class AjaxTest extends UbercartTestBase {
     // @todo Re-enable when shipping quote conditions are available.
     // $this->assertNoText('Other');
 
-    // Change the billing zone and veriy that payment pane updates.
+    // Change the billing zone and verify that payment pane updates.
     $edit = array();
     $edit['panes[billing][zone]'] = '26';
     $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');

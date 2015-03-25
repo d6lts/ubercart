@@ -338,7 +338,7 @@ abstract class UbercartTestBase extends WebTestBase {
   protected function ucPostAjax($path, $edit, $triggering_element, $ajax_path = NULL, array $options = [], array $headers = [], $form_html_id = NULL, $ajax_settings = NULL) {
     $commands = parent::drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path, $options, $headers, $form_html_id, $ajax_settings);
     $dom = new \DOMDocument();
-    @$dom->loadHTML($this->drupalGetContent());
+    @$dom->loadHTML($this->getRawContent());
     foreach ($commands as $command) {
       if ($command['command'] == 'insert' && isset($command['selector']) && preg_match('/^\#-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/', $command['selector'])) {
         $xpath = new \DOMXPath($dom);
@@ -382,7 +382,7 @@ abstract class UbercartTestBase extends WebTestBase {
       }
     }
     $content = $dom->saveHTML();
-    $this->drupalSetContent($content);
+    $this->setRawContent($content);
     $this->verbose('Page content after ajax submission:<hr />' . $this->content);
     return $commands;
   }
