@@ -385,7 +385,8 @@ class CartLinksTest extends UbercartTestBase {
       array(
         'body' => array(
           0 => array('value' => 'ERROR: Invalid Cart Link!')
-        )
+        ),
+        'promote' => 0,
       )
     );
 
@@ -693,6 +694,7 @@ class CartLinksTest extends UbercartTestBase {
           'format' => 'full_html',
         )
       ),
+      'promote' => 0,
     );
 
     return $this->drupalCreateNode($page);
@@ -709,10 +711,10 @@ class CartLinksTest extends UbercartTestBase {
 
     // Create a product
     if ($product_class) {
-      $product = $this->createProductClass();
+      $product = $this->createProductClass(array('promote' => 0));
     }
     else {
-      $product = $this->createProduct();
+      $product = $this->createProduct(array('promote' => 0));
     }
 
     // Create some attributes
