@@ -69,12 +69,12 @@ class CartLinksForm extends ConfirmFormBase {
       $restrictions = array_map('trim', $restrictions);
 
       if (!empty($restrictions) && !in_array($this->actions, $restrictions)) {
-        $url = $cart_links_config->get('invalid_page');
-        if (empty($url)) {
-          $url = '<front>';
-        }
         unset($_GET['destination']);
-        return new RedirectResponse(Url::fromUri($url, ['absolute' => TRUE]));
+        $path = $cart_links_config->get('invalid_page');
+        if (empty($path)) {
+          return new RedirectResponse(\Drupal::url('<front>', [], ['absolute' => TRUE]));
+        }
+        return new RedirectResponse(Url::fromUri('internal:/' . $path, ['absolute' => TRUE])->toString());
       }
     }
 
@@ -251,10 +251,7 @@ class CartLinksForm extends ConfirmFormBase {
     $options += array('absolute' => TRUE);
 
     // Form redirect is for confirmed links.
-    $form_state->setRedirectUrl(Url::fromUri($path, $options));
-
-    // RedirectResponse is for unconfirmed links.
-    return new RedirectResponse(Url::fromUri($path, $options));
+    $form_state->setRedirectUrl(Url::fromUri('base:/' . $path, $options));
   }
 
 }
