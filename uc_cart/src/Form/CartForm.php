@@ -220,8 +220,9 @@ class CartForm extends FormBase {
     $url = '';
 
     // Use the last URL if enabled and available.
-    if ($cart_config->get('continue_shopping_use_last_url') && isset($_SESSION['uc_cart_last_url'])) {
-      $url = $_SESSION['uc_cart_last_url'];
+    $session = \Drupal::service('session');
+    if ($cart_config->get('continue_shopping_use_last_url') && $session->has('uc_cart_last_url')) {
+      $url = $session->get('uc_cart_last_url');
     }
 
     // If the URL is still empty, fall back to the default.
@@ -229,7 +230,7 @@ class CartForm extends FormBase {
       $url = $cart_config->get('continue_shopping_url');
     }
 
-    unset($_SESSION['uc_cart_last_url']);
+    $session->remove('uc_cart_last_url');
 
     return $url;
   }

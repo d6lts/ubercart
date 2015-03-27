@@ -181,19 +181,20 @@ function template_preprocess_uc_cart_block_title(&$variables) {
 /**
  * Implements hook_user_login().
  *
- * Updates a user's cart to include items from their anonymous session.
+ * Updates cart to include items from the user's anonymous session.
  */
 function uc_cart_user_login($account) {
   $session = \Drupal::service('session');
-  $cart_id = $session->get('uc_cart_id');
-  if (empty($cart_id)) {
+  if (!$session->has('uc_cart_id')) {
+    // No anonymous cart, so nothing to do here.
     return;
   }
+  $cart_id = $session->get('uc_cart_id');
 
   // If there are items in the anonymous cart, consolidate them.
-  if ($items = uc_cart_get_contents($session->get('uc_cart_id'))) {
+  if ($items = uc_cart_get_contents($cart_id)) {
     // Remove the anonymous cart items.
-    uc_cart_empty($session->get('uc_cart_id'));
+    uc_cart_empty($cart_id);
 
     // Merge the anonymous items into the user cart.
     foreach ($items as $item) {
@@ -366,16 +367,16 @@ function uc_cart_uc_checkout_complete($order) {
  */
 function uc_cart_get_id($create = TRUE) {
   $user = \Drupal::currentUser();
-  $cart_id = \Drupal::service('session')->get('uc_cart_id');
+  $session = \Drupal::service('session');
 
   if ($user->isAuthenticated()) {
     return $user->id();
   }
-  elseif (empty($cart_id) && $create) {
-    \Drupal::service('session')->set('uc_cart_id', md5(uniqid(rand(), TRUE)));
+  elseif (!$session->has('uc_cart_id') && $create) {
+    $session->set('uc_cart_id', md5(uniqid(rand(), TRUE)));
   }
 
-  return !empty($cart_id) ? $cart_id : FALSE;
+  return $session->has('uc_cart_id') ? $session->get('uc_cart_id') : FALSE;
 }
 
 /**
@@ -426,8 +427,7 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
       // no longer required. To guard against unsetting the session ID in the
       // middle of an uc_cart_add_item() call, we only do this on rebuild.
       // See issue 858816 for details.
-      $cart_id = \Drupal::service('session')->get('uc_cart_id');
-      if (empty($items[$cid]) && !empty($cart_id) && $cart_id == $cid) {
+      if (empty($items[$cid]) && $session->has('uc_cart_id') && $session->get('uc_cart_id') == $cid) {
         $session->remove('uc_cart_id');
       }
     }
