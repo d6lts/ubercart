@@ -185,7 +185,8 @@ function template_preprocess_uc_cart_block_title(&$variables) {
  */
 function uc_cart_user_login($account) {
   $session = \Drupal::service('session');
-  if (empty($session->get('uc_cart_id'))) {
+  $cart_id = $session->get('uc_cart_id');
+  if (empty($cart_id)) {
     return;
   }
 
