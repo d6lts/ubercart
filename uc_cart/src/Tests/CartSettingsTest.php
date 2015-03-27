@@ -17,6 +17,13 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class CartSettingsTest extends UbercartTestBase {
 
+  public static $modules = array('uc_cart', 'block');
+
+  public function setUp() {
+    parent::setUp();
+    $this->drupalPlaceBlock('system_breadcrumb_block');
+  }
+
   public function testAddToCartMessage() {
     $this->drupalLogin($this->adminUser);
 
@@ -50,7 +57,7 @@ class CartSettingsTest extends UbercartTestBase {
       [],
       t('Add to cart')
     );
-    $url_pass = ($this->getUrl() == Url::fromUri('base:' . $redirect, ['absolute' => TRUE])->toString());
+    $url_pass = ($this->getUrl() == Url::fromUri('internal:/' . $redirect, ['absolute' => TRUE])->toString());
     $this->assertTrue(
       $url_pass,
       t('Add to cart redirect takes user to the correct URL.')
@@ -203,7 +210,7 @@ debug($this->getUrl());
       0,
       t('The breadcrumb link text is set correctly.')
     );
-    $links = $this->xpath('//a[@href="' . Url::fromUri('internal:' . $settings['uc_cart_breadcrumb_url'], ['absolute' => TRUE])->toString() . '"]');
+    $links = $this->xpath('//a[@href="' . Url::fromUri('internal:/' . $settings['uc_cart_breadcrumb_url'], ['absolute' => TRUE])->toString() . '"]');
     $this->assertTrue(
       isset($links[0]),
       t('The breadcrumb link is set correctly.')
