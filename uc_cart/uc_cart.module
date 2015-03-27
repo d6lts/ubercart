@@ -184,14 +184,15 @@ function template_preprocess_uc_cart_block_title(&$variables) {
  * Updates a user's cart to include items from their anonymous session.
  */
 function uc_cart_user_login($account) {
-  if (!isset($_SESSION['uc_cart_id'])) {
+  $session = \Drupal::service('session');
+  if (empty($session->get('uc_cart_id'))) {
     return;
   }
 
   // If there are items in the anonymous cart, consolidate them.
-  if ($items = uc_cart_get_contents($_SESSION['uc_cart_id'])) {
+  if ($items = uc_cart_get_contents($session->get('uc_cart_id'))) {
     // Remove the anonymous cart items.
-    uc_cart_empty($_SESSION['uc_cart_id']);
+    uc_cart_empty($session->get('uc_cart_id'));
 
     // Merge the anonymous items into the user cart.
     foreach ($items as $item) {
@@ -199,7 +200,7 @@ function uc_cart_user_login($account) {
     }
 
     // Unset the anonymous cart ID, it's no longer needed.
-    unset($_SESSION['uc_cart_id']);
+    $session->remove('uc_cart_id');
   }
 }
 
@@ -364,15 +365,16 @@ function uc_cart_uc_checkout_complete($order) {
  */
 function uc_cart_get_id($create = TRUE) {
   $user = \Drupal::currentUser();
+  $session = \Drupal::service('session');
 
   if ($user->isAuthenticated()) {
     return $user->id();
   }
-  elseif (!isset($_SESSION['uc_cart_id']) && $create) {
-    $_SESSION['uc_cart_id'] = md5(uniqid(rand(), TRUE));
+  elseif (empty($session->get('uc_cart_id')) && $create) {
+    $session->set('uc_cart_id', md5(uniqid(rand(), TRUE)));
   }
 
-  return isset($_SESSION['uc_cart_id']) ? $_SESSION['uc_cart_id'] : FALSE;
+  return !empty($session->get('uc_cart_id')) ? $session->get('uc_cart_id') : FALSE;
 }
 
 /**
@@ -416,14 +418,15 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
       // Mark the current cart order (if any) as needing to be rebuilt.  We only
       // do this if the cart is being explicitly rebuilt (i.e. after an item is
       // added, removed or altered).
-      $_SESSION['uc_cart_order_rebuild'] = TRUE;
+      $session = \Drupal::service('session');
+      $session->set('uc_cart_order_rebuild', TRUE);
 
       // When there are no longer any items in the cart, the anonymous cart ID is
       // no longer required. To guard against unsetting the session ID in the
       // middle of an uc_cart_add_item() call, we only do this on rebuild.
       // See issue 858816 for details.
-      if (empty($items[$cid]) && isset($_SESSION['uc_cart_id']) && $_SESSION['uc_cart_id'] == $cid) {
-        unset($_SESSION['uc_cart_id']);
+      if (empty($items[$cid]) && !empty($session->get('uc_cart_id')) && $session->get('uc_cart_id') == $cid) {
+        $session->remove('uc_cart_id');
       }
     }
   }
@@ -445,6 +448,7 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
     $data['module'] = 'uc_product';
   }
 
+  $session = \Drupal::service('session');
   $result = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart', array($nid, $qty, $data));
   if (is_array($result) && !empty($result)) {
     foreach ($result as $row) {
@@ -457,12 +461,12 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
         }
         if (isset($row['silent']) && ($row['silent'] === TRUE)) {
           if ($check_redirect) {
-            if (isset($_GET['destination'])) {
-              drupal_goto();
+            $destination = \Drupal::request()->query->get('destination');
+            if (!empty($destination)) {
+              return new RedirectResponse(Url::fromUri('internal:/' . $destination)->toString());
             }
-            $_SESSION['uc_cart_last_url'] = Url::fromRoute('<current>')->toString();
-            $cart_config = \Drupal::config('uc_cart.settings');
-            return $cart_config->get('add_item_redirect');
+            $session->set('uc_cart_last_url', Url::fromRoute('<current>')->toString());
+            return \Drupal::config('uc_cart.settings')->get('add_item_redirect');
           }
         }
         else {
@@ -509,13 +513,13 @@ function uc_cart_add_item($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE
   }
 
   if ($check_redirect) {
-    if (isset($_GET['destination'])) {
-      drupal_goto();
+    $destination = \Drupal::request()->query->get('destination');
+    if (!empty($destination)) {
+      return new RedirectResponse(Url::fromUri('internal:/' . $destination)->toString());
     }
 
-    $_SESSION['uc_cart_last_url'] = Url::fromRoute('<current>')->toString();
-    $cart_config = \Drupal::config('uc_cart.settings');
-    return $cart_config->get('add_item_redirect');
+    $session->set('uc_cart_last_url', Url::fromRoute('<current>')->toString());
+    return \Drupal::config('uc_cart.settings')->get('add_item_redirect');
   }
 }
 
