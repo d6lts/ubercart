@@ -372,7 +372,7 @@ function uc_cart_get_id($create = TRUE) {
     return $user->id();
   }
   elseif (empty($cart_id) && $create) {
-    $session->set('uc_cart_id', md5(uniqid(rand(), TRUE)));
+    \Drupal::service('session')->set('uc_cart_id', md5(uniqid(rand(), TRUE)));
   }
 
   return !empty($cart_id) ? $cart_id : FALSE;
