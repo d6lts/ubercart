@@ -118,7 +118,7 @@ function uc_cybersource_settings_form($form, &$form_state) {
   $form['uc_cybersource_method'] = array(
     '#type' => 'radios',
     '#title' => t('Payment method'),
-    '#description' => t('You must ensure your CyberSource account and web server are able to use the service you select.<br />Silent Order POST requires a modified <a href="!url">HOP.php</a>.<br />The SOAP Toolkit API requires the SOAP and DOM extensions for PHP.', array('!url' => \Drupal::url('http://www.ubercart.org/contrib/139', array('absolute' => TRUE)))),
+    '#description' => t('You must ensure your CyberSource account and web server are able to use the service you select.<br />Silent Order POST requires a modified <a href="!url">HOP.php</a>.<br />The SOAP Toolkit API requires the SOAP and DOM extensions for PHP.', ['!url' => \Drupal::url('http://www.ubercart.org/contrib/139', ['absolute' => TRUE])]),
     '#options' => array(
       'post' => t('Silent Order POST'),
       // 'api' => t('Simple Order API'),
@@ -320,8 +320,8 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
 
   $tax = 0;
 
-  if (\Drupal::moduleHandler()->moduleExists('uc_taxes')) {
-    foreach (uc_taxes_calculate($order) as $tax_item) {
+  if (\Drupal::moduleHandler()->moduleExists('uc_tax')) {
+    foreach (uc_tax_calculate($order) as $tax_item) {
       $tax += $tax_item->amount;
     }
   }
@@ -347,12 +347,12 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
   $data['orderPage_sendMerchantReceiptEmail'] = variable_get('uc_cybersource_hop_merchant_receipt_email', 'true');
   $data['orderPage_sendMerchantURLPost'] = 'true';
   // CyberSource posts payment confirmation to this URL.
-  $data['orderPage_merchantURLPostAddress']= \Drupal::url('cybersource/hop-post', array('absolute' => TRUE));
+  $data['orderPage_merchantURLPostAddress']= \Drupal::url('cybersource/hop-post', ['absolute' => TRUE]);
   $data['orderPage_buyButtonText'] = t('Checkout');
-  $receipt_url = \Drupal::url('cybersource/hop-complete/' . $order->id(), array('absolute' => TRUE));
+  $receipt_url = \Drupal::url('cybersource/hop-complete/' . $order->id(), ['absolute' => TRUE]);
   $data['orderPage_receiptResponseURL'] = $receipt_url;
   $data['orderPage_buyButtonText'] = variable_get('uc_cybersource_cs_hop_button_text', t('Process payment'));
-  $comments = t('Order @order-id at @store-name', array('@order-id' => $order->id(), '@store-name' => uc_store_name()));
+  $comments = t('Order @order-id at @store-name', ['@order-id' => $order->id(), '@store-name' => uc_store_name()]);
   $alter_data['order'] = $order;
   $alter_data['comments'] = $comments;
   $alter_data['merchant_fields'] = array();
@@ -528,15 +528,15 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
     }
 
     // Create the order and payment ledger comments.
-    $o_comment = t('<b>Credit card !type:</b> !amount<br /><b>Decision: @decision</b><br /><b>Reason:</b> !reason', array('!type' => variable_get('uc_cybersource_hop_transaction_type', 'sale'), '!amount' => uc_currency_format($nvp['orderAmount']), '@decision' => $nvp['decision'], '!reason' => \Drupal\uc_cybersource\CybersourceUtilities::reasonResponse($nvp['reasonCode'])));
-    $p_comment = t('!id<br />!decision, Reason: !reason', array('!id' => $nvp['orderPage_serialNumber'], '!decision' => $nvp['decision'], '!reason' => $nvp['reasonCode']));
+    $o_comment = t('<b>Credit card !type:</b> !amount<br /><b>Decision: @decision</b><br /><b>Reason:</b> !reason', ['!type' => variable_get('uc_cybersource_hop_transaction_type', 'sale'), '!amount' => uc_currency_format($nvp['orderAmount']), '@decision' => $nvp['decision'], '!reason' => \Drupal\uc_cybersource\CybersourceUtilities::reasonResponse($nvp['reasonCode'])]);
+    $p_comment = t('!id<br />!decision, Reason: !reason', ['!id' => $nvp['orderPage_serialNumber'], '!decision' => $nvp['decision'], '!reason' => $nvp['reasonCode']]);
     if (!empty($nvp['ccAuthReply_avsCode'])) {
-      $o_comment .= t('<br /><b>AVS:</b> !avs', array('!avs' => \Drupal\uc_cybersource\CybersourceUtilities::avsResponse($nvp['ccAuthReply_avsCode'])));
-      $p_comment .= t(', AVS: @avs', array('@avs' => $nvp['ccAuthReply_avsCode']));
+      $o_comment .= t('<br /><b>AVS:</b> !avs', ['!avs' => \Drupal\uc_cybersource\CybersourceUtilities::avsResponse($nvp['ccAuthReply_avsCode'])]);
+      $p_comment .= t(', AVS: @avs', ['@avs' => $nvp['ccAuthReply_avsCode']]);
     }
     if (!empty($nvp['ccAuthReply_cvCode'])) {
-      $o_comment .= t('<br /><b>CVV:</b> !cvv', array('!cvv' => \Drupal\uc_cybersource\CybersourceUtilities::cvvResponse($nvp['ccAuthReply_cvCode'])));
-      $p_comment .= t(', CVV: @cvv', array('@cvv' => $nvp['ccAuthReply_cvCode']));
+      $o_comment .= t('<br /><b>CVV:</b> !cvv', ['!cvv' => \Drupal\uc_cybersource\CybersourceUtilities::cvvResponse($nvp['ccAuthReply_cvCode'])]);
+      $p_comment .= t(', CVV: @cvv', ['@cvv' => $nvp['ccAuthReply_cvCode']]);
     }
     uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), $o_comment, 'admin');
 
@@ -747,7 +747,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
   catch (SoapFault $exception) {
     // Log and display errors if Ubercart is unable to connect via SOAP.
     \Drupal::logger('uc_cybersource')->error('Unable to connect to CyberSource via SOAP.');
-    drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href="@url">contact sales</a> to complete your order.', array('@url' => \Drupal::url('contact'))), 'error');
+    drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href="@url">contact sales</a> to complete your order.', ['@url' => \Drupal::url('contact')]), 'error');
   }
 
   // Process a reply from CyberSource.
@@ -755,16 +755,16 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
     $types = uc_credit_transaction_types();
 
     // Create the order and payment ledger comments.
-    $o_comment = t('<b>@type:</b> @amount<br /><b>Decision: @decision</b><br /><b>Reason:</b> !reason', array('@type' => $types[$data['txn_type']], '@amount' => uc_currency_format($amount), '@decision' => $reply->decision, '!reason' => \Drupal\uc_cybersource\CybersourceUtilities::reasonResponse($reply->reasonCode)));
-    $p_comment = t('<b>@type:</b><br />@id<br />@decision, Reason: !reason', array('@type' => $types[$data['txn_type']], '@id' => $reply->requestID, '@decision' => $reply->decision, '!reason' => $reply->reasonCode));
+    $o_comment = t('<b>@type:</b> @amount<br /><b>Decision: @decision</b><br /><b>Reason:</b> !reason', ['@type' => $types[$data['txn_type']], '@amount' => uc_currency_format($amount), '@decision' => $reply->decision, '!reason' => \Drupal\uc_cybersource\CybersourceUtilities::reasonResponse($reply->reasonCode)]);
+    $p_comment = t('<b>@type:</b><br />@id<br />@decision, Reason: !reason', ['@type' => $types[$data['txn_type']], '@id' => $reply->requestID, '@decision' => $reply->decision, '!reason' => $reply->reasonCode]);
 
     if (!empty($reply->ccAuthReply->avsCode)) {
-      $o_comment .= '<br />' . t('<b>AVS:</b> @avs', array('@avs' => \Drupal\uc_cybersource\CybersourceUtilities::avsResponse($reply->ccAuthReply->avsCode)));
-      $p_comment .= t(', AVS: @avs', array('@avs' => $reply->ccAuthReply->avsCode));
+      $o_comment .= '<br />' . t('<b>AVS:</b> @avs', ['@avs' => \Drupal\uc_cybersource\CybersourceUtilities::avsResponse($reply->ccAuthReply->avsCode)]);
+      $p_comment .= t(', AVS: @avs', ['@avs' => $reply->ccAuthReply->avsCode]);
     }
     if (!empty($reply->ccAuthReply->cvCode)) {
-      $o_comment .= '<br />' . t('<b>CVV:</b> @cvv', array('@cvv' => \Drupal\uc_cybersource\CybersourceUtilities::cvvResponse($reply->ccAuthReply->cvCode)));
-      $p_comment .= t(', CVV: @cvv', array('@cvv' => $reply->ccAuthReply->cvCode));
+      $o_comment .= '<br />' . t('<b>CVV:</b> @cvv', ['@cvv' => \Drupal\uc_cybersource\CybersourceUtilities::cvvResponse($reply->ccAuthReply->cvCode)]);
+      $p_comment .= t(', CVV: @cvv', ['@cvv' => $reply->ccAuthReply->cvCode]);
     }
     uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), $o_comment, 'admin');
 
@@ -777,10 +777,10 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
         // Save the subscription ID to the order's data array.
         $order->data = uc_credit_log_reference($order->id(), $id, $order->payment_details['cc_number']);
 
-        uc_order_comment_save($order->id(), 0, t('<b>CyberSource profile created.</b><br /><b>Subscription ID:</b> @id', array('@id' => $id)), 'admin');
+        uc_order_comment_save($order->id(), 0, t('<b>CyberSource profile created.</b><br /><b>Subscription ID:</b> @id', ['@id' => $id]), 'admin');
       }
       else {
-        uc_order_comment_save($order->id(), 0, t('<b>Attempt to create CyberSource profile failed.</b><br /><b>Reason:</b> @code', array('@code' => $reply->paySubscriptionCreateReply->reasonCode)), 'admin');
+        uc_order_comment_save($order->id(), 0, t('<b>Attempt to create CyberSource profile failed.</b><br /><b>Reason:</b> @code', ['@code' => $reply->paySubscriptionCreateReply->reasonCode]), 'admin');
       }
     }
 
@@ -980,7 +980,7 @@ function uc_cybersource_uc_calculate_tax($order) {
   catch (SoapFault $exception) {
     // Log and display errors if Ubercart is unable to connect via SOAP.
     \Drupal::logger('uc_cybersource')->error('Unable to connect to CyberSource via SOAP.');
-    drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href="@url">contact sales</a> to complete your order.', array('@url' => \Drupal::url('contact'))), 'error');
+    drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href="@url">contact sales</a> to complete your order.', ['@url' => \Drupal::url('contact')]), 'error');
   }
 
   // Process a reply from CyberSource.
@@ -991,7 +991,7 @@ function uc_cybersource_uc_calculate_tax($order) {
       if (floatval($reply->taxReply->totalCityTaxAmount) > 0) {
         $result['city'] = (object)array(
           'id' => 'city',
-          'name' => t('@city city tax', array('@city' => floatval($reply->taxReply->city))),
+          'name' => t('@city city tax', ['@city' => floatval($reply->taxReply->city)]),
           'amount' => floatval($reply->taxReply->totalCityTaxAmount),
         );
       }
@@ -1018,7 +1018,7 @@ function uc_cybersource_uc_calculate_tax($order) {
       if (floatval($reply->taxReply->totalStateTaxAmount) > 0) {
         $result['state'] = (object)array(
           'id' => 'state',
-          'name' => t('@state state tax', array('@state' => $reply->taxReply->state)),
+          'name' => t('@state state tax', ['@state' => $reply->taxReply->state]),
           'amount' => floatval($reply->taxReply->totalStateTaxAmount),
         );
       }
@@ -1031,7 +1031,7 @@ function uc_cybersource_uc_calculate_tax($order) {
 
       // If it doesn't, log an error message and simply return the total.
       if ($total != floatval($reply->taxReply->totalTaxAmount)) {
-        \Drupal::logger('uc_cybersource')->error('Tax calculation produced uneven results. Expected a total of @total, received the following: @dump', array('@total' => uc_currency_format($reply->taxReply->totalTaxAmount), '@dump' => '<pre>' . print_r($result, TRUE) . '</pre>'));
+        \Drupal::logger('uc_cybersource')->error('Tax calculation produced uneven results. Expected a total of @total, received the following: @dump', ['@total' => uc_currency_format($reply->taxReply->totalTaxAmount), '@dump' => '<pre>' . print_r($result, TRUE) . '</pre>']);
 
         $result = array(
           'total' => (object)array(
@@ -1043,11 +1043,11 @@ function uc_cybersource_uc_calculate_tax($order) {
       }
     }
     else {
-      \Drupal::logger('uc_cybersource')->error('Attempted to calculate taxes failed for order @order_id - reason @code', array('@order_id' => $order->id(), '@code' => $reply->reasonCode));
+      \Drupal::logger('uc_cybersource')->error('Attempted to calculate taxes failed for order @order_id - reason @code', ['@order_id' => $order->id(), '@code' => $reply->reasonCode]);
     }
   }
   else {
-    \Drupal::logger('uc_cybersource')->error('Attempted to calculate taxes failed for order @order_id. No response returned from CyberSource.', array('@order_id' => $order->id()));
+    \Drupal::logger('uc_cybersource')->error('Attempted to calculate taxes failed for order @order_id. No response returned from CyberSource.', ['@order_id' => $order->id()]);
     $result = array();
   }
 

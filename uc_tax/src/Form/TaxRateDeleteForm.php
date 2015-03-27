@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_taxes\Form\TaxRateDeleteForm.
+ * Contains \Drupal\uc_tax\Form\TaxRateDeleteForm.
  */
 
-namespace Drupal\uc_taxes\Form;
+namespace Drupal\uc_tax\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -39,21 +39,21 @@ class TaxRateDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_taxes.overview');
+    return new Url('uc_tax.overview');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'uc_taxes_delete_form';
+    return 'uc_tax_delete_form';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $tax_rate = NULL) {
-    $this->rate = uc_taxes_rate_load($tax_rate);
+    $this->rate = uc_tax_rate_load($tax_rate);
 
     return parent::buildForm($form, $form_state);
   }
@@ -62,11 +62,11 @@ class TaxRateDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    uc_taxes_rate_delete($this->rate->id);
+    uc_tax_rate_delete($this->rate->id);
 
     drupal_set_message(t('Tax rate %name deleted.', ['%name' => $this->rate->name]));
 
-    $form_state->setRedirect('uc_taxes.overview');
+    $form_state->setRedirect('uc_tax.overview');
   }
 
 }

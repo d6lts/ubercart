@@ -93,7 +93,7 @@ function uc_paypal_form_uc_cart_checkout_review_form_alter(&$form, &$form_state,
  */
 function uc_paypal_uc_payment_gateway() {
   if (!\Drupal::moduleHandler()->moduleExists('uc_credit')) {
-    drupal_set_message(t('You must <a href="@modules">enable the Credit Card module</a> to use PayPal Website Payments Pro.', array('@modules' => \Drupal::url('system.modules_list', [], ['fragment' => 'edit-modules-ubercart-payment']))), 'warning');
+    drupal_set_message(t('You must <a href="@modules">enable the Credit Card module</a> to use PayPal Website Payments Pro.', ['@modules' => \Drupal::url('system.modules_list', [], ['fragment' => 'edit-modules-ubercart-payment'])]), 'warning');
     return;
   }
 
@@ -220,7 +220,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       $cc_type = _uc_paypal_card_type($order->payment_details['cc_number']);
       if ($cc_type === FALSE) {
         drupal_set_message(t('The credit card type did not pass validation.'), 'error');
-        \Drupal::logger('uc_paypal')->error('Could not figure out cc type: @number / @type', array('@number' => $order->payment_details['cc_number'], '@type' => $order->payment_details['cc_type']));
+        \Drupal::logger('uc_paypal')->error('Could not figure out cc type: @number / @type', ['@number' => $order->payment_details['cc_number'], '@type' => $order->payment_details['cc_type']]);
         return array('success' => FALSE);
       }
     }
@@ -295,16 +295,16 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       );
       // Fall through.
     case 'Success':
-      $message = t('<b>@type</b><br /><b>Success: </b>@amount @currency', array('@type' => $types[$data['txn_type']], '@amount' => uc_currency_format($nvp_response['AMT'], FALSE), '@currency' => $nvp_response['CURRENCYCODE']));
+      $message = t('<b>@type</b><br /><b>Success: </b>@amount @currency', ['@type' => $types[$data['txn_type']], '@amount' => uc_currency_format($nvp_response['AMT'], FALSE), '@currency' => $nvp_response['CURRENCYCODE']]);
       if ($data['txn_type'] != UC_CREDIT_PRIOR_AUTH_CAPTURE) {
-        $message .= '<br />' . t('<b>Address:</b> @avscode', array('@avscode' => _uc_paypal_avscode_message($nvp_response['AVSCODE'])));
+        $message .= '<br />' . t('<b>Address:</b> @avscode', ['@avscode' => _uc_paypal_avscode_message($nvp_response['AVSCODE'])]);
         if (variable_get('uc_credit_cvv_enabled', TRUE)) {
-          $message .= '<br />' . t('<b>CVV2:</b> @cvvmatch', array('@cvvmatch' => _uc_paypal_cvvmatch_message($nvp_response['CVV2MATCH'])));
+          $message .= '<br />' . t('<b>CVV2:</b> @cvvmatch', ['@cvvmatch' => _uc_paypal_cvvmatch_message($nvp_response['CVV2MATCH'])]);
         }
       }
       $result = array(
         'success' => TRUE,
-        'comment' => t('PayPal transaction ID: @transactionid', array('@transactionid' => $nvp_response['TRANSACTIONID'])),
+        'comment' => t('PayPal transaction ID: @transactionid', ['@transactionid' => $nvp_response['TRANSACTIONID']]),
         'message' => $message,
         'data' => SafeMarkup::checkPlain($nvp_response['TRANSACTIONID']),
         'uid' => $user->id(),
@@ -336,7 +336,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
     case 'FailureWithWarning':
       // Fall through.
     case 'Failure':
-      $message = t('<b>@type failed.</b>', array('@type' => $types[$data['txn_type']])) . _uc_paypal_build_error_messages($nvp_response);
+      $message = t('<b>@type failed.</b>', ['@type' => $types[$data['txn_type']]]) . _uc_paypal_build_error_messages($nvp_response);
       $result = array(
         'success' => FALSE,
         'message' => $message,
@@ -344,7 +344,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       );
       break;
     default:
-      $message = t('Unexpected acknowledgement status: @status', array('@status' => $nvp_response['ACK']));
+      $message = t('Unexpected acknowledgement status: @status', ['@status' => $nvp_response['ACK']]);
       $result = array(
         'success' => NULL,
         'message' => $message,
@@ -382,12 +382,12 @@ function _uc_paypal_build_error_messages($nvp_response) {
 function uc_payment_method_paypal_wps($op, &$order) {
   switch ($op) {
     case 'order-view':
-      $txn_id = db_query("SELECT txn_id FROM {uc_payment_paypal_ipn} WHERE order_id = :id ORDER BY received ASC", array(':id' => $order->id()))->fetchField();
+      $txn_id = db_query("SELECT txn_id FROM {uc_payment_paypal_ipn} WHERE order_id = :id ORDER BY received ASC", [':id' => $order->id()])->fetchField();
       if (empty($txn_id)) {
         $txn_id = t('Unknown');
       }
 
-      $build['#markup'] = t('Transaction ID:<br />@txn_id', array('@txn_id' => $txn_id));
+      $build['#markup'] = t('Transaction ID:<br />@txn_id', ['@txn_id' => $txn_id]);
       return $build;
 
     case 'settings':
@@ -489,12 +489,12 @@ function uc_payment_method_paypal_wps($op, &$order) {
 function uc_payment_method_paypal_ec($op, &$order) {
   switch ($op) {
     case 'order-view':
-      $txn_id = db_query("SELECT txn_id FROM {uc_payment_paypal_ipn} WHERE order_id = :id ORDER BY received ASC", array(':id' => $order->id()))->fetchField();
+      $txn_id = db_query("SELECT txn_id FROM {uc_payment_paypal_ipn} WHERE order_id = :id ORDER BY received ASC", [':id' => $order->id()])->fetchField();
       if (empty($txn_id)) {
         $txn_id = t('Unknown');
       }
 
-      $build['#markup'] = t('Transaction ID:<br />@txn_id', array('@txn_id' => $txn_id));
+      $build['#markup'] = t('Transaction ID:<br />@txn_id', ['@txn_id' => $txn_id]);
       return $build;
 
     case 'settings':
@@ -653,7 +653,7 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
   $nvp_response = uc_paypal_api_request($nvp_request, variable_get('uc_paypal_wpp_server', 'https://api-3t.sandbox.paypal.com/nvp'));
 
   if ($nvp_response['ACK'] != 'Success') {
-    drupal_set_message(t('Error message from PayPal:<br />@message', array('@message' => $nvp_response['L_LONGMESSAGE0'])), 'error');
+    drupal_set_message(t('Error message from PayPal:<br />@message', ['@message' => $nvp_response['L_LONGMESSAGE0']]), 'error');
     drupal_goto('cart/checkout');
   }
 
@@ -723,7 +723,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
   $nvp_response = uc_paypal_api_request($nvp_request, variable_get('uc_paypal_wpp_server', 'https://api-3t.sandbox.paypal.com/nvp'));
 
   if ($nvp_response['ACK'] != 'Success') {
-    drupal_set_message(t('PayPal reported an error: @code: @message', array('@code' => $nvp_response['L_ERRORCODE0'], '@message' => $nvp_response['L_LONGMESSAGE0'])), 'error');
+    drupal_set_message(t('PayPal reported an error: @code: @message', ['@code' => $nvp_response['L_ERRORCODE0'], '@message' => $nvp_response['L_LONGMESSAGE0']]), 'error');
     return;
   }
 
@@ -759,8 +759,8 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
   }
 
   $tax = 0;
-  if (\Drupal::moduleHandler()->moduleExists('uc_taxes')) {
-    foreach (uc_taxes_calculate($order) as $tax_item) {
+  if (\Drupal::moduleHandler()->moduleExists('uc_tax')) {
+    foreach (uc_tax_calculate($order) as $tax_item) {
       $tax += $tax_item->amount;
     }
   }
@@ -808,8 +808,8 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
   }
 
   $tax = 0;
-  if (\Drupal::moduleHandler()->moduleExists('uc_taxes')) {
-    foreach (uc_taxes_calculate($order) as $tax_item) {
+  if (\Drupal::moduleHandler()->moduleExists('uc_tax')) {
+    foreach (uc_tax_calculate($order) as $tax_item) {
       $tax += $tax_item->amount;
     }
   }
@@ -939,7 +939,7 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
   else {
     // List the whole cart as a single item to account for fees/discounts.
     $data['amount_1'] = uc_currency_format($order->getTotal() - $shipping - $tax, FALSE, FALSE, '.');
-    $data['item_name_1'] = t('Order @order_id at !store', array('@order_id' => $order->id(), '!store' => uc_store_name()));
+    $data['item_name_1'] = t('Order @order_id at !store', ['@order_id' => $order->id(), '!store' => uc_store_name()]);
     $data['on0_1'] = t('Product count');
     $data['os0_1'] = count($order->products);
   }
@@ -981,7 +981,7 @@ function uc_paypal_api_request($request, $server) {
     ->send();
 
   if ($response->isError()) {
-    \Drupal::logger('uc_paypal')->error('!error', array('!error' => $response-getReasonPhrase()));
+    \Drupal::logger('uc_paypal')->error('!error', ['!error' => $response-getReasonPhrase()]);
   }
 
   return _uc_paypal_nvp_to_array($response->getBody(TRUE));
@@ -1156,7 +1156,7 @@ function _uc_paypal_pending_message($reason) {
       return t('You must verify your account before you can accept this payment.');
     case 'other':
     default:
-      return t('Reason "@reason" unknown; contact PayPal Customer Service for more information.', array('@reason' => $reason));
+      return t('Reason "@reason" unknown; contact PayPal Customer Service for more information.', ['@reason' => $reason]);
   }
 }
 
@@ -1175,7 +1175,7 @@ function _uc_paypal_reversal_message($reason) {
       return t('You gave the customer a refund.');
     case 'other':
     default:
-      return t('Reason "@reason" unknown; contact PayPal Customer Service for more information.', array('@reason' => $reason));
+      return t('Reason "@reason" unknown; contact PayPal Customer Service for more information.', ['@reason' => $reason]);
   }
 }
 

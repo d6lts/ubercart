@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_taxes\Form\TaxRateFormBase.
+ * Contains \Drupal\uc_tax\Form\TaxRateFormBase.
  */
 
-namespace Drupal\uc_taxes\Form;
+namespace Drupal\uc_tax\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -20,7 +20,7 @@ abstract class TaxRateFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'uc_taxes_form';
+    return 'uc_tax_form';
   }
 
   /**
@@ -103,7 +103,7 @@ abstract class TaxRateFormBase extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
-      '#suffix' => \Drupal::l(t('Cancel'), new Url('uc_taxes.overview')),
+      '#suffix' => \Drupal::l(t('Cancel'), new Url('uc_tax.overview')),
     );
 
     return $form;
@@ -144,10 +144,10 @@ abstract class TaxRateFormBase extends FormBase {
       'display_include' => $form_state->getValue('display_include'),
       'inclusion_text' => $form_state->getValue('inclusion_text'),
     );
-    return uc_taxes_rate_save($rate);
+    return uc_tax_rate_save($rate);
 
     // Update the name of the associated conditions.
-    // $conditions = rules_config_load('uc_taxes_' . $form_state->getValue('id'));
+    // $conditions = rules_config_load('uc_tax_' . $form_state->getValue('id'));
     // if ($conditions) {
     //   $conditions->label = $form_state->getValue('name');
     //   $conditions->save();

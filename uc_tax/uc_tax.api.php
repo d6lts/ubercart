@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Hooks provided by the Taxes module.
+ * Hooks provided by the Tax module.
  */
 
 /**
@@ -33,7 +33,7 @@ function hook_uc_calculate_tax($order) {
     $order->delivery_country = $order->billing_country;
   }
 
-  $order->taxes = array();
+  $order->tax = array();
 
   if ($order->getStatusId()) {
     $use_same_rates = in_array($order->getStateId(), array('payment_received', 'completed'));
@@ -42,7 +42,7 @@ function hook_uc_calculate_tax($order) {
     $use_same_rates = FALSE;
   }
 
-  foreach (uc_taxes_rate_load() as $tax) {
+  foreach (uc_tax_rate_load() as $tax) {
     if ($use_same_rates) {
       foreach ((array)$order->line_items as $old_line) {
         if ($old_line['type'] == 'tax' && $old_line['data']['tax_id'] == $tax->id) {
@@ -52,16 +52,16 @@ function hook_uc_calculate_tax($order) {
       }
     }
 
-    $set = rules_config_load('uc_taxes_' . $tax->id);
+    $set = rules_config_load('uc_tax_' . $tax->id);
     if ($set->execute($order)) {
-      $line_item = uc_taxes_apply_tax($order, $tax);
+      $line_item = uc_tax_apply_tax($order, $tax);
       if ($line_item) {
-        $order->taxes[$line_item->id] = $line_item;
+        $order->tax[$line_item->id] = $line_item;
       }
     }
   }
 
-  return $order->taxes;
+  return $order->tax;
 }
 
 /**

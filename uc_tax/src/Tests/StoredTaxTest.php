@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_taxes\Tests\StoredTaxesTest.
+ * Contains \Drupal\uc_tax\Tests\StoredTaxTest.
  */
 
-namespace Drupal\uc_taxes\Tests;
+namespace Drupal\uc_tax\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
@@ -14,10 +14,10 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  *
  * @group Ubercart
  */
-class StoredTaxesTest extends UbercartTestBase {
+class StoredTaxTest extends UbercartTestBase {
 
-  public static $modules = ['uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_taxes'];
-  public static $adminPermissions = [/*'administer rules', */'configure taxes'];
+  public static $modules = ['uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_tax'];
+  public static $adminPermissions = [/*'administer rules', */'configure tax'];
 
   protected function loadTaxLine($order_id) {
     $order = uc_order_load($order_id, TRUE);
@@ -55,12 +55,12 @@ class StoredTaxesTest extends UbercartTestBase {
       'display_include' => 1,
       'inclusion_text' => '',
     );
-    uc_taxes_rate_save($rate);
+    uc_tax_rate_save($rate);
 
     $this->drupalGet('admin/store/settings/taxes');
     $this->assertText($rate->name, t('Tax was saved successfully.'));
 
-    // $this->drupalGet("admin/store/settings/taxes/manage/uc_taxes_$rate->id");
+    // $this->drupalGet("admin/store/settings/taxes/manage/uc_tax_$rate->id");
     // $this->assertText(t('Conditions'), t('Rules configuration linked to tax.'));
 
     $this->addToCart($this->product);
@@ -100,7 +100,7 @@ class StoredTaxesTest extends UbercartTestBase {
       // Change tax rate and ensure order doesn't change.
       $oldrate = $rate->rate;
       $rate->rate = 0.1;
-      $rate = uc_taxes_rate_save($rate);
+      $rate = uc_tax_rate_save($rate);
 
       // Save order because tax changes are only updated on save.
       $this->drupalPostForm('admin/store/orders/' . $order_id . '/edit', array(), t('Save changes'));
@@ -110,7 +110,7 @@ class StoredTaxesTest extends UbercartTestBase {
       // Change taxable products and ensure order doesn't change.
       $class = $this->createProductClass();
       $rate->taxed_product_types = array($class->getEntityTypeId());
-      uc_taxes_rate_save($rate);
+      uc_tax_rate_save($rate);
       // entity_flush_caches();
       $this->drupalPostForm('admin/store/orders/' . $order_id . '/edit', array(), t('Save changes'));
       $this->assertText(t('Order changes saved.'));
@@ -126,7 +126,7 @@ class StoredTaxesTest extends UbercartTestBase {
 
       // Restore taxable product and ensure new tax is added.
       $rate->taxed_product_types = array('product');
-      uc_taxes_rate_save($rate);
+      uc_tax_rate_save($rate);
       $this->drupalPostForm('admin/store/orders/' . $order_id . '/edit', array(), t('Save changes'));
       $this->assertText(t('Order changes saved.'));
       $this->assertTaxLineCorrect($this->loadTaxLine($order_id), $rate->rate, 'when order status changed back to in_checkout');

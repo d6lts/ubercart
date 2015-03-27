@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_taxes\Form\TaxRateEditForm.
+ * Contains \Drupal\uc_tax\Form\TaxRateEditForm.
  */
 
-namespace Drupal\uc_taxes\Form;
+namespace Drupal\uc_tax\Form;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
@@ -19,7 +19,7 @@ class TaxRateEditForm extends TaxRateFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $tax_rate = NULL) {
-    $rate = uc_taxes_rate_load($tax_rate);
+    $rate = uc_tax_rate_load($tax_rate);
 
     $form = parent::buildForm($form, $form_state);
 
@@ -46,7 +46,7 @@ class TaxRateEditForm extends TaxRateFormBase {
 
     drupal_set_message(t('Tax rate %name saved.', ['%name' => $rate->name]));
 
-    $form_state->setRedirect('uc_taxes.overview');
+    $form_state->setRedirect('uc_tax.overview');
   }
 
 }

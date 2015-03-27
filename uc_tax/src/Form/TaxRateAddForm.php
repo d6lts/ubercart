@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_taxes\Form\TaxRateAddForm.
+ * Contains \Drupal\uc_tax\Form\TaxRateAddForm.
  */
 
-namespace Drupal\uc_taxes\Form;
+namespace Drupal\uc_tax\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 
@@ -22,8 +22,8 @@ class TaxRateAddForm extends TaxRateFormBase {
 
     drupal_set_message(t('Tax rate %name created.', ['%name' => $rate->name]));
 
-    //$form_state['redirect'] = 'admin/store/settings/taxes/manage/uc_taxes_' . $rate->id;
-    $form_state->setRedirect('uc_taxes.overview');
+    //$form_state['redirect'] = 'admin/store/settings/taxes/manage/uc_tax_' . $rate->id;
+    $form_state->setRedirect('uc_tax.overview');
   }
 
 }

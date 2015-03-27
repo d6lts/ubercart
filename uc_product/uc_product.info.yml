@@ -5,6 +5,7 @@ package: Ubercart - core
 core: 8.x
 dependencies:
   - image
+  - path
   - node
   - uc_store
 configure: uc_product.settings

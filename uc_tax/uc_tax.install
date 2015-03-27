@@ -2,16 +2,16 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the uc_taxes module.
+ * Install, update and uninstall functions for the uc_tax module.
  */
 
 /**
  * Implements hook_schema().
  */
-function uc_taxes_schema() {
+function uc_tax_schema() {
   $schema = array();
 
-  $schema['uc_taxes'] = array(
+  $schema['uc_tax'] = array(
     'description' => 'Stores tax information.',
     'fields' => array(
       'id' => array(
@@ -67,7 +67,7 @@ function uc_taxes_schema() {
     'primary key' => array('id'),
   );
 
-  $schema['uc_taxed_product_types'] = array(
+  $schema['uc_tax_taxed_product_types'] = array(
     'fields' => array(
       'tax_id' => array(
         'description' => 'Tax rate id',
@@ -89,8 +89,8 @@ function uc_taxes_schema() {
     ),
   );
 
-  $schema['uc_taxed_line_items'] = $schema['uc_taxed_product_types'];
-  $schema['uc_taxed_line_items']['fields']['type']['description'] = 'Line item type';
+  $schema['uc_tax_taxed_line_items'] = $schema['uc_tax_taxed_product_types'];
+  $schema['uc_tax_taxed_line_items']['fields']['type']['description'] = 'Line item type';
 
   return $schema;
 }
@@ -98,6 +98,6 @@ function uc_taxes_schema() {
 /**
  * Implements hook_update_last_removed().
  */
-function uc_taxes_update_last_removed() {
+function uc_tax_update_last_removed() {
   return 7003;
 }
