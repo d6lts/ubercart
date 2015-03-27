@@ -366,16 +366,16 @@ function uc_cart_uc_checkout_complete($order) {
  */
 function uc_cart_get_id($create = TRUE) {
   $user = \Drupal::currentUser();
-  $session = \Drupal::service('session');
+  $cart_id = \Drupal::service('session')->get('uc_cart_id');
 
   if ($user->isAuthenticated()) {
     return $user->id();
   }
-  elseif (empty($session->get('uc_cart_id')) && $create) {
+  elseif (empty($cart_id) && $create) {
     $session->set('uc_cart_id', md5(uniqid(rand(), TRUE)));
   }
 
-  return !empty($session->get('uc_cart_id')) ? $session->get('uc_cart_id') : FALSE;
+  return !empty($cart_id) ? $cart_id : FALSE;
 }
 
 /**
@@ -426,7 +426,8 @@ function uc_cart_get_contents($cid = NULL, $action = NULL) {
       // no longer required. To guard against unsetting the session ID in the
       // middle of an uc_cart_add_item() call, we only do this on rebuild.
       // See issue 858816 for details.
-      if (empty($items[$cid]) && !empty($session->get('uc_cart_id')) && $session->get('uc_cart_id') == $cid) {
+      $cart_id = \Drupal::service('session')->get('uc_cart_id');
+      if (empty($items[$cid]) && !empty($cart_id) && $cart_id == $cid) {
         $session->remove('uc_cart_id');
       }
     }
