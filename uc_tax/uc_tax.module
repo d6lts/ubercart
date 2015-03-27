@@ -14,19 +14,19 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 use Drupal\uc_order\OrderInterface;
 
-/**
- * Implements hook_menu().
- */
-function uc_tax_menu() {
-  $items['admin/store/settings/taxes'] = array(
-    'title' => 'Tax',
-    'description' => 'Configure tax rates and rules.',
-    'route_name' => 'uc_tax.overview',
-  );
-  // $items += rules_ui()->config_menu('admin/store/settings/taxes');
-
-  return $items;
-}
+///**
+// * Implements hook_menu().
+// */
+//function uc_tax_menu() {
+//  $items['admin/store/settings/taxes'] = array(
+//    'title' => 'Tax',
+//    'description' => 'Configure tax rates and rules.',
+//    'route_name' => 'uc_tax.overview',
+//  );
+//  $items += rules_ui()->config_menu('admin/store/settings/taxes');
+//
+//  return $items;
+//}
 
 /**
  * Implements hook_module_implements_alter().
@@ -452,7 +452,7 @@ function uc_tax_rate_load($rate_id = NULL) {
     }
 
     foreach (['taxed_product_types', 'taxed_line_items'] as $field) {
-      $result = db_select('uc_tax' . $field, 't')->fields('t', array('tax_id', 'type'))->execute();
+      $result = db_select('uc_tax_' . $field, 't')->fields('t', array('tax_id', 'type'))->execute();
       foreach ($result as $record) {
         $rates[$record->tax_id]->{$field}[] = $record->type;
       }
