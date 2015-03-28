@@ -28,6 +28,8 @@ class StockEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
+    $form['#title'] = $this->t('<em>Edit @type stock</em> @title', ['@type' => node_get_type_label($node), '@title' => $node->label()]);
+
     $form['stock'] = array(
       '#type' => 'table',
       '#header' => array(

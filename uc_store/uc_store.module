@@ -743,11 +743,11 @@ function uc_store_default_country() {
  *   account can not be found for $address, the default language code is
  *   returned.
  *
- * @see language_default()
+ * @see LanguageManagerInterface::getDefaultLanguage()
  */
 function uc_store_mail_recipient_langcode($address) {
   $account = user_load_by_mail(trim($address));
-  return $account ? $account->getPreferredLangcode() : language_default()->id;
+  return $account ? $account->getPreferredLangcode() : \Drupal::languageManager()->getDefaultLanguage()->getId();
 }
 
 /**

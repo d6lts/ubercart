@@ -693,7 +693,7 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   $variables['head'] = drupal_get_html_head();
 
   // Set the default language if necessary.
-  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : language_default();
+  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : \Drupal::languageManager()->getDefaultLanguage();
 
   $variables['head_title'] = implode(' | ', $head_title);
 }

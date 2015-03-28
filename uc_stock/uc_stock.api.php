@@ -26,8 +26,9 @@ function hook_uc_stock_adjusted($sku, $stock, $qty) {
     'stock' => $stock,
     'qty' => $qty,
   );
+  $to = "stock-manager@example.com"
 
-  \Drupal::service('plugin.manager.mail')->mail('uc_stock_notify', 'stock-adjusted', uc_store_email_from(), language_default(), $params);
+  \Drupal::service('plugin.manager.mail')->mail('uc_stock_notify', 'stock-adjusted', $to, uc_store_mail_recipient_langcode($to), $params, uc_store_email_from());
 }
 
 /**

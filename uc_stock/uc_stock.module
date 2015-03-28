@@ -178,9 +178,10 @@ function _uc_stock_send_mail($order, $node, $stock) {
  * Decrements stock if Rules is not installed.
  */
 function uc_stock_uc_checkout_complete($order) {
-  if (!\Drupal::moduleHandler()->moduleExists('rules')) {
+  // @todo: When Rules actually works, we can uncomment this conditional.
+  //if (!\Drupal::moduleHandler()->moduleExists('rules')) {
     array_walk($order->products, 'uc_stock_adjust_product_stock', $order);
-  }
+  //}
 }
 
 /**
