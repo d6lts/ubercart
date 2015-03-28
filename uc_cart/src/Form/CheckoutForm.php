@@ -168,9 +168,10 @@ class CheckoutForm extends FormBase {
    */
   public function cancel(array &$form, FormStateInterface $form_state) {
     $order = $form_state->get('order');
-    if (isset($_SESSION['cart_order']) && $_SESSION['cart_order'] == $order->id()) {
-      uc_order_comment_save($_SESSION['cart_order'], 0, $this->t('Customer canceled this order from the checkout form.'));
-      unset($_SESSION['cart_order']);
+    $session = \Drupal::service('session');
+    if ($session->has('cart_order') && $session->get('cart_order') == $order->id()) {
+      uc_order_comment_save($session->get('cart_order'), 0, $this->t('Customer canceled this order from the checkout form.'));
+      $session->remove('cart_order');
     }
 
     unset($_SESSION['uc_checkout'][$order->id()]);
