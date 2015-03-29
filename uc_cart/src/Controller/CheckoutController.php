@@ -48,7 +48,6 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
    * Displays the cart checkout page built of checkout panes from enabled modules.
    */
   public function checkout() {
-    $user = \Drupal::currentUser();
     $cart_config = \Drupal::config('uc_cart.settings');
 
     $items = uc_cart_get_contents();
@@ -57,10 +56,10 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     }
 
     // Send anonymous users to login page when anonymous checkout is disabled.
-    if ($user->isAnonymous() && !$cart_config->get('checkout_anonymous')) {
-      drupal_set_message(t('You must login before you can proceed to checkout.'));
+    if ($this->currentUser()->isAnonymous() && !$cart_config->get('checkout_anonymous')) {
+      drupal_set_message($this->t('You must login before you can proceed to checkout.'));
       if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-        drupal_set_message(t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => \Drupal::url('user.register', [], ['query' => drupal_get_destination()]))));
+        drupal_set_message($this->t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => \Drupal::url('user.register', [], ['query' => drupal_get_destination()]))));
       }
       return $this->redirect('user.page', [], ['query' => drupal_get_destination()]);
     }
@@ -73,7 +72,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
         // Don't use an existing order if it has changed status or owner, or if
         // there has been no activity for 10 minutes (to prevent identity theft).
         if ($order->getStateId() != 'in_checkout' ||
-            ($user->isAuthenticated() && $user->id() != $order->getUserId()) ||
+            ($this->currentUser()->isAuthenticated() && $this->currentUser()->id() != $order->getUserId()) ||
             $order->modified->value < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
           if ($order->getStateId() == 'in_checkout' && $order->modified->value < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
             // Mark expired orders as abandoned.
@@ -85,7 +84,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       else {
         // Ghost session.
         $session->remove('cart_order');
-        drupal_set_message(t('Your session has expired or is no longer valid.  Please review your order and try again.'));
+        drupal_set_message($this->t('Your session has expired or is no longer valid.  Please review your order and try again.'));
         return $this->redirect('uc_cart.cart');
       }
     }
@@ -94,11 +93,11 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     if (isset($_POST['form_id']) && $_POST['form_id'] == 'uc_cart_checkout_form') {
       // If this is a form submission, make sure the cart order is still valid.
       if (!isset($order)) {
-        drupal_set_message(t('Your session has expired or is no longer valid.  Please review your order and try again.'));
+        drupal_set_message($this->t('Your session has expired or is no longer valid.  Please review your order and try again.'));
         return $this->redirect('uc_cart.cart');
       }
       elseif ($session->has('uc_cart_order_rebuild')) {
-        drupal_set_message(t('Your shopping cart contents have changed. Please review your order and try again.'));
+        drupal_set_message($this->t('Your shopping cart contents have changed. Please review your order and try again.'));
         return $this->redirect('uc_cart.cart');
       }
     }
@@ -107,7 +106,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       $rebuild = FALSE;
       if (!isset($order)) {
         // Create a new order if necessary.
-        $order = uc_order_new($user->id());
+        $order = uc_order_new($this->currentUser()->id());
         $session->set('cart_order', $order->id());
         $rebuild = TRUE;
       }
@@ -132,14 +131,14 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
         $session->remove('uc_cart_order_rebuild');
       }
       elseif (!uc_order_product_revive($order->products)) {
-        drupal_set_message(t('Some of the products in this order are no longer available.'), 'error');
+        drupal_set_message($this->t('Some of the products in this order are no longer available.'), 'error');
         return $this->redirect('uc_cart.cart');
       }
     }
 
     $min = $cart_config->get('minimum_subtotal');
     if ($min > 0 && $order->getSubtotal() < $min) {
-      drupal_set_message(t('The minimum order subtotal for checkout is @min.', array('@min' => uc_currency_format($min))), 'error');
+      drupal_set_message($this->t('The minimum order subtotal for checkout is @min.', array('@min' => uc_currency_format($min))), 'error');
       return $this->redirect('uc_cart.cart');
     }
 
@@ -166,7 +165,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       return $this->redirect('uc_cart.checkout');
     }
     elseif (!uc_order_product_revive($order->products)) {
-      drupal_set_message(t('Some of the products in this order are no longer available.'), 'error');
+      drupal_set_message($this->t('Some of the products in this order are no longer available.'), 'error');
       return $this->redirect('uc_cart.cart');
     }
 
@@ -211,7 +210,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
 
     if (empty($order)) {
       // Display messages to customers and the administrator if the order was lost.
-      drupal_set_message(t("We're sorry.  An error occurred while processing your order that prevents us from completing it at this time. Please contact us and we will resolve the issue as soon as possible."), 'error');
+      drupal_set_message($this->t("We're sorry.  An error occurred while processing your order that prevents us from completing it at this time. Please contact us and we will resolve the issue as soon as possible."), 'error');
       \Drupal::logger('uc_cart')->error('An empty order made it to checkout! Cart order ID: @cart_order', ['@cart_order' => $session->get('cart_order')]);
       return $this->redirect('uc_cart.cart');
     }

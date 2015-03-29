@@ -29,14 +29,14 @@ class StockReports {
     $rows = array();
 
     $header = array(
-      array('data' => t('SKU'), 'field' => 'sku', 'sort' => 'asc'),
-      array('data' => t('Product'), 'field' => 'title'),
-      array('data' => t('Stock'), 'field' => 'stock'),
-      array('data' => t('Threshold'), 'field' => 'threshold'),
-      array('data' => t('Operations')),
+      array('data' => $this->t('SKU'), 'field' => 'sku', 'sort' => 'asc'),
+      array('data' => $this->t('Product'), 'field' => 'title'),
+      array('data' => $this->t('Stock'), 'field' => 'stock'),
+      array('data' => $this->t('Threshold'), 'field' => 'threshold'),
+      array('data' => $this->t('Operations')),
     );
 
-    $csv_rows[] = array(t('SKU'), t('Product'), t('Stock'), t('Threshold'));
+    $csv_rows[] = array($this->t('SKU'), $this->t('Product'), $this->t('Stock'), $this->t('Threshold'));
 
     $query = db_select('uc_product_stock', 's')
       ->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
@@ -63,15 +63,15 @@ class StockReports {
     $result = $query->execute();
     foreach ($result as $stock) {
       $op = array();
-      if (\Drupal::currentUser()->hasPermission('administer product stock')) {
-        $op[] = \Drupal::l(t('edit'), new Url('uc_stock.edit', ['node' => $stock->nid], ['query' => ['destination' => 'admin/store/reports/stock']]));
+      if ($this->currentUser()->hasPermission('administer product stock')) {
+        $op[] = $this->l($this->t('edit'), new Url('uc_stock.edit', ['node' => $stock->nid], ['query' => ['destination' => 'admin/store/reports/stock']]));
       }
 
       // Add the data to a table row for display.
       $rows[] = array(
         'data' => array(
           array('data' => $stock->sku),
-          array('data' => \Drupal::l($stock->title, new Url('uc_stock.edit', ['node' => $stock->nid]))),
+          array('data' => $this->l($stock->title, new Url('uc_stock.edit', ['node' => $stock->nid]))),
           array('data' => $stock->stock),
           array('data' => $stock->threshold),
           array('data' => implode(' ', $op)),
@@ -102,18 +102,18 @@ class StockReports {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => \Drupal::l(t('Export to CSV file'), new Url('admin/store/reports/getcsv/' . $csv_data['report'] . '/' . $csv_data['user'])),
+      '#markup' => $this->l($this->t('Export to CSV file'), new Url('admin/store/reports/getcsv/' . $csv_data['report'] . '/' . $csv_data['user'])),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
 
 //    if (isset($_GET['nopage'])) {
 //      $build['links']['toggle_pager'] = array(
-//        '#markup' => \Drupal::l(t('Show paged records'), new Url('admin/store/reports/stock')),
+//        '#markup' => $this->l($this->t('Show paged records'), new Url('admin/store/reports/stock')),
 //      );
 //    }
 //    else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => \Drupal::l(t('Show all records'), new Url('admin/store/reports/stock'), [], ['query' => ['nopage' => '1']]),
+        '#markup' => $this->l($this->t('Show all records'), new Url('admin/store/reports/stock'), [], ['query' => ['nopage' => '1']]),
       );
 //    }
 

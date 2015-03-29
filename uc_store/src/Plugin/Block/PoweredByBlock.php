@@ -42,9 +42,9 @@ class PoweredByBlock extends BlockBase {
 
     $form['message'] = array(
       '#type' => 'radios',
-      '#title' => t('Footer message for store pages'),
+      '#title' => $this->t('Footer message for store pages'),
       '#options' => array_merge(
-        array(0 => t('Randomly select a message from the list below.')),
+        array(0 => $this->t('Randomly select a message from the list below.')),
         $this->options()
       ),
       '#default_value' => isset($configuration['message']) ? $configuration['message'] : '',
@@ -90,10 +90,10 @@ class PoweredByBlock extends BlockBase {
   protected function options() {
     $url = array('!url' => Url::fromUri('http://www.ubercart.org/')->toString());
     return array(
-      1 => t('<a href="!url">Powered by Ubercart</a>', $url),
-      2 => t('<a href="!url">Drupal e-commerce</a> provided by Ubercart.', $url),
-      3 => t('Supported by Ubercart, an <a href="!url">open source e-commerce suite</a>.', $url),
-      4 => t('Powered by Ubercart, the <a href="!url">free shopping cart software</a>.', $url),
+      1 => $this->t('<a href="!url">Powered by Ubercart</a>', $url),
+      2 => $this->t('<a href="!url">Drupal e-commerce</a> provided by Ubercart.', $url),
+      3 => $this->t('Supported by Ubercart, an <a href="!url">open source e-commerce suite</a>.', $url),
+      4 => $this->t('Powered by Ubercart, the <a href="!url">free shopping cart software</a>.', $url),
     );
   }
 

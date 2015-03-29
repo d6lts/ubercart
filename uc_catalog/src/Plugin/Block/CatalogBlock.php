@@ -50,17 +50,17 @@ class CatalogBlock extends BlockBase {
   public function blockForm($form, FormStateInterface $form_state) {
     $form['link_title'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Make the block title a link to the top-level catalog page.'),
+      '#title' => $this->t('Make the block title a link to the top-level catalog page.'),
       '#default_value' => $this->configuration['link_title'],
     );
     $form['expanded'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Always expand categories.'),
+      '#title' => $this->t('Always expand categories.'),
       '#default_value' => $this->configuration['expanded'],
     );
     $form['product_count'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display product counts.'),
+      '#title' => $this->t('Display product counts.'),
       '#default_value' => $this->configuration['product_count'],
     );
     return $form;

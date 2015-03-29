@@ -39,22 +39,22 @@ class CartBlock extends BlockBase {
   public function blockForm($form, FormStateInterface $form_state) {
     $form['hide_empty'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Hide block if cart is empty.'),
+      '#title' => $this->t('Hide block if cart is empty.'),
       '#default_value' => $this->configuration['hide_empty'],
     );
     $form['show_image'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display the shopping cart icon in the block title.'),
+      '#title' => $this->t('Display the shopping cart icon in the block title.'),
       '#default_value' => $this->configuration['show_image'],
     );
     $form['collapsible'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Make the shopping cart block collapsible by clicking the name or arrow.'),
+      '#title' => $this->t('Make the shopping cart block collapsible by clicking the name or arrow.'),
       '#default_value' => $this->configuration['collapsible'],
     );
     $form['collapsed'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display the shopping cart block collapsed by default.'),
+      '#title' => $this->t('Display the shopping cart block collapsed by default.'),
       '#default_value' => $this->configuration['collapsed'],
     );
     return $form;
@@ -103,7 +103,7 @@ class CartBlock extends BlockBase {
 
       // Build the cart links.
       $summary_links['view-cart'] = array(
-        'title' => t('View cart'),
+        'title' => $this->t('View cart'),
         'url' => Url::fromRoute('uc_cart.cart'),
         'attributes' => array('rel' => ['nofollow']),
       );
@@ -111,7 +111,7 @@ class CartBlock extends BlockBase {
       // Only add the checkout link if checkout is enabled.
       if (\Drupal::config('uc_cart.settings')->get('checkout_enabled')) {
         $summary_links['checkout'] = array(
-          'title' => t('Checkout'),
+          'title' => $this->t('Checkout'),
           'url' => Url::fromRoute('uc_cart.checkout'),
           'attributes' => array('rel' => ['nofollow']),
         );

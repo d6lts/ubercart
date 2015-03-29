@@ -9,6 +9,7 @@ namespace Drupal\uc_roles\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 /**
@@ -284,8 +285,7 @@ class RoleFeatureForm extends FormBase {
       }
     }
     else {
-      $description .= t('<strong>Expiration:</strong> !link (not overridden)<br />', ['!link' => \
-Drupal::l(t('Global expiration'), new Url('uc_product.settings'))]);
+      $description .= t('<strong>Expiration:</strong> !link (not overridden)<br />', ['!link' => \Drupal::l(t('Global expiration'), new Url('uc_product.settings'))]);
     }
     $description .= $product_role['shippable'] ? t('<strong>Shippable:</strong> Yes<br />') : t('<strong>Shippable:</strong> No<br />');
     $description .= $product_role['by_quantity'] ? t('<strong>Multiply by quantity:</strong> Yes') : t('<strong>Multiply by quantity:</strong> No');

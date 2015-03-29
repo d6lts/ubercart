@@ -28,15 +28,15 @@ class Reports {
     $csv_rows = array();
 
     $header = array(
-      array('data' => t('#')),
-      array('data' => t('Customer'), 'field' => "ou.$last_name"),
-      array('data' => t('Username'), 'field' => "u.name"),
-      array('data' => t('Orders'), 'field' => 'orders'),
-      array('data' => t('Products'), 'field' => 'products'),
-      array('data' => t('Total'), 'field' => 'total', 'sort' => 'desc'),
-      array('data' => t('Average'), 'field' => 'average'),
+      array('data' => $this->t('#')),
+      array('data' => $this->t('Customer'), 'field' => "ou.$last_name"),
+      array('data' => $this->t('Username'), 'field' => "u.name"),
+      array('data' => $this->t('Orders'), 'field' => 'orders'),
+      array('data' => $this->t('Products'), 'field' => 'products'),
+      array('data' => $this->t('Total'), 'field' => 'total', 'sort' => 'desc'),
+      array('data' => $this->t('Average'), 'field' => 'average'),
     );
-    $csv_rows[] = array(t('#'), t('Customer'), t('Username'), t('Orders'), t('Products'), t('Total'), t('Average'));
+    $csv_rows[] = array($this->t('#'), $this->t('Customer'), $this->t('Username'), $this->t('Orders'), $this->t('Products'), $this->t('Total'), $this->t('Average'));
 
     $query = db_select('users', 'u', array('fetch' => PDO::FETCH_ASSOC))
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
@@ -99,7 +99,7 @@ class Reports {
       '#header' => $header,
       '#rows' => $rows,
       '#attributes' => array('width' => '100%', 'class' => array('uc-sales-table')),
-      '#empty' => t('No customers found'),
+      '#empty' => $this->t('No customers found'),
     );
     $build['pager'] = array(
       '#type' => 'pager',
@@ -109,17 +109,17 @@ class Reports {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => \Drupal::l(t('Export to CSV file.'), 'admin/store/reports/getcsv/' . $csv_data['report'] . '/' . $csv_data['user']),
+      '#markup' => \Drupal::l($this->t('Export to CSV file.'), 'admin/store/reports/getcsv/' . $csv_data['report'] . '/' . $csv_data['user']),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
       $build['links']['toggle_pager'] = array(
-        '#markup' => \Drupal::l(t('Show paged records'), 'admin/store/reports/customers'),
+        '#markup' => \Drupal::l($this->t('Show paged records'), 'admin/store/reports/customers'),
       );
     }
     else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => \Drupal::l(t('Show all records'), 'admin/store/reports/customers', array('query' => array('nopage' => '1'))),
+        '#markup' => \Drupal::l($this->t('Show all records'), 'admin/store/reports/customers', array('query' => array('nopage' => '1'))),
       );
     }
 
@@ -1045,7 +1045,7 @@ class Reports {
    *   of the report and the CSV data itself.
    */
   public static function store_csv($report_id, $rows) {
-    $account = \Drupal::currentUser();
+    $account = $this->currentUser();
     $csv_output = '';
     $user_id = $account->isAnonymous() ? session_id() : $account->id();
     foreach ($rows as $row) {
@@ -1069,7 +1069,7 @@ class Reports {
    *   - sid: Equals session_id for anonymous users.
    */
   public static function getCSV($report_id, $user_id) {
-    $account = \Drupal::currentUser();
+    $account = $this->currentUser();
     $user_check = $account->isAnonymous() ? session_id() : $account->id();
     $csv_data = cache()->get('uc_reports_' . $report_id . '_' . $user_id);
 
