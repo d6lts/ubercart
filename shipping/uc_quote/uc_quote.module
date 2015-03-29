@@ -835,7 +835,7 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
 function uc_quote_cart_returned_rates($form, $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#quote', trim(drupal_render($form['quote']))));
-  $status_messages = array('#theme' => 'status_messages');
+  $status_messages = array('#type' => 'status_messages');
   $response->addCommand(new PrependCommand('#quote', drupal_render($status_messages)));
 
   return $response;
@@ -885,7 +885,7 @@ function uc_quote_order_update_rates($form, FormStateInterface $form_state) {
 
   // Reset shipping form.
   $response->addCommand(new ReplaceCommand('#quote', trim(drupal_render($form['quotes']['quotes']))));
-  $status_messages = array('#theme' => 'status_messages');
+  $status_messages = array('#type' => 'status_messages');
   $response->addCommand(new PrependCommand('#quote', drupal_render($status_messages)));
 
   return $response;

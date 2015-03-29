@@ -688,7 +688,7 @@ function uc_order_edit_products_remove($form, FormStateInterface $form_state) {
 function uc_order_pane_products_ajax_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#product-controls', trim(drupal_render($form['product_controls']))));
-  $status_messages = array('#theme' => 'status_messages');
+  $status_messages = array('#type' => 'status_messages');
   $response->addCommand(new PrependCommand('#product-controls', drupal_render($status_messages)));
 
   if ($form_state->get('refresh_products')) {
@@ -927,7 +927,7 @@ function uc_order_pane_line_items_remove($form, FormStateInterface $form_state) 
 function uc_order_pane_line_items_update($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#order-line-items', trim(drupal_render($form['line_items']))));
-  $status_messages = array('#theme' => 'status_messages');
+  $status_messages = array('#type' => 'status_messages');
   $response->addCommand(new PrependCommand('#order-line-items', drupal_render($status_messages)));
 
   return $response;

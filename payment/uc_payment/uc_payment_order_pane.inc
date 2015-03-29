@@ -115,7 +115,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $f
 function uc_payment_order_pane_ajax_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
   $response->addCommand(new ReplaceCommand('#payment-details', trim(drupal_render($form['payment']['payment_details']))));
-  $status_messages = array('#theme' => 'status_messages');
+  $status_messages = array('#type' => 'status_messages');
   $response->addCommand(new PrependCommand('#payment-details', drupal_render($status_messages)));
 
   return $response;

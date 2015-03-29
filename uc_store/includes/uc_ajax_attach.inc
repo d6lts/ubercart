@@ -175,7 +175,7 @@ function uc_ajax_multiplex($form, FormStateInterface $form_state) {
           // Otherwise, assume the callback returned a string or render-array, and insert it into the wrapper.
           $html = is_string($result) ? $result : drupal_render($result);
           $response->addCommand(new ReplaceCommand('#' . $wrapper, trim($html)));
-          $status_messages = array('#theme' => 'status_messages');
+          $status_messages = array('#type' => 'status_messages');
           $response->addCommand(new PrependCommand('#' . $wrapper, drupal_render($status_messages)));
         }
       }

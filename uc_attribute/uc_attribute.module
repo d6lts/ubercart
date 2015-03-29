@@ -267,7 +267,7 @@ function uc_attribute_node_update_index($node) {
     $output .= "\n";
   }
 
-  $result = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid", array(':nid' => $node->id()));
+  $result = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid", [':nid' => $node->id()]);
   while ($model = $result->fetchField()) {
     $output .= '<h2>' . $model . "</h2>\n";
   }
@@ -280,7 +280,7 @@ function uc_attribute_node_update_index($node) {
  */
 function uc_attribute_uc_product_models($nid) {
   // Get all the SKUs for all the attributes on this node.
-  $models = db_query("SELECT DISTINCT model FROM {uc_product_adjustments} WHERE nid = :nid", array(':nid' => $nid))->fetchCol();
+  $models = db_query("SELECT DISTINCT model FROM {uc_product_adjustments} WHERE nid = :nid", [':nid' => $nid])->fetchCol();
 
   return $models;
 }
@@ -354,7 +354,7 @@ function uc_attribute_uc_product_alter(&$node) {
     }
     ksort($combination);
 
-    $model = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid AND combination LIKE :combo", array(':nid' => $node->id(), ':combo' => serialize($combination)))->fetchField();
+    $model = db_query("SELECT model FROM {uc_product_adjustments} WHERE nid = :nid AND combination LIKE :combo", [':nid' => $node->id(), ':combo' => serialize($combination)])->fetchField();
 
     if (!empty($model)) {
       $node->model = $model;
@@ -532,8 +532,8 @@ function uc_attribute_load($aid, $id = NULL, $type = '') {
     default:
 
       // Read attribute and option data.
-      $attribute = db_query("SELECT * FROM {uc_attributes} WHERE aid = :aid", array(':aid' => $aid))->fetchObject();
-      $result = db_query("SELECT * FROM {uc_attribute_options} WHERE aid = :aid ORDER BY ordering, name", array(':aid' => $aid));
+      $attribute = db_query("SELECT * FROM {uc_attributes} WHERE aid = :aid", [':aid' => $aid])->fetchObject();
+      $result = db_query("SELECT * FROM {uc_attribute_options} WHERE aid = :aid ORDER BY ordering, name", [':aid' => $aid]);
 
       // Don't try to build it further if it failed already.
       if (!$attribute) {
@@ -639,7 +639,7 @@ function uc_attribute_delete($aid) {
  *   The attribute option object.
  */
 function uc_attribute_option_load($oid) {
-  return db_query("SELECT * FROM {uc_attribute_options} WHERE oid = :oid", array(':oid' => $oid))->fetchObject();
+  return db_query("SELECT * FROM {uc_attribute_options} WHERE oid = :oid", [':oid' => $oid])->fetchObject();
 }
 
 /**
@@ -1002,7 +1002,7 @@ function uc_attribute_type_info($type) {
 function uc_product_get_attributes($nid) {
   $attributes = array();
 
-  $result = db_query("SELECT upa.aid FROM {uc_product_attributes} upa LEFT JOIN {uc_attributes} ua ON upa.aid = ua.aid WHERE upa.nid = :nid ORDER BY upa.ordering, ua.name", array(':nid' => $nid));
+  $result = db_query("SELECT upa.aid FROM {uc_product_attributes} upa LEFT JOIN {uc_attributes} ua ON upa.aid = ua.aid WHERE upa.nid = :nid ORDER BY upa.ordering, ua.name", [':nid' => $nid]);
   foreach ($result as $attribute) {
     $attributes[$attribute->aid] = uc_attribute_load($attribute->aid, $nid, 'product');
   }
@@ -1016,7 +1016,7 @@ function uc_product_get_attributes($nid) {
 function uc_class_get_attributes($pcid) {
   $attributes = array();
 
-  $result = db_query("SELECT uca.aid FROM {uc_class_attributes} uca LEFT JOIN {uc_attributes} ua ON uca.aid = ua.aid WHERE uca.pcid = :type ORDER BY uca.ordering, ua.name", array(':type' => $pcid));
+  $result = db_query("SELECT uca.aid FROM {uc_class_attributes} uca LEFT JOIN {uc_attributes} ua ON uca.aid = ua.aid WHERE uca.pcid = :type ORDER BY uca.ordering, ua.name", [':type' => $pcid]);
   foreach ($result as $attribute) {
     $attributes[$attribute->aid] = uc_attribute_load($attribute->aid, $pcid, 'class');
   }
@@ -1101,7 +1101,7 @@ function uc_attribute_option_ajax($form, FormStateInterface $form_state) {
   if (strpos($form['#form_id'], 'add_to_cart_form') !== FALSE) {
     uc_product_view_ajax_commands($response, $form_state, array('display_price', 'weight', 'cost'));
   }
-  $status_messages = array('#theme' => 'status_messages');
+  $status_messages = array('#type' => 'status_messages');
   $response->addCommand(new PrependCommand($wrapper, drupal_render($status_messages)));
   return $response;
 }
@@ -1309,7 +1309,7 @@ function _uc_attribute_display_types() {
  *   Array of attribute ids that have price affecting options.
  */
 function uc_attribute_priced_attributes($nid) {
-  $aids = db_query("SELECT DISTINCT (pa.aid) FROM {uc_product_attributes} pa INNER JOIN {uc_attribute_options} ao ON ao.aid = pa.aid INNER JOIN {uc_product_options} po ON (po.oid = ao.oid AND po.nid = pa.nid) WHERE pa.nid = :nid AND po.price <> :price AND pa.display <> :display", array(':nid' => $nid, ':price' => 0, ':display' => 0))->fetchCol();
+  $aids = db_query("SELECT DISTINCT (pa.aid) FROM {uc_product_attributes} pa INNER JOIN {uc_attribute_options} ao ON ao.aid = pa.aid INNER JOIN {uc_product_options} po ON (po.oid = ao.oid AND po.nid = pa.nid) WHERE pa.nid = :nid AND po.price <> :price AND pa.display <> :display", [':nid' => $nid, ':price' => 0, ':display' => 0])->fetchCol();
 
   return $aids;
 }
