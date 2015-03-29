@@ -245,7 +245,7 @@ function uc_shipping_theme() {
  * @see uc-packing-slip.tpl.php
  */
 function template_preprocess_uc_packing_slip(&$variables) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $tokens = $token_service->generate('site', array('logo' => 'logo'));
   $variables['site_logo'] = isset($tokens['logo']) ? $tokens['logo'] : '';
@@ -264,7 +264,7 @@ function template_preprocess_uc_packing_slip(&$variables) {
   $variables['shipping_phone'] = SafeMarkup::checkPlain($order->getAddress('delivery')->phone);
 
   if (\Drupal::moduleHandler()->moduleExists('uc_payment')) {
-    $variables['payment_method'] = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
+    $variables['payment_method'] = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
   }
   else {
     $variables['payment_method'] = '';

@@ -37,7 +37,7 @@ function uc_payment_tokens($type, $tokens, $data = array(), $options = array()) 
     if (isset($tokens['payment-method'])) {
       $original = $tokens['payment-method'];
       try {
-        $values[$original] = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
+        $values[$original] = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
       }
       catch (PluginException $e) {
         $values[$original] = t('Other');

@@ -40,7 +40,7 @@ function theme_uc_product_attributes(array $variables) {
     }
 
     if ($optionstr != '') {
-      $option_rows[$key] = t('@attribute: @option', array('@attribute' => $attributes[$key]['#attribute_name'], '@option' => $optionstr));
+      $option_rows[$key] = t('@attribute: @option', ['@attribute' => $attributes[$key]['#attribute_name'], '@option' => $optionstr]);
     }
   }
 

@@ -236,9 +236,9 @@ function uc_order_mail($key, &$message, $params) {
       $message['from'] = $params['from'];
 
       // Perform token replacement on the subject and body.
-      $token_service = Drupal::token();
-      $subject = $token_service->replace($params['subject'], $params['replacements'], $langcode ? array('language' => $message['language']) : array());
-      $body = $token_service->replace($params['message'], $params['replacements'], $langcode ? array('language' => $message['language']) : array());
+      $token_service = \Drupal::token();
+      $subject = $token_service->replace($params['subject'], $params['replacements'], $langcode ? ['language' => $message['language']] : []);
+      $body = $token_service->replace($params['message'], $params['replacements'], $langcode ? ['language' => $message['language']] : []);
 
       // Strip newline characters from e-mail subjects.
       // @todo: Maybe drupal_mail_send() should do this?
@@ -264,7 +264,7 @@ function uc_order_form_views_exposed_form_alter(&$form, FormStateInterface $form
     $form['#submit'][] = 'uc_order_form_views_exposed_form_submit';
 
     if ($form['#id'] == 'views-exposed-form-uc-orders-search' && !\Drupal::moduleHandler()->moduleExists('date_views')) {
-      drupal_set_message(t('Download the <a href="@url">Date module</a> and enable Date Views to allow searching orders by date.', array('@url' => 'http://drupal.org/project/date')), 'warning');
+      drupal_set_message(t('Download the <a href="@url">Date module</a> and enable Date Views to allow searching orders by date.', ['@url' => 'http://drupal.org/project/date']), 'warning');
     }
   }
 }
@@ -614,7 +614,7 @@ function template_preprocess_uc_order_invoice(&$variables) {
       $variables['products'][$id]->model = $product->model->value;
       $variables['products'][$id]->total_price = uc_currency_format($product->price->value * $product->qty->value);
       if ($product->qty->value > 1) {
-        $variables['products'][$id]->individual_price = t('(!price each)', array('!price' => uc_currency_format($product->price->value)));
+        $variables['products'][$id]->individual_price = t('(!price each)', ['!price' => uc_currency_format($product->price->value)]);
       }
       else {
         $variables['products'][$id]->individual_price = '';
@@ -624,7 +624,7 @@ function template_preprocess_uc_order_invoice(&$variables) {
       if (!empty($product->data->attributes)) {
         $attributes = array();
         foreach ($product->data->attributes as $attribute => $option) {
-          $attributes[] = t('@attribute: @options', array('@attribute' => $attribute, '@options' => implode(', ', (array)$option)));
+          $attributes[] = t('@attribute: @options', ['@attribute' => $attribute, '@options' => implode(', ', (array)$option)]);
         }
         $variables['products'][$id]->details = array(
           '#theme' => 'item_list',
@@ -642,7 +642,7 @@ function template_preprocess_uc_order_invoice(&$variables) {
     'uc_order' => $order,
   );
 
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
   $token_info = $token_service->getInfo();
 
   $replacements = array();
@@ -671,7 +671,7 @@ function template_preprocess_uc_order_invoice(&$variables) {
  * @see uc_order-invoice-page.tpl.php
  */
 function template_preprocess_uc_order_invoice_page(&$variables) {
-  $language_interface = Drupal::languageManager()->getLanguage();
+  $language_interface = \Drupal::languageManager()->getLanguage();
 
   // HTML element attributes.
   $variables['html_attributes'] = new Attribute;
@@ -723,11 +723,11 @@ function uc_order_state_options_list() {
  */
 function uc_order_state_default($state_id) {
   // Attempt to get the default state from the form.
-  $default = Drupal::config('uc_order.settings')->get("default_state.$state_id");
+  $default = \Drupal::config('uc_order.settings')->get("default_state.$state_id");
 
   // If it is not found, pick the lightest status for this state.
   if (!$default) {
-    $result = Drupal::entityQuery('uc_order_status')
+    $result = \Drupal::entityQuery('uc_order_status')
       ->condition('state', $state_id)
       ->sort('weight')
       ->execute();

@@ -650,7 +650,7 @@ function uc_order_action_update_status($order, $status) {
  */
 function uc_order_action_add_comment($order, $comment, $comment_type) {
   uc_order_comment_save($order->id(), 0,
-    Drupal::token()->replace($comment, array('uc_order' => $order)),
+    \Drupal::token()->replace($comment, array('uc_order' => $order)),
     $comment_type == 'admin' ? 'admin' : 'order',
     $order->getStatusId(), $comment_type == 'notified');
 }
@@ -675,7 +675,7 @@ function uc_order_action_order_comment_types() {
  * @see uc_order_action_email_form()
  */
 function uc_order_action_email($order, $from, $addresses, $subject, $message, $format) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $settings = array(
     'from' => $from,
@@ -738,7 +738,7 @@ function uc_order_message_formats() {
  * The 'Sender', 'Subject' and 'Addresses' fields take order token replacements.
  */
 function uc_order_action_email_invoice($order, $from, $addresses, $subject, $template, $view) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $settings = array(
     'from' => $from,

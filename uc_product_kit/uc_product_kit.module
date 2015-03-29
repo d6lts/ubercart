@@ -530,7 +530,7 @@ function uc_product_kit_form_node_form_alter(&$form, FormStateInterface $form_st
 
   // Create an array of products on the site for use in the product selector.
   $products = array();
-  $result = Drupal::entityQuery('node')
+  $result = \Drupal::entityQuery('node')
     ->condition('type', uc_product_types(), 'IN')
     ->sort('title')
     ->execute();

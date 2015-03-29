@@ -378,7 +378,7 @@ function hook_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
   if (!$nid) return NULL;
   $cid = !(is_null($cid) || empty($cid)) ? $cid : uc_cart_get_id();
 
-  $result = Drupal::entityQuery('uc_cart_item')
+  $result = \Drupal::entityQuery('uc_cart_item')
     ->condition('cart_id', $cid)
     ->condition('nid', $nid)
     ->condition('data', serialize($data))

@@ -202,7 +202,7 @@ function _uc_catalog_navigation($branch) {
     $types = uc_product_types();
   }
 
-  $query = Drupal::entityQuery('node')
+  $query = \Drupal::entityQuery('node')
     ->condition('type', $types)
     ->condition('status', 1) // Don't include unpublished products.
     ->condition('taxonomy_catalog.target_id', $branch->getTid())

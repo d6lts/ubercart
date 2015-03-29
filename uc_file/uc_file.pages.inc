@@ -203,7 +203,7 @@ function _uc_file_download($fid) {
     UC_FILE_ERROR_HOOK_ERROR              => t('A hook denied your access to this file.') . ' ',
   );
 
-  $ip = Drupal::request()->getClientIp();
+  $ip = \Drupal::request()->getClientIp();
   if ($user->hasPermission('view all downloads')) {
     $file_download = uc_file_get_by_id($fid);
   }

@@ -67,7 +67,7 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $for
  */
 function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
   $order = $form_state->get('uc_order');
-  $definition = Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->getPluginDefinition();
+  $definition = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->getPluginDefinition();
 
   if (isset($definition['redirect'])) {
     unset($form['actions']['submit']);
@@ -82,7 +82,7 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInt
 function uc_payment_uc_order($op, $order) {
   switch ($op) {
     case 'submit':
-      return Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSubmit($order);
+      return \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSubmit($order);
   }
 }
 
@@ -270,7 +270,7 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
   $account = user_load($uid);
 
   try {
-    $method_name = Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->cartReviewTitle();
+    $method_name = \Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->cartReviewTitle();
   }
   catch (PluginException $e) {
     $method_name = t('Other');
@@ -328,7 +328,7 @@ function uc_payment_uc_payment_entered(OrderInterface $order) {
 function uc_payment_uc_order_load($orders) {
   foreach ($orders as $order) {
     if ($order->getPaymentMethodId()) {
-      Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderLoad($order);
+      \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderLoad($order);
     }
   }
 }
@@ -338,7 +338,7 @@ function uc_payment_uc_order_load($orders) {
  */
 function uc_payment_uc_order_update(OrderInterface $order) {
   if ($order->getPaymentMethodId()) {
-    Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSave($order);
+    \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSave($order);
   }
 
   // Move non-shippable orders from "payment received" to "completed".
@@ -368,7 +368,7 @@ function uc_payment_uc_order_delete(OrderInterface $order) {
 
   // Call each payment method to delete method-specific data from the database.
   foreach (uc_payment_method_list() as $id => $method) {
-    Drupal::service('plugin.manager.uc_payment.method')->createInstance($id)->orderDelete($order);
+    \Drupal::service('plugin.manager.uc_payment.method')->createInstance($id)->orderDelete($order);
   }
 }
 

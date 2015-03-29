@@ -136,7 +136,7 @@ function uc_order_token_info() {
  * Implements hook_tokens().
  */
 function uc_order_tokens($type, $tokens, $data = [], $options = []) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $sanitize = !empty($options['sanitize']);
 
@@ -177,7 +177,7 @@ function uc_order_tokens($type, $tokens, $data = [], $options = []) {
           break;
 
         case 'admin-link':
-          $replacements[$original] = \Drupal::l($order->id(), Url::fromUri('internal:/' . admin_path, ['absolute' => TRUE]));
+          $replacements[$original] = \Drupal::l($order->id(), Url::fromUri('internal:/' . $admin_path, ['absolute' => TRUE]));
           break;
 
         case 'subtotal':

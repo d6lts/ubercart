@@ -68,7 +68,7 @@ function uc_store_token_info() {
  * Implements hook_tokens().
  */
 function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $replacements = array();
 
@@ -105,7 +105,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'link':
-          $replacements[$original] = \Drupal::l(uc_store_name(), new Url('<front>', [], ['absolute' => TRUE]));
+          $replacements[$original] = \Drupal::l(uc_store_name(), Url::fromRoute('<front>', [], ['absolute' => TRUE]));
           break;
 
         case 'email':
@@ -125,7 +125,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
           break;
 
         case 'help-url':
-          $replacements[$original] = \Drupal::url($config->get('help_page'), [], ['absolute' => TRUE]);
+          $replacements[$original] = Url::fromUserInput('/' . $config->get('help_page'), ['absolute' => TRUE])->toString();
           break;
       }
     }

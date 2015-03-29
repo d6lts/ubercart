@@ -93,9 +93,9 @@ function uc_product_kit_schema() {
  */
 function uc_product_kit_install() {
   // Do not allow the product kit content type to be deleted.
-  $locked = Drupal::state()->get('node.type.locked');
+  $locked = \Drupal::state()->get('node.type.locked');
   $locked['product_kit'] = 'product_kit';
-  Drupal::state()->set('node.type.locked', $locked);
+  \Drupal::state()->set('node.type.locked', $locked);
 
   // Add the product kit node type to the catalog if this module is installed
   // some time after uc_catalog.
@@ -112,9 +112,9 @@ function uc_product_kit_install() {
  */
 function uc_product_kit_uninstall() {
   // Allow the product kit content type to be deleted.
-  $locked = Drupal::state()->get('node.type.locked');
+  $locked = \Drupal::state()->get('node.type.locked');
   unset($locked['product_kit']);
-  Drupal::state()->set('node.type.locked', $locked);
+  \Drupal::state()->set('node.type.locked', $locked);
 }
 
 /**

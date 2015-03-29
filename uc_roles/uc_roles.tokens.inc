@@ -35,7 +35,7 @@ function uc_roles_token_info() {
  * Implements hook_tokens().
  */
 function uc_roles_tokens($type, $tokens, $data = array(), $options = array()) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $sanitize = !empty($options['sanitize']);
 
