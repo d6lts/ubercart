@@ -224,9 +224,10 @@ function uc_order_mail($key, &$message, $params) {
     // Setup an e-mailed invoice.
     case 'invoice':
       $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed';
-      $message['subject'] = t('Your Order Invoice', array(), array('langcode' => $langcode));
+      $message['subject'] = t('Your Order Invoice', [], ['langcode' => $langcode]);
       $message['from'] = uc_store_email_from();
-      $message['body'][] = theme('uc_order_invoice', array('order' => $params['order'], 'op' => 'admin-mail'));
+      $body = array('#theme' => 'uc_order_invoice', '#order' => $params['order'], '#op' => 'admin-mail');
+      $message['body'][] = drupal_render($body);
       break;
 
     // Setup a custom e-mail defined by an action on a predicate.
@@ -688,7 +689,7 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   if (theme_get_setting('features.favicon')) {
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
-    drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
+    _drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols($favicon), 'type' => $type));
   }
   $variables['head'] = drupal_get_html_head();
 

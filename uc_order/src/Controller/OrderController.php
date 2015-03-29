@@ -27,8 +27,9 @@ class OrderController extends ControllerBase {
     );
 
     if ($print) {
-      drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-      print theme('uc_order_invoice_page', array('content' => drupal_render($build)));
+      //@todo fix this
+      //drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+      //print drupal_render(array('#theme' => 'uc_order_invoice_page', 'content' => $build));
       exit();
     }
 
@@ -39,14 +40,14 @@ class OrderController extends ControllerBase {
    * Displays a log of changes made to an order.
    */
   public function log(OrderInterface $uc_order) {
-    $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", array(':id' => $uc_order->id()));
+    $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", [':id' => $uc_order->id()]);
 
     $header = array(t('Time'), t('User'), t('Changes'));
     $rows = array();
     foreach ($result as $change) {
       $rows[] = array(
         \Drupal::service('date.formatter')->format($change->created, 'short'),
-        theme('uc_uid', array('uid' => $change->uid)),
+        array('#theme' => 'uc_uid',  '#uid' => $change->uid),
         $change->changes,
       );
     }

@@ -98,7 +98,8 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#default_value' => $cart_config->get('checkout_enabled'),
     );
 
-    if (!\Drupal::moduleHandler()->moduleExists('rules')) {
+    //@todo: Uncomment this conditional when Rules actually works.
+    //if (!\Drupal::moduleHandler()->moduleExists('rules')) {
       $form['checkout']['uc_checkout_email_customer'] = array(
         '#type' => 'checkbox',
         '#title' => t('Send e-mail invoice to customer after checkout.'),
@@ -109,7 +110,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
         '#title' => t('Send e-mail order notification to admin after checkout.'),
         '#default_value' => $cart_config->get('checkout_email_admin'),
       );
-    }
+    //}
 
     $form['anonymous'] = array(
       '#type' => 'details',
@@ -285,11 +286,12 @@ class CheckoutSettingsForm extends ConfigFormBase {
     $cart_config
       ->set('checkout_enabled', $form_state->getValue('uc_checkout_enabled'));
 
-    if (!\Drupal::moduleHandler()->moduleExists('rules')) {
+    //@todo: Uncomment this conditional when Rules actually works.
+    //if (!\Drupal::moduleHandler()->moduleExists('rules')) {
       $cart_config
         ->set('checkout_email_customer', $form_state->getValue('uc_checkout_email_customer'))
         ->set('checkout_email_admin', $form_state->getValue('uc_checkout_email_admin'));
-    }
+    //}
 
     $cart_config
       ->set('checkout_anonymous', $form_state->getValue('uc_checkout_anonymous'))

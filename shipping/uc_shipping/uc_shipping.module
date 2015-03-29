@@ -282,7 +282,7 @@ function template_preprocess_uc_packing_slip(&$variables) {
  * @see uc-packing-slip-page.tpl.php
  */
 function template_preprocess_uc_packing_slip_page(&$variables) {
-  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : language_default();
+  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : \Drupal::languageManager()->getDefaultLanguage();
   $variables['language']          = $language;
   $variables['language']->dir     = $language->direction ? 'rtl' : 'ltr';
 }

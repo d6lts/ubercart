@@ -210,16 +210,16 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertRaw('Your order is complete!');
 
     // Test new account email.
-    $mail = $this->drupalGetMails(array('id' => 'user_register_no_approval_required'));
-    $mail = array_pop($mail);
+    $mails = $this->drupalGetMails(array('id' => 'user_register_no_approval_required'));
+    $mail = array_pop($mails);
     $account = $mail['params']['account'];
     $this->assertTrue(!empty($account->name->value), 'New username is not empty.');
     $this->assertTrue(!empty($account->password), 'New password is not empty.');
     $this->assertTrue(strpos($mail['body'], $account->name->value) !== FALSE, 'Mail body contains username.');
 
     // Test invoice email.
-    $mail = $this->drupalGetMails(array('subject' => 'Your Order at Ubercart'));
-    $mail = array_pop($mail);
+    $mails = $this->drupalGetMails(array('subject' => 'Your Order at Ubercart'));
+    $mail = array_pop($mails);
     $this->assertTrue(strpos($mail['body'], $account->name->value) !== FALSE, 'Invoice body contains username.');
     $this->assertTrue(strpos($mail['body'], $account->password) !== FALSE, 'Invoice body contains password.');
 
@@ -263,13 +263,13 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertNoText($password, 'Password is not shown on screen.');
 
     // Test new account email.
-    $mail = $this->drupalGetMails(array('id' => 'user_register_no_approval_required'));
-    $mail = array_pop($mail);
+    $mails = $this->drupalGetMails(array('id' => 'user_register_no_approval_required'));
+    $mail = array_pop($mails);
     $this->assertTrue(strpos($mail['body'], $username) !== FALSE, 'Mail body contains username.');
 
     // Test invoice email.
-    $mail = $this->drupalGetMails(array('subject' => 'Your Order at Ubercart'));
-    $mail = array_pop($mail);
+    $mails = $this->drupalGetMails(array('subject' => 'Your Order at Ubercart'));
+    $mail = array_pop($mails);
     $this->assertTrue(strpos($mail['body'], $username) !== FALSE, 'Invoice body contains username.');
     $this->assertFalse(strpos($mail['body'], $password) !== FALSE, 'Invoice body does not contain password.');
 
@@ -344,10 +344,10 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertRaw('Your order is complete!');
 
     // Test new account email.
-    $mail = $this->drupalGetMails(array('id' => 'user_register_pending_approval'));
-    $this->assertTrue(!empty($mail), 'Blocked user email found.');
-    $mail = $this->drupalGetMails(array('id' => 'user_register_no_approval_required'));
-    $this->assertTrue(empty($mail), 'No unblocked user email found.');
+    $mails = $this->drupalGetMails(array('id' => 'user_register_pending_approval'));
+    $this->assertTrue(!empty($mails), 'Blocked user email found.');
+    $mails = $this->drupalGetMails(array('id' => 'user_register_no_approval_required'));
+    $this->assertTrue(empty($mails), 'No unblocked user email found.');
   }
 
   public function testCheckoutLogin() {
@@ -367,7 +367,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Confirm login.
     $this->drupalGet('<front>');
-    $this->assertText('My account', 'User is logged in.');
+    $this->assertText('Member for ', 'User is logged in.');
 
     // Check that cart is now empty.
     $this->drupalGet('cart');
