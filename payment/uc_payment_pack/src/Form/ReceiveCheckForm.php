@@ -12,12 +12,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
 
 /**
- * Form for recording received checks.
+ * Form for recording a received check and expected clearance date.
  */
 class ReceiveCheckForm extends FormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'uc_payment_pack_receive_check_form';
@@ -25,34 +25,32 @@ class ReceiveCheckForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Receives a check for an order and put in a clear date.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
-    $balance = uc_payment_balance($order);
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL) {
+    $balance = uc_payment_balance($uc_order);
     $form['balance'] = array(
-      '#prefix' => '<strong>' . t('Order balance:') . '</strong> ',
+      '#prefix' => '<strong>' . $this->t('Order balance:') . '</strong> ',
       '#markup' => uc_currency_format($balance),
     );
     $form['order_id'] = array(
       '#type' => 'hidden',
-      '#value' => $order->id(),
+      '#value' => $uc_order->id(),
     );
     $form['amount'] = array(
       '#type' => 'uc_price',
-      '#title' => t('Amount'),
+      '#title' => $this->t('Amount'),
       '#default_value' => $balance,
     );
     $form['comment'] = array(
       '#type' => 'textfield',
-      '#title' => t('Comment'),
-      '#description' => t('Any notes about the check, like type or check number.'),
+      '#title' => $this->t('Comment'),
+      '#description' => $this->t('Any notes about the check, like type or check number.'),
       '#size' => 64,
       '#maxlength' => 256,
     );
     $form['clear'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Expected clear date'),
+      '#title' => $this->t('Expected clear date'),
       '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
     );
     $form['clear']['clear_month'] = uc_select_month(NULL, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'n'));
@@ -62,7 +60,7 @@ class ReceiveCheckForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Receive check'),
+      '#value' => $this->t('Receive check'),
     );
 
     return $form;
@@ -72,7 +70,7 @@ class ReceiveCheckForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    uc_payment_enter($form_state->getValue('order_id'), 'check', $form_state->getValue('amount'), \Drupal::currentUser()->id(), '', $form_state->getValue('comment'));
+    uc_payment_enter($form_state->getValue('order_id'), 'check', $form_state->getValue('amount'), $this->currentUser()->id(), '', $form_state->getValue('comment'));
 
     db_insert('uc_payment_check')
       ->fields(array(
@@ -81,7 +79,7 @@ class ReceiveCheckForm extends FormBase {
       ))
       ->execute();
 
-    drupal_set_message(t('Check received, expected clear date of @date.', ['@date' => uc_date_format($form_state->getValue('clear_month'), $form_state->getValue('clear_day'), $form_state->getValue('clear_year'))]));
+    drupal_set_message($this->t('Check received, expected clear date of @date.', ['@date' => uc_date_format($form_state->getValue('clear_month'), $form_state->getValue('clear_day'), $form_state->getValue('clear_year'))]));
 
     $form_state->setRedirect('uc_order.admin_view', ['uc_order' => $form_state->getValue('order_id')]);
   }

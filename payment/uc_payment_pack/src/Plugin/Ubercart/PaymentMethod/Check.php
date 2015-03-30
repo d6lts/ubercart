@@ -156,7 +156,7 @@ class Check extends PaymentMethodPluginBase {
         'uc_check_mailing_street2' => $check_config->get('mailing_street2'),
         'uc_check_mailing_city' => $check_config->get('mailing_city'),
         'uc_check_mailing_zone' => $check_config->get('mailing_zone'),
-        'uc_check_mailing_country' => $form_state->getValue('uc_check_mailing_country') ?: $check_config->get('uc_check_mailing_country'),
+        'uc_check_mailing_country' => $form_state->hasValue('uc_check_mailing_country') ? $form_state->getValue('uc_check_mailing_country') : $check_config->get('uc_check_mailing_country'),
         'uc_check_mailing_postal_code' => $check_config->get('mailing_postal_code'),
       ),
       '#required' => FALSE,
@@ -164,7 +164,7 @@ class Check extends PaymentMethodPluginBase {
     );
     $form['uc_check_policy'] = array(
       '#type' => 'textarea',
-      '#title' => t('Check payment policy', array(), array('context' => 'cheque')),
+      '#title' => t('Check payment policy', [], ['context' => 'cheque']),
       '#description' => t('Instructions for customers on the checkout page.'),
       '#default_value' => $check_config->get('policy'),
       '#rows' => 3,

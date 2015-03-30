@@ -38,7 +38,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
 
     if (($max = $cod_config->get('max_order')) > 0 && is_numeric($max)) {
       $build['eligibility'] = array(
-        '#markup' => '<p>' . t('Orders totalling more than !number are <b>not eligible</b> for COD.', array('!number' => uc_currency_format($max))) . '</p>'
+        '#markup' => '<p>' . t('Orders totalling more than !number are <b>not eligible</b> for COD.', ['!number' => uc_currency_format($max)]) . '</p>'
       );
     }
 

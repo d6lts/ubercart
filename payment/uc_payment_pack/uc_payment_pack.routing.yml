@@ -6,5 +6,5 @@ uc_payment_pack.check.receive:
     _permission: 'view all orders'
   options:
     parameters:
-      order:
-        type: 'entity:uc_order'
+      uc_order:
+        type: entity:uc_order

@@ -29,8 +29,8 @@ class Other extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderView(OrderInterface $order) {
-    if ($description = db_query('SELECT description FROM {uc_payment_other} WHERE order_id = :id', array(':id' => $order->id()))->fetchField()) {
-      return array('#markup' => t('Description: @desc', array('@desc' => $description)));
+    if ($description = db_query('SELECT description FROM {uc_payment_other} WHERE order_id = :id', [':id' => $order->id()])->fetchField()) {
+      return array('#markup' => t('Description: @desc', ['@desc' => $description]));
     }
   }
 
@@ -52,7 +52,7 @@ class Other extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderLoad(OrderInterface $order) {
-    $description = db_query('SELECT description FROM {uc_payment_other} WHERE order_id = :id', array(':id' => $order->id()))->fetchField();
+    $description = db_query('SELECT description FROM {uc_payment_other} WHERE order_id = :id', [':id' => $order->id()])->fetchField();
     if (isset($description)) {
       $order->payment_details['description'] = $description;
     }
