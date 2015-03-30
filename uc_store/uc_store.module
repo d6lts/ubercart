@@ -708,7 +708,9 @@ function uc_store_encryption_errors(&$crypt, $module) {
     foreach ($errors as $message) {
       $items[] = $message;
     }
-    \Drupal::logger('encryption')->error('Encryption failed. !messages', ['!messages' => theme('item_list', array('items' => $items))]);
+    \Drupal::logger('encryption')->error('Encryption failed.');
+    // @todo Fix formatting of logger message
+    //\Drupal::logger('encryption')->error('Encryption failed. !messages', ['!messages' => drupal_render(['#theme' => 'item_list', '#items' => $items])]);
   }
 }
 
