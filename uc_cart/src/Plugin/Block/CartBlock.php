@@ -30,8 +30,23 @@ class CartBlock extends BlockBase {
       'show_image' => TRUE,
       'collapsible' => TRUE,
       'collapsed' => TRUE,
+      'cache' => array(
+        'max_age' => array(
+          '#value' => 0,
+        ),
+      ),
     );
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCacheable() {
+    // Contents of cart don't depend on the page or user or any other
+    // cache context we have available.
+    return FALSE;
+  }
+
 
   /**
    * {@inheritdoc}
