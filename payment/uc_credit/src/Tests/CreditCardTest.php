@@ -85,7 +85,7 @@ class CreditCardTest extends UbercartTestBase {
     // Putting this under sites/default/files because SimpleTest needs to be
     // able to create the directory - this is NOT where you'd put the key file
     // on a live site.  On a live site, it should be outside the web root.
-    drupal_mkdir('sites/default/files/simpletest.keys', 0755);
+    \Drupal::service('file_system')->mkdir('sites/default/files/simpletest.keys', 0755);
 
     $this->drupalPostForm(
       'admin/store/settings/payment/method/credit',
@@ -134,8 +134,8 @@ class CreditCardTest extends UbercartTestBase {
    */
   public function tearDown() {
     // Cleanup keys directory after test.
-    drupal_unlink('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME);
-    drupal_rmdir('sites/default/files/simpletest.keys');
+    \Drupal::service('file_system')->unlink('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME);
+    \Drupal::service('file_system')->rmdir('sites/default/files/simpletest.keys');
     parent::tearDown();
   }
 
@@ -147,7 +147,7 @@ class CreditCardTest extends UbercartTestBase {
     // where key file is not readable or doesn't contain a valid key
 
     // Create key directory, make it readable and writeable.
-    drupal_mkdir('sites/default/files/testkey', 0755);
+    \Drupal::service('file_system')->mkdir('sites/default/files/testkey', 0755);
 
     // Try to submit settings form without a key file path.
     // Save current variable, reset to its value when first installed.
@@ -215,7 +215,7 @@ class CreditCardTest extends UbercartTestBase {
     // Check that warning about needing key file goes away.
     $this->assertNoText(t('Credit card security settings must be configured in the security settings tab.'));
     // Remove key file.
-    drupal_unlink('sites/default/files/testkey/' . UC_CREDIT_KEYFILE_NAME);
+    \Drupal::service('file_system')->unlink('sites/default/files/testkey/' . UC_CREDIT_KEYFILE_NAME);
 
     // Finally, specify good directory
     $this->drupalPostForm(
@@ -236,8 +236,8 @@ class CreditCardTest extends UbercartTestBase {
     );
 
     // Cleanup keys directory after test.
-    drupal_unlink('sites/default/files/testkey/' . UC_CREDIT_KEYFILE_NAME);
-    drupal_rmdir('sites/default/files/testkey');
+    \Drupal::service('file_system')->unlink('sites/default/files/testkey/' . UC_CREDIT_KEYFILE_NAME);
+    \Drupal::service('file_system')->rmdir('sites/default/files/testkey');
   }
 
   /**

@@ -46,7 +46,7 @@ function test_gateway_uc_payment_gateway() {
  * @see test_gateway_uc_payment_gateway()
  */
 function test_gateway_charge($order_id, $amount, $data) {
-  global $user;
+  $user = \Drupal::currentUser();
   $order = uc_order_load($order_id);
 
   // cc_exp_month and cc_exp_year are also validated by

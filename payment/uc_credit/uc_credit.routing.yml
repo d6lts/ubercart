@@ -5,3 +5,11 @@ uc_credit.terminal:
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _permission: 'process credit cards'
+
+uc_credit.cvv:
+  path: '/cart/checkout/credit/cvv_info'
+  defaults:
+    _controller: '\Drupal\uc_credit\Controller\CreditController::cvvInfo'
+    _title: 'CVV information'
+  requirements:
+    _permission: 'access content'
