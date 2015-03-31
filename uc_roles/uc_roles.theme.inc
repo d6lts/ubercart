@@ -76,12 +76,14 @@ function theme_uc_roles_user_expiration(array $variables) {
     );
   }
 
-  $output = theme('table', array(
-    'header' => $header,
-    'rows' => $rows,
-    'caption' => t('Below you can add or remove time to the expiration dates of the following roles.'),
-    'empty' => t('There are no pending expirations for roles this user.'),
-  ));
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#caption' => t('Below you can add or remove time to the expiration dates of the following roles.'),
+    '#empty' => t('There are no pending expirations for roles this user.'),
+  );
+  $output  = drupal_render($table);
   $output .= drupal_render_children($form);
 
   return $output;

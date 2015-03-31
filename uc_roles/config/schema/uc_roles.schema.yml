@@ -4,14 +4,16 @@ uc_roles.settings:
   mapping:
     default_role:
       type: string
-      label: ''
+      label: 'Default role for role assignments'
     default_role_choices:
-      type: string
-      label: ''
+      type: sequence
+      label: 'Roles other than anonymous and authenticated'
+      sequence:
+        type: string
+        label: 'Role'
     default_by_quantity:
       type: boolean
       label: ''
-
     default_show_expiration:
       type: boolean
       label: ''

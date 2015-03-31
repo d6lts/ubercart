@@ -1,5 +1,5 @@
 default_role: null 
-default_role_choices: null  #array
+default_role_choices: {  }
 default_by_quantity: false
 
 default_show_expiration: true

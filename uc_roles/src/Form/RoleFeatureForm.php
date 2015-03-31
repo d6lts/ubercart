@@ -33,7 +33,7 @@ class RoleFeatureForm extends FormBase {
 
     // Check if editing or adding to set default values.
     if (!empty($feature)) {
-      $product_role = db_query("SELECT * FROM {uc_roles_products} WHERE pfid = :pfid", [':pfid' => $feature['pfid']])->fetchObject();
+      $product_role = db_query('SELECT * FROM {uc_roles_products} WHERE pfid = :pfid', [':pfid' => $feature['pfid']])->fetchObject();
 
       $default_model = $product_role->model;
       $default_role = $product_role->rid;
@@ -229,7 +229,7 @@ class RoleFeatureForm extends FormBase {
     }
 
     // This role already set on this SKU?
-    if (!$form_state->hasValue('pfid') && ($product_roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid AND model = :model AND rid = :rid", [':nid' => $form_state->getValue('nid'), ':model' => $form_state->getValue('uc_roles_model'), ':rid' => $form_state->getValue('uc_roles_role')])->fetchObject())) {
+    if (!$form_state->hasValue('pfid') && ($product_roles = db_query('SELECT * FROM {uc_roles_products} WHERE nid = :nid AND model = :model AND rid = :rid', [':nid' => $form_state->getValue('nid'), ':model' => $form_state->getValue('uc_roles_model'), ':rid' => $form_state->getValue('uc_roles_role')])->fetchObject())) {
       $form_state->setErrorByName('uc_roles_role', t('The combination of SKU and role already exists for this product.'));
       $form_state->setErrorByName('uc_roles_model');
     }

@@ -96,12 +96,11 @@ function uc_roles_theme() {
  * Implements hook_form_user_profile_form_alter().
  */
 function uc_roles_form_user_profile_form_alter(&$form, FormStateInterface $form_state) {
-  $roles_config = \Drupal::config('uc_roles.settings');
-  $account = $form_state->getFormObject()->getEntity();
-
   if (!\Drupal::currentUser()->hasPermission('administer users')) {
     return;
   }
+  $roles_config = \Drupal::config('uc_roles.settings');
+  $account = $form_state->getFormObject()->getEntity();
 
   $role_choices = _uc_roles_get_choices(array_keys($account->roles));
 
@@ -146,7 +145,7 @@ function uc_roles_form_user_profile_form_alter(&$form, FormStateInterface $form_
   $form['uc_roles']['expirations']['table']['#tree'] = TRUE;
 
   // Create the expirations table.
-  $expirations = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid", [':uid' => $account->id()]);
+  $expirations = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
   foreach ($expirations as $expiration) {
     $form['uc_roles']['expirations']['table'][$expiration->rid] = array(
       'name' => array(
@@ -226,7 +225,7 @@ function uc_roles_user_validate($form, FormStateInterface $form_state) {
 
       $new_expiration = _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']);
       if (REQUEST_TIME > $new_expiration) {
-        $form_state->setErrorByName('qty', t("The new expiration date, %date, has already occurred.", ['%date' => \Drupal::service('date.formatter')->format($new_expiration, 'short')]));
+        $form_state->setErrorByName('qty', t('The new expiration date, %date, has already occurred.', ['%date' => \Drupal::service('date.formatter')->format($new_expiration, 'short')]));
       }
     }
   }
@@ -313,7 +312,7 @@ function uc_roles_user_view($account, $view_mode) {
   }
 
   $form = array();
-  $expirations = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid", [':uid' => $account->id()]);
+  $expirations = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
   foreach ($expirations as $expiration) {
     $form[$expiration->rid] = array(
       '#type' => 'item',
@@ -340,7 +339,7 @@ function uc_roles_user_view($account, $view_mode) {
  * Implements hook_uc_order_product_can_ship().
  */
 function uc_roles_uc_order_product_can_ship($item) {
-  $roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid", [':nid' => $item->nid->target_id]);
+  $roles = db_query('SELECT * FROM {uc_roles_products} WHERE nid = :nid', [':nid' => $item->nid->target_id]);
   foreach ($roles as $role) {
     // If the model is empty, keep looking. (Everyone needs a role model...)
     if (empty($role->model)) {
@@ -410,7 +409,7 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
 
   if (!count($default_role_choices)) {
     $form['no_roles'] = array(
-      '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', array('!url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']]))),
+      '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', ['!url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']])]),
       '#prefix' => '<p>',
       '#suffix' => '</p>',
     );
@@ -584,7 +583,7 @@ function _uc_roles_get_choices($exclude = array()) {
   unset($roles[DRUPAL_AUTHENTICATED_RID]);
 
   // User set specific roles that we must use?
-  $selected = $roles_config->get('default_role_choices');
+  $selected = \Drupal::config('uc_roles.settings')->get('default_role_choices');
 
   // If there's none, or if none are checked, use all of em.
   $default = empty($selected) || array_sum($selected) == 0;
@@ -640,12 +639,14 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
       drupal_set_message(t('The expiration of your %role_name role has been deleted.', ['%role_name' => _uc_roles_get_name($rid)]));
     }
     else {
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $account,
+        '#name' => SafeMarkup::checkPlain($account->getUsername()),
+        '#link_path' => 'user/' . $account->id(),
+      );
       drupal_set_message(t('The expiration of %role_name role for the user !user has been deleted.', array(
-        '!user' => theme('username', array(
-          'account' => $account,
-          'name' => SafeMarkup::checkPlain($account->getUsername()),
-          'link_path' => 'user/' . $account->id(),
-        )),
+        '!user' => drupal_render($username),
         '%role_name' => _uc_roles_get_name($rid),
       )));
     }
@@ -677,19 +678,21 @@ function uc_roles_revoke(&$account, $rid, $silent = FALSE) {
   // Remove our record of the expiration.
   uc_roles_delete($account, $rid, $silent);
 
-  $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", [':rid' => $rid])->fetchField();
+  $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
 
   if (!$silent) {
     if (\Drupal::currentUser()->id() == $account->id()) {
       drupal_set_message(t('Your %role role has been revoked.', ['%role' => $role_name]));
     }
     else {
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $account,
+        '#name' => SafeMarkup::checkPlain($account->getUsername()),
+        '#link_path' => 'user/' . $account->id(),
+      );
       drupal_set_message(t('!user has had the %role role revoked.', array(
-        '!user' => theme('username', array(
-          'account' => $account,
-          'name' => SafeMarkup::checkPlain($account->getUsername()),
-          'link_path' => 'user/' . $account->id(),
-        )),
+        '!user' => drupal_render($username),
         '%role' => $role_name,
       )));
     }
@@ -745,18 +748,20 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
 
   // Display the message if appropriate.
   if (!$silent) {
-    $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", [':rid' => $rid])->fetchField();
+    $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
 
     if (\Drupal::currentUser()->id() == $account->id()) {
       $message = t('You have been granted the %role role.', ['%role' => $role_name]);
     }
     else {
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $account,
+        '#name' => SafeMarkup::checkPlain($account->getUsername()),
+        '#link_path' => 'user/' . $account->id(),
+      );
       $message = t('!user has been granted the %role role.', array(
-        '!user' => theme('username', array(
-          'account' => $account,
-          'name' => SafeMarkup::checkPlain($account->getUsername()),
-          'link_path' => 'user/' . $account->id(),
-        )),
+        '!user' => drupal_render($username),
         '%role' => $role_name,
       ));
     }
@@ -807,17 +812,19 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
     ->execute();
 
   if (!$silent) {
-    $role_name = db_query("SELECT name FROM {role} WHERE rid = :rid", [':rid' => $rid])->fetchField();
+    $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
     if (\Drupal::currentUser()->id() == $account->id()) {
       $message = t('Your %role role has been renewed. It will expire on %date.', ['%role' => $role_name, '%date' => \Drupal::service('date.formatter')->format($timestamp, 'short')]);
     }
     else {
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $account,
+        '#name' => SafeMarkup::checkPlain($account->getUsername()),
+        '#link_path' => 'user/' . $account->id(),
+      );
       $message = t("!user's %role role has been renewed. It will expire on %date.", array(
-        '!user' => theme('username', array(
-          'account' => $account,
-          'name' => SafeMarkup::checkPlain($account->getUsername()),
-          'link_path' => 'user/' . $account->id(),
-        )),
+        '!user' => drupal_render($username),
         '%role' => $role_name,
         '%date' => \Drupal::service('date.formatter')->format($timestamp, 'short'),
       ));

@@ -26,12 +26,14 @@ class RoleDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
+    $username = array(
+      '#theme' => 'username',
+      '#account' => $account,
+      '#name' => SafeMarkup::checkPlain($account->getUsername()),
+      '#link_path' => 'user/' . $account->id(),
+    );
     return $this->t('Delete expiration of %role_name role for the user !user?', array(
-      '!user' => theme('username', array(
-        'account' => $account,
-        'name' => SafeMarkup::checkPlain($account->getUsername()),
-        'link_path' => 'entity.user.canonical' . $account->id(),
-      )),
+      '!user' => drupal_render($username),
       '%role_name' => $role_name,
     ));
   }
@@ -40,14 +42,16 @@ class RoleDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
+    $username = array(
+      '#theme' => 'username',
+      '#account' => $account,
+      '#name' => SafeMarkup::checkPlain($account->getUsername()),
+      '#link_path' => 'user/' . $account->id(),
+    );
     return $this->t('Deleting the expiration will give !user privileges set by the %role_name role indefinitely unless manually removed.', array(
-          '!user' => theme('username', array(
-            'account' => $account,
-            'name' => SafeMarkup::checkPlain($account->getUsername()),
-            'link_path' => 'entity.user.canonical' . $account->id(),
-          )),
-          '%role_name' => $role_name,
-        ));
+      '!user' => drupal_render($username),
+      '%role_name' => $role_name,
+    ));
   }
 
   /**
@@ -82,7 +86,7 @@ class RoleDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $user = NULL, $role = NULL) {
-    $expiration = db_query("SELECT expiration FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", [':uid' => $user->id(), ':rid' => $role])->fetchField();
+    $expiration = db_query('SELECT expiration FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid', [':uid' => $user->id(), ':rid' => $role])->fetchField();
     if ($expiration) {
 
       $role_name = _uc_roles_get_name($role);
