@@ -30,7 +30,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $cod_config = \Drupal::config('uc_cod.settings');
+    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
 
     $build['policy'] = array(
       '#markup' => '<p>' . $cod_config->get('policy') . '</p>'
@@ -53,7 +53,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $cod_config = \Drupal::config('uc_cod.settings');
+    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
 
     if ($cod_config->get('delivery_date')) {
       $order->payment_details = $form_state->getValue(['panes', 'payment', 'details']);
@@ -66,7 +66,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartReview(OrderInterface $order) {
-    $cod_config = \Drupal::config('uc_cod.settings');
+    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
 
     $review = array();
 
@@ -86,7 +86,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderView(OrderInterface $order) {
-    $cod_config = \Drupal::config('uc_cod.settings');
+    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
 
     $build = array();
 
@@ -109,7 +109,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderEditDetails(OrderInterface $order) {
-    $cod_config = \Drupal::config('uc_cod.settings');
+    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
 
     $build = array();
 
@@ -156,7 +156,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderSubmit(OrderInterface $order) {
-    $cod_config = \Drupal::config('uc_cod.settings');
+    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
     $max = $cod_config->get('max_order');
 
     if ($max > 0 && $order->getTotal() > $max) {
@@ -181,7 +181,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $cod_config = \Drupal::config('uc_cod.settings');
+    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
 
     $form['uc_cod_policy'] = array(
       '#type' => 'textarea',

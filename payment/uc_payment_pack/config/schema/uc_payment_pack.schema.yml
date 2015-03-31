@@ -1,4 +1,4 @@
-uc_check.settings:
+uc_payment_pack.check.settings:
   type: mapping
   label: 'Check payment method settings'
   mapping:
@@ -30,7 +30,7 @@ uc_check.settings:
       type: int
       label: ''
 
-uc_cod.settings:
+uc_payment_pack.cod.settings:
   type: mapping
   label: 'COD payment method settings'
   mapping:

@@ -31,7 +31,7 @@ class Check extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $check_config = \Drupal::config('uc_check.settings');
+    $check_config = \Drupal::config('uc_payment_pack.check.settings');
 
     $build['instructions'] = array(
       '#markup' => t('Checks should be made out to:')
@@ -73,7 +73,7 @@ class Check extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartReview(OrderInterface $order) {
-    $check_config = \Drupal::config('uc_check.settings');
+    $check_config = \Drupal::config('uc_payment_pack.check.settings');
 
     if (!$check_config->get('mailing_street1')) {
       $review[] = array(
@@ -137,7 +137,7 @@ class Check extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $check_config = \Drupal::config('uc_check.settings');
+    $check_config = \Drupal::config('uc_payment_pack.check.settings');
 
     $form['check_address_info'] = array(
       '#markup' => '<div>' . t('Set the mailing address to display to customers who choose this payment method during checkout.') . '</div>',
