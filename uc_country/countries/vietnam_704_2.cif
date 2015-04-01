@@ -80,7 +80,7 @@ function vietnam_install() {
     array(704, 'YB', 'Yen Bai'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -107,13 +107,13 @@ function vietnam_update($version) {
         ->condition('country_id', 704)
         ->execute();
 
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Dak Nong'))
         ->condition('zone_country_id', 704)
         ->condition('zone_name', 'Dac Nong')
         ->execute();
 
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Ha Noi'))
         ->condition('zone_country_id', 704)
         ->condition('zone_name', 'Hanoi')

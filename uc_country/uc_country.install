@@ -55,7 +55,7 @@ function uc_country_schema() {
     'primary key' => array('country_id'),
   );
 
-  $schema['uc_zones'] = array(
+  $schema['uc_countries_zones'] = array(
     'description' => 'Stores state/province information within a country.',
     'fields' => array(
       'zone_id' => array(

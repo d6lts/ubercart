@@ -132,7 +132,7 @@ function united_kingdom_install() {
     array(826, 'WRX', 'Wrexham')
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -172,13 +172,13 @@ function united_kingdom_update($version) {
         array(826, 'MIDDX', 'Middlesex'),
       );
 
-      $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+      $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
       foreach ($zones as $zone) {
         $query->values($zone);
       }
       $query->execute();
 
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Greater Manchester'))
         ->condition('zone_country_id', 826)
         ->condition('zone_name', 'Manchester')

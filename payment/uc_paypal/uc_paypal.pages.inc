@@ -230,7 +230,7 @@ function uc_paypal_ec_review() {
 
     if (!empty($country_id) && isset($nvp_response['SHIPTOSTATE'])) {
       $zone = $nvp_response['SHIPTOSTATE'];
-      $zone_id = db_query("SELECT zone_id FROM {uc_zones} WHERE zone_country_id = :id AND (zone_code = :code OR zone_name = :name)", array(':id' => $country_id, ':code' => $zone, ':name' => $zone))->fetchField();
+      $zone_id = db_query("SELECT zone_id FROM {uc_countries_zones} WHERE zone_country_id = :id AND (zone_code = :code OR zone_name = :name)", array(':id' => $country_id, ':code' => $zone, ':name' => $zone))->fetchField();
     }
 
     $order->delivery_street1 = SafeMarkup::checkPlain($nvp_response['SHIPTOSTREET']);

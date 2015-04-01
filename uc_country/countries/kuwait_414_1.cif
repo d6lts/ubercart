@@ -23,7 +23,7 @@ function kuwait_install() {
     array(414, 'KW-MU', 'Mubārak al Kabīr'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }

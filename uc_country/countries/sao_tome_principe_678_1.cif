@@ -19,7 +19,7 @@ function sao_tome_principe_install() {
     array(678, 'ST-S', 'São Tomé'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }

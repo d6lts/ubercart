@@ -30,7 +30,7 @@ function timor_leste_install() {
     array(626, 'TL-VI', 'Viqueque'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }

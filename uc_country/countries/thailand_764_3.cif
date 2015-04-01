@@ -99,7 +99,7 @@ function thailand_install() {
     array(764, 'TH-38', 'Bueng Kan'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -127,7 +127,7 @@ function thailand_update($version) {
         array(764, 'TH-38', 'Bueng Kan'),
       );
 
-      $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+      $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
       foreach ($zones as $zone) {
         $query->values($zone);
       }
@@ -214,7 +214,7 @@ function thailand_update($version) {
       );
 
       foreach ($zones as $zone) {
-        db_update('uc_zones')
+        db_update('uc_countries_zones')
           ->fields(array(
             'zone_name' => $zone[3],
             'zone_code' => $zone[2],

@@ -340,7 +340,7 @@ function uc_set_address_format($country_id, $format) {
  * Formats an address for display based on a country's address format.
  */
 function uc_address_format($first_name, $last_name, $company, $street1, $street2, $city, $zone, $postal_code, $country) {
-  $result = db_query("SELECT * FROM {uc_zones} WHERE zone_id = :id", [':id' => $zone]);
+  $result = db_query("SELECT * FROM {uc_countries_zones} WHERE zone_id = :id", [':id' => $zone]);
   if (!($zone_data = $result->fetchAssoc())) {
     $zone_data = array('zone_code' => t('N/A'), 'zone_name' => t('Unknown'));
   }

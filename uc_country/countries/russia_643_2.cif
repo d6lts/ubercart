@@ -98,7 +98,7 @@ function russia_install() {
     array(643, 'ZAB', 'Забайкальский край'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -126,22 +126,22 @@ function russia_update($version) {
         ->execute();
 
       // Remove old obsolete zones
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 643)
           ->condition('zone_code', 'AGB'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 643)
           ->condition('zone_code', 'CHI'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 643)
           ->condition('zone_code', 'KOR'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 643)
           ->condition('zone_code', 'UOB'))
@@ -152,14 +152,14 @@ function russia_update($version) {
         array(643, 'ZAB', 'Забайкальский край'),
       );
 
-      $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+      $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
       foreach ($zones as $zone) {
         $query->values($zone);
       }
       $query->execute();
 
       // Rename other zones
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Камчатский край', 'zone_code' => 'KAM'))
         ->condition('zone_country_id', 643)
         ->condition('zone_code', 'KAM')

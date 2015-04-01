@@ -70,7 +70,7 @@ function uc_shipping_schema() {
         'default' => '',
       ),
       'o_zone' => array(
-        'description' => 'Origin address: State/province, from {uc_zones}.zone_id.',
+        'description' => 'Origin address: State/province, from {uc_countries_zones}.zone_id.',
         'type' => 'int',
         'size' => 'medium',
         'unsigned' => TRUE,
@@ -135,7 +135,7 @@ function uc_shipping_schema() {
         'default' => '',
       ),
       'd_zone' => array(
-        'description' => 'Destination address: State/province, from {uc_zones}.zone_id.',
+        'description' => 'Destination address: State/province, from {uc_countries_zones}.zone_id.',
         'type' => 'int',
         'size' => 'medium',
         'unsigned' => TRUE,

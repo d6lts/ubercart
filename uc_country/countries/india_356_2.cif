@@ -56,7 +56,7 @@ function india_install() {
     array(356, 'WB', 'West Bengal'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -84,14 +84,14 @@ function india_update($version) {
         array(356, 'PY', 'Puducherry'),
       );
 
-      $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+      $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
       foreach ($zones as $zone) {
         $query->values($zone);
       }
       $query->execute();
 
       // Correct zone name misspelling and ISO-3166-2 code
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Chhattisgarh', 'zone_code' => 'CT'))
         ->condition('zone_country_id', 356)
         ->condition('zone_code', 'CG')
@@ -99,24 +99,24 @@ function india_update($version) {
 
       // Replace ampersand with 'and' for consistency within .cif
       // and for agreement with ISO-3166-2
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Jammu and Kashmir', 'zone_code' => 'JK'))
         ->condition('zone_country_id', 356)
         ->condition('zone_code', 'JK')
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Andaman and Nicobar', 'zone_code' => 'AN'))
         ->condition('zone_country_id', 356)
         ->condition('zone_code', 'AN')
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Daman and Diu', 'zone_code' => 'DD'))
         ->condition('zone_country_id', 356)
         ->condition('zone_code', 'DD')
         ->execute();
 
       // Correct ISO-3166-2 code
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Uttarakhand', 'zone_code' => 'UL'))
         ->condition('zone_country_id', 356)
         ->condition('zone_code', 'UA')

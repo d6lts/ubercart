@@ -137,7 +137,7 @@ class UcAddress extends Element\FormElement {
           );
 
           $country_id = is_object($value) ? $value->{$prefix . 'country'} : $value[$prefix . 'country'];
-          $zones = db_query("SELECT zone_id, zone_name FROM {uc_zones} WHERE zone_country_id = :country", [':country' => $country_id])->fetchAllKeyed();
+          $zones = db_query("SELECT zone_id, zone_name FROM {uc_countries_zones} WHERE zone_country_id = :country", [':country' => $country_id])->fetchAllKeyed();
           if (!empty($zones)) {
             natcasesort($zones);
             $subelement += array(

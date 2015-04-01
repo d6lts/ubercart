@@ -28,7 +28,7 @@ function congo_democratic_republic_of_install() {
     array(180, 'CD-SK', 'Sud-Kivu'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }

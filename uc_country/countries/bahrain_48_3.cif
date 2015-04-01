@@ -26,7 +26,7 @@ function bahrain_install() {
     array(48, 'BH-17', 'Ash Shamaliyah'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -53,42 +53,42 @@ function bahrain_update($version) {
         ->execute();
 
       // Remove old obsolete zones
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 48)
           ->condition('zone_code', 'AHD'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 48)
           ->condition('zone_code', 'AMG'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 48)
           ->condition('zone_code', 'JHA'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 48)
           ->condition('zone_code', 'STH'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 48)
           ->condition('zone_code', 'MAT'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 48)
           ->condition('zone_code', 'ARR'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 48)
           ->condition('zone_code', 'AMJ'))
         ->execute();
-      db_delete('uc_zones')
+      db_delete('uc_countries_zones')
         ->condition(db_and()
           ->condition('zone_country_id', 48)
           ->condition('zone_code', 'MAH'))
@@ -99,29 +99,29 @@ function bahrain_update($version) {
         array(48, 'BH-14', 'Al Janubiyah'),
       );
 
-      $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+      $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
       foreach ($zones as $zone) {
         $query->values($zone);
       }
       $query->execute();
 
       // Rename remaining zones
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Al Manamah', 'zone_code' => 'BH-13'))
         ->condition('zone_country_id', 48)
         ->condition('zone_code', 'AMH')
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Al Muharraq', 'zone_code' => 'BH-15'))
         ->condition('zone_country_id', 48)
         ->condition('zone_code', 'AMQ')
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Al Wusta', 'zone_code' => 'BH-16'))
         ->condition('zone_country_id', 48)
         ->condition('zone_code', 'AMW')
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Ash Shamaliyah', 'zone_code' => 'BH-17'))
         ->condition('zone_country_id', 48)
         ->condition('zone_code', 'AMS')

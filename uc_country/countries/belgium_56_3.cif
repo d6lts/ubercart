@@ -28,7 +28,7 @@ function belgium_install() {
     array(56, 'WLX', 'Luxembourg'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -50,59 +50,59 @@ function belgium_update($version) {
   switch ($version) {
     case '2':
       // Update existing zone codes and names.
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_code' => 'VWV'))
         ->condition('zone_code', 'WV')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_code' => 'VOV'))
         ->condition('zone_code', 'OV')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_code' => 'VAN'))
         ->condition('zone_code', 'AN')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_code' => 'VLI'))
         ->condition('zone_code', 'LG')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_code' => 'VBR'))
         ->condition('zone_code', 'VB')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Brabant-Wallon', 'zone_code' => 'WBR'))
         ->condition('zone_code', 'BW')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Liège', 'zone_code' => 'WLG'))
         ->condition('zone_code', 'LB')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Hainaut', 'zone_code' => 'WHT'))
         ->condition('zone_code', 'HT')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Namur', 'zone_code' => 'WNA'))
         ->condition('zone_code', 'NM')
         ->condition('zone_country_id', 56)
         ->execute();
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Luxembourg', 'zone_code' => 'WLX'))
         ->condition('zone_code', 'LU')
         ->condition('zone_country_id', 56)
         ->execute();
 
       // Insert Brussels.
-      db_insert('uc_zones')
+      db_insert('uc_countries_zones')
         ->fields(array(
             'zone_country_id' => 56,
             'zone_code' => 'BRU',

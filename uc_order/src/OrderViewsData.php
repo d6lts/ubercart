@@ -312,7 +312,7 @@ class OrderViewsData extends EntityViewsData {
 
       $data[$prefix . '_zones']['table']['group'] = $group;
       $data[$prefix . '_zones']['table']['join']['uc_orders'] = array(
-        'table' => 'uc_zones',
+        'table' => 'uc_countries_zones',
         'left_field' => $prefix . '_zone',
         'field' => 'zone_id',
       );

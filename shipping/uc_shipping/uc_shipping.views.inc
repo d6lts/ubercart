@@ -331,7 +331,7 @@ function uc_shipping_views_data() {
 
     $data['uc_shipments_' . $prefix . '_zones']['table']['group'] = $group;
     $data['uc_shipments_' . $prefix . '_zones']['table']['join']['uc_shipments'] = array(
-      'table' => 'uc_zones',
+      'table' => 'uc_countries_zones',
       'left_field' => $prefix . '_zone',
       'field' => 'zone_id',
     );

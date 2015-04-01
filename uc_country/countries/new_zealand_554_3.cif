@@ -36,7 +36,7 @@ function new_zealand_install() {
     array(554, 'WTC', 'West Coast'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -79,7 +79,7 @@ function new_zealand_update($version) {
         array(554, 'WTC', 'West Coast'),
       );
 
-      $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+      $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
       foreach ($zones as $zone) {
         $query->values($zone);
       }
@@ -87,7 +87,7 @@ function new_zealand_update($version) {
       break;
 
     case 3:
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Wairarapa'))
         ->condition('zone_name', 'Wairprarapa')
         ->execute();

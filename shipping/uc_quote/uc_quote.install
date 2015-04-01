@@ -92,7 +92,7 @@ function uc_quote_schema() {
         'default' => '',
       ),
       'zone' => array(
-        'description' => 'The address state/province, from {uc_zones}.zone_id.',
+        'description' => 'The address state/province, from {uc_countries_zones}.zone_id.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -178,18 +178,6 @@ function uc_quote_schema() {
 }
 
 /**
- * Implements hook_update_last_removed().
- */
-function uc_quote_update_last_removed() {
-  return 7001;
-}
-
-/**
- * @addtogroup updates-7.x-to-8.x
- * @{
- */
-
-/**
  * Converts uc_quote system variables to config.
  *
  * @ingroup config_upgrade
@@ -213,8 +201,3 @@ function uc_quote_update_8000() {
     )
   );
 }
-
-/**
- * @} End of "defgroup updates-7.x-to-8.x".
- * The next series of updates should start at 9000.
- */

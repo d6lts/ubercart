@@ -33,7 +33,7 @@ function bosnia_herzegovina_install() {
     array(70, '04', 'Zenicko-Dobojski Kanton'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }

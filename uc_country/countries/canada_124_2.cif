@@ -30,7 +30,7 @@ function canada_install() {
     array(124, 'YT', 'Yukon Territory'),
   );
 
-  $query = db_insert('uc_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
+  $query = db_insert('uc_countries_zones')->fields(array('zone_country_id', 'zone_code', 'zone_name'));
   foreach ($zones as $zone) {
     $query->values($zone);
   }
@@ -58,7 +58,7 @@ function canada_update($version) {
     case 2:
 
       // Rename zone
-      db_update('uc_zones')
+      db_update('uc_countries_zones')
         ->fields(array('zone_name' => 'Newfoundland and Labrador', 'zone_code' => 'NL'))
         ->condition('zone_country_id', 124)
         ->condition('zone_code', 'NF')
