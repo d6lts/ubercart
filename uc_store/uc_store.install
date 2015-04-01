@@ -41,7 +41,7 @@ function uc_store_install() {
     ->set('interface.uc_cart',  'ubercart_mail')
     ->set('interface.uc_order', 'ubercart_mail')
     ->set('interface.uc_file',  'ubercart_mail')
-    ->set('interface.uc_roles', 'ubercart_mail')
+    ->set('interface.uc_role', 'ubercart_mail')
     ->set('interface.uc_stock', 'ubercart_mail')
     ->set('interface.uc_store', 'ubercart_mail')
     ->save();
@@ -130,7 +130,7 @@ function uc_store_update_8003() {
     ->set('interface.uc_cart',  'ubercart_mail')
     ->set('interface.uc_order', 'ubercart_mail')
     ->set('interface.uc_file',  'ubercart_mail')
-    ->set('interface.uc_roles', 'ubercart_mail')
+    ->set('interface.uc_role', 'ubercart_mail')
     ->set('interface.uc_stock', 'ubercart_mail')
     ->set('interface.uc_store', 'ubercart_mail')
     ->save();

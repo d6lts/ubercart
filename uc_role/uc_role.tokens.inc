@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Token hooks for the uc_roles module.
+ * Token hooks for the uc_role module.
  */
 
 /**
  * Implements hook_token_info().
  */
-function uc_roles_token_info() {
+function uc_role_token_info() {
   $type = array(
     'name' => t('Role promotions'),
     'description' => t('Tokens related to purchased, temporary roles.'),
@@ -34,7 +34,7 @@ function uc_roles_token_info() {
 /**
  * Implements hook_tokens().
  */
-function uc_roles_tokens($type, $tokens, $data = array(), $options = array()) {
+function uc_role_tokens($type, $tokens, $data = array(), $options = array()) {
   $token_service = \Drupal::token();
 
   $sanitize = !empty($options['sanitize']);
@@ -50,7 +50,7 @@ function uc_roles_tokens($type, $tokens, $data = array(), $options = array()) {
           $replacements[$original] = \Drupal::service('date.formatter')->format($object->expiration, 'medium');
           break;
         case 'name':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain(_uc_roles_get_name($object->rid)) : _uc_roles_get_name($object->rid);
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain(_uc_role_get_name($object->rid)) : _uc_role_get_name($object->rid);
           break;
       }
     }

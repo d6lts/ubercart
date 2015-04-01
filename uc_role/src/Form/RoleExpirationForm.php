@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_roles\Form\RoleExpirationForm.
+ * Contains \Drupal\uc_role\Form\RoleExpirationForm.
  */
 
-namespace Drupal\uc_roles\Form;
+namespace Drupal\uc_role\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -21,7 +21,7 @@ class RoleExpirationForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormID() {
-    return 'uc_roles_expiration_form';
+    return 'uc_role_expiration_form';
   }
 
   /**
@@ -64,7 +64,7 @@ class RoleExpirationForm extends FormBase {
       // Each row has user name, role , expiration date, and edit/delete operations.
       $row = array(
         'username' => SafeMarkup::checkPlain($account->getUsername()),
-        'role' => SafeMarkup::checkPlain(_uc_roles_get_name($result->rid)),
+        'role' => SafeMarkup::checkPlain(_uc_role_get_name($result->rid)),
         'expiration' => \Drupal::service('date.formatter')->format($result->expiration, 'short'),
       );
 
@@ -75,7 +75,7 @@ class RoleExpirationForm extends FormBase {
       );
       $ops['delete'] = array(
         'title' => $this->t('Delete'),
-        'url' => Url::fromRoute('uc_roles.expiration', ['user' => $result->id(), 'role' => $result->rid]),
+        'url' => Url::fromRoute('uc_role.expiration', ['user' => $result->id(), 'role' => $result->rid]),
       );
       $row['ops'] = array(
         'data' => array(

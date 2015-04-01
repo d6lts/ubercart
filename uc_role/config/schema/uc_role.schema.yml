@@ -1,4 +1,4 @@
-uc_roles.settings:
+uc_role.settings:
   type: mapping
   label: 'Role settings'
   mapping:

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_roles\Form\RoleDeleteForm.
+ * Contains \Drupal\uc_role\Form\RoleDeleteForm.
  */
 
-namespace Drupal\uc_roles\Form;
+namespace Drupal\uc_role\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -72,14 +72,14 @@ class RoleDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_roles.expiration');
+    return new Url('uc_role.expiration');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'uc_roles_deletion_form';
+    return 'uc_role_deletion_form';
   }
 
   /**
@@ -89,7 +89,7 @@ class RoleDeleteForm extends ConfirmFormBase {
     $expiration = db_query('SELECT expiration FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid', [':uid' => $user->id(), ':rid' => $role])->fetchField();
     if ($expiration) {
 
-      $role_name = _uc_roles_get_name($role);
+      $role_name = _uc_role_get_name($role);
 
       $form['user'] = array('#type' => 'value', '#value' => $user->getUsername());
       $form['uid'] = array('#type' => 'value', '#value' => $user->id());
@@ -104,8 +104,8 @@ class RoleDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    uc_roles_delete(user_load($form_state->getValue('uid')), $form_state->getValue('rid'));
+    uc_role_delete(user_load($form_state->getValue('uid')), $form_state->getValue('rid'));
 
-    $form_state->setRedirect('uc_roles.expiration');
+    $form_state->setRedirect('uc_role.expiration');
   }
 }

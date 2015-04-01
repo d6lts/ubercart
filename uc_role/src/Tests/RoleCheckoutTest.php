@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_roles\Tests\RoleCheckoutTest.
+ * Contains \Drupal\uc_role\Tests\RoleCheckoutTest.
  */
 
-namespace Drupal\uc_roles\Tests;
+namespace Drupal\uc_role\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
@@ -16,7 +16,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class RoleCheckoutTest extends UbercartTestBase {
 
-  public static $modules = array('uc_payment', 'uc_payment_pack', 'uc_roles');
+  public static $modules = array('uc_payment', 'uc_payment_pack', 'uc_role');
 
   /** Authenticated but unprivileged user. */
   protected $customer;
@@ -38,7 +38,7 @@ class RoleCheckoutTest extends UbercartTestBase {
     $rid = $this->drupalCreateRole(array('access content'));
     $this->drupalLogin($this->adminUser);
     $this->drupalPostForm('node/' . $this->product->id() . '/edit/features', array('feature' => 'role'), t('Add'));
-    $this->drupalPostForm(NULL, array('uc_roles_role' => $rid), t('Save feature'));
+    $this->drupalPostForm(NULL, array('uc_role_role' => $rid), t('Save feature'));
 
     // Process an anonymous, shippable order.
     $order = $this->createOrder();
@@ -47,7 +47,7 @@ class RoleCheckoutTest extends UbercartTestBase {
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // Find the order uid.
-    $uid = db_query("SELECT uid FROM {uc_orders} ORDER BY order_id DESC")->fetchField();
+    $uid = db_query('SELECT uid FROM {uc_orders} ORDER BY order_id DESC')->fetchField();
     $account = user_load($uid);
     // @todo Re-enable when Rules is available.
     // $this->assertTrue($account->hasRole($rid), 'New user was granted role.');

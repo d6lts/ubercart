@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Theme functions for the uc_roles module.
+ * Theme functions for the uc_role module.
  */
 
 use Drupal\Component\Utility\SafeMarkup;
@@ -16,7 +16,7 @@ use Drupal\Component\Utility\SafeMarkup;
  *
  * @ingroup themeable
  */
-function theme_uc_roles_user_new(array $variables) {
+function theme_uc_role_user_new(array $variables) {
   $form = $variables['form'];
 
   // Render the expiration tables first.
@@ -42,7 +42,7 @@ function theme_uc_roles_user_new(array $variables) {
  *
  * @ingroup themeable
  */
-function theme_uc_roles_user_expiration(array $variables) {
+function theme_uc_role_user_expiration(array $variables) {
   $form = $variables['form'];
 
   $header = array(

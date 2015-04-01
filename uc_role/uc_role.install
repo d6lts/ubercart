@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the uc_roles module.
+ * Install, update and uninstall functions for the uc_role module.
  */
 
 /**
  * Implements hook_schema().
  */
-function uc_roles_schema() {
+function uc_role_schema() {
   $schema['uc_roles_products'] = array(
     'description' => 'Maps purchasable roles to Ubercart products.',
     'fields' => array(
@@ -182,15 +182,8 @@ function uc_roles_schema() {
 /**
  * Implements hook_uninstall().
  */
-function uc_roles_uninstall() {
+function uc_role_uninstall() {
   db_delete('uc_product_features')
     ->condition('fid', 'role')
     ->execute();
-}
-
-/**
- * Implements hook_update_last_removed().
- */
-function uc_roles_update_last_removed() {
-  return 7300;
 }

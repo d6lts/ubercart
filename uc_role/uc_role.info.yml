@@ -1,4 +1,4 @@
-name: Roles
+name: Role Assignments
 type: module
 description: 'Assigns permanent or expirable roles based on product purchases.'
 package: Ubercart - core (optional)

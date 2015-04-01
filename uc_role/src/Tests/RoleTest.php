@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_roles\Tests\RolesTest.
+ * Contains \Drupal\uc_role\Tests\RoleTest.
  */
 
-namespace Drupal\uc_roles\Tests;
+namespace Drupal\uc_role\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
 
@@ -14,9 +14,9 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  *
  * @group Ubercart
  */
-class RolesTest extends UbercartTestBase {
+class RoleTest extends UbercartTestBase {
 
-  public static $modules = array('uc_payment', 'uc_payment_pack', 'uc_roles');
+  public static $modules = array('uc_payment', 'uc_payment_pack', 'uc_role');
 
   public function testRolePurchaseCheckout() {
     // Add role assignment to the test product.
@@ -24,10 +24,10 @@ class RolesTest extends UbercartTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalPostForm('node/' . $this->product->id() . '/edit/features', array('feature' => 'role'), t('Add'));
     $edit = array(
-      'uc_roles_role' => $rid,
+      'uc_role_role' => $rid,
       'end_override' => TRUE,
-      'uc_roles_expire_relative_duration' => 1,
-      'uc_roles_expire_relative_granularity' => 'day',
+      'uc_role_expire_relative_duration' => 1,
+      'uc_role_expire_relative_granularity' => 'day',
     );
     $this->drupalPostForm(NULL, $edit, t('Save feature'));
 

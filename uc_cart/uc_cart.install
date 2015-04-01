@@ -19,7 +19,7 @@ function uc_cart_update_last_removed() {
 
 
 /**
- * Converts uc_roles system variables to config.
+ * Converts uc_role system variables to config.
  *
  * @ingroup config_upgrade
  */

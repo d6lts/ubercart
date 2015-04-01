@@ -1,5 +1,5 @@
-uc_roles.expiration:
-  route_name: uc_roles.expiration
+uc_role.expiration:
+  route_name: uc_role.expiration
   title: 'Role expirations'
   base_route: entity.user.collection
   weight: 20

@@ -4,7 +4,7 @@
  * @file
  * Grants roles upon accepted payment of products.
  *
- * The uc_roles module will grant specified roles upon purchase of specified
+ * The uc_role module will grant specified roles upon purchase of specified
  * products. Granted roles can be set to have a expiration date. Users can also
  * be notified of the roles they are granted and when the roles will
  * expire/need to be renewed/etc.
@@ -17,12 +17,12 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function uc_roles_help($path, RouteMatchInterface $route_match) {
+function uc_role_help($path, RouteMatchInterface $route_match) {
   if ($path == '/node/%/edit/features/%/%' && $arg[4] == 'role') {
     return '<p>' . t('Add roles through this page and then use the <a href="!url">Rules interface</a> to limit which orders they are applied to. Most important is the order status on which role granting will be triggered.', ['!url' => \Drupal::url('admin/config/workflow/rules/reaction')]) . '</p>';
   }
   switch ($path) {
-    case 'uc_roles.expiration':
+    case 'uc_role.expiration':
       return '<p>' . t('Ubercart grants certain roles to customers when they purchase products with a role assignment feature. These can be permanent or temporary roles. Here you can view and edit when temporary roles are set to expire.') . '</p>';
   }
 }
@@ -30,8 +30,8 @@ function uc_roles_help($path, RouteMatchInterface $route_match) {
 /**
  * Implements hook_cron().
  */
-function uc_roles_cron() {
-  $roles_config = \Drupal::config('uc_roles.settings');
+function uc_role_cron() {
+  $roles_config = \Drupal::config('uc_role.settings');
   $reminder_granularity = $roles_config->get('reminder_granularity');
   $reminder_qty = $roles_config->get('reminder_length');
 
@@ -42,7 +42,7 @@ function uc_roles_cron() {
   if ($reminder_granularity != 'never') {
     $condition->condition(db_and()
       ->isNull('e.notified')
-      ->condition('e.expiration', _uc_roles_get_expiration($reminder_qty, $reminder_granularity, REQUEST_TIME), '<=')
+      ->condition('e.expiration', _uc_role_get_expiration($reminder_qty, $reminder_granularity, REQUEST_TIME), '<=')
     );
   }
   $query->condition($condition);
@@ -53,18 +53,18 @@ function uc_roles_cron() {
 
     // Cleanup if user or role was deleted already.
     if (!$account || !in_array($expiration->rid, array_keys($account->roles))) {
-      uc_roles_delete($expiration, $expiration->rid, TRUE);
+      uc_role_delete($expiration, $expiration->rid, TRUE);
     }
 
     // Role expired.
     elseif ($expiration->expiration <= REQUEST_TIME) {
-      // rules_invoke_event('uc_roles_notify_revoke', $account, $expiration);
-      uc_roles_revoke($account, $expiration->rid);
+      // rules_invoke_event('uc_role_notify_revoke', $account, $expiration);
+      uc_role_revoke($account, $expiration->rid);
     }
 
     // Remind the user about an upcoming expiration.
     elseif ($reminder_granularity != 'never') {
-      // rules_invoke_event('uc_roles_notify_reminder', $account, $expiration);
+      // rules_invoke_event('uc_role_notify_reminder', $account, $expiration);
       db_update('uc_roles_expirations')
         ->fields(array('notified' => 1))
         ->condition('uid', $account->id())
@@ -77,17 +77,17 @@ function uc_roles_cron() {
 /**
  * Implements hook_theme().
  */
-function uc_roles_theme() {
+function uc_role_theme() {
   return array(
-    'uc_roles_user_expiration' => array(
+    'uc_role_user_expiration' => array(
       'render element' => 'form',
-      'file' => 'uc_roles.theme.inc',
-      'function' => 'theme_uc_roles_user_expiration',
+      'file' => 'uc_role.theme.inc',
+      'function' => 'theme_uc_role_user_expiration',
     ),
-    'uc_roles_user_new' => array(
+    'uc_role_user_new' => array(
       'render element' => 'form',
-      'file' => 'uc_roles.theme.inc',
-      'function' => 'theme_uc_roles_user_new',
+      'file' => 'uc_role.theme.inc',
+      'function' => 'theme_uc_role_user_new',
     ),
   );
 }
@@ -95,14 +95,14 @@ function uc_roles_theme() {
 /**
  * Implements hook_form_user_profile_form_alter().
  */
-function uc_roles_form_user_profile_form_alter(&$form, FormStateInterface $form_state) {
+function uc_role_form_user_profile_form_alter(&$form, FormStateInterface $form_state) {
   if (!\Drupal::currentUser()->hasPermission('administer users')) {
     return;
   }
-  $roles_config = \Drupal::config('uc_roles.settings');
+  $roles_config = \Drupal::config('uc_role.settings');
   $account = $form_state->getFormObject()->getEntity();
 
-  $role_choices = _uc_roles_get_choices(array_keys($account->roles));
+  $role_choices = _uc_role_get_choices(array_keys($account->roles));
 
   $polarity_widget = array(
     '#type' => 'select',
@@ -128,29 +128,29 @@ function uc_roles_form_user_profile_form_alter(&$form, FormStateInterface $form_
     ),
   );
 
-  $form['uc_roles'] = array(
+  $form['uc_role'] = array(
     '#type' => 'details',
     '#title' => t('Ubercart roles'),
     '#weight' => 10,
-    '#theme' => 'uc_roles_user_new',
+    '#theme' => 'uc_role_user_new',
   );
 
-  $form['uc_roles']['expirations'] = array(
+  $form['uc_role']['expirations'] = array(
     '#type' => 'fieldset',
     '#title' => t('Pending expirations'),
     '#weight' => 0,
-    '#theme' => 'uc_roles_user_expiration',
+    '#theme' => 'uc_role_user_expiration',
   );
 
-  $form['uc_roles']['expirations']['table']['#tree'] = TRUE;
+  $form['uc_role']['expirations']['table']['#tree'] = TRUE;
 
   // Create the expirations table.
   $expirations = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
   foreach ($expirations as $expiration) {
-    $form['uc_roles']['expirations']['table'][$expiration->rid] = array(
+    $form['uc_role']['expirations']['table'][$expiration->rid] = array(
       'name' => array(
         '#type' => 'value',
-        '#value' => _uc_roles_get_name($expiration->rid),
+        '#value' => _uc_role_get_name($expiration->rid),
       ),
       'remove' => array(
         '#type' => 'checkbox',
@@ -167,31 +167,31 @@ function uc_roles_form_user_profile_form_alter(&$form, FormStateInterface $form_
 
   // Option to allow temporary roles.
   if (!empty($role_choices)) {
-    $form['uc_roles']['new_role'] = array(
+    $form['uc_role']['new_role'] = array(
       '#type' => 'checkbox',
       '#title' => t('Add role'),
     );
 
-    $form['uc_roles']['new_role_add'] = array(
+    $form['uc_role']['new_role_add'] = array(
       '#type' => 'select',
       '#default_value' => $roles_config->get('default_role'),
       '#options' => $role_choices,
     );
 
-    $form['uc_roles']['new_role_add_for'] = array(
+    $form['uc_role']['new_role_add_for'] = array(
       '#markup' => ' ' . t('for') . ' ',
     );
 
-    $form['uc_roles']['new_role_add_qty'] = $quantity_widget;
-    $form['uc_roles']['new_role_add_granularity'] = $granularity_widget;
+    $form['uc_role']['new_role_add_qty'] = $quantity_widget;
+    $form['uc_role']['new_role_add_granularity'] = $granularity_widget;
 
     if (($default_granularity = $roles_config->get('default_granularity')) != 'never') {
-      $form['uc_roles']['new_role_add_qty'] = $form['uc_roles']['new_role_add_qty'] + array('#default_value' => $roles_config->get('default_length'));
-      $form['uc_roles']['new_role_add_granularity'] = $form['uc_roles']['new_role_add_granularity'] + array('#default_value' => $default_granularity);
+      $form['uc_role']['new_role_add_qty'] = $form['uc_role']['new_role_add_qty'] + array('#default_value' => $roles_config->get('default_length'));
+      $form['uc_role']['new_role_add_granularity'] = $form['uc_role']['new_role_add_granularity'] + array('#default_value' => $default_granularity);
     }
   }
 
-  $form['#validate'][] = 'uc_roles_user_validate';
+  $form['#validate'][] = 'uc_role_user_validate';
 
   return $form;
 }
@@ -199,9 +199,9 @@ function uc_roles_form_user_profile_form_alter(&$form, FormStateInterface $form_
 /**
  * User profile form validate handler.
  *
- * @see uc_roles_form_user_profile_form_alter()
+ * @see uc_role_form_user_profile_form_alter()
  */
-function uc_roles_user_validate($form, FormStateInterface $form_state) {
+function uc_role_user_validate($form, FormStateInterface $form_state) {
   $edit = $form_state->getValues();
 
   // Validate the amount of time for the expiration.
@@ -223,7 +223,7 @@ function uc_roles_user_validate($form, FormStateInterface $form_state) {
       $qty = $value['qty'];
       $qty *= $value['polarity'] == 'add' ? 1 : -1;
 
-      $new_expiration = _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']);
+      $new_expiration = _uc_role_get_expiration($qty, $value['granularity'], $value['expiration']);
       if (REQUEST_TIME > $new_expiration) {
         $form_state->setErrorByName('qty', t('The new expiration date, %date, has already occurred.', ['%date' => \Drupal::service('date.formatter')->format($new_expiration, 'short')]));
       }
@@ -234,14 +234,14 @@ function uc_roles_user_validate($form, FormStateInterface $form_state) {
 /**
  * Implements hook_user_cancel().
  */
-function uc_roles_user_cancel($edit, $account, $method) {
-  uc_roles_delete($account);
+function uc_role_user_cancel($edit, $account, $method) {
+  uc_role_delete($account);
 }
 
 /**
  * Implements hook_user_presave().
  */
-function uc_roles_user_presave($account) {
+function uc_role_user_presave($account) {
   if (!\Drupal::currentUser()->hasPermission('administer users')) {
     return;
   }
@@ -249,10 +249,10 @@ function uc_roles_user_presave($account) {
   // Grant a new role if a new temporary role is added.
   if (!empty($account->new_role)) {
     // Save our role info, but don't save the user; user.module will do that.
-    uc_roles_grant($account, $account->new_role, _uc_roles_get_expiration($account->new_role_add_qty, $account->new_role_add_granularity), FALSE);
+    uc_role_grant($account, $account->new_role, _uc_role_get_expiration($account->new_role_add_qty, $account->new_role_add_granularity), FALSE);
 
     // Push in values so user.module will save in the roles.
-    $account->roles[$account->new_role_add] = _uc_roles_get_name($account->new_role_add);
+    $account->roles[$account->new_role_add] = _uc_role_get_name($account->new_role_add);
 
     // Reset the new role form.
     unset($account->new_role);
@@ -266,7 +266,7 @@ function uc_roles_user_presave($account) {
     foreach ($account->table as $rid => $value) {
       // Remove this expiration.
       if ($value['remove']) {
-        uc_roles_delete($account, $rid);
+        uc_role_delete($account, $rid);
       }
 
       // Adjust it.
@@ -275,7 +275,7 @@ function uc_roles_user_presave($account) {
           $qty = $value['qty'];
           $qty *= $value['polarity'] == 'add' ? 1 : -1;
 
-          uc_roles_renew($account, $rid, _uc_roles_get_expiration($qty, $value['granularity'], $value['expiration']));
+          uc_role_renew($account, $rid, _uc_role_get_expiration($qty, $value['granularity'], $value['expiration']));
         }
       }
     }
@@ -285,7 +285,7 @@ function uc_roles_user_presave($account) {
   if (isset($account->original->roles)) {
     foreach ($account->original->roles as $rid => $role) {
       if (!in_array($rid, $account->roles) && $rid != DRUPAL_AUTHENTICATED_RID) {
-        uc_roles_delete($account, $rid);
+        uc_role_delete($account, $rid);
       }
     }
   }
@@ -296,13 +296,13 @@ function uc_roles_user_presave($account) {
  *
  * Displays role expirations on the user account screen.
  */
-function uc_roles_user_view($account, $view_mode) {
+function uc_role_user_view($account, $view_mode) {
   // Kick out anonymous or other view modes.
   if (\Drupal::currentUser()->isAnonymous() || $view_mode != 'full') {
     return;
   }
 
-  $roles_config = \Drupal::config('uc_roles.settings');
+  $roles_config = \Drupal::config('uc_role.settings');
 
   // Only show if this user can access all role expirations, or if it's the same
   // user and the expirations are showing on the user pages.
@@ -316,7 +316,7 @@ function uc_roles_user_view($account, $view_mode) {
   foreach ($expirations as $expiration) {
     $form[$expiration->rid] = array(
       '#type' => 'item',
-      '#title' => SafeMarkup::checkPlain(_uc_roles_get_name($expiration->rid)),
+      '#title' => SafeMarkup::checkPlain(_uc_role_get_name($expiration->rid)),
       '#markup' => t('This role will expire on !date', ['!date' => \Drupal::service('date.formatter')->format($expiration->expiration, 'short')]),
     );
   }
@@ -332,13 +332,13 @@ function uc_roles_user_view($account, $view_mode) {
     '#title' => t('Expiring roles'),
   );
 
-  $account->content['uc_roles'] = $item + $form;
+  $account->content['uc_role'] = $item + $form;
 }
 
 /**
  * Implements hook_uc_order_product_can_ship().
  */
-function uc_roles_uc_order_product_can_ship($item) {
+function uc_role_uc_order_product_can_ship($item) {
   $roles = db_query('SELECT * FROM {uc_roles_products} WHERE nid = :nid', [':nid' => $item->nid->target_id]);
   foreach ($roles as $role) {
     // If the model is empty, keep looking. (Everyone needs a role model...)
@@ -361,13 +361,13 @@ function uc_roles_uc_order_product_can_ship($item) {
 /**
  * Implements hook_uc_product_feature().
  */
-function uc_roles_uc_product_feature() {
+function uc_role_uc_product_feature() {
   $features[] = array(
     'id' => 'role',
     'title' => t('Role assignment'),
-    'callback' => 'Drupal\uc_roles\Form\RoleFeatureForm',
-    'delete' => 'uc_roles_feature_delete',
-    'settings' => 'uc_roles_feature_settings',
+    'callback' => 'Drupal\uc_role\Form\RoleFeatureForm',
+    'delete' => 'uc_role_feature_delete',
+    'settings' => 'uc_role_feature_settings',
   );
 
   return $features;
@@ -376,9 +376,9 @@ function uc_roles_uc_product_feature() {
 /**
  * Implements hook_uc_store_status().
  */
-function uc_roles_uc_store_status() {
+function uc_role_uc_store_status() {
   $message = array();
-  $role_choices = _uc_roles_get_choices();
+  $role_choices = _uc_role_get_choices();
   if (empty($role_choices)) {
     $message[] = array(
       'status' => 'warning',
@@ -399,13 +399,13 @@ function uc_roles_uc_store_status() {
 /**
  * Form builder for role settings.
  *
- * @see uc_roles_feature_settings_submit()
+ * @see uc_role_feature_settings_submit()
  * @ingroup forms
  */
-function uc_roles_feature_settings($form, FormStateInterface $form_state) {
+function uc_role_feature_settings($form, FormStateInterface $form_state) {
   $default_role_choices = user_role_names(TRUE);
   unset($default_role_choices[DRUPAL_AUTHENTICATED_RID]);
-  $roles_config = \Drupal::config('uc_roles.settings');
+  $roles_config = \Drupal::config('uc_role.settings');
 
   if (!count($default_role_choices)) {
     $form['no_roles'] = array(
@@ -417,14 +417,14 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
     return $form;
   }
 
-  $form['uc_roles_default_role'] = array(
+  $form['uc_role_default_role'] = array(
     '#type' => 'select',
     '#title' => t('Default role'),
     '#default_value' => $roles_config->get('default_role'),
     '#description' => t('The default role Ubercart grants on specified products.'),
-    '#options' => _uc_roles_get_choices(),
+    '#options' => _uc_role_get_choices(),
   );
-  $form['uc_roles_default_role_choices'] = array(
+  $form['uc_role_default_role_choices'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Product roles'),
     '#default_value' => $roles_config->get('default_role_choices'),
@@ -438,7 +438,7 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
     '#title' => t('Default role expiration'),
   );
 
-  $form['role_lifetime']['uc_roles_default_end_expiration'] = array(
+  $form['role_lifetime']['uc_role_default_end_expiration'] = array(
     '#type' => 'select',
     '#title' => t('Expiration type'),
     '#options' => array(
@@ -447,7 +447,7 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
     ),
     '#default_value' => $roles_config->get('default_end_expiration'),
   );
-  $form['role_lifetime']['uc_roles_default_length'] = array(
+  $form['role_lifetime']['uc_role_default_length'] = array(
     '#type' => 'textfield',
     '#default_value' => ($roles_config->get('default_granularity') == 'never') ? NULL : $roles_config->get('default_length'),
     '#size' => 4,
@@ -455,11 +455,11 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
     '#prefix' => '<div class="expiration">',
     '#suffix' => '</div>',
     '#states' => array(
-      'visible' => array('select[name="uc_roles_default_end_expiration"]' => array('value' => 'rel')),
-      'invisible' => array('select[name="uc_roles_default_granularity"]' => array('value' => 'never')),
+      'visible' => array('select[name="uc_role_default_end_expiration"]' => array('value' => 'rel')),
+      'invisible' => array('select[name="uc_role_default_granularity"]' => array('value' => 'never')),
     ),
   );
-  $form['role_lifetime']['uc_roles_default_granularity'] = array(
+  $form['role_lifetime']['uc_role_default_granularity'] = array(
     '#type' => 'select',
     '#default_value' => $roles_config->get('default_granularity'),
     '#options' => array(
@@ -473,27 +473,27 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
     '#prefix' => '<div class="expiration">',
     '#suffix' => '</div>',
     '#states' => array(
-      'visible' => array('select[name="uc_roles_default_end_expiration"]' => array('value' => 'rel')),
+      'visible' => array('select[name="uc_role_default_end_expiration"]' => array('value' => 'rel')),
     ),
   );
   $form['role_lifetime']['absolute'] = array(
     '#type' => 'container',
     '#states' => array(
-      'visible' => array('select[name="uc_roles_default_end_expiration"]' => array('value' => 'abs')),
+      'visible' => array('select[name="uc_role_default_end_expiration"]' => array('value' => 'abs')),
     ),
   );
-  $form['role_lifetime']['absolute']['uc_roles_default_end_time'] = array(
+  $form['role_lifetime']['absolute']['uc_role_default_end_time'] = array(
     '#type' => 'date',
     '#description' => t('Expire the role at the beginning of this day.'),
     '#default_value' => $roles_config->get('default_end_time'),
   );
-  $form['role_lifetime']['uc_roles_default_by_quantity'] = array(
+  $form['role_lifetime']['uc_role_default_by_quantity'] = array(
     '#type' => 'checkbox',
     '#title' => t('Multiply by quantity'),
     '#description' => t('Check if the role duration should be multiplied by the quantity purchased.'),
     '#default_value' => $roles_config->get('default_by_quantity'),
   );
-  $form['reminder']['uc_roles_reminder_length'] = array(
+  $form['reminder']['uc_role_reminder_length'] = array(
     '#type' => 'textfield',
     '#title' => t('Time before reminder'),
     '#default_value' => ($roles_config->get('reminder_granularity') == 'never') ? NULL : $roles_config->get('reminder_length'),
@@ -502,10 +502,10 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
     '#prefix' => '<div class="expiration">',
     '#suffix' => '</div>',
     '#states' => array(
-      'disabled' => array('select[name="uc_roles_reminder_granularity"]' => array('value' => 'never')),
+      'disabled' => array('select[name="uc_role_reminder_granularity"]' => array('value' => 'never')),
     ),
   );
-  $form['reminder']['uc_roles_reminder_granularity'] = array(
+  $form['reminder']['uc_role_reminder_granularity'] = array(
     '#type' => 'select',
     '#default_value' => $roles_config->get('reminder_granularity'),
     '#options' => array(
@@ -519,7 +519,7 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
     '#prefix' => '<div class="expiration">',
     '#suffix' => '</div>',
   );
-  $form['uc_roles_default_show_expiration'] = array(
+  $form['uc_role_default_show_expiration'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show expirations on user page'),
     '#default_value' => $roles_config->get('default_show_expiration'),
@@ -529,26 +529,26 @@ function uc_roles_feature_settings($form, FormStateInterface $form_state) {
 }
 
 /**
- * Form submission handler for uc_roles_feature_settings().
+ * Form submission handler for uc_role_feature_settings().
  *
- * @see uc_roles_feature_settings()
+ * @see uc_role_feature_settings()
  */
-function uc_roles_feature_settings_submit($form, FormStateInterface $form_state) {
-  $roles_config = \Drupal::configFactory()->getEditable('uc_roles.settings');
+function uc_role_feature_settings_submit($form, FormStateInterface $form_state) {
+  $roles_config = \Drupal::configFactory()->getEditable('uc_role.settings');
   $roles_config
-    ->set('default_role', $form_state->getValue('uc_roles_default_role'))
-    ->set('default_role_choices', $form_state->getValue('uc_roles_default_role_choices'))
-    ->set('default_end_expiration', $form_state->getValue('uc_roles_default_end_expiration'))
-    ->set('default_length', $form_state->getValue('uc_roles_default_length'))
-    ->set('default_granularity', $form_state->getValue('uc_roles_default_granularity'))
-    ->set('default_end_time', $form_state->getValue('uc_roles_default_end_time'))
-    ->set('default_by_quantity', $form_state->getValue('uc_roles_default_by_quantity'))
-    ->set('reminder_length', $form_state->getValue('uc_roles_reminder_length'))
-    ->set('reminder_granularity', $form_state->getValue('uc_roles_reminder_granularity'))
-    ->set('default_show_expiration', $form_state->getValue('uc_roles_default_show_expiration'))
-    ->set('default_expiration_header', $form_state->getValue('uc_roles_default_expiration_header'))
-    ->set('default_expiration_title', $form_state->getValue('uc_roles_default_expiration_title'))
-    ->set('default_expiration_message', $form_state->getValue('uc_roles_default_expiration_message'))
+    ->set('default_role', $form_state->getValue('uc_role_default_role'))
+    ->set('default_role_choices', $form_state->getValue('uc_role_default_role_choices'))
+    ->set('default_end_expiration', $form_state->getValue('uc_role_default_end_expiration'))
+    ->set('default_length', $form_state->getValue('uc_role_default_length'))
+    ->set('default_granularity', $form_state->getValue('uc_role_default_granularity'))
+    ->set('default_end_time', $form_state->getValue('uc_role_default_end_time'))
+    ->set('default_by_quantity', $form_state->getValue('uc_role_default_by_quantity'))
+    ->set('reminder_length', $form_state->getValue('uc_role_reminder_length'))
+    ->set('reminder_granularity', $form_state->getValue('uc_role_reminder_granularity'))
+    ->set('default_show_expiration', $form_state->getValue('uc_role_default_show_expiration'))
+    ->set('default_expiration_header', $form_state->getValue('uc_role_default_expiration_header'))
+    ->set('default_expiration_title', $form_state->getValue('uc_role_default_expiration_title'))
+    ->set('default_expiration_message', $form_state->getValue('uc_role_default_expiration_message'))
     ->save();
 }
 
@@ -561,7 +561,7 @@ function uc_roles_feature_settings_submit($form, FormStateInterface $form_state)
  * @return
  *   A string containing the name of the role, returns FALSE if rid is invalid.
  */
-function _uc_roles_get_name($rid) {
+function _uc_role_get_name($rid) {
   $roles = user_role_names(TRUE);
   return (!is_null($roles[$rid])) ? $roles[$rid] : FALSE;
 }
@@ -575,7 +575,7 @@ function _uc_roles_get_name($rid) {
  * @return
  *   An assoc array with key = rid and value = role name.
  */
-function _uc_roles_get_choices($exclude = array()) {
+function _uc_role_get_choices($exclude = array()) {
   $output = array();
 
   // Get roles from Drupal, excluding Anonymous and Authenticated.
@@ -583,7 +583,7 @@ function _uc_roles_get_choices($exclude = array()) {
   unset($roles[DRUPAL_AUTHENTICATED_RID]);
 
   // User set specific roles that we must use?
-  $selected = \Drupal::config('uc_roles.settings')->get('default_role_choices');
+  $selected = \Drupal::config('uc_role.settings')->get('default_role_choices');
 
   // If there's none, or if none are checked, use all of em.
   $default = empty($selected) || array_sum($selected) == 0;
@@ -602,7 +602,7 @@ function _uc_roles_get_choices($exclude = array()) {
  * @param $pfid
  *   An Ubercart product feature ID.
  */
-function uc_roles_feature_delete($pfid) {
+function uc_role_feature_delete($pfid) {
   db_delete('uc_roles_products')
     ->condition('pfid', $pfid)
     ->execute();
@@ -625,7 +625,7 @@ function uc_roles_feature_delete($pfid) {
  * @param $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
-function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
+function uc_role_delete($account, $rid = NULL, $silent = FALSE) {
   $query = db_delete('uc_roles_expirations')
     ->condition('uid', $account->id());
 
@@ -636,7 +636,7 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
   // Echo the deletion only if something was actually deleted.
   if ($query->execute() && !$silent) {
     if (\Drupal::currentUser()->id() == $account->id()) {
-      drupal_set_message(t('The expiration of your %role_name role has been deleted.', ['%role_name' => _uc_roles_get_name($rid)]));
+      drupal_set_message(t('The expiration of your %role_name role has been deleted.', ['%role_name' => _uc_role_get_name($rid)]));
     }
     else {
       $username = array(
@@ -647,13 +647,13 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
       );
       drupal_set_message(t('The expiration of %role_name role for the user !user has been deleted.', array(
         '!user' => drupal_render($username),
-        '%role_name' => _uc_roles_get_name($rid),
+        '%role_name' => _uc_role_get_name($rid),
       )));
     }
   }
 
   // Flush visible menu items, since our permissions could've changed.
-  _uc_roles_flush_menu_cache($account);
+  _uc_role_flush_menu_cache($account);
 }
 
 /**
@@ -670,13 +670,13 @@ function uc_roles_delete($account, $rid = NULL, $silent = FALSE) {
  * @param $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
-function uc_roles_revoke(&$account, $rid, $silent = FALSE) {
+function uc_role_revoke(&$account, $rid, $silent = FALSE) {
   // Remove this role from the user's list.
   unset($account->roles[$rid]);
   $account->save();
 
   // Remove our record of the expiration.
-  uc_roles_delete($account, $rid, $silent);
+  uc_role_delete($account, $rid, $silent);
 
   $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
 
@@ -717,17 +717,17 @@ function uc_roles_revoke(&$account, $rid, $silent = FALSE) {
  *   When this role will expire.
  * @param $save_user
  *   Optimization to prevent unnecessary user saving when calling from
- *   uc_roles_user_presave().
+ *   uc_role_user_presave().
  * @param $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
-function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent = FALSE) {
+function uc_role_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent = FALSE) {
   // First, delete any previous record of this user/role association.
-  uc_roles_delete($account, $rid, $silent);
+  uc_role_delete($account, $rid, $silent);
 
   if ($save_user) {
     // Punch the role into the user object.
-    $account->roles += array($rid => _uc_roles_get_name($rid));
+    $account->roles += array($rid => _uc_role_get_name($rid));
     $account->save();
   }
 
@@ -744,7 +744,7 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
   }
 
   // Flush visible menu items, since our permissions could've changed.
-  _uc_roles_flush_menu_cache($account);
+  _uc_role_flush_menu_cache($account);
 
   // Display the message if appropriate.
   if (!$silent) {
@@ -792,11 +792,11 @@ function uc_roles_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent 
  * @param $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
-function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
+function uc_role_renew($account, $rid, $timestamp, $silent = FALSE) {
   // If it doesn't expire, we'll remove our data associated with it.
   // After that, Drupal will take care of it.
   if (is_null($timestamp)) {
-    uc_roles_delete($account, $rid);
+    uc_role_delete($account, $rid);
 
     return;
   }
@@ -843,10 +843,10 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
  * @param $account
  *   A Drupal user object.
  *
- * @see uc_roles_delete()
- * @see uc_roles_grant()
+ * @see uc_role_delete()
+ * @see uc_role_grant()
  */
-function _uc_roles_flush_menu_cache($account) {
+function _uc_role_flush_menu_cache($account) {
   cache_clear_all($account->id() . ':', 'cache_menu', TRUE);
 }
 
@@ -862,7 +862,7 @@ function _uc_roles_flush_menu_cache($account) {
  *   The current time to use as a starting point for relative expiration
  *   calculation.
  */
-function _uc_roles_product_get_expiration($role_product, $quantity, $time) {
+function _uc_role_product_get_expiration($role_product, $quantity, $time) {
   // Override the end expiration?
   if ($role_product->end_override) {
 
@@ -873,7 +873,7 @@ function _uc_roles_product_get_expiration($role_product, $quantity, $time) {
 
     // We're gonna have to calculate the relative time from $time.
     $length = $role_product->duration * ($role_product->by_quantity ? $quantity : 1);
-    return _uc_roles_get_expiration($length, $role_product->granularity, $time);
+    return _uc_role_get_expiration($length, $role_product->granularity, $time);
   }
 
   // No override, use the default expiration values.
@@ -881,7 +881,7 @@ function _uc_roles_product_get_expiration($role_product, $quantity, $time) {
     // Relative...
     if ($roles_config->get('default_end_expiration') === 'rel') {
       $length = $roles_config->get('default_length') * ($role_product->by_quantity ? $quantity : 1);
-      return _uc_roles_get_expiration($length, $roles_config->get('default_granularity'), $time);
+      return _uc_role_get_expiration($length, $roles_config->get('default_granularity'), $time);
     }
 
     // Absolute...
@@ -909,7 +909,7 @@ function _uc_roles_product_get_expiration($role_product, $quantity, $time) {
  *   A UNIX timestamp representing the second that expiration takes place,
  *   or NULL if the expiration should never occur.
  */
-function _uc_roles_get_expiration($duration, $granularity, $start_time = NULL) {
+function _uc_role_get_expiration($duration, $granularity, $start_time = NULL) {
   // Never expires?
   if ($granularity == 'never') {
     return NULL;
