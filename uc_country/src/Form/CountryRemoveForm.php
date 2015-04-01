@@ -94,7 +94,7 @@ class CountryRemoveForm extends ConfirmFormBase {
     db_delete('uc_countries')
       ->condition('country_id', $country->country_id)
       ->execute();
-    db_delete('uc_zones')
+    db_delete('uc_countries_zones')
       ->condition('zone_country_id', $country->country_id)
       ->execute();
 
