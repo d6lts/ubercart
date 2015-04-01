@@ -45,7 +45,7 @@ class RolesTest extends UbercartTestBase {
     // @todo Re-enable when Rules is available.
     // $this->assertMailString('subject', $role->label(), 4, 'Role assignment email mentions role in subject line.');
 
-    // Delete the user.
+    // Test that the role product / user relation is deleted with the user.
     user_delete($order->getUserId());
 
     // Run cron to ensure deleted users are handled correctly.

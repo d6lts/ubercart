@@ -264,7 +264,7 @@ function uc_roles_action_order_email($order, $role_expiration, $from, $addresses
     $sent = \Drupal::service('plugin.manager.mail')->mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $settings['from']);
 
     if (!$sent['result']) {
-      \Drupal::logger('uc_roles')->error('Attempt to e-mail @email concerning order @order_id failed.', array('@email' => $email, '@order_id' => $order->id()));
+      \Drupal::logger('uc_roles')->error('Attempt to e-mail @email concerning order @order_id failed.', ['@email' => $email, '@order_id' => $order->id()]);
     }
   }
 }
@@ -306,7 +306,7 @@ function uc_roles_action_user_email($account, $role_expiration, $from, $addresse
     $sent = \Drupal::service('plugin.manager.mail')->mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $settings['from']);
 
     if (!$sent['result']) {
-      \Drupal::logger('uc_roles')->error('Attempt to e-mail @email concerning role notification failed.', array('@email' => $email));
+      \Drupal::logger('uc_roles')->error('Attempt to e-mail @email concerning role notification failed.', ['@email' => $email]);
     }
   }
 }
@@ -336,7 +336,7 @@ function uc_roles_action_order_renew($order, $message) {
   // Loop through all the products on the order.
   foreach ($order->products as $product) {
     // Look for any role promotion features assigned to the product.
-    $roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid", array(':nid' => $product->nid));
+    $roles = db_query('SELECT * FROM {uc_roles_products} WHERE nid = :nid', [':nid' => $product->nid]);
 
     foreach ($roles as $role) {
       // Product model matches, or was 'any'.
@@ -344,7 +344,7 @@ function uc_roles_action_order_renew($order, $message) {
         continue;
       }
 
-      $existing_role = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", array(':uid' => $account->id(), ':rid' => $role->rid))->fetchObject();
+      $existing_role = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid', [':uid' => $account->id(), ':rid' => $role->rid])->fetchObject();
 
       // Determine the expiration timestamp for the role.
       $expiration = _uc_roles_product_get_expiration($role, $product->qty, isset($existing_role->expiration) ? $existing_role->expiration : NULL);
@@ -352,21 +352,21 @@ function uc_roles_action_order_renew($order, $message) {
       // Leave an order comment.
       if (isset($existing_role->expiration)) {
         $op = 'renew';
-        $comment = t('Customer user role %role renewed.', array('%role' => _uc_roles_get_name($role->rid)));
+        $comment = t('Customer user role %role renewed.', ['%role' => _uc_roles_get_name($role->rid)]);
 
         // Renew the user's role.
         uc_roles_renew($account, $role->rid, $expiration, !$message);
       }
       else {
         $op = 'grant';
-        $comment = t('Customer granted user role %role.', array('%role' => _uc_roles_get_name($role->rid)));
+        $comment = t('Customer granted user role %role.', ['%role' => _uc_roles_get_name($role->rid)]);
 
         // Grant the role to the user.
         uc_roles_grant($account, $role->rid, $expiration, TRUE, !$message);
       }
 
       // Get the new expiration (if applicable)
-      $new_expiration = db_query("SELECT * FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid", array(':uid' => $account->id(), ':rid' => $role->rid))->fetchObject();
+      $new_expiration = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid AND rid = :rid', [':uid' => $account->id(), ':rid' => $role->rid])->fetchObject();
       if (!$new_expiration) {
         $new_expiration = new stdClass();
         $new_expiration->uid = $account->uid;

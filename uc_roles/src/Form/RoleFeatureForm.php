@@ -285,7 +285,7 @@ class RoleFeatureForm extends FormBase {
       }
     }
     else {
-      $description .= t('<strong>Expiration:</strong> !link (not overridden)<br />', ['!link' => \Drupal::l(t('Global expiration'), new Url('uc_product.settings'))]);
+      $description .= t('<strong>Expiration:</strong> !link (not overridden)<br />', ['!link' => \Drupal::l(t('Global expiration'), Url::fromRoute('uc_product.settings'))]);
     }
     $description .= $product_role['shippable'] ? t('<strong>Shippable:</strong> Yes<br />') : t('<strong>Shippable:</strong> No<br />');
     $description .= $product_role['by_quantity'] ? t('<strong>Multiply by quantity:</strong> Yes') : t('<strong>Multiply by quantity:</strong> No');
@@ -306,12 +306,17 @@ class RoleFeatureForm extends FormBase {
       $product_role[$property] = $product_role[$property] === NULL ? 0 : $product_role[$property];
     }
 
-    $key = array();
-    if ($product_role['rpid']) {
-      $key = 'rpid';
+    if (!isset($product_role['rpid'])) {
+      $product_role['rpid'] = db_insert('uc_roles_products')
+        ->fields($product_role)
+        ->execute();
     }
-
-    drupal_write_record('uc_roles_products', $product_role, $key);
+    else {
+      db_merge('uc_roles_products')
+        ->key('rpid', $product_role['rpid'])
+        ->fields($product_role)
+        ->execute();
+    }
 
     $form_state->setRedirect('uc_product.features', ['node' => $data['nid']]);
   }

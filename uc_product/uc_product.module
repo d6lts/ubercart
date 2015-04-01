@@ -849,17 +849,21 @@ function uc_product_feature_data($fid, $key) {
  *   - description: The string describing the feature for the overview table.
  */
 function uc_product_feature_save(&$data) {
-  $result = drupal_write_record('uc_product_features', $data, !empty($data['pfid']) ? 'pfid' : array());
-
-  if ($result == SAVED_NEW) {
+  if (empty($data['pfid'])) {
+    $data['pfid'] = db_insert('uc_product_features')
+      ->fields($data)
+      ->execute();
     drupal_set_message(t('The product feature has been added.'));
   }
-  elseif ($result == SAVED_UPDATED) {
+  else {
+    db_merge('uc_product_features')
+      ->key(array('pfid' => $data['pfid']))
+      ->fields($data)
+      ->execute();
     drupal_set_message(t('The product feature has been updated.'));
   }
-  else {
-    drupal_set_message(t('The product feature was unable to be saved.'));
-  }
+
+  // drupal_set_message(t('The product feature was unable to be saved.'));
 }
 
 /**
