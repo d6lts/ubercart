@@ -51,7 +51,7 @@ class ProductKitTest extends UbercartTestBase {
       ),
     );
     $this->drupalPostForm('node/add/product_kit', $edit, 'Save');
-    $this->assertText(t('Product kit @title has been created.', array('@title' => $edit[$title_key])));
+    $this->assertText(t('Product kit @title has been created.', ['@title' => $edit[$title_key]]));
     $this->assertText($edit[$body_key], 'Product kit body found.');
     $this->assertText('1 × ' . $products[0]->label(), 'Product 1 title found.');
     $this->assertText('1 × ' . $products[1]->label(), 'Product 2 title found.');
