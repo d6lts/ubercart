@@ -16,6 +16,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class ProductTest extends UbercartTestBase {
 
+  public static $modules = array('path', 'uc_product');
   public static $adminPermissions = array('administer content types');
 
   public function setUp() {
@@ -89,7 +90,7 @@ class ProductTest extends UbercartTestBase {
     $this->assertText(uc_length_format($edit['dimensions[0][height]'], $edit['dimensions[0][units]']), 'Product height found.');
 
     $elements = $this->xpath('//body[contains(@class, "uc-product-node")]');
-    $this->assertEqual(count($elements), 1, t('Product page contains body CSS class.'));
+    $this->assertEqual(count($elements), 1, 'Product page contains body CSS class.');
 
     // Update the node fields.
     $edit = array(
@@ -171,7 +172,7 @@ class ProductTest extends UbercartTestBase {
       'description' => $this->randomMachineName(32),
       'uc_product[product]' => 1,
     );
-    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/add', $edit, 'Save content type');
     $this->assertTrue(uc_product_is_product($class), 'The new content type is a product class.');
 
     // Make an existing node type a product class.
@@ -182,7 +183,7 @@ class ProductTest extends UbercartTestBase {
       'uc_product[product]' => 1,
     );
 
-    $this->drupalPostForm('admin/structure/types/manage/' . $type->getOriginalId(), $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $type->getOriginalId(), $edit, 'Save content type');
     $this->assertTrue(uc_product_is_product($type->getOriginalId()), 'The updated content type is a product class.');
 
     // Check the product classes page
@@ -197,7 +198,7 @@ class ProductTest extends UbercartTestBase {
       'uc_product[product]' => 0,
     );
 
-    $this->drupalPostForm('admin/structure/types/manage/' . $class, $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $class, $edit, 'Save content type');
     $this->assertTrue(uc_product_is_product($class), 'The updated content type is no longer a product class.');
   }
 

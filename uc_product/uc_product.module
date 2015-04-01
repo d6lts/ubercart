@@ -100,7 +100,7 @@ function uc_product_node_load($nodes) {
   }
 
   if (!empty($vids)) {
-    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids[])', array(':vids[]' => $vids));
+    $result = db_query('SELECT nid, model, cost, price, weight, weight_units, length, width, height, length_units, pkg_qty, default_qty, shippable FROM {uc_products} WHERE vid IN (:vids[])', [':vids[]' => $vids]);
     $fields = array('model', 'cost', 'price', 'weight', 'pkg_qty', 'default_qty', 'shippable');
     foreach ($result as $record) {
       foreach ($fields as $name) {
@@ -570,7 +570,7 @@ function uc_product_uc_store_status() {
   }
   else {
     $status = 'warning';
-    $description = t('<a href="!url">Click here</a> to automatically configure core image support.', array('!url' => \Drupal::url('uc_product.image_defaults')))
+    $description = t('<a href="!url">Click here</a> to automatically configure core image support.', ['!url' => \Drupal::url('uc_product.image_defaults')])
       . ' ' . t('(This action is not required and should not be taken if you do not need images or have implemented your own image support.)');
   }
 
@@ -728,7 +728,7 @@ function uc_product_get_models($nid, $add_blank = TRUE) {
   // Get any modules' SKUs on this node.
   $models = \Drupal::moduleHandler()->invokeAll('uc_product_models', array($nid));
   // Add the base SKU of the node.
-  $models[] = db_query('SELECT model FROM {uc_products} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
+  $models[] = db_query('SELECT model FROM {uc_products} WHERE nid = :nid', [':nid' => $nid])->fetchField();
 
   // Now we map the SKUs to the keys, for form handling, etc.
   $models = array_combine($models, $models);
@@ -876,7 +876,7 @@ function uc_product_feature_save(&$data) {
  *   The array of all product features object.
  */
 function uc_product_feature_load_multiple($nid) {
-  $features = db_query("SELECT * FROM {uc_product_features} WHERE nid = :nid ORDER BY pfid ASC", array(':nid' => $nid))->fetchAllAssoc('pfid');
+  $features = db_query('SELECT * FROM {uc_product_features} WHERE nid = :nid ORDER BY pfid ASC', [':nid' => $nid])->fetchAllAssoc('pfid');
 
   return $features;
 }
@@ -895,7 +895,7 @@ function uc_product_feature_load_multiple($nid) {
  *   The product feature array.
  */
 function uc_product_feature_load($pfid) {
-  $feature = db_query("SELECT * FROM {uc_product_features} WHERE pfid = :pfid", array(':pfid' => $pfid))->fetchAssoc();
+  $feature = db_query('SELECT * FROM {uc_product_features} WHERE pfid = :pfid', [':pfid' => $pfid])->fetchAssoc();
 
   return $feature;
 }
@@ -945,7 +945,7 @@ function uc_product_node_type_insert(NodeTypeInterface $type) {
       'default_qty' => 1,
       'shippable' => $type->getThirdPartySetting('uc_product', 'shippable', TRUE),
     );
-    $result = db_query("SELECT n.vid, n.nid FROM {node} n LEFT JOIN {uc_products} p ON n.vid = p.vid WHERE n.type = :type AND p.vid IS NULL", array(':type' => $type->id()));
+    $result = db_query('SELECT n.vid, n.nid FROM {node} n LEFT JOIN {uc_products} p ON n.vid = p.vid WHERE n.type = :type AND p.vid IS NULL', [':type' => $type->id()]);
     foreach ($result as $node) {
       db_insert('uc_products')
         ->fields($defaults + array(
