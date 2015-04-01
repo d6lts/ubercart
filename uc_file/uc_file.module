@@ -692,10 +692,13 @@ function theme_uc_file_downloads_token($user_files) {
  ******************************************************************************/
 
 /**
- * Product feature delete function.
+ * Deletes all file data associated with a given product feature.
+ *
+ * @param $pfid
+ *   An Ubercart product feature ID.
  */
-function uc_file_feature_delete($feature) {
-  db_query("DELETE FROM {uc_file_products} WHERE pfid = %d", $feature['pfid']);
+function uc_file_feature_delete($pfid) {
+  db_query("DELETE FROM {uc_file_products} WHERE pfid = %d", $pfid);
 }
 
 /**

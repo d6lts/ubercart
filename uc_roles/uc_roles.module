@@ -1118,7 +1118,7 @@ function uc_roles_node_delete($nid) {
 }
 
 /**
- * Deletes all data associated with a given product feature.
+ * Deletes all role data associated with a given product feature.
  *
  * @param $pfid
  *   An Ubercart product feature ID.
