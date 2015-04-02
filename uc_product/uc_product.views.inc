@@ -12,14 +12,15 @@ function uc_product_views_data() {
   $data['uc_products']['table']['group'] = t('Product');
 
   $data['uc_products']['table']['join'] = array(
-    'node' => array(
-      'left_field' => 'vid',
-      'field' => 'vid',
+    'node_field_data' => array(
+      'left_field' => 'nid',
+      'field' => 'nid',
     ),
-    'node_revisions' => array(
-      'left_field' => 'vid',
-      'field' => 'vid',
-    ),
+// @todo: get revisions to work
+//    'node_revisions' => array(
+//      'left_field' => 'vid',
+//      'field' => 'vid',
+//    ),
   );
 
   $data['uc_products']['model'] = array(
