@@ -17,7 +17,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class CatalogTest extends UbercartTestBase {
 
-  public static $modules = array('uc_catalog', 'uc_attribute', 'field_ui');
+  public static $modules = array('history', 'uc_catalog', 'uc_attribute', 'field_ui');
   public static $adminPermissions = array('administer catalog', 'administer node fields', 'administer taxonomy_term fields', 'view catalog');
 
   /**

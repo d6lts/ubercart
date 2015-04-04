@@ -1,8 +1,8 @@
-vid: catalog
-uuid: 6709c3ec-1292-4fbf-ac39-d5efb1dd4c6d
+langcode: en
+status: true
+dependencies: {  }
 name: Catalog
+vid: catalog
 description: 'Product catalog'
 hierarchy: 1
 weight: -10
-status: true
-langcode: en

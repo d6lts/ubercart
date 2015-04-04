@@ -39,10 +39,11 @@ class CatalogSettingsForm extends ConfigFormBase {
     $config = $this->config('uc_catalog.settings');
 
     $view = Views::getView('uc_catalog');
+    $view->initDisplay();
     $displays = array();
-    foreach ($view->display as $display) {
-      if ($display->display_plugin == 'page') {
-        $displays[$display->id] = $display->display_title;
+    foreach ($view->displayHandlers as $display) {
+      if ($display->getPluginId() == 'page') {
+        $displays[$display->display['id']] = $display->display['display_title'];
       }
     }
 

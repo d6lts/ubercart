@@ -20,7 +20,7 @@ function uc_catalog_install() {
  */
 function uc_catalog_uninstall() {
   if ($vid = \Drupal::config('uc_catalog.settings')->get('vocabulary')) {
-    $vocab = taxonomy_vocabulary_load($vid);
+    $vocab = \Drupal\taxonomy\Entity\Vocabulary::load($vid);
     drupal_set_message(t('The Ubercart Catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', array('@url' => \Drupal::url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $vocab->id()]))), 'warning');
   }
 }

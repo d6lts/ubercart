@@ -8,6 +8,7 @@
 namespace Drupal\uc_catalog\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Controller routines for catalog routes.
@@ -15,17 +16,29 @@ use Drupal\Core\Controller\ControllerBase;
 class CatalogController extends ControllerBase {
 
   /**
-   * Repairs the catalog taxonomy field if it is lost or deleted.
+   * Returns forum page for a given forum.
+   *
+   * @param \Drupal\taxonomy\TermInterface $taxonomy_term
+   *   The forum to render the page for.
+   *
+   * @return array
+   *   A render array.
    */
-  public function repairField() {
-    foreach (uc_product_types() as $type) {
-      uc_catalog_add_node_type($type);
+  public function catalogPage(TermInterface $taxonomy_term) {
+    // Get forum details.
+    $taxonomy_term->forums = $this->forumManager->getChildren($this->config('forum.settings')->get('vocabulary'), $taxonomy_term->id());
+    $taxonomy_term->parents = $this->forumManager->getParents($taxonomy_term->id());
+
+    if (empty($taxonomy_term->forum_container->value)) {
+      $build = $this->forumManager->getTopics($taxonomy_term->id(), $this->currentUser());
+      $topics = $build['topics'];
+      $header = $build['header'];
     }
-    uc_catalog_add_image_field();
-
-    drupal_set_message(t('The catalog taxonomy reference field has been repaired.'));
-
-    return $this->redirect('uc_store.admin');
+    else {
+      $topics = '';
+      $header = array();
+    }
+    return $this->build($taxonomy_term->forums, $taxonomy_term, $topics, $taxonomy_term->parents, $header);
   }
 
 }

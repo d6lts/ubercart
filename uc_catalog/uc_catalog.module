@@ -28,7 +28,7 @@ function uc_catalog_help($route_name, RouteMatchInterface $route_match) {
 
     case 'uc_catalog.settings':
       if (!\Drupal::moduleHandler()->moduleExists('views_ui')) {
-        return '<p>' . t('<a href="@modules">Enable the Views UI module</a> to edit the catalog display.', array('@modules' => \Drupal::url('system.modules_list', [], ['fragment' => 'edit-modules-views']))) . '</p>';
+        return '<p>' . t('<a href="@modules">Enable the Views UI module</a> to edit the catalog display.', ['@modules' => \Drupal::url('system.modules_list', [], ['fragment' => 'edit-modules-views'])]) . '</p>';
       }
       break;
   }
@@ -67,9 +67,10 @@ function uc_catalog_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $f
   $vocabulary = $form_state->getFormObject()->getEntity();
   if ($vid == $vocabulary->id()) {
     $form['help_catalog_vocab'] = array(
-      '#markup' => t('This is the designated catalog vocabulary. Some of the normal vocabulary options have been removed.'),
+      '#markup' => t('This is the designated product catalog vocabulary. It cannot be deleted until the Catalog module is uninstalled. The machine name of this vocabulary may not be changed.'),
       '#weight' => -1,
     );
+//@todo - does the 'hierarchy' element do anything?
     // Catalog vocabulary always has single hierarchy.
     $form['hierarchy']['#value'] = TAXONOMY_HIERARCHY_SINGLE;
     // Do not allow the catalog vocabulary to be deleted.
@@ -95,7 +96,7 @@ function uc_catalog_entity_bundle_info_alter(&$bundles) {
  * Entity URI callback used in uc_catalog_entity_bundle_info_alter().
  */
 function uc_catalog_uri($category) {
-  return 'catalog/' . $category->id();
+  return Url::fromUri('catalog/' . $category->id());
 }
 
 /**
@@ -103,7 +104,7 @@ function uc_catalog_uri($category) {
  */
 function uc_catalog_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'uc_catalog' && $variables['label'] && $variables['configuration']['link_title']) {
-    $variables['label'] = \Drupal::l($variables['label'], new Url('uc_catalog.settings'));
+    $variables['label'] = \Drupal::l($variables['label'], Url::fromUri('catalog'));
   }
 }
 
@@ -132,7 +133,7 @@ function uc_catalog_uc_store_status() {
       $statuses[] = array(
         'status' => 'ok',
         'title' => t('Catalog vocabulary'),
-        'desc' => t('Vocabulary @name has been identified as the Ubercart catalog.', ['@name' => \Drupal::l($catalog->label(), new Url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()]))]),
+        'desc' => t('Vocabulary @name has been identified as the Ubercart catalog.', ['@name' => \Drupal::l($catalog->label(), Url::fromRoute('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()]))]),
       );
 
       $product_types = uc_product_types();
@@ -140,13 +141,13 @@ function uc_catalog_uc_store_status() {
       $result = db_query("SELECT COUNT(DISTINCT n.nid) FROM {node} n LEFT JOIN {taxonomy_index} ti ON n.nid = ti.nid LEFT JOIN {taxonomy_term_data} td ON ti.tid = td.tid WHERE n.type IN (:types[]) AND ti.tid IS NULL AND td.vid = :vid", [':types[]' => $types, ':vid' => $catalog->id()]);
       if ($excluded = $result->fetchField()) {
         $description = \Drupal::translation()->formatPlural($excluded, 'There is 1 product not listed in the catalog.', 'There are @count products not listed in the catalog.')
-          . t('Products are listed by assigning a category from the <a href="@cat_url">Product Catalog</a> vocabulary to them.', array('@cat_url' => new Url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->machine_name])));
+          . t('Products are listed by assigning a category from the <a href="@cat_url">Product Catalog</a> vocabulary to them.', ['@cat_url' => Url::fromRoute('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->machine_name])]);
         $terms = db_query("SELECT COUNT(1) FROM {taxonomy_term_data} WHERE vid = :vid", [':vid' => $catalog->id()])->fetchField();
         if ($terms) {
-          $description .= ' ' . \Drupal::l(t('Find orphaned products here.'), new Url('uc_product.orphans'));
+          $description .= ' ' . \Drupal::l(t('Find orphaned products here.'), Url::fromRoute('uc_product.orphans'));
         }
         else {
-          $description .= ' ' . \Drupal::l(t('Add terms for the products to inhabit.'), new Url('entity.taxonomy_vocabulary.add_form', array('taxonomy_vocabulary' => $catalog->id())));
+          $description .= ' ' . \Drupal::l(t('Add terms for the products to inhabit.'), Url::fromRoute('entity.taxonomy_vocabulary.add_form', ['taxonomy_vocabulary' => $catalog->id()]));
         }
         $statuses[] = array(
           'status' => 'warning',
@@ -160,7 +161,7 @@ function uc_catalog_uc_store_status() {
     $statuses[] = array(
       'status' => 'error',
       'title' => t('Catalog vocabulary'),
-      'desc' => t('No vocabulary has been recognized as the Ubercart catalog. Choose one on <a href="@admin_catalog">this page</a> or add one on the <a href="@admin_vocab">taxonomy admin page</a> first, if needed.', array('@admin_catalog' => \Drupal::url('uc_catalog.settings'), '@admin_vocab' => \Drupal::url('entity.taxonomy_vocabulary.collection'))),
+      'desc' => t('No vocabulary has been recognized as the Ubercart catalog. Choose one on <a href="@admin_catalog">this page</a> or add one on the <a href="@admin_vocab">taxonomy admin page</a> first, if needed.', ['@admin_catalog' => \Drupal::url('uc_catalog.settings'), '@admin_vocab' => \Drupal::url('entity.taxonomy_vocabulary.collection')]),
     );
   }
 
@@ -173,7 +174,7 @@ function uc_catalog_uc_store_status() {
  * Adds product node types to the catalog vocabulary as they are created.
  */
 function uc_catalog_node_type_insert(NodeTypeInterface $type) {
-  $settings = $type->getModuleSettings('uc_product');
+  $settings = $type->getThirdPartySettings('uc_product');
   if (!empty($settings['product'])) {
     uc_catalog_add_node_type($type->id());
   }
@@ -204,7 +205,7 @@ function _uc_catalog_navigation($branch) {
 
   $query = \Drupal::entityQuery('node')
     ->condition('type', $types)
-    ->condition('status', 1) // Don't include unpublished products.
+    ->condition('status', TRUE) // Don't include unpublished products.
     ->condition('taxonomy_catalog.target_id', $branch->getTid())
     ->count();
   $num = $query->execute();
@@ -230,7 +231,7 @@ function _uc_catalog_navigation($branch) {
   }
 
   $lis = array();
-  $expand = variable_get('uc_catalog_expand_categories', FALSE);
+  $expand = \Drupal::config('uc_catalog.settings')->get('expand_categories');
   if ($expand || count($branch->getChildren())) {
     foreach ($branch->getChildren() as $twig) {
       // Expand if children are in the menu path. Capture their output.
@@ -249,12 +250,12 @@ function _uc_catalog_navigation($branch) {
 
   // Checks to see if node counts are desired in navigation.
   $num_text = '';
-  if (variable_get('uc_catalog_block_nodecount', TRUE)) {
+  if (\Drupal::config('uc_catalog.settings')->get('block_nodecount')) {
     $num_text = ' (' . $num . ')';
   }
-  $link = \Drupal::l($branch->getName() . $num_text, new Url($branch_path));
+  $link = \Drupal::l($branch->getName() . $num_text, Url::fromUri('base:/' . $branch_path));
 
-  $output = theme('uc_catalog_item', array(
+  $output = theme_uc_catalog_item(array(
     'here' => $here,
     'link' => $link,
     'lis' => $lis,
@@ -284,16 +285,11 @@ function uc_catalog_add_node_type($type) {
     entity_create('field_storage_config', array(
       'entity_type' => 'node',
       'field_name' => 'taxonomy_catalog',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'type' => 'entity_reference',
       'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => $vid,
-            'parent' => 0,
-          ),
-        ),
+        'target_type' => 'taxonomy_term',
       ),
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ))->save();
   }
 
@@ -303,18 +299,30 @@ function uc_catalog_add_node_type($type) {
       'entity_type' => 'node',
       'bundle' => $type,
       'label' => t('Catalog'),
+      'settings' => array(
+        'handler_settings' => array(
+          'target_bundles' => array(
+            $vid => $vid,
+          ),
+          'auto_create' => TRUE,
+        ),
+      ),
     ))->save();
-
-    entity_get_form_display('node', $type, 'default')
-      ->setComponent('taxonomy_catalog', array(
-        'type' => 'options_select',
-      ))
-      ->save();
-
-    entity_get_display('node', $type, 'default')
-      ->setComponent('taxonomy_catalog')
-      ->save();
   }
+
+  // Make sure catalog field shows up on node edit form.
+  $form = entity_get_form_display('node', $type, 'default')
+    ->setComponent('taxonomy_catalog', array(
+      'type' => 'options_select',
+    ))
+    ->save();
+
+  // Display catalog value on node view.
+  $display = entity_get_display('node', $type, 'default')
+    ->setComponent('taxonomy_catalog', array(
+      'type' => 'entity_reference_label',
+    ))
+    ->save();
 }
 
 /**

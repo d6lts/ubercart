@@ -1,14 +1,25 @@
-base_field: tid
-base_table: taxonomy_term_data
-core: 8.x
-description: ''
+langcode: en
 status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.catalog
+  module:
+    - taxonomy
+    - user
+id: uc_catalog_terms
+label: 'Catalog categories'
+module: views
+description: ''
+tag: Ubercart
+base_table: taxonomy_term_field_data
+base_field: tid
+core: 8.x
 display:
   default:
     display_plugin: default
     id: default
     display_title: Master
-    position: 1
+    position: 0
     display_options:
       access:
         type: perm
@@ -22,7 +33,7 @@ display:
         options:
           disable_sql_rewrite: false
           distinct: false
-          slave: false
+          replica: false
           query_comment: ''
           query_tags: {  }
       exposed_form:
@@ -38,17 +49,17 @@ display:
       pager:
         type: none
         options:
-          offset: '0'
+          offset: 0
       style:
         type: grid
         options:
           grouping: {  }
-          columns: '3'
-          automatic_width: 1
+          columns: 3
+          automatic_width: true
           alignment: horizontal
-          col_class_default: 1
+          col_class_default: true
           col_class_custom: ''
-          row_class_default: 1
+          row_class_default: true
           row_class_custom: ''
       row:
         type: fields
@@ -60,40 +71,40 @@ display:
       fields:
         tid:
           id: tid
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           field: tid
           relationship: none
           group_type: group
           admin_label: ''
           label: ''
-          exclude: 1
+          exclude: true
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -101,22 +112,29 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ''
-          format_plural: 0
-          format_plural_singular: '1'
-          format_plural_plural: '@count'
-          prefix: ''
-          suffix: ''
-          plugin_id: numeric
-          provider: views
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_unformatted
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: taxonomy_term
+          entity_field: tid
+          plugin_id: field
         uc_catalog_image:
           id: uc_catalog_image
           table: taxonomy_term__uc_catalog_image
@@ -125,34 +143,34 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 1
-            path: 'catalog/[tid]'
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            make_link: true
+            path: 'catalog/{{ tid }}'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
+            nl2br: false
             max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -160,11 +178,11 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           click_sort_column: target_id
           type: image
           settings:
@@ -179,45 +197,46 @@ display:
           delta_first_last: false
           multi_type: separator
           separator: ', '
-          field_api_classes: 0
+          field_api_classes: false
           plugin_id: field
-          provider: field
         name:
           id: name
           table: taxonomy_term_field_data
           field: name
+          entity_type: taxonomy_term
+          entity_field: name
           relationship: none
           group_type: group
           admin_label: ''
           label: ''
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 1
-            path: 'catalog/[tid]'
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            make_link: true
+            path: 'catalog/{{ tid }}'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
+            nl2br: false
             max_length: ''
-            word_boundary: 0
-            ellipsis: 0
-            more_link: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -225,14 +244,14 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
-          link_to_taxonomy: 0
-          convert_spaces: 0
-          provider: taxonomy
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_taxonomy: false
+          convert_spaces: false
+          plugin_id: taxonomy
       filters:
         vid:
           id: vid
@@ -240,13 +259,24 @@ display:
           field: vid
           value:
             catalog: catalog
+          entity_type: taxonomy_term
+          entity_field: vid
+          plugin_id: bundle
       sorts:
         weight:
           id: weight
           table: taxonomy_term_field_data
           field: weight
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: taxonomy_term
+          entity_field: weight
           plugin_id: standard
-          provider: views
         name:
           id: name
           table: taxonomy_term_field_data
@@ -259,8 +289,9 @@ display:
           expose:
             label: Name
             order: ASC
+          entity_type: taxonomy_term
+          entity_field: name
           plugin_id: standard
-          provider: views
       header: {  }
       footer: {  }
       empty: {  }
@@ -273,38 +304,39 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          default_action: default
+          default_action: ignore
           exception:
             value: all
-            title_enable: 0
+            title_enable: false
             title: All
-          title_enable: 0
+          title_enable: false
           title: ''
           default_argument_type: fixed
           default_argument_options:
             argument: '0'
-          default_argument_skip_url: 0
+          default_argument_skip_url: false
           summary_options:
             base_path: ''
-            count: '1'
-            items_per_page: '25'
-            override: 0
+            count: true
+            items_per_page: 25
+            override: false
           summary:
             sort_order: asc
-            number_of_records: '0'
+            number_of_records: 0
             format: default_summary
-          specify_validation: 0
+          specify_validation: false
           validate:
             type: none
             fail: 'not found'
           validate_options: {  }
-          break_phrase: 0
-          not: 0
+          break_phrase: false
+          not: false
+          entity_type: taxonomy_term
+          entity_field: parent
           plugin_id: taxonomy
-          provider: taxonomy
-label: 'Catalog categories'
-module: views
-id: uc_catalog_terms
-tag: ''
-uuid: ead377aa-bf90-479a-9b08-8d5dc3dc7e23
-langcode: en
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false
