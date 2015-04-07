@@ -57,7 +57,7 @@ class CartSettingsTest extends UbercartTestBase {
       [],
       t('Add to cart')
     );
-    $url_pass = ($this->getUrl() == Url::fromUri('internal:/' . $redirect, ['absolute' => TRUE])->toString());
+    $url_pass = ($this->getUrl() == Url::fromUri('base:' . $redirect, ['absolute' => TRUE])->toString());
     $this->assertTrue(
       $url_pass,
       t('Add to cart redirect takes user to the correct URL.')
@@ -73,7 +73,7 @@ class CartSettingsTest extends UbercartTestBase {
     $url = \Drupal::url('entity.node.canonical', ['node' => $this->product->id()], ['absolute' => TRUE, 'query' => ['test' => 'querystring']]);
 debug($url);
 debug($this->getUrl());
-    $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect works with a query string.');
+    $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect preserves the query string.');
   }
 
   public function testMinimumSubtotal() {

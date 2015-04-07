@@ -58,8 +58,8 @@ class BuyItNowForm extends FormBase {
       $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValues()));
       $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
       $redirect = uc_cart_add_item($form_state->getValue('nid'), $form_state->getValue('qty'), $data, NULL, $msg);
-      if ($redirect != '<none>') {
-        $form_state->setRedirectUrl(Url::fromUri('base:' . $redirect));
+      if (isset($redirect)) {
+        $form_state->setRedirectUrl($redirect);
       }
     }
   }
