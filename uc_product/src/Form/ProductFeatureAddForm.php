@@ -36,14 +36,14 @@ class ProductFeatureAddForm extends FormBase {
 
     $form['feature'] = array(
       '#type' => 'select',
-      '#title' => t('Add a new feature'),
+      '#title' => $this->t('Add a new feature'),
       '#options' => $options,
     );
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Add'),
+      '#value' => $this->t('Add'),
     );
 
     return $form;

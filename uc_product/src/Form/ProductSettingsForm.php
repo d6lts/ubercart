@@ -41,7 +41,7 @@ class ProductSettingsForm extends ConfigFormBase {
 
     $form['product'] = array(
       '#type' => 'details',
-      '#title' => t('Product settings'),
+      '#title' => $this->t('Product settings'),
       '#group' => 'product-settings',
       '#weight' => -10,
     );
@@ -49,14 +49,14 @@ class ProductSettingsForm extends ConfigFormBase {
     if (\Drupal::moduleHandler()->moduleExists('uc_cart')) {
       $form['product']['uc_product_add_to_cart_qty'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Display an optional quantity field in the <em>Add to Cart</em> form.'),
+        '#title' => $this->t('Display an optional quantity field in the <em>Add to Cart</em> form.'),
         '#default_value' => $config->get('add_to_cart_qty'),
       );
       $form['product']['uc_product_update_node_view'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Update product display based on customer selections'),
+        '#title' => $this->t('Update product display based on customer selections'),
         '#default_value' => $config->get('update_node_view'),
-        '#description' => t('Check this box to dynamically update the display of product information such as display-price or weight based on customer input on the add-to-cart form (e.g. selecting a particular attribute option).'),
+        '#description' => $this->t('Check this box to dynamically update the display of product information such as display-price or weight based on customer input on the add-to-cart form (e.g. selecting a particular attribute option).'),
       );
     }
 
@@ -66,7 +66,7 @@ class ProductSettingsForm extends ConfigFormBase {
       if (isset($feature['settings']) && function_exists($feature['settings'])) {
         $form[$feature['id']] = array(
           '#type' => 'details',
-          '#title' => t('@feature settings', ['@feature' => $feature['title']]),
+          '#title' => $this->t('@feature settings', ['@feature' => $feature['title']]),
           '#group' => 'product-settings',
         );
         $form[$feature['id']] += $feature['settings']([], $form_state);

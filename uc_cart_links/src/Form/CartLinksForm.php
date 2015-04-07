@@ -237,7 +237,7 @@ class CartLinksForm extends ConfirmFormBase {
         ->execute();
     }
 
-    $_SESSION['uc_cart_last_url'] = \Drupal::request()->server->get('HTTP_REFERER');
+    $_SESSION['uc_cart_last_url'] = $this->getRequest()->server->get('HTTP_REFERER');
 
     $query = $this->getRequest()->query;
     if ($query->has('destination')) {

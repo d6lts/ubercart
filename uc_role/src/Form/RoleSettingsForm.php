@@ -47,7 +47,7 @@ class RoleSettingsForm extends ConfigFormBase {
 
     if (!count($default_role_choices)) {
       $form['no_roles'] = array(
-        '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', array('!url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']]))),
+        '#markup' => $this->t('You need to <a href="!url">create new roles</a> before any can be added as product features.', array('!url' => $this->url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']]))),
         '#prefix' => '<p>',
         '#suffix' => '</p>',
       );
@@ -57,31 +57,31 @@ class RoleSettingsForm extends ConfigFormBase {
 
     $form['uc_role_default_role'] = array(
       '#type' => 'select',
-      '#title' => t('Default role'),
+      '#title' => $this->t('Default role'),
       '#default_value' => $roles_config->get('default_role'),
-      '#description' => t('The default role Ubercart grants on specified products.'),
+      '#description' => $this->t('The default role Ubercart grants on specified products.'),
       '#options' => _uc_role_get_choices(),
     );
     $form['uc_role_default_role_choices'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Product roles'),
+      '#title' => $this->t('Product roles'),
       '#default_value' => $roles_config->get('default_role_choices'),
       '#multiple' => TRUE,
-      '#description' => t('These are roles that Ubercart can grant to customers who purchase specified products. If you leave all roles unchecked, they will all be eligible for adding to a product.'),
+      '#description' => $this->t('These are roles that Ubercart can grant to customers who purchase specified products. If you leave all roles unchecked, they will all be eligible for adding to a product.'),
       '#options' => $default_role_choices,
     );
 
     $form['role_lifetime'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Default role expiration'),
+      '#title' => $this->t('Default role expiration'),
     );
 
     $form['role_lifetime']['uc_role_default_end_expiration'] = array(
       '#type' => 'select',
-      '#title' => t('Expiration type'),
+      '#title' => $this->t('Expiration type'),
       '#options' => array(
-        'rel' => t('Relative to purchase date'),
-        'abs' => t('Fixed date'),
+        'rel' => $this->t('Relative to purchase date'),
+        'abs' => $this->t('Fixed date'),
       ),
       '#default_value' => $roles_config->get('default_end_expiration'),
     );
@@ -101,13 +101,13 @@ class RoleSettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#default_value' => $roles_config->get('default_granularity'),
       '#options' => array(
-        'never' => t('never'),
-        'day' => t('day(s)'),
-        'week' => t('week(s)'),
-        'month' => t('month(s)'),
-        'year' => t('year(s)')
+        'never' => $this->t('never'),
+        'day' => $this->t('day(s)'),
+        'week' => $this->t('week(s)'),
+        'month' => $this->t('month(s)'),
+        'year' => $this->t('year(s)')
       ),
-      '#description' => t('From the time the role was purchased.'),
+      '#description' => $this->t('From the time the role was purchased.'),
       '#prefix' => '<div class="expiration">',
       '#suffix' => '</div>',
       '#states' => array(
@@ -122,18 +122,18 @@ class RoleSettingsForm extends ConfigFormBase {
     );
     $form['role_lifetime']['absolute']['uc_role_default_end_time'] = array(
       '#type' => 'date',
-      '#description' => t('Expire the role at the beginning of this day.'),
+      '#description' => $this->t('Expire the role at the beginning of this day.'),
       '#default_value' => $roles_config->get('default_end_time'),
     );
     $form['role_lifetime']['uc_role_default_by_quantity'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Multiply by quantity'),
-      '#description' => t('Check if the role duration should be multiplied by the quantity purchased.'),
+      '#title' => $this->t('Multiply by quantity'),
+      '#description' => $this->t('Check if the role duration should be multiplied by the quantity purchased.'),
       '#default_value' => $roles_config->get('default_by_quantity'),
     );
     $form['reminder']['uc_role_reminder_length'] = array(
       '#type' => 'textfield',
-      '#title' => t('Time before reminder'),
+      '#title' => $this->t('Time before reminder'),
       '#default_value' => ($roles_config->get('reminder_granularity') == 'never') ? NULL : $roles_config->get('reminder_length'),
       '#size' => 4,
       '#maxlength' => 4,
@@ -147,21 +147,21 @@ class RoleSettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#default_value' => $roles_config->get('reminder_granularity'),
       '#options' => array(
-        'never' => t('never'),
-        'day' => t('day(s)'),
-        'week' => t('week(s)'),
-        'month' => t('month(s)'),
-        'year' => t('year(s)')
+        'never' => $this->t('never'),
+        'day' => $this->t('day(s)'),
+        'week' => $this->t('week(s)'),
+        'month' => $this->t('month(s)'),
+        'year' => $this->t('year(s)')
       ),
-      '#description' => t('The amount of time before a role expiration takes place that a customer is notified of its expiration.'),
+      '#description' => $this->t('The amount of time before a role expiration takes place that a customer is notified of its expiration.'),
       '#prefix' => '<div class="expiration">',
       '#suffix' => '</div>',
     );
     $form['uc_role_default_show_expiration'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Show expirations on user page'),
+      '#title' => $this->t('Show expirations on user page'),
       '#default_value' => $roles_config->get('default_show_expiration'),
-      '#description' => t('If users have any role expirations they will be displayed on their account page.'),
+      '#description' => $this->t('If users have any role expirations they will be displayed on their account page.'),
     );
     return parent::buildForm($form, $form_state);
   }

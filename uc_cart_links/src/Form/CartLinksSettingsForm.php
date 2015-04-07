@@ -39,38 +39,38 @@ class CartLinksSettingsForm extends ConfigFormBase {
 
     $form['uc_cart_links_add_show'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display the cart link product action when you add a product to your cart.'),
+      '#title' => $this->t('Display the cart link product action when you add a product to your cart.'),
       '#default_value' => $cart_links_config->get('add_show'),
     );
     $form['uc_cart_links_track'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Track clicks through Cart Links that specify tracking IDs.'),
+      '#title' => $this->t('Track clicks through Cart Links that specify tracking IDs.'),
       '#default_value' => $cart_links_config->get('track'),
     );
     $form['uc_cart_links_empty'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Allow Cart Links to empty customer carts.'),
+      '#title' => $this->t('Allow Cart Links to empty customer carts.'),
       '#default_value' => $cart_links_config->get('empty'),
     );
     $form['uc_cart_links_messages'] = array(
       '#type' => 'textarea',
-      '#title' => t('Cart Links messages'),
-      '#description' => t('Enter messages available to the Cart Links API for display through a link. Separate messages with a line break. Each message should have a numeric key and text value, separated by "|". For example: 1337|Message text.'),
+      '#title' => $this->t('Cart Links messages'),
+      '#description' => $this->t('Enter messages available to the Cart Links API for display through a link. Separate messages with a line break. Each message should have a numeric key and text value, separated by "|". For example: 1337|Message text.'),
       '#default_value' => $cart_links_config->get('messages'),
     );
     $form['uc_cart_links_restrictions'] = array(
       '#type' => 'textarea',
-      '#title' => t('Cart Links restrictions'),
-      '#description' => t('To restrict what Cart Links may be used on your site, enter all valid Cart Links in this textbox.  Separate links with a line break. Leave blank to permit any cart link.'),
+      '#title' => $this->t('Cart Links restrictions'),
+      '#description' => $this->t('To restrict what Cart Links may be used on your site, enter all valid Cart Links in this textbox.  Separate links with a line break. Leave blank to permit any cart link.'),
       '#default_value' => $cart_links_config->get('restrictions'),
     );
     $form['uc_cart_links_invalid_page'] = array(
       '#type' => 'textfield',
-      '#title' => t('Invalid link redirect page'),
-      '#description' => t('Enter the URL to redirect to when an invalid cart link is used.'),
+      '#title' => $this->t('Invalid link redirect page'),
+      '#description' => $this->t('Enter the URL to redirect to when an invalid cart link is used.'),
       '#default_value' => $cart_links_config->get('invalid_page'),
       '#size' => 32,
-      '#field_prefix' => \Drupal::url('<front>', [], ['absolute' => TRUE]),
+      '#field_prefix' => $this->url('<front>', [], ['absolute' => TRUE]),
     );
 
     return parent::buildForm($form, $form_state);

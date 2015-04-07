@@ -28,7 +28,7 @@ class RoleFeatureForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL, $feature = NULL) {
-    $roles_config = \Drupal::config('uc_role.settings');
+    $roles_config = $this->config('uc_role.settings');
     $models = uc_product_get_models($node->id());
 
     // Check if editing or adding to set default values.
@@ -88,7 +88,7 @@ class RoleFeatureForm extends FormBase {
       unset($form['buttons']);
 
       $form['no_roles'] = array(
-        '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', ['!url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']])]),
+        '#markup' => $this->t('You need to <a href="!url">create new roles</a> before any can be added as product features.', ['!url' => $this->url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']])]),
         '#prefix' => '<p>',
         '#suffix' => '</p>',
       );
@@ -102,44 +102,44 @@ class RoleFeatureForm extends FormBase {
     );
     $form['uc_role_model'] = array(
       '#type' => 'select',
-      '#title' => t('SKU'),
+      '#title' => $this->t('SKU'),
       '#default_value' => $default_model,
-      '#description' => t('This is the SKU of the product that will grant the role.'),
+      '#description' => $this->t('This is the SKU of the product that will grant the role.'),
       '#options' => $models,
     );
     $form['uc_role_role'] = array(
       '#type' => 'select',
-      '#title' => t('Role'),
+      '#title' => $this->t('Role'),
       '#default_value' => $default_role,
-      '#description' => t('This is the role the customer will receive after purchasing the product.'),
+      '#description' => $this->t('This is the role the customer will receive after purchasing the product.'),
       '#options' => $roles,
     );
     $form['uc_role_shippable'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Shippable product'),
+      '#title' => $this->t('Shippable product'),
       '#default_value' => $default_shippable,
-      '#description' => t('Check if this product SKU that uses role assignment is associated with a shippable product.'),
+      '#description' => $this->t('Check if this product SKU that uses role assignment is associated with a shippable product.'),
     );
 
     $form['end_override'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Override the <a href="!url">default role expiration</a>.', ['!url' => \Drupal::url('uc_product.settings')]),
+      '#title' => $this->t('Override the <a href="!url">default role expiration</a>.', ['!url' => $this->url('uc_product.settings')]),
       '#default_value' => $default_end_override,
     );
 
     $form['role_lifetime'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Role expiration'),
+      '#title' => $this->t('Role expiration'),
       '#states' => array(
         'visible' => array('input[name="end_override"]' => array('checked' => TRUE)),
       ),
     );
     $form['role_lifetime']['expiration'] = array(
       '#type' => 'select',
-      '#title' => t('Expiration type'),
+      '#title' => $this->t('Expiration type'),
       '#options' => array(
-        'rel' => t('Relative to purchase date'),
-        'abs' => t('Fixed date'),
+        'rel' => $this->t('Relative to purchase date'),
+        'abs' => $this->t('Fixed date'),
       ),
       '#default_value' => $default_end_type,
     );
@@ -158,14 +158,14 @@ class RoleFeatureForm extends FormBase {
     $form['role_lifetime']['uc_role_expire_relative_granularity'] = array(
       '#type' => 'select',
       '#options' => array(
-        'never' => t('never'),
-        'day' => t('day(s)'),
-        'week' => t('week(s)'),
-        'month' => t('month(s)'),
-        'year' => t('year(s)')
+        'never' => $this->t('never'),
+        'day' => $this->t('day(s)'),
+        'week' => $this->t('week(s)'),
+        'month' => $this->t('month(s)'),
+        'year' => $this->t('year(s)')
       ),
       '#default_value' => $default_granularity,
-      '#description' => t('From the time the role was purchased.'),
+      '#description' => $this->t('From the time the role was purchased.'),
       '#prefix' => '<div class="expiration">',
       '#suffix' => '</div>',
       '#states' => array(
@@ -180,22 +180,22 @@ class RoleFeatureForm extends FormBase {
     );
     $form['role_lifetime']['absolute']['uc_role_expire_absolute'] = array(
       '#type' => 'date',
-      '#description' => t('Expire the role at the beginning of this day.'),
+      '#description' => $this->t('Expire the role at the beginning of this day.'),
     );
     if ($end_time) {
       $form['role_lifetime']['absolute']['uc_role_expire_absolute']['#default_value'] = $end_time;
     }
     $form['role_lifetime']['uc_role_by_quantity'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Multiply by quantity'),
+      '#title' => $this->t('Multiply by quantity'),
       '#default_value' => $default_by_quantity,
-      '#description' => t('Check if the role duration should be multiplied by the quantity purchased.'),
+      '#description' => $this->t('Check if the role duration should be multiplied by the quantity purchased.'),
     );
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save feature'),
+      '#value' => $this->t('Save feature'),
     );
 
     return $form;
@@ -214,23 +214,23 @@ class RoleFeatureForm extends FormBase {
       ));
 
       if ($form_state->getValue('uc_role_expire_absolute') <= REQUEST_TIME) {
-        $form_state->setErrorByName('uc_role_expire_absolute', t('The specified date !date has already occurred. Please choose another.', ['!date' => \Drupal::service('date.formatter')->format($form_state->getValue('uc_role_expire_absolute'))]));
+        $form_state->setErrorByName('uc_role_expire_absolute', $this->t('The specified date !date has already occurred. Please choose another.', ['!date' => \Drupal::service('date.formatter')->format($form_state->getValue('uc_role_expire_absolute'))]));
       }
     }
     else {
       if ($form_state->getValue('uc_role_expire_relative_granularity') != 'never' && intval($form_state->getValue('uc_role_expire_relative_duration')) < 1) {
-        $form_state->setErrorByName('uc_role_expire_relative_duration', t('The amount of time must be a positive integer.'));
+        $form_state->setErrorByName('uc_role_expire_relative_duration', $this->t('The amount of time must be a positive integer.'));
       }
     }
 
     // No roles?
     if ($form_state->isValueEmpty('uc_role_role')) {
-      $form_state->setErrorByName('uc_role_role', t('You must have a role to assign. You may need to <a href="!role_url">create a new role</a> or perhaps <a href="!feature_url">set role assignment defaults</a>.', ['!role_url' => \Drupal::url('user.role_add'), '!feature_url' => \Drupal::url('uc_product.settings')]));
+      $form_state->setErrorByName('uc_role_role', $this->t('You must have a role to assign. You may need to <a href="!role_url">create a new role</a> or perhaps <a href="!feature_url">set role assignment defaults</a>.', ['!role_url' => $this->url('user.role_add'), '!feature_url' => $this->url('uc_product.settings')]));
     }
 
     // This role already set on this SKU?
     if (!$form_state->hasValue('pfid') && ($product_roles = db_query('SELECT * FROM {uc_roles_products} WHERE nid = :nid AND model = :model AND rid = :rid', [':nid' => $form_state->getValue('nid'), ':model' => $form_state->getValue('uc_role_model'), ':rid' => $form_state->getValue('uc_role_role')])->fetchObject())) {
-      $form_state->setErrorByName('uc_role_role', t('The combination of SKU and role already exists for this product.'));
+      $form_state->setErrorByName('uc_role_role', $this->t('The combination of SKU and role already exists for this product.'));
       $form_state->setErrorByName('uc_role_model');
     }
   }
@@ -255,29 +255,29 @@ class RoleFeatureForm extends FormBase {
       'end_time'     => $form_state->getValue('expiration'  ) === 'abs' ? $form_state->getValue('uc_role_expire_absolute') : NULL,
     );
 
-    $description = empty($product_role['model']) ? t('<strong>SKU:</strong> Any<br />') : t('<strong>SKU:</strong> !sku<br />', ['!sku' => $product_role['model']]);
-    $description .=  t('<strong>Role:</strong> @role_name<br />', ['@role_name' => _uc_role_get_name($product_role['rid'])]);
+    $description = empty($product_role['model']) ? $this->t('<strong>SKU:</strong> Any<br />') : $this->t('<strong>SKU:</strong> !sku<br />', ['!sku' => $product_role['model']]);
+    $description .=  $this->t('<strong>Role:</strong> @role_name<br />', ['@role_name' => _uc_role_get_name($product_role['rid'])]);
 
     if ($product_role['end_override']) {
       if ($product_role['end_time']) {
-        $description .= t('<strong>Expiration:</strong> !date<br />', ['!date' => \Drupal::service('date.formatter')->format($product_role['end_time'])]);
+        $description .= $this->t('<strong>Expiration:</strong> !date<br />', ['!date' => \Drupal::service('date.formatter')->format($product_role['end_time'])]);
       }
       else {
         switch ($product_role['granularity']) {
           case 'never':
-            $description .= t('<strong>Expiration:</strong> never<br />');
+            $description .= $this->t('<strong>Expiration:</strong> never<br />');
             break;
           case 'day':
-            $description .= t('<strong>Expiration:</strong> !qty day(s)<br />', ['!qty' => $product_role['duration']]);
+            $description .= $this->t('<strong>Expiration:</strong> !qty day(s)<br />', ['!qty' => $product_role['duration']]);
             break;
           case 'week':
-            $description .= t('<strong>Expiration:</strong> !qty week(s)<br />', ['!qty' => $product_role['duration']]);
+            $description .= $this->t('<strong>Expiration:</strong> !qty week(s)<br />', ['!qty' => $product_role['duration']]);
             break;
           case 'month':
-            $description .= t('<strong>Expiration:</strong> !qty month(s)<br />', ['!qty' => $product_role['duration']]);
+            $description .= $this->t('<strong>Expiration:</strong> !qty month(s)<br />', ['!qty' => $product_role['duration']]);
             break;
           case 'year':
-            $description .= t('<strong>Expiration:</strong> !qty year(s)<br />', ['!qty' => $product_role['duration']]);
+            $description .= $this->t('<strong>Expiration:</strong> !qty year(s)<br />', ['!qty' => $product_role['duration']]);
             break;
           default:
             break;
@@ -285,10 +285,10 @@ class RoleFeatureForm extends FormBase {
       }
     }
     else {
-      $description .= t('<strong>Expiration:</strong> !link (not overridden)<br />', ['!link' => \Drupal::l(t('Global expiration'), Url::fromRoute('uc_product.settings'))]);
+      $description .= $this->t('<strong>Expiration:</strong> !link (not overridden)<br />', ['!link' => $this->l(t('Global expiration'), Url::fromRoute('uc_product.settings'))]);
     }
-    $description .= $product_role['shippable'] ? t('<strong>Shippable:</strong> Yes<br />') : t('<strong>Shippable:</strong> No<br />');
-    $description .= $product_role['by_quantity'] ? t('<strong>Multiply by quantity:</strong> Yes') : t('<strong>Multiply by quantity:</strong> No');
+    $description .= $product_role['shippable'] ? $this->t('<strong>Shippable:</strong> Yes<br />') : $this->t('<strong>Shippable:</strong> No<br />');
+    $description .= $product_role['by_quantity'] ? $this->t('<strong>Multiply by quantity:</strong> Yes') : $this->t('<strong>Multiply by quantity:</strong> No');
 
     $data = array(
       'pfid' => $product_role['pfid'],

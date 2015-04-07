@@ -31,7 +31,7 @@ class CartController extends ControllerBase {
       );
     }
 
-    return \Drupal::formBuilder()->getForm('Drupal\uc_cart\Form\CartForm', $items);
+    return $this->formBuilder()->getForm('Drupal\uc_cart\Form\CartForm', $items);
   }
 
 }

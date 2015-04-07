@@ -98,7 +98,7 @@ class CountryRemoveForm extends ConfirmFormBase {
       ->condition('zone_country_id', $country->country_id)
       ->execute();
 
-    $formats = \Drupal::configFactory()->getEditable('uc_country.formats');
+    $formats = $this->configFactory()->getEditable('uc_country.formats');
     $formats->set($country->country_id, '')->save();
 
     $func_base = CountryController::importInclude($country->country_id, $country->version);

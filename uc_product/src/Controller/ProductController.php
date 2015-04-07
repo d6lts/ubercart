@@ -24,12 +24,12 @@ class ProductController extends ControllerBase {
     $classes = entity_load_multiple_by_properties('node_type', array(
       'third_party_settings.uc_product.product' => TRUE,
     ));
-    $header = array(t('Class ID'), t('Name'), t('Description'), t('Operations'));
+    $header = array($this->t('Class ID'), $this->t('Name'), $this->t('Description'), $this->t('Operations'));
     $rows = [];
     foreach ($classes as $class) {
       $links = [];
       $links['edit'] = array(
-        'title' => t('Edit'),
+        'title' => $this->t('Edit'),
         'url' => Url::fromRoute('entity.node_type.edit_form', ['node_type' =>$class->id()]),
         'query' => array(
           'destination' => 'admin/store/products/classes',
@@ -37,7 +37,7 @@ class ProductController extends ControllerBase {
       );
       if (!$class->isLocked()) {
         $links['delete'] = array(
-          'title' => t('Delete'),
+          'title' => $this->t('Delete'),
           'url' => Url::fromRoute('entity.node_type.delete_form', ['node_type' => $class->id()]),
           'query' => array(
             'destination' => 'admin/store/products/classes',
@@ -61,7 +61,7 @@ class ProductController extends ControllerBase {
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => t('No product classes have been defined yet.'),
+      '#empty' => $this->t('No product classes have been defined yet.'),
     );
   }
 
@@ -71,7 +71,7 @@ class ProductController extends ControllerBase {
   public function setImageDefaults() {
     uc_product_add_default_image_field();
 
-    drupal_set_message(t('Default image support configured for Ubercart products.'));
+    drupal_set_message($this->t('Default image support configured for Ubercart products.'));
 
     return $this->redirect('uc_store.admin');
   }

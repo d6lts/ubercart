@@ -58,8 +58,8 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     // Send anonymous users to login page when anonymous checkout is disabled.
     if ($this->currentUser()->isAnonymous() && !$cart_config->get('checkout_anonymous')) {
       drupal_set_message($this->t('You must login before you can proceed to checkout.'));
-      if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-        drupal_set_message($this->t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => \Drupal::url('user.register', [], ['query' => drupal_get_destination()]))));
+      if ($this->config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
+        drupal_set_message($this->t('If you do not have an account yet, you should <a href="!url">register now</a>.', array('!url' => $this->url('user.register', [], ['query' => drupal_get_destination()]))));
       }
       return $this->redirect('user.page', [], ['query' => drupal_get_destination()]);
     }
@@ -143,10 +143,10 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     }
 
     // Trigger the "Customer starts checkout" hook and event.
-    \Drupal::moduleHandler()->invokeAll('uc_cart_checkout_start', array($order));
+    $this->moduleHandler()->invokeAll('uc_cart_checkout_start', array($order));
     // rules_invoke_event('uc_cart_checkout_start', $order);
 
-    return \Drupal::formBuilder()->getForm('Drupal\uc_cart\Form\CheckoutForm', $order);
+    return $this->formBuilder()->getForm('Drupal\uc_cart\Form\CheckoutForm', $order);
   }
 
   /**
@@ -172,7 +172,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     $filter = array('enabled' => FALSE);
 
     // If the cart isn't shippable, bypass panes with shippable == TRUE.
-    if (!$order->isShippable() && \Drupal::config('uc_cart.settings')->get('delivery_not_shippable')) {
+    if (!$order->isShippable() && $this->config('uc_cart.settings')->get('delivery_not_shippable')) {
       $filter['shippable'] = TRUE;
     }
 
@@ -187,7 +187,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     $build = array(
       '#theme' => 'uc_cart_checkout_review',
       '#panes' => $data,
-      '#form' => \Drupal::formBuilder()->getForm('Drupal\uc_cart\Form\CheckoutReviewForm', $order),
+      '#form' => $this->formBuilder()->getForm('Drupal\uc_cart\Form\CheckoutReviewForm', $order),
     );
 
     $build['#attached']['library'][] = 'system/drupal.system';
