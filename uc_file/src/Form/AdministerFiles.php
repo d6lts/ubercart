@@ -37,7 +37,7 @@ class AdministerFiles extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-module_load_include('inc', 'uc_roles', 'uc_roles.admin');
+module_load_include('inc', 'uc_role', 'uc_role.admin');
     if ($form_state->get('step') == UC_FILE_FORM_ACTION) {
         return array(
           '#validate' => array('uc_file_admin_files_form_action_validate'),
