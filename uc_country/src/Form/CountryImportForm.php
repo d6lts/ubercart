@@ -36,7 +36,7 @@ class CountryImportForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $countries = [];
-    $result = db_query("SELECT * FROM {uc_countries}");
+    $result = db_query('SELECT country_id, country_name, country_iso_code_3, version FROM {uc_countries}');
     foreach ($result as $country) {
       $countries[t($country->country_name)] = $country;
     }

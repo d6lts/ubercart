@@ -68,7 +68,7 @@ class CountryFormatSettingsForm extends ConfigFormBase {
     );
 
     $countries = [];
-    $result = db_query("SELECT * FROM {uc_countries}");
+    $result = db_query('SELECT country_id, country_name FROM {uc_countries}');
     foreach ($result as $country) {
       $countries[t($country->country_name)] = $country;
     }

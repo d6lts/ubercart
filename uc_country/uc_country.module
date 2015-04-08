@@ -8,6 +8,12 @@
 
 /**
  * Returns an array of country files that can be installed or updated.
+ *
+ * @return array
+ *   Associative array keyed by the country's ISO 3166-1 numeric country
+ *   code. Each key holds an array of two elements, 'file' and 'version',
+ *   containing the file name for that country's .cif file and the .cif
+ *   file version, respectively.
  */
 function uc_country_import_list() {
   $dir = drupal_get_path('module', 'uc_country') . '/countries/';
@@ -51,14 +57,18 @@ function uc_country_import_list() {
  *   The country's ISO 3166-1 numeric identifier.
  */
 function uc_country_get_by_id($id) {
-  return db_query("SELECT country_name FROM {uc_countries} WHERE country_id = :id", [':id' => $id])->fetchField();
+  return db_query('SELECT country_name FROM {uc_countries} WHERE country_id = :id', [':id' => $id])->fetchField();
 }
 
 /**
- * Returns a list of available countries.
+ * Returns a list of all installed/available countries.
+ *
+ * @return array
+ *   Associative array keyed by the country's ISO 3166-1 numeric country
+ *   code and containing the translated ISO 3166-1 country name.
  */
 function uc_country_option_list() {
-  $result = db_query("SELECT * FROM {uc_countries} WHERE version > :version", [':version' => 0]);
+  $result = db_query('SELECT country_id, country_name FROM {uc_countries} WHERE version > :version', [':version' => 0]);
 
   $options = array();
   while ($country = $result->fetchAssoc()) {
@@ -79,7 +89,7 @@ function uc_country_option_list() {
  *   The zone's ID.
  */
 function uc_zone_get_by_id($id) {
-  return db_query("SELECT zone_name FROM {uc_countries_zones} WHERE zone_id = :id", [':id' => $id])->fetchField();
+  return db_query('SELECT zone_name FROM {uc_countries_zones} WHERE zone_id = :id', [':id' => $id])->fetchField();
 }
 
 /**
@@ -139,7 +149,7 @@ function uc_zone_select($title = '', $default = NULL, $country_id = NULL, $optio
  * Helper function to return zone options, grouped by country.
  */
 function uc_zone_option_list() {
-  $result = db_query("SELECT z.*, c.country_name FROM {uc_countries_zones} z LEFT JOIN {uc_countries} c ON z.zone_country_id = c.country_id ORDER BY c.country_name, z.zone_name");
+  $result = db_query('SELECT z.zone_id, z.zone_name, c.country_name FROM {uc_countries_zones} z LEFT JOIN {uc_countries} c ON z.zone_country_id = c.country_id ORDER BY c.country_name, z.zone_name');
 
   foreach ($result as $zone) {
     $options[t($zone->country_name)][$zone->zone_id] = $zone->zone_name;
@@ -158,10 +168,10 @@ function uc_get_zone_code($zone = NULL) {
   }
 
   if (is_numeric($zone)) {
-    $result = db_query("SELECT zone_code FROM {uc_countries_zones} WHERE zone_id = :id", [':id' => $zone]);
+    $result = db_query('SELECT zone_code FROM {uc_countries_zones} WHERE zone_id = :id', [':id' => $zone]);
   }
   else {
-    $result = db_query("SELECT zone_code FROM {uc_countries_zones} WHERE zone_name = :name", [':name' => $zone]);
+    $result = db_query('SELECT zone_code FROM {uc_countries_zones} WHERE zone_name = :name', [':name' => $zone]);
   }
 
   if ($row = $result->fetchObject()) {

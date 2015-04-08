@@ -46,7 +46,7 @@ class CountryRemoveForm extends ConfirmFormBase {
    */
   public function getDescription() {
     // If orders exist for this country, show a warning message prior to removal.
-    $count = db_query("SELECT COUNT(order_id) FROM {uc_orders} WHERE delivery_country = :delivery_country OR billing_country = :billing_country", [':delivery_country' => $this->country_id, ':billing_country' => $this->country_id])->fetchField();
+    $count = db_query('SELECT COUNT(order_id) FROM {uc_orders} WHERE delivery_country = :delivery_country OR billing_country = :billing_country', [':delivery_country' => $this->country_id, ':billing_country' => $this->country_id])->fetchField();
     if ($count > 0) {
       return t('<p><strong>Warning:</strong> @count orders were found with addresses in this country.</p><p>Removing this country now will cause errors to show on those order pages. You might consider simply disabling this country instead.</p>', ['@count' => $count]);
     }
@@ -74,7 +74,7 @@ class CountryRemoveForm extends ConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $country_id = NULL) {
     // Fetch the country name from the database.
-    $this->country_name = t(db_query("SELECT country_name FROM {uc_countries} WHERE country_id = :id", [':id' => $country_id])->fetchField());
+    $this->country_name = t(db_query('SELECT country_name FROM {uc_countries} WHERE country_id = :id', [':id' => $country_id])->fetchField());
     $this->country_id = $country_id;
 
     return parent::buildForm($form, $form_state);
@@ -84,7 +84,7 @@ class CountryRemoveForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", [':id' => $this->country_id]);
+    $result = db_query('SELECT country_id, country_name, version FROM {uc_countries} WHERE country_id = :id', [':id' => $this->country_id]);
     if (!($country = $result->fetchObject())) {
       drupal_set_message(t('Attempted to remove an invalid country.'), 'error');
       $form_state->setRedirect('uc_country.settings');
