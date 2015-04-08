@@ -26,13 +26,21 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
   protected $checkoutPaneManager;
 
   /**
+   * The cart controller.
+   *
+   * @var \Drupal\uc_cart\Controller\Cart
+   */
+  protected $cart;
+
+  /**
    * Constructs a CheckoutController.
    *
    * @param \Drupal\uc_cart\Plugin\CheckoutPaneManager $checkout_pane_manager
    *   The checkout pane plugin manager.
    */
-  public function __construct(CheckoutPaneManager $checkout_pane_manager) {
+  public function __construct(CheckoutPaneManager $checkout_pane_manager, CartInterface $cart) {
     $this->checkoutPaneManager = $checkout_pane_manager;
+    $this->cart = $cart;
   }
 
   /**
@@ -40,7 +48,8 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.uc_cart.checkout_pane')
+      $container->get('plugin.manager.uc_cart.checkout_pane'),
+      Cart::create($container)
     );
   }
 
@@ -48,9 +57,9 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
    * Displays the cart checkout page built of checkout panes from enabled modules.
    */
   public function checkout() {
-    $cart_config = \Drupal::config('uc_cart.settings');
+    $cart_config = $this->config('uc_cart.settings');
 
-    $items = uc_cart_get_contents();
+    $items = $this->cart->getContents();
     if (count($items) == 0 || !$cart_config->get('checkout_enabled')) {
       return $this->redirect('uc_cart.cart');
     }
@@ -73,8 +82,8 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
         // there has been no activity for 10 minutes (to prevent identity theft).
         if ($order->getStateId() != 'in_checkout' ||
             ($this->currentUser()->isAuthenticated() && $this->currentUser()->id() != $order->getUserId()) ||
-            $order->modified->value < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
-          if ($order->getStateId() == 'in_checkout' && $order->modified->value < REQUEST_TIME - UC_CART_CHECKOUT_TIMEOUT) {
+            $order->modified->value < REQUEST_TIME - Cart::CHECKOUT_TIMEOUT) {
+          if ($order->getStateId() == 'in_checkout' && $order->modified->value < REQUEST_TIME - Cart::CHECKOUT_TIMEOUT) {
             // Mark expired orders as abandoned.
             $order->setStatusId('abandoned')->save();
           }
@@ -211,12 +220,12 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     if (empty($order)) {
       // Display messages to customers and the administrator if the order was lost.
       drupal_set_message($this->t("We're sorry.  An error occurred while processing your order that prevents us from completing it at this time. Please contact us and we will resolve the issue as soon as possible."), 'error');
-      \Drupal::logger('uc_cart')->error('An empty order made it to checkout! Cart order ID: @cart_order', ['@cart_order' => $session->get('cart_order')]);
+      $this->logger('uc_cart')->error('An empty order made it to checkout! Cart order ID: @cart_order', ['@cart_order' => $session->get('cart_order')]);
       return $this->redirect('uc_cart.cart');
     }
 
-    $cart_config = \Drupal::config('uc_cart.settings');
-    $build = uc_cart_complete_sale($order, $cart_config->get('new_customer_login'));
+    $cart_config = $this->config('uc_cart.settings');
+    $build = $this->cart->completeSale($order, $cart_config->get('new_customer_login'));
     $session->remove('cart_order');
     unset($_SESSION['uc_checkout'][$order->id()]);
 

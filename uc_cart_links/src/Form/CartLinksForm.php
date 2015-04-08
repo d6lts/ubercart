@@ -13,6 +13,7 @@ use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\uc_cart\Controller\Cart;
 
 /**
  * Preprocesses a cart link, confirming with the user for destructive actions.
@@ -72,14 +73,15 @@ class CartLinksForm extends ConfirmFormBase {
         unset($_GET['destination']);
         $path = $cart_links_config->get('invalid_page');
         if (empty($path)) {
-          return new RedirectResponse(\Drupal::url('<front>', [], ['absolute' => TRUE]));
+          return $this->redirect('<front>', [], ['absolute' => TRUE]);
         }
         return new RedirectResponse(Url::fromUri('internal:/' . $path, ['absolute' => TRUE])->toString());
       }
     }
 
     // Confirm with the user if the form contains a destructive action.
-    $items = uc_cart_get_contents();
+    $cart = Cart::create(\Drupal::getContainer());
+    $items = $cart->getContents();
     if ($cart_links_config->get('empty') && !empty($items)) {
       $actions = explode('-', urldecode($this->actions));
       foreach ($actions as $action) {
@@ -105,8 +107,9 @@ class CartLinksForm extends ConfirmFormBase {
     $actions = explode('-', urldecode($this->actions));
     $rebuild_cart = FALSE;
     $messages = array();
-    $id = t('(not specified)');
+    $id = $this->t('(not specified)');
 
+    $cart = Cart::create(\Drupal::getContainer());
     foreach ($actions as $action) {
       switch (Unicode::substr($action, 0, 1)) {
         // Set the ID of the Cart Link.
@@ -183,11 +186,11 @@ class CartLinksForm extends ConfirmFormBase {
                   );
                 }
               }
-              uc_cart_add_item($p['nid'], $p['qty'], $p['data'] + \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($p)), NULL, $msg, FALSE, FALSE);
+              $cart->addItem($p['nid'], $p['qty'], $p['data'] + \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($p)), NULL, $msg, FALSE, FALSE);
               $rebuild_cart = TRUE;
             }
             else {
-              \Drupal::logger('uc_cart_link')->error('Cart Link on %url tried to add an unpublished product to the cart.', array('%url' => \Drupal::request()->server->get('HTTP_REFERER')));
+              $this->logger('uc_cart_link')->error('Cart Link on %url tried to add an unpublished product to the cart.', array('%url' => $this->getRequest()->server->get('HTTP_REFERER')));
             }
           }
           break;
@@ -196,7 +199,7 @@ class CartLinksForm extends ConfirmFormBase {
         case 'e':
         case 'E':
           if ($cart_links_config->get('empty')) {
-            uc_cart_empty();
+            $cart->emptyCart();
           }
           break;
 
@@ -222,7 +225,7 @@ class CartLinksForm extends ConfirmFormBase {
 
       // Rebuild the cart cache if necessary.
       if ($rebuild_cart) {
-        uc_cart_get_contents(NULL, 'rebuild');
+        $cart->getContents(NULL, 'rebuild');
       }
     }
 

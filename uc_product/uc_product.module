@@ -616,7 +616,8 @@ function uc_product_uc_cart_display($item) {
  */
 function uc_product_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
   if (!$nid) return NULL;
-  $cid = !(is_null($cid) || empty($cid)) ? $cid : uc_cart_get_id();
+  $cart = \Drupal\uc_cart\Controller\Cart::create(\Drupal::getContainer());
+  $cid = !(is_null($cid) || empty($cid)) ? $cid : $cart->getId();
 
   $result = \Drupal::entityQuery('uc_cart_item')
     ->condition('cart_id', $cid)

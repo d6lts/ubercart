@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart\Tests;
 
+use Drupal\uc_cart\Controller\Cart;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -21,8 +22,15 @@ class CartCheckoutTest extends UbercartTestBase {
   /** Authenticated but unprivileged user. */
   protected $customer;
 
+  /** Instance of the Cart controller. */
+  protected $cart;
+
+
   public function setUp() {
     parent::setUp();
+
+    // Create a simple customer user account.
+    $this->cart = Cart::create(\Drupal::getContainer());
 
     // Create a simple customer user account.
     $this->customer = $this->drupalCreateUser();
@@ -35,13 +43,13 @@ class CartCheckoutTest extends UbercartTestBase {
 
   public function testCartAPI() {
     // Test the empty cart.
-    $items = uc_cart_get_contents();
+    $items = $this->cart->getContents();
     $this->assertEqual($items, [], 'Cart is an empty array.');
 
     // Add an item to the cart.
-    uc_cart_add_item($this->product->id());
+    $this->cart->addItem($this->product->id());
 
-    $items = uc_cart_get_contents();
+    $items = $this->cart->getContents();
     $this->assertEqual(count($items), 1, 'Cart contains one item.');
     $item = reset($items);
     $this->assertEqual($item->nid->target_id, $this->product->id(), 'Cart item nid is correct.');
@@ -49,9 +57,9 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Add more of the same item.
     $qty = mt_rand(1, 100);
-    uc_cart_add_item($this->product->id(), $qty);
+    $this->cart->addItem($this->product->id(), $qty);
 
-    $items = uc_cart_get_contents();
+    $items = $this->cart->getContents();
     $this->assertEqual(count($items), 1, 'Updated cart contains one item.');
     $item = reset($items);
     $this->assertEqual($item->qty->value, $qty + 1, 'Updated cart item quantity is correct.');
@@ -62,15 +70,15 @@ class CartCheckoutTest extends UbercartTestBase {
     $item->data->updated = TRUE;
     $item->save();
 
-    $items = uc_cart_get_contents();
+    $items = $this->cart->getContents();
     $item = reset($items);
     $this->assertEqual($item->qty->value, $qty, 'Set cart item quantity is correct.');
     $this->assertTrue($item->data->updated, 'Set cart item data is correct.');
 
     // Add an item with different data to the cart.
-    uc_cart_add_item($this->product->id(), 1, array('test' => TRUE));
+    $this->cart->addItem($this->product->id(), 1, array('test' => TRUE));
 
-    $items = uc_cart_get_contents();
+    $items = $this->cart->getContents();
     $this->assertEqual(count($items), 2, 'Updated cart contains two items.');
 
     // Remove the items.
@@ -78,16 +86,16 @@ class CartCheckoutTest extends UbercartTestBase {
       $item->delete();
     }
     // @TODO: remove the need for this
-    uc_cart_get_contents(NULL, 'rebuild');
+    $this->cart->getContents(NULL, 'rebuild');
 
-    $items = uc_cart_get_contents();
+    $items = $this->cart->getContents();
     $this->assertEqual(count($items), 0, 'Cart is empty after removal.');
 
     // Empty the cart.
-    uc_cart_add_item($this->product->id());
-    uc_cart_empty();
+    $this->cart->addItem($this->product->id());
+    $this->cart->emptyCart();
 
-    $items = uc_cart_get_contents();
+    $items = $this->cart->getContents();
     $this->assertEqual($items, [], 'Cart is emptied correctly.');
   }
 
@@ -174,7 +182,7 @@ class CartCheckoutTest extends UbercartTestBase {
     // Test that the cart is empty.
     $this->drupalGet('cart');
     $this->assertText('There are no products in your shopping cart.');
-    $this->assertIdentical(uc_cart_get_contents(), [], 'There are no items in the cart.');
+    $this->assertIdentical($this->cart->getContents(), [], 'There are no items in the cart.');
   }
 
   // public function testMaximumQuantityRule() {
@@ -379,7 +387,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $order_data = array('primary_email' => 'simpletest@ubercart.org');
     $order = $this->createOrder($order_data);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
-    $output = uc_cart_complete_sale($order);
+    $output = $this->cart->completeSale($order);
 
     // Check that a new account was created.
     $this->assertTrue(strpos($output['#message'], 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
@@ -398,7 +406,7 @@ class CartCheckoutTest extends UbercartTestBase {
     // Different user, sees the checkout page first.
     $order_data = array('primary_email' => 'simpletest2@ubercart.org');
     $order = $this->createOrder($order_data);
-    $output = uc_cart_complete_sale($order, TRUE);
+    $output = $this->cart->completeSale($order, TRUE);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // 3 e-mails: new account, customer invoice, admin invoice
@@ -414,7 +422,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Same user, new order.
     $order = $this->createOrder($order_data);
-    $output = uc_cart_complete_sale($order, TRUE);
+    $output = $this->cart->completeSale($order, TRUE);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // Check that no new account was created.
@@ -456,7 +464,7 @@ class CartCheckoutTest extends UbercartTestBase {
       // Jump 10 minutes into the future.
       db_update('uc_orders')
         ->fields(array(
-            'modified' => time() - UC_CART_ORDER_TIMEOUT - 1,
+            'modified' => time() - Cart::ORDER_TIMEOUT - 1,
           ))
         ->condition('order_id', $order_id)
         ->execute();

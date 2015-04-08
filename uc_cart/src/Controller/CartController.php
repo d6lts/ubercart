@@ -22,7 +22,8 @@ class CartController extends ControllerBase {
    */
   public function listing() {
     // Load the array of shopping cart items.
-    $items = uc_cart_get_contents();
+    $cart = Cart::create(\Drupal::getContainer());
+    $items = $cart->getContents();
 
     // Display the empty cart page if there are no items in the cart.
     if (empty($items)) {

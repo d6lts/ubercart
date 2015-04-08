@@ -297,7 +297,8 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
 
   // Ensure user has an account before payment is made.
   if (\Drupal::moduleHandler()->moduleExists('uc_cart')) {
-    uc_cart_complete_sale($order);
+    $cart = \Drupal\uc_cart\Controller\Cart::create(\Drupal::getContainer());
+    $cart->completeSale($order);
   }
 
   \Drupal::moduleHandler()->invokeAll('uc_payment_entered', array($order, $method, $amount, $account, $data, $comment));
