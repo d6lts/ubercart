@@ -1,8 +1,19 @@
-base_field: uid
-base_table: users
-core: 8.x
-description: ''
+langcode: en
 status: true
+dependencies:
+  config:
+    - system.menu.admin
+  module:
+    - uc_order
+    - user
+id: uc_customers
+label: Customers
+module: views
+description: 'View and search customer information.'
+tag: Ubercart
+base_table: users_field_data
+base_field: uid
+core: 8.x
 display:
   default:
     display_plugin: default
@@ -13,7 +24,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access content'
+          perm: 'view customers'
         perm: 'access user profiles'
       cache:
         type: none
@@ -39,10 +50,10 @@ display:
       pager:
         type: full
         options:
-          items_per_page: '30'
+          items_per_page: 30
           offset: 0
           id: 0
-          total_pages: ''
+          total_pages: null
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -62,10 +73,10 @@ display:
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: 1
+          default_row_class: true
           row_class_special: 1
-          override: 1
-          sticky: 0
+          override: true
+          sticky: false
           caption: ''
           summary: ''
           description: ''
@@ -81,70 +92,70 @@ display:
             order_total: order_total
           info:
             uid:
-              sortable: 0
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: 0
+              empty_column: false
               responsive: ''
             name:
-              sortable: 1
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: 0
+              empty_column: false
               responsive: ''
             billing_full_name:
-              sortable: 0
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: 0
+              empty_column: false
               responsive: ''
             primary_email:
-              sortable: 1
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: 0
+              empty_column: false
               responsive: ''
             billing_city:
-              sortable: 1
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ', '
-              empty_column: 0
+              empty_column: false
               responsive: ''
             zone_code:
-              sortable: 0
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: 0
+              empty_column: false
               responsive: ''
             country_name:
-              sortable: 0
+              sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: 0
+              empty_column: false
               responsive: ''
             order_id:
-              sortable: 1
+              sortable: true
               default_sort_order: desc
               align: ''
               separator: ''
-              empty_column: 0
+              empty_column: false
               responsive: ''
             order_total:
-              sortable: 1
+              sortable: true
               default_sort_order: desc
               align: ''
               separator: ''
-              empty_column: 0
+              empty_column: false
               responsive: ''
           default: order_id
-          empty_table: 0
+          empty_table: false
       row:
         type: fields
       fields:
@@ -156,34 +167,34 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: 1
+          exclude: true
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -191,12 +202,12 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
-          link_to_user: 0
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_user: false
           plugin_id: user
           provider: user
         name:
@@ -207,46 +218,46 @@ display:
           group_type: group
           admin_label: ''
           label: User
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 0
-            ellipsis: 0
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: false
+            ellipsis: false
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: 1
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           link_to_user: 1
           overwrite_anonymous: 0
           anonymous_text: ''
@@ -260,46 +271,46 @@ display:
           group_type: group
           admin_label: ''
           label: Name
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: 1
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           link_to_user: 0
           format: first_last
           plugin_id: uc_order_full_name
@@ -312,47 +323,47 @@ display:
           group_type: group
           admin_label: ''
           label: 'Email address'
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: 1
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
-          link_to_user: mailto
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_user: true
           plugin_id: user_mail
           provider: user
         billing_city:
@@ -363,46 +374,46 @@ display:
           group_type: group
           admin_label: ''
           label: Location
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: 1
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           plugin_id: standard
           provider: views
         zone_code:
@@ -413,34 +424,34 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -448,11 +459,11 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           plugin_id: standard
           provider: views
         country_name:
@@ -463,34 +474,34 @@ display:
           group_type: group
           admin_label: ''
           label: ''
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -498,11 +509,11 @@ display:
           element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           plugin_id: standard
           provider: views
         order_id:
@@ -513,46 +524,46 @@ display:
           group_type: count
           admin_label: ''
           label: Orders
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: 1
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           link_to_order: 0
           plugin_id: uc_order
           provider: uc_order
@@ -564,46 +575,46 @@ display:
           group_type: sum
           admin_label: ''
           label: Total
-          exclude: 0
+          exclude: false
           alter:
-            alter_text: 0
+            alter_text: false
             text: ''
-            make_link: 0
+            make_link: false
             path: ''
-            absolute: 0
-            external: 0
-            replace_spaces: 0
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: 0
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: 0
-            max_length: ''
-            word_boundary: 1
-            ellipsis: 1
-            more_link: 0
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: 0
-            trim: 0
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: 0
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: 1
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: 1
+          element_default_classes: true
           empty: ''
-          hide_empty: 0
-          empty_zero: 0
-          hide_alter_empty: 1
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           set_precision: false
           precision: 0
           decimal: .
@@ -629,10 +640,10 @@ display:
             min: ''
             max: ''
             value: '0'
-          group: '1'
+          group: 1
           exposed: false
           expose:
-            operator_id: false
+            operator_id: ''
             label: ''
             description: ''
             use_operator: false
@@ -651,7 +662,7 @@ display:
             optional: true
             widget: select
             multiple: false
-            remember: 0
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -670,17 +681,23 @@ display:
           relationship: none
           group_type: group
           admin_label: Orders
-          required: 1
+          required: true
           plugin_id: standard
           provider: views
       arguments: {  }
       filter_groups:
         operator: AND
         groups: {  }
-      group_by: 1
-  page_1:
+      group_by: true
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+      cacheable: false
+  admin_page:
     display_plugin: page
-    id: page_1
+    id: admin_page
     display_title: Page
     position: 1
     display_options:
@@ -691,11 +708,11 @@ display:
         description: 'View and search customer information.'
         menu_name: admin
         parent: uc_order.admin.store.customers
-        weight: '-10'
-        context: 0
-label: uc_customers
-module: views
-id: uc_customers
-tag: ''
-uuid: de2c464f-17a0-40da-b000-ba0b0c558122
-langcode: en
+        weight: -10
+        context: '0'
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+      cacheable: false

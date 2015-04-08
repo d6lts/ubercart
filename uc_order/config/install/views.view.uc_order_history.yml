@@ -1,15 +1,24 @@
-api_version: '3.0'
-base_field: order_id
+langcode: en
+status: true
+dependencies:
+  module:
+    - uc_order
+    - uc_store
+    - user
+id: uc_order_history
+label: 'Order history'
+module: uc_order
+description: 'Customer''s order history and management view.'
+tag: Ubercart
 base_table: uc_orders
+base_field: order_id
 core: 8.x
-description: ''
-disabled: '0'
 display:
   default:
     display_plugin: default
     id: default
     display_title: Master
-    position: ''
+    position: null
     display_options:
       access:
         type: perm
@@ -24,16 +33,16 @@ display:
       pager:
         type: full
         options:
-          items_per_page: '20'
+          items_per_page: 20
       style:
         type: table
         options:
           grouping: {  }
           row_class: ''
-          default_row_class: '1'
+          default_row_class: true
           row_class_special: '1'
-          override: '1'
-          sticky: '0'
+          override: true
+          sticky: false
           summary: ''
           columns:
             created: created
@@ -44,47 +53,47 @@ display:
             order_total: order_total
           info:
             created:
-              sortable: '1'
+              sortable: true
               default_sort_order: desc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
             order_id:
-              sortable: '1'
+              sortable: true
               default_sort_order: desc
               align: ''
               separator: ' '
-              empty_column: '0'
+              empty_column: false
               responsive: ''
             actions:
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
             order_status:
-              sortable: '1'
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
             product_count:
-              sortable: '1'
+              sortable: true
               default_sort_order: desc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: priority-medium
             order_total:
-              sortable: '1'
+              sortable: true
               default_sort_order: desc
               align: ''
               separator: ''
-              empty_column: '0'
+              empty_column: false
               responsive: ''
           default: created
-          empty_table: '0'
+          empty_table: false
       row:
         type: fields
       fields:
@@ -96,46 +105,46 @@ display:
           group_type: group
           admin_label: ''
           label: Date
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
-            max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           date_format: short
           custom_date_format: ''
           timezone: ''
@@ -147,46 +156,46 @@ display:
           group_type: group
           admin_label: ''
           label: 'Order #'
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
-            max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '0'
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           link_to_order: '1'
         actions:
           id: actions
@@ -196,46 +205,46 @@ display:
           group_type: group
           admin_label: ''
           label: Actions
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
-            max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         order_status:
           id: order_status
           table: uc_orders
@@ -244,46 +253,46 @@ display:
           group_type: group
           admin_label: ''
           label: Status
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
-            max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         product_count:
           id: product_count
           table: uc_orders
@@ -292,46 +301,46 @@ display:
           group_type: group
           admin_label: ''
           label: Products
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
-            max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           set_precision: '0'
           precision: '0'
           decimal: .
@@ -349,46 +358,46 @@ display:
           group_type: group
           admin_label: ''
           label: Total
-          exclude: '0'
+          exclude: false
           alter:
-            alter_text: '0'
+            alter_text: false
             text: ''
-            make_link: '0'
+            make_link: false
             path: ''
-            absolute: '0'
-            external: '0'
-            replace_spaces: '0'
+            absolute: false
+            external: false
+            replace_spaces: false
             path_case: none
-            trim_whitespace: '0'
+            trim_whitespace: false
             alt: ''
             rel: ''
             link_class: ''
             prefix: ''
             suffix: ''
             target: ''
-            nl2br: '0'
-            max_length: ''
-            word_boundary: '1'
-            ellipsis: '1'
-            more_link: '0'
+            nl2br: false
+            max_length: null
+            word_boundary: true
+            ellipsis: true
+            more_link: false
             more_link_text: ''
             more_link_path: ''
-            strip_tags: '0'
-            trim: '0'
+            strip_tags: false
+            trim: false
             preserve_tags: ''
-            html: '0'
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: '1'
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
-          element_default_classes: '1'
+          element_default_classes: true
           empty: ''
-          hide_empty: '0'
-          empty_zero: '0'
-          hide_alter_empty: '1'
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
           set_precision: '0'
           precision: '0'
           decimal: .
@@ -410,30 +419,30 @@ display:
           operator: in
           value:
             _active: _active
-          group: '1'
-          exposed: '0'
+          group: 1
+          exposed: false
           expose:
             operator_id: '0'
             label: ''
             description: ''
-            use_operator: '0'
+            use_operator: false
             operator: ''
             identifier: ''
-            required: '0'
-            remember: '0'
-            multiple: '0'
+            required: false
+            remember: false
+            multiple: false
             remember_roles:
               authenticated: authenticated
             reduce: '0'
-          is_grouped: '0'
+          is_grouped: false
           group_info:
             label: ''
             description: ''
             identifier: ''
-            optional: '1'
+            optional: true
             widget: select
-            multiple: '0'
-            remember: '0'
+            multiple: false
+            remember: false
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
@@ -450,42 +459,48 @@ display:
           default_action: 'not found'
           exception:
             value: all
-            title_enable: '0'
+            title_enable: false
             title: All
-          title_enable: '0'
+          title_enable: false
           title: ''
           breadcrumb_enable: '0'
           breadcrumb: ''
           default_argument_type: fixed
           default_argument_options:
             argument: ''
-          default_argument_skip_url: '0'
+          default_argument_skip_url: false
           summary_options:
             base_path: ''
-            count: '1'
-            items_per_page: '25'
-            override: '0'
+            count: true
+            items_per_page: 25
+            override: false
           summary:
             sort_order: asc
-            number_of_records: '0'
+            number_of_records: 0
             format: default_summary
-          specify_validation: '1'
+          specify_validation: true
           validate:
             type: user_or_permission
             fail: 'not found'
           validate_options:
             type: uid
             perm: 'view all orders'
-          break_phrase: '0'
+          break_phrase: false
           not: '0'
       filter_groups:
         operator: AND
         groups: {  }
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false
   page_1:
     display_plugin: page
     id: page_1
     display_title: Page
-    position: ''
+    position: null
     display_options:
       path: user/%user/orders
       menu:
@@ -493,9 +508,11 @@ display:
         title: Orders
         description: ''
         name: account
-        weight: '0'
+        weight: 0
         context: '0'
-human_name: 'Order history'
-id: uc_order_history
-module: uc_order
-tag: Ubercart
+      display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false
