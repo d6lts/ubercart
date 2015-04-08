@@ -11,6 +11,8 @@ use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Displays the Cart Links report.
+ * @todo: This controller should be deleted now that it has been
+ * replaced by a View.
  *
  * @return
  *   Renderable form array.

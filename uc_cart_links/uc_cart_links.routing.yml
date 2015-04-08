@@ -6,13 +6,14 @@ uc_cart_links.settings:
   requirements:
     _permission: 'administer cart links'
 
-uc_cart_links.reports:
-  path: '/admin/store/reports/cart-links'
-  defaults:
-    _controller: '\Drupal\uc_cart_links\Controller\CartLinksReports::buildReport'
-    _title: 'Cart Links'
-  requirements:
-    _permission: 'view cart links report'
+#This route has been replaced by a View at view.uc_cart_links.report
+#uc_cart_links.reports:
+#  path: '/admin/store/reports/cart-links'
+#  defaults:
+#    _controller: '\Drupal\uc_cart_links\Controller\CartLinksReports::buildReport'
+#    _title: 'Cart Links'
+#  requirements:
+#    _permission: 'view cart links report'
 
 uc_cart_links.process:
   path: '/cart/add/{actions}'
