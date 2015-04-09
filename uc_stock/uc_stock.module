@@ -32,7 +32,7 @@ function uc_stock_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_menu().
  */
 function uc_stock_menu() {
-  if (\Drupal::moduleHandler()->moduleExists('uc_reports')) {
+  if (\Drupal::moduleHandler()->moduleExists('uc_report')) {
     $items['admin/store/reports/stock'] = array(
       'title' => 'Stock reports',
       'description' => 'View reports for product stock.',

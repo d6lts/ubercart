@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_reports\Controller\Reports;
+ * Contains \Drupal\uc_report\Controller\Reports;
  */
 
-namespace Drupal\uc_reports\Controller;
+namespace Drupal\uc_report\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
@@ -22,8 +22,8 @@ class Reports extends ControllerBase {
     $first_name = ($address_preference == 'billing') ? 'billing_first_name' : 'delivery_first_name';
     $last_name = ($address_preference == 'billing') ? 'billing_last_name' : 'delivery_last_name';
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-    $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
-    $order_statuses = uc_reports_order_statuses();
+    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : variable_get('uc_report_table_size', 30);
+    $order_statuses = uc_report_order_statuses();
     $rows = array();
     $csv_rows = array();
 
@@ -74,7 +74,7 @@ class Reports extends ControllerBase {
 
     foreach ($customers as $customer) {
       $name = (!empty($customer[$last_name]) || !empty($customer[$first_name])) ? $this->l($customer[$last_name] . ', ' . $customer[$first_name], Url::fromUri('base:admin/store/customers/orders/' . $customer['uid'])) : $this->l($customer['name'], Url::fromUri('base:admin/store/customers/orders/' . $customer['uid']));
-      $customer_number = ($page * variable_get('uc_reports_table_size', 30)) + (count($rows) + 1);
+      $customer_number = ($page * variable_get('uc_report_table_size', 30)) + (count($rows) + 1);
       $customer_order_name = (!empty($customer[$last_name]) || !empty($customer[$first_name])) ? $customer[$last_name] . ', ' . $customer[$first_name] : $customer['name'];
       $customer_name = $customer['name'];
       $orders = !empty($customer['orders']) ? $customer['orders'] : 0;
@@ -109,7 +109,7 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l($this->t('Export to CSV file.'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => $this->l($this->t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
@@ -133,9 +133,9 @@ class Reports extends ControllerBase {
     $views_column = \Drupal::moduleHandler()->moduleExists('statistics') && $this->config('statistics.settings')->get('count_content_views');
 
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-    $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
-    $order_statuses = uc_reports_order_statuses();
-    $row_cell = $page * variable_get('uc_reports_table_size', 30) + 1;
+    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : variable_get('uc_report_table_size', 30);
+    $order_statuses = uc_report_order_statuses();
+    $row_cell = $page * variable_get('uc_report_table_size', 30) + 1;
     $rows = array();
     $csv_rows = array();
 
@@ -221,7 +221,7 @@ class Reports extends ControllerBase {
 
       if (\Drupal::moduleHandler()->moduleExists('uc_attribute')) {
         // Get the SKUs from this product.
-        $models = uc_reports_product_get_skus($product['nid']);
+        $models = uc_report_product_get_skus($product['nid']);
         // Add the product breakdown rows
         foreach ($models as $model) {
           $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", array(':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']))->fetchField();
@@ -265,11 +265,11 @@ class Reports extends ControllerBase {
     $csv_data = $this->store_csv('uc_products', $csv_rows);
 
     $build['report'] = array(
-    // theme_uc_reports_product_table stripes the rows differently than theme_table.
+    // theme_uc_report_product_table stripes the rows differently than theme_table.
     // We want all of a product's SKUs to show up in separate rows, but they should all
     // be adjacent and grouped with each other visually by using the same striping for
     // each product SKU (all odd or all even).
-    //  '#theme' => 'uc_reports_product_table',
+    //  '#theme' => 'uc_report_product_table',
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
@@ -285,17 +285,17 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l(t('Show paged records'), Url::fromRoute('uc_reports.products')),
+        '#markup' => $this->l(t('Show paged records'), Url::fromRoute('uc_report.products')),
       );
     }
     else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l(t('Show all records'), Url::fromRoute('uc_reports.products', ['query' => ['nopage' => '1']])),
+        '#markup' => $this->l(t('Show all records'), Url::fromRoute('uc_report.products', ['query' => ['nopage' => '1']])),
       );
     }
     $build['instructions'] = array('#markup' => '<small>*' . t('Make sure %setting_name is set to %state in the <a href="!url">access log settings page</a> to enable views column.', array('%setting_name' => 'count content views', '%state' => 'enabled', '!url' => $this->url('statistics.settings', [], ['query' => ['destination' => 'admin/store/reports/products']]))) . '</small>');
@@ -335,7 +335,7 @@ class Reports extends ControllerBase {
     $views_column = \Drupal::moduleHandler()->moduleExists('statistics') && $this->config('statistics.settings')->get('count_content_views');
 
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-    $page_size = isset($_GET['nopage']) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : variable_get('uc_report_table_size', 30);
     $rows = array();
     $csv_rows = array();
 
@@ -356,7 +356,7 @@ class Reports extends ControllerBase {
       $args = array(
         'start_date' => mktime(0, 0, 0, date('n'), 1, date('Y') - 1),
         'end_date' => REQUEST_TIME,
-        'status' => uc_reports_order_statuses(),
+        'status' => uc_report_order_statuses(),
       );
     }
     else {
@@ -405,7 +405,7 @@ class Reports extends ControllerBase {
 
     $products = $query->execute();
     foreach ($products as $product) {
-      $row_cell = ($page * variable_get('uc_reports_table_size', 30)) + count($rows) + 1;
+      $row_cell = ($page * variable_get('uc_report_table_size', 30)) + count($rows) + 1;
       $product_cell = $this->l($product['title'], Url::fromRoute('entity.node.canonical', ['node' => $product['nid']]));
       $product_csv = $product['title'];
       $sold_cell = empty($product['sold']) ? 0 : $product['sold'];
@@ -419,7 +419,7 @@ class Reports extends ControllerBase {
         $breakdown_product = $breakdown_sold = $breakdown_revenue = $breakdown_gross = '';
 
         // Get the SKUs from this product.
-        $models = uc_reports_product_get_skus($product['nid']);
+        $models = uc_report_product_get_skus($product['nid']);
         // Add the product breakdown rows
         foreach ($models as $model) {
           $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid AND o.created >= :start AND o.created <= :end", array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date'], ':model' => $model, ':nid' => $product['nid']))->fetchField();
@@ -472,7 +472,7 @@ class Reports extends ControllerBase {
     $csv_data = $this->store_csv('uc_products', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.
-    $build['form'] = \Drupal::formBuilder()->getForm('uc_reports_products_custom_form', $args);
+    $build['form'] = \Drupal::formBuilder()->getForm('uc_report_products_custom_form', $args);
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,
@@ -488,7 +488,7 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
@@ -511,7 +511,7 @@ class Reports extends ControllerBase {
    * Displays the sales summary report.
    */
   public function sales() {
-    $order_statuses = uc_reports_order_statuses();
+    $order_statuses = uc_report_order_statuses();
 
     $date_day_of_month = date('j');
     $date_month = date('n');
@@ -740,7 +740,7 @@ class Reports extends ControllerBase {
     $csv_data = $this->store_csv('uc_sales_yearly', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.
-    $build['form'] = \Drupal::formBuilder()->getForm('uc_reports_sales_year_form', $year);
+    $build['form'] = \Drupal::formBuilder()->getForm('uc_report_sales_year_form', $year);
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,
@@ -753,7 +753,7 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
     );
 
     return $build;
@@ -769,7 +769,7 @@ class Reports extends ControllerBase {
         'start_date' => mktime(0, 0, 0, date('n'), 1, date('Y') - 1),
         'end_date' => REQUEST_TIME,
         'length' => 'month',
-        'status' => uc_reports_order_statuses(),
+        'status' => uc_report_order_statuses(),
         'detail' => FALSE,
       );
     }
@@ -790,7 +790,7 @@ class Reports extends ControllerBase {
     $csv_rows = array(array(t('Date'), t('Number of orders'), t('Products sold'), t('Total revenue')));
 
     // Grab the subreports based on the date range and the report breakdown.
-    $subreports = uc_reports_subreport_intervals($args['start_date'], $args['end_date'], $args['length']);
+    $subreports = uc_report_subreport_intervals($args['start_date'], $args['end_date'], $args['length']);
 
     // Loop through the subreports and build the report table.
     foreach ($subreports as $subreport) {
@@ -877,7 +877,7 @@ class Reports extends ControllerBase {
     $csv_data = $this->store_csv('uc_sales_custom', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.
-    $build['form'] = \Drupal::formBuilder()->getForm('uc_reports_sales_custom_form', $args, $args['status']);
+    $build['form'] = \Drupal::formBuilder()->getForm('uc_report_sales_custom_form', $args, $args['status']);
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,
@@ -889,7 +889,7 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
     );
 
     return $build;
@@ -917,7 +917,7 @@ class Reports extends ControllerBase {
       }
       $csv_output .= implode(',', $row) . "\n";
     }
-    \Drupal::cache()->set('uc_reports_' . $report_id . '_' . $user_id, $csv_output, REQUEST_TIME + 86400);
+    \Drupal::cache()->set('uc_report_' . $report_id . '_' . $user_id, $csv_output, REQUEST_TIME + 86400);
     return array('user' => $user_id, 'report' => $report_id, 'csv' => $csv_output);
   }
 
@@ -934,7 +934,7 @@ class Reports extends ControllerBase {
   public function getCSV($report_id, $user_id) {
     $account = $this->currentUser();
     $user_check = $account->isAnonymous() ? session_id() : $account->id();
-    $csv_data = \Drupal::cache()->get('uc_reports_' . $report_id . '_' . $user_id);
+    $csv_data = \Drupal::cache()->get('uc_report_' . $report_id . '_' . $user_id);
 
     if (!$csv_data || $user_id != $user_check) {
       drupal_set_message(t("The CSV data could not be retrieved. It's possible the data might have expired. Refresh the report page and try to retrieve the CSV file again."), 'error');
@@ -982,7 +982,7 @@ class Reports extends ControllerBase {
 
     // Set up the default SQL for getting orders with the proper status
     // within this period.
-    $order_statuses = uc_reports_order_statuses();
+    $order_statuses = uc_report_order_statuses();
 
     // Get the total value of the orders.
     $output = array('income' => 0);

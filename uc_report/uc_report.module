@@ -16,17 +16,17 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * The maximum number of records.
  */
-define('UC_REPORTS_MAX_RECORDS', PHP_INT_MAX);
+define('UC_REPORT_MAX_RECORDS', PHP_INT_MAX);
 
 
 /**
  * Implements hook_help().
  */
-function uc_reports_help($path, RouteMatchInterface $route_match) {
+function uc_report_help($path, RouteMatchInterface $route_match) {
   $output =  '';
 
   $route = \Drupal::routeMatch()->getRouteName();
-  //if (substr($route, 0, 11) == 'uc_reports.') {
+  //if (substr($route, 0, 10) == 'uc_report.') {
 
   if (strncmp($path, '/admin/store/reports/', 20) === 0) {
     $include_statuses = $include_offset = FALSE;
@@ -37,9 +37,9 @@ function uc_reports_help($path, RouteMatchInterface $route_match) {
     }
     else {
       switch ($path) {
-        case 'uc_reports.customers':
-        case 'uc_reports.products':
-        case 'uc_reports.sales':
+        case 'uc_report.customers':
+        case 'uc_report.products':
+        case 'uc_report.sales':
           $include_statuses = TRUE;
           break;
       }
@@ -53,16 +53,16 @@ function uc_reports_help($path, RouteMatchInterface $route_match) {
     // Generate message for the path we're at.
     $output .= '<p>';
     switch ($path) {
-      case 'uc_reports.customers':
+      case 'uc_report.customers':
         $output .= t("The following are total orders, products, sales, and average order totals for each store customer. Clicking on the header links will toggle a descending or ascending order for that column. Clicking on a customer's name will take you to a detailed list of orders that customer has made. Clicking on a customers username will take you to their account page.");
         break;
-      case 'uc_reports.products':
+      case 'uc_report.products':
         $output .= t('The table lists each product listed in the store, its amount sold, how many times it has been viewed, revenue it has produced, and gross profit it has generated. If you do not see the number of views you must enable the Statistics module on the <a href="!url">module administration page</a>.', array('!url' => \Drupal::url('admin/modules')));
         break;
-      case 'uc_reports.sales':
+      case 'uc_report.sales':
         $output .= t('These are the sales for the last two days, average sales for the month, and the projected sales for the rest of the month. Further down the list you will see other sales statistics.');
         break;
-      case 'uc_reports.sales_custom_report':
+      case 'uc_report.sales_custom_report':
         $output .= t('Expand the fieldset below to customize the date range of this report, the statuses of orders displayed, and product display options.');
         break;
     }
@@ -78,7 +78,7 @@ function uc_reports_help($path, RouteMatchInterface $route_match) {
     }
     if ($include_statuses) {
       $statuses = array();
-      foreach (uc_reports_order_statuses() as $status) {
+      foreach (uc_report_order_statuses() as $status) {
         $statuses[] = SafeMarkup::checkPlain(entity_load('uc_order_status', $status)->name);
       }
       $order_statuses = t('<b>Order statuses used:</b> @statuses', array('@statuses' => implode(', ', array_filter($statuses))));
@@ -92,11 +92,11 @@ function uc_reports_help($path, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function uc_reports_theme() {
+function uc_report_theme() {
   return array(
-    'uc_reports_product_table' => array(
+    'uc_report_product_table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'empty' => ''),
-      'function' => 'theme_uc_reports_product_table',
+      'function' => 'theme_uc_report_product_table',
     ),
   );
 }
@@ -109,7 +109,7 @@ function uc_reports_theme() {
  * @see theme_table()
  * @ingroup themeable
  */
-function theme_uc_reports_product_table(array $variables) {
+function theme_uc_report_product_table(array $variables) {
   $header = $variables['header'];
   $rows = $variables['rows'];
   $attributes = $variables['attributes'];
@@ -248,36 +248,36 @@ function theme_uc_reports_product_table(array $variables) {
 /**
  * Implements hook_page_attachments().
  */
-function uc_reports_page_attachments(&$page) {
+function uc_report_page_attachments(&$page) {
   // Load reports CSSs on all reports pages.
   $route = \Drupal::routeMatch()->getRouteName();
-  if (substr($route, 0, 11) == 'uc_reports.') {
-    $page['#attached']['library'][] = 'uc_reports/uc_reports.styles';
+  if (substr($route, 0, 10) == 'uc_report.') {
+    $page['#attached']['library'][] = 'uc_report/uc_report.styles';
   }
 }
 
 /**
  * Implements hook_form_FORM_ID_alter() for uc_store_settings_form().
  */
-function uc_reports_form_uc_store_settings_form_alter(&$form, &$form_state) {
+function uc_report_form_uc_store_settings_form_alter(&$form, &$form_state) {
   $form['reports'] = array(
     '#type' => 'details',
     '#title' => t('Report settings'),
     '#group' => 'store',
   );
-  $form['reports']['uc_reports_table_size'] = array(
+  $form['reports']['uc_report_table_size'] = array(
     '#type' => 'textfield',
     '#title' => t('Number of rows to show in reports'),
     '#description' => t('The maximum number of rows displayed on one page for a report table.'),
-    '#default_value' => variable_get('uc_reports_table_size', 30),
+    '#default_value' => variable_get('uc_report_table_size', 30),
     '#size' => 5,
   );
-  $form['reports']['uc_reports_reported_statuses'] = array(
+  $form['reports']['uc_report_reported_statuses'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Reported statuses'),
     '#description' => t('Only orders with selected statuses will be included in reports.'),
     '#options' => uc_order_status_options_list(),
-    '#default_value' => variable_get('uc_reports_reported_statuses', array('completed')),
+    '#default_value' => variable_get('uc_report_reported_statuses', array('completed')),
     '#multiple' => TRUE,
   );
 }
@@ -285,7 +285,7 @@ function uc_reports_form_uc_store_settings_form_alter(&$form, &$form_state) {
 /**
  * Returns a SQL friendly array of order statuses for orders used in reports.
  */
-function uc_reports_order_statuses() {
+function uc_report_order_statuses() {
   $statuses = array();
   foreach (entity_load_multiple('uc_order_status') as $status) {
     $statuses[$status->id] = $status->name;

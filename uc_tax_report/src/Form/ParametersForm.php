@@ -55,7 +55,7 @@ class ParametersForm extends FormBase {
 
     $stat = $values['status'];
     if ($stat === FALSE) {
-      $stat = uc_reports_order_statuses();
+      $stat = uc_report_order_statuses();
     }
 
     $form['params']['status'] = array(

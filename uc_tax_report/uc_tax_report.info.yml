@@ -4,5 +4,5 @@ description: 'Provides a report of sales tax your customers paid.'
 package: Ubercart - core (optional)
 core: 8.x
 dependencies:
-  - uc_reports
+  - uc_report
   - uc_tax

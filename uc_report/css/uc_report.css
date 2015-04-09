@@ -1,6 +1,6 @@
 /**
  * @file
- * Styles for uc_reports module.
+ * Styles for uc_report module.
  */
 .sales-year  {
   display: inline;
@@ -28,7 +28,7 @@
   white-space: nowrap;
 }
 
-form.uc-reports-customize-report-form fieldset.collapsible .fieldset-wrapper {
+form.uc-report-customize-report-form fieldset.collapsible .fieldset-wrapper {
   overflow: visible;
 }
 

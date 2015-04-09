@@ -20,7 +20,7 @@ class StockReports extends ControllerBase {
    */
   public function report() {
 
-    //$page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
+    //$page_size = (isset($_GET['nopage'])) ? UC_REPORT_MAX_RECORDS : variable_get('uc_report_table_size', 30);
     $page_size = 30;
     $csv_rows = array();
     $rows = array();
@@ -82,7 +82,7 @@ class StockReports extends ControllerBase {
     }
 
     // Cache the CSV export.
-    $controller = new \Drupal\uc_reports\Controller\Reports();
+    $controller = new \Drupal\uc_report\Controller\Reports();
     $csv_data = $controller->store_csv('uc_stock', $csv_rows);
 
     $build['form'] = \Drupal::formBuilder()->getForm('\Drupal\uc_stock\Form\StockReportForm');
@@ -101,7 +101,7 @@ class StockReports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l($this->t('Export to CSV file'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => $this->l($this->t('Export to CSV file'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
 

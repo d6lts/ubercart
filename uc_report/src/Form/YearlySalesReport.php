@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_reports\Form\YearlySalesReport;
+ * Contains \Drupal\uc_report\Form\YearlySalesReport;
  */
 
-namespace Drupal\uc_reports\Form;
+namespace Drupal\uc_report\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -41,6 +41,6 @@ class YearlySalesReport extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('uc_reports.yearly.sales', ['year' => $form_state->getValue('year')]);
+    $form_state->setRedirect('uc_report.yearly.sales', ['year' => $form_state->getValue('year')]);
   }
 }

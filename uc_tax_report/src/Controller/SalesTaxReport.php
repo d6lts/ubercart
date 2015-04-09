@@ -40,7 +40,7 @@ class SalesTaxReport {
 
     // Pull the order statuses into a SQL friendly array.
     if ($args['status'] === FALSE) {
-      $order_statuses = uc_reports_order_statuses();
+      $order_statuses = uc_report_order_statuses();
     }
     else {
       $order_statuses = $args['status'];
@@ -161,7 +161,7 @@ class SalesTaxReport {
     $csv_rows[] = $row;
 
     // Cache the CSV export.
-    $controller = new \Drupal\uc_reports\Controller\Reports();
+    $controller = new \Drupal\uc_report\Controller\Reports();
     $csv_data = $controller->store_csv('uc_tax_report', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.
@@ -182,7 +182,7 @@ class SalesTaxReport {
     }
 
     $build['export_csv'] = array(
-      '#markup' => \Drupal::l(t('Export to CSV file.'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => \Drupal::l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
       '#prefix' => '<div class="uc-reports-links">',
       '#suffix' => '</div>',
     );
