@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_cart\Controller\Cart;
@@ -42,10 +43,10 @@ class CartBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function isCacheable() {
+  public function getCacheMaxAge() {
     // Contents of cart don't depend on the page or user or any other
     // cache context we have available.
-    return FALSE;
+    return 0;
   }
 
 
