@@ -81,11 +81,8 @@ uc_reports.sales_custom_report:
     _permission: 'view reports'
 
 uc_reports.getcsv:
-  path: '/admin/store/reports/getcsv/%/%'
+  path: '/admin/store/reports/getcsv/{report_id}/{user_id}'
   defaults:
     _controller: '\Drupal\uc_reports\Controller\Reports::getCSV'
-#    'page callback: 'uc_reports_get_csv'
-#    'page arguments: array(4, 5)
-#    'type: MENU_CALLBACK
   requirements:
     _permission: 'view reports'

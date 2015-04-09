@@ -54,7 +54,7 @@ class SalesTaxReport {
 
     // Query to get the tax line items in this date range
 
-    $result = db_query("SELECT ucoli.amount, ucoli.title, ucoli.data FROM {uc_orders} ucord LEFT JOIN {uc_order_statuses} ON order_status_id = order_status LEFT JOIN {uc_order_line_items} ucoli ON ucord.order_id = ucoli.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[]) AND ucoli.type = :type", array(':start' => $args['start_date'], ':end' => $args['end_date'], ':statuses[]' => $order_statuses, ':type' => 'tax'));
+    $result = db_query("SELECT li.amount, li.title, li.data FROM {uc_orders} o LEFT JOIN {uc_order_line_items} li ON o.order_id = li.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[]) AND li.type = :type", array(':start' => $args['start_date'], ':end' => $args['end_date'], ':statuses[]' => $order_statuses, ':type' => 'tax'));
 
     // add up the amounts by jurisdiction
     $totals = array();
@@ -117,8 +117,8 @@ class SalesTaxReport {
         $line['name'],
         $line['jurisdiction'],
         number_format($line['rate'] * 100, 3) . '%',
-        theme('uc_price', array('price' => $line['taxable_amount'])),
-        theme('uc_price', array('price' => $line['amount'])),
+        array('#theme' => 'uc_price', '#price' => $line['taxable_amount']),
+        array('#theme' => 'uc_price', '#price' => $line['amount']),
       );
       $rows[] = $row;
       // Remove HTML for CSV files.
@@ -135,7 +135,7 @@ class SalesTaxReport {
         '*',
         '*',
         '*',
-        theme('uc_price', array('price' => $line['amount'])),
+        array('#theme' => 'uc_price', '#price' => $line['amount']),
       );
       $rows[] = $row;
       // Remove HTML for CSV files.
@@ -151,8 +151,8 @@ class SalesTaxReport {
       t('Total'),
       '',
       '',
-      theme('uc_price', array('price' => $taxable_amount)),
-      theme('uc_price', array('price' => $amount)),
+      array('#theme' => 'uc_price', '#price' => $taxable_amount),
+      array('#theme' => 'uc_price', '#price' => $amount),
     );
     $rows[] = $row;
     // Removes HTML for CSV files.
@@ -161,11 +161,11 @@ class SalesTaxReport {
     $csv_rows[] = $row;
 
     // Cache the CSV export.
-    module_load_include('inc', 'uc_reports', 'uc_reports.admin');
-    $csv_data = uc_reports_store_csv('uc_tax_report', $csv_rows);
+    $controller = new \Drupal\uc_reports\Controller\Reports();
+    $csv_data = $controller->store_csv('uc_tax_report', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.
-    $build['form'] = \Drupal::formBuilder()->getForm('uc_tax_report_params_form', $args, $args['status']);
+    $build['form'] = \Drupal::formBuilder()->getForm('\Drupal\uc_tax_report\Form\ParametersForm', $args, $args['status']);
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,
@@ -182,7 +182,7 @@ class SalesTaxReport {
     }
 
     $build['export_csv'] = array(
-      '#markup' => \Drupal::l(t('Export to CSV file.'), new Url('admin/store/reports/getcsv/' . $csv_data['report'] . '/' . $csv_data['user'])),
+      '#markup' => \Drupal::l(t('Export to CSV file.'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
       '#prefix' => '<div class="uc-reports-links">',
       '#suffix' => '</div>',
     );

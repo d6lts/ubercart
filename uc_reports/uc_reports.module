@@ -25,6 +25,9 @@ define('UC_REPORTS_MAX_RECORDS', PHP_INT_MAX);
 function uc_reports_help($path, RouteMatchInterface $route_match) {
   $output =  '';
 
+  $route = \Drupal::routeMatch()->getRouteName();
+  //if (substr($route, 0, 11) == 'uc_reports.') {
+
   if (strncmp($path, '/admin/store/reports/', 20) === 0) {
     $include_statuses = $include_offset = FALSE;
 
@@ -54,7 +57,7 @@ function uc_reports_help($path, RouteMatchInterface $route_match) {
         $output .= t("The following are total orders, products, sales, and average order totals for each store customer. Clicking on the header links will toggle a descending or ascending order for that column. Clicking on a customer's name will take you to a detailed list of orders that customer has made. Clicking on a customers username will take you to their account page.");
         break;
       case 'uc_reports.products':
-        $output .= t('The table lists each product listed in the store, its amount sold, how many times it has been viewed, revenue it has produced, and gross profit it has generated. If you do not see the number of views you must enable the Statistics module on the <a href="!url">module administration page</a>.', array('!url' => url('admin/modules')));
+        $output .= t('The table lists each product listed in the store, its amount sold, how many times it has been viewed, revenue it has produced, and gross profit it has generated. If you do not see the number of views you must enable the Statistics module on the <a href="!url">module administration page</a>.', array('!url' => \Drupal::url('admin/modules')));
         break;
       case 'uc_reports.sales':
         $output .= t('These are the sales for the last two days, average sales for the month, and the projected sales for the rest of the month. Further down the list you will see other sales statistics.');
@@ -87,103 +90,168 @@ function uc_reports_help($path, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_menu().
- */
-function uc_reports_menu() {
-/*
-  $items['admin/store/reports/customers'] = array(
-    'title' => 'Customer reports',
-    'description' => 'View reports for store customers.',
-    'page callback' => 'uc_reports_customers',
-    'access arguments' => array('view reports'),
-    'file' => 'uc_reports.admin.inc',
-  );
-  $items['admin/store/reports/products'] = array(
-    'title' => 'Product reports',
-    'description' => 'View reports for store products.',
-    'page callback' => 'uc_reports_products',
-    'access arguments' => array('view reports'),
-    'file' => 'uc_reports.admin.inc',
-  );
-  $items['admin/store/reports/products/summary'] = array(
-    'title' => 'Product report',
-    'access arguments' => array('view reports'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-    'file' => 'uc_reports.admin.inc',
-  );
-  $items['admin/store/reports/products/custom'] = array(
-    'title' => 'Custom product report',
-    'description' => 'View a customized product report',
-    'page callback' => 'uc_reports_products_custom',
-    'access arguments' => array('view reports'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -5,
-    'file' => 'uc_reports.admin.inc',
-  );
-  $items['admin/store/reports/sales'] = array(
-    'title' => 'Sales reports',
-    'description' => 'View reports for store sales.',
-    'page callback' => 'uc_reports_sales_summary',
-    'access arguments' => array('view reports'),
-    'file' => 'uc_reports.admin.inc',
-  );
-  $items['admin/store/reports/sales/summary'] = array(
-    'title' => 'Sales summary',
-    'description' => 'View summary of all store sales',
-    'access arguments' => array('view reports'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-    'file' => 'uc_reports.admin.inc',
-  );
-  $items['admin/store/reports/sales/year'] = array(
-    'title' => 'Sales per year',
-    'description' => 'View store sales for a particular year',
-    'page callback' => 'uc_reports_sales_year',
-    'access arguments' => array('view reports'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -7,
-    'file' => 'uc_reports.admin.inc',
-  );
-  $items['admin/store/reports/sales/custom'] = array(
-    'title' => 'Custom sales summary',
-    'description' => 'View a customized sales summary',
-    'page callback' => 'uc_reports_sales_custom',
-    'access arguments' => array('view reports'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -1,
-    'file' => 'uc_reports.admin.inc',
-  );
-  $items['admin/store/reports/getcsv/%/%'] = array(
-    'page callback' => 'uc_reports_get_csv',
-    'page arguments' => array(4, 5),
-    'access arguments' => array('view reports'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_reports.admin.inc',
-  );
-
-  return $items;
-*/
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_reports_theme() {
   return array(
     'uc_reports_product_table' => array(
       'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'empty' => ''),
-      'file' => 'uc_reports.admin.inc',
       'function' => 'theme_uc_reports_product_table',
     ),
   );
 }
 
 /**
+ * Return a themed table for product reports.
+ *
+ * Straight duplication of theme_table, but our row handling is different.
+ *
+ * @see theme_table()
+ * @ingroup themeable
+ */
+function theme_uc_reports_product_table(array $variables) {
+  $header = $variables['header'];
+  $rows = $variables['rows'];
+  $attributes = $variables['attributes'];
+  $caption = $variables['caption'];
+  $colgroups = $variables['colgroups'];
+  $sticky = $variables['sticky'];
+  $empty = $variables['empty'];
+
+  // Add sticky headers, if applicable.
+  if (count($header) && $sticky) {
+    //drupal_add_js('misc/tableheader.js');
+    // Add 'sticky-enabled' class to the table to identify it for JS.
+    // This is needed to target tables constructed by this function.
+    $attributes['class'][] = 'sticky-enabled';
+  }
+
+  $output = '<table' . $attributes . ">\n";
+
+  if (isset($caption)) {
+    $output .= '<caption>' . $caption . "</caption>\n";
+  }
+
+  // Format the table columns:
+  if (count($colgroups)) {
+    foreach ($colgroups as $colgroup) {
+      $attributes = array();
+
+      // Check if we're dealing with a simple or complex column
+      if (isset($colgroup['data'])) {
+        foreach ($colgroup as $key => $value) {
+          if ($key == 'data') {
+            $cols = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $cols = $colgroup;
+      }
+
+      // Build colgroup
+      if (is_array($cols) && count($cols)) {
+        $output .= ' <colgroup' . new Attribute($attributes) . '>';
+        foreach ($cols as $col) {
+          $output .= ' <col' . new Attribute($col) . ' />';
+        }
+        $output .= " </colgroup>\n";
+      }
+      else {
+        $output .= ' <colgroup' . new Attribute($attributes) . " />\n";
+      }
+    }
+  }
+
+  // Add the 'empty' row message if available.
+  if (!count($rows) && $empty) {
+    $header_count = 0;
+    foreach ($header as $header_cell) {
+      if (is_array($header_cell)) {
+        $header_count += isset($header_cell['colspan']) ? $header_cell['colspan'] : 1;
+      }
+      else {
+        $header_count++;
+      }
+    }
+    $rows[] = array(array('data' => $empty, 'colspan' => $header_count, 'class' => array('empty', 'message')));
+  }
+
+  // Format the table header:
+  if (count($header)) {
+    $ts = tablesort_init($header);
+    // HTML requires that the thead tag has tr tags in it follwed by tbody
+    // tags. Using ternary operator to check and see if we have any rows.
+    $output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
+    foreach ($header as $cell) {
+      $cell = tablesort_header($cell, $header, $ts);
+      $output .= _theme_table_cell($cell, TRUE);
+    }
+    // Using ternary operator to close the tags based on whether or not there are rows
+    $output .= (count($rows) ? " </tr></thead>\n" : "</tr>\n");
+  }
+  else {
+    $ts = array();
+  }
+
+  // Format the table rows:
+  if (count($rows)) {
+    $output .= "<tbody>\n";
+    $flip = array('even' => 'odd', 'odd' => 'even');
+    $class = 'even';
+    foreach ($rows as $row) {
+      $attributes = array();
+
+      // Check if we're dealing with a simple or complex row
+      if (isset($row['data'])) {
+        foreach ($row as $key => $value) {
+          if ($key == 'data') {
+            $cells = $value;
+          }
+          // The following elseif clause is where we differ from theme_table()
+          elseif ($key == 'primary') {
+            $class = $flip[$class];
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $cells = $row;
+      }
+      if (count($cells)) {
+        // Add odd/even class
+        // We don't flip here like theme_table(), because we did that above.
+        $attributes['class'][] = $class;
+
+        // Build row
+        $output .= ' <tr' . new Attribute($attributes) . '>';
+        $i = 0;
+        foreach ($cells as $cell) {
+          $cell = tablesort_cell($cell, $header, $ts, $i++);
+          $output .= _theme_table_cell($cell);
+        }
+        $output .= " </tr>\n";
+      }
+    }
+    $output .= "</tbody>\n";
+  }
+
+  $output .= "</table>\n";
+  return $output;
+}
+
+/**
  * Implements hook_page_attachments().
  */
 function uc_reports_page_attachments(&$page) {
-  if (arg(0) == 'admin' && arg(1) == 'store' && arg(2) == 'reports') {
+  // Load reports CSSs on all reports pages.
+  $route = \Drupal::routeMatch()->getRouteName();
+  if (substr($route, 0, 11) == 'uc_reports.') {
     $page['#attached']['library'][] = 'uc_reports/uc_reports.styles';
   }
 }
@@ -218,7 +286,9 @@ function uc_reports_form_uc_store_settings_form_alter(&$form, &$form_state) {
  * Returns a SQL friendly array of order statuses for orders used in reports.
  */
 function uc_reports_order_statuses() {
-  $statuses = variable_get('uc_reports_reported_statuses', array('completed'));
-
+  $statuses = array();
+  foreach (entity_load_multiple('uc_order_status') as $status) {
+    $statuses[$status->id] = $status->name;
+  }
   return $statuses;
 }

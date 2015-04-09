@@ -32,7 +32,7 @@ class StockReportForm extends FormBase {
     $form['threshold'] = array(
       '#type' => 'checkbox',
       '#title' => t('Only show SKUs that are below their threshold.'),
-      '#default_value' => arg(4) == 'threshold' ? TRUE : FALSE,
+      '#default_value' => /* @todo remove arg(): arg(4) == 'threshold' ? TRUE :*/ FALSE,
       '#attributes' => array('onchange' => 'this.form.submit();'),
     );
 

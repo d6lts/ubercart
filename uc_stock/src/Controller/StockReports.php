@@ -7,21 +7,18 @@
 
 namespace Drupal\uc_stock\Controller;
 
-use Drupal\Component\Utility\String;
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
-use Drupal\node\NodeInterface;
 
 /**
  * Displays a stock report for products with stock tracking enabled.
  */
-class StockReports {
+class StockReports extends ControllerBase {
 
   /**
    * {@inheritdoc}
    */
-  public static function report() {
+  public function report() {
 
     //$page_size = (isset($_GET['nopage'])) ? UC_REPORTS_MAX_RECORDS : variable_get('uc_reports_table_size', 30);
     $page_size = 30;
@@ -56,22 +53,23 @@ class StockReports {
       ->condition('title', '', '<>');
 
 
-    if (arg(4) == 'threshold') {
-      $query->where('threshold >= stock');
-    }
+    // @todo: Replace arg()
+    //if (arg(4) == 'threshold') {
+    //  $query->where('threshold >= stock');
+    //}
 
     $result = $query->execute();
     foreach ($result as $stock) {
       $op = array();
       if ($this->currentUser()->hasPermission('administer product stock')) {
-        $op[] = $this->l($this->t('edit'), new Url('uc_stock.edit', ['node' => $stock->nid], ['query' => ['destination' => 'admin/store/reports/stock']]));
+        $op[] = $this->l($this->t('edit'), Url::fromRoute('uc_stock.edit', ['node' => $stock->nid], ['query' => ['destination' => 'admin/store/reports/stock']]));
       }
 
       // Add the data to a table row for display.
       $rows[] = array(
         'data' => array(
           array('data' => $stock->sku),
-          array('data' => $this->l($stock->title, new Url('uc_stock.edit', ['node' => $stock->nid]))),
+          array('data' => $this->l($stock->title, Url::fromRoute('uc_stock.edit', ['node' => $stock->nid]))),
           array('data' => $stock->stock),
           array('data' => $stock->threshold),
           array('data' => implode(' ', $op)),
@@ -83,10 +81,11 @@ class StockReports {
       $csv_rows[] = array($stock->sku, $stock->title, $stock->stock, $stock->threshold);
     }
 
-    module_load_include('inc', 'uc_reports', 'uc_reports.admin');
-    $csv_data = uc_reports_store_csv('uc_stock', $csv_rows);
+    // Cache the CSV export.
+    $controller = new \Drupal\uc_reports\Controller\Reports();
+    $csv_data = $controller->store_csv('uc_stock', $csv_rows);
 
-    $build['form'] = drupal_get_form('uc_stock_report_form');
+    $build['form'] = \Drupal::formBuilder()->getForm('\Drupal\uc_stock\Form\StockReportForm');
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,
@@ -102,7 +101,7 @@ class StockReports {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l($this->t('Export to CSV file'), new Url('admin/store/reports/getcsv/' . $csv_data['report'] . '/' . $csv_data['user'])),
+      '#markup' => $this->l($this->t('Export to CSV file'), Url::fromRoute('uc_reports.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
 
@@ -113,7 +112,7 @@ class StockReports {
 //    }
 //    else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l($this->t('Show all records'), new Url('admin/store/reports/stock'), [], ['query' => ['nopage' => '1']]),
+        '#markup' => $this->l($this->t('Show all records'), Url::fromRoute('uc_stock.reports'), [], ['query' => ['nopage' => '1']]),
       );
 //    }
 

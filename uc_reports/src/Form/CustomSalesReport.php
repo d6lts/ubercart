@@ -2,39 +2,27 @@
 
 /**
  * @file
- * Contains \Drupal\uc_tax_report\Form\ParametersForm.
+ * Contains \Drupal\uc_reports\Form\CustomSalesReport;
  */
 
-namespace Drupal\uc_tax_report\Form;
+namespace Drupal\uc_reports\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
-
-/**
- * Form to customize parameters on the tax report.
- */
-class ParametersForm extends FormBase {
+class CustomSalesReport extends FormBase {
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
-    return 'uc_tax_report_params_form';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildForm(array $form, FormStateInterface $form_state, $values = NULL) {
-    $form['params'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Customize tax report parameters'),
-      '#description' => t('Adjust these values and update the report to build your sales tax report. Once submitted, the report may be bookmarked for easy reference in the future.'),
+  public function buildForm(array $form, FormStateInterface $form_state, $values, $statuses) {
+    $form['search'] = array(
+      '#type' => 'details',
+      '#title' => t('Customize sales report parameters'),
+      '#description' => t('Adjust these values and update the report to build your custom sales summary. Once submitted, the report may be bookmarked for easy reference in the future.'),
     );
 
-    $form['params']['start_date'] = array(
+    $form['search']['start_date'] = array(
       '#type' => 'date',
       '#title' => t('Start date'),
       '#default_value' => array(
@@ -43,7 +31,7 @@ class ParametersForm extends FormBase {
         'year' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'Y'),
       ),
     );
-    $form['params']['end_date'] = array(
+    $form['search']['end_date'] = array(
       '#type' => 'date',
       '#title' => t('End date'),
       '#default_value' => array(
@@ -53,23 +41,39 @@ class ParametersForm extends FormBase {
       ),
     );
 
-    $stat = $values['status'];
-    if ($stat === FALSE) {
-      $stat = uc_reports_order_statuses();
-    }
-
-    $form['params']['status'] = array(
+    $form['search']['length'] = array(
       '#type' => 'select',
-      '#title' => t('Order statuses'),
-      '#description' => t('Only orders with selected statuses will be included in the report.') . '<br />' . t('Hold Ctrl + click to select multiple statuses.'),
-      '#options' => uc_order_status_options_list(),
-      '#default_value' => $stat,
-      '#multiple' => TRUE,
-      '#size' => 5,
+      '#title' => t('Results breakdown'),
+      '#description' => t('Large daily reports may take a long time to display.'),
+      '#options' => array(
+        'day' => t('daily'),
+        'week' => t('weekly'),
+        'month' => t('monthly'),
+        'year' => t('yearly'),
+      ),
+      '#default_value' => $values['length'],
     );
 
-    $form['params']['actions'] = array('#type' => 'actions');
-    $form['params']['actions']['submit'] = array(
+    if ($statuses === FALSE) {
+      $statuses = uc_reports_order_statuses();
+    }
+
+    $form['search']['status'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Order statuses'),
+      '#description' => t('Only orders with selected statuses will be included in the report.'),
+      '#options' => uc_order_status_options_list(),
+      '#default_value' => $statuses,
+    );
+
+    $form['search']['detail'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show a detailed list of products ordered.'),
+      '#default_value' => $values['detail'],
+    );
+
+    $form['search']['actions'] = array('#type' => 'actions');
+    $form['search']['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Update report'),
     );
@@ -97,9 +101,11 @@ class ParametersForm extends FormBase {
     $args = array(
       'start_date' => $start_date,
       'end_date' => $end_date,
-      'status' => implode(',', array_keys($form_state->getValue('status'))),
+      'length' => $form_state->getValue('length'),
+      'status' => implode(',', array_keys(array_filter($form_state->getValue('status')))),
+      'detail' => $form_state->getValue('detail'),
     );
 
-    $form_state->setRedirect('uc_tax_report.reports', $args);
+    $form_state->setRedirect('uc_reports.custom.sales', $args);
   }
 }

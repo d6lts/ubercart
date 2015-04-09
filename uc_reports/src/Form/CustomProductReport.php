@@ -2,39 +2,27 @@
 
 /**
  * @file
- * Contains \Drupal\uc_tax_report\Form\ParametersForm.
+ * Contains \Drupal\uc_reports\Form\CustomProductReport;
  */
 
-namespace Drupal\uc_tax_report\Form;
+namespace Drupal\uc_reports\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
-
-/**
- * Form to customize parameters on the tax report.
- */
-class ParametersForm extends FormBase {
+class CustomProductReport extends FormBase {
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
-    return 'uc_tax_report_params_form';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildForm(array $form, FormStateInterface $form_state, $values = NULL) {
-    $form['params'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Customize tax report parameters'),
-      '#description' => t('Adjust these values and update the report to build your sales tax report. Once submitted, the report may be bookmarked for easy reference in the future.'),
+  public function buildForm(array $form, FormStateInterface $form_state, $values) {
+    $form['search'] = array(
+      '#type' => 'details',
+      '#title' => t('Customize product report parameters'),
+      '#description' => t('Adjust these values and update the report to build your custom product report. Once submitted, the report may be bookmarked for easy reference in the future.'),
     );
 
-    $form['params']['start_date'] = array(
+    $form['search']['start_date'] = array(
       '#type' => 'date',
       '#title' => t('Start date'),
       '#default_value' => array(
@@ -43,7 +31,7 @@ class ParametersForm extends FormBase {
         'year' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'Y'),
       ),
     );
-    $form['params']['end_date'] = array(
+    $form['search']['end_date'] = array(
       '#type' => 'date',
       '#title' => t('End date'),
       '#default_value' => array(
@@ -53,23 +41,16 @@ class ParametersForm extends FormBase {
       ),
     );
 
-    $stat = $values['status'];
-    if ($stat === FALSE) {
-      $stat = uc_reports_order_statuses();
-    }
-
-    $form['params']['status'] = array(
-      '#type' => 'select',
+    $form['search']['status'] = array(
+      '#type' => 'checkboxes',
       '#title' => t('Order statuses'),
-      '#description' => t('Only orders with selected statuses will be included in the report.') . '<br />' . t('Hold Ctrl + click to select multiple statuses.'),
+      '#description' => t('Only orders with selected statuses will be included in the report.'),
       '#options' => uc_order_status_options_list(),
-      '#default_value' => $stat,
-      '#multiple' => TRUE,
-      '#size' => 5,
+      '#default_value' => $values['status'],
     );
 
-    $form['params']['actions'] = array('#type' => 'actions');
-    $form['params']['actions']['submit'] = array(
+    $form['search']['actions'] = array('#type' => 'actions');
+    $form['search']['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Update report'),
     );
@@ -90,16 +71,15 @@ class ParametersForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Build the start and end dates from the form.
     $start_date = mktime(0, 0, 0, $form_state->getValue(['start_date', 'month']), $form_state->getValue(['start_date', 'day']), $form_state->getValue(['start_date', 'year']));
     $end_date = mktime(23, 59, 59, $form_state->getValue(['end_date', 'month']), $form_state->getValue(['end_date', 'day']), $form_state->getValue(['end_date', 'year']));
 
     $args = array(
       'start_date' => $start_date,
       'end_date' => $end_date,
-      'status' => implode(',', array_keys($form_state->getValue('status'))),
+      'status' => implode(',', array_keys(array_filter($form_state->getValue('status')))),
     );
 
-    $form_state->setRedirect('uc_tax_report.reports', $args);
+    $form_state->setRedirect('uc_reports.custom.products', $args);
   }
 }
