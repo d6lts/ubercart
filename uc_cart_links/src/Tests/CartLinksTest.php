@@ -513,18 +513,22 @@ class CartLinksTest extends UbercartTestBase {
       // Keep a record of how many links were assigned this key
       $tracking[$tracking_id] += 1;
     }
+    // Sort by # of clicks, as that is how Views displays them by default.
+    arsort($tracking, SORT_NUMERIC);
 
     // Check report to see these clicks have been recorded correctly
     $this->drupalGet('admin/store/reports/cart-links');
     $total = 0;
     foreach ($tracking as $id => $clicks) {
       $total += $clicks;
-      $this->assertPattern(
-        t('#<td>@id</td>\s*<td>@clicks</td>#', ['@id' => $id, '@clicks' => $clicks]),
-        t('Tracking ID @id received @clicks clicks.', ['@id' => $id, '@clicks' => $clicks])
+//    $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-cart-link-id ")]');
+//    $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-clicks ")]');
+      $this->assertTextPattern(
+        '/\s+' . preg_quote($id, '/') . '\s+' . preg_quote($clicks, '/') . '\s+/',
+        format_string('Tracking ID @id received @clicks clicks.', ['@id' => $id, '@clicks' => $clicks])
       );
     }
-    $this->assertEqual($total, 50, t('Fifty clicks recorded.'));
+    $this->assertEqual($total, 50, 'Fifty clicks recorded.');
 
     $this->drupalLogout();
   }
