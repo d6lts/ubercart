@@ -63,39 +63,39 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertResponse(200);
     $this->assertText(
       t('View the help page to learn how to create Cart Links.'),
-      t('Settings page found.')
+      'Settings page found.'
     );
     $this->assertFieldByName(
       'uc_cart_links_add_show',
       0,
-      t('Display Cart Links product action messages is off.')
+      'Display Cart Links product action messages is off.'
     );
     $this->assertFieldByName(
       'uc_cart_links_track',
       1,
-      t('Track clicks is on.')
+      'Track clicks is on.'
     );
     $this->assertFieldByName(
       'uc_cart_links_empty',
       1,
-      t('Allow Cart Links to empty carts is on.')
+      'Allow Cart Links to empty carts is on.'
     );
     $this->assertFieldByName(
       'uc_cart_links_messages',
       '',
-      t('Cart Links messages  is empty.')
+      'Cart Links messages  is empty.'
     );
     $this->assertFieldByName(
       'uc_cart_links_restrictions',
       '',
-      t('Cart Links restrictions is empty.')
+      'Cart Links restrictions is empty.'
     );
 
     // Test presence of and contents of Help page
     $this->clickLink(t('View the help page'));
     $this->assertText(
       'http://www.example.com/cart/add/&lt;cart_link_content&gt;',
-      t('Help text found.')
+      'Help text found.'
     );
   }
 
@@ -131,12 +131,12 @@ class CartLinksTest extends UbercartTestBase {
       $this->assertLink(
         t('Cart Link #@link', ['@link' => $key]),
         0,
-        t('Cart Link #@link found on page.', ['@link' => $key])
+        format_string('Cart Link #@link found on page.', ['@link' => $key])
       );
       $this->assertLinkByHref(
         t('@link', ['@link' => $test_link]),
         0,
-        t('Cart Link @link found on page.', ['@link' => $test_link])
+        format_string('Cart Link @link found on page.', ['@link' => $test_link])
       );
 
       // Click on link
@@ -145,32 +145,32 @@ class CartLinksTest extends UbercartTestBase {
       // by default, see admin/store/settings/cart)
       $this->assertText(
         t('@title added to your shopping cart.', ['@title' => $link_data[$key]['title']]),
-        t('Product @title added to cart.', ['@title' => $link_data[$key]['title']])
+        format_string('Product @title added to cart.', ['@title' => $link_data[$key]['title']])
       );
 
       // Check contents of cart
       $this->drupalGet('cart');
       $this->assertText(
         $link_data[$key]['title'],
-        t('Product title correct in cart.')
+        'Product title correct in cart.'
       );
       $this->assertFieldByName(
         'items[0][qty]',
         $link_data[$key]['qty'],
-        t('Product quantity correct in cart.')
+        'Product quantity correct in cart.'
       );
 
       // Check for correct attribute name(s) in cart
       foreach ($link_data[$key]['attributes'] as $label => $attribute) {
         $this->assertText(
           $label . ':',
-          t('Attribute @label correct in cart.', ['@label' => $label])
+          format_string('Attribute @label correct in cart.', ['@label' => $label])
         );
         foreach ($attribute as $option) {
           // Check for correct option name(s) in cart
           $this->assertText(
             $option,
-            t('Option @name correct in cart.', ['@name' => $option])
+            format_string('Option @name correct in cart.', ['@name' => $option])
           );
         }
       }
@@ -181,12 +181,12 @@ class CartLinksTest extends UbercartTestBase {
       // Default add-to-cart message is different when adding a duplicate item
       $this->assertNoText(
         t('Your item(s) have been updated.'),
-        t('Default add-to-cart message suppressed.')
+        format_string('Default add-to-cart message suppressed.')
       );
 
       // Empty cart (press remove button)
       $this->drupalPostForm('cart', array(), t('Remove'));
-      $this->assertText('There are no products in your shopping cart.');
+      $this->assertText(t('There are no products in your shopping cart.'));
     }
   }
 
@@ -223,12 +223,12 @@ class CartLinksTest extends UbercartTestBase {
     $this->clickLink(t('Cart Link #@link', ['@link' => $test_link]));
     $this->assertText(
       t('Cart Link product action: @link', ['@link' => substr($cart_links[$test_link], 10)]),
-      t('Cart Link product action message found.')
+      'Cart Link product action message found.'
     );
 
     // Empty cart (press remove button)
     $this->drupalPostForm('cart', array(), t('Remove'));
-    $this->assertText('There are no products in your shopping cart.');
+    $this->assertText(t('There are no products in your shopping cart.'));
 
     // Turn off display of product action message
     $this->setCartLinksUIProductActionMessage(FALSE);
@@ -239,7 +239,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->clickLink(t('Cart Link #@link', ['@link' => $test_link]));
     $this->assertNoText(
       t('Cart Link product action: @link', ['@link' => substr($cart_links[$test_link], 10)]),
-      t('Cart Link product action message not present.')
+      'Cart Link product action message not present.'
     );
 
     $this->drupalLogout();
@@ -285,7 +285,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->drupalGet(str_replace('add/p', 'add/e-p', $cart_links[$test_link]));
     $this->assertText(
       t('The current contents of your shopping cart will be lost. Are you sure you want to continue?'),
-      t('Empty cart confirmation page found.')
+      'Empty cart confirmation page found.'
     );
     // Allow
     $this->drupalPostForm(NULL, array(), t('Confirm'));
@@ -294,11 +294,11 @@ class CartLinksTest extends UbercartTestBase {
     $this->drupalGet('cart');
     $this->assertText(
       $link_data[$test_link]['title'],
-      t('Product title correct in cart.')
+      'Product title correct in cart.'
     );
     $this->assertNoText(
       $link_data[$test_link_0]['title'],
-      t('Cart was emptied by Cart Link.')
+      'Cart was emptied by Cart Link.'
     );
 
     // Still have something ($test_link) in the cart
@@ -311,11 +311,11 @@ class CartLinksTest extends UbercartTestBase {
     $this->drupalGet('cart');
     $this->assertText(
       $link_data[$test_link_0]['title'],
-      t('Cart was not emptied by Cart Link.')
+      'Cart was not emptied by Cart Link.'
     );
     $this->assertText(
       $link_data[$test_link]['title'],
-      t('Cart was not emptied by Cart Link.')
+      'Cart was not emptied by Cart Link.'
     );
 
     $this->drupalLogout();
@@ -360,7 +360,7 @@ class CartLinksTest extends UbercartTestBase {
     // by default, see admin/store/settings/cart)
     $this->assertText(
       t('@title added to your shopping cart.', ['@title' => $link_data[$test_link_0]['title']]),
-      t('Product @title added to cart.', ['@title' => $link_data[$test_link_0]['title']])
+      format_string('Product @title added to cart.', ['@title' => $link_data[$test_link_0]['title']])
     );
 
     // Pick another link at random, as long as it is different from first
@@ -377,7 +377,7 @@ class CartLinksTest extends UbercartTestBase {
     );
     $this->assertText(
       t('No front page content has been created yet.'),
-      t('Redirected to front page for link not in restrictions.')
+      'Redirected to front page for link not in restrictions.'
     );
 
     // Now create a special redirect page for bad links
@@ -399,7 +399,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->clickLink(t('Cart Link #@link', ['@link' => $test_link]));
     $this->assertText(
       t('ERROR: Invalid Cart Link!'),
-      t('Redirected to error page for link not in restrictions.')
+      'Redirected to error page for link not in restrictions.'
     );
 
     // Remove restrictions, try to add again - it should pass
@@ -408,7 +408,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->clickLink(t('Cart Link #@link', ['@link' => $test_link]));
     $this->assertText(
       t('@title added to your shopping cart.', ['@title' => $link_data[$test_link]['title']]),
-      t('Product @title added to cart.', ['@title' => $link_data[$test_link]['title']])
+      format_string('Product @title added to cart.', ['@title' => $link_data[$test_link]['title']])
     );
 
     $this->drupalLogout();
@@ -458,12 +458,12 @@ class CartLinksTest extends UbercartTestBase {
     $this->drupalGet($cart_links[$test_link] . '-m' . $message_key);
     $this->assertText(
       t('@message', ['@message' => $message_text[1]]),
-      t('Message @key displayed.', ['@key' => $message_key])
+      format_string('Message @key displayed.', ['@key' => $message_key])
     );
 
     // Empty cart (press remove button)
     $this->drupalPostForm('cart', array(), t('Remove'));
-    $this->assertText('There are no products in your shopping cart.');
+    $this->assertText(t('There are no products in your shopping cart.'));
 
     $this->drupalLogout();
   }
@@ -551,7 +551,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_add_show',
       $state,
-      t('Display Cart Links product action messages is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
+      format_string('Display Cart Links product action messages is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
     );
   }
 
@@ -573,7 +573,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_track',
       $state ? 1 : 0,
-      t('Track clicks is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
+      format_string('Track clicks is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
     );
   }
 
@@ -595,7 +595,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_empty',
       $state,
-      t('Allow Cart Links to empty carts is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
+      format_string('Allow Cart Links to empty carts is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
     );
   }
 
@@ -618,7 +618,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_messages',
       $message_string,
-      t('Cart Links messages contains "@messages".', ['@messages' => $message_string])
+      format_string('Cart Links messages contains "@messages".', ['@messages' => $message_string])
     );
   }
 
@@ -640,7 +640,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_restrictions',
       $restrictions,
-      t('Cart Links restrictions contains "@restrictions".', ['@restrictions' => $restrictions])
+      format_string('Cart Links restrictions contains "@restrictions".', ['@restrictions' => $restrictions])
     );
   }
 
@@ -661,7 +661,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_invalid_page',
       $url,
-      t('Cart Links invalid page URL contains "@url".', ['@url' => $url])
+      format_string('Cart Links invalid page URL contains "@url".', ['@url' => $url])
     );
   }
 
