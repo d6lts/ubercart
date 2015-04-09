@@ -9,6 +9,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\uc_store\Address;
 
 /**
  * Shipment creation callback.
@@ -571,32 +572,34 @@ function theme_uc_ups_confirm_shipment(array $variables) {
   $form = $variables['form'];
 
   $output = '<div class="shipping-address"><b>' . t('Ship from:') . '</b><br />';
-  $output .= uc_address_format(
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->first_name),
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->last_name),
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->company),
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->street1),
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->street2),
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->city),
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->zone),
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->postal_code),
-    SafeMarkup::checkPlain($_SESSION['ups']['origin']->country)
-  );
+  $address = new Address();
+  $address->first_name = SafeMarkup::checkPlain($_SESSION['ups']['origin']->first_name),
+  $address->last_name = SafeMarkup::checkPlain($_SESSION['ups']['origin']->last_name),
+  $address->company = SafeMarkup::checkPlain($_SESSION['ups']['origin']->company),
+  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['origin']->street1),
+  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['origin']->street2),
+  $address->city = SafeMarkup::checkPlain($_SESSION['ups']['origin']->city),
+  $address->zone = SafeMarkup::checkPlain($_SESSION['ups']['origin']->zone),
+  $address->postal_code = SafeMarkup::checkPlain($_SESSION['ups']['origin']->postal_code),
+  $address->country = SafeMarkup::checkPlain($_SESSION['ups']['origin']->country)
+  $output .= (string) $address;
+
   $output .= '<br />' . SafeMarkup::checkPlain($_SESSION['ups']['origin']->email);
   $output .= '</div>';
 
   $output .= '<div class="shipping-address"><b>' . t('Ship to:') . '</b><br />';
-  $output .= uc_address_format(
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->first_name),
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->last_name),
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->company),
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->street1),
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->street2),
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->city),
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->zone),
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->postal_code),
-    SafeMarkup::checkPlain($_SESSION['ups']['destination']->country)
-  );
+  $address = new Address();
+  $address->first_name = SafeMarkup::checkPlain($_SESSION['ups']['destination']->first_name),
+  $address->last_name = SafeMarkup::checkPlain($_SESSION['ups']['destination']->last_name),
+  $address->company = SafeMarkup::checkPlain($_SESSION['ups']['destination']->company),
+  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['destination']->street1),
+  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['destination']->street2),
+  $address->city = SafeMarkup::checkPlain($_SESSION['ups']['destination']->city),
+  $address->zone = SafeMarkup::checkPlain($_SESSION['ups']['destination']->zone),
+  $address->postal_code = SafeMarkup::checkPlain($_SESSION['ups']['destination']->postal_code),
+  $address->country = SafeMarkup::checkPlain($_SESSION['ups']['destination']->country)
+  $output .= (string) $address;
+
   $output .= '<br />' . SafeMarkup::checkPlain($_SESSION['ups']['destination']->email);
   $output .= '</div>';
   $output .= '<div class="shipment-data">';

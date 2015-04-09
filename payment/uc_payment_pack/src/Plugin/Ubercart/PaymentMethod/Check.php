@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
+use Drupal\uc_store\Address;
 
 /**
  * Defines the check payment method.
@@ -45,18 +46,17 @@ class Check extends PaymentMethodPluginBase {
       );
     }
     else {
+      $address = new Address();
+      $address->first_name = $check_config->get('mailing_name');
+      $address->company = $check_config->get('mailing_company');
+      $address->street1 = $check_config->get('mailing_street1');
+      $address->street1 = $check_config->get('mailing_street2');
+      $address->city = $check_config->get('mailing_city');
+      $address->zone = $check_config->get('mailing_zone');
+      $address->postal_code = $check_config->get('mailing_postal_code');
+      $address->country = $check_config->get('mailing_country');
       $build['address'] = array(
-        '#markup' => uc_address_format(
-          $check_config->get('mailing_name'),
-          NULL,
-          $check_config->get('mailing_company'),
-          $check_config->get('mailing_street1'),
-          $check_config->get('mailing_street2'),
-          $check_config->get('mailing_city'),
-          $check_config->get('mailing_zone'),
-          $check_config->get('mailing_postal_code'),
-          $check_config->get('mailing_country')
-        ),
+        '#markup' => (string) $address,
         '#prefix' => '<p>',
         '#suffix' => '</p>',
       );
@@ -82,19 +82,19 @@ class Check extends PaymentMethodPluginBase {
       );
     }
     else {
+      $address = new Address();
+      $address->first_name = $check_config->get('mailing_name');
+      $address->company = $check_config->get('mailing_company');
+      $address->street1 = $check_config->get('mailing_street1');
+      $address->street1 = $check_config->get('mailing_street2');
+      $address->city = $check_config->get('mailing_city');
+      $address->zone = $check_config->get('mailing_zone');
+      $address->postal_code = $check_config->get('mailing_postal_code');
+      $address->country = $check_config->get('mailing_country');
+
       $review[] = array(
         'title' => t('Mail to'),
-        'data' => uc_address_format(
-          $check_config->get('mailing_name'),
-          NULL,
-          $check_config->get('mailing_company'),
-          $check_config->get('mailing_street1'),
-          $check_config->get('mailing_street2'),
-          $check_config->get('mailing_city'),
-          $check_config->get('mailing_zone'),
-          $check_config->get('mailing_postal_code'),
-          $check_config->get('mailing_country')
-        )
+        'data' => (string) $address,
       );
     }
 

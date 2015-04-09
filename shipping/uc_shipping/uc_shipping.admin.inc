@@ -753,23 +753,23 @@ function uc_shipping_shipment_view($order, $shipment) {
  */
 function uc_shipment_address($order, $type) {
   $name = $order->{$type . '_first_name'} . ' ' . $order->{$type . '_last_name'};
-  $address = uc_address_format(
-    $order->{$type . '_first_name'},
-    $order->{$type . '_last_name'},
-    $order->{$type . '_company'},
-    $order->{$type . '_street1'},
-    $order->{$type . '_street2'},
-    $order->{$type . '_city'},
-    $order->{$type . '_zone'},
-    $order->{$type . '_postal_code'},
-    $order->{$type . '_country'}
-  );
+  $address = new Address();
+  $address->first_name = $order->{$type . '_first_name'},
+  $address->last_name = $order->{$type . '_last_name'},
+  $address->company = $order->{$type . '_company'},
+  $address->street1 = $order->{$type . '_street1'},
+  $address->street1 = $order->{$type . '_street2'},
+  $address->city = $order->{$type . '_city'},
+  $address->zone = $order->{$type . '_zone'},
+  $address->postal_code = $order->{$type . '_postal_code'},
+  $address->country = $order->{$type . '_country'}
 
+  $output = (string) $address;
   if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
-    $address = Unicode::strtoupper($address);
+    $output = Unicode::strtoupper($output);
   }
 
-  return $address;
+  return $output;
 }
 
 /**

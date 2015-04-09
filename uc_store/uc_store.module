@@ -14,6 +14,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\uc_store\Address;
 
 /**
  * Weight unit conversion constants, used by uc_weight_conversion().
@@ -337,64 +338,6 @@ function uc_set_address_format($country_id, $format) {
 }
 
 /**
- * Formats an address for display based on a country's address format.
- */
-function uc_address_format($first_name, $last_name, $company, $street1, $street2, $city, $zone, $postal_code, $country) {
-  $result = db_query("SELECT * FROM {uc_countries_zones} WHERE zone_id = :id", [':id' => $zone]);
-  if (!($zone_data = $result->fetchAssoc())) {
-    $zone_data = array('zone_code' => t('N/A'), 'zone_name' => t('Unknown'));
-  }
-  $result = db_query("SELECT * FROM {uc_countries} WHERE country_id = :id", [':id' => $country]);
-  if (!($country_data = $result->fetchAssoc())) {
-    $country_data = array(
-      'country_name' => t('Unknown'),
-      'country_iso_code_2' => t('N/A'),
-      'country_iso_code_3' => t('N/A'),
-    );
-  }
-
-  $variables = array(
-    "\r\n" => '<br />',
-    '!company' => SafeMarkup::checkPlain($company),
-    '!first_name' => SafeMarkup::checkPlain($first_name),
-    '!last_name' => SafeMarkup::checkPlain($last_name),
-    '!street1' => SafeMarkup::checkPlain($street1),
-    '!street2' => SafeMarkup::checkPlain($street2),
-    '!city' => SafeMarkup::checkPlain($city),
-    '!zone_code' => $zone_data['zone_code'],
-    '!zone_name' => $zone_data['zone_name'],
-    '!postal_code' => SafeMarkup::checkPlain($postal_code),
-    '!country_name' => t($country_data['country_name']),
-    '!country_code2' => $country_data['country_iso_code_2'],
-    '!country_code3' => $country_data['country_iso_code_3'],
-  );
-
-  if (uc_store_default_country() != $country) {
-    $variables['!country_name_if'] = t($country_data['country_name']);
-    $variables['!country_code2_if'] = $country_data['country_iso_code_2'];
-    $variables['!country_code3_if'] = $country_data['country_iso_code_3'];
-  }
-  else {
-    $variables['!country_name_if'] = '';
-    $variables['!country_code2_if'] = '';
-    $variables['!country_code3_if'] = '';
-  }
-
-  $format = \Drupal::config('uc_country.formats')->get($country);
-  if (empty($format)) {
-    $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
-  }
-  $address = strtr($format, $variables);
-  $address = strtr($address, array("\n" => '<br />'));
-
-  $match = array('`^<br( /)?>`', '`<br( /)?>$`', '`<br( /)?>(\s*|[\s*<br( /)?>\s*]+)<br( /)?>`', '`<br( /)?><br( /)?>`', '`<br( /)?>, N/A`');
-  $replace = array('', '', '<br />', '<br />', '', '');
-  $address = preg_replace($match, $replace, $address);
-
-  return $address;
-}
-
-/**
  * Returns TRUE if the address field is enabled.
  */
 function uc_address_field_enabled($field = NULL) {
@@ -591,12 +534,16 @@ function uc_store_name() {
  */
 function uc_store_address() {
   $config = \Drupal::config('uc_store.settings');
-  $store_address = uc_address_format(NULL, NULL, $config->get('name'),
-    $config->get('address.street1'), $config->get('address.street2'),
-    $config->get('address.city'), $config->get('address.zone'),
-    $config->get('address.postal_code'), $config->get('address.country'));
+  $address = new Address();
+  $address->company = $config->get('name');
+  $address->street1 = $config->get('address.street1');
+  $address->street1 = $config->get('address.street2');
+  $address->city = $config->get('address.city');
+  $address->zone = $config->get('address.zone');
+  $address->postal_code = $config->get('address.postal_code');
+  $address->country = $config->get('address.country');
 
-  return $store_address;
+  return (string) $address;
 }
 
 /**
