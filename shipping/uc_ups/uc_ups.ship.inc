@@ -573,15 +573,15 @@ function theme_uc_ups_confirm_shipment(array $variables) {
 
   $output = '<div class="shipping-address"><b>' . t('Ship from:') . '</b><br />';
   $address = new Address();
-  $address->first_name = SafeMarkup::checkPlain($_SESSION['ups']['origin']->first_name),
-  $address->last_name = SafeMarkup::checkPlain($_SESSION['ups']['origin']->last_name),
-  $address->company = SafeMarkup::checkPlain($_SESSION['ups']['origin']->company),
-  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['origin']->street1),
-  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['origin']->street2),
-  $address->city = SafeMarkup::checkPlain($_SESSION['ups']['origin']->city),
-  $address->zone = SafeMarkup::checkPlain($_SESSION['ups']['origin']->zone),
-  $address->postal_code = SafeMarkup::checkPlain($_SESSION['ups']['origin']->postal_code),
-  $address->country = SafeMarkup::checkPlain($_SESSION['ups']['origin']->country)
+  $address->first_name = SafeMarkup::checkPlain($_SESSION['ups']['origin']->first_name);
+  $address->last_name = SafeMarkup::checkPlain($_SESSION['ups']['origin']->last_name);
+  $address->company = SafeMarkup::checkPlain($_SESSION['ups']['origin']->company);
+  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['origin']->street1);
+  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['origin']->street2);
+  $address->city = SafeMarkup::checkPlain($_SESSION['ups']['origin']->city);
+  $address->zone = SafeMarkup::checkPlain($_SESSION['ups']['origin']->zone);
+  $address->postal_code = SafeMarkup::checkPlain($_SESSION['ups']['origin']->postal_code);
+  $address->country = SafeMarkup::checkPlain($_SESSION['ups']['origin']->country);
   $output .= (string) $address;
 
   $output .= '<br />' . SafeMarkup::checkPlain($_SESSION['ups']['origin']->email);
@@ -589,15 +589,15 @@ function theme_uc_ups_confirm_shipment(array $variables) {
 
   $output .= '<div class="shipping-address"><b>' . t('Ship to:') . '</b><br />';
   $address = new Address();
-  $address->first_name = SafeMarkup::checkPlain($_SESSION['ups']['destination']->first_name),
-  $address->last_name = SafeMarkup::checkPlain($_SESSION['ups']['destination']->last_name),
-  $address->company = SafeMarkup::checkPlain($_SESSION['ups']['destination']->company),
-  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['destination']->street1),
-  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['destination']->street2),
-  $address->city = SafeMarkup::checkPlain($_SESSION['ups']['destination']->city),
-  $address->zone = SafeMarkup::checkPlain($_SESSION['ups']['destination']->zone),
-  $address->postal_code = SafeMarkup::checkPlain($_SESSION['ups']['destination']->postal_code),
-  $address->country = SafeMarkup::checkPlain($_SESSION['ups']['destination']->country)
+  $address->first_name = SafeMarkup::checkPlain($_SESSION['ups']['destination']->first_name);
+  $address->last_name = SafeMarkup::checkPlain($_SESSION['ups']['destination']->last_name);
+  $address->company = SafeMarkup::checkPlain($_SESSION['ups']['destination']->company);
+  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['destination']->street1);
+  $address->street1 = SafeMarkup::checkPlain($_SESSION['ups']['destination']->street2);
+  $address->city = SafeMarkup::checkPlain($_SESSION['ups']['destination']->city);
+  $address->zone = SafeMarkup::checkPlain($_SESSION['ups']['destination']->zone);
+  $address->postal_code = SafeMarkup::checkPlain($_SESSION['ups']['destination']->postal_code);
+  $address->country = SafeMarkup::checkPlain($_SESSION['ups']['destination']->country);
   $output .= (string) $address;
 
   $output .= '<br />' . SafeMarkup::checkPlain($_SESSION['ups']['destination']->email);
