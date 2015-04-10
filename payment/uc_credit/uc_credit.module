@@ -668,7 +668,6 @@ function _uc_credit_valid_card_issue($issue) {
 function uc_credit_encryption_key() {
   static $key = FALSE;
 
-  $credit_config = \Drupal::config('uc_credit.settings');
   if (empty($key)) {
     $config = \Drupal::config('uc_credit.settings');
     $key_file = $config->get('encryption_path') . '/' . UC_CREDIT_KEYFILE_NAME;

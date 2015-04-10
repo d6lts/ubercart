@@ -149,16 +149,11 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
   public function customerView(OrderInterface $order);
 
   /**
-   * Form builder function for the payment method settings form.
+   * Form instance for the payment method settings form.
    *
-   * @param array $form
-   *   The form array.
-   * @param array $form_state
-   *   The form state array.
-   *
-   * @return array
-   *   The settings form.
+   * @return \Drupal\Core\Form\FormInterface
+   *   An instance of the settings form.
    */
-  public function settingsForm(array $form, FormStateInterface $form_state);
+  public function getSettingsForm();
 
 }

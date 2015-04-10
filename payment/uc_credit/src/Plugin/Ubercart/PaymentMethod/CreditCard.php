@@ -9,7 +9,6 @@ namespace Drupal\uc_credit\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\uc_credit\Form\CreditSettingsForm;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 use Drupal\uc_store\Encryption;
@@ -141,9 +140,8 @@ class CreditCard extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    $form = new CreditSettingsForm(\Drupal::configFactory());
-    return \Drupal::formBuilder()->getForm($form);
+  public function getSettingsForm() {
+    return \Drupal\uc_credit\Form\CreditSettingsForm::create(\Drupal::getContainer());
   }
 
   /**

@@ -99,14 +99,7 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    return array();
+  public function getSettingsForm() {
+    return NULL;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitConfigurationForm(array $form, FormStateInterface $form_state) {
-  }
-
 }

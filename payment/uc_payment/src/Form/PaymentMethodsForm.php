@@ -115,8 +115,8 @@ class PaymentMethodsForm extends ConfigFormBase {
 
       if (!isset($method['configurable'])) {
         // Determine whether a legacy plugin has a valid settings form.
-        $method_settings = $this->paymentMethodManager->createInstance($id)->settingsForm(array(), $form_state);
-        if (is_array($method_settings)) {
+        $method_settings = $this->paymentMethodManager->createInstance($id)->getSettingsForm();
+        if ($method_settings != NULL) {
           $links['settings'] = array(
             'title' => t('Settings'),
             'url' => Url::fromRoute('uc_payment.method_settings', ['method' => $id]),

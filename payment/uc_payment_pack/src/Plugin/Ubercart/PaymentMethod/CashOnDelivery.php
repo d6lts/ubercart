@@ -180,27 +180,8 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
-
-    $form['uc_cod_policy'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Policy message'),
-      '#default_value' => $cod_config->get('policy'),
-      '#description' => t('Help message shown at checkout.'),
-    );
-    $form['uc_cod_max_order'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Maximum order total eligible for COD'),
-      '#default_value' => $cod_config->get('max_order'),
-      '#description' => t('Set to 0 for no maximum order limit.'),
-    );
-    $form['uc_cod_delivery_date'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Let customers enter a desired delivery date.'),
-      '#default_value' => $cod_config->get('delivery_date'),
-    );
-    return $form;
+  public function getSettingsForm() {
+    return \Drupal\uc_payment_pack\Form\CashOnDeliverySettingsForm::create(\Drupal::getContainer());
   }
 
   /**

@@ -7,29 +7,20 @@
 
 namespace Drupal\uc_credit\Form;
 
-use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Displays the credit card terminal form for administrators.
  */
-class CreditSettingsForm extends ConfigFormBase {
+class CreditSettingsForm extends FormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
     return 'uc_credit_settings_form';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEditableConfigNames() {
-    return [
-      'uc_credit.settings',
-    ];
   }
 
   /**
@@ -96,7 +87,7 @@ class CreditSettingsForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => t('Encryption key directory'),
       '#description' => t('The card type, expiration date and last four digits of the card number are encrypted and stored temporarily while the customer is in the process of checking out.<br /><b>You must enable encryption</b> by following the <a href="!url">encryption instructions</a> in order to accept credit card payments.<br />In short, you must enter the path of a directory outside of your document root where the encryption key may be stored.<br />Relative paths will be resolved relative to the Drupal installation directory.<br />Once this directory is set, you should not change it.', ['!url' => 'http://drupal.org/node/1309226']),
-      '#default_value' => uc_credit_encryption_key() ? $config->get('encryption_path') : t('Not configured.'),
+      '#default_value' => uc_credit_encryption_key() ? $credit_config->get('encryption_path') : t('Not configured.'),
     );
 
     // Form elements that deal with the type of data requested at checkout.
@@ -244,7 +235,7 @@ class CreditSettingsForm extends ConfigFormBase {
       drupal_set_message(t('Credit card security settings must be configured in the security settings tab.'), 'warning');
     }
 
-    return parent::buildForm($form, $form_state);
+    return $form;
   }
 
   /**
@@ -254,7 +245,6 @@ class CreditSettingsForm extends ConfigFormBase {
     // Check that the encryption key directory has been specified, that it
     // exists, and that it is readable.
 
-drupal_set_message("in validate");
     // Trim trailing whitespace and any trailing / or \ from the key path name.
     $key_path = rtrim(trim($form_state->getValue('uc_credit_encryption_path')), '/\\');
 
@@ -292,19 +282,19 @@ drupal_set_message("in validate");
     if (is_dir($key_path)) {
       // The entered directory is valid and in need of a key file.
       // Flag this condition for the submit handler.
-      $form_state->set('update_cc_encrypt_dir', TRUE);
+      $form_state->setValue('update_cc_encrypt_dir', TRUE);
 
       // Can we open for writing?
       $file = @fopen($key_path . '/encrypt.test', 'w');
       if ($file === FALSE) {
         $form_state->setErrorByName('uc_credit_encryption_path', t('Cannot write to directory, please verify the directory permissions.'));
-        $form_state->set('update_cc_encrypt_dir', FALSE);
+        $form_state->setValue('update_cc_encrypt_dir', FALSE);
       }
       else {
         // Can we actually write?
         if (@fwrite($file, '0123456789') === FALSE) {
           $form_state->setErrorByName('uc_credit_encryption_path', t('Cannot write to directory, please verify the directory permissions.'));
-          $form_state->set('update_cc_encrypt_dir', FALSE);
+          $form_state->setValue('update_cc_encrypt_dir', FALSE);
           fclose($file);
         }
         else {
@@ -313,7 +303,7 @@ drupal_set_message("in validate");
           $file = @fopen($key_path . '/encrypt.test', 'r');
           if ($file === FALSE) {
             $form_state->setErrorByName('uc_credit_encryption_path', t('Cannot read from directory, please verify the directory permissions.'));
-            $form_state->set('update_cc_encrypt_dir', FALSE);
+            $form_state->setValue('update_cc_encrypt_dir', FALSE);
           }
           else {
             fclose($file);
@@ -335,7 +325,6 @@ drupal_set_message("in validate");
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-drupal_set_message("in submit");
     // Check to see if we need to create an encryption key file.
     if ($form_state->getValue('update_cc_encrypt_dir')) {
       $key_path = $form_state->getValue('uc_credit_encryption_path');
@@ -358,7 +347,10 @@ drupal_set_message("in submit");
       }
     }
 
-    $credit_config = $this->config('uc_credit.settings');
+    // Need to use configFactory() and getEditable() here, because this form is
+    // wrapped by PaymentMethodSettingsForm so $this->getEditableConfigNames()
+    // never gets called
+    $credit_config = \Drupal::configFactory()->getEditable('uc_credit.settings');
     $credit_config
       ->set('validate_numbers', $form_state->getValue('uc_credit_validate_numbers'))
       ->set('encryption_path', $form_state->getValue('uc_credit_encryption_path'))
@@ -371,7 +363,5 @@ drupal_set_message("in submit");
       ->set('policy', $form_state->getValue('uc_credit_policy'))
       ->set('accepted_types', explode("\r\n", $form_state->getValue('uc_credit_accepted_types')))
       ->save();
-
-    parent::submitForm($form, $form_state);
   }
 }
