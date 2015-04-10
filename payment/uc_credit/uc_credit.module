@@ -72,19 +72,20 @@ function uc_credit_theme() {
  */
 function uc_credit_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
   // Cache the CC details for use in other functions.
-  if (isset($_SESSION['sescrd'])) {
-    uc_credit_cache('save', $_SESSION['sescrd']);
+  $session = \Drupal::service('session');
+  if ($session->has('sescrd')) {
+    uc_credit_cache('save', $session->get('sescrd'));
 
     // Store the encrypted details to the form for processing on submit.
     $form['payment_details_data'] = array(
       '#type' => 'hidden',
-      '#value' => $_SESSION['sescrd'],
+      '#value' => $session->get('sescrd'),
     );
 
     // Clear the session of the details.
-    unset($_SESSION['sescrd']);
+    $session->remove('sescrd');
   }
-  unset($_SESSION['cc_pay']);
+  $session->remove('cc_pay');
 }
 
 /**
@@ -92,23 +93,24 @@ function uc_credit_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $
  */
 function uc_credit_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
   // Check if the customer paid by CC and refreshed on the review page.
-  if (isset($_SESSION['cc_pay']) && !isset($_SESSION['sescrd']) && empty($_POST['sescrd'])) {
+  $session = \Drupal::service('session');
+  if ($session->has('cc_pay') && !$session->has('sescrd') && empty($_POST['sescrd'])) {
     // Send them back to the checkout form to put in their details again.
     drupal_set_message(t('To protect our customers from identity theft, credit card details are erased when a browser refreshes on the checkout review page.  Please enter your card details again and re-submit the form.'), 'error');
 
-    $_SESSION['clear_cc'] = TRUE;
-    unset($_SESSION['cc_pay']);
+    $session->set('clear_cc', TRUE);
+    $session->remove('cc_pay');
     drupal_goto('cart/checkout');
   }
 
-  if (isset($_SESSION['sescrd'])) {
+  if ($session->has('sescrd')) {
     // Cache the CC details for use in other functions.
-    uc_credit_cache('save', $_SESSION['sescrd']);
+    uc_credit_cache('save', $session->get('sescrd'));
 
     // Store the encrypted details to the form for processing on submit.
     $form['sescrd'] = array(
       '#type' => 'hidden',
-      '#value' => base64_encode($_SESSION['sescrd']),
+      '#value' => base64_encode($session->get('sescrd')),
     );
   }
   else {
@@ -129,7 +131,7 @@ function uc_credit_form_uc_cart_checkout_review_form_alter(&$form, FormStateInte
   $form['#submit'] = $submit;
 
   // Clear the session of the details.
-  unset($_SESSION['sescrd']);
+  $session->remove('sescrd');
 }
 
 /**
@@ -137,11 +139,12 @@ function uc_credit_form_uc_cart_checkout_review_form_alter(&$form, FormStateInte
  */
 function uc_credit_exit() {
   // Make sure sensitive checkout session data doesn't persist on other pages.
-  if (isset($_SESSION['sescrd'])) {
+  $session = \Drupal::service('session');
+  if ($session->has('sescrd')) {
     // Separate the args ourself since the arg() function may not be loaded.
     $args = explode('/', Url::fromRoute('<current>')->toString());
     if (!isset($args[1]) || $args[1] != 'checkout') {
-      unset($_SESSION['sescrd']);
+      $session->remove('sescrd');
     }
   }
 }
@@ -174,11 +177,12 @@ function uc_credit_uc_store_status() {
  */
 function uc_credit_uc_order($op, $order, $arg2) {
   $credit_config = \Drupal::config('uc_credit.settings');
+  $session = \Drupal::service('session');
   switch ($op) {
     case 'submit':
       if ($order->getPaymentMethodId() == 'credit') {
         // Clear out that session variable denoting this as a CC paid order.
-        unset($_SESSION['cc_pay']);
+        $session->remove('cc_pay');
 
         // Process CC transactions when an order is submitted after review.
         $gateway_id = uc_credit_default_gateway();
@@ -271,6 +275,7 @@ function temp_uc_credit_uc_payment_method() {
  */
 function uc_payment_method_credit_form($form, FormStateInterface $form_state, $order) {
   $credit_config = \Drupal::config('uc_credit.settings');
+  $session = \Drupal::service('session');
 
   // Normally the CC data is posted in via AJAX.
   if ($form_state->hasValue('payment_details_data') && \Drupal::routeMatch()->getRouteName() == 'uc_cart.cart') {
@@ -278,9 +283,9 @@ function uc_payment_method_credit_form($form, FormStateInterface $form_state, $o
   }
 
   // But we have to accommodate failed checkout form validation here.
-  if (isset($_SESSION['sescrd'])) {
-    $order->payment_details = uc_credit_cache('save', $_SESSION['sescrd']);
-    unset($_SESSION['sescrd']);
+  if ($session->has('sescrd')) {
+    $order->payment_details = uc_credit_cache('save', $session->get('sescrd'));
+    $session->remove('sescrd');
   }
 
   if (!isset($order->payment_details) && $form_state->hasValue(['panes', 'payment', 'details'])) {
@@ -318,7 +323,7 @@ function uc_payment_method_credit_form($form, FormStateInterface $form_state, $o
   }
 
   // Set up the default CC number on the credit card form.
-  if (isset($_SESSION['clear_cc']) || !isset($order->payment_details['cc_number'])) {
+  if ($session->has('clear_cc') || !isset($order->payment_details['cc_number'])) {
     $default_num = NULL;
   }
   elseif ($credit_config->get('validate_numbers') && !_uc_credit_valid_card_number($order->payment_details['cc_number'])) {
@@ -380,7 +385,7 @@ function uc_payment_method_credit_form($form, FormStateInterface $form_state, $o
 
   if ($credit_config->get('cvv_enabled')) {
     // Set up the default CVV  on the credit card form.
-    if (isset($_SESSION['clear_cc']) || empty($order->payment_details['cc_cvv'])) {
+    if ($session->has('clear_cc') || empty($order->payment_details['cc_cvv'])) {
       $default_cvv = NULL;
     }
     elseif (!_uc_credit_valid_cvv($order->payment_details['cc_cvv'])) {
@@ -414,7 +419,7 @@ function uc_payment_method_credit_form($form, FormStateInterface $form_state, $o
     );
   }
 
-  unset($_SESSION['clear_cc']);
+  $session->remove('clear_cc');
 
   return $form;
 }
@@ -503,9 +508,10 @@ function uc_credit_cache($op, $data = NULL, $encrypted = TRUE) {
  * Caches the encrypted CC data on the review order form for processing.
  */
 function uc_credit_cart_review_back_submit($form, FormStateInterface $form_state) {
+  $session = \Drupal::service('session');
   $session_card_data = base64_decode($_POST['sescrd']);
 
-  $_SESSION['sescrd'] = $session_card_data;
+  $session->set('sescrd', $session_card_data);
   uc_credit_cache('save', $session_card_data);
 }
 
@@ -513,9 +519,10 @@ function uc_credit_cart_review_back_submit($form, FormStateInterface $form_state
  * Caches the encrypted CC data on the review order form for processing.
  */
 function uc_credit_cart_review_pre_form_submit($form, FormStateInterface $form_state) {
+  $session = \Drupal::service('session');
   $session_card_data = base64_decode($_POST['sescrd']);
 
-  $_SESSION['sescrd'] = $session_card_data;
+  $session->set('sescrd', $session_card_data);
   uc_credit_cache('save', $session_card_data);
 }
 
@@ -523,9 +530,14 @@ function uc_credit_cart_review_pre_form_submit($form, FormStateInterface $form_s
  * Clears the temporary CC data if the review order form submits.
  */
 function uc_credit_cart_review_post_form_submit($form, FormStateInterface $form_state) {
-  if (!empty($_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_complete'])) {
+  $session = \Drupal::service('session');
+  $complete = array();
+  if ($session->has('uc_checkout')) {
+    $complete = $session->get('uc_checkout');
+  }
+  if (!empty($complete[$session->get('cart_order')]['do_complete'])) {
     // Otherwise stuff it back in the session for the next pageload.
-    unset($_SESSION['sescrd']);
+    $session->remove('sescrd');
   }
 }
 
