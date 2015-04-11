@@ -15,7 +15,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Allows a customer to make comments on the order.
  *
- * @Plugin(
+ * @CheckoutPane(
  *   id = "comments",
  *   title = @Translation("Order comments"),
  *   weight = 7,

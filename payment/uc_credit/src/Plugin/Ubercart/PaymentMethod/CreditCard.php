@@ -16,7 +16,7 @@ use Drupal\uc_store\Encryption;
 /**
  * Defines the check payment method.
  *
- * @Plugin(
+ * @PaymentMethod(
  *   id = "credit",
  *   name = @Translation("Credit card"),
  *   title = @Translation("Credit card"),

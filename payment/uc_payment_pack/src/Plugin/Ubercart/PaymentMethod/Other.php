@@ -13,7 +13,7 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
 /**
  * Defines a generic payment method.
  *
- * @Plugin(
+ * @PaymentMethod(
  *   id = "other",
  *   name = @Translation("Other"),
  *   title = @Translation("Other"),

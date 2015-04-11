@@ -14,7 +14,7 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
 /**
  * Defines a free order payment method.
  *
- * @Plugin(
+ * @PaymentMethod(
  *   id = "free_order",
  *   name = @Translation("Free order"),
  *   title = @Translation("No payment required"),

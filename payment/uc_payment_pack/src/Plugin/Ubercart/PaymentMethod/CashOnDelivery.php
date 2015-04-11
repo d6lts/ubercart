@@ -14,7 +14,7 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
 /**
  * Defines the cash on delivery payment method.
  *
- * @Plugin(
+ * @PaymentMethod(
  *   id = "cod",
  *   name = @Translation("Cash on delivery"),
  *   title = @Translation("Cash on delivery"),

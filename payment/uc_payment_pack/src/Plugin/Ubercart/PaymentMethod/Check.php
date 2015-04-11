@@ -16,7 +16,7 @@ use Drupal\uc_store\Address;
 /**
  * Defines the check payment method.
  *
- * @Plugin(
+ * @PaymentMethod(
  *   id = "check",
  *   name = @Translation("Check", context = "cheque"),
  *   title = @Translation("Check or money order"),

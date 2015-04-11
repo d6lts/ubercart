@@ -12,7 +12,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Gets the user's delivery information.
  *
- * @Plugin(
+ * @CheckoutPane(
  *   id = "delivery",
  *   title = @Translation("Delivery information"),
  *   weight = 3,

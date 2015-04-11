@@ -15,7 +15,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Gets the user's email address for login.
  *
- * @Plugin(
+ * @CheckoutPane(
  *   id = "customer",
  *   title = @Translation("Customer information"),
  *   weight = 2,

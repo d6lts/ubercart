@@ -44,7 +44,7 @@ class PaymentMethodManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    $this->discovery = new AnnotatedClassDiscovery('Plugin/Ubercart/PaymentMethod', $namespaces, 'Drupal\Component\Annotation\Plugin');
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/Ubercart/PaymentMethod', $namespaces, 'Drupal\uc_payment\Annotation\PaymentMethod');
     $this->discovery = new InfoHookDecorator($this->discovery, 'uc_payment_method', 'Drupal\uc_payment\Plugin\Ubercart\PaymentMethod\LegacyPaymentMethod');
     $this->factory = new ContainerFactory($this);
 

@@ -14,7 +14,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Displays the cart contents for review during checkout.
  *
- * @Plugin(
+ * @CheckoutPane(
  *   id = "cart",
  *   title = @Translation("Cart contents"),
  *   weight = 1,

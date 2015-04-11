@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Allows the user to select a payment method and preview the line items.
  *
- * @Plugin(
+ * @CheckoutPane(
  *   id = "payment",
  *   title = @Translation("Payment method"),
  *   weight = 6

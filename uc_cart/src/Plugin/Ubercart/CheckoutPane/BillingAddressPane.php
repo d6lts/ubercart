@@ -12,7 +12,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Gets the user's billing address.
  *
- * @Plugin(
+ * @CheckoutPane(
  *   id = "billing",
  *   title = @Translation("Billing information"),
  *   weight = 4
