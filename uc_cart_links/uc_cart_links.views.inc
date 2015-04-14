@@ -21,7 +21,7 @@ function uc_cart_links_views_data() {
     'title' => t('ID'),
     'help' => t('The cart link identifier.'),
     'field' => array(
-      'id' => 'node',
+      'id' => 'standard',
       'click sortable' => TRUE,
     ),
     'sort' => array(

@@ -2,24 +2,43 @@
 
 /**
  * @file
- * Total weight field handler.
+ * Contains \Drupal\uc_order\Plugin\views\field\OrderWeightTotal.
  */
+
+namespace Drupal\uc_order\Plugin\views\field;
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_store\Plugin\views\field\Weight;
+use Drupal\views\ResultRow;
 
 /**
- * Field handler: displays a weight multiplied by the quantity.
+ * Total weight field handler.
+ *
+ * Displays a weight multiplied by the quantity.
+ *
+ * @ingroup views_field_handlers
+ *
+ * @ViewsField("uc_order_order_weight_total")
  */
-class uc_order_handler_field_order_weight_total extends uc_product_handler_field_weight {
+class OrderWeightTotal extends Weight {
 
-  function option_definition() {
-    $options = parent::option_definition();
+  /**
+   * {@inheritdoc}
+   */
+  protected function defineOptions() {
+    $options = parent::defineOptions();
     $options['weight_units'] = array('default' => variable_get('uc_weight_unit', 'lb'));
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
+  /**
+   * {@inheritdoc}
+   */
+  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+    parent::buildOptionsForm($form, $form_state);
 
-    $form['weight_units'] = array('#type' => 'select',
+    $form['weight_units'] = array(
+      '#type' => 'select',
       '#title' => t('Unit of measurement'),
       '#default_value' => $this->options['weight_units'],
       '#options' => array(
@@ -32,17 +51,17 @@ class uc_order_handler_field_order_weight_total extends uc_product_handler_field
   }
 
   /**
-   * Overrides views_handler_field::query().
+   * {@inheritdoc}
    */
-  function query() {
+  public function query() {
     $this->ensure_my_table();
     $this->add_additional_fields();
   }
 
   /**
-   * Overrides views_handler_field::render().
+   * {@inheritdoc}
    */
-  function render($values) {
+  public function render(ResultRow $values) {
     $oid = $values->{$this->aliases['order_id']};
     $order = uc_order_load($oid);
     $total = 0;

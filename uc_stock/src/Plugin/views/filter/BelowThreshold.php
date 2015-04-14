@@ -2,16 +2,25 @@
 
 /**
  * @file
- * Views handler: Filter on comparison of stock level to threshold.
+ * Definition of Drupal\uc_stock\Plugin\views\filter\BelowThreshold.
  */
+
+namespace Drupal\uc_stock\Plugin\views\filter;
+
+use Drupal\views\Plugin\views\filter\BooleanOperator;
+
 
 /**
  * Filters nodes based on comparison of stock value to stock threshold.
+ *
+ * @ingroup views_filter_handlers
+ *
+ * @ViewsFilter("uc_stock_below_threshold")
  */
-class uc_stock_handler_filter_below_threshold extends views_handler_filter_boolean_operator {
+class BelowThreshold extends BooleanOperator {
 
   /**
-   * Overrides views_handler_field::query().
+   * {@inheritdoc}
    */
   function query() {
     $this->ensure_my_table();

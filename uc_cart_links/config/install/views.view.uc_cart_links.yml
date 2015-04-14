@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - node
     - user
 id: uc_cart_links
 label: 'Cart Links'
@@ -159,7 +158,7 @@ display:
           link_to_node: false
           entity_type: null
           entity_field: null
-          plugin_id: node
+          plugin_id: standard
         clicks:
           id: clicks
           table: uc_cart_link_clicks
