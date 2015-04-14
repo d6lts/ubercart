@@ -9,6 +9,7 @@ namespace Drupal\uc_catalog\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\uc_catalog\TreeNode;
 
 /**
@@ -40,8 +41,8 @@ class CatalogBlock extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function blockAccess() {
-    return \Drupal::currentUser()->hasPermission('view catalog');
+  public function blockAccess(AccountInterface $account) {
+    return $account->hasPermission('view catalog');
   }
 
   /**
