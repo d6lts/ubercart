@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_quote\Form\ShippingQuoteSettingsForm.
+ * Contains \Drupal\uc_quote\Form\QuoteSettingsForm.
  */
 
 namespace Drupal\uc_quote\Form;
@@ -19,7 +19,7 @@ use Drupal\uc_store\Address;
  * the others. Also sets the default quote and shipping types of all products
  * in the store. Individual products may be configured differently.
  */
-class ShippingQuoteSettingsForm extends ConfigFormBase {
+class QuoteSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

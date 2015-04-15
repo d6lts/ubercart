@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_quote\Form\ShippingQuoteMethodsForm.
+ * Contains \Drupal\uc_quote\Form\QuoteMethodsForm.
  */
 
 namespace Drupal\uc_quote\Form;
@@ -15,7 +15,7 @@ use Drupal\Core\Url;
 /**
  * Settings for the shipping quote methods.
  */
-class ShippingQuoteMethodsForm extends ConfigFormBase {
+class QuoteMethodsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -126,10 +126,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
       '#default_value' => $quote_config->get('shipping_type'),
     );
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
-
-    return $form;
+    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -151,7 +148,7 @@ class ShippingQuoteMethodsForm extends ConfigFormBase {
       ->set('shipping_type', $form_state->getValue('uc_store_shipping_type'))
       ->save();
 
-    drupal_set_message(t('The configuration options have been saved.'));
+    return parent::submitForm($form, $form_state);
   }
 
 }

@@ -91,9 +91,9 @@ function uc_quote_node_load($nodes) {
 
   $quote_config = \Drupal::config('uc_quote.settings');
   $shipping_type = $quote_config->get('shipping_type');
-  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", array(':type' => 'product', ':ids[]' => $nids))->fetchAllKeyed();
+  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", [':type' => 'product', ':ids[]' => $nids])->fetchAllKeyed();
 
-  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids[])", array(':nids[]' => $nids), array('fetch' => 'Address'))->fetchAllAssoc('nid');
+  $addresses = db_query("SELECT nid, first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid IN (:nids[])", [':nids[]' => $nids], array('fetch' => 'Address'))->fetchAllAssoc('nid');
 
   foreach ($nids as $nid) {
     if (isset($shipping_types[$nid])) {
@@ -177,7 +177,7 @@ function uc_quote_form_node_form_alter(&$form, FormStateInterface $form_state) {
     $form['shipping']['shipping_address'] = array(
       '#type' => 'details',
       '#title' => t('Default product pickup address'),
-      '#description' => t('When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. If this pickup address is left blank, this product will default to the <a href="!url">store pickup address</a>.', array('!url' => \Drupal::url('uc_quote.settings'))),
+      '#description' => t('When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. If this pickup address is left blank, this product will default to the <a href="!url">store pickup address</a>.', ['!url' => \Drupal::url('uc_quote.settings')]),
       '#weight' => -6,
     );
     $form['shipping']['shipping_address']['#tree'] = TRUE;
@@ -253,7 +253,7 @@ function uc_quote_uc_order_pane() {
  */
 function uc_quote_uc_order_load($orders) {
   foreach ($orders as $order) {
-    $quote = db_query("SELECT method, accessorials, rate FROM {uc_order_quotes} WHERE order_id = :id", array(':id' => $order->id()))->fetchAssoc();
+    $quote = db_query("SELECT method, accessorials, rate FROM {uc_order_quotes} WHERE order_id = :id", [':id' => $order->id()])->fetchAssoc();
     $order->quote = $quote;
     $order->quote['accessorials'] = strval($quote['accessorials']);
   }
@@ -364,7 +364,7 @@ function uc_quote_get_shipping_type($id_type, $id) {
   static $types = array();
 
   if (!isset($types[$id_type][$id])) {
-    $types[$id_type][$id] = db_query("SELECT shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id = :id", array(':type' => $id_type, ':id' => $id))->fetchField();
+    $types[$id_type][$id] = db_query("SELECT shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id = :id", [':type' => $id_type, ':id' => $id])->fetchField();
   }
 
   return $types[$id_type][$id];
@@ -400,7 +400,7 @@ function uc_product_get_shipping_type($product) {
  *   the store's shipping address if the product's is not set.
  */
 function uc_quote_get_default_shipping_address($nid) {
-  $address = db_query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", array(':nid' => $nid))->fetchObject('Drupal\uc_store\Address');
+  $address = db_query("SELECT first_name, last_name, company, street1, street2, city, zone, postal_code, country, phone FROM {uc_quote_product_locations} WHERE nid = :nid", [':nid' => $nid])->fetchObject('Drupal\uc_store\Address');
 
   if (empty($address)) {
     $quote_config = \Drupal::config('uc_quote.settings');
@@ -457,7 +457,7 @@ function uc_cart_pane_quotes($form, FormStateInterface $form_state, $items) {
         $key = $method . '---' . $accessorial;
 
         if (isset($quote['rate'])) {
-          $quote_options[$key] = t('!label: !price', array('!label' => $quote['option_label'], '!price' => $quote['format']));
+          $quote_options[$key] = t('!label: !price', ['!label' => $quote['option_label'], '!price' => $quote['format']]);
         }
       }
     }
@@ -519,6 +519,8 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, FormStateInterface 
         '#weight' => 1,
       );
 
+//@TODO: Figure out why this is throwing an exception
+// -- evidently the 'prepare' case never gets called, that's why, so quote_form doesn't exist
       $contents['quotes'] += $order->quote_form;
 
       $form_state->set(['uc_ajax', 'uc_quote', 'panes][quotes][quote_button'], array(
@@ -568,7 +570,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, FormStateInterface 
 
         $label = $method['quote']['accessorials'][$quote_option[1]];
 
-        $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
+        $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", [':id' => $order->id(), ':type' => 'shipping']);
         if ($lid = $result->fetchField()) {
           uc_order_update_line_item($lid,
             $label,
@@ -598,7 +600,7 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, FormStateInterface 
     case 'review':
       $review = array();
 
-      $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
+      $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", [':id' => $order->id(), ':type' => 'shipping']);
       if ($line_item = $result->fetchAssoc()) {
         $review[] = array('title' => $line_item['title'], 'data' => array('#theme' => 'uc_price', '#price' => $line_item['amount']));
       }
@@ -712,7 +714,7 @@ function uc_quote_apply_quote_to_order($form, FormStateInterface $form_state) {
       $quote_option = $form_state->getValue(['quotes', 'quote_option']);
       $order->quote['rate'] = $form_state->getValue(['quotes', $quote_option, 'rate']);
 
-      $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
+      $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", [':id' => $order->id(), ':type' => 'shipping']);
       if ($lid = $result->fetchField()) {
         uc_order_update_line_item($lid,
           $label,
@@ -763,7 +765,7 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
         $key = $method . '---' . $accessorial;
 
         if (isset($quote['rate'])) {
-          $quote_options[$key] = t('!label: !price', array('!label' => $quote['option_label'], '!price' => $quote['format']));
+          $quote_options[$key] = t('!label: !price', ['!label' => $quote['option_label'], '!price' => $quote['format']]);
           $return[$key]['rate'] = array(
             '#type' => 'hidden',
             '#value' => $quote['rate'],
@@ -771,8 +773,12 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
         }
 
         if (!empty($quote['error'])) {
+          $item_list = array(
+            '#theme' => 'item_list',
+            '#items' => array('items' => $quote['error']),
+          );
           $return[$key]['error'] = array(
-            '#markup' => '<div class="quote-error">' . theme('item_list', array('items' => $quote['error'])) . '</div>',
+            '#markup' => '<div class="quote-error">' . drupal_render($item_list) . '</div>',
           );
         }
 
