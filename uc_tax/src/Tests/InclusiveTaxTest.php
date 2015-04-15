@@ -17,7 +17,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 class InclusiveTaxTest extends UbercartTestBase {
 
   public static $modules = ['uc_product_kit', 'uc_attribute', 'uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_tax'];
-  public static $adminPermissions = [/*'administer rules', */'configure tax'];
+  public static $adminPermissions = [/*'administer rules', */'administer taxes'];
 
   public function testProductKitAttributes() {
     $this->drupalLogin($this->adminUser);

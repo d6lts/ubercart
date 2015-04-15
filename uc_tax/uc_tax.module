@@ -21,7 +21,7 @@ use Drupal\uc_order\OrderInterface;
 //  $items['admin/store/settings/taxes'] = array(
 //    'title' => 'Tax',
 //    'description' => 'Configure tax rates and rules.',
-//    'route_name' => 'uc_tax.overview',
+//    'route_name' => 'uc_tax.methods',
 //  );
 //  $items += rules_ui()->config_menu('admin/store/settings/taxes');
 //

@@ -17,7 +17,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 class StoredTaxTest extends UbercartTestBase {
 
   public static $modules = ['uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_tax'];
-  public static $adminPermissions = [/*'administer rules', */'configure tax'];
+  public static $adminPermissions = [/*'administer rules', */'administer taxes'];
 
   protected function loadTaxLine($order_id) {
     $order = uc_order_load($order_id, TRUE);
