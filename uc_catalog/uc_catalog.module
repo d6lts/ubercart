@@ -96,7 +96,7 @@ function uc_catalog_entity_bundle_info_alter(&$bundles) {
  * Entity URI callback used in uc_catalog_entity_bundle_info_alter().
  */
 function uc_catalog_uri($category) {
-  return Url::fromUri('catalog/' . $category->id());
+  return Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $category->id()]);
 }
 
 /**
@@ -104,7 +104,7 @@ function uc_catalog_uri($category) {
  */
 function uc_catalog_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'uc_catalog' && $variables['label'] && $variables['configuration']['link_title']) {
-    $variables['label'] = \Drupal::l($variables['label'], Url::fromUri('catalog'));
+    $variables['label'] = \Drupal::l($variables['label'], Url::fromRoute('view.uc_catalog.page_1'));
   }
 }
 
@@ -272,7 +272,7 @@ function _uc_catalog_navigation($branch) {
  * Creates paths to the catalog from taxonomy term.
  */
 function uc_catalog_path($term) {
-  return 'catalog/' . $term->getTid();
+  return Url::fromRoute('view.uc_catalog.page_1')->toString() . '/' . $term->getTid();
 }
 
 /**

@@ -76,11 +76,11 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected function catalogBreadcrumb($node) {
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
-    $breadcrumb[] = \Drupal::l(t('Catalog'), new Url('catalog'));
+    $breadcrumb[] = \Drupal::l(t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
     if ($parents = taxonomy_term_load_parents_all($node->taxonomy_catalog->target_id)) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = \Drupal::l($parent->label(), new Url('catalog/' . $parent->id()));
+        $breadcrumb[] = \Drupal::l($parent->label(), Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]));
       }
     }
     return $breadcrumb;
@@ -91,12 +91,12 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected function catalogTermBreadcrumb($tid) {
     $breadcrumb[] = $this->l($this->t('Home'), '<front>');
-    $breadcrumb[] = \Drupal::l(t('Catalog'), new Url('catalog'));
+    $breadcrumb[] = \Drupal::l(t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
     if ($parents = taxonomy_term_load_parents_all($tid)) {
       array_shift($parents);
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = \Drupal::l($parent->label(), new Url('catalog/' . $parent->id()));
+        $breadcrumb[] = \Drupal::l($parent->label(), Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]));
       }
     }
     return $breadcrumb;
