@@ -1,0 +1,19 @@
+name: Cyprus
+alpha_2: CY
+alpha_3: CYP
+numeric: 196
+status: false
+zones:
+  04: Famagusta
+  06: Kyrenia
+  03: Larnaca
+  02: Limassol
+  01: Nicosia
+  05: Paphos
+address_format:
+  - '!company'
+  - '!first_name !last_name'
+  - '!street1'
+  - '!street2'
+  - '!city, !zone_code !postal_code'
+  - '!country_name_if'
