@@ -1,0 +1,42 @@
+# Schema for uc_tax configuration files.
+
+uc_tax.rate.*:
+  type: config_entity
+  label: 'Tax rate'
+  mapping:
+    label:
+      type: label
+      label: 'Name'
+    id:
+      type: string
+      label: 'Machine-readable name'
+    rate:
+      type: float
+      label: 'Rate multiplier'
+    weight:
+      type: integer
+      label: 'Relative weight'
+    jurisdiction:
+      type: string
+      label: 'Jurisdiction'
+    shippable:
+      type: boolean
+      label: 'Shippable'
+    display_include:
+      type: boolean
+      label: 'Display tax included'
+    inclusion_text:
+      type: text
+      label: 'Text for included tax'
+    product_types:
+      type: sequence
+      label: 'Product types to tax'
+      sequence:
+        type: label
+        label: 'Product type label'
+    line_item_types:
+      type: sequence
+      label: 'Line item types to tax'
+      sequence:
+        type: label
+        label: 'Line item type label'

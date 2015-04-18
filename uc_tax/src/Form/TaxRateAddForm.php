@@ -17,13 +17,10 @@ class TaxRateAddForm extends TaxRateFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $rate = parent::submitForm($form, $form_state);
-
-    drupal_set_message(t('Tax rate %name created.', ['%name' => $rate->name]));
-
-    //$form_state['redirect'] = 'admin/store/settings/taxes/manage/uc_tax_' . $rate->id;
-    $form_state->setRedirect('uc_tax.overview');
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+    $actions['submit']['#value'] = $this->t('Create tax rate');
+    return $actions;
   }
 
 }

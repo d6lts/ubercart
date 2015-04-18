@@ -7,49 +7,76 @@
 
 namespace Drupal\uc_tax\Form;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
  * Defines the tax rate add/edit form.
  */
-abstract class TaxRateFormBase extends FormBase {
+class TaxRateFormBase extends EntityForm {
 
   /**
-   * {@inheritdoc}
+   * Returns a Url to redirect to if the current operation is cancelled.
+   *
+   * @return \Drupal\Core\Url 
    */
-  public function getFormId() {
-    return 'uc_tax_form';
+  public function getCancelUrl() {
+    return new Url('entity.uc_tax_rate.list');
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['name'] = array(
+    $form = parent::buildForm($form, $form_state);
+    $rate = $this->entity;
+
+    $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Name'),
-      '#description' => t('This name will appear to the customer when this tax is applied to an order.'),
+      '#title' => $this->t('Label'),
+      '#description' => $this->t('This name will appear to the customer when this tax is applied to an order.'),
+      '#default_value' => $rate->label(),
       '#required' => TRUE,
+    );
+
+    $form['id'] = array(
+      '#type' => 'machine_name',
+      '#title' => $this->t('Machine name'),
+      '#default_value' => $rate->id(),
+      '#machine_name' => array(
+        'exists' => array($this, 'exists'),
+        'replace_pattern' => '([^a-z0-9_]+)|(^custom$)',
+        'error' => 'The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".',
+      ),
+//      '#disabled' => !$this->isNew(),
     );
 
     $form['rate'] = array(
       '#type' => 'textfield',
-      '#title' => t('Rate'),
-      '#description' => t('The tax rate as a percent or decimal. Examples: 6%, .06'),
+      '#title' => $this->t('Rate'),
+      '#description' => $this->t('The tax rate as a percent or decimal. Examples: 6%, .06'),
       '#size' => 15,
+      '#default_value' => (float) $rate->getRate() * 100.0 . '%',
       '#required' => TRUE,
+    );
+
+    $form['jurisdiction'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Jurisdiction'),
+      '#description' => $this->t('Administrative label for the taxing authority, used to prepare reports of collected taxes.'),
+      '#default_value' => $rate->getJurisdiction(),
+      '#required' => FALSE,
     );
 
     $form['shippable'] = array(
       '#type' => 'radios',
-      '#title' => t('Taxed products'),
+      '#title' => $this->t('Taxed products'),
       '#options' => array(
-        t('Apply tax to any product regardless of its shippability.'),
-        t('Apply tax to shippable products only.'),
+        0 => $this->t('Apply tax to any product regardless of its shippability.'),
+        1 => $this->t('Apply tax to shippable products only.'),
       ),
-      '#default_value' => 0,
+      '#default_value' => (int) $rate->isForShippable(),
     );
 
     // TODO: Remove the need for a special case for product kit module.
@@ -59,12 +86,13 @@ abstract class TaxRateFormBase extends FormBase {
         $options[$type] = $name;
       }
     }
-    $options['blank-line'] = t('"Blank line" product');
+    $options['blank-line'] = $this->t('"Blank line" product');
 
-    $form['taxed_product_types'] = array(
+    $form['product_types'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Taxed product types'),
-      '#description' => t('Apply taxes to the specified product types/classes.'),
+      '#title' => $this->t('Taxed product types'),
+      '#description' => $this->t('Apply taxes to the specified product types/classes.'),
+      '#default_value' => $rate->getProductTypes(),
       '#options' => $options,
     );
 
@@ -75,35 +103,32 @@ abstract class TaxRateFormBase extends FormBase {
       }
     }
 
-    $form['taxed_line_items'] = array(
+    $form['line_item_types'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Taxed line items'),
-      '#description' => t('Adds the checked line item types to the total before applying this tax.'),
+      '#title' => $this->t('Taxed line items'),
+      '#description' => $this->t('Adds the checked line item types to the total before applying this tax.'),
+      '#default_value' => $rate->getLineItemTypes(),
       '#options' => $options,
     );
 
     $form['weight'] = array(
       '#type' => 'weight',
-      '#title' => t('Weight'),
-      '#description' => t('Taxes are sorted by weight and then applied to the order sequentially. This value is important when taxes need to include other tax line items.'),
+      '#title' => $this->t('Weight'),
+      '#description' => $this->t('Taxes are sorted by weight and then applied to the order sequentially. This value is important when taxes need to include other tax line items.'),
+      '#default_value' => $rate->getWeight(),
     );
 
     $form['display_include'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Include this tax when displaying product prices.'),
+      '#title' => $this->t('Include this tax when displaying product prices.'),
+      '#default_value' => $rate->isIncludedInPrice(),
     );
 
     $form['inclusion_text'] = array(
       '#type' => 'textfield',
-      '#title' => t('Tax inclusion text'),
-      '#description' => t('This text will be displayed near the price to indicate that it includes tax.'),
-    );
-
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Submit'),
-      '#suffix' => \Drupal::l(t('Cancel'), new Url('uc_tax.overview')),
+      '#title' => $this->t('Tax inclusion text'),
+      '#description' => $this->t('This text will be displayed near the price to indicate that it includes tax.'),
+      '#default_value' => $rate->getInclusionText(),
     );
 
     return $form;
@@ -112,46 +137,74 @@ abstract class TaxRateFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validate(array &$form, FormStateInterface $form_state) {
+    parent::validate($form, $form_state);
     $rate = $form_state->getValue('rate');
-    if (!empty($rate) && floatval($rate) < 0) {
-      $form_state->setErrorByName('rate', t('Rate must be a positive number. No commas and only one decimal point.'));
+    $rate = trim($rate);
+    // @TODO Would be nice to better validate rate, maybe with preg_match
+    if (floatval($rate) < 0)) {
+      $form_state->setErrorByName('rate', $this->t('Rate must be a positive number. No commas and only one decimal point.'));
     }
+    // Save trimmed rate back to form if it passes validation.
+    $form_state->setValue('rate', $rate);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Determine the decimal rate value.
+  public function save(array $form, FormStateInterface $form_state) {
+    $tax_rate = $this->getEntity();
+
+    // Save rate.
     $rate = $form_state->getValue('rate');
-    if (strpos($rate, '%')) {
-      $rate = floatval($rate) / 100;
-    }
-    else {
-      $rate = floatval($rate);
+    if (substr($rate, -1) == '%') {
+      // Rate given in percentage, so convert it to a fraction for storage.
+      $tax_rate->setRate(floatval($rate) / 100.0);
     }
 
-    // Build the rate object based on the form values and save it.
-    $rate = (object) array(
-      'id' => $form_state->getValue('id'),
-      'name' => $form_state->getValue('name'),
-      'rate' => $rate,
-      'taxed_product_types' => array_filter($form_state->getValue('taxed_product_types')),
-      'taxed_line_items' => array_filter($form_state->getValue('taxed_line_items')),
-      'weight' => $form_state->getValue('weight'),
-      'shippable' => $form_state->getValue('shippable'),
-      'display_include' => $form_state->getValue('display_include'),
-      'inclusion_text' => $form_state->getValue('inclusion_text'),
-    );
-    return uc_tax_rate_save($rate);
+    // Save machine names of product types and line item types.
+    $tax_rate->setProductTypes(array_filter($form_state->getValue('product_types')));
+    $tax_rate->setLineItemTypes(array_filter($form_state->getValue('line_item_types')));
 
+    // @TODO When Rules is working in D8 ..
     // Update the name of the associated conditions.
     // $conditions = rules_config_load('uc_tax_' . $form_state->getValue('id'));
     // if ($conditions) {
-    //   $conditions->label = $form_state->getValue('name');
+    //   $conditions->label = $form_state->getVolue('name');
     //   $conditions->save();
     // }
+
+    $status = $tax_rate->save();
+
+    // Create an edit link.
+    $edit_link = $this->l($this->t('Edit'), $tax_rate->urlInfo());
+
+    if ($status == SAVED_UPDATED) {
+      // If we edited an existing entity...
+      drupal_set_message($this->t('Tax rate %label has been updated.', array('%label' => $tax_rate->label())));
+      $this->logger('contact')->notice('Tax rate %label has been updated.', ['%label' => $tax_rate->label(), 'link' => $edit_link]);
+    }
+    else {
+      // If we created a new entity...
+      drupal_set_message($this->t('Tax rate %label has been added.', array('%label' => $tax_rate->label())));
+      $this->logger('contact')->notice('Tax rate %label has been added.', ['%label' => $tax_rate->label(), 'link' => $edit_link]);
+    }
+
+    // Redirect the user back to the listing route after the save operation.
+    $form_state->setRedirect('entity.uc_tax_rate.list');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+
+    // Change the submit button text.
+    $actions['submit']['#value'] = $this->t('Save');
+    $actions['submit']['#suffix'] = $this->l($this->t('Cancel'), $this->getCancelUrl());
+
+    return $actions;
   }
 
 }
