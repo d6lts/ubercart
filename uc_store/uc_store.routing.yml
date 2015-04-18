@@ -37,3 +37,11 @@ uc_store.address_fields:
     _title: 'Address fields'
   requirements:
     _permission: 'administer store'
+
+uc_store.config_form:
+  path: '/admin/store/config/store'
+  defaults:
+    _form: '\Drupal\uc_store\Form\StoreSettingsForm'
+    _title: 'Store'
+  requirements:
+    _permission: 'administer store'
