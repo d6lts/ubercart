@@ -17,7 +17,6 @@ function uc_store_requirements($phase) {
       'error' => REQUIREMENT_ERROR,
     );
 
-    module_load_include('inc', 'uc_store', 'uc_store.admin');
     $results = \Drupal::moduleHandler()->invokeAll('uc_store_status');
     foreach ($results as $status) {
       $requirements[] = array(

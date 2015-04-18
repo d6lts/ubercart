@@ -57,7 +57,6 @@ class TaxRateMethodsForm extends ConfigFormBase {
 
     $rows = array();
     foreach (uc_tax_rate_load() as $rate_id => $rate) {
-debug($rate);
 
       // Build a list of operations links.
       $operations = array(

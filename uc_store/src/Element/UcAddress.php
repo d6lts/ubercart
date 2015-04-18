@@ -82,11 +82,7 @@ class UcAddress extends Element\FormElement {
       $value = array();
     }
 
-    $countries = db_query("SELECT country_id, country_name FROM {uc_countries} WHERE version > :version", [':version' => 0])->fetchAllKeyed();
-    foreach ($countries as $country_id => $country_name) {
-      $countries[$country_id] = t($country_name);
-    }
-    natcasesort($countries);
+    $countries = uc_country_option_list();
     $country_keys = array_keys($countries);
 
     // Force the selected country to a valid one, so the zone dropdown matches.

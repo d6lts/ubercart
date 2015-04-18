@@ -142,7 +142,7 @@ class TaxRateFormBase extends EntityForm {
     $rate = $form_state->getValue('rate');
     $rate = trim($rate);
     // @TODO Would be nice to better validate rate, maybe with preg_match
-    if (floatval($rate) < 0)) {
+    if (floatval($rate) < 0) {
       $form_state->setErrorByName('rate', $this->t('Rate must be a positive number. No commas and only one decimal point.'));
     }
     // Save trimmed rate back to form if it passes validation.
