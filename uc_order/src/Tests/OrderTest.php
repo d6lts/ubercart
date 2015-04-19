@@ -219,9 +219,10 @@ class OrderTest extends UbercartTestBase {
     $order_exists = db_query("SELECT 1 FROM {uc_orders} WHERE order_id = :order_id", [':order_id' => $order->id()])->fetchField();
     $this->assertTrue($order_exists, t('Found order ID @order_id', ['@order_id' => $order->id()]));
 
-    $countries = uc_country_option_list();
+    $country_manager = \Drupal::service('country_manager');
+    $countries = $country_manager->getAvailableList();
     $country = array_rand($countries);
-    $zones = uc_zone_option_list();
+    $zones = $country_manager->getZoneList($country);
 
     $delivery_address = new Address();
     $delivery_address->first_name = $this->randomMachineName(12);
@@ -229,7 +230,7 @@ class OrderTest extends UbercartTestBase {
     $delivery_address->street1 = $this->randomMachineName(12);
     $delivery_address->street2 = $this->randomMachineName(12);
     $delivery_address->city = $this->randomMachineName(12);
-    $delivery_address->zone = array_rand($zones[$countries[$country]]);
+    $delivery_address->zone = array_rand($zones);
     $delivery_address->postal_code = mt_rand(10000, 99999);
     $delivery_address->country = $country;
 
@@ -239,7 +240,7 @@ class OrderTest extends UbercartTestBase {
     $billing_address->street1 = $this->randomMachineName(12);
     $billing_address->street2 = $this->randomMachineName(12);
     $billing_address->city = $this->randomMachineName(12);
-    $billing_address->zone = array_rand($zones[$countries[$country]]);
+    $billing_address->zone = array_rand($zones);
     $billing_address->postal_code = mt_rand(10000, 99999);
     $billing_address->country = $country;
 

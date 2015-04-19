@@ -331,13 +331,6 @@ function uc_date_format($month, $day, $year) {
 }
 
 /**
- * Saves the address format for a country.
- */
-function uc_set_address_format($country_id, $format) {
-  \Drupal::configFactory()->getEditable('uc_country.formats')->set(intval($country_id), $format)->save();
-}
-
-/**
  * Returns TRUE if the address field is enabled.
  */
 function uc_address_field_enabled($field = NULL) {
@@ -663,22 +656,12 @@ function uc_store_encryption_errors(&$crypt, $module) {
 
 /**
  * Returns a default store country value.
+ *
+ * @return
+ *   The two character country code representing the store default.
  */
 function uc_store_default_country() {
-  static $default;
-
-  if (!empty($default)) {
-    return $default;
-  }
-
-  $default = \Drupal::config('uc_store.settings')->get('address.country');
-
-  $result = db_query("SELECT COUNT(*) FROM {uc_countries} WHERE country_id = :id AND version > :version", [':id' => $default, ':version' => 0])->fetchField();
-  if ($result == 0) {
-    $default = db_query_range("SELECT country_id FROM {uc_countries} WHERE version > :version", 0, 1, [':version' => 0])->fetchField();
-  }
-
-  return $default;
+  return \Drupal::config('uc_store.settings')->get('address.country');
 }
 
 /**

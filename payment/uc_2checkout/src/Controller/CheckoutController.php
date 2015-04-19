@@ -54,21 +54,11 @@ class CheckoutController extends ControllerBase {
 
     $order->billing_street1 = $_REQUEST['street_address'];
     $order->billing_street2 = $_REQUEST['street_address2'];
-    $order->city = $_REQUEST['city'];
+    $order->billing_city = $_REQUEST['city'];
     $order->billing_postal_code = $_REQUEST['zip'];
     $order->billing_phone = $_REQUEST['phone'];
-
-    $zone_id = db_query("SELECT zone_id FROM {uc_countries_zones} WHERE zone_code LIKE :code", [':code' => $_REQUEST['state']])->fetchField();
-    if (!empty($zone_id)) {
-      $order->billing_zone = $zone_id;
-    }
-
-    $country_id = db_query("SELECT country_id FROM {uc_countries} WHERE country_name LIKE :name", [':name' => $_REQUEST['country']])->fetchField();
-    if (!empty($country_id)) {
-      $order->billing_country = $country_id;
-    }
-
-    // Save changes to order without it's completion.
+    $order->billing_zone = $_REQUEST['state'];
+    $order->billing_country = $_REQUEST['country'];
     $order->save();
 
     if (Unicode::strtolower($_REQUEST['email']) !== Unicode::strtolower($order->getEmail())) {

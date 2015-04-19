@@ -11,8 +11,8 @@ store_default_address:
   street1: ''
   street2: ''
   city: ''
-  zone: 0
-  country: 840
+  zone: ''
+  country: US
   postal_code: ''
   phone: ''
 

@@ -511,7 +511,7 @@ function uc_shipping_order_shipments($order) {
     $row[] = $shipment->sid;
     $row[] = SafeMarkup::checkPlain($shipment->d_first_name) . ' ' . SafeMarkup::checkPlain($shipment->d_last_name);
     $row[] = SafeMarkup::checkPlain($shipment->d_company);
-    $row[] = SafeMarkup::checkPlain($shipment->d_city) . ', ' . uc_get_zone_code($shipment->d_zone) . ' ' . SafeMarkup::checkPlain($shipment->d_postal_code);
+    $row[] = SafeMarkup::checkPlain($shipment->d_city) . ', ' . $shipment->d_zone . ' ' . SafeMarkup::checkPlain($shipment->d_postal_code);
     $row[] = \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store');
     $row[] = \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store');
     $row[] = is_null($shipment->tracking_number) ? t('n/a') : SafeMarkup::checkPlain($shipment->tracking_number);

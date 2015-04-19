@@ -225,20 +225,12 @@ function uc_paypal_ec_review() {
       $order->delivery_last_name = '';
     }
 
-    $country_id = db_query("SELECT country_id FROM {uc_countries} WHERE country_iso_code_2 = :code", array(':code' => $nvp_response['SHIPTOCOUNTRYCODE']))->fetchField();
-    $zone_id = 0;
-
-    if (!empty($country_id) && isset($nvp_response['SHIPTOSTATE'])) {
-      $zone = $nvp_response['SHIPTOSTATE'];
-      $zone_id = db_query("SELECT zone_id FROM {uc_countries_zones} WHERE zone_country_id = :id AND (zone_code = :code OR zone_name = :name)", array(':id' => $country_id, ':code' => $zone, ':name' => $zone))->fetchField();
-    }
-
     $order->delivery_street1 = SafeMarkup::checkPlain($nvp_response['SHIPTOSTREET']);
     $order->delivery_street2 = isset($nvp_response['SHIPTOSTREET2']) ? SafeMarkup::checkPlain($nvp_response['SHIPTOSTREET2']) : '';
     $order->delivery_city = SafeMarkup::checkPlain($nvp_response['SHIPTOCITY']);
-    $order->delivery_zone = !empty($zone_id) ? $zone_id : 0;
+    $order->delivery_zone = $nvp_response['SHIPTOSTATE'];
     $order->delivery_postal_code = SafeMarkup::checkPlain($nvp_response['SHIPTOZIP']);
-    $order->delivery_country = !empty($country_id) ? $country_id : 840;
+    $order->delivery_country = $nvp_response['SHIPTOCOUNTRYCODE'];
 
     $order->billing_first_name = SafeMarkup::checkPlain($nvp_response['FIRSTNAME']);
     $order->billing_last_name = SafeMarkup::checkPlain($nvp_response['LASTNAME']);

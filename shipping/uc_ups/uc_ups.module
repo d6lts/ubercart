@@ -359,17 +359,14 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
   $pkg_types = \Drupal\uc_ups\UPSUtilities::packageTypes();
 
   $store_config = \Drupal::config('uc_store.settings');
-  $shipper_zone = uc_get_zone_code($store_config->get('address.zone'));
-  $shipper_country = uc_get_country_data(array('country_id' => $store_config->get('address.country')));
-  $shipper_country = $shipper_country[0]['country_iso_code_2'];
+  $shipper_zone = $store_config->get('address.zone');
+  $shipper_country =$store_config->get('address.country');
   $shipper_zip = $store_config->get('address.postal_code');
-  $shipto_zone = uc_get_zone_code($destination->zone);
-  $shipto_country = uc_get_country_data(array('country_id' => $destination->country));
-  $shipto_country = $shipto_country[0]['country_iso_code_2'];
+  $shipto_zone = $destination->zone;
+  $shipto_country =$destination->country;
   $shipto_zip = $destination->postal_code;
-  $shipfrom_zone = uc_get_zone_code($origin->zone);
-  $shipfrom_country = uc_get_country_data(array('country_id' => $origin->country));
-  $shipfrom_country = $shipfrom_country[0]['country_iso_code_2'];
+  $shipfrom_zone = $origin->zone;
+  $shipfrom_country = $origin->country;
   $shipfrom_zip = $origin->postal_code;
 
   $ups_units = $ups_config->get('unit_system');

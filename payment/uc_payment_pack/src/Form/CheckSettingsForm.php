@@ -26,7 +26,7 @@ class CheckSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $check_config = \Drupal::config('uc_payment_pack.check.settings');
+    $check_config = $this->config('uc_payment_pack.check.settings');
 
     $form['check_address_info'] = array(
       '#markup' => '<div>' . t('Set the mailing address to display to customers who choose this payment method during checkout.') . '</div>',
@@ -45,7 +45,7 @@ class CheckSettingsForm extends FormBase {
         'uc_check_mailing_street2' => $check_config->get('mailing_street2'),
         'uc_check_mailing_city' => $check_config->get('mailing_city'),
         'uc_check_mailing_zone' => $check_config->get('mailing_zone'),
-        'uc_check_mailing_country' => $form_state->hasValue('uc_check_mailing_country') ? $form_state->getValue('uc_check_mailing_country') : $check_config->get('uc_check_mailing_country'),
+        'uc_check_mailing_country' => $form_state->hasValue('uc_check_mailing_country') ? $form_state->getValue('uc_check_mailing_country') : $check_config->get('mailing_country'),
         'uc_check_mailing_postal_code' => $check_config->get('mailing_postal_code'),
       ),
       '#required' => FALSE,

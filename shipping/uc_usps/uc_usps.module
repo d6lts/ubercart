@@ -269,7 +269,7 @@ function uc_usps_quote($products, $details, $method) {
   }
 
   // Shipments to the US also need zone and postal_code.
-  if (($destination->country == 840) &&
+  if (($destination->country == 'US') &&
       (empty($destination->zone) || empty($destination->postal_code))) {
     // Skip this shipping method.
     return array();
@@ -291,11 +291,11 @@ function uc_usps_quote($products, $details, $method) {
     $orig = $addresses[$key];
     $orig->email = uc_store_email();
 
-    if (strpos($method['id'], 'intl') && ($destination->country != 840)) {
+    if (strpos($method['id'], 'intl') && ($destination->country != 'US')) {
       // Build XML for international rate request.
       $request = uc_usps_intl_rate_request($ship_packages, $orig, $destination);
     }
-    elseif ($destination->country == 840) {
+    elseif ($destination->country == 'US') {
       // Build XML for domestic rate request.
       $request = uc_usps_rate_request($ship_packages, $orig, $destination);
     }

@@ -225,15 +225,6 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       }
     }
 
-    $billing_country = uc_get_country_data(array('country_id' => $order->billing_country));
-    if ($billing_country === FALSE) {
-      $billing_country = array(0 => array('country_iso_code_2' => 'US'));
-    }
-    $delivery_country = uc_get_country_data(array('country_id' => $order->delivery_country));
-    if ($delivery_country === FALSE) {
-      $delivery_country = array(0 => array('country_iso_code_2' => 'US'));
-    }
-
     // Paypal doesn't accept IPv6 addresses.
     $ip_address = ltrim(Drupal::request()->getClientIp(), '::ffff:');
 
@@ -251,9 +242,9 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'STREET' => substr($order->billing_street1, 0, 100),
       'STREET2' => substr($order->billing_street2, 0, 100),
       'CITY' => substr($order->billing_city, 0, 40),
-      'STATE' => uc_get_zone_code($order->billing_zone),
+      'STATE' => $order->billing_zone,
       'ZIP' => $order->billing_postal_code,
-      'COUNTRYCODE' => $billing_country[0]['country_iso_code_2'],
+      'COUNTRYCODE' => $order->billing_country,
       'CURRENCYCODE' => variable_get('uc_paypal_wpp_currency', 'USD'),
       'DESC' => substr($desc, 0, 127),
       'INVNUM' => $order_id . '-' . REQUEST_TIME,
@@ -269,9 +260,9 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
         'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
         'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
         'SHIPTOCITY' => substr($order->delivery_city, 0, 40),
-        'SHIPTOSTATE' => uc_get_zone_code($order->delivery_zone),
+        'SHIPTOSTATE' => $order->delivery_zone,
         'SHIPTOZIP' => $order->delivery_postal_code,
-        'SHIPTOCOUNTRYCODE' => $delivery_country[0]['country_iso_code_2'],
+        'SHIPTOCOUNTRYCODE' => $order->delivery_country,
       );
       $nvp_request += $shipdata;
     }
@@ -616,11 +607,6 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
 
   list($desc, $subtotal) = _uc_paypal_product_details($order->products);
 
-  $country = uc_get_country_data(array('country_id' => $order->billing_country));
-  if ($country === FALSE) {
-    $country = array(0 => array('country_iso_code_2' => 'US'));
-  }
-
   $nvp_request = array(
     'METHOD' => 'SetExpressCheckout',
     'RETURNURL' => \Drupal::url('cart/echeckout/selected', [], ['absolute' => TRUE]),
@@ -638,8 +624,8 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
     'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
     'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
     'SHIPTOCITY' => substr($order->delivery_city, 0, 40),
-    'SHIPTOSTATE' => uc_get_zone_code($order->delivery_zone),
-    'SHIPTOCOUNTRYCODE' => $country[0]['country_iso_code_2'],
+    'SHIPTOSTATE' => $order->delivery_zone,
+    'SHIPTOCOUNTRYCODE' => $order->delivery_country,
     'SHIPTOZIP' => substr($order->delivery_postal_code, 0, 20),
     'PHONENUM' => substr($order->delivery_phone, 0, 20),
     'LANDINGPAGE' => variable_get('uc_paypal_ec_landingpage_style', 'Billing'),
@@ -767,11 +753,6 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
 
   $subtotal = $order->getTotal() - $tax - $shipping;
 
-  $country = uc_get_country_data(array('country_id' => $order->billing_country));
-  if ($country === FALSE) {
-    $country = array(0 => array('country_iso_code_2' => 'US'));
-  }
-
   $nvp_request = array(
     'METHOD' => 'DoExpressCheckoutPayment',
     'TOKEN' => $_SESSION['TOKEN'],
@@ -816,11 +797,7 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
 
   $address = variable_get('uc_paypal_wps_address_selection', 'billing');
 
-  $country = uc_get_country_data(array('country_id' => $order->{$address . '_country'}));
-  if ($country === FALSE) {
-    $country = array(0 => array('country_iso_code_2' => 'US'));
-  }
-
+  $country = $order->{$address . '_country'};
   $phone = '';
   for ($i = 0; $i < strlen($order->{$address . '_phone'}); $i++) {
     if (is_numeric($order->{$address . '_phone'}[$i])) {
@@ -837,7 +814,7 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
    * night_phone_c: The four-digit phone number for U.S. phone numbers.
    *                (Not Used for UK numbers)
    */
-  if ($country[0]['country_iso_code_2'] == 'US' || $country[0]['country_iso_code_2'] == 'CA') {
+  if ($country == 'US' || $country == 'CA') {
     $phone = substr($phone, -10);
     $phone_a = substr($phone, 0, 3);
     $phone_b = substr($phone, 3, 3);
@@ -880,11 +857,11 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
     'address1' => substr($order->{$address . '_street1'}, 0, 100),
     'address2' => substr($order->{$address . '_street2'}, 0, 100),
     'city' => substr($order->{$address . '_city'}, 0, 40),
-    'country' => $country[0]['country_iso_code_2'],
+    'country' => $country,
     'email' => $order->getEmail(),
     'first_name' => substr($order->{$address . '_first_name'}, 0, 32),
     'last_name' => substr($order->{$address . '_last_name'}, 0, 64),
-    'state' => uc_get_zone_code($order->{$address . '_zone'}),
+    'state' => $order->{$address . '_zone'},
     'zip' => $order->{$address . '_postal_code'},
     'night_phone_a' => $phone_a,
     'night_phone_b' => $phone_b,

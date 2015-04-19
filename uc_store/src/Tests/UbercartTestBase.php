@@ -195,16 +195,14 @@ abstract class UbercartTestBase extends WebTestBase {
     foreach (array('billing', 'delivery') as $pane) {
       $prefix = 'panes[' . $pane . ']';
       $key =  $prefix . '[country]';
-      $country = empty($edit[$key]) ? \Drupal::config('uc_store.settings')->get('address.country') : $edit[$key];
-      $zone_id = db_query_range('SELECT zone_id FROM {uc_countries_zones} WHERE zone_country_id = :country ORDER BY rand()', 0, 1, ['country' => $country])->fetchField();
-//      $country = entity_load('uc_country', isset($edit[$key]) ? $edit[$key] : \Drupal::config('uc_store.settings')->get('address.country'));
+      $country_id = isset($edit[$key]) ? $edit[$key] : \Drupal::config('uc_store.settings')->get('address.country');
+      $country = \Drupal::service('country_manager')->getCountry($country_id);
       $edit += array(
         $prefix . '[first_name]' => $this->randomMachineName(10),
         $prefix . '[last_name]' => $this->randomMachineName(10),
         $prefix . '[street1]' => $this->randomMachineName(10),
         $prefix . '[city]' => $this->randomMachineName(10),
-//        $prefix . '[zone]' => array_rand($country->zones),
-        $prefix . '[zone]' => $zone_id,
+        $prefix . '[zone]' => array_rand($country->zones),
         $prefix . '[postal_code]' => mt_rand(10000, 99999),
       );
     }

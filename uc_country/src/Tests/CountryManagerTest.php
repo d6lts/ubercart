@@ -43,6 +43,19 @@ class CountryManagerTest extends WebTestBase {
     // Test standard list alter, to make sure we don't break contrib.
     //
     // Test new functions provided by this extended service.
+
+    // Verify that CA has 13 zones.
+    $this->assertEqual(count($country_manager->getZoneList('CA')), 13, 'Canada has 13 zones');
+
+    debug($country_manager->getByProperty(['status' => TRUE]));
+    debug("Count = " . count($country_manager->getByProperty(['status' => TRUE])));
+
+  //$countries = entity_load_multiple_by_properties('uc_country', ['zones.AK' => 'Alaska']);
+  //debug($countries);
+    // Compare getList() to core getStandardList().
+    // Test standard list alter, to make sure we don't break contrib.
+    //
+    // Test new functions provided by this extended service.
   }
 
   /**
@@ -57,16 +70,14 @@ class CountryManagerTest extends WebTestBase {
     $this->assertLinkByHref('admin/store/config/country/BE/enable', 0, 'Belgium is not enabled by default.');
 
     $this->drupalGet('admin/store/config/store');
-// @TODO replace 56 with BE when we switch to alpha_2 instead of numeric
-    $this->assertNoOption('edit-uc-store-country', '56', 'Belgium not listed as an selectable country.');
+    $this->assertNoOption('edit-uc-store-country', 'BE', 'Belgium not listed as an selectable country.');
 
     $this->drupalGet('admin/store/config/country/BE/enable');
     $this->assertText('The country Belgium has been enabled.');
     $this->assertLinkByHref('admin/store/config/country/BE/disable', 0, 'Belgium is now enabled.');
 
     $this->drupalGet('admin/store/config/store');
-// @TODO replace 56 with BE when we switch to alpha_2 instead of numeric
-    $this->assertOption('edit-uc-store-country', '56', 'Belgium listed as a selectable country.');
+    $this->assertOption('edit-uc-store-country', 'BE', 'Belgium listed as a selectable country.');
 
     $this->drupalGet('admin/store/config/country');
     $this->clickLink('Disable');

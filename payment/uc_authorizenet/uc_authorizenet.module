@@ -415,9 +415,6 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     $delivery_address .= ', ' . $order->delivery_street2;
   }
 
-  $billing_country = uc_get_country_data(array('country_id' => $order->billing_country));
-  $delivery_country = uc_get_country_data(array('country_id' => $order->delivery_country));
-
   // Build the POST data for the transaction.
   $submit_data = array(
     // Merchant information.
@@ -449,9 +446,9 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     'x_company' => substr($order->billing_company, 0, 50),
     'x_address' => substr($billing_address, 0, 60),
     'x_city' => substr($order->billing_city, 0, 40),
-    'x_state' => substr(uc_get_zone_code($order->billing_zone), 0, 40),
+    'x_state' => substr($order->billing_zone, 0, 40),
     'x_zip' => substr($order->billing_postal_code, 0, 20),
-    'x_country' => !$billing_country ? '' : $billing_country[0]['country_iso_code_2'],
+    'x_country' => $order->billing_country,
     'x_phone' => substr($order->billing_phone, 0, 25),
     // 'x_fax' => substr('', 0, 25),
     'x_email' => substr($order->getEmail(), 0, 255),
@@ -464,9 +461,9 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     'x_ship_to_company' => substr($order->delivery_company, 0, 50),
     'x_ship_to_address' => substr($delivery_address, 0, 60),
     'x_ship_to_city' => substr($order->delivery_city, 0, 40),
-    'x_ship_to_state' => substr(uc_get_zone_code($order->delivery_zone), 0, 40),
+    'x_ship_to_state' => substr($order->delivery_zone, 0, 40),
     'x_ship_to_zip' => substr($order->delivery_postal_code, 0, 20),
-    'x_ship_to_country' => !$delivery_country ? '' : $delivery_country[0]['country_iso_code_2'],
+    'x_ship_to_country' => $order->delivery_country,
 
     // Extra information.
     'x_delim_data' => 'TRUE',
@@ -778,16 +775,15 @@ function _uc_authorizenet_txn_map($type) {
  * Maps an order's billing information to an array for later XML conversion.
  */
 function _uc_authorize_cim_xml_billto($order) {
-  $billing_country = uc_get_country_data(array('country_id' => $order->billing_country));
   return array(
     'firstName' => substr($order->billing_first_name, 0, 50),
     'lastName' => substr($order->billing_last_name, 0, 50),
     'company' => substr($order->billing_company, 0, 50),
     'address' => substr($order->billing_street1, 0, 60),
     'city' => substr($order->billing_city, 0, 40),
-    'state' => substr(uc_get_zone_code($order->billing_zone), 0, 2),
+    'state' => substr($order->billing_zone, 0, 2),
     'zip' => substr($order->billing_postal_code, 0, 20),
-    'country' => !$billing_country ? '' : $billing_country[0]['country_iso_code_2'],
+    'country' => $order->billing_country,
     'phoneNumber' => substr($order->billing_phone, 0, 25),
   );
 }
@@ -796,16 +792,15 @@ function _uc_authorize_cim_xml_billto($order) {
  * Maps an order's shipping information to an array for later XML conversion.
  */
 function _uc_authorize_cim_xml_shipto($order) {
-  $delivery_country = uc_get_country_data(array('country_id' => $order->delivery_country));
   return array(
     'firstName' => substr($order->delivery_first_name, 0, 50),
     'lastName' => substr($order->delivery_last_name, 0, 50),
     'company' => substr($order->delivery_company, 0, 50),
     'address' => substr($order->delivery_street1, 0, 60),
     'city' => substr($order->delivery_city, 0, 40),
-    'state' => substr(uc_get_zone_code($order->delivery_zone), 0, 2),
+    'state' => substr($order->delivery_zone, 0, 2),
     'zip' => substr($order->delivery_postal_code, 0, 20),
-    'country' => !$delivery_country ? '' : $delivery_country[0]['country_iso_code_2'],
+    'country' => $order->delivery_country,
   );
 }
 

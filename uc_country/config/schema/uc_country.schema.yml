@@ -1,13 +1,5 @@
 # Schema for uc_country country configuration files.
 
-# @TODO remove this when config entity patch goes in
-uc_country.formats:
-  type: sequence
-  label: ''
-  sequence:
-    type: string
-    label: ''
-
 uc_country.country.*:
   type: config_entity
   label: 'Country ISO-3166 data'

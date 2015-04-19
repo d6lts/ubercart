@@ -162,10 +162,7 @@ function uc_payment_method_2checkout($op, &$order, $form = NULL, &$form_state = 
  */
 function uc_2checkout_form($form, &$form_state, $order) {
   $module_config = \Drupal::config('uc_2checkout.settings');
-  $country = uc_get_country_data(array('country_id' => $order->billing_country));
-  if ($country === FALSE) {
-    $country = array(0 => array('country_iso_code_3' => 'USA'));
-  }
+  $country = \Drupal::service('country_manager')->getCountry($order->billing_country);
 
   $data = array(
     'sid' => $module_config->get('sid'),
@@ -181,9 +178,9 @@ function uc_2checkout_form($form, &$form_state, $order) {
     'street_address' => Unicode::substr($order->billing_street1, 0, 64),
     'street_address2' => Unicode::substr($order->billing_street2, 0, 64),
     'city' => Unicode::substr($order->billing_city, 0, 64),
-    'state' => uc_get_zone_code($order->billing_zone),
+    'state' => $order->billing_zone,
     'zip' => Unicode::substr($order->billing_postal_code, 0, 16),
-    'country' => $country[0]['country_iso_code_3'],
+    'country' => $country ? $country->alpha_3 : 'USA',
     'email' => Unicode::substr($order->getEmail(), 0, 64),
     'phone' => Unicode::substr($order->billing_phone, 0, 16),
     'id_type' => 1,

@@ -87,12 +87,6 @@ class Order extends ContentEntityBase implements OrderInterface {
   public function preSave(EntityStorageInterface $storage) {
     $this->order_total->value = $this->getTotal();
     $this->product_count->value = $this->getProductCount();
-    if (is_null($this->delivery_country->value) || $this->delivery_country->value == 0) {
-      $this->delivery_country->value = \Drupal::config('uc_store.settings')->get('address.country');
-    }
-    if (is_null($this->billing_country->value) || $this->billing_country->value == 0) {
-      $this->billing_country->value = \Drupal::config('uc_store.settings')->get('address.country');
-    }
     $this->host->value = \Drupal::request()->getClientIp();
     $this->modified->value = REQUEST_TIME;
   }
@@ -497,21 +491,19 @@ class Order extends ContentEntityBase implements OrderInterface {
       ->setLabel(t('Delivery city'))
       ->setDescription(t('The city of the delivery location.'))
       ->setSetting('default_value', '');
-    $fields['delivery_zone'] = BaseFieldDefinition::create('integer')
+    $fields['delivery_zone'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Delivery state/province'))
       ->setDescription(t('The state/zone/province id of the delivery location.'))
-      ->setSetting('default_value', 0)
-      ->setSetting('unsigned', TRUE);
+      ->setSetting('default_value', '');
     $fields['delivery_postal_code'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Delivery postal code'))
       ->setDescription(t('The postal code of the delivery location.'))
       ->setSetting('default_value', '');
-    $fields['delivery_country'] = BaseFieldDefinition::create('integer')
+    $fields['delivery_country'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Delivery country'))
       ->setDescription(t('The country ID of the delivery location.'))
       ->setSetting('size', 'medium')
-      ->setSetting('default_value', 0)
-      ->setSetting('unsigned', TRUE);
+      ->setSetting('default_value', '');
     $fields['billing_first_name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Billing first name'))
       ->setDescription(t('The first name of the person paying for the order.'))
@@ -540,22 +532,20 @@ class Order extends ContentEntityBase implements OrderInterface {
       ->setLabel(t('Billing city'))
       ->setDescription(t('The city where the bill will be sent.'))
       ->setSetting('default_value', '');
-    $fields['billing_zone'] = BaseFieldDefinition::create('integer')
+    $fields['billing_zone'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Billing state/province'))
       ->setDescription(t('The state/zone/province ID where the bill will be sent.'))
-      ->setSetting('default_value', 0)
-      ->setSetting('size', 'medium')
-      ->setSetting('unsigned', TRUE);
+      ->setSetting('default_value', '')
+      ->setSetting('size', 'medium');
     $fields['billing_postal_code'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Billing postal code'))
       ->setDescription(t('The postal code where the bill will be sent.'))
       ->setSetting('default_value', '');
-    $fields['billing_country'] = BaseFieldDefinition::create('integer')
+    $fields['billing_country'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Billing country'))
       ->setDescription(t('The country ID where the bill will be sent.'))
-      ->setSetting('default_value', 0)
-      ->setSetting('size', 'medium')
-      ->setSetting('unsigned', TRUE);
+      ->setSetting('default_value', '')
+      ->setSetting('size', 'medium');
     $fields['payment_method'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Payment method'))
       ->setDescription(t('The method of payment.'))

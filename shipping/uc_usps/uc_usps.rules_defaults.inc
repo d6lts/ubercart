@@ -15,11 +15,11 @@ function uc_usps_default_rules_configuration_alter(&$configs) {
 
   // Domestic areas include U.S., American Samoa, Guam, Puerto Rico, and the Virgin Islands
   $countries = array(
-    16 => t('American Samoa'),
-    316 => t('Guam'),
-    630 => t('Puerto Rico'),
-    840 => t('United States'),
-    850 => t('Virgin Islands (US)'),
+    'AS' => t('American Samoa'),
+    'GU' => t('Guam'),
+    'PR' => t('Puerto Rico'),
+    'US' => t('United States'),
+    'VI' => t('Virgin Islands (US)'),
   );
 
   $domestic = rules_or();

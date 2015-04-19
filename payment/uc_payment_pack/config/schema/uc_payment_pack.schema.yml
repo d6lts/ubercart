@@ -27,7 +27,7 @@ uc_payment_pack.check.settings:
       type: string
       label: ''
     mailing_country:
-      type: int
+      type: string
       label: ''
 
 uc_payment_pack.cod.settings:

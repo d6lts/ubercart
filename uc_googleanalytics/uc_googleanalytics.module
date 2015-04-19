@@ -102,18 +102,6 @@ function uc_googleanalytics_display() {
 function uc_googleanalytics_ecommerce_js($order) {
   $script = '';
 
-  // Lookup the name of the country or default to the ID if it can't be found
-  // for some reason.
-  if ($country_data = uc_get_country_data(array('country_id' => $order->billing_country))) {
-    $order->billing_country_name = $country_data[0]['country_name'];
-  }
-  else {
-    $order->billing_country_name = $order->billing_country;
-  }
-
-  // Lookup the name of the zone.
-  $order->billing_zone_name = uc_zone_get_by_id($order->billing_zone);
-
   // Calculate order tax and shipping totals.
   $order->tax_total = 0;
   $order->shipping_total = 0;
@@ -128,6 +116,7 @@ function uc_googleanalytics_ecommerce_js($order) {
   }
 
   // Build the transaction arguments.
+  $country = \Drupal::service('country_manager')->getCountry($order->billing_country);
   $trans = array(
     'order_id' => $order->id(),
     'store' => uc_store_name(),
@@ -135,8 +124,8 @@ function uc_googleanalytics_ecommerce_js($order) {
     'tax' => $order->tax_total,
     'shipping' => $order->shipping_total,
     'city' => $order->billing_city,
-    'state' => $order->billing_zone_name,
-    'country' => $order->billing_country_name,
+    'state' => $country->zones[$order->billing_zone_name],
+    'country' => $country->name,
   );
 
   // Allow modules to alter the transaction arguments.

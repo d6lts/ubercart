@@ -31,14 +31,30 @@ class AddressTest extends UbercartTestBase {
       'last_name'   => 'Monster',
       'company'     => 'CTW, Inc.',
       'street1'     => '123 Sesame Street',
+      'street2'     => '',
       'city'        => 'New York',
-      'zone'        => 43,
-      'country'     => 840,
+      'zone'        => 'NY',
+      'country'     => 'US',
       'postal_code' => '10010',
       'phone'       => '1234567890',
       'email'       => 'elmo@ctw.org',
     );
     $this->test_address[] = $this->createAddress($settings);
+  }
+
+  public function testAddressFormat() {
+    $address = $this->test_address[1];
+
+    $formatted = (string) $address;
+    $expected = "CTW, INC.<br />\nELMO MONSTER<br />\n123 SESAME STREET<br />\nNEW YORK, NY 10010";
+    $this->assertEqual($formatted, $expected, 'Formatted address matches expected value.');
+
+    $address->city = 'Victoria';
+    $address->zone = 'BC';
+    $address->country = 'CA';
+    $formatted = (string) $address;
+    $expected = "CTW, INC.<br />\nELMO MONSTER<br />\n123 SESAME STREET<br />\nVICTORIA BC  10010<br />\nCANADA";
+    $this->assertEqual($formatted, $expected, 'Formatted address with non-default country matches expected value.');
   }
 
   public function testAddressComparison() {
@@ -55,20 +71,18 @@ class AddressTest extends UbercartTestBase {
       t('Physical address comparison ignores non-physical fields.')
     );
 
-    // Use specifc address.
+    // Use specific address.
     $address = clone($this->test_address[1]);
 
     // Modify city and test equality
-    $address->city = 'nEw YoRk';
-    $this->pass((string) $address);
+    $address->city = 'vIcToRia';
     $this->assertTrue(
       $this->test_address[1]->isSamePhysicalLocation($address),
       t('Case-insensitive address comparison works.')
     );
 
     // Modify city and test equality
-    $address->city = '		NewYork ';
-    $this->pass((string) $address);
+    $address->city = '		vic toria ';
     $this->assertTrue(
       $this->test_address[1]->isSamePhysicalLocation($address),
       t('Whitespace-insensitive address comparison works.')
@@ -107,8 +121,8 @@ class AddressTest extends UbercartTestBase {
                             array_rand($street);
     $address->street2     = 'Suite ' . mt_rand(100, 999);
     $address->city        = $this->randomMachineName(10);
-    $address->zone        = 23;
-    $address->country     = 840;
+    $address->zone        = 'IL';
+    $address->country     = 'US';
     $address->postal_code = mt_rand(10000, 99999);
     $address->phone       = '(' . mt_rand(100, 999) . ') ' .
                             mt_rand(100, 999) . '-' . mt_rand(0, 9999);

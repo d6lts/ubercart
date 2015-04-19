@@ -240,10 +240,3 @@ function uc_order_schema() {
 
   return $schema;
 }
-
-/**
- * Remove unused variables.
- */
-function uc_order_update_8000() {
-  update_variable_del('uc_cust_order_invoice_template');
-}

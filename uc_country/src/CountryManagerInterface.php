@@ -38,7 +38,7 @@ interface CountryManagerInterface extends \Drupal\Core\Locale\CountryManagerInte
    *
    * @return \Drupal\uc_country\Entity\Country
    */
-  public function getCountry(string $alpha_2);
+  public function getCountry($alpha_2);
 //  public function getCountryById($id) {
 //  public function getCountryData($match = array(), $sort = 'country_name') {
 
@@ -69,15 +69,12 @@ interface CountryManagerInterface extends \Drupal\Core\Locale\CountryManagerInte
    * @return array
    *   An array of zone code => zone name pairs.
    */
-  public function getZoneList(string $alpha_2);
+  public function getZoneList($alpha_2);
+
+  public function getAllZones();
 //  public function uc_zone_option_list() {
-//  public function getZoneOptions() {
 
 
-  public function getZoneById(string $id);
-//  public function getZoneById($id) {
-
-//  public function uc_zone_select($title = '', $default = NULL, $country_id = NULL, $options = array()) {
 //  public function getZoneCode($zone = NULL) {
 
 }

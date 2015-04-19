@@ -8,6 +8,7 @@
 namespace Drupal\uc_store;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -34,10 +35,10 @@ class Address {
   public $city = '';
 
   /** State, provence, or region id. */
-  public $zone = 0;
+  public $zone = '';
 
-  /** ISO 3166-1 3-digit numeric country code. */
-  public $country = 0;
+  /** ISO 3166-1 2-character numeric country code. */
+  public $country = '';
 
   /** Postal code. */
   public $postal_code = '';
@@ -52,13 +53,10 @@ class Address {
   /**
    * Constructor.
    *
-   * @param $country
-   *   ISO 3166-1 3-digit numeric country code. Defaults to the store country.
+   * For convenience, country defaults to store country.
    */
-  public function __construct($country = NULL) {
-    if (!$this->country) {
-      $this->country = isset($country) ? $country : \Drupal::config('uc_store.settings')->get('address.country');
-    }
+  public function __construct() {
+    $this->country = \Drupal::config('uc_store.settings')->get('address.country');
   }
 
   /**
@@ -121,39 +119,42 @@ class Address {
    *   A formatted string containing the address.
    */
   public function __toString() {
-    $result = db_query('SELECT zone_code, zone_name FROM {uc_countries_zones} WHERE zone_id = :id', [':id' => $this->zone]);
-    if (!($zone_data = $result->fetchAssoc())) {
-      $zone_data = array('zone_code' => t('N/A'), 'zone_name' => t('Unknown'));
-    }
-    $result = db_query('SELECT country_name, country_iso_code_2, country_iso_code_3 FROM {uc_countries} WHERE country_id = :id', [':id' => $this->country]);
-    if (!($country_data = $result->fetchAssoc())) {
-      $country_data = array(
-        'country_name' => t('Unknown'),
-        'country_iso_code_2' => t('N/A'),
-        'country_iso_code_3' => t('N/A'),
-      );
-    }
-
     $variables = array(
-      "\r\n" => '<br />',
-      '!company' => SafeMarkup::checkPlain($this->company),
-      '!first_name' => SafeMarkup::checkPlain($this->first_name),
-      '!last_name' => SafeMarkup::checkPlain($this->last_name),
-      '!street1' => SafeMarkup::checkPlain($this->street1),
-      '!street2' => SafeMarkup::checkPlain($this->street2),
-      '!city' => SafeMarkup::checkPlain($this->city),
-      '!zone_code' => $zone_data['zone_code'],
-      '!zone_name' => $zone_data['zone_name'],
-      '!postal_code' => SafeMarkup::checkPlain($this->postal_code),
-      '!country_name' => t($country_data['country_name']),
-      '!country_code2' => $country_data['country_iso_code_2'],
-      '!country_code3' => $country_data['country_iso_code_3'],
+      '!company' => $this->company,
+      '!first_name' => $this->first_name,
+      '!last_name' => $this->last_name,
+      '!street1' => $this->street1,
+      '!street2' => $this->street2,
+      '!city' => $this->city,
+      '!postal_code' => $this->postal_code,
     );
 
+    $country = \Drupal::service('country_manager')->getCountry($this->country);
+    if ($country) {
+      $variables += array(
+        '!zone_code' => $this->zone ?: t('N/A'),
+        '!zone_name' => isset($country->zones[$this->zone]) ? $country->zones[$this->zone] : t('Unknown'),
+        '!country_name' => t($country->name),
+        '!country_code2' => $country->alpha_2,
+        '!country_code3' => $country->alpha_3,
+      );
+      $format = implode("\r\n", $country->address_format);
+    }
+    else {
+      $variables += array(
+        '!zone_code' => t('N/A'),
+        '!zone_name' => t('Unknown'),
+        '!country_name' => t('Unknown'),
+        '!country_code2' => t('N/A'),
+        '!country_code3' => t('N/A'),
+      );
+      $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
+    }
+
     if (uc_store_default_country() != $this->country) {
-      $variables['!country_name_if'] = t($country_data['country_name']);
-      $variables['!country_code2_if'] = $country_data['country_iso_code_2'];
-      $variables['!country_code3_if'] = $country_data['country_iso_code_3'];
+      $variables['!country_name_if'] = $variables['!country_name'];
+      $variables['!country_code2_if'] = $variables['!country_code2'];
+      $variables['!country_code3_if'] = $variables['!country_code3'];
     }
     else {
       $variables['!country_name_if']  = '';
@@ -161,40 +162,14 @@ class Address {
       $variables['!country_code3_if'] = '';
     }
 
-    $format = \Drupal::config('uc_country.formats')->get($this->country);
-    if (empty($format)) {
-      $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
-    }
-    $address = strtr($format, $variables);
-    $address = strtr($address, array("\n" => '<br />'));
-
-    $match = array('`^<br( /)?>`', '`<br( /)?>$`', '`<br( /)?>(\s*|[\s*<br( /)?>\s*]+)<br( /)?>`', '`<br( /)?><br( /)?>`', '`<br( /)?>, N/A`');
-    $replace = array('', '', '<br />', '<br />', '', '');
-    $address = preg_replace($match, $replace, $address);
+    $address = SafeMarkup::checkPlain(strtr($format, $variables));
+    $address = trim(preg_replace(array("/\r/", "/\n+/"), array('', "\n"), $address), "\n");
 
     if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
       $address = Unicode::strtoupper($address);
     }
 
-    return $address;
-  }
-
-  /**
-   * PHP magic method to use in relation with var_export().
-   *
-   * Created for strongarm compatibility.
-   *
-   * @param array $data
-   *   Data to import
-   */
-  public static function __set_state($data) {
-    $obj = new self;
-
-    foreach ($data as $key => $val) {
-      $obj->$key = $val;
-    }
-
-    return $obj;
-  }
-
-}
+    return nl2br($address);
+   }
+ 
+ }

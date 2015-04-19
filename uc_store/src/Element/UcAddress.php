@@ -82,17 +82,17 @@ class UcAddress extends Element\FormElement {
       $value = array();
     }
 
-    $countries = uc_country_option_list();
-    $country_keys = array_keys($countries);
-
+    $country_names = \Drupal::service('country_manager')->getEnabledList();
+    $country_keys = array_keys($country_names);
+ 
     // Force the selected country to a valid one, so the zone dropdown matches.
     if (is_object($value)) {
-      if (isset($value->{$prefix . 'country'}) && !isset($countries[$value->{$prefix . 'country'}])) {
+      if (isset($value->{$prefix . 'country'}) && !isset($country_names[$value->{$prefix . 'country'}])) {
         $value->{$prefix . 'country'} = $country_keys[0];
       }
     }
     else {
-      if (isset($value[$prefix . 'country']) && !isset($countries[$value[$prefix . 'country']])) {
+      if (isset($value[$prefix . 'country']) && !isset($country_names[$value[$prefix . 'country']])) {
         $value[$prefix . 'country'] = $country_keys[0];
       }
     }
@@ -111,7 +111,7 @@ class UcAddress extends Element\FormElement {
         case 'country':
           $subelement = array(
             '#type' => 'select',
-            '#options' => $countries,
+            '#options' => $country_names,
             '#ajax' => array(
               'callback' => array(get_class(), 'updateZone'),
               'wrapper' => 'uc-store-address-' . str_replace('_', '-', $prefix) . 'zone-wrapper',
@@ -133,7 +133,7 @@ class UcAddress extends Element\FormElement {
           );
 
           $country_id = is_object($value) ? $value->{$prefix . 'country'} : $value[$prefix . 'country'];
-          $zones = db_query("SELECT zone_id, zone_name FROM {uc_countries_zones} WHERE zone_country_id = :country", [':country' => $country_id])->fetchAllKeyed();
+          $zones = \Drupal::service('country_manager')->getZoneList($country_id);
           if (!empty($zones)) {
             natcasesort($zones);
             $subelement += array(

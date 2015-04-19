@@ -285,15 +285,13 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
     return array('success' => FALSE);
   }
 
-  $billing_country = uc_get_country_data(array('country_id' => $order->billing_country));
-  $delivery_country = uc_get_country_data(array('country_id' => $order->delivery_country));
   $data = array(
     'billTo_firstName' => $order->billing_first_name,
     'billTo_lastName' => $order->billing_last_name,
     'billTo_street1' => $order->billing_street1,
     'billTo_city' => $order->billing_city,
-    'billTo_country' => $billing_country[0]['country_iso_code_2'],
-    'billTo_state' => uc_get_zone_code($order->billing_zone),
+    'billTo_state' => $order->billing_zone,
+    'billTo_country' => $order->billing_country,
     'billTo_postalCode' => $order->billing_postal_code,
     'billTo_email' => $order->getEmail(),
     'billTo_phoneNumber' => $order->billing_phone,
@@ -305,8 +303,8 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
       'shipTo_street1' => $order->delivery_street1,
       'shipTo_street2' => $order->delivery_street2,
       'shipTo_city' => $order->delivery_city,
-      'shipTo_country' => $delivery_country[0]['country_iso_code_2'],
-      'shipTo_state' => uc_get_zone_code($order->delivery_zone),
+      'shipTo_state' => $order->delivery_zone,
+      'shipTo_country' => $order->delivery_country,
       'shipTo_postalCode' => $order->delivery_postal_code,
     );
   }
@@ -417,23 +415,18 @@ function uc_cybersource_charge($order_id, $amount, $data) {
     }
   }
 
-  $country = uc_get_country_data(array('country_id' => $order->billing_country));
-  if ($country === FALSE) {
-    $country = array(0 => array('country_iso_code_2' => 'US'));
-  }
-
   // Process the charge differently depending on the CyberSource method.
   switch (variable_get('uc_cybersource_method', 'post')) {
     // Support for the Silent Order POST.
     case 'post':
-      return _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country);
+      return _uc_cybersource_post_charge($order, $amount, $data, $cc_type);
 
     // Support for the SOAP Toolkit API.
     case 'soap':
       // TODO: Refactor to use separate function for each API type.
       // - i.e. _uc_cybersource_charge_request_soap($order, $amount, $data);
       // require_once(drupal_get_path('module', 'uc_cybersource') . '/SOAP.php');
-      return _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country);
+      return _uc_cybersource_soap_charge($order, $amount, $data, $cc_type);
 
     case 'api':
       $config = cybs_load_config('cybs.ini');
@@ -459,7 +452,7 @@ function uc_cybersource_charge($order_id, $amount, $data) {
 /**
  * POSTs transaction to CyberSource.
  */
-function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country) {
+function _uc_cybersource_post_charge($order, $amount, $data, $cc_type) {
   // Include the HOP.php per the module instructions.
   if (!uc_cybersource_hop_include()) {
     drupal_set_message(t('Silent Order POST requires the HOP.php provided by CyberSource.'));
@@ -471,8 +464,8 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
     'billTo_lastName' => $order->billing_last_name,
     'billTo_street1' => $order->billing_street1,
     'billTo_city' => $order->billing_city,
-    'billTo_country' => $country[0]['country_iso_code_2'],
-    'billTo_state' => uc_get_zone_code($order->billing_zone),
+    'billTo_state' => $order->billing_zone,
+    'billTo_country' => $order->billing_country,
     'billTo_postalCode' => $order->billing_postal_code,
     'billTo_email' => $order->getEmail(),
     'card_accountNumber' => $order->payment_details['cc_number'],
@@ -570,7 +563,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
 /**
  * Handles the SOAP charge request and Ubercart order save.
  */
-function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country) {
+function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type) {
   // Set the URL for the CyberSource SOAP Toolkit API WSDL.
   if (variable_get('uc_cybersource_server', 'test') == 'test') {
     $url = 'https://ics2wstest.ic3.com/commerce/1.x/transactionProcessor/CyberSourceTransaction_1.38.wsdl';
@@ -581,9 +574,6 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
 
   // Variable currency... not used at the moment.
   $currency = variable_get('uc_cybersource_currency', 'usd');
-
-  $billing_country = uc_get_country_data(array('country_id' => $order->billing_country));
-  $delivery_country = uc_get_country_data(array('country_id' => $order->delivery_country));
 
   try {
     $soapClient = new \Drupal\uc_cybersource\SoapClient($url, array());
@@ -660,9 +650,9 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
       $billTo->street2 = $order->billing_street2;
     }
     $billTo->city = $order->billing_city;
-    $billTo->state = uc_get_zone_code($order->billing_zone);
+    $billTo->state = $order->billing_zone;
     $billTo->postalCode = $order->billing_postal_code;
-    $billTo->country = $billing_country[0]['country_iso_code_2'];
+    $billTo->country = $order->billing_country;
     if ($order->billing_phone) {
       $billTo->phoneNumber = $order->billing_phone;
     }
@@ -868,9 +858,6 @@ function uc_cybersource_uc_calculate_tax($order) {
   // Variable currency... not used at the moment.
   $currency = variable_get('uc_cybersource_currency', 'usd');
 
-  $billing_country = uc_get_country_data(array('country_id' => $order->billing_country));
-  $delivery_country = uc_get_country_data(array('country_id' => $order->delivery_country));
-
   try {
     $soapClient = new \Drupal\uc_cybersource\SoapClient($url, array());
 
@@ -893,9 +880,9 @@ function uc_cybersource_uc_calculate_tax($order) {
       $billTo->street2 = $order->billing_street2;
     }
     $billTo->city = $order->billing_city;
-    $billTo->state = uc_get_zone_code($order->billing_zone);
+    $billTo->state = $order->billing_zone;
     $billTo->postalCode = $order->billing_postal_code;
-    $billTo->country = $billing_country[0]['country_iso_code_2'];
+    $billTo->country = $order->billing_country;
     if ($order->billing_phone) {
       $billTo->phoneNumber = $order->billing_phone;
     }
@@ -912,9 +899,9 @@ function uc_cybersource_uc_calculate_tax($order) {
       $shipTo->street2 = $order->delivery_street2;
     }
     $shipTo->city = $order->delivery_city;
-    $shipTo->state = uc_get_zone_code($order->delivery_zone);
+    $shipTo->state = $order->delivery_zone;
     $shipTo->postalCode = $order->delivery_postal_code;
-    $shipTo->country = $delivery_country[0]['country_iso_code_2'];
+    $shipTo->country = $order->delivery_country;
     $shipTo->email = $order->getEmail();
     $request->shipTo = $shipTo;
 

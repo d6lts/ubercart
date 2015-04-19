@@ -151,7 +151,7 @@ class QuoteTest extends UbercartTestBase {
       'AND' => array( array(
         'data_is' => array(
           'data' => array('order:delivery-address:country'),
-          'value' => '840',
+          'value' => 'US',
         ),
       )),
     ));

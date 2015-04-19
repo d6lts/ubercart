@@ -12,7 +12,7 @@
  * handles the exceptions.
  *
  * @param $code
- *   ISO 3166-1 3-digit numerical country code.
+ *   ISO 3166-1 2-character country code.
  *
  * @return
  *   Country name string for use by the USPS International Rate API.
@@ -21,52 +21,52 @@
  */
 function uc_usps_country_map($code = NULL) {
   $countries = array(
-    248 => 'Aland Island (Finland)',
-    334 => 'Australia', // Heard Island and McDonald Islands
-     68 => 'Bolivia',
-    535 => 'Bonaire (Netherlands Antilles)',
-     92 => 'British Virgin Islands',
-    166 => 'Cocos Island (Australia)',
-    180 => 'Congo, Democratic Republic of the',
-    178 => 'Congo, Republic of the',
-    531 => 'Curacao (Netherlands Antilles)',
-    384 => "Cote d'Ivoire",
-    626 => 'East Timor (Indonesia)',
-    238 => 'Falkland Islands',
-    260 => 'France', // French Southern Territories
-    268 => 'Georgia, Republic of',
-    826 => 'Great Britain and Northern Ireland',
-     86 => 'Great Britain and Northern Ireland', // British Indian Ocean Territory
-    239 => 'Great Britain and Northern Ireland', // South Georgia and the
+    'AX' => 'Aland Island (Finland)',
+    'AU' => 'Australia', // Heard Island and McDonald Islands
+    'BO' => 'Bolivia',
+    'BQ' => 'Bonaire (Netherlands Antilles)',
+    'VG' => 'British Virgin Islands',
+    'CC' => 'Cocos Island (Australia)',
+    'CD' => 'Congo, Democratic Republic of the',
+    'CG' => 'Congo, Republic of the',
+    'CW' => 'Curacao (Netherlands Antilles)',
+    'CI' => "Cote d'Ivoire",
+    'TL' => 'East Timor (Indonesia)',
+    'FK' => 'Falkland Islands',
+    'TF' => 'France', // French Southern Territories
+    'GE' => 'Georgia, Republic of',
+    'GB' => 'Great Britain and Northern Ireland',
+    'IO' => 'Great Britain and Northern Ireland', // British Indian Ocean Territory
+    'GS' => 'Great Britain and Northern Ireland', // South Georgia and the
                                                  // South Sandwich Islands
-    364 => 'Iran',
-    275 => 'Israel', // Palestinian Territory, Occupied
-    833 => 'Isle of Man (Great Britain and Northern Ireland)',
-    498 => 'Moldova',
-    732 => 'Morocco', // Western Sahara
-    408 => "Korea, Democratic People's Republic of (North Korea)",
-     74 => 'Norway', // Bouvet Island
-    744 => 'Norway', // Svalbard and Jan Mayen
-    410 => 'Korea, Republic of (South Korea)',
-    418 => 'Laos',
-    492 => 'Monaco (France)',
-    104 => 'Myanmar (Burma)',
-    612 => 'Pitcairn Island',
-    638 => 'Reunion',
-    643 => 'Russia',
-    688 => 'Serbia, Republic of',
-    652 => 'Saint Barthelemy (Guadeloupe)',
-    654 => 'Saint Helena',
-    534 => 'Saint Maarten (Dutch) (Netherlands Antilles)',
-    663 => 'Saint Martin (French) (Guadeloupe)',
-    703 => 'Slovak Republic',
-    158 => 'Taiwan',
-    834 => 'Tanzania',
-    792 => 'Turkey',
-    804 => 'Ukraine',
-    336 => 'Vatican City',
-    862 => 'Venezuela',
-    876 => 'Wallis and Futuna Islands',
+    'IR' => 'Iran',
+    'IL' => 'Israel', // Palestinian Territory, Occupied
+    'IM' => 'Isle of Man (Great Britain and Northern Ireland)',
+    'MD' => 'Moldova',
+    'MA' => 'Morocco', // Western Sahara
+    'KP' => "Korea, Democratic People's Republic of (North Korea)",
+    'BV' => 'Norway', // Bouvet Island
+    'SJ' => 'Norway', // Svalbard and Jan Mayen
+    'KR' => 'Korea, Republic of (South Korea)',
+    'LA' => 'Laos',
+    'MC' => 'Monaco (France)',
+    'MM' => 'Myanmar (Burma)',
+    'PN' => 'Pitcairn Island',
+    'RE' => 'Reunion',
+    'RU' => 'Russia',
+    'RS' => 'Serbia, Republic of',
+    'BL' => 'Saint Barthelemy (Guadeloupe)',
+    'SH' => 'Saint Helena',
+    'SX' => 'Saint Maarten (Dutch) (Netherlands Antilles)',
+    'MF' => 'Saint Martin (French) (Guadeloupe)',
+    'SK' => 'Slovak Republic',
+    'TW' => 'Taiwan',
+    'TZ' => 'Tanzania',
+    'TR' => 'Turkey',
+    'UA' => 'Ukraine',
+    'VA' => 'Vatican City',
+    'VE' => 'Venezuela',
+    'WF' => 'Wallis and Futuna Islands',
   );
 
   if ($code) {

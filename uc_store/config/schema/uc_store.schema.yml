@@ -36,10 +36,10 @@ uc_store.settings:
           type: string
           label: ''
         zone:
-          type: integer
+          type: string
           label: ''
         country:
-          type: integer
+          type: string
           label: ''
         postal_code:
           type: string
