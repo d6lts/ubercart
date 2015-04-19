@@ -9,6 +9,7 @@ namespace Drupal\uc_country;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a listing of countries.
@@ -67,7 +68,7 @@ class CountryListBuilder extends ConfigEntityListBuilder {
     $build['description'] = array(
       '#markup' => $this->t("<p>This is a list of the countries currently"
         . " defined for use on your Drupal site. This country data adheres to "
-        . " the ISO 3166 standard for country and zone naming used by payment"
+        . " the @iso standard for country and zone naming used by payment"
         . " providers and package couriers.</p>"
         . "<p>To make a country available for use at checkout or in a user's"
         . " address book, 'Enable' the country using the widget in the"
@@ -75,7 +76,9 @@ class CountryListBuilder extends ConfigEntityListBuilder {
         . " prevent customers from selecting that country as a billing or"
         . " shipping address.</p>"
         . "<p>You may also use the the widget in the 'Operations' column to edit "
-        . " a country's name or address format.</p>"),
+        . " a country's name or address format.</p>",
+        ['@iso' => \Drupal::l('ISO 3166', Url::fromUri('http://en.wikipedia.org/wiki/ISO_3166'))]
+      ),
     );
     $build += parent::render();
     $build['table']['#empty'] = $this->t('No countries have been configured yet.');

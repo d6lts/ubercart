@@ -74,7 +74,8 @@ function uc_usps_country_map($code = NULL) {
       return $countries[$code];
     }
     else {
-      return uc_country_get_by_id($code);
+      $country = \Drupal::service('country_manager')->getCountry($code);
+      return $country->name;
     }
   }
 

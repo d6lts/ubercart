@@ -38,6 +38,7 @@ class CountryManager implements CountryManagerInterface {
    * Constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    */
   public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
     $this->moduleHandler = $module_handler;
@@ -45,12 +46,7 @@ class CountryManager implements CountryManagerInterface {
   }
 
   /**
-   * Get an array of country code => country name pairs, altered by alter hooks.
-   *
-   * @return array
-   *   An array of country code => country name pairs.
-   *
-   * @see \Drupal\Core\Locale\CountryManager::getStandardList()
+   * {@inheritdoc}
    */
   public function getList() {
     // Populate the country list if it is not already populated.
@@ -63,10 +59,7 @@ class CountryManager implements CountryManagerInterface {
   }
 
   /**
-   * Get an array of country numeric code => country name pairs, altered by alter hooks.
-   *
-   * @return array
-   *   An array of country numeric code => country name pairs.
+   * {@inheritdoc}
    */
   public function getAvailableList() {
     $countries = $this->entityManager->getStorage('uc_country')->loadMultiple(NULL);
@@ -80,10 +73,7 @@ class CountryManager implements CountryManagerInterface {
   }
 
   /**
-   * Get an array of all countries enabled for checkout, altered by alter hooks.
-   *
-   * @return array
-   *   An array of country numeric code => country name pairs.
+   * {@inheritdoc}
    */
   public function getEnabledList() {
     $countries = $this->entityManager->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
@@ -97,20 +87,14 @@ class CountryManager implements CountryManagerInterface {
   }
 
   /**
-   * Get an array of all countries enabled for checkout, altered by alter hooks.
-   *
-   * @return array
-   *   An array of country numeric code => country name pairs.
+   * {@inheritdoc}
    */
   public function getCountry($alpha_2) {
     return $this->entityManager->getStorage('uc_country')->load($alpha_2);
   }
 
   /**
-   * Get an array of all countries enabled for checkout, altered by alter hooks.
-   *
-   * @return array
-   *   An array of country numeric code => country name pairs.
+   * {@inheritdoc}
    */
   public function getByProperty(array $properties) {
     $countries = $this->entityManager->getStorage('uc_country')->loadByProperties($properties);
@@ -123,32 +107,11 @@ class CountryManager implements CountryManagerInterface {
   }
 
   /**
-   * Returns a list of zone code => zone name pairs for the specified country.
-   *
-   * @return array
-   *   An array of zone code => zone name pairs.
+   * {@inheritdoc}
    */
   public function getZoneList($alpha_2) {
     $country = $this->entityManager->getStorage('uc_country')->load($alpha_2);
     return $country->zones;
   }
 
-  /**
-   * Returns a list of zone code => zone name pairs for all enabled countries.
-   *
-   * @return array
-   *   An array of zone code => zone name pairs.
-   */
-  public function getAllZones() {
-    $options = array();
-    $countries = entity_load_multiple_by_properties('uc_country', array('status' => TRUE));
-    foreach ($countries as $country) {
-      if (!empty($country->zones)) {
-        $options[t($country->name)] = $country->zones;
-      }
-    }
-    uksort($options, 'strnatcasecmp');
-
-    return $options;
-  }
 }

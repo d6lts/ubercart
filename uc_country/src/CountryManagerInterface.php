@@ -19,7 +19,6 @@ interface CountryManagerInterface extends \Drupal\Core\Locale\CountryManagerInte
    *   An array of country code => country name pairs.
    */
   public function getAvailableList();
-//  public function uc_country_import_list() {
 
   /**
    * Returns a list of country code => country name pairs for enabled countries.
@@ -28,19 +27,16 @@ interface CountryManagerInterface extends \Drupal\Core\Locale\CountryManagerInte
    *   An array of country code => country name pairs.
    */
   public function getEnabledList();
-//  public function uc_country_option_list() {
 
   /**
    * Returns the uc_country config entity with the specified country code.
    *
-   * @param string $id
+   * @param string $alpha_2
    *   The two-character ISO 3166 country code.
    *
    * @return \Drupal\uc_country\Entity\Country
    */
   public function getCountry($alpha_2);
-//  public function getCountryById($id) {
-//  public function getCountryData($match = array(), $sort = 'country_name') {
 
   /**
    * Returns all uc_country config entities with the specified propertes.
@@ -66,15 +62,12 @@ interface CountryManagerInterface extends \Drupal\Core\Locale\CountryManagerInte
   /**
    * Returns a list of zone code => zone name pairs for the specified country.
    *
+   * @param string $alpha_2
+   *   The two-character ISO 3166 country code.
+   *
    * @return array
    *   An array of zone code => zone name pairs.
    */
   public function getZoneList($alpha_2);
-
-  public function getAllZones();
-//  public function uc_zone_option_list() {
-
-
-//  public function getZoneCode($zone = NULL) {
 
 }

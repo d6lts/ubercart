@@ -7,87 +7,41 @@
 
 namespace Drupal\uc_country\Tests;
 
-use Drupal\uc_store\Tests\UbercartTestBase;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Import, edit, and remove countries and their settings.
  *
  * @group Ubercart
  */
-class CountryTest extends UbercartTestBase {
+class CountryTest extends WebTestBase {
+
+  public static $modules = array('uc_country', 'uc_store');
 
   /**
-   * Test import/enable/disable/remove of Country information files.
+   * Test enable/disable of countries.
    */
-  public function testCountries() {
-    $import_file = 'belgium_56_3.cif';
-    $country_name = 'Belgium';
-    $country_code = 'BEL';
+  public function testCountryUI() {
+    $this->drupalLogin($this->drupalCreateUser(array('administer countries', 'administer store')));
 
-    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/store/config/country');
+    $this->assertLinkByHref('admin/store/config/country/US/disable', 0, 'United States is enabled by default.');
+    $this->assertLinkByHref('admin/store/config/country/CA/disable', 0, 'Canada is enabled by default.');
+    $this->assertLinkByHref('admin/store/config/country/BE/enable', 0, 'Belgium is not enabled by default.');
 
-    $this->drupalGet('admin/store/settings/country');
-    $this->assertRaw(
-      '<option value="' . $import_file . '">' . $import_file . '</option>',
-      t('Ensure country file is not imported yet.')
-    );
+    $this->drupalGet('admin/store/config/store');
+    $this->assertNoOption('edit-uc-store-country', 'BE', 'Belgium not listed in uc_address select country field.');
 
-    $edit = array(
-      'import_file[]' => array($import_file => $import_file),
-    );
-    $this->drupalPostForm(
-      'admin/store/settings/country',
-      $edit,
-      t('Import')
-    );
-    $this->assertText(
-      t('Country file @file imported.', ['@file' => $import_file]),
-      t('Country was imported successfully.')
-    );
-    $this->assertText(
-      $country_code,
-      t('Country appears in the imported countries table.')
-    );
-    $this->assertNoRaw(
-      '<option value="' . $import_file . '">' . $import_file . '</option>',
-      t('Country does not appear in list of files to be imported.')
-    );
+    $this->drupalGet('admin/store/config/country/BE/enable');
+    $this->assertText('The country Belgium has been enabled.');
+    $this->assertLinkByHref('admin/store/config/country/BE/disable', 0, 'Belgium is now enabled.');
 
-    // Have to pick the right one here!
-    $this->clickLink(t('Disable'));
-    $this->assertText(
-      t('@name disabled.', ['@name' => $country_name]),
-      t('Country was disabled.')
-    );
+    $this->drupalGet('admin/store/config/store');
+    $this->assertOption('edit-uc-store-country', 'BE', 'Belgium listed in uc_address select country field.');
 
-    $this->clickLink(t('Enable'));
-    $this->assertText(
-      t('@name enabled.', ['@name' => $country_name]),
-      t('Country was enabled.')
-    );
-
-    $this->clickLink(t('Remove'));
-    $this->assertText(
-      t('Are you sure you want to remove @name from the system?', ['@name' => $country_name]),
-      t('Confirm form is displayed.')
-    );
-
-    $this->drupalPostForm(
-      'admin/store/settings/country/56/remove',
-      [],
-      t('Remove')
-    );
-    $this->assertText(
-      t('@name removed.', ['@name' => $country_name]),
-      t('Country removed.')
-    );
-    $this->assertRaw(
-      '<option value="' . $import_file . '">' . $import_file . '</option>',
-      t('Ensure country file is not imported yet.')
-    );
-    $this->assertNoText(
-      $country_code,
-      t('Country does not appear in imported countries table.')
-    );
+    $this->drupalGet('admin/store/config/country');
+    $this->clickLink('Disable');
+    $this->assertText('The country Belgium has been disabled.');
+    $this->assertLinkByHref('admin/store/config/country/BE/enable', 0, 'Belgium is now disabled.');
   }
 }
