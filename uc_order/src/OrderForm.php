@@ -60,7 +60,7 @@ class OrderForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array &$form, FormStateInterface $form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     $order = $this->buildEntity($form, $form_state);
 
     if ($form_state->getValue('order_modified') != $order->modified->value) {
