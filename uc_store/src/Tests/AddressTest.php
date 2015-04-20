@@ -46,14 +46,14 @@ class AddressTest extends UbercartTestBase {
     $address = $this->test_address[1];
 
     $formatted = (string) $address;
-    $expected = "CTW, INC.<br />\nELMO MONSTER<br />\n123 SESAME STREET<br />\nNEW YORK, NY 10010";
+    $expected = "CTW, INC.<br>\nELMO MONSTER<br>\n123 SESAME STREET<br>\nNEW YORK, NY 10010";
     $this->assertEqual($formatted, $expected, 'Formatted address matches expected value.');
 
     $address->city = 'Victoria';
     $address->zone = 'BC';
     $address->country = 'CA';
     $formatted = (string) $address;
-    $expected = "CTW, INC.<br />\nELMO MONSTER<br />\n123 SESAME STREET<br />\nVICTORIA BC  10010<br />\nCANADA";
+    $expected = "CTW, INC.<br>\nELMO MONSTER<br>\n123 SESAME STREET<br>\nVICTORIA BC  10010<br>\nCANADA";
     $this->assertEqual($formatted, $expected, 'Formatted address with non-default country matches expected value.');
   }
 

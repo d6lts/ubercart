@@ -137,7 +137,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
     $pane = $this->pluginDefinition['id'];
     $source = $this->sourcePaneId();
 
-    $address = new Address;
+    $address = new Address();
     $panes = &$form_state->getValue('panes');
     foreach ($panes[$pane] as $field => $value) {
       if (isset($address->$field)) {

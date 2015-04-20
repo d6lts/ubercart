@@ -68,6 +68,15 @@ abstract class UbercartTestBase extends WebTestBase {
       $class = get_parent_class($class);
     }
 
+    // Enable a random selection of 8 countries so we're not always
+    // testing with US and CA.
+    $countries = \Drupal::service('country_manager')->getAvailableList();
+    $country_ids = array_rand($countries, 8);
+    foreach ($country_ids as $country_id) {
+      // Don't use the country UI, we're not testing that here...
+      entity_load('uc_country', $country_id)->enable()->save();
+    }
+
     // Create a store administrator user account.
     $this->adminUser = $this->drupalCreateUser($adminPermissions);
 

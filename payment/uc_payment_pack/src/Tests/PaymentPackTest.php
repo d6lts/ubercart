@@ -50,9 +50,7 @@ class PaymentPackTest extends UbercartTestBase {
     $address->street1 = mt_rand(100, 1000) . ' ' . $this->randomMachineName(10);
     $address->street2 = 'Suite ' . mt_rand(100, 999);
     $address->city = $this->randomMachineName(10);
-    $country_id = array_rand(\Drupal::service('country_manager')->getAvailableList());
-    // Enable this country
-    $this->drupalGet('admin/store/config/country/' . $country_id . '/enable');
+    $country_id = array_rand(\Drupal::service('country_manager')->getEnabledList());
     $address->country = $country_id;
     $zone = array_rand(\Drupal::service('country_manager')->getZoneList($country_id));
     $address->zone = $zone;

@@ -220,8 +220,7 @@ class OrderTest extends UbercartTestBase {
     $this->assertTrue($order_exists, t('Found order ID @order_id', ['@order_id' => $order->id()]));
 
     $country_manager = \Drupal::service('country_manager');
-    $countries = $country_manager->getAvailableList();
-    $country = array_rand($countries);
+    $country = array_rand($country_manager->getEnabledList());
     $zones = $country_manager->getZoneList($country);
 
     $delivery_address = new Address();
