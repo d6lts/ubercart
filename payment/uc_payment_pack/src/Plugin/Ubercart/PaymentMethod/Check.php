@@ -38,7 +38,7 @@ class Check extends PaymentMethodPluginBase {
       '#markup' => t('Checks should be made out to:')
     );
 
-    if (!$check_config->get('mailing_street1')) {
+    if (!$check_config->get('mailing_address.street1')) {
       $build['address'] = array(
         '#markup' => uc_store_address(),
         '#prefix' => '<p>',
@@ -47,14 +47,14 @@ class Check extends PaymentMethodPluginBase {
     }
     else {
       $address = new Address();
-      $address->first_name = $check_config->get('mailing_name');
-      $address->company = $check_config->get('mailing_company');
-      $address->street1 = $check_config->get('mailing_street1');
-      $address->street1 = $check_config->get('mailing_street2');
-      $address->city = $check_config->get('mailing_city');
-      $address->zone = $check_config->get('mailing_zone');
-      $address->postal_code = $check_config->get('mailing_postal_code');
-      $address->country = $check_config->get('mailing_country');
+      $address->first_name = $check_config->get('mailing_address.name');
+      $address->company = $check_config->get('mailing_address.company');
+      $address->street1 = $check_config->get('mailing_address.street1');
+      $address->street2 = $check_config->get('mailing_address.street2');
+      $address->city = $check_config->get('mailing_address.city');
+      $address->zone = $check_config->get('mailing_address.zone');
+      $address->postal_code = $check_config->get('mailing_address.postal_code');
+      $address->country = $check_config->get('mailing_address.country');
       $build['address'] = array(
         '#markup' => (string) $address,
         '#prefix' => '<p>',
@@ -75,7 +75,7 @@ class Check extends PaymentMethodPluginBase {
   public function cartReview(OrderInterface $order) {
     $check_config = \Drupal::config('uc_payment_pack.check.settings');
 
-    if (!$check_config->get('mailing_street1')) {
+    if (!$check_config->get('mailing_address.street1')) {
       $review[] = array(
         'title' => t('Mail to'),
         'data' => uc_store_address(),
@@ -83,14 +83,14 @@ class Check extends PaymentMethodPluginBase {
     }
     else {
       $address = new Address();
-      $address->first_name = $check_config->get('mailing_name');
-      $address->company = $check_config->get('mailing_company');
-      $address->street1 = $check_config->get('mailing_street1');
-      $address->street1 = $check_config->get('mailing_street2');
-      $address->city = $check_config->get('mailing_city');
-      $address->zone = $check_config->get('mailing_zone');
-      $address->postal_code = $check_config->get('mailing_postal_code');
-      $address->country = $check_config->get('mailing_country');
+      $address->first_name = $check_config->get('mailing_address.name');
+      $address->company = $check_config->get('mailing_address.company');
+      $address->street1 = $check_config->get('mailing_address.street1');
+      $address->street2 = $check_config->get('mailing_address.street2');
+      $address->city = $check_config->get('mailing_address.city');
+      $address->zone = $check_config->get('mailing_address.zone');
+      $address->postal_code = $check_config->get('mailing_address.postal_code');
+      $address->country = $check_config->get('mailing_address.country');
 
       $review[] = array(
         'title' => t('Mail to'),

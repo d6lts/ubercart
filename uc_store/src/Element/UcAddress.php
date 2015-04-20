@@ -68,7 +68,7 @@ class UcAddress extends Element\FormElement {
 
     $element['#tree'] = TRUE;
     $prefix = $element['#key_prefix'] ? ($element['#key_prefix'] . '_') : '';
-    $config = \Drupal::config('uc_store.settings')->get("address_fields");
+    $config = \Drupal::config('uc_store.settings')->get('address_fields');
 
     if ($form_state->has('uc_address')) {
       // Use submitted Ajax values.

@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment_pack\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
+use Drupal\uc_store\Address;
 
 /**
  * Tests the payment method pack.
@@ -40,31 +41,64 @@ class PaymentPackTest extends UbercartTestBase {
 
     $this->drupalGet('admin/store/settings/payment/method/check');
     $this->assertTitle('Check settings | Drupal');
-    // @todo: Fix and test the settings page
+    $this->assertText(\Drupal::config('uc_payment_pack.check.settings')->get('policy'), 'Default check payment policy found.');
 
+    // Fill in and save the check address settings.
+    $address = new Address();
+    $address->first_name = $this->randomMachineName(6);
+    $address->company = $this->randomMachineName(10);
+    $address->street1 = mt_rand(100, 1000) . ' ' . $this->randomMachineName(10);
+    $address->street2 = 'Suite ' . mt_rand(100, 999);
+    $address->city = $this->randomMachineName(10);
+    $country_id = array_rand(\Drupal::service('country_manager')->getAvailableList());
+    // Enable this country
+    $this->drupalGet('admin/store/config/country/' . $country_id . '/enable');
+    $address->country = $country_id;
+    $zone = array_rand(\Drupal::service('country_manager')->getZoneList($country_id));
+    $address->zone = $zone;
+    $address->postal_code = mt_rand(10000, 99999);
+
+    $edit = array(
+      'uc_check_mailing_name' => $address->first_name,
+      'uc_check_mailing_company' => $address->company,
+      'uc_check_mailing_street1' => $address->street1,
+      'uc_check_mailing_street2' => $address->street2,
+      'uc_check_mailing_city' => $address->city,
+      'uc_check_mailing_zone' => $address->zone,
+      'uc_check_mailing_country' => $address->country,
+      'uc_check_mailing_postal_code' => $address->postal_code,
+    );
+    // Fool the Ajax by setting the store default country to our randomly-chosen
+    // country before we post the form. Otherwise the zone select won't be
+    // populated correctly.
+    \Drupal::configFactory()->getEditable('uc_payment_pack.check.settings')->set('mailing_address.country', $country_id)->save();
+    $this->drupalPostForm('admin/store/settings/payment/method/check', $edit, t('Save configuration'));
+
+    // Test that check settings show up on checkout page.
     $this->drupalGet('cart/checkout');
     $this->assertFieldByName('panes[payment][payment_method]', 'check', 'Check payment method is selected at checkout.');
     $this->assertText('Checks should be made out to:');
-    // @todo: Test the settings
-    // $this->assertText('Personal and business checks will be held for up to 10 business days to ensure payment clears before an order is shipped.');
+    $this->assertRaw((string) $address, 'Properly formated check mailing address found.');
+    $this->assertText(\Drupal::config('uc_payment_pack.check.settings')->get('policy'), 'Check payment policy found.');
 
+    // Test that check settings show up on review order page.
     $this->drupalPostForm(NULL, array(), 'Review order');
     $this->assertText('Check', 'Check payment method found on review page.');
     $this->assertText('Mail to', 'Check payment method help text found on review page.');
-    // @todo: Test the settings
-
+    $this->assertRaw((string) $address, 'Properly formated check mailing address found.');
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
+    // Test user order view
     $order = entity_load('uc_order', 1);
     $this->assertEqual($order->getPaymentMethodId(), 'check', 'Order has check payment method.');
 
     $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
     $this->assertText('Method: Check', 'Check payment method displayed.');
 
+    // Test admin order view - receive check
     $this->drupalGet('admin/store/orders/' . $order->id());
     $this->assertText('Method: Check', 'Check payment method displayed.');
     $this->assertLink('Receive Check');
-
     $this->clickLink('Receive Check');
     $this->assertFieldByName('amount', number_format($order->getTotal(), 2, '.', ''), 'Amount field defaults to order total.');
 
@@ -76,10 +110,10 @@ class PaymentPackTest extends UbercartTestBase {
     );
     $formatted = sprintf('%02d-%02d-%d', $edit['clear_month'], $edit['clear_day'], $edit['clear_year']);
     $this->drupalPostForm(NULL, $edit, 'Receive check');
-
     $this->assertNoLink('Receive Check');
     $this->assertText('Clear Date: ' . $formatted, 'Check clear date found.');
 
+    // Test that user order view shows check received
     $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
     $this->assertText('Check received');
     $this->assertText('Expected clear date:');
@@ -98,7 +132,7 @@ class PaymentPackTest extends UbercartTestBase {
 
     $this->drupalGet('admin/store/settings/payment/method/cod');
     $this->assertTitle('Cash on delivery settings | Drupal');
-    // @todo: Fix and test the settings page
+    // @todo: Test the settings page
 
     $this->drupalGet('cart/checkout');
     $this->assertFieldByName('panes[payment][payment_method]', 'cod', 'COD payment method is selected at checkout.');
@@ -148,7 +182,7 @@ class PaymentPackTest extends UbercartTestBase {
       'payment_details[description]' => $this->randomString(),
     );
     $this->drupalPostForm(NULL, array(), 'Save changes');
-    // @todo: Fix storage of payment details.
+    // @todo: Test storage of payment details.
 
     $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
     $this->assertText('Method: Other', 'Other payment method displayed.');

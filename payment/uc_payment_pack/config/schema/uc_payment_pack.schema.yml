@@ -3,43 +3,47 @@ uc_payment_pack.check.settings:
   label: 'Check payment method settings'
   mapping:
     policy:
-      type: string
+      type: text
       label: 'Check payment policy message'
-    mailing_name:
-      type: string
-      label: ''
-    mailing_company:
-      type: string
-      label: ''
-    mailing_street1:
-      type: string
-      label: ''
-    mailing_street2:
-      type: string
-      label: ''
-    mailing_city:
-      type: string
-      label: ''
-    mailing_zone:
-      type: string
-      label: ''
-    mailing_postal_code:
-      type: string
-      label: ''
-    mailing_country:
-      type: string
-      label: ''
+    mailing_address:
+      type: mapping
+      label: 'Where to mail the check'
+      mapping:
+        name:
+          type: string
+          label: 'Contact name'
+        company:
+          type: string
+          label: 'Company name'
+        street1:
+          type: string
+          label: 'First street line'
+        street2:
+          type: string
+          label: 'Second street line'
+        city:
+          type: string
+          label: 'City'
+        zone:
+          type: string
+          label: 'State/Provence'
+        postal_code:
+          type: string
+          label: 'Postal code'
+        country:
+          type: string
+          label: 'Country ID'
 
 uc_payment_pack.cod.settings:
   type: mapping
   label: 'COD payment method settings'
   mapping:
     policy:
-      type: string
+      type: text
       label: 'COD payment policy message'
     max_order:
       type: float
-      label: ''
+      label: 'Maximum currency amount for COD'
     delivery_date:
       type: boolean
-      label: ''
+      label: 'Whether to ask customer for desired delivery date'
