@@ -1,5 +1,5 @@
 id: uc_order.customer
 label: Customer view
 status: false
-cache: true
+cache: false
 targetEntityType: uc_order
