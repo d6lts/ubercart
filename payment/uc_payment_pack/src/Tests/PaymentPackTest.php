@@ -34,6 +34,9 @@ class PaymentPackTest extends UbercartTestBase {
     $this->drupalPostForm('admin/store/settings/checkout', $edit, t('Save configuration'));
   }
 
+  /**
+   * Tests for Check payment method.
+   */
   public function testCheck() {
     $this->drupalGet('admin/store/settings/payment');
     $this->assertText('Check', 'Check payment method found.');
@@ -56,6 +59,10 @@ class PaymentPackTest extends UbercartTestBase {
     $address->zone = $zone;
     $address->postal_code = mt_rand(10000, 99999);
 
+    //$edit = array(
+    //  'uc_check_mailing_country' => $address->country,
+    //);
+    //$this->drupalPostAjaxForm('admin/store/settings/payment/method/check', $edit, 'uc_check_mailing_country');
     $edit = array(
       'uc_check_mailing_name' => $address->first_name,
       'uc_check_mailing_company' => $address->company,
@@ -63,7 +70,6 @@ class PaymentPackTest extends UbercartTestBase {
       'uc_check_mailing_street2' => $address->street2,
       'uc_check_mailing_city' => $address->city,
       'uc_check_mailing_zone' => $address->zone,
-      'uc_check_mailing_country' => $address->country,
       'uc_check_mailing_postal_code' => $address->postal_code,
     );
     // Fool the Ajax by setting the store default country to our randomly-chosen
@@ -77,7 +83,7 @@ class PaymentPackTest extends UbercartTestBase {
     $this->assertFieldByName('panes[payment][payment_method]', 'check', 'Check payment method is selected at checkout.');
     $this->assertText('Checks should be made out to:');
     $this->assertRaw((string) $address, 'Properly formated check mailing address found.');
-    $this->assertText(\Drupal::config('uc_payment_pack.check.settings')->get('policy'), 'Check payment policy found.');
+    $this->assertText(\Drupal::config('uc_payment_pack.check.settings')->get('policy'), 'Check payment policy found at checkout.');
 
     // Test that check settings show up on review order page.
     $this->drupalPostForm(NULL, array(), 'Review order');
@@ -118,6 +124,9 @@ class PaymentPackTest extends UbercartTestBase {
     $this->assertText($formatted, 'Check clear date found.');
   }
 
+  /**
+   * Tests for Cash on Delivery payment method.
+   */
   public function testCashOnDelivery() {
     $this->drupalGet('admin/store/settings/payment');
     $this->assertText('Cash on delivery', 'COD payment method found.');
@@ -130,29 +139,35 @@ class PaymentPackTest extends UbercartTestBase {
 
     $this->drupalGet('admin/store/settings/payment/method/cod');
     $this->assertTitle('Cash on delivery settings | Drupal');
-    // @todo: Test the settings page
+    $this->assertText(\Drupal::config('uc_payment_pack.cod.settings')->get('policy'), 'Default COD policy found.');
+    // @todo: Test changing the policy on settings page
+    // @todo: Test enabling delivery datae on settings page
 
+    // Test checkout page
     $this->drupalGet('cart/checkout');
     $this->assertFieldByName('panes[payment][payment_method]', 'cod', 'COD payment method is selected at checkout.');
-    // @todo: Test the settings
-    // $this->assertText('Full payment is expected upon delivery or prior to pick-up.');
+    $this->assertText(\Drupal::config('uc_payment_pack.cod.settings')->get('policy'), 'Default COD policy found at checkout.');
 
+    // Test review order page
     $this->drupalPostForm(NULL, array(), 'Review order');
     $this->assertText('Cash on delivery', 'COD payment method found on review page.');
-    // @todo: Test the settings
-
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
+    // Test user order view
     $order = entity_load('uc_order', 1);
     $this->assertEqual($order->getPaymentMethodId(), 'cod', 'Order has COD payment method.');
 
     $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
     $this->assertText('Method: Cash on delivery', 'COD payment method displayed.');
 
+    // Test admin order view
     $this->drupalGet('admin/store/orders/' . $order->id());
     $this->assertText('Method: Cash on delivery', 'COD payment method displayed.');
   }
 
+  /**
+   * Tests for Other payment method.
+   */
   public function testOther() {
     $this->drupalGet('admin/store/settings/payment');
     $this->assertText('Other', 'Other payment method found.');
@@ -163,16 +178,25 @@ class PaymentPackTest extends UbercartTestBase {
     );
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
 
+    // Test checkout page
     $this->drupalGet('cart/checkout');
     $this->assertFieldByName('panes[payment][payment_method]', 'other', 'Other payment method is selected at checkout.');
 
+    // Test review order page
     $this->drupalPostForm(NULL, array(), 'Review order');
     $this->assertText('Other', 'Other payment method found on review page.');
-
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
+    // Test user order view
     $order = entity_load('uc_order', 1);
     $this->assertEqual($order->getPaymentMethodId(), 'other', 'Order has other payment method.');
+
+    $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
+    $this->assertText('Method: Other', 'Other payment method displayed.');
+
+    // Test admin order view
+    $this->drupalGet('admin/store/orders/' . $order->id());
+    $this->assertText('Method: Other', 'Other payment method displayed.');
 
     $this->drupalGet('admin/store/orders/' . $order->id() . '/edit');
     $this->assertFieldByName('payment_method', 'other', 'Other payment method is selected in the order edit form.');
@@ -181,12 +205,6 @@ class PaymentPackTest extends UbercartTestBase {
     );
     $this->drupalPostForm(NULL, array(), 'Save changes');
     // @todo: Test storage of payment details.
-
-    $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
-    $this->assertText('Method: Other', 'Other payment method displayed.');
-
-    $this->drupalGet('admin/store/orders/' . $order->id());
-    $this->assertText('Method: Other', 'Other payment method displayed.');
   }
 
 }
