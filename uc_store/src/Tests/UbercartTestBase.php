@@ -187,7 +187,7 @@ abstract class UbercartTestBase extends WebTestBase {
       'type' => $class,
       'name' => $class,
       'description' => $this->randomMachineName(32),
-      'uc_product[product]' => 1,
+      'uc_product[product]' => TRUE,
     );
     $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
 
@@ -206,6 +206,7 @@ abstract class UbercartTestBase extends WebTestBase {
       $key =  $prefix . '[country]';
       $country_id = isset($edit[$key]) ? $edit[$key] : \Drupal::config('uc_store.settings')->get('address.country');
       $country = \Drupal::service('country_manager')->getCountry($country_id);
+// @todo: Handle the case where the chosen country doesn't have zones!
       $edit += array(
         $prefix . '[first_name]' => $this->randomMachineName(10),
         $prefix . '[last_name]' => $this->randomMachineName(10),

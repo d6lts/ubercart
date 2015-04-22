@@ -24,6 +24,7 @@ class StoreTest extends UbercartTestBase {
     $this->assertLink('Countries and addresses');
     $this->assertText('Store status');
 
+    $country_id = \Drupal::config('uc_store.settings')->get('address.country');
     $edit = array(
       'uc_store_name' => $this->randomMachineName(),
       'uc_store_email' => $this->randomMachineName() . '@example.com',
@@ -33,7 +34,7 @@ class StoreTest extends UbercartTestBase {
       'uc_store_street1' => $this->randomMachineName(),
       'uc_store_street2' => $this->randomMachineName(),
       'uc_store_city' => $this->randomMachineName(),
-      'uc_store_zone' => mt_rand(1, 65),
+      'uc_store_zone' => array_rand(\Drupal::service('country_manager')->getZoneList($country_id)),
       'uc_store_postal_code' => $this->randomMachineName(),
       'uc_currency_code' => $this->randomMachineName(3),
       'uc_currency_sign' => $this->randomMachineName(1),

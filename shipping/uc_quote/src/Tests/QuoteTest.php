@@ -21,7 +21,6 @@ class QuoteTest extends UbercartTestBase {
 
   public function setUp() {
     parent::setUp();
-    module_load_include('inc', 'uc_flatrate', 'uc_flatrate.admin');
     $this->drupalLogin($this->adminUser);
   }
 
@@ -62,17 +61,18 @@ class QuoteTest extends UbercartTestBase {
   /**
    * Simulates selection of a delivery country on the checkout page.
    *
-   * @param $country
-   *   The text version of the country name to select, e.g. "Canada" or
-   *   "United States".
+   * @param $country_id
+   *   The ISO 3166 2-character country code to select. Country must
+   *   be enabled for this to work.
    */
-  protected function selectCountry($country = "Canada") {
+  protected function selectCountry($country_id) {
+    $country_name = \Drupal::service('country_manager')->getCountry($country_id)->name;
     $dom = new \DOMDocument();
     $dom->loadHTML($this->content);
     $parent = $dom->getElementById('edit-panes-delivery-delivery-country');
     $options = $parent->getElementsByTagName('option');
     for ($i = 0; $i < $options->length; $i++) {
-      if ($options->item($i)->textContent == $country) {
+      if ($options->item($i)->textContent == $country_name) {
         $options->item($i)->setAttribute('selected', 'selected');
       }
       else {
@@ -180,11 +180,11 @@ class QuoteTest extends UbercartTestBase {
 
     // @todo Re-enable when shipping quote conditions are available.
     // Switch to a different country and ensure the ajax updates the page correctly.
-    // $edit['panes[delivery][country]'] = 124;
-    // $result = $this->ucPostAjax(NULL, $edit, 'panes[delivery][country]');
-    // $this->assertText($quote1->option_text, 'The default quote is still available after changing the country.');
+    $edit['panes[delivery][country]'] = 'CA';
+    $result = $this->ucPostAjax(NULL, $edit, 'panes[delivery][country]');
+    $this->assertText($quote1->option_text, 'The default quote is still available after changing the country.');
     // $this->assertNoText($quote2->option_text, 'The second quote is no longer available after changing the country.');
-    // $this->assertText($quote1->total, 'The total includes the default quote.');
+    $this->assertText($quote1->total, 'The total includes the default quote.');
 
     // Proceed to review page and ensure the correct quote is present.
     $edit['panes[quotes][quotes][quote_option]'] = 'flatrate_1---0';
@@ -193,7 +193,7 @@ class QuoteTest extends UbercartTestBase {
     $this->assertRaw(t('Your order is almost complete.'));
     $this->assertText($quote1->total, 'The total is correct on the order review page.');
 
-    // Submit the review.
+    // Submit the review order page.
     $this->drupalPostForm(NULL, array(), t('Submit order'));
     $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", array(':name' => $edit['panes[delivery][first_name]']))->fetchField();
     if ($order_id) {
