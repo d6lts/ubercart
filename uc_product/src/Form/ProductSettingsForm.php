@@ -46,7 +46,14 @@ class ProductSettingsForm extends ConfigFormBase {
       '#weight' => -10,
     );
 
+    $form['product']['empty'] = array(
+      '#markup' => t('There are currently no settings choices for your products. When enabled, the Cart module and other modules that provide product features (such as Role assignment and File downloads) will add settings choices here.'),
+    );
+
+    $form['#submit'][] = array($this, 'submitForm');
+
     if (\Drupal::moduleHandler()->moduleExists('uc_cart')) {
+      unset($form['product']['empty']);
       $form['product']['uc_product_add_to_cart_qty'] = array(
         '#type' => 'checkbox',
         '#title' => $this->t('Display an optional quantity field in the <em>Add to Cart</em> form.'),
@@ -60,9 +67,8 @@ class ProductSettingsForm extends ConfigFormBase {
       );
     }
 
-    $form['#submit'][] = array($this, 'submitForm');
-
     foreach (\Drupal::moduleHandler()->invokeAll('uc_product_feature') as $feature) {
+      unset($form['product']['empty']);
       if (isset($feature['settings']) && function_exists($feature['settings'])) {
         $form[$feature['id']] = array(
           '#type' => 'details',
