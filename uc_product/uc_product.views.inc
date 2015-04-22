@@ -187,7 +187,7 @@ function uc_product_views_data() {
     'help' => t('Check for the fields provided by the Ubercart product module.'),
     'group' => t('Content'),
     'filter' => array(
-      'id' => 'uc_product',
+      'id' => 'uc_product_is_product',
       'label' => t('Is a product'),
     ),
   );

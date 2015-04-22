@@ -11,3 +11,9 @@ uc_catalog.settings:
     vocabulary:
       type: string
       label: 'Vocabulary name'
+    expand_categories:
+      type: boolean
+      label: ''
+    block_nodecount:
+      type: boolean
+      label: ''

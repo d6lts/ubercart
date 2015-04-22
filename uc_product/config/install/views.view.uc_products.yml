@@ -9,7 +9,7 @@ dependencies:
     - node
     - uc_product
     - user
-id: products
+id: uc_products
 label: Products
 module: views
 description: ''
@@ -308,7 +308,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value: '1'
+          value: true
           group: 1
           exposed: false
           expose:
@@ -335,7 +335,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: uc_product
+          plugin_id: uc_product_is_product
         title:
           id: title
           table: node_field_data

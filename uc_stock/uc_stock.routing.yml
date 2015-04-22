@@ -2,9 +2,9 @@ uc_stock.settings:
   path: '/admin/store/settings/stock'
   defaults:
     _form: '\Drupal\uc_stock\Form\StockSettingsForm'
+    _title: 'Stock notifications'
   requirements:
     _permission: 'administer product stock'
-#    'title' => 'Stock notifications',
 #    'description' => 'Enable or disable stock level notifications.',
 
 uc_stock.edit:
@@ -23,4 +23,5 @@ uc_stock.reports:
   defaults:
     _controller: '\Drupal\uc_stock\Controller\StockReports::report'
   requirements:
+    _module_dependencies: 'uc_report'
     _permission: 'view reports'
