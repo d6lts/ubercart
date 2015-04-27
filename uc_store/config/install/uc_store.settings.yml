@@ -9,7 +9,7 @@ address:
   street2: ''
   city: ''
   zone: ''
-  country: US
+  country: ''
   postal_code: ''
 address_fields:
   first_name:

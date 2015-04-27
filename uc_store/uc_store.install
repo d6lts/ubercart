@@ -34,6 +34,21 @@ function uc_store_requirements($phase) {
  * Implements hook_install().
  */
 function uc_store_install() {
+  // If store country isn't set in the the store configuration,
+  // use the site default country as the store default.
+  $store_config = \Drupal::configFactory()->getEditable('uc_store.settings');
+  $store_country = $store_config->get('address.country');
+  if (!$store_country) {
+    $site_country = \Drupal::config('system.date')->get('country.default');
+    $store_config->set('address.country', $site_country)->save();
+    // Site country was already enabled in uc_country_install(), which was
+    // invoked before uc_store_install().
+  }
+  else {
+    // Ensure store country is enabled.
+    entity_load('uc_country', $store_country)->enable()->save();
+  }
+
   // Set mail handler for all Ubercart modules
   $mail_config = \Drupal::configFactory()->getEditable('system.mail');
   $mail_config

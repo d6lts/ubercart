@@ -76,6 +76,8 @@ abstract class UbercartTestBase extends WebTestBase {
       // Don't use the country UI, we're not testing that here...
       entity_load('uc_country', $country_id)->enable()->save();
     }
+    // Last one of the 8 gets to be the store default country.
+    \Drupal::configFactory()->getEditable('uc_store.settings')->set('address.country', $country_id)->save();
 
     // Create a store administrator user account.
     $this->adminUser = $this->drupalCreateUser($adminPermissions);

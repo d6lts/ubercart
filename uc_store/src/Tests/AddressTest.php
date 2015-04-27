@@ -45,15 +45,28 @@ class AddressTest extends UbercartTestBase {
   public function testAddressFormat() {
     $address = $this->test_address[1];
 
+    // Expected format depends on the store country.
+    $store_country = \Drupal::config('uc_store.settings')->get('address.country');
+
     $formatted = (string) $address;
-    $expected = "CTW, INC.<br>\nELMO MONSTER<br>\n123 SESAME STREET<br>\nNEW YORK, NY 10010";
+    if ($store_country == 'US') {
+      $expected = "CTW, INC.<br>\nELMO MONSTER<br>\n123 SESAME STREET<br>\nNEW YORK, NY 10010";
+    }
+    else {
+      $expected = "CTW, INC.<br>\nELMO MONSTER<br>\n123 SESAME STREET<br>\nNEW YORK, NY 10010<br>\nUNITED STATES";
+    }
     $this->assertEqual($formatted, $expected, 'Formatted address matches expected value.');
 
     $address->city = 'Victoria';
     $address->zone = 'BC';
     $address->country = 'CA';
     $formatted = (string) $address;
-    $expected = "CTW, INC.<br>\nELMO MONSTER<br>\n123 SESAME STREET<br>\nVICTORIA BC  10010<br>\nCANADA";
+    if ($store_country == 'CA') {
+      $expected = "CTW, INC.<br>\nELMO MONSTER<br>\n123 SESAME STREET<br>\nVICTORIA BC  10010";
+    }
+    else {
+      $expected = "CTW, INC.<br>\nELMO MONSTER<br>\n123 SESAME STREET<br>\nVICTORIA BC  10010<br>\nCANADA";
+    }
     $this->assertEqual($formatted, $expected, 'Formatted address with non-default country matches expected value.');
   }
 

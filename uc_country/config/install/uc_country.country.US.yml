@@ -2,7 +2,7 @@ name: 'United States'
 alpha_2: US
 alpha_3: USA
 numeric: 840
-status: true
+status: false
 zones:
   AL: Alabama
   AK: Alaska

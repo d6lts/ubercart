@@ -2,7 +2,7 @@ name: Canada
 alpha_2: CA
 alpha_3: CAN
 numeric: 124
-status: true
+status: false
 zones:
   AB: Alberta
   BC: 'British Columbia'
