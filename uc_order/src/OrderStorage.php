@@ -8,6 +8,7 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\user\Entity\User;
 
 /**
  * Controller class for orders.
@@ -22,7 +23,7 @@ class OrderStorage extends SqlContentEntityStorage {
 
     // Set the primary email address.
     if (empty($values['primary_email']) && !empty($values['uid'])) {
-      if ($account = user_load($values['uid'])) {
+      if ($account = User::load($values['uid'])) {
         $values['primary_email'] = $account->mail;
       }
     }

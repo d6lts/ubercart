@@ -5,6 +5,8 @@
  * Theme functions for the uc_store module.
  */
 
+use Drupal\user\Entity\User;
+
 /**
  * Displays a price in the standard format and with consistent markup.
  *
@@ -58,7 +60,7 @@ function theme_uc_uid(array $variables) {
   if ($variables['uid']) {
     $username = array(
       '#theme' => 'username',
-      '#account' => user_load($variables['uid']),
+      '#account' => User::load($variables['uid']),
     );
     return drupal_render($username);
   }

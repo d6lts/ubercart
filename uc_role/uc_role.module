@@ -13,6 +13,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_help().
@@ -49,7 +50,7 @@ function uc_role_cron() {
 
   $result = $query->execute();
   foreach ($result as $expiration) {
-    $account = user_load($expiration->id());
+    $account = User::load($expiration->id());
 
     // Cleanup if user or role was deleted already.
     if (!$account || !in_array($expiration->rid, array_keys($account->roles))) {

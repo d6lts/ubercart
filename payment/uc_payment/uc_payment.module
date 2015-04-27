@@ -11,11 +11,12 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\OrderInterface;
+use Drupal\Core\Url;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\Xss;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\Core\Url;
+use Drupal\user\Entity\User;
+use Drupal\uc_order\OrderInterface;
 
 require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
 
@@ -267,7 +268,7 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
  */
 function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $comment = '', $received = REQUEST_TIME) {
   $order = uc_order_load($order_id, TRUE);
-  $account = user_load($uid);
+  $account = User::load($uid);
 
   try {
     $method_name = \Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->cartReviewTitle();

@@ -11,6 +11,7 @@ use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\user\Entity\User;
 
 /**
  * Form builder for role expirations.
@@ -104,7 +105,7 @@ class RoleDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    uc_role_delete(user_load($form_state->getValue('uid')), $form_state->getValue('rid'));
+    uc_role_delete(User::load($form_state->getValue('uid')), $form_state->getValue('rid'));
 
     $form_state->setRedirect('uc_role.expiration');
   }

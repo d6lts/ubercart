@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_role\Tests;
 
+use Drupal\user\Entity\User;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -48,7 +49,7 @@ class RoleCheckoutTest extends UbercartTestBase {
 
     // Find the order uid.
     $uid = db_query('SELECT uid FROM {uc_orders} ORDER BY order_id DESC')->fetchField();
-    $account = user_load($uid);
+    $account = User::load($uid);
     // @todo Re-enable when Rules is available.
     // $this->assertTrue($account->hasRole($rid), 'New user was granted role.');
     $order = uc_order_load($order->id());
@@ -70,7 +71,7 @@ class RoleCheckoutTest extends UbercartTestBase {
     $order->products[2]->data->shippable = 0;
     $order->save();
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
-    $account = user_load($this->customer->id());
+    $account = User::load($this->customer->id());
     // @todo Re-enable when Rules is available.
     // $this->assertTrue($account->hasRole($rid), 'Existing user was granted role.');
     $order = uc_order_load($order->id());

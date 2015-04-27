@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Plugin\views\argument_validator;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
@@ -140,7 +141,7 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     // argument so it works for example for generation summary urls.
     $uids_arg_keys = array_flip($args);
     if ($this->options['type'] == 'name') {
-      $users = user_load_multiple($args);
+      $users = User::loadMultiple($args);
       foreach ($users as $uid => $account) {
         $args[$uids_arg_keys[$uid]] = $account->name;
       }

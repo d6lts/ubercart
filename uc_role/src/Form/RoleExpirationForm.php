@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\user\Entity\User;
 
 /**
  * Menu callback for viewing expirations.
@@ -59,7 +60,7 @@ class RoleExpirationForm extends FormBase {
     // Stick the expirations into the form.
     $rows = [];
     foreach ($results as $result) {
-      $account = user_load($result->id());
+      $account = User::load($result->id());
 
       // Each row has user name, role , expiration date, and edit/delete operations.
       $row = array(
