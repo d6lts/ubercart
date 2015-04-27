@@ -193,7 +193,7 @@ class CountryController extends ControllerBase {
 
     drupal_set_message($this->t('The country %label has been enabled.', ['%label' => $uc_country->label()]));
 
-    return $this->redirect('entity.uc_country.list');
+    return $this->redirect('entity.uc_country.collection');
   }
 
   /**
@@ -210,7 +210,7 @@ class CountryController extends ControllerBase {
 
     drupal_set_message($this->t('The country %label has been disabled.', ['%label' => $uc_country->label()]));
 
-    return $this->redirect('entity.uc_country.list');
+    return $this->redirect('entity.uc_country.collection');
   }
 
 }

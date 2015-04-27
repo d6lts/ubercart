@@ -1,5 +1,5 @@
 uc_tax.admin.store.settings.tax:
   title: Tax
   description: 'Configure tax rates and rules.'
-  route_name: uc_tax.overview
+  route_name: entity.uc_tax_rate.collection
   parent: uc_store.admin.store.settings

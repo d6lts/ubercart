@@ -86,6 +86,6 @@ class CountryForm extends EntityForm {
 
     $this->entity->save();
     drupal_set_message($this->t('Country settings saved.'));
-    $form_state->setRedirect('entity.uc_country.list');
+    $form_state->setRedirect('entity.uc_country.collection');
   }
 }

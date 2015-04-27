@@ -34,7 +34,7 @@ uc_tax.rate_delete:
   requirements:
     _permission: 'administer taxes'
 
-entity.uc_tax_rate.list:
+entity.uc_tax_rate.collection:
   path: '/admin/store/config/tax'
   defaults:
     _entity_list: 'uc_tax_rate'

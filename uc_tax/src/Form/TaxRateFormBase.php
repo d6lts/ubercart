@@ -22,7 +22,7 @@ class TaxRateFormBase extends EntityForm {
    * @return \Drupal\Core\Url 
    */
   public function getCancelUrl() {
-    return new Url('entity.uc_tax_rate.list');
+    return new Url('entity.uc_tax_rate.collection');
   }
 
   /**
@@ -191,7 +191,7 @@ class TaxRateFormBase extends EntityForm {
     }
 
     // Redirect the user back to the listing route after the save operation.
-    $form_state->setRedirect('entity.uc_tax_rate.list');
+    $form_state->setRedirect('entity.uc_tax_rate.collection');
   }
 
   /**

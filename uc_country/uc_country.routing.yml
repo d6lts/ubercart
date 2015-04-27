@@ -1,4 +1,4 @@
-entity.uc_country.list:
+entity.uc_country.collection:
   path: '/admin/store/config/country'
   defaults:
     _entity_list: 'uc_country'

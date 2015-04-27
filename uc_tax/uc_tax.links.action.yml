@@ -8,4 +8,4 @@ uc_tax.rate.add_action:
   route_name: entity.uc_tax_rate.add_form
   title: 'Add a tax rate'
   appears_on:
-    - entity.uc_tax_rate.list
+    - entity.uc_tax_rate.collection
