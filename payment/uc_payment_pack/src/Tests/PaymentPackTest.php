@@ -54,6 +54,7 @@ class PaymentPackTest extends UbercartTestBase {
     $address->street2 = 'Suite ' . mt_rand(100, 999);
     $address->city = $this->randomMachineName(10);
     $country_id = array_rand(\Drupal::service('country_manager')->getEnabledList());
+    //@todo: Have to deal with countries that don't have a zone.
     $address->country = $country_id;
     $zone = array_rand(\Drupal::service('country_manager')->getZoneList($country_id));
     $address->zone = $zone;

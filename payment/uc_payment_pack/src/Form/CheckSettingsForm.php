@@ -37,6 +37,7 @@ class CheckSettingsForm extends FormBase {
       '#description' => t('Direct checks to a person or department.'),
       '#default_value' => $check_config->get('mailing_address.name'),
     );
+    $default_country = $check_config->get('mailing_address.country') ? $check_config->get('mailing_address.country') : $this->config('uc_store.settings')->get('address.country');
     $form['uc_check_address'] = array(
       '#type' => 'uc_address',
       '#default_value' => array(
@@ -45,7 +46,7 @@ class CheckSettingsForm extends FormBase {
         'uc_check_mailing_street2' => $check_config->get('mailing_address.street2'),
         'uc_check_mailing_city' => $check_config->get('mailing_address.city'),
         'uc_check_mailing_zone' => $check_config->get('mailing_address.zone'),
-        'uc_check_mailing_country' => $form_state->hasValue('uc_check_mailing_country') ? $form_state->getValue('uc_check_mailing_country') : $check_config->get('mailing_address.country'),
+        'uc_check_mailing_country' => $form_state->hasValue('uc_check_mailing_country') ? $form_state->getValue('uc_check_mailing_country') : $default_country,
         'uc_check_mailing_postal_code' => $check_config->get('mailing_address.postal_code'),
       ),
       '#required' => FALSE,
