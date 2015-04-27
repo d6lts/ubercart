@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -102,7 +103,7 @@ function _uc_ajax_admin_list_triggers($element, &$list) {
     $list[$key] = $title;
   }
   if (empty($element['#type']) || !in_array($element['#type'], array('radios', 'checkboxes'))) {
-    foreach (element_children($element) as $child) {
+    foreach (Element::children($element) as $child) {
       _uc_ajax_admin_list_triggers($element[$child], $list);
     }
   }
@@ -119,7 +120,7 @@ function _uc_ajax_admin_list_triggers($element, &$list) {
  */
 function _uc_ajax_admin_checkout_trigger_options($form) {
   $list = array();
-  foreach (element_children($form['panes']) as $name) {
+  foreach (Element::children($form['panes']) as $name) {
     $group = ucfirst($name);
     $list[$group] = array();
     _uc_ajax_admin_list_triggers($form['panes'][$name], $list[$group]);

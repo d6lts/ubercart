@@ -10,6 +10,7 @@ namespace Drupal\uc_cart\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\uc_cart\Controller\Cart;
 
@@ -104,7 +105,7 @@ class CartBlock extends BlockBase {
         foreach ($cart->getContents() as $item) {
           $display_item = \Drupal::moduleHandler()->invoke($item->data->module, 'uc_cart_display', array($item));
 
-          if (count(element_children($display_item))) {
+          if (count(Element::children($display_item))) {
             $items[] = array(
               'nid' => $display_item['nid']['#value'],
               'qty' => $display_item['qty']['#default_value'],

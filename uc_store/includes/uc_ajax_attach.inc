@@ -71,6 +71,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Form process callback to allow multiple Ajax callbacks on form elements.
@@ -100,7 +101,7 @@ function uc_ajax_process_form($form, FormStateInterface $form_state) {
   // which is where the triggering element is determined. If we haven't added
   // an '#ajax' key by that time, Drupal won't be able to determine which
   // callback to invoke.
-  foreach (element_children($form) as $child) {
+  foreach (Element::children($form) as $child) {
     $element =& $form[$child];
 
     // Add this process function recursively to the children.

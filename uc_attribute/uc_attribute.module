@@ -19,6 +19,7 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
@@ -141,7 +142,7 @@ function uc_attribute_uc_form_alter(&$form, FormStateInterface $form_state, $for
       else {
         $element = &$form['sub_products'];
       }
-      foreach (element_children($element) as $key) {
+      foreach (Element::children($element) as $key) {
         $element[$key]['attributes'] = _uc_attribute_alter_form($id . '-' . $key, $node->products[$key], $use_ajax);
 
         if (is_array($element[$key]['attributes'])) {

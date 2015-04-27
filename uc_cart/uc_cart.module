@@ -11,6 +11,7 @@
  */
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Element;
 use Drupal\uc_cart\Controller\Cart;
 
 /**
@@ -150,7 +151,7 @@ function template_preprocess_uc_cart_complete_sale(&$variables) {
  */
 function template_preprocess_uc_cart_checkout_buttons(&$variables) {
   $buttons = array();
-  foreach (element_children($variables['buttons']) as $button) {
+  foreach (Element::children($variables['buttons']) as $button) {
     $buttons[] = $variables['buttons'][$button];
   }
   $variables['buttons'] = $buttons;

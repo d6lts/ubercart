@@ -16,6 +16,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 
 /**
@@ -863,7 +864,7 @@ function theme_uc_order_pane_line_items(array $variables) {
   $form = $variables['form'];
 
   $output = '<table class="line-item-table">';
-  foreach (element_children($form) as $field) {
+  foreach (Element::children($form) as $field) {
     $form[$field]['title']['#title'] = '';
     $form[$field]['amount']['#title'] = '';
     $output .= '<tr><td class="li-title">'

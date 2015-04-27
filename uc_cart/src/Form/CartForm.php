@@ -9,6 +9,7 @@ namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 
 /**
@@ -70,7 +71,7 @@ class CartForm extends FormBase {
     $subtotal = 0;
     foreach ($items as $cart_item) {
       $item = \Drupal::moduleHandler()->invoke($cart_item->data->module, 'uc_cart_display', array($cart_item));
-      if (element_children($item)) {
+      if (Element::children($item)) {
         $form['items'][$i]['remove'] = $item['remove'];
         $form['items'][$i]['remove']['#name'] = 'remove-' . $i;
         $form['items'][$i]['image'] = uc_product_get_picture($item['nid']['#value'], 'uc_cart');

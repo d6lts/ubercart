@@ -10,6 +10,7 @@ namespace Drupal\uc_stock\Form;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\node\NodeInterface;
 
 /**
@@ -84,7 +85,7 @@ class StockEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach (element_children($form_state->getValue('stock')) as $sku) {
+    foreach (Element::children($form_state->getValue('stock')) as $sku) {
       $stock = $form_state->getValue(['stock', $sku]);
 
       db_merge('uc_product_stock')

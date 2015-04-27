@@ -5,6 +5,8 @@
  * Theme functions for the uc_file module.
  */
 
+use Drupal\Core\Render\Element;
+
 /**
  * Themes the download table at the user account page.
  *
@@ -27,7 +29,7 @@ function theme_uc_file_hook_user_file_downloads(array $variables) {
   $rows = array();
   $output = '';
 
-  foreach (element_children($form['file_download']) as $key) {
+  foreach (Element::children($form['file_download']) as $key) {
 
     if (!isset($form['file_download'][$key]['addresses_in'])) {
       continue;

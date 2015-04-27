@@ -5,6 +5,8 @@
  * Attribute administration menu items.
  */
 
+use Drupal\Core\Render\Element;
+
 /**
  * Returns a themed set of attribute options for use in order displays.
  *
@@ -26,7 +28,7 @@ function theme_uc_product_attributes(array $variables) {
 
   $option_rows = array();
 
-  foreach (element_children($attributes) as $key) {
+  foreach (Element::children($attributes) as $key) {
     $optionstr = '';
 
     foreach ((array)$attributes[$key]['#options'] as $option) {

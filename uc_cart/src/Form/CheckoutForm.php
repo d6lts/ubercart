@@ -10,6 +10,7 @@ namespace Drupal\uc_cart\Form;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -136,7 +137,7 @@ class CheckoutForm extends FormBase {
 
     // Validate/process the cart panes.  A FALSE value results in failed checkout.
     $form_state->set('checkout_valid', TRUE);
-    foreach (element_children($form_state->getValue('panes')) as $id) {
+    foreach (Element::children($form_state->getValue('panes')) as $id) {
       $pane = $this->checkoutPaneManager->createInstance($id);
       if ($pane->process($order, $form, $form_state) === FALSE) {
         $form_state->set('checkout_valid', FALSE);
