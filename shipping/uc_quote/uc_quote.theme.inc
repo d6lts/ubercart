@@ -5,6 +5,8 @@
  * Theme functions for the uc_quote module.
  */
 
+use Drupal\Core\Render\Element;
+
 /**
  * Displays the formatted quote cart pane.
  *
@@ -36,7 +38,7 @@ function theme_uc_quote_returned_rates(array $variables) {
   $form = $variables['form'];
   $output = '';
 
-  $keys = element_children($form);
+  $keys = Element::children($form);
 
   // Render notes and error messages after each radio button.
   if (count($keys) > 1) {

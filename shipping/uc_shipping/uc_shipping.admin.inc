@@ -9,6 +9,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 
 /**
@@ -204,7 +205,7 @@ function theme_uc_shipping_new_package_fieldset(array $variables) {
   $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), t('Quantity'), t('Package'));
 
   $rows = array();
-  foreach (element_children($fieldset) as $op_id) {
+  foreach (Element::children($fieldset) as $op_id) {
     $row = array();
     $row[] = drupal_render($fieldset[$op_id]['checked']);
     $row[] = drupal_render($fieldset[$op_id]['model']);
@@ -385,7 +386,7 @@ function theme_uc_shipping_edit_package_fieldset(array $variables) {
   $output = '';
   $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), t('Quantity'));
   $rows = array();
-  foreach (element_children($fieldset) as $op_id) {
+  foreach (Element::children($fieldset) as $op_id) {
     $row = array();
     $row[] = drupal_render($fieldset[$op_id]['checked']);
     $row[] = drupal_render($fieldset[$op_id]['model']);
@@ -637,9 +638,9 @@ function theme_uc_shipping_new_shipment(array $variables) {
 
   $output = '';
   $header = array(array('class' => array('select-all')), t('Package'), t('Products'), t('Weight'));
-  foreach (element_children($form['shipping_types']) as $shipping_type) {
+  foreach (Element::children($form['shipping_types']) as $shipping_type) {
     $rows = array();
-    foreach (element_children($form['shipping_types'][$shipping_type]['packages']) as $package_id) {
+    foreach (Element::children($form['shipping_types'][$shipping_type]['packages']) as $package_id) {
       $row = array();
       $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['checked']);
       $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['package_id']);
