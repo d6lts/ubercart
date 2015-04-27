@@ -62,6 +62,16 @@ function uc_store_install() {
 }
 
 /**
+ * Implements hook_uninstall().
+ */
+function uc_store_uninstall() {
+  $format = entity_load('date_format', 'uc_store');
+  if ($format) {
+    drupal_set_message(t('The date format %format has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', ['%format' => $format->label(), '@url' => \Drupal::url('entity.date_format.collection')]), 'warning');
+  }
+}
+
+/**
  * Moves store settings from variable to config.
  */
 function uc_store_update_8000() {
