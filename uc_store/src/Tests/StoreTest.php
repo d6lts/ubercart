@@ -46,7 +46,7 @@ class StoreTest extends UbercartTestBase {
     $zone_list = \Drupal::service('country_manager')->getZoneList($country_id);
     if (!empty($zone_list)) {
       $edit += array(
-        'uc_store_zone' => array_rand(\Drupal::service('country_manager')->getZoneList($country_id)),
+        'uc_store_zone' => array_rand($zone_list),
       );
     }
 

@@ -53,12 +53,9 @@ class PaymentPackTest extends UbercartTestBase {
     $address->street1 = mt_rand(100, 1000) . ' ' . $this->randomMachineName(10);
     $address->street2 = 'Suite ' . mt_rand(100, 999);
     $address->city = $this->randomMachineName(10);
-    $country_id = array_rand(\Drupal::service('country_manager')->getEnabledList());
-    //@todo: Have to deal with countries that don't have a zone.
-    $address->country = $country_id;
-    $zone = array_rand(\Drupal::service('country_manager')->getZoneList($country_id));
-    $address->zone = $zone;
     $address->postal_code = mt_rand(10000, 99999);
+    $country_id = array_rand(\Drupal::service('country_manager')->getEnabledList());
+    $address->country = $country_id;
 
     //$edit = array(
     //  'uc_check_mailing_country' => $address->country,
@@ -70,9 +67,17 @@ class PaymentPackTest extends UbercartTestBase {
       'uc_check_mailing_street1' => $address->street1,
       'uc_check_mailing_street2' => $address->street2,
       'uc_check_mailing_city' => $address->city,
-      'uc_check_mailing_zone' => $address->zone,
       'uc_check_mailing_postal_code' => $address->postal_code,
     );
+    // Don't try to set the zone unless the store country has zones!
+    $zone_list = \Drupal::service('country_manager')->getZoneList($country_id);
+    if (!empty($zone_list)) {
+      $address->zone = array_rand($zone_list);
+      $edit += array(
+        'uc_check_mailing_zone' => $address->zone,
+      );
+    }
+
     // Fool the Ajax by setting the store default country to our randomly-chosen
     // country before we post the form. Otherwise the zone select won't be
     // populated correctly.
