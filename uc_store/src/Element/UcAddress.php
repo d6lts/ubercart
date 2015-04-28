@@ -84,7 +84,7 @@ class UcAddress extends Element\FormElement {
 
     $country_names = \Drupal::service('country_manager')->getEnabledList();
     $country_keys = array_keys($country_names);
- 
+
     // Force the selected country to a valid one, so the zone dropdown matches.
     if (is_object($value)) {
       if (isset($value->{$prefix . 'country'}) && !isset($country_names[$value->{$prefix . 'country'}])) {
@@ -184,7 +184,7 @@ class UcAddress extends Element\FormElement {
         '#title' => $labels[$base_field] ? $labels[$base_field] : '&nbsp;',
         '#default_value' => is_object($value) ? $value->$field : $value[$field],
         '#parents' => array_merge(array_slice($element['#parents'], 0, -1), array($field)),
-        '#pre_render' => array_merge(array(array(get_class(), 'preRenderAddressField')), element_info_property('textfield', '#pre_render', array())),
+        '#pre_render' => array_merge(array(array(get_class(), 'preRenderAddressField')), \Drupal::service('element_info')->getInfoProperty($subelement['#type'], '#pre_render', array())),
         '#access' => !$element['#hidden'] && !empty($config[$base_field]['status']),
         '#required' => $element['#required'] && !empty($config[$base_field]['required']),
         '#weight' => isset($config[$base_field]['weight']) ? $config[$base_field]['weight'] : 0,
