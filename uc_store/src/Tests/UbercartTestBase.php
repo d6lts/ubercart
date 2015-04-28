@@ -207,19 +207,22 @@ abstract class UbercartTestBase extends WebTestBase {
       $prefix = 'panes[' . $pane . ']';
       $key =  $prefix . '[country]';
       $country_id = isset($edit[$key]) ? $edit[$key] : \Drupal::config('uc_store.settings')->get('address.country');
-      do {
-        $country = \Drupal::service('country_manager')->getCountry($country_id);
-        // @todo: Fix uc_address form element so that we can use countries without zones here.
-      } while ($country->zones);
+      $country = \Drupal::service('country_manager')->getCountry($country_id);
 
       $edit += array(
         $prefix . '[first_name]' => $this->randomMachineName(10),
         $prefix . '[last_name]' => $this->randomMachineName(10),
         $prefix . '[street1]' => $this->randomMachineName(10),
         $prefix . '[city]' => $this->randomMachineName(10),
-        $prefix . '[zone]' => array_rand($country->zones),
         $prefix . '[postal_code]' => mt_rand(10000, 99999),
       );
+
+      // Don't try to set the zone unless the store country has zones!
+      if (!empty($country->zones)) {
+        $edit += array(
+          $prefix . '[zone]' => array_rand($country->zones),
+        );
+      }
     }
 
     // If the email address has not been set, and the user has not logged in,
