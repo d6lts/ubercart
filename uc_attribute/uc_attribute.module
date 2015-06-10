@@ -743,6 +743,9 @@ function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALS
     }
   }
 
+  // Ensure the attribute's ID property is set.
+  $attribute->{$sql['id']} = $id;
+
   return db_merge($sql['attr_table'])
     ->keys(array(
       $sql['id'] => $id,
@@ -751,8 +754,8 @@ function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALS
     ->fields(array(
       'label' => $attribute->label,
       'ordering' => $attribute->ordering,
-      'default_option' => $attribute->default_option,
-      'required' => $attribute->required,
+      'default_option' => isset($attribute->default_option) ? $attribute->default_option : 0,
+      'required' => (int) $attribute->required,
       'display' => $attribute->display,
     ))
     ->execute();
