@@ -42,9 +42,9 @@ interface CountryManagerInterface extends \Drupal\Core\Locale\CountryManagerInte
    * Returns all uc_country config entities with the specified propertes.
    *
    * For example:
-   * To obtain all enabled countries, use getByProperty(['status' => TRUE]
+   * To obtain all enabled countries, use getByProperty(['status' => TRUE]).
    * To  obtain the country with the two-character ISO 3166 code of 'ES', use
-   * getByProperty(['alpha_2' => 'ES']. Any property/properties defined in
+   * getByProperty(['alpha_2' => 'ES']). Any property/properties defined in
    * \Drupal\uc_country\Entity\Country may be used. Keep in mind that in most
    * cases these properties are <em>unique</em>, so this method will return
    * only one country configuration entity.
