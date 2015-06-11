@@ -88,14 +88,14 @@ class PaymentPackTest extends UbercartTestBase {
     $this->drupalGet('cart/checkout');
     $this->assertFieldByName('panes[payment][payment_method]', 'check', 'Check payment method is selected at checkout.');
     $this->assertText('Checks should be made out to:');
-    $this->assertRaw((string) $address, 'Properly formated check mailing address found.');
+    $this->assertRaw((string) $address, 'Properly formatted check mailing address found.');
     $this->assertText(\Drupal::config('uc_payment_pack.check.settings')->get('policy'), 'Check payment policy found at checkout.');
 
     // Test that check settings show up on review order page.
     $this->drupalPostForm(NULL, array(), 'Review order');
     $this->assertText('Check', 'Check payment method found on review page.');
     $this->assertText('Mail to', 'Check payment method help text found on review page.');
-    $this->assertRaw((string) $address, 'Properly formated check mailing address found.');
+    $this->assertRaw((string) $address, 'Properly formatted check mailing address found.');
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
     // Test user order view

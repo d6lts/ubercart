@@ -132,7 +132,7 @@ class OrderCreateForm extends FormBase {
           if (!empty($user->billing_first_name) && !empty($user->billing_last_name)) {
             $name = $user->billing_first_name . ' ' . $user->billing_last_name . ' ';
           }
-          // Options formated as "First Last <email@example.com> (username)".
+          // Options formatted as "First Last <email@example.com> (username)".
           $options[$user->uid] = $name . '&lt;' . $user->mail . '&gt;' . ' (' . $user->name . ')';
         }
 
