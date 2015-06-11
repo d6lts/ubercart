@@ -441,12 +441,14 @@ function uc_tax_rate_load($rate_id = NULL) {
   // If the rates have not been cached yet...
   if (empty($rates)) {
     // Get all the rate data from the database.
-    $result = db_query("SELECT * FROM {uc_tax} ORDER BY weight");
+    $result = db_query('SELECT id, name, rate, shippable, weight, display_include, inclusion_text FROM {uc_tax} ORDER BY weight');
 
     // Loop through each returned row.
     foreach ($result as $rate) {
       $rate->taxed_product_types = array();
       $rate->taxed_line_items = array();
+      // Disabled by default, overridden in config.
+      $rate->enabled = FALSE;
 
       $rates[$rate->id] = $rate;
     }
