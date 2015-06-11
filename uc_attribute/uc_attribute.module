@@ -719,9 +719,6 @@ function uc_attribute_option_delete($oid) {
 function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALSE) {
   $sql = uc_attribute_type_info($type);
 
-  // Insert or update?
-  $key = uc_attribute_subject_exists($attribute->aid, $type, $id) ? array('aid', $sql['id']) : array();
-
   // First, save the options. First because if this is an insert, we'll set
   // a default option for the product/class attribute.
   if ($save_options && is_array($attribute->options)) {
@@ -732,7 +729,7 @@ function uc_attribute_subject_save(&$attribute, $type, $id, $save_options = FALS
     }
 
     // Is this an insert? If so, we'll set the default option.
-    if (empty($key)) {
+    if (!uc_attribute_subject_exists($attribute->aid, $type, $id)) {
       $default_option = 0;
       // Make the first option (if any) the default.
       if (!empty($attribute->options) && is_array($attribute->options)) {
