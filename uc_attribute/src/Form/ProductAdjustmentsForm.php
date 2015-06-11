@@ -48,6 +48,7 @@ class ProductAdjustmentsForm extends FormBase {
       ->groupBy('pa.ordering')
       ->groupBy('a.ordering')
       ->groupBy('pa.nid')
+      ->groupBy('a.aid')
       ->addTag('uc_product_adjustments_form')
       ->execute();
 
