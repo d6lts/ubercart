@@ -110,8 +110,10 @@ class CountryManager implements CountryManagerInterface {
    * {@inheritdoc}
    */
   public function getZoneList($alpha_2) {
-    $country = $this->entityManager->getStorage('uc_country')->load($alpha_2);
-    return $country->zones;
+    if ($country = $this->entityManager->getStorage('uc_country')->load($alpha_2)) {
+      return $country->zones;
+    }
+    return array();
   }
 
 }

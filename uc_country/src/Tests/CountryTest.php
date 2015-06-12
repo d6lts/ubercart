@@ -86,4 +86,30 @@ class CountryTest extends WebTestBase {
     );
   }
 
+  /**
+   * Test functionality with all countries disabled.
+   */
+  public function testAllDisabled() {
+    $this->drupalLogin($this->drupalCreateUser(array(
+      'administer countries',
+      'administer store',
+      'access administration pages',
+    )));
+
+    // Disable all countries.
+    $manager = \Drupal::service('country_manager');
+    $countries = $manager->getEnabledList();
+    foreach (array_keys($countries) as $code) {
+      $manager->getCountry($code)->disable()->save();
+    }
+
+    // Verify that an error is shown.
+    $this->drupalGet('admin/store');
+    $this->assertText('No countries are enabled.');
+
+    // Verify that the country fields are hidden.
+    $this->drupalGet('admin/store/settings/store');
+    $this->assertNoText('State/Province');
+    $this->assertNoText('Country');
+  }
 }

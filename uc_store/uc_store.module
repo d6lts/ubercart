@@ -705,12 +705,20 @@ function uc_store_uc_store_status() {
   // How else do we know if Ubercart has corrected country data? Wouldn't want
   // to hook_update it I don't think, because then we'd overwrite any site
   // customizations. Leaving this as a dead code block for now...
+  $country_names = \Drupal::service('country_manager')->getEnabledList();
   $updates = [];
-  if (count($updates)) {
+  if (!$country_names) {
+    $messages[] = [
+      'status' => 'error',
+      'title'  => t('Countries'),
+      'desc'   => t('No countries are enabled. You may enable countries on the <a href="@url">country settings</a> page.', ['@url' => \Drupal::url('entity.uc_country.collection')]),
+    ];
+  }
+  elseif (count($updates)) {
     $messages[] = array(
       'status' => 'warning',
       'title'  => t('Countries'),
-      'desc'   => t('Updates are available for the following installed countries: %countries. You may update these countries on the <a href="@url">country settings</a> page.', array('%countries' => implode(', ', $updates), '@url' => \Drupal::url('entity.uc_country.list'))),
+      'desc'   => t('Updates are available for the following installed countries: %countries. You may update these countries on the <a href="@url">country settings</a> page.', ['%countries' => implode(', ', $updates), '@url' => \Drupal::url('entity.uc_country.collection')]),
     );
   }
   else {

@@ -83,17 +83,18 @@ class UcAddress extends Element\FormElement {
     }
 
     $country_names = \Drupal::service('country_manager')->getEnabledList();
-    $country_keys = array_keys($country_names);
 
     // Force the selected country to a valid one, so the zone dropdown matches.
-    if (is_object($value)) {
-      if (isset($value->{$prefix . 'country'}) && !isset($country_names[$value->{$prefix . 'country'}])) {
-        $value->{$prefix . 'country'} = $country_keys[0];
+    if ($country_keys = array_keys($country_names)) {
+      if (is_object($value)) {
+        if (isset($value->{$prefix . 'country'}) && !isset($country_names[$value->{$prefix . 'country'}])) {
+          $value->{$prefix . 'country'} = $country_keys[0];
+        }
       }
-    }
-    else {
-      if (isset($value[$prefix . 'country']) && !isset($country_names[$value[$prefix . 'country']])) {
-        $value[$prefix . 'country'] = $country_keys[0];
+      else {
+        if (isset($value[$prefix . 'country']) && !isset($country_names[$value[$prefix . 'country']])) {
+          $value[$prefix . 'country'] = $country_keys[0];
+        }
       }
     }
 
@@ -109,21 +110,29 @@ class UcAddress extends Element\FormElement {
 
       switch ($base_field) {
         case 'country':
-          $subelement = array(
-            '#type' => 'select',
-            '#options' => $country_names,
-            '#ajax' => array(
-              'callback' => array(get_class(), 'updateZone'),
-              'wrapper' => 'uc-store-address-' . str_replace('_', '-', $prefix) . 'zone-wrapper',
-              'progress' => array(
-                'type' => 'throbber',
+          if ($country_names) {
+            $subelement = array(
+              '#type' => 'select',
+              '#options' => $country_names,
+              '#ajax' => array(
+                'callback' => array(get_class(), 'updateZone'),
+                'wrapper' => 'uc-store-address-' . str_replace('_', '-', $prefix) . 'zone-wrapper',
+                'progress' => array(
+                  'type' => 'throbber',
+                ),
               ),
-            ),
-            '#element_validate' => array(
-              array(get_class(), 'validateCountry'),
-            ),
-            '#key_prefix' => $element['#key_prefix'],
-          );
+              '#element_validate' => array(
+                array(get_class(), 'validateCountry'),
+              ),
+              '#key_prefix' => $element['#key_prefix'],
+            );
+          }
+          else {
+            $subelement = array(
+              '#type' => 'hidden',
+              '#required' => FALSE,
+            );
+          }
           break;
 
         case 'zone':
