@@ -601,7 +601,8 @@ function ca_conditions_form($form_state, $pid, $title = TRUE) {
     $predicate['#conditions'] = ca_new_conditions();
   }
   else {
-    $key = array_shift(array_keys($predicate['#conditions']['#conditions']));
+    $keys = array_keys($predicate['#conditions']['#conditions']);
+    $key = array_shift($keys);
 
     if (empty($predicate['#conditions']['#conditions'][$key]['#operator'])) {
       $predicate['#conditions'] = array(

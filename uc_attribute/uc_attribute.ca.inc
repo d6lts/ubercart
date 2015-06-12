@@ -39,7 +39,9 @@ function uc_attribute_condition_ordered_product_option($order, $settings) {
 
     // Once the order is made, the attribute data is changed to just the names.
     // If we can't find it by ID, check the names.
-    if (is_int(array_shift(array_keys($attributes)))) {
+    $keys = array_keys($attributes);
+    if (is_int(array_shift($keys))) {
+
       foreach ($attributes as $options) {
         // Only checkboxes are stored in an array, so fix up other option types.
         if (!is_array($options)) {
