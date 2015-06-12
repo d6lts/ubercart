@@ -714,7 +714,7 @@ function uc_store_uc_store_status() {
       'desc'   => t('No countries are enabled. You may enable countries on the <a href="@url">country settings</a> page.', ['@url' => \Drupal::url('entity.uc_country.collection')]),
     ];
   }
-  elseif (count($updates)) {
+  elseif (count($updates)) { // This will always == FALSE
     $messages[] = array(
       'status' => 'warning',
       'title'  => t('Countries'),
@@ -734,7 +734,7 @@ function uc_store_uc_store_status() {
     $messages[] = array(
       'status' => 'error',
       'title'  => t('Store settings'),
-      'desc'   => t('Store e-mail address has not been set. Please enter it <a href="@url">here</a>.', array('@url' => \Drupal::url('uc_store.settings_form'))),
+      'desc'   => t('Store e-mail address has not been set. Please enter it on the <a href="@url">store settings</a> page.', array('@url' => \Drupal::url('uc_store.settings_form'))),
     );
   }
   else {
