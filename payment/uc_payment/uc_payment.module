@@ -527,7 +527,8 @@ function uc_payment_process($method, $order_id, $amount, $data = NULL, $default 
   // If we only found one gateway for this payment method...
   if (count($gateways) == 1) {
     // Get the right key for the payment gateway in the array.
-    $key = array_shift(array_keys($gateways));
+    $gateways_keys = array_keys($gateways);
+    $key = array_shift($gateways_keys);
 
     // If we can find a callback in the gateway for the payment method...
     if (function_exists($gateways[$key][$method])) {

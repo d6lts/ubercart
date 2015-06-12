@@ -1029,11 +1029,12 @@ function uc_payment_method_credit_form($form_state, $order) {
     foreach ($types as $type) {
       $options[check_plain($type)] = $type;
     }
+    $options_keys = array_keys($options);
     $form['cc_type'] = array(
       '#type' => 'select',
       '#title' => t('Card type'),
       '#options' => $options,
-      '#default_value' => $order->payment_details['cc_type'] ? $order->payment_details['cc_type'] : array_shift(array_keys($options)),
+      '#default_value' => $order->payment_details['cc_type'] ? $order->payment_details['cc_type'] : array_shift($options_keys),
     );
   }
 
