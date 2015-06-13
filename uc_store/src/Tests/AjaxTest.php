@@ -24,6 +24,11 @@ class AjaxTest extends UbercartTestBase {
     // module_load_include() has to be called after parent::setUp()
     // because the moduler_handler service isn't initialized yet.
     module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
+
+    // In order to test zone-based conditions, this particular test class
+    // assumes that US is enabled and set as the store country.
+    entity_load('uc_country', 'US')->enable()->save();
+    \Drupal::configFactory()->getEditable('uc_store.settings')->set('address.country', 'US')->save();
   }
 
   /**
@@ -78,7 +83,7 @@ class AjaxTest extends UbercartTestBase {
       'methods[other][status]' => TRUE,
     );
     $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
-    // $this->addPaymentZoneCondition('other', '26');
+    // $this->addPaymentZoneCondition('other', 'KS');
 
     // Specify that the billing zone should update the payment pane.
     $config = _uc_ajax_defaults('checkout');
@@ -97,13 +102,13 @@ class AjaxTest extends UbercartTestBase {
 
     // Change the billing zone and verify that payment pane updates.
     $edit = array();
-    $edit['panes[billing][zone]'] = '26';
+    $edit['panes[billing][zone]'] = 'KS';
     $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
-    $this->assertText("Other");
-    $edit['panes[billing][zone]'] = '1';
+    $this->assertText('Other');
+    $edit['panes[billing][zone]'] = 'AL';
     $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
     // Not in Kansas any more...
     // @todo Re-enable when shipping quote conditions are available.
-    // $this->assertNoText("Other");
+    // $this->assertNoText('Other');
   }
 }
