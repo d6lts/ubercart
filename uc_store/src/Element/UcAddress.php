@@ -170,7 +170,7 @@ class UcAddress extends Element\FormElement {
 
         case 'phone':
           $subelement = array(
-            '#type' => 'textfield',
+            '#type' => 'tel',
             '#size' => 16,
             '#maxlength' => 32,
           );

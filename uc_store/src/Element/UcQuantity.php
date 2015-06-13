@@ -56,19 +56,21 @@ class UcQuantity extends Element\FormElement {
   }
 
   /**
-   * Prepares a #type 'uc_price' render element for theme_input().
+   * Prepares a #type 'uc_quantity' render element for theme_input().
    *
    * @param array $element
    *   An associative array containing the properties of the element.
    *   Properties used: #title, #value, #description, #size, #maxlength,
-   *   #placeholder, #required, #attributes.
+   *   #placeholder, #min, #max, #step, #required, #attributes.
    *
    * @return array
    *   The $element with prepared variables ready for theme_input().
    */
   public static function preRenderQuantity($element) {
     $element['#attributes']['type'] = 'number';
-    Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
+    $element['#attributes']['min'] = 0;
+    $element['#attributes']['step'] = 1;
+    Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder', 'min', 'max', 'step'));
     static::setAttributes($element, array('form-uc-quantity'));
 
     return $element;

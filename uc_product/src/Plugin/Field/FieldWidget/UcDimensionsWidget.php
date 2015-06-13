@@ -48,6 +48,7 @@ class UcDimensionsWidget extends WidgetBase {
       '#default_value' => $length,
       '#size' => 6,
       '#min' => 0,
+      '#step' => 'any',
     );
 
     $element['width'] = array(
@@ -56,6 +57,7 @@ class UcDimensionsWidget extends WidgetBase {
       '#default_value' => $width,
       '#size' => 6,
       '#min' => 0,
+      '#step' => 'any',
     );
 
     $element['height'] = array(
@@ -64,6 +66,7 @@ class UcDimensionsWidget extends WidgetBase {
       '#default_value' => $height,
       '#size' => 6,
       '#min' => 0,
+      '#step' => 'any',
     );
 
     $element['units'] = array(

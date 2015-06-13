@@ -47,6 +47,7 @@ class UcWeightWidget extends WidgetBase {
       '#default_value' => $value,
       '#size' => 6,
       '#min' => 0,
+      '#step' => 'any',
     );
 
     $element['units'] = array(

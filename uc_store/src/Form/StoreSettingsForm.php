@@ -64,12 +64,12 @@ class StoreSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('mail_include_name'),
     );
     $form['basic']['uc_store_phone'] = array(
-      '#type' => 'textfield',
+      '#type' => 'tel',
       '#title' => t('Phone number'),
       '#default_value' => $config->get('phone'),
     );
     $form['basic']['uc_store_fax'] = array(
-      '#type' => 'textfield',
+      '#type' => 'tel',
       '#title' => t('Fax number'),
       '#default_value' => $config->get('fax'),
     );
