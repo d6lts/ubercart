@@ -41,7 +41,7 @@ class StoreController extends SystemController {
 
       $build['status'] = array(
         '#theme' => 'table',
-        '#caption' => SafeMarkup::set('<h2>' . t('Store status') . '</h2>'),
+        '#caption' => SafeMarkup::format('<h2>' . t('Store status') . '</h2>'),
         '#rows' => $rows,
         '#attributes' => array('class' => array('system-status-report')),
       );
