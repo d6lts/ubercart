@@ -491,10 +491,28 @@ display:
         groups:
           1: AND
       display_extenders: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: 'No orders available.'
+            format: basic_html
+          plugin_id: text
     cache_metadata:
       contexts:
         - 'languages:language_interface'
         - url
+        - 'url.query_args.pagers:0'
+        - 'url.query_args:order'
+        - 'url.query_args:sort'
+        - user.permissions
       cacheable: false
   admin_page:
     display_plugin: page
@@ -517,6 +535,10 @@ display:
       contexts:
         - 'languages:language_interface'
         - url
+        - 'url.query_args.pagers:0'
+        - 'url.query_args:order'
+        - 'url.query_args:sort'
+        - user.permissions
       cacheable: false
   by_customer:
     display_plugin: page
@@ -619,6 +641,10 @@ display:
       contexts:
         - 'languages:language_interface'
         - url
+        - 'url.query_args.pagers:0'
+        - 'url.query_args:order'
+        - 'url.query_args:sort'
+        - user.permissions
       cacheable: false
   search:
     display_plugin: page
@@ -910,4 +936,8 @@ display:
       contexts:
         - 'languages:language_interface'
         - url
+        - 'url.query_args.pagers:0'
+        - 'url.query_args:order'
+        - 'url.query_args:sort'
+        - user.permissions
       cacheable: false

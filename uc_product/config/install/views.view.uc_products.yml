@@ -13,7 +13,7 @@ id: uc_products
 label: Products
 module: views
 description: ''
-tag: 'Ubercart'
+tag: Ubercart
 base_table: node_field_data
 base_field: nid
 core: 8.x
@@ -380,7 +380,20 @@ display:
       title: Products
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: 'No products available.'
+            format: basic_html
+          plugin_id: text
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
@@ -390,10 +403,14 @@ display:
           1: AND
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - 'url.query_args.pagers:0'
+        - 'url.query_args:order'
+        - 'url.query_args:sort'
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false
   admin_page:
     display_plugin: page
@@ -413,8 +430,12 @@ display:
         menu_name: admin
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - 'url.query_args.pagers:0'
+        - 'url.query_args:order'
+        - 'url.query_args:sort'
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false
