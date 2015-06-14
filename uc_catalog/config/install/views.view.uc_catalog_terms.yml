@@ -119,9 +119,6 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: number_unformatted
-          settings:
-            thousand_separator: ''
-            prefix_suffix: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -130,7 +127,6 @@ display:
           delta_reversed: false
           delta_first_last: false
           multi_type: separator
-          separator: ', '
           field_api_classes: false
           entity_type: taxonomy_term
           entity_field: tid
@@ -161,7 +157,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: ''
+            max_length: 0
             word_boundary: true
             ellipsis: true
             more_link: false
@@ -191,7 +187,7 @@ display:
           group_column: ''
           group_columns: {  }
           group_rows: true
-          delta_limit: all
+          delta_limit: 0
           delta_offset: 0
           delta_reversed: false
           delta_first_last: false
@@ -227,7 +223,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: ''
+            max_length: 0
             word_boundary: false
             ellipsis: false
             more_link: false
@@ -250,7 +246,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           link_to_taxonomy: false
-          convert_spaces: false
           plugin_id: taxonomy
       filters:
         vid:
@@ -337,6 +332,8 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - user.permissions
       cacheable: false

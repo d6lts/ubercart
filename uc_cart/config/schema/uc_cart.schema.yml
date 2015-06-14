@@ -24,6 +24,19 @@ uc_cart.settings:
   type: mapping
   label: 'Cart function settings'
   mapping:
+    ajax:
+      type: mapping
+      label: 'Ajax flag'
+      mapping:
+        checkout:
+          type: sequence
+          label: 'Enable ajax on checkout page?'
+          sequence:
+            type: sequence
+            label: ''
+            sequence:
+              type: string
+              label: ''
     add_item_msg:
       type: boolean
       label: 'Display add item message'

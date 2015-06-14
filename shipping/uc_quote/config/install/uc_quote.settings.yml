@@ -21,4 +21,4 @@ method_weight: ""
 shipping_type: 'small_package'
 type_weight:
   small_package: 0
-enabled: ""
+enabled: false
