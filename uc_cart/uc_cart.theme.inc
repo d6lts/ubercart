@@ -5,6 +5,7 @@
  * Theme functions for the uc_cart module.
  */
 
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Formats the cart contents table on the checkout page.
@@ -50,7 +51,7 @@ function theme_uc_cart_review_table(array $variables) {
         'class' => array('qty'),
       ),
       array(
-        'data' => $item->title->value . uc_product_get_description($item),
+        'data' => SafeMarkup::format($item->title->value . uc_product_get_description($item)),
         'class' => array('products'),
       ),
       array(
