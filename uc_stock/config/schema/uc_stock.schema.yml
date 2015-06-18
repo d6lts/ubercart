@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Cart Links module.
 
 uc_stock.settings:
-  type: mapping
+  type: config_object
   mapping:
     notify:
       type: boolean
@@ -11,7 +11,7 @@ uc_stock.settings:
       label: ''
 
 uc_stock.mail:
-  type: mapping
+  type: config_object
   label: ''
   mapping:
     threshold_notification:

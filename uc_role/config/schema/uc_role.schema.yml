@@ -1,5 +1,5 @@
 uc_role.settings:
-  type: mapping
+  type: config_object
   label: 'Role settings'
   mapping:
     default_role:

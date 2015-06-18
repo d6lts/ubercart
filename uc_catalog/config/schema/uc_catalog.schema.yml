@@ -1,5 +1,5 @@
 uc_catalog.settings:
-  type: mapping
+  type: config_object
   label: 'Product catalog settings'
   mapping:
     breadcrumb:

@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Comment module.
 
 uc_cart.messages:
-  type: mapping
+  type: config_object
   label: 'Default cart messages'
   mapping:
     logged_in:
@@ -21,7 +21,7 @@ uc_cart.messages:
       label: 'Language code'
 
 uc_cart.settings:
-  type: mapping
+  type: config_object
   label: 'Cart function settings'
   mapping:
     ajax:

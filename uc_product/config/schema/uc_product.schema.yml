@@ -1,5 +1,5 @@
 uc_product.settings:
-  type: mapping
+  type: config_object
   label: 'Ubercart Product settings'
   mapping:
     add_to_cart_qty:

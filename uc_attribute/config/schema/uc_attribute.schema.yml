@@ -1,5 +1,5 @@
 uc_attribute.settings:
-  type: mapping
+  type: config_object
   label: 'Product attribute settings'
   mapping:
     option_price_format:

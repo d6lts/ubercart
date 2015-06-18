@@ -1,5 +1,5 @@
 uc_file.settings:
-  type: mapping
+  type: config_object
   label: 'File download settings'
   mapping:
     base_dir:

@@ -26,7 +26,7 @@ uc_order.status.*:
 
 
 uc_order.settings:
-  type: mapping
+  type: config_object
   label: 'Order settings'
   mapping:
     default_state:

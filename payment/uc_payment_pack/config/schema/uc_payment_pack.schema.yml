@@ -1,5 +1,5 @@
 uc_payment_pack.check.settings:
-  type: mapping
+  type: config_object
   label: 'Check payment method settings'
   mapping:
     policy:
@@ -35,7 +35,7 @@ uc_payment_pack.check.settings:
           label: 'Country ID'
 
 uc_payment_pack.cod.settings:
-  type: mapping
+  type: config_object
   label: 'COD payment method settings'
   mapping:
     policy:
