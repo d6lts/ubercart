@@ -67,16 +67,16 @@ class CountryListBuilder extends ConfigEntityListBuilder {
   public function render() {
     $build['description'] = array(
       '#markup' => $this->t("<p>This is a list of the countries currently"
-        . " defined for use on your Drupal site. This country data adheres to "
+        . " defined for use on your Drupal site. This country data adheres to"
         . " the @iso standard for country and zone naming used by payment"
         . " providers and package couriers.</p>"
         . "<p>To make a country available for use at checkout or in a user's"
         . " address book, 'Enable' the country using the widget in the"
-        . "'Operations' for that country. You may also 'Disable' a country to"
+        . " 'Operations' for that country. You may also 'Disable' a country to"
         . " prevent customers from selecting that country as a billing or"
         . " shipping address.</p>"
-        . "<p>You may also use the the widget in the 'Operations' column to edit "
-        . " a country's name or address format.</p>",
+        . "<p>You may also use the 'Edit' widget in the 'Operations' column to"
+        . " edit a country's name or address format.</p>",
         ['@iso' => \Drupal::l('ISO 3166', Url::fromUri('http://en.wikipedia.org/wiki/ISO_3166'))]
       ),
     );

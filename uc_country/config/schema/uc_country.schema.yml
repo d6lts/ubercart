@@ -6,7 +6,7 @@ uc_country.country.*:
   mapping:
     name:
       type: label
-      label: 'Country short name'
+      label: 'English short name'
     alpha_2:
       type: string
       label: '2-character country code'
