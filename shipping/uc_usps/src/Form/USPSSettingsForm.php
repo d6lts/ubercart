@@ -220,7 +220,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#markup' => \Drupal::l(t('Cancel'), new Url('uc_quote.methods')),
     );
 
-    if (!empty($_POST) && form_get_errors()) {
+    if (!empty($_POST) && $form_state->getErrors()) {
       drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
     }
     if (!isset($form['#theme'])) {

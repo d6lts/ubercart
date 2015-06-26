@@ -230,7 +230,7 @@ function uc_ups_fulfill_order($form, FormStateInterface $form_state, $order, $pa
 function uc_ups_fulfill_order_validate($form, FormStateInterface $form_state) {
 
   $ups_config = \Drupal::config('uc_ups.setttings');
-  $errors = form_get_errors();
+  $errors = $form_state->getErrors();
   if (isset($errors)) {
     // Some required elements are missing - don't bother with making
     // a UPS API call until that gets fixed.
