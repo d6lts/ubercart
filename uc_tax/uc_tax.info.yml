@@ -4,5 +4,5 @@ description: "Defines tax rates for customers' geographic locations and products
 package: Ubercart - core (optional)
 core: 8.x
 dependencies:
-  - uc_payment
+  - uc_cart
 configure: uc_tax.methods
