@@ -74,7 +74,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => t('Display USPS "online" rates'),
       '#default_value' => $usps_config->get('online_rates'),
-      '#description' => t('Show your customer standard USPS rates (default) or discounted "online" rates.  Online rates apply only if you, the merchant, pay for and print out postage from the USPS <a href="https://sss-web.usps.com/cns/landing.do">Click-N-Ship</a> web site.'),
+      '#description' => t('Show your customer standard USPS rates (default) or discounted "online" rates.  Online rates apply only if you, the merchant, pay for and print out postage from the USPS <a href="https://cns.usps.com/labelInformation.shtml">Click-N-Ship</a> web site.'),
     );
 
     $form['domestic']['uc_usps_env_services'] = array(
