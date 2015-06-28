@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\uc_country\CountryManager.
+ * Contains \Drupal\uc_country\CountryManager.
  */
 
 namespace Drupal\uc_country;

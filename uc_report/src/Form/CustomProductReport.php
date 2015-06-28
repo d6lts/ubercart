@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_report\Form\CustomProductReport;
+ * Contains \Drupal\uc_report\Form\CustomProductReport.
  */
 
 namespace Drupal\uc_report\Form;

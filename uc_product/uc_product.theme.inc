@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Theme functions for uc_product module.

@@ -1,7 +1,8 @@
 <?php
+
 /**
  * @file
- * Contains Drupal\uc_tax\Controller\TaxRateListBuilder.
+ * Contains \Drupal\uc_tax\Controller\TaxRateListBuilder.
  */
 
 namespace Drupal\uc_tax\Controller;

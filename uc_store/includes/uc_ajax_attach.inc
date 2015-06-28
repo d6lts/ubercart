@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains logic to aid in attaching multiple ajax behaviors to form

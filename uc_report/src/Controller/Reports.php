@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_report\Controller\Reports;
+ * Contains \Drupal\uc_report\Controller\Reports.
  */
 
 namespace Drupal\uc_report\Controller;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\uc_stock\Plugin\views\filter\BelowThreshold.
+ * Contains \Drupal\uc_stock\Plugin\views\filter\BelowThreshold.
  */
 
 namespace Drupal\uc_stock\Plugin\views\filter;
