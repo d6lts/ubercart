@@ -207,6 +207,15 @@ uc_store.settings:
         units:
           type: string
           label: 'Default weight units'
+        thousands_marker:
+          type: string
+          label: 'Weight thousands marker'
+        decimal_marker:
+          type: string
+          label: 'Weight decimal marker'
+        precision:
+          type: integer
+          label: 'Weight decimal places'
     length:
       type: mapping
       label:
@@ -214,6 +223,15 @@ uc_store.settings:
         units:
           type: string
           label: 'Default length units'
+        thousands_marker:
+          type: string
+          label: 'Length thousands marker'
+        decimal_marker:
+          type: string
+          label: 'Length decimal marker'
+        precision:
+          type: integer
+          label: 'Length decimal places'
     customer_address:
       type: string
       label: 'Address type to use'

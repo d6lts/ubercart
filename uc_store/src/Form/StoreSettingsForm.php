@@ -154,12 +154,12 @@ class StoreSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('currency.precision'),
     );
 
-    $form['display'] = array(
+    $form['weight'] = array(
       '#type' => 'details',
-      '#title' => t('Display settings'),
+      '#title' => t('Weight format'),
       '#group' => 'store',
     );
-    $form['display']['uc_weight_unit'] = array(
+    $form['weight']['uc_weight_unit'] = array(
       '#type' => 'select',
       '#title' => t('Default weight units'),
       '#default_value' => $config->get('weight.units'),
@@ -170,7 +170,33 @@ class StoreSettingsForm extends ConfigFormBase {
         'g' => t('Grams'),
       ),
     );
-    $form['display']['uc_length_unit'] = array(
+    $form['weight']['uc_weight_thou'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Thousands marker'),
+      '#default_value' => $config->get('weight.thousands_marker'),
+      '#size' => 10,
+      '#maxlength' => 10,
+    );
+    $form['weight']['uc_weight_dec'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Decimal marker'),
+      '#default_value' => $config->get('weight.decimal_marker'),
+      '#size' => 10,
+      '#maxlength' => 10,
+    );
+    $form['weight']['uc_weight_prec'] = array(
+      '#type' => 'select',
+      '#title' => t('Number of decimal places'),
+      '#options' => array(0 => 0, 1 => 1, 2 => 2),
+      '#default_value' => $config->get('weight.precision'),
+    );
+
+    $form['length'] = array(
+      '#type' => 'details',
+      '#title' => t('Length format'),
+      '#group' => 'store',
+    );
+    $form['length']['uc_length_unit'] = array(
       '#type' => 'select',
       '#title' => t('Default length units'),
       '#default_value' => $config->get('length.units'),
@@ -180,6 +206,32 @@ class StoreSettingsForm extends ConfigFormBase {
         'cm' => t('Centimeters'),
         'mm' => t('Millimeters'),
       ),
+    );
+    $form['length']['uc_length_thou'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Thousands marker'),
+      '#default_value' => $config->get('length.thousands_marker'),
+      '#size' => 10,
+      '#maxlength' => 10,
+    );
+    $form['length']['uc_length_dec'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Decimal marker'),
+      '#default_value' => $config->get('length.decimal_marker'),
+      '#size' => 10,
+      '#maxlength' => 10,
+    );
+    $form['length']['uc_length_prec'] = array(
+      '#type' => 'select',
+      '#title' => t('Number of decimal places'),
+      '#options' => array(0 => 0, 1 => 1, 2 => 2),
+      '#default_value' => $config->get('length.precision'),
+    );
+
+    $form['display'] = array(
+      '#type' => 'details',
+      '#title' => t('Display settings'),
+      '#group' => 'store',
     );
     $form['display']['uc_customer_list_address'] = array(
       '#type' => 'radios',
@@ -224,7 +276,13 @@ class StoreSettingsForm extends ConfigFormBase {
       ->set('currency.decimal_marker', $form_state->getValue('uc_currency_dec'))
       ->set('currency.precision', $form_state->getValue('uc_currency_prec'))
       ->set('weight.units', $form_state->getValue('uc_weight_unit'))
+      ->set('weight.thousands_marker', $form_state->getValue('uc_weight_thou'))
+      ->set('weight.decimal_marker', $form_state->getValue('uc_weight_dec'))
+      ->set('weight.precision', $form_state->getValue('uc_weight_prec'))
       ->set('length.units', $form_state->getValue('uc_length_unit'))
+      ->set('length.thousands_marker', $form_state->getValue('uc_length_thou'))
+      ->set('length.decimal_marker', $form_state->getValue('uc_length_dec'))
+      ->set('length.precision', $form_state->getValue('uc_length_prec'))
       ->set('customer_address', $form_state->getValue('uc_customer_list_address'))
       ->set('capitalize_address', $form_state->getValue('uc_order_capitalize_addresses'))
       ->save();

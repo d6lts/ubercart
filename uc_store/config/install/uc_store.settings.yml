@@ -61,8 +61,14 @@ currency:
   precision: 2
 weight:
   units: lb
+  thousands_marker: ','
+  decimal_marker: .
+  precision: 2
 length:
   units: in
+  thousands_marker: ','
+  decimal_marker: .
+  precision: 2
 customer_address: billing
 capitalize_address: true
 footer_message: false

@@ -232,22 +232,54 @@ function uc_currency_format($value, $sign = NULL, $thou = NULL, $dec = NULL) {
  * @param $unit
  *   Weight unit. One of 'lb', 'oz', 'kg', or 'g', or NULL to use store
  *   default weight units.
+ * @param $thou
+ *   The thousands separator character. If FALSE is given, no separator is used.
+ *   The default, NULL, causes the configuration variable
+ *   'weight.thousands_marker' to be used, which defaults to ','.
+ * @param $dec
+ *   The decimal separator character. If FALSE is given, confusion will abound,
+ *   because it will look 100 times bigger. The default, NULL, causes the
+ *   configuration variable 'weight.decimal_marker' to be used, which
+ *   defaults to '.'.
  *
  * @return
  *   String containing formattted weight, including weight units.
  */
-function uc_weight_format($value, $unit = NULL) {
-  $vars = array('!value' => $value);
+function uc_weight_format($value, $unit = NULL, $thou = NULL, $dec = NULL) {
+  $output = '';
 
+  $config = \Drupal::config('uc_store.settings')->get('weight');
+  $prec = $config['precision'];
   if (is_null($unit)) {
-    $unit = \Drupal::config('uc_store.settings')->get('weight.units');
+    $unit = $config['units'];
+  }
+  if (is_null($thou)) {
+    $thou = $config['thousands_marker'];
+  }
+  if (is_null($dec)) {
+    $dec = $config['decimal_marker'];
   }
 
+  // If the value is significantly less than the minimum precision, zero it.
+  if ($prec > 0 && round(abs($value), $prec + 1) < pow(10, -$prec)) {
+    $value = 0;
+  }
+
+  // Force the weight to a positive value and add a negative sign if necessary.
+  if ($value < 0) {
+    $value = abs($value);
+    $output .= '-';
+  }
+
+  // Format the number, like 1234.567 => 1,234.57
+  $output .= number_format($value, $prec, $dec, $thou);
+
+  // Add the units last.
   switch ($unit) {
-    case 'lb': return t('!value lb.', $vars);
-    case 'oz': return t('!value oz.', $vars);
-    case 'kg': return t('!valuekg', $vars);
-    case 'g':  return t('!valueg', $vars);
+    case 'lb': return t('@value lb.', ['@value' => $output]);
+    case 'oz': return t('@value oz.', ['@value' => $output]);
+    case 'kg': return t('@valuekg', ['@value' => $output]);
+    case 'g':  return t('@valueg', ['@value' => $output]);
     default:   return $value;
   }
 }
@@ -276,23 +308,54 @@ function uc_weight_conversion($from_units, $to_units = NULL) {
  * @param $unit
  *   Length unit. One of 'ft', 'in', 'cm', or 'mm', or NULL to use store
  *   default length units.
+ * @param $thou
+ *   The thousands separator character. If FALSE is given, no separator is used.
+ *   The default, NULL, causes the configuration variable
+ *   'length.thousands_marker' to be used, which defaults to ','.
+ * @param $dec
+ *   The decimal separator character. If FALSE is given, confusion will abound,
+ *   because it will look 100 times bigger. The default, NULL, causes the
+ *   configuration variable 'length.decimal_marker' to be used, which
+ *   defaults to '.'.
  *
  * @return
  *   String containing formattted length, including length units.
  */
-function uc_length_format($value, $unit = NULL) {
-  $vars = array('!value' => $value);
+function uc_length_format($value, $unit = NULL, $thou = NULL, $dec = NULL) {
+  $output = '';
 
+  $config = \Drupal::config('uc_store.settings')->get('length');
+  $prec = $config['precision'];
   if (is_null($unit)) {
-    $unit = \Drupal::config('uc_store.settings')->get('length.units');
+    $unit = $config['units'];
+  }
+  if (is_null($thou)) {
+    $thou = $config['thousands_marker'];
+  }
+  if (is_null($dec)) {
+    $dec = $config['decimal_marker'];
   }
 
+  // If the value is significantly less than the minimum precision, zero it.
+  if ($prec > 0 && round(abs($value), $prec + 1) < pow(10, -$prec)) {
+    $value = 0;
+  }
+
+  // Force the length to a positive value and add a negative sign if necessary.
+  if ($value < 0) {
+    $value = abs($value);
+    $output .= '-';
+  }
+
+  // Format the number, like 1234.567 => 1,234.57
+  $output .= number_format($value, $prec, $dec, $thou);
+
+  // Add the units last.
   switch ($unit) {
-    case 'in': return t('!valuein.', $vars);
-    case 'ft': return t('!valueft.', $vars);
-    case 'cm': return t('!valuecm', $vars);
-    case 'mm': return t('!valuemm', $vars);
-    default:   return $value;
+    case 'in': return t('@valuein.', ['@value' => $output]);
+    case 'ft': return t('@valueft.', ['@value' => $output]);
+    case 'cm': return t('@valuecm', ['@value' => $output]);
+    case 'mm':  return t('@valuemm', ['@value' => $output]);
   }
 }
 
