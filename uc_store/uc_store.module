@@ -161,23 +161,24 @@ function uc_store_help($route_name, RouteMatchInterface $route_match) {
  *
  * @param $value
  *   The numeric value of the currency amount.
- * @param $sign
+ * @param $symbol
  *   The currency symbol. If FALSE is given, no symbol is used. The default,
- *   NULL, causes the variable 'uc_currency_sign' to be used, which defaults to
- *   '$'.
+ *   NULL, causes the configuration variable 'currency.symbol' to be used, which
+ *   defaults to '$'.
  * @param $thou
  *   The thousands separator character. If FALSE is given, no separator is used.
- *   The default, NULL, causes the variable 'uc_currency_sign' to be used, which
- *   defaults to ','.
+ *   The default, NULL, causes the configuration variable
+ *   'currency.thousands_marker' to be used, which defaults to ','.
  * @param $dec
  *   The decimal separator character. If FALSE is given, confusion will abound,
  *   because it will look 100 times bigger. The default, NULL, causes the
- *   variable 'uc_currency_dec' to be used, which defaults to '.'.
+ *   configuration variable 'currency.decimal_marker' to be used, which
+ *   defaults to '.'.
  *
  * @return
  *   String containing price formatted with currency symbol and separators.
  */
-function uc_currency_format($value, $sign = NULL, $thou = NULL, $dec = NULL) {
+function uc_currency_format($value, $symbol = NULL, $thou = NULL, $dec = NULL) {
   if ($value === NULL) {
     return NULL;
   }
@@ -185,10 +186,10 @@ function uc_currency_format($value, $sign = NULL, $thou = NULL, $dec = NULL) {
   $output = '';
 
   $config = \Drupal::config('uc_store.settings')->get('currency');
-  $sign_after = $config['symbol_after'];
+  $symbol_after = $config['symbol_after'];
   $prec = $config['precision'];
-  if (is_null($sign)) {
-    $sign = $config['symbol'];
+  if (is_null($symbol)) {
+    $symbol = $config['symbol'];
   }
   if (is_null($thou)) {
     $thou = $config['thousands_marker'];
@@ -208,17 +209,17 @@ function uc_currency_format($value, $sign = NULL, $thou = NULL, $dec = NULL) {
     $output .= '-';
   }
 
-  // Add the currency sign first if specified.
-  if ($sign && !$sign_after) {
-    $output .= $sign;
+  // Add the currency symbol first if specified.
+  if ($symbol && !$symbol_after) {
+    $output .= $symbol;
   }
 
   // Format the number, like 1234.567 => 1,234.57
   $output .= number_format($value, $prec, $dec, $thou);
 
-  // Add the currency sign last if specified.
-  if ($sign && $sign_after) {
-    $output .= $sign;
+  // Add the currency symbol last if specified.
+  if ($symbol && $symbol_after) {
+    $output .= $symbol;
   }
 
   return $output;
