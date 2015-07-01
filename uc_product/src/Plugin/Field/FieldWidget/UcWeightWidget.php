@@ -29,7 +29,7 @@ class UcWeightWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $value = isset($items[$delta]->value) ? $items[$delta]->value : 0;
-    $units = isset($items[$delta]->units) ? $items[$delta]->units : \Drupal::config('uc_store.settings')->get('units.weight');
+    $units = isset($items[$delta]->units) ? $items[$delta]->units : \Drupal::config('uc_store.settings')->get('weight.units');
 
     $element += array(
       '#type' => 'fieldset',

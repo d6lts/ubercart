@@ -62,7 +62,7 @@ class WeightquoteEditForm extends FormBase {
       '#default_value' => $method->base_rate,
       '#required' => TRUE,
     );
-    $unit = \Drupal::config('uc_store.settings')->get('units.weight');
+    $unit = \Drupal::config('uc_store.settings')->get('weight.units');
     $form['product_rate'] = array(
       '#type' => 'uc_price',
       '#title' => t('Default cost adjustment per !unit', ['!unit' => $unit]),

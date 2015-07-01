@@ -59,9 +59,10 @@ currency:
   thousands_marker: ','
   decimal_marker: .
   precision: 2
-units:
-  weight: lb
-  length: in
+weight:
+  units: lb
+length:
+  units: in
 customer_address: billing
 capitalize_address: true
 footer_message: false

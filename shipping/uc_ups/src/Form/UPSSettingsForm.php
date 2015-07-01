@@ -184,9 +184,9 @@ class UPSSettingsForm extends ConfigFormBase {
     $form['uc_ups_quote_options']['uc_ups_unit_system'] = array(
       '#type' => 'select',
       '#title' => t('System of measurement'),
-      '#default_value' => $ups_config->get('unit_system', \Drupal::config('uc_store.settings')->get('units.length')),
+      '#default_value' => $ups_config->get('unit_system', \Drupal::config('uc_store.settings')->get('length.units')),
       '#options' => array(
-        'in' => t('British'),
+        'in' => t('Imperial'),
         'cm' => t('Metric'),
       ),
       '#description' => t('Choose the standard system of measurement for your country.'),

@@ -104,7 +104,7 @@ function uc_ups_fulfill_order($form, FormStateInterface $form_state, $order, $pa
           'oz' => t('Ounces'),
           'g'  => t('Grams'),
         ),
-        '#default_value' => isset($package->weight_units) ? $package->weight_units : $store_config->get('units.weight'),
+        '#default_value' => isset($package->weight_units) ? $package->weight_units : $store_config->get('weight.units'),
       );
       $pkg_form['dimensions'] = array(
         '#type'          => 'container',
@@ -139,7 +139,7 @@ function uc_ups_fulfill_order($form, FormStateInterface $form_state, $order, $pa
           'cm' => t('Centimeters'),
           'mm' => t('Millimeters'),
         ),
-        '#default_value' => isset($package->length_units) ? $package->length_units : $store_config->get('units.length'),
+        '#default_value' => isset($package->length_units) ? $package->length_units : $store_config->get('length.units'),
       );
 
       $form['packages'][$id] = $pkg_form;

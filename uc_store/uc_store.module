@@ -240,7 +240,7 @@ function uc_weight_format($value, $unit = NULL) {
   $vars = array('!value' => $value);
 
   if (is_null($unit)) {
-    $unit = \Drupal::config('uc_store.settings')->get('units.weight');
+    $unit = \Drupal::config('uc_store.settings')->get('weight.units');
   }
 
   switch ($unit) {
@@ -257,7 +257,7 @@ function uc_weight_format($value, $unit = NULL) {
  */
 function uc_weight_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $to_units = \Drupal::config('uc_store.settings')->get('units.weight');
+    $to_units = \Drupal::config('uc_store.settings')->get('weight.units');
   }
   $constant = strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
@@ -284,7 +284,7 @@ function uc_length_format($value, $unit = NULL) {
   $vars = array('!value' => $value);
 
   if (is_null($unit)) {
-    $unit = \Drupal::config('uc_store.settings')->get('units.length');
+    $unit = \Drupal::config('uc_store.settings')->get('length.units');
   }
 
   switch ($unit) {
@@ -301,7 +301,7 @@ function uc_length_format($value, $unit = NULL) {
  */
 function uc_length_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $to_units = \Drupal::config('uc_store.settings')->get('units.length');
+    $to_units = \Drupal::config('uc_store.settings')->get('length.units');
   }
   $constant = strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {

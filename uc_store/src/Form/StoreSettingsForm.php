@@ -162,7 +162,7 @@ class StoreSettingsForm extends ConfigFormBase {
     $form['display']['uc_weight_unit'] = array(
       '#type' => 'select',
       '#title' => t('Default weight units'),
-      '#default_value' => $config->get('units.weight'),
+      '#default_value' => $config->get('weight.units'),
       '#options' => array(
         'lb' => t('Pounds'),
         'oz' => t('Ounces'),
@@ -173,7 +173,7 @@ class StoreSettingsForm extends ConfigFormBase {
     $form['display']['uc_length_unit'] = array(
       '#type' => 'select',
       '#title' => t('Default length units'),
-      '#default_value' => $config->get('units.length'),
+      '#default_value' => $config->get('length.units'),
       '#options' => array(
         'in' => t('Inches'),
         'ft' => t('Feet'),
@@ -223,8 +223,8 @@ class StoreSettingsForm extends ConfigFormBase {
       ->set('currency.thousands_marker', $form_state->getValue('uc_currency_thou'))
       ->set('currency.decimal_marker', $form_state->getValue('uc_currency_dec'))
       ->set('currency.precision', $form_state->getValue('uc_currency_prec'))
-      ->set('units.weight', $form_state->getValue('uc_weight_unit'))
-      ->set('units.length', $form_state->getValue('uc_length_unit'))
+      ->set('weight.units', $form_state->getValue('uc_weight_unit'))
+      ->set('length.units', $form_state->getValue('uc_length_unit'))
       ->set('customer_address', $form_state->getValue('uc_customer_list_address'))
       ->set('capitalize_address', $form_state->getValue('uc_order_capitalize_addresses'))
       ->save();

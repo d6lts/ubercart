@@ -31,7 +31,7 @@ class UcDimensionsWidget extends WidgetBase {
     $length = isset($items[$delta]->length) ? $items[$delta]->length : 0;
     $width = isset($items[$delta]->width) ? $items[$delta]->width : 0;
     $height = isset($items[$delta]->height) ? $items[$delta]->height : 0;
-    $units = isset($items[$delta]->units) ? $items[$delta]->units : \Drupal::config('uc_store.settings')->get('units.length');
+    $units = isset($items[$delta]->units) ? $items[$delta]->units : \Drupal::config('uc_store.settings')->get('length.units');
 
     $element += array(
       '#type' => 'fieldset',

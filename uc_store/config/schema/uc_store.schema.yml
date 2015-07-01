@@ -200,14 +200,18 @@ uc_store.settings:
         precision:
           type: integer
           label: 'Currency decimal places'
-    units:
+    weight:
       type: mapping
       label:
       mapping:
-        weight:
+        units:
           type: string
           label: 'Default weight units'
-        length:
+    length:
+      type: mapping
+      label:
+      mapping:
+        units:
           type: string
           label: 'Default length units'
     customer_address:
