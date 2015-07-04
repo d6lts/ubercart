@@ -33,7 +33,7 @@ class AttributeDeleteForm extends ConfirmFormBase {
    */
   public function getDescription() {
     $count = db_query("SELECT COUNT(*) FROM {uc_product_attributes} WHERE aid = :aid", [':aid' => $this->attribute->aid])->fetchField();
-    return \Drupal::translation()->formatPlural($count, 'There is 1 product with this attribute.', 'There are @count products with this attribute.');
+    return $this->formatPlural($count, 'There is 1 product with this attribute.', 'There are @count products with this attribute.');
   }
 
   /**

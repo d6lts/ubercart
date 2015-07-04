@@ -108,7 +108,7 @@ class QuoteMethodsForm extends ConfigFormBase {
       }
       if (isset($method_types['order']) && is_array($method_types['order'])) {
         $count = count($method_types['order']);
-        $form['uc_quote_type_weight']['#description'] .= \Drupal::translation()->formatPlural($count, '<br />The %list method is compatible with any shipping type.', '<br />The %list methods are compatible with any shipping type.', array('%list' => implode(', ', $method_types['order'])));
+        $form['uc_quote_type_weight']['#description'] .= $this->formatPlural($count, '<br />The %list method is compatible with any shipping type.', '<br />The %list methods are compatible with any shipping type.', array('%list' => implode(', ', $method_types['order'])));
       }
       foreach ($shipping_types as $id => $title) {
         $form['uc_quote_type_weight'][$id] = array(
