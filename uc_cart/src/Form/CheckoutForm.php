@@ -79,7 +79,7 @@ class CheckoutForm extends FormBase {
     // Invoke the 'prepare' op of enabled panes, but only if their 'process' ops
     // have not been invoked on this request (i.e. when rebuilding after AJAX).
     foreach ($panes as $id => $pane) {
-      if ($form_state->get(['panes', $id, 'prepared'])) {
+      if (!$form_state->get(['panes', $id, 'prepared'])) {
         $pane->prepare($order, $form, $form_state);
         $form_state->set(['panes', $id, 'prepared'], TRUE);
         $processed = FALSE; // Make sure we save the updated order.

@@ -22,6 +22,12 @@ class QuoteTest extends UbercartTestBase {
   public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
+
+    // In order to test zone-based conditions, this particular test class
+    // assumes that US is enabled as default, and CA is also enabled.
+    entity_load('uc_country', 'US')->enable()->save();
+    entity_load('uc_country', 'CA')->enable()->save();
+    \Drupal::configFactory()->getEditable('uc_store.settings')->set('address.country', 'US')->save();
   }
 
   /**

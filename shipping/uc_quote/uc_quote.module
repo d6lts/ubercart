@@ -519,8 +519,6 @@ function uc_checkout_pane_quotes($op, &$order, $form = NULL, FormStateInterface 
         '#weight' => 1,
       );
 
-//@TODO: Figure out why this is throwing an exception
-// -- evidently the 'prepare' case never gets called, that's why, so quote_form doesn't exist
       $contents['quotes'] += $order->quote_form;
 
       $form_state->set(['uc_ajax', 'uc_quote', 'panes][quotes][quote_button'], array(
