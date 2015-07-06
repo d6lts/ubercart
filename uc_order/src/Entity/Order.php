@@ -420,7 +420,7 @@ class Order extends ContentEntityBase implements OrderInterface {
         ->fields(array(
           'order_id' => $this->id(),
           'uid' => \Drupal::currentUser()->id(),
-          'changes' => drupal_render($item_list),
+          'changes' => \Drupal::service('renderer')->renderPlain($item_list),
           'created' => REQUEST_TIME,
         ))
         ->execute();
