@@ -62,7 +62,10 @@ class CartSettingsTest extends UbercartTestBase {
       $url_pass,
       t('Add to cart redirect takes user to the correct URL.')
     );
+  }
 
+  public function testAddToCartQueryRedirect() {
+    $this->drupalLogin($this->adminUser);
     $this->drupalPostForm(
       'admin/store/settings/cart',
       array('uc_add_item_redirect' => '<none>'),
@@ -71,8 +74,6 @@ class CartSettingsTest extends UbercartTestBase {
 
     $this->drupalPostForm('node/' . $this->product->id(), [], t('Add to cart'), ['query' => ['test' => 'querystring']]);
     $url = \Drupal::url('entity.node.canonical', ['node' => $this->product->id()], ['absolute' => TRUE, 'query' => ['test' => 'querystring']]);
-debug($url);
-debug($this->getUrl());
     $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect preserves the query string.');
   }
 

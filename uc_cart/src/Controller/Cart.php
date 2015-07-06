@@ -364,11 +364,6 @@ class Cart extends ControllerBase implements CartInterface {
       return Url::fromUri('base:' . $redirect);
     }
     else {
-    $request = \Drupal::request();
-  drupal_set_message("Here in the no-redirect case, need to fetch and preserve the query string...");
-  drupal_set_message($request->getRequestUri());
-  drupal_set_message($request->getQueryString());
-  drupal_set_message(var_export(UrlHelper::filterQueryParameters($query->all()), true));
       return Url::fromRoute('<current>', [], ['query' => UrlHelper::filterQueryParameters($query->all())]);
     }
   }
