@@ -776,7 +776,7 @@ function uc_order_action_email_invoice($order, $from, $addresses, $subject, $tem
     '#op' => $settings['view'],
     '#template' => $settings['template'],
   );
-  $settings['message'] = drupal_render($message);
+  $settings['message'] = \Drupal::service('renderer')->renderPlain($message);
 
   foreach ($recipients as $email) {
     $sent = \Drupal::service('plugin.manager.mail')->mail('uc_order', 'action-mail', $email, uc_store_mail_recipient_langcode($email), $settings, $from);
