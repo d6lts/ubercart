@@ -25,7 +25,7 @@ class CountryController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response to the country listing page.
    */
-  function enableConfig(Country $uc_country) {
+  public function enableConfig(Country $uc_country) {
     $uc_country->enable()->save();
 
     drupal_set_message($this->t('The country %label has been enabled.', ['%label' => $uc_country->label()]));
@@ -42,7 +42,7 @@ class CountryController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response to the country listing page.
    */
-  function disableConfig(Country $uc_country) {
+  public function disableConfig(Country $uc_country) {
     $uc_country->disable()->save();
 
     drupal_set_message($this->t('The country %label has been disabled.', ['%label' => $uc_country->label()]));
