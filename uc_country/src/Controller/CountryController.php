@@ -19,7 +19,7 @@ class CountryController extends ControllerBase {
   /**
    * Enables a country.
    *
-   * @param \Drupal\uc_store\Entity\Country $uc_country
+   * @param \Drupal\uc_country\Entity\Country $uc_country
    *   The country object to enable.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -36,7 +36,7 @@ class CountryController extends ControllerBase {
   /**
    * Disables a country.
    *
-   * @param \Drupal\uc_store\Entity\Country $uc_country
+   * @param \Drupal\uc_country\Entity\Country $uc_country
    *   The country object to disable.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
