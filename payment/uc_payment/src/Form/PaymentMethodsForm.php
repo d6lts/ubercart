@@ -72,7 +72,7 @@ class PaymentMethodsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['help'] = array(
-      '#markup' => t('By default, only the "Free order" payment method is listed here. To see additional payment methods you must <a href="@install">install addtional modules</a>. The "Payment Method Pack" module that comes with Ubercart provides "Check" and "COD" payment methods. The "Credit Card" module that comes with Ubercart provides a credit card payment method, although you will need an additional module to provide a payment gateway for your credit card. For more information about payment methods and settings please read the <a href="@doc">Ubercart Documentation</a>.', ['@install' => Url::fromRoute('system.modules_list')->toString(), '@doc' => Url::fromUri('http://www.drupal.org/documentation/modules/ubercart')->toString()]),
+      '#markup' => t('By default, only the "Free order" payment method is listed here. To see additional payment methods you must <a href="@install">install additional modules</a>. The "Payment Method Pack" module that comes with Ubercart provides "Check" and "COD" payment methods. The "Credit Card" module that comes with Ubercart provides a credit card payment method, although you will need an additional module to provide a payment gateway for your credit card. For more information about payment methods and settings please read the <a href="@doc">Ubercart Documentation</a>.', ['@install' => Url::fromRoute('system.modules_list')->toString(), '@doc' => Url::fromUri('http://www.drupal.org/documentation/modules/ubercart')->toString()]),
     );
 
     $form['methods'] = array(

@@ -47,6 +47,7 @@ use Drupal\uc_store\Address;
  */
 class Order extends ContentEntityBase implements OrderInterface {
 
+// @todo
 // *     "route_provider" = {
 // *       "html" = "Drupal\uc_order\Entity\OrderRouteProvider",
 // *     },

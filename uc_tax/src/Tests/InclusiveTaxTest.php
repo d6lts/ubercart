@@ -95,6 +95,7 @@ class InclusiveTaxTest extends UbercartTestBase {
     $this->drupalGet('cart');
     $this->assertText('Subtotal: $16.80', 'Order subtotal is correct on cart page.');
 
+    // @todo: disable rest of test, see [#2306379]
     return;
 
     // Make sure that the subtotal is also correct on the checkout page.
@@ -107,7 +108,7 @@ class InclusiveTaxTest extends UbercartTestBase {
     $this->assertRaw(t('Your order is almost complete.'));
 
     // Make sure the price is still listed tax-inclusively.
-    // !TODO This could be handled more specifically with a regex.
+    // @TODO This could be handled more specifically with a regex.
     $this->assertText('$16.80' . $rate->inclusion_text, 'Tax inclusive price appears in cart pane on checkout review page');
 
     // Ensure the tax-inclusive price is listed on the order admin page.

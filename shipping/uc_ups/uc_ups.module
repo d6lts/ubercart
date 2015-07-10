@@ -55,7 +55,7 @@ function uc_ups_cron() {
   foreach ($files as $file) {
     if ($cutoff > filectime($file->uri)) {
       drupal_unlink($file->uri);
-      \Drupal::logger('uc_ups')->notice('Removed uc_ups label file @file.', array('@file' => $file->uri));
+      \Drupal::logger('uc_ups')->notice('Removed uc_ups label file @file.', ['@file' => $file->uri]);
     }
   }
 }
@@ -185,7 +185,7 @@ function uc_ups_node_load($nodes) {
   $vids = array();
   $ups_config = \Drupal::config('uc_ups.settings');
   $shipping_type = $ups_config->get('uc_store_shipping_type');
-  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", array(':type' => 'product', ':ids[]' => $nids))->fetchAllKeyed();
+  $shipping_types = db_query("SELECT id, shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id IN (:ids[])", [':type' => 'product', ':ids[]' => $nids])->fetchAllKeyed();
 
   foreach ($nids as $nid) {
     if (isset($shipping_types[$nid])) {
@@ -201,7 +201,7 @@ function uc_ups_node_load($nodes) {
   }
 
   if ($vids) {
-    $result = db_query("SELECT * FROM {uc_ups_products} WHERE vid IN (:vids[])", array(':vids[]' => $vids), array('fetch' => PDO::FETCH_ASSOC));
+    $result = db_query("SELECT * FROM {uc_ups_products} WHERE vid IN (:vids[])", [':vids[]' => $vids], ['fetch' => PDO::FETCH_ASSOC]);
     foreach ($result as $ups) {
       $nodes[$ups['nid']]->ups = $ups;
     }
@@ -258,7 +258,7 @@ function uc_ups_uc_shipping_method() {
     'operations' => array(
       'configure' => array(
         'title' => t('configure'),
-        'url' => Url::fromUri('base:admin/store/settings/quotes/settings/ups'),
+        'url' => Url::fromRoute('uc_ups.settings'),
       ),
     ),
     'quote' => array(
@@ -304,7 +304,7 @@ function uc_ups_uc_store_status() {
     $messages[] = array(
       'status' => 'error',
       'title' => t('UPS Online Tools'),
-      'desc' => t('More information is needed to access UPS Online Tools. Please enter it <a href="@url">here</a>.', array('@url' => \Drupal::url('uc_ups.settings'))),
+      'desc' => t('More information is needed to access UPS Online Tools. Please enter it <a href="@url">here</a>.', ['@url' => \Drupal::url('uc_ups.settings')]),
     );
   }
 
@@ -800,7 +800,7 @@ function uc_ups_void_shipment_request($shipment_number, $tracking_numbers = arra
     $schema .= '<RequestAction>Void</RequestAction>';
     $schema .= '<TransactionReference>';
       $schema .= '<CustomerContext>';
-      $schema .= t('Void shipment @ship_number and tracking numbers @track_list', array('@ship_number' => $shipment_number, '@track_list' => implode(', ', $tracking_numbers)));
+      $schema .= t('Void shipment @ship_number and tracking numbers @track_list', ['@ship_number' => $shipment_number, '@track_list' => implode(', ', $tracking_numbers)]);
       $schema .= '</CustomerContext>';
       $schema .= '<XpciVersion>1.0</XpciVersion>';
     $schema .= '</TransactionReference>';
