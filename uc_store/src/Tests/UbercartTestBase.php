@@ -74,7 +74,7 @@ abstract class UbercartTestBase extends WebTestBase {
     $country_ids = array_rand($countries, 8);
     foreach ($country_ids as $country_id) {
       // Don't use the country UI, we're not testing that here...
-      entity_load('uc_country', $country_id)->enable()->save();
+      \Drupal\uc_country\Entity\Country::load($country_id)->enable()->save();
     }
     // Last one of the 8 gets to be the store default country.
     \Drupal::configFactory()->getEditable('uc_store.settings')->set('address.country', $country_id)->save();
@@ -276,10 +276,10 @@ abstract class UbercartTestBase extends WebTestBase {
       $edit['primary_email'] = $this->randomString() . '@example.org';
     }
 
-    $order = entity_create('uc_order', $edit);
+    $order = \Drupal\uc_order\Entity\Order::create($edit);
 
     if (!isset($fields['products'])) {
-      $order->products[] = entity_create('uc_order_product', array(
+      $order->products[] = \Drupal\uc_order\Entity\OrderProduct::create(array(
         'nid' => $this->product->nid->target_id,
         'title' => $this->product->title->value,
         'model' => $this->product->model,
@@ -293,7 +293,7 @@ abstract class UbercartTestBase extends WebTestBase {
 
     $order->save();
 
-    return entity_load('uc_order', $order->id());
+    return \Drupal\uc_order\Entity\Order::load($order->id());
   }
 
   /**

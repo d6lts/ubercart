@@ -130,7 +130,7 @@ class Cart extends ControllerBase implements CartInterface {
     }
 
     // Create the account.
-    $account = entity_create('user', $fields);
+    $account = \Drupal\user\Entity\User::create($fields);
     $account->save();
 
     // Override the password, if specified.
@@ -208,7 +208,9 @@ class Cart extends ControllerBase implements CartInterface {
         ->execute();
 
       if (!empty($result)) {
-        $items[$cid] = entity_load_multiple('uc_cart_item', array_keys($result), TRUE);
+        $storage = \Drupal::entityManager()->getStorage('uc_cart_item');
+        $storage->resetCache(array_keys($result));
+        $items[$cid] = $storage->loadMultiple(array_keys($result));
       }
 
       // Allow other modules a chance to alter the fully loaded cart object.
@@ -253,7 +255,7 @@ class Cart extends ControllerBase implements CartInterface {
    *   TRUE to rebuild the cart item cache after adding an item.
    *
    * @return null|\Drupal\Core\Url
-   *   If $check_redirect is TRUE, a Url to redirect to. Otherwise null.
+   *   If $check_redirect is TRUE, a Url to redirect to. Otherwise NULL.
    */
   public function addItem($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE, $check_redirect = TRUE, $rebuild = TRUE) {
     $cid = $cid ? $cid : $this->getId();
@@ -301,7 +303,7 @@ class Cart extends ControllerBase implements CartInterface {
 
     if (empty($result)) {
       // If the item isn't in the cart yet, add it.
-      $item_entity = entity_create('uc_cart_item', array(
+      $item_entity = \Drupal\uc_cart\Entity\CartItem::create(array(
         'cart_id' => $cid,
         'nid' => $nid,
         'qty' => $qty,
@@ -317,7 +319,7 @@ class Cart extends ControllerBase implements CartInterface {
       if ($msg) {
         drupal_set_message(t('Your item(s) have been updated.'));
       }
-      $item_entity = entity_load('uc_cart_item', current(array_keys($result)));
+      $item_entity = \Drupal\uc_cart\Entity\CartItem::load(current(array_keys($result)));
       $qty += $item_entity->qty->value;
       $this->moduleHandler()->invoke($data['module'], 'uc_update_cart_item', array($nid, $data, min($qty, 999999), $cid));
     }
@@ -386,7 +388,9 @@ class Cart extends ControllerBase implements CartInterface {
       ->execute();
 
     if (!empty($result)) {
-      entity_delete_multiple('uc_cart_item', array_keys($result));
+      $storage = \Drupal::entityManager()->getStorage('uc_cart_item');
+      $entities = $storage->loadMultiple(array_keys($result));
+      $storage->delete($entities);
     }
 
     // Remove cached cart.

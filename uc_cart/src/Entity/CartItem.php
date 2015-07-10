@@ -50,7 +50,7 @@ class CartItem extends ContentEntityBase {
    * Converts a cart item into an order product.
    */
   public function toOrderProduct() {
-    $order_product = entity_create('uc_order_product', array(
+    $order_product = \Drupal\uc_order\Entity\OrderProduct::create(array(
       'nid' => $this->nid->target_id,
       'title' => $this->title,
       'model' => $this->model,

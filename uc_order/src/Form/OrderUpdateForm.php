@@ -96,7 +96,7 @@ class OrderUpdateForm extends FormBase {
     }
 
     if ($form_state->getValue('status') != $form_state->getValue('current_status')) {
-      entity_load('uc_order', $form_state->getValue('order_id'))
+      \Drupal\uc_order\Entity\Order::load($form_state->getValue('order_id'))
         ->setStatusId($form_state->getValue('status'))
         ->save();
 

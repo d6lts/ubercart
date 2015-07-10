@@ -27,7 +27,7 @@ class AjaxTest extends UbercartTestBase {
 
     // In order to test zone-based conditions, this particular test class
     // assumes that US is enabled and set as the store country.
-    entity_load('uc_country', 'US')->enable()->save();
+    \Drupal\uc_country\Entity\Country::load('US')->enable()->save();
     \Drupal::configFactory()->getEditable('uc_store.settings')->set('address.country', 'US')->save();
   }
 

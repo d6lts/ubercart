@@ -40,7 +40,7 @@ class CartLinksTest extends UbercartTestBase {
 
     // Create Full HTML text format, needed because we want links
     // to appear on pages.
-    $full_html_format = entity_create('filter_format', array(
+    $full_html_format = \Drupal\filter\Entity\FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
     ));

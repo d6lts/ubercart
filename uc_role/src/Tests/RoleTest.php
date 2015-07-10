@@ -41,7 +41,7 @@ class RoleTest extends UbercartTestBase {
     // $this->assertTrue($order->getUser()->hasRole($rid), 'Existing user was granted role.');
 
     // Test that the email is correct.
-    $role = entity_load('user_role', $rid);
+    $role = \Drupal\user\Entity\Role::load($rid);
     // @todo Re-enable when Rules is available.
     // $this->assertMailString('subject', $role->label(), 4, 'Role assignment email mentions role in subject line.');
 

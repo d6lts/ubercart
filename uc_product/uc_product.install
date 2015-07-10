@@ -176,7 +176,7 @@ function uc_product_schema() {
  * Implements hook_uninstall().
  */
 function uc_product_uninstall() {
-  $styles = entity_load_multiple('image_style', ['uc_product', 'uc_thumbnail']);
+  $styles = \Drupal\image\Entity\ImageStyle::loadMultiple(['uc_product', 'uc_thumbnail']);
   if (!empty($styles)) {
     $style_names = array();
     foreach ($styles as $style) {
@@ -185,7 +185,7 @@ function uc_product_uninstall() {
     drupal_set_message(\Drupal::translation()->formatPlural(count($style_names),
       'The image style %style has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.',
       'The image styles %styles have not been deleted. If you need to delete them, <a href="@url">please do so manually</a>.',
-       array(
+      array(
         '%style' => $style_names[0],
         '%styles' => implode(', ', $style_names),
         '@url' => \Drupal::url('entity.image_style.collection'),

@@ -125,7 +125,9 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
           ->condition('order_id', $order->id())
           ->execute();
         if (!empty($result)) {
-          entity_delete_multiple('uc_order_product', array_keys($result));
+          $storage = \Drupal::entityManager()->getStorage('uc_order_product');
+          $entities = $storage->loadMultiple(array_keys($result));
+          $storage->delete($entities);
         }
         uc_order_delete_line_item($order->id(), TRUE);
         $rebuild = TRUE;

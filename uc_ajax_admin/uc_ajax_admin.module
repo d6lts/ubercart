@@ -138,8 +138,8 @@ function _uc_ajax_admin_checkout_trigger_options($form) {
 function _uc_ajax_admin_build_checkout_form() {
   $order = empty($_SESSION['cart_order']) ? FALSE : uc_order_load($_SESSION['cart_order']);
   if (!$order) {
-    $order = entity_create('uc_order', array());
-    $order->products = array(entity_create('uc_order_product', array(
+    $order = \Drupal\uc_order\Entity\Order::create(array());
+    $order->products = array(\Drupal\uc_order\Entity\OrderProduct::create(array(
       'title' => 'fake',
       'nid' => 0,
       'qty' => 1,

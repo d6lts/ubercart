@@ -438,7 +438,7 @@ function uc_order_uri($order) {
  *   The initial state of the order.
  */
 function uc_order_new($uid = 0, $state = 'in_checkout') {
-  $order = entity_create('uc_order', array(
+  $order = \Drupal\uc_order\Entity\Order::create(array(
     'uid' => $uid,
     'order_status' => uc_order_state_default($state),
   ));

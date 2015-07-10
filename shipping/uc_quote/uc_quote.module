@@ -417,7 +417,7 @@ function uc_quote_get_default_shipping_address($nid) {
  * @ingroup forms
  */
 function uc_cart_pane_quotes($form, FormStateInterface $form_state, $items) {
-  $order = entity_create('uc_order', array(
+  $order = \Drupal\uc_order\Entity\Order::create(array(
     'uid' => \Drupal::currentUser()->id(),
   ));
   $order->delivery_country = $form_state->getValue('delivery_country') ?: uc_store_default_country();

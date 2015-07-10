@@ -58,7 +58,7 @@ function uc_country_import_list() {
  *   code and containing the translated ISO 3166-1 country name.
  */
 function uc_country_option_list() {
-  $countries = entity_load_multiple_by_properties('uc_country', ['status' => TRUE]);
+  $countries = \Drupal::entityManager()->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
   $country_names = [];
   foreach ($countries as $alpha_2 => $country) {
     $country_names[$alpha_2] = t($country->name);
@@ -72,7 +72,7 @@ function uc_country_option_list() {
  */
 function uc_zone_option_list() {
   $options = array();
-  $countries = entity_load_multiple_by_properties('uc_country', array('status' => TRUE));
+  $countries = \Drupal::entityManager()->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
   foreach ($countries as $country) {
     if (!empty($country->zones)) {
       $options[t($country->name)] = $country->zones;

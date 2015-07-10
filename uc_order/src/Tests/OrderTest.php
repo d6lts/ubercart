@@ -45,12 +45,12 @@ class OrderTest extends UbercartTestBase {
   }
 
   public function testOrderEntity() {
-    $order = entity_create('uc_order', []);
+    $order = \Drupal\uc_order\Entity\Order::create(array());
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
     $name = $this->randomMachineName();
-    $order = entity_create('uc_order', array(
+    $order = \Drupal\uc_order\Entity\Order::create(array(
       'uid' => $this->customer->id(),
       'order_status' => 'completed',
       'billing_first_name' => $name,
@@ -63,8 +63,12 @@ class OrderTest extends UbercartTestBase {
 
     // Test deletion.
     $order->save();
-    entity_delete_multiple('uc_order', array($order->id()));
-    $deleted_order = entity_load('uc_order', $order->id(), TRUE);
+    $storage = \Drupal::entityManager()->getStorage('uc_order');
+    $entities = $storage->loadMultiple(array($order->id()));
+    $storage->delete($entities);
+
+    $storage->resetCache(array($order->id));
+    $deleted_order = \Drupal\uc_order\Entity\Order::load($order->id());
     $this->assertFalse($deleted_order, 'Order was successfully deleted');
   }
 

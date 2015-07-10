@@ -56,7 +56,7 @@ class CatalogSettingsForm extends ConfigFormBase {
 
     $vid = $config->get('vocabulary');
     if ($vid) {
-      $catalog = entity_load('taxonomy_vocabulary', $vid);
+      $catalog = \Drupal\taxonomy\Entity\Vocabulary::load($vid);
 
       $form['catalog_vid'] = array(
         '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => \Drupal::url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()]), '%name' => $catalog->label())) . '</p>',
@@ -64,7 +64,7 @@ class CatalogSettingsForm extends ConfigFormBase {
     }
 
     $vocabs = array();
-    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
+    $vocabularies = \Drupal\taxonomy\Entity\Vocabulary::loadMultiple();
     foreach ($vocabularies as $vid => $vocabulary) {
       $vocabs[$vid] = $vocabulary->label();
     }

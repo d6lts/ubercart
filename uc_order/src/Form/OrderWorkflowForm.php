@@ -36,7 +36,7 @@ class OrderWorkflowForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $states = uc_order_state_options_list();
-    $statuses = entity_load_multiple('uc_order_status');
+    $statuses = \Drupal\uc_order\Entity\OrderStatus::loadMultiple();
 
     $form['order_states'] = array(
       '#type' => 'details',
@@ -131,7 +131,7 @@ class OrderWorkflowForm extends ConfigFormBase {
     $config->save();
 
     foreach ($form_state->getValue('order_statuses') as $id => $value) {
-      $status = entity_load('uc_order_status', $id);
+      $status = \Drupal\uc_order\Entity\OrderStatus::load($id);
       if (!$form['#locked'][$id] && $value['remove']) {
         $status->delete();
         drupal_set_message(t('Order status %status removed.', ['%status' => $status->name]));

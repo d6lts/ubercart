@@ -24,7 +24,7 @@ function uc_catalog_uninstall() {
     drupal_set_message(t('The Ubercart %catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', ['%catalog' => $vocab->label(), '@url' => \Drupal::url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $vocab->id()])]), 'warning');
   }
 
-  $styles = entity_load_multiple('image_style', ['uc_category', 'uc_product_list']);
+  $styles = \Drupal\image\Entity\ImageStyle::loadMultiple(['uc_category', 'uc_product_list']);
   if (!empty($styles)) {
     $style_names = array();
     foreach ($styles as $style) {

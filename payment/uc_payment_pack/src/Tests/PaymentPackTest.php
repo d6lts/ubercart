@@ -99,7 +99,7 @@ class PaymentPackTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
     // Test user order view
-    $order = entity_load('uc_order', 1);
+    $order = \Drupal\uc_order\Entity\Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'check', 'Order has check payment method.');
 
     $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
@@ -160,7 +160,7 @@ class PaymentPackTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
     // Test user order view
-    $order = entity_load('uc_order', 1);
+    $order = \Drupal\uc_order\Entity\Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'cod', 'Order has COD payment method.');
 
     $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
@@ -194,7 +194,7 @@ class PaymentPackTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
     // Test user order view
-    $order = entity_load('uc_order', 1);
+    $order = \Drupal\uc_order\Entity\Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'other', 'Order has other payment method.');
 
     $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());

@@ -385,7 +385,7 @@ function hook_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
     ->execute();
 
   if (!empty($result)) {
-    $item = entity_load('uc_cart_item', current(array_keys($result)));
+    $item = \Drupal\uc_cart\Entity\CartItem::load(current(array_keys($result)));
     if ($item->qty->value != $qty) {
       $item->qty->value = $qty;
       $item->save();

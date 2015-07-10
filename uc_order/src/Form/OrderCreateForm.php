@@ -244,7 +244,7 @@ class OrderCreateForm extends FormBase {
           'pass' => user_password(),
           'status' => $this->config('uc_cart.settings')->get('new_customer_status_active') ? 1 : 0,
         );
-        $account = entity_create('user', $fields);
+        $account = \Drupal\user\Entity\User::create($fields);
         $account->save();
         $uid = $account->id();
 

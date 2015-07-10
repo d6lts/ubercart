@@ -142,7 +142,7 @@ function uc_order_select_customer($email = NULL) {
         'status' => \Drupal::config('uc_cart.settings')->get('new_customer_status_active') ? 1 : 0,
       );
 
-      $account = entity_create('user', $fields);
+      $account = \Drupal\user\Entity\User::create($fields);
       $account->save();
 
       if ($_POST['sendmail'] == 'true') {

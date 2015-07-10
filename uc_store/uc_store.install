@@ -46,7 +46,7 @@ function uc_store_install() {
   }
   else {
     // Ensure store country is enabled.
-    entity_load('uc_country', $store_country)->enable()->save();
+    \Drupal\uc_country\Entity\Country::load($store_country)->enable()->save();
   }
 
   // Set mail handler for all Ubercart modules
@@ -65,7 +65,7 @@ function uc_store_install() {
  * Implements hook_uninstall().
  */
 function uc_store_uninstall() {
-  $format = entity_load('date_format', 'uc_store');
+  $format = \Drupal\Core\Datetime\Entity\DateFormat::load('uc_store');
   if ($format) {
     drupal_set_message(t('The date format %format has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', ['%format' => $format->label(), '@url' => \Drupal::url('entity.date_format.collection')]), 'warning');
   }

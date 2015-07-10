@@ -42,7 +42,7 @@ function uc_cart_cron() {
   $result = db_query('SELECT order_id FROM {uc_orders} WHERE order_status = :status AND modified < :time',
     [':status' => 'in_checkout', ':time' => REQUEST_TIME - Cart::ORDER_TIMEOUT])->fetchCol();
   foreach ($result as $order_id) {
-    entity_load('uc_order', $order_id)
+    \Drupal\uc_order\Entity\Order::load($order_id)
       ->setStatusId('abandoned')
       ->save();
   }
@@ -184,7 +184,9 @@ function uc_cart_node_delete($node) {
       ->execute();
 
     if (!empty($result)) {
-      entity_delete_multiple('uc_cart_item', array_keys($result));
+      $storage = \Drupal::entityManager()->getStorage('uc_cart_item');
+      $entities = $storage->loadMultiple(array_keys($result));
+      $storage->delete($entities);
     }
   }
 }

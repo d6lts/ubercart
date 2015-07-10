@@ -22,7 +22,7 @@ class TaxController extends ControllerBase {
    */
   public function saveClone($uc_tax_rate) {
     // Load the source rate object.
-    $rate = entity_load('uc_tax_rate', $uc_tax_rate);
+    $rate = \Drupal\uc_tax\Entity\TaxRate::load($uc_tax_rate);
     $name = $rate->label();
 
     // Tweak the name and unset the rate ID.

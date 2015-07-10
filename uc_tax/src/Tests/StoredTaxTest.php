@@ -117,9 +117,7 @@ class StoredTaxTest extends UbercartTestBase {
       $this->assertTaxLineCorrect($this->loadTaxLine($order_id), $oldrate, 'after applicable product change');
 
       // Change order Status back to in_checkout and ensure tax-rate changes now update the order.
-      entity_load('uc_order', $order_id)
-        ->setStatusId('in_checkout')
-        ->save();
+      \Drupal\uc_order\Entity\Order::load($order_id)->setStatusId('in_checkout')->save();
       $this->drupalPostForm('admin/store/orders/' . $order_id . '/edit', array(), t('Save changes'));
       $this->assertText(t('Order changes saved.'));
       $this->assertFalse($this->loadTaxLine($order_id), t('The tax line was removed from the order when order status changed back to in_checkout.'));

@@ -81,7 +81,7 @@ class OrderStatusAddForm extends FormBase {
       $form_state->setErrorByName('id', t('You have entered an invalid status ID.'));
     }
 
-    if (entity_load('uc_order_status', $id)) {
+    if (\Drupal\uc_order\Entity\OrderStatus::load($id)) {
       $form_state->setErrorByName('id', t('This ID is already in use.  Please specify a unique ID.'));
     }
   }
@@ -90,7 +90,7 @@ class OrderStatusAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    entity_create('uc_order_status', array(
+    \Drupal\uc_order\Entity\OrderStatus::create(array(
       'id' => strtolower(trim($form_state->getValue('id'))),
       'name' => $form_state->getValue('name'),
       'state' => $form_state->getValue('state'),

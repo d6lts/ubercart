@@ -15,6 +15,6 @@ function uc_country_install() {
 
   $site_country = \Drupal::config('system.date')->get('country.default');
   if ($site_country) {
-    entity_load('uc_country', $site_country)->enable()->save();
+    \Drupal\uc_country\Entity\Country::load($site_country)->enable()->save();
   }
 }
