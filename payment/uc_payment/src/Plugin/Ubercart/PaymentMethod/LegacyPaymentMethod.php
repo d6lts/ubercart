@@ -19,21 +19,21 @@ class LegacyPaymentMethod extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return $this->pluginDefinition['callback']('cart-details', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
+  public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return $this->pluginDefinition['callback']('cart-process', $order, $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  function cartReview(OrderInterface $order) {
+  public function cartReview(OrderInterface $order) {
     return $this->pluginDefinition['callback']('cart-review', $order);
   }
 
