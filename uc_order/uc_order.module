@@ -418,18 +418,6 @@ function uc_order_uc_line_item() {
 }
 
 /**
- * Entity API "uri callback" for uc_order entity.
- *
- * @param $order
- *   The order to return the URI for.
- */
-function uc_order_uri($order) {
-  return array(
-    'path' => 'admin/store/orders/' . $order->id(),
-  );
-}
-
-/**
  * Generates and saves a new order.
  *
  * @param $uid
