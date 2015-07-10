@@ -193,7 +193,6 @@ class UcAddress extends Element\FormElement {
         '#title' => $labels[$base_field] ? $labels[$base_field] : '&nbsp;',
         '#default_value' => is_object($value) ? $value->$field : $value[$field],
         '#parents' => array_merge(array_slice($element['#parents'], 0, -1), array($field)),
-        '#pre_render' => array_merge(array(array(get_class(), 'preRenderAddressField')), \Drupal::service('element_info')->getInfoProperty($subelement['#type'], '#pre_render', array())),
         '#access' => !$element['#hidden'] && !empty($config[$base_field]['status']),
         '#required' => $element['#required'] && !empty($config[$base_field]['required']),
         '#weight' => isset($config[$base_field]['weight']) ? $config[$base_field]['weight'] : 0,
@@ -223,21 +222,6 @@ class UcAddress extends Element\FormElement {
     }
     $prefix = empty($element['#key_prefix']) ? '' : ($element['#key_prefix'] . '_');
     return $element[$prefix . 'zone'];
-  }
-
-  /**
-   * Prerenders address field elements to move the required marker when needed.
-   */
-  public static function preRenderAddressField($element) {
-    if (!empty($element['#required'])) {
-      $marker = array(
-        '#theme' => 'form_required_marker',
-        '#element' => $element,
-      );
-      $element['#title'] = drupal_render($marker) . ' ' . $element['#title'];
-      unset($element['#required']);
-    }
-    return $element;
   }
 
 }

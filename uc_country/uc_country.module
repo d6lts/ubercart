@@ -7,50 +7,6 @@
 
 
 /**
- * Returns an array of country files that can be installed or updated.
- *
- * @return array
- *   Associative array keyed by the country's ISO 3166-1 numeric country
- *   code. Each key holds an array of two elements, 'file' and 'version',
- *   containing the file name for that country's .cif file and the .cif
- *   file version, respectively.
- */
-function uc_country_import_list() {
-  $dir = drupal_get_path('module', 'uc_country') . '/countries/';
-
-  $countries = array();
-  if (is_dir($dir)) {
-    if ($dh = opendir($dir)) {
-      while (($file = readdir($dh)) !== FALSE) {
-        switch (filetype($dir . $file)) {
-          case 'file':
-            if (substr($file, -4, 4) == '.cif') {
-              $pieces = explode('_', substr($file, 0, strlen($file) - 4));
-              $country_id = intval($pieces[count($pieces) - 2]);
-              $version = $pieces[count($pieces) - 1];
-
-              if (!isset($countries[$country_id])) {
-                $countries[$country_id]['version'] = $version;
-                $countries[$country_id]['file'] = $file;
-              }
-              else {
-                if ($version > $countries[$country_id]['version']) {
-                  $countries[$country_id]['version'] = $version;
-                  $countries[$country_id]['file'] = $file;
-                }
-              }
-            }
-            break;
-        }
-      }
-      closedir($dh);
-    }
-  }
-
-  return $countries;
-}
-
-/**
  * Returns a list of all installed/available countries.
  *
  * @return array
