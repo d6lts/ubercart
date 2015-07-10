@@ -1,14 +1,9 @@
-uc_country.settings:
-  route_name: uc_country.settings
+entity.uc_country.collection:
+  route_name: entity.uc_country.collection
   title: 'Countries'
-  base_route: uc_country.settings
-uc_country.fields:
-  route_name: uc_country.fields
+  base_route: entity.uc_country.collection
+uc_store.address_fields:
+  route_name: uc_store.address_fields
   title: 'Address fields'
-  base_route: uc_country.settings
+  base_route: entity.uc_country.collection
   weight: 10
-uc_country.formats:
-  route_name: uc_country.formats
-  title: 'Address formats'
-  base_route: uc_country.settings
-  weight: 20
