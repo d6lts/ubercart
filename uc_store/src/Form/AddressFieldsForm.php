@@ -85,7 +85,7 @@ class AddressFieldsForm extends ConfigFormBase {
         '#attributes' => array('class' => array('uc-store-address-fields-weight')),
       );
     }
-    uasort($form['fields'], 'element_sort');
+    uasort($form['fields'], 'Drupal\Component\Utility\SortArray::sortByWeightProperty');
 
     return parent::buildForm($form, $form_state);
   }
