@@ -112,7 +112,10 @@ class InclusiveTaxTest extends UbercartTestBase {
     $this->assertText('$16.80' . $rate->inclusion_text, 'Tax inclusive price appears in cart pane on checkout review page');
 
     // Ensure the tax-inclusive price is listed on the order admin page.
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", [':name' => $edit['panes[delivery][first_name]']])->fetchField();
+    $order_ids = \Drupal::entityQuery('uc_order')
+      ->condition('delivery_first_name', $edit['panes[delivery][first_name]'])
+      ->execute();
+    $order_id = reset($order_ids);
     $this->assertTrue($order_id, 'Order was created successfully');
     $this->drupalGet('admin/store/orders/' . $order_id);
     $this->assertText('$16.80' . $rate->inclusion_text, 'Tax inclusive price appears on the order view page.');

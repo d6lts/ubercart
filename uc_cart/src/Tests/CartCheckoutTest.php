@@ -450,7 +450,10 @@ class CartCheckoutTest extends UbercartTestBase {
     $oldname = $edit['panes[delivery][first_name]'];
     $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", [':name' => $oldname])->fetchField();
+    $order_ids = \Drupal::entityQuery('uc_order')
+      ->condition('delivery_first_name', $oldname)
+      ->execute();
+    $order_id = reset($order_ids);
     if ($order_id) {
       // Go to a different page, then back to order - make sure order_id is the same.
       $this->drupalGet('<front>');
@@ -458,10 +461,14 @@ class CartCheckoutTest extends UbercartTestBase {
       $this->drupalPostForm('cart', [], 'Checkout');
       $this->assertRaw($oldname, 'Customer name was unchanged.');
       $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
-      $new_order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", [':name' => $edit['panes[delivery][first_name]']])->fetchField();
+      $new_order_ids = \Drupal::entityQuery('uc_order')
+        ->condition('delivery_first_name', $edit['panes[delivery][first_name]'])
+        ->execute();
+      $new_order_id = reset($new_order_ids);
       $this->assertEqual($order_id, $new_order_id, 'Original order_id was reused.');
 
       // Jump 10 minutes into the future.
+      // @todo: Can we set modified through the Entity API rather than DBTNG?
       db_update('uc_orders')
         ->fields(array(
             'modified' => time() - Cart::ORDER_TIMEOUT - 1,
@@ -476,11 +483,16 @@ class CartCheckoutTest extends UbercartTestBase {
       $newname = $this->randomMachineName(10);
       $edit['panes[delivery][first_name]'] = $newname;
       $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
-      $new_order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", [':name' => $newname])->fetchField();
+
+      $new_order_ids = \Drupal::entityQuery('uc_order')
+        ->condition('delivery_first_name', $newname)
+        ->execute();
+      $new_order_id = reset($new_order_ids);
       $this->assertNotEqual($order_id, $new_order_id, 'New order was created after timeout.');
 
+      // Force the order to load from the DB instead of the entity cache.
+      $old_order = \Drupal::entityManager()->getStorage('uc_order')->loadUnchanged($order_id);
       // Verify that the status of old order is abandoned.
-      $old_order = uc_order_load($order_id, TRUE);
       $this->assertEqual($old_order->getStatusId(), 'abandoned', 'Original order was marked abandoned.');
     }
     else {

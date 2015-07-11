@@ -84,7 +84,10 @@ class StoredTaxTest extends UbercartTestBase {
     // Complete the review page.
     $this->drupalPostForm(NULL, array(), t('Submit order'));
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", [':name' => $edit['panes[delivery][first_name]']])->fetchField();
+    $order_ids = \Drupal::entityQuery('uc_order')
+      ->condition('delivery_first_name', $edit['panes[delivery][first_name]'])
+      ->execute();
+    $order_id = reset($order_ids);
     if ($order_id) {
       $this->pass(
         t('Order %order_id has been created', ['%order_id' => $order_id])

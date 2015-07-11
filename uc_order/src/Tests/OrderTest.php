@@ -82,7 +82,7 @@ class OrderTest extends UbercartTestBase {
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type uc_order');
 
     $GLOBALS['entity_crud_hook_test'] = [];
-    $order = uc_order_load($order->id());
+    $order = \Drupal\uc_order\Entity\Order::load($order->id());
 
     $this->assertHookMessage('entity_crud_hook_test_entity_load called for type uc_order');
 
@@ -112,7 +112,10 @@ class OrderTest extends UbercartTestBase {
     $this->assertText(t('Order created by the administration.'), 'Order created by the administration.');
     $this->assertFieldByName('uid_text', $this->customer->id(), 'The customer UID appears on the page.');
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE uid = :uid", [':uid' => $this->customer->id()])->fetchField();
+    $order_ids = \Drupal::entityQuery('uc_order')
+      ->condition('uid', $this->customer->id())
+      ->execute();
+    $order_id = reset($order_ids);
     $this->assertTrue($order_id, t('Found order ID @order_id', ['@order_id' => $order_id]));
 
     $this->drupalGet('admin/store/orders/view');
@@ -220,8 +223,10 @@ class OrderTest extends UbercartTestBase {
     $order = uc_order_new($customer->id());
     uc_order_comment_save($order->id(), 0, t('Order created programmatically.'), 'admin');
 
-    $order_exists = db_query("SELECT 1 FROM {uc_orders} WHERE order_id = :order_id", [':order_id' => $order->id()])->fetchField();
-    $this->assertTrue($order_exists, t('Found order ID @order_id', ['@order_id' => $order->id()]));
+    $order_ids = \Drupal::entityQuery('uc_order')
+      ->condition('order_id', $order->id())
+      ->execute();
+    $this->assertTrue(in_array($order->id(), $order_ids), t('Found order ID @order_id', ['@order_id' => $order->id()]));
 
     $country_manager = \Drupal::service('country_manager');
     $country = array_rand($country_manager->getEnabledList());
@@ -251,24 +256,13 @@ class OrderTest extends UbercartTestBase {
       ->setAddress('billing', $billing_address)
       ->save();
 
-    $db_order = db_query("SELECT * FROM {uc_orders} WHERE order_id = :order_id", [':order_id' => $order->id()])->fetchObject();
-    $this->assertEqual($delivery_address->first_name, $db_order->delivery_first_name);
-    $this->assertEqual($delivery_address->last_name, $db_order->delivery_last_name);
-    $this->assertEqual($delivery_address->street1, $db_order->delivery_street1);
-    $this->assertEqual($delivery_address->street2, $db_order->delivery_street2);
-    $this->assertEqual($delivery_address->city, $db_order->delivery_city);
-    $this->assertEqual($delivery_address->zone, $db_order->delivery_zone);
-    $this->assertEqual($delivery_address->postal_code, $db_order->delivery_postal_code);
-    $this->assertEqual($delivery_address->country, $db_order->delivery_country);
-
-    $this->assertEqual($billing_address->first_name, $db_order->billing_first_name);
-    $this->assertEqual($billing_address->last_name, $db_order->billing_last_name);
-    $this->assertEqual($billing_address->street1, $db_order->billing_street1);
-    $this->assertEqual($billing_address->street2, $db_order->billing_street2);
-    $this->assertEqual($billing_address->city, $db_order->billing_city);
-    $this->assertEqual($billing_address->zone, $db_order->billing_zone);
-    $this->assertEqual($billing_address->postal_code, $db_order->billing_postal_code);
-    $this->assertEqual($billing_address->country, $db_order->billing_country);
+    // Force the order to load from the DB instead of the entity cache.
+    $db_order = \Drupal::entityManager()->getStorage('uc_order')->loadUnchanged($order->id());
+    // Compare delivery and billing addresses to those loaded from the database.
+    $db_delivery_address = $db_order->getAddress('delivery');
+    $db_billing_address = $db_order->getAddress('billing');
+    $this->assertEqual($delivery_address, $db_delivery_address, 'Delivery address is equal to delivery address in database.');
+    $this->assertEqual($billing_address, $db_billing_address, 'Billing address is equal to billing address in database.');
 
     return $order;
   }

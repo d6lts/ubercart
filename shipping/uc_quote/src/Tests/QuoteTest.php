@@ -201,10 +201,13 @@ class QuoteTest extends UbercartTestBase {
 
     // Submit the review order page.
     $this->drupalPostForm(NULL, [], t('Submit order'));
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE delivery_first_name = :name", [':name' => $edit['panes[delivery][first_name]']])->fetchField();
+    $order_ids = \Drupal::entityQuery('uc_order')
+      ->condition('delivery_first_name', $edit['panes[delivery][first_name]'])
+      ->execute();
+    $order_id = reset($order_ids);
 
     if ($order_id) {
-      $order = uc_order_load($order_id);
+      $order = \Drupal\uc_order\Entity\Order::load($order_id);
       foreach ($order->line_items as $line) {
         if ($line['type'] == 'shipping') {
           break;

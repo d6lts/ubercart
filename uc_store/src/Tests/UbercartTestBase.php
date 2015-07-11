@@ -253,12 +253,15 @@ abstract class UbercartTestBase extends WebTestBase {
     // Complete the review page.
     $this->drupalPostForm(NULL, [], t('Submit order'));
 
-    $order_id = db_query("SELECT order_id FROM {uc_orders} WHERE billing_first_name = :name", [':name' => $edit['panes[billing][first_name]']])->fetchField();
+    $order_ids = \Drupal::entityQuery('uc_order')
+      ->condition('billing_first_name', $edit['panes[billing][first_name]'])
+      ->execute();
+    $order_id = reset($order_ids);
     if ($order_id) {
       $this->pass(
         t('Order %order_id has been created', ['%order_id' => $order_id])
       );
-      $order = uc_order_load($order_id);
+      $order = \Drupal\uc_order\Entity\Order::load($order_id);
     }
     else {
       $this->fail(t('No order was created.'));
