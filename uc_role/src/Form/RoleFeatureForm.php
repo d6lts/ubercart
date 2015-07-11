@@ -179,8 +179,11 @@ class RoleFeatureForm extends FormBase {
       ),
     );
     $form['role_lifetime']['absolute']['uc_role_expire_absolute'] = array(
-      '#type' => 'date',
+      '#type' => 'datetime',
       '#description' => $this->t('Expire the role at the beginning of this day.'),
+      '#date_date_element' => 'date',
+      '#date_time_element' => 'none',
+      '#default_value' => '',
     );
     if ($end_time) {
       $form['role_lifetime']['absolute']['uc_role_expire_absolute']['#default_value'] = $end_time;

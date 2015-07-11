@@ -120,10 +120,15 @@ class RoleSettingsForm extends ConfigFormBase {
         'visible' => array('select[name="uc_role_default_end_expiration"]' => array('value' => 'abs')),
       ),
     );
+    $date = $roles_config->get('default_end_time');
+    $date = !empty($date) ? \Drupal\Core\Datetime\DrupalDateTime::createFromTimestamp($date) : \Drupal\Core\Datetime\DrupalDateTime::createFromTimestamp(REQUEST_TIME);
     $form['role_lifetime']['absolute']['uc_role_default_end_time'] = array(
-      '#type' => 'date',
+      '#type' => 'datetime',
       '#description' => $this->t('Expire the role at the beginning of this day.'),
-      '#default_value' => $roles_config->get('default_end_time'),
+      '#description' => $this->t('Enter a datetime.'),
+      '#date_date_element' => 'date',
+      '#date_time_element' => 'none',
+      '#default_value' => $date,
     );
     $form['role_lifetime']['uc_role_default_by_quantity'] = array(
       '#type' => 'checkbox',
@@ -177,7 +182,7 @@ class RoleSettingsForm extends ConfigFormBase {
       ->set('default_end_expiration', $form_state->getValue('uc_role_default_end_expiration'))
       ->set('default_length', $form_state->getValue('uc_role_default_length'))
       ->set('default_granularity', $form_state->getValue('uc_role_default_granularity'))
-      ->set('default_end_time', $form_state->getValue('uc_role_default_end_time'))
+      ->set('default_end_time', $form_state->getValue('uc_role_default_end_time')->getTimestamp())
       ->set('default_by_quantity', $form_state->getValue('uc_role_default_by_quantity'))
       ->set('reminder_length', $form_state->getValue('uc_role_reminder_length'))
       ->set('reminder_granularity', $form_state->getValue('uc_role_reminder_granularity'))
