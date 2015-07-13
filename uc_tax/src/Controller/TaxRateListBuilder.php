@@ -13,24 +13,11 @@ use Drupal\Core\Url;
 
 /**
  * Provides a listing of tax rate configuration entities.
- *
- * Drupal locates the list controller by looking for the "list" entry under
- * "controllers" in our entity type's annotation. We define the path on which
- * the list may be accessed in our module's *.routing.yml file. The key entry
- * to look for is "_entity_list". In *.routing.yml, "_entity_list" specifies
- * an entity type ID. When a user navigates to the URL for that router item,
- * Drupal loads the annotation for that entity type. It looks for the "list"
- * entry under "controllers" for the class to load.
  */
 class TaxRateListBuilder extends ConfigEntityListBuilder {
 
   /**
-   * Builds the header row for the entity listing.
-   *
-   * @return array
-   *   A render array structure of header strings.
-   *
-   * @see Drupal\Core\Entity\EntityListController::render()
+   * {@inheritdoc}
    */
   public function buildHeader() {
     $header['label'] = $this->t('Name');
@@ -45,15 +32,7 @@ class TaxRateListBuilder extends ConfigEntityListBuilder {
   }
 
   /**
-   * Builds a row for an entity in the entity listing.
-   *
-   * @param EntityInterface $entity
-   *   The entity for which to build the row.
-   *
-   * @return array
-   *   A render array of the table row for displaying the entity.
-   *
-   * @see Drupal\Core\Entity\EntityListController::render()
+   * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $this->getLabel($entity);
@@ -74,6 +53,9 @@ class TaxRateListBuilder extends ConfigEntityListBuilder {
     return $row + parent::buildRow($entity);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOperations(EntityInterface $entity) {
     $build = parent::buildOperations($entity);
     $build['#links']['clone'] = array(
@@ -87,13 +69,7 @@ class TaxRateListBuilder extends ConfigEntityListBuilder {
   }
 
   /**
-   * Adds some descriptive text to our entity list.
-   *
-   * Typically, there's no need to override render(). You may wish to do so,
-   * however, if you want to add markup before or after the table.
-   *
-   * @return array
-   *   Renderable array.
+   * {@inheritdoc}
    */
   public function render() {
     $build['description'] = array(

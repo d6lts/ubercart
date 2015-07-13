@@ -20,8 +20,8 @@ interface CartInterface {
   /**
    * Completes a sale, including adjusting order status and creating user account.
    *
-   * @param $order
-   *   The order object that has just been completed.
+   * @param \Drupal\uc_order\Entity\Order $order
+   *   The order entity that has just been completed.
    * @param $login
    *   Whether or not to login a new user when this function is called.
    *
@@ -33,8 +33,8 @@ interface CartInterface {
   /**
    * Link a completed sale to a user.
    *
-   * @param $order
-   *   The order object that has just been completed.
+   * @param \Drupal\uc_order\Entity\Order $order
+   *   The order entity that has just been completed.
    */
   public function completeSaleAccount($order);
 
@@ -76,9 +76,9 @@ interface CartInterface {
    *   ID of user's cart.
    * @param string $msg
    *   Message to display upon adding an item to the cart.
-   * @param boolean $check_redirect
+   * @param bool $check_redirect
    *   TRUE to return a redirect URL.
-   * @param boolean $rebuild
+   * @param bool $rebuild
    *   TRUE to rebuild the cart item cache after adding an item.
    *
    * @return null|\Drupal\Core\Url
@@ -112,7 +112,7 @@ interface CartInterface {
    * @param integer $cart_id
    *   The ID of the cart.
    *
-   * @return boolean
+   * @return bool
    */
   public function isShippable($cart_id);
 

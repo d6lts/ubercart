@@ -410,14 +410,14 @@ function uc_order_condition_billing_country($order, $countries) {
  * @param array $product_classes
  *   An array of strings containing the product classes (node content
  *   types) to check against.
- * @param boolean $required
+ * @param bool $required
  *   TRUE to require all product classes be present in the order.  FALSE
  *   to require at least one be present.
- * @param boolean $forbidden
+ * @param bool $forbidden
  *   TRUE to require that only the listed product classes be present.  FALSE
  *   to allow products with other classes.
  *
- * @return boolean
+ * @return bool
  *   Whether the order meets the specified conditions.
  */
 function uc_order_condition_has_product_class($order, $product_classes, $required, $forbidden) {

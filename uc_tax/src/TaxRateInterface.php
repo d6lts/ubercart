@@ -25,7 +25,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * The tax rate ID.
    *
-   * @param string
+   * @param string $id
    *
    * @return $this
    */
@@ -41,7 +41,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * The tax rate label.
    *
-   * @param string
+   * @param string $label
    *
    * @return $this
    */
@@ -57,7 +57,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * The tax rate.
    *
-   * @param float
+   * @param float $rate
    *
    * @return $this
    */
@@ -73,7 +73,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * The taxing authority jurisdiction.
    *
-   * @param string
+   * @param string $jurisdiction
    *
    * @return $this
    */
@@ -89,7 +89,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * Product item types subject to this tax rate.
    *
-   * @param array
+   * @param array $product_types
    *
    * @return $this
    */
@@ -105,7 +105,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * Line item types subject to this tax rate.
    *
-   * @param array
+   * @param array $line_item_types
    *
    * @return $this
    */
@@ -121,7 +121,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * The tax rate weight.
    *
-   * @param int
+   * @param int $weight
    *
    * @return $this
    */
@@ -137,7 +137,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * Whether to display prices including tax.
    *
-   * @param bool
+   * @param bool $included
    *
    * @return $this
    */
@@ -153,7 +153,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * The text to display next to prices if tax is included.
    *
-   * @param string
+   * @param string $inclusion_text
    *
    * @return $this
    */
@@ -169,7 +169,7 @@ interface TaxRateInterface extends ConfigEntityInterface {
   /**
    * If the tax applies only to shippable products.
    *
-   * @param bool
+   * @param bool $shippable
    *
    * @return $this
    */

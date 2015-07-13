@@ -36,15 +36,7 @@ class Cart extends ControllerBase implements CartInterface {
 
 
   /**
-   * Completes a sale, including adjusting order status and creating user account.
-   *
-   * @param $order
-   *   The order object that has just been completed.
-   * @param $login
-   *   Whether or not to login a new user when this function is called.
-   *
-   * @return
-   *   The HTML text of the default order completion page.
+   * {@inheritdoc}
    */
   public function completeSale($order, $login = FALSE) {
     // Empty that cart...
@@ -94,10 +86,7 @@ class Cart extends ControllerBase implements CartInterface {
   }
 
   /**
-   * Link a completed sale to a user.
-   *
-   * @param $order
-   *   The order object that has just been completed.
+   * {@inheritdoc}
    */
   public function completeSaleAccount($order) {
     // Order already has a user ID, so the user was logged in during checkout.
@@ -155,13 +144,7 @@ class Cart extends ControllerBase implements CartInterface {
   }
 
   /**
-   * Returns the unique cart ID for the current user.
-   *
-   * @param $create
-   *   If TRUE, a cart ID will be generated if none is set.
-   *
-   * @return
-   *   The cart ID. If $create is FALSE, returns FALSE if no cart exists.
+   * {@inheritdoc}
    */
   public function getId($create = TRUE) {
     $user = $this->currentUser();
@@ -178,16 +161,7 @@ class Cart extends ControllerBase implements CartInterface {
   }
 
   /**
-   * Grabs the items in a shopping cart for a user.
-   *
-   * @param $cid
-   *   (optional) The cart ID to load, or NULL to load the current user's cart.
-   * @param $action
-   *   (optional) Carts are statically cached by default. If set to "rebuild",
-   *   the cache will be ignored and the cart reloaded from the database.
-   *
-   * @return
-   *   An array of cart items.
+   * {@inheritdoc}
    */
   public function getContents($cid = NULL, $action = NULL) {
     static $items = array();
@@ -237,25 +211,7 @@ class Cart extends ControllerBase implements CartInterface {
   }
 
   /**
-   * Adds an item to a user's cart.
-   *
-   * @param int $nid
-   *   Node ID to add to cart.
-   * @param int $qty
-   *   Quantity to add to cart.
-   * @param array $data
-   *   Array of module-specific data to add to cart.
-   * @param int $cid
-   *   ID of user's cart.
-   * @param string $msg
-   *   Message to display upon adding an item to the cart.
-   * @param boolean $check_redirect
-   *   TRUE to return a redirect URL.
-   * @param boolean $rebuild
-   *   TRUE to rebuild the cart item cache after adding an item.
-   *
-   * @return null|\Drupal\Core\Url
-   *   If $check_redirect is TRUE, a Url to redirect to. Otherwise NULL.
+   * {@inheritdoc}
    */
   public function addItem($nid, $qty = 1, $data = NULL, $cid = NULL, $msg = TRUE, $check_redirect = TRUE, $rebuild = TRUE) {
     $cid = $cid ? $cid : $this->getId();
@@ -340,14 +296,7 @@ class Cart extends ControllerBase implements CartInterface {
   }
 
   /**
-   * Computes the destination Url for an add-to-cart action.
-   *
-   * Redirect Url is chosen in the following order:
-   *  - Query parameter "destination"
-   *  - Cart config variable "uc_cart.settings.add_item_redirect"
-   *
-   * @return \Drupal\Core\Url
-   *   A Url destination for redirection.
+   * {@inheritdoc}
    */
   public function getAddItemRedirect() {
     // Check for destination= query string
@@ -371,10 +320,7 @@ class Cart extends ControllerBase implements CartInterface {
   }
 
   /**
-   * Empties a cart of its contents.
-   *
-   * @param $cart_id
-   *   The ID of the cart, or NULL to empty the current cart.
+   * {@inheritdoc}
    */
   public function emptyCart($cart_id = NULL) {
     $cart_id = $cart_id ? $cart_id : $this->getId(FALSE);
@@ -398,12 +344,7 @@ class Cart extends ControllerBase implements CartInterface {
   }
 
   /**
-   * Determines whether a cart contains shippable items or not.
-   *
-   * @param integer $cart_id
-   *   The ID of the cart.
-   *
-   * @return boolean
+   * {@inheritdoc}
    */
   public function isShippable($cart_id = NULL) {
     $items = $this->getContents($cart_id);

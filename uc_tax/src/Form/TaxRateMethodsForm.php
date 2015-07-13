@@ -17,8 +17,6 @@ use Drupal\Core\Url;
  */
 class TaxRateMethodsForm extends ConfigFormBase {
 
- /**
-   */
   /**
    * {@inheritdoc}
    */

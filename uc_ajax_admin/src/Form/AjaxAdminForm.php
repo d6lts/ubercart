@@ -27,7 +27,7 @@ class AjaxAdminForm extends FormBase {
   /**
    * {@inheritdoc}
    *
-   * @param $target_form
+   * @param string $target_form
    *   The form for which ajax behaviors are to be administered. Currently only
    *   'checkout' is supported.
    */
