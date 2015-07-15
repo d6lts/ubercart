@@ -8,7 +8,6 @@
 namespace Drupal\uc_store;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 
 /**
@@ -67,10 +66,10 @@ class Address {
    * in this comparison because they don't contain information about the
    * physical location.
    *
-   * @param $address
+   * @param \Drupal\uc_store\Address $address
    *   An object of type Address.
    *
-   * @return
+   * @return bool
    *   TRUE if the two addresses are the same physical location, else FALSE.
    */
   public function isSamePhysicalLocation(Address $address) {
@@ -97,10 +96,10 @@ class Address {
    * human would consider identical, but may be capitalized differently or
    * have different whitespace.
    *
-   * @param $string
+   * @param string $string
    *   String to make canonical.
    *
-   * @return
+   * @return string
    *   Canonical form of input string.
    */
   public static function makeCanonical($string = '') {
@@ -115,8 +114,8 @@ class Address {
   /**
    * Formats the address for display based on the country's address format.
    *
-   * @return
-   *   A formatted string containing the address.
+   * @return string
+   *   An HTML formatted string containing the address.
    */
   public function __toString() {
     $variables = array(
@@ -172,6 +171,6 @@ class Address {
     // <br> instead of <br />, because Twig will change it to <br> anyway and it's nice
     // to be able to test the Raw output.
     return nl2br($address, FALSE);
-   }
+  }
  
- }
+}
