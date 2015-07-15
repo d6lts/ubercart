@@ -18,6 +18,8 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Drupal\uc_order\Entity\OrderProduct;
+use Drupal\uc_order\Entity\OrderStatus;
 
 /**
  * Handles the "Print button" order pane.
@@ -667,7 +669,7 @@ function uc_order_edit_products_remove($form, FormStateInterface $form_state) {
 
   if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
     // Replace stock immediately.
-    $product = entity_load('uc_order_product', $order_product_id);
+    $product = OrderProduct::load($order_product_id);
     uc_stock_adjust($product->model, $product->qty);
   }
 
@@ -954,7 +956,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, FormStateInter
         '#empty' => t('This order has no comments associated with it.'),
       );
       $comments = uc_order_comments_load($order->id());
-      $statuses = entity_load_multiple('uc_order_status');
+      $statuses = OrderStatus::loadMultiple();
       foreach ($comments as $comment) {
         $icon = $comment->notified ? 'true-icon.gif' : 'false-icon.gif';
         $build['#rows'][] = array(
@@ -969,7 +971,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, FormStateInter
 
     case 'customer':
       $comments = uc_order_comments_load($order->id());
-      $statuses = entity_load_multiple('uc_order_status');
+      $statuses = OrderStatus::loadMultiple();
       $header = array(t('Date'), t('Status'), t('Message'));
       $rows[] = array(
         array('data' => \Drupal::service('date.formatter')->format($order->created->value, 'uc_store'), 'class' => array('date')),

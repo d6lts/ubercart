@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order\Plugin\views\field;
 
+use Drupal\uc_order\Entity\OrderStatus;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -23,7 +24,7 @@ class Status extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    $status = entity_load('uc_order_status', $this->getValue($values));
+    $status = OrderStatus::load($this->getValue($values));
     return $this->sanitizeValue($status->name);
   }
 

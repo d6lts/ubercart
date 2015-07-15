@@ -11,6 +11,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\uc_order\OrderInterface;
 
@@ -570,7 +571,7 @@ function uc_tax_apply_item_tax($item, $tax) {
     $shippable = $node->shippable->value;
   }
   else { // Use default for this node type.
-    $settings = entity_load('node_type', $type)->getModuleSettings('uc_product');
+    $settings = NodeType::load($type)->getModuleSettings('uc_product');
     $shippable = isset($settings['shippable']) ? $settings['shippable'] : TRUE;
   }
 

@@ -16,6 +16,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
+use Drupal\uc_order\Entity\Order;
+use Drupal\uc_order\Entity\OrderStatus;
 
 require_once dirname(__FILE__) . '/uc_order.order_pane.inc';
 require_once dirname(__FILE__) . '/uc_order.line_item.inc';
@@ -274,7 +276,7 @@ function uc_order_form_views_exposed_form_alter(&$form, FormStateInterface $form
  * Redirects if a valid order ID was entered in the exposed field.
  */
 function uc_order_form_views_exposed_form_submit($form, FormStateInterface $form_state) {
-  if (!$form_state->isValueEmpty('order_id') && entity_load('uc_order', $form_state->getValue('order_id'))) {
+  if (!$form_state->isValueEmpty('order_id') && Order::load($form_state->getValue('order_id'))) {
     $form_state->setRedirect('uc_order.admin_view', ['uc_order' => $form_state->getValue('order_id')]);
     $form_state->disableRedirect(FALSE);
   }
@@ -426,7 +428,7 @@ function uc_order_uc_line_item() {
  *   The initial state of the order.
  */
 function uc_order_new($uid = 0, $state = 'in_checkout') {
-  $order = \Drupal\uc_order\Entity\Order::create(array(
+  $order = Order::create(array(
     'uid' => $uid,
     'order_status' => uc_order_state_default($state),
   ));
@@ -498,7 +500,7 @@ function uc_order_product_revive($products, $published = TRUE) {
  * @param bool $reset
  *   (optional) Whether to reset the internal cache. Defaults to FALSE.
  *
- * @return Drupal\uc_order\Order|false
+ * @return Drupal\uc_order\Entity\Order|false
  *   A fully-populated order entity, or FALSE if the order is not found.
  */
 function uc_order_load($order_id, $reset = FALSE) {
@@ -731,7 +733,7 @@ function uc_order_state_default($state_id) {
  */
 function uc_order_status_options_list() {
   $options = array();
-  foreach (entity_load_multiple('uc_order_status') as $status) {
+  foreach (OrderStatus::loadMultiple() as $status) {
     $options[$status->id] = $status->name;
   }
   return $options;

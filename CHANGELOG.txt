@@ -40,7 +40,7 @@ Ubercart 4.x
     * uc_cart_get_total_qty() removed
 * Order statuses are configuration entities
     * uc_order_update_status() => $order->setStatusId()->save()
-    * uc_order_status_list() => entity_load_multiple('uc_order_status')
+    * uc_order_status_list() => OrderStatus::loadMultiple()
     * uc_order_status_data() removed
     * uc_order_state_list() converted to uc_order_state_options_list()
     * Order state scopes removed, replaced with order status weights.
