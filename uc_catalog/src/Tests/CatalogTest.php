@@ -8,6 +8,7 @@
 namespace Drupal\uc_catalog\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -105,8 +106,8 @@ class CatalogTest extends UbercartTestBase {
   /**
    * Returns a new term with random properties in the catalog vocabulary.
    */
-  function createTerm() {
-    $term = entity_create('taxonomy_term', array(
+  protected function createTerm() {
+    $term = Term::create([
       'name' => $this->randomMachineName(),
       'description' => array(
         'value' => $this->randomMachineName(),
@@ -114,7 +115,7 @@ class CatalogTest extends UbercartTestBase {
       ),
       'vid' => 'catalog',
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
-    ));
+    ]);
     $term->save();
     return $term;
   }
