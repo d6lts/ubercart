@@ -57,7 +57,7 @@ class UcAddress extends Element\FormElement {
       'last_name' => t('Last name'),
       'company' => t('Company'),
       'street1' => t('Street address'),
-      'street2' => t(''),
+      'street2' => ' ',
       'city' => t('City'),
       'zone' => t('State/Province'),
       'country' => t('Country'),
@@ -190,7 +190,7 @@ class UcAddress extends Element\FormElement {
 
       // Set common values for all address fields.
       $element[$field] = $subelement + array(
-        '#title' => $labels[$base_field] ? $labels[$base_field] : '&nbsp;',
+        '#title' => $labels[$base_field],
         '#default_value' => is_object($value) ? $value->$field : $value[$field],
         '#parents' => array_merge(array_slice($element['#parents'], 0, -1), array($field)),
         '#access' => !$element['#hidden'] && !empty($config[$base_field]['status']),
