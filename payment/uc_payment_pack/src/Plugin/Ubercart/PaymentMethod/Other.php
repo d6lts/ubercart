@@ -19,7 +19,6 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  *   title = @Translation("Other"),
  *   checkout = FALSE,
  *   no_gateway = TRUE,
- *   configurable = FALSE,
  *   weight = 10,
  * )
  */

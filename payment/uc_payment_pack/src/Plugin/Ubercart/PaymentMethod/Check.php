@@ -22,7 +22,7 @@ use Drupal\uc_store\Address;
  *   title = @Translation("Check or money order"),
  *   checkout = TRUE,
  *   no_gateway = TRUE,
- *   configurable = TRUE,
+ *   settings_form = "Drupal\uc_payment_pack\Form\CheckSettingsForm",
  *   weight = 1,
  * )
  */
@@ -131,13 +131,6 @@ class Check extends PaymentMethodPluginBase {
     }
 
     return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSettingsForm() {
-    return \Drupal\uc_payment_pack\Form\CheckSettingsForm::create(\Drupal::getContainer());
   }
 
 }

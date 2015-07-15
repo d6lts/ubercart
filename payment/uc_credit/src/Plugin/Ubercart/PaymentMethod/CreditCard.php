@@ -22,7 +22,7 @@ use Drupal\uc_store\Encryption;
  *   title = @Translation("Credit card"),
  *   checkout = TRUE,
  *   no_gateway = FALSE,
- *   configurable = TRUE,
+ *   settings_form = "Drupal\uc_credit\Form\CreditSettingsForm",
  *   weight = 2,
  * )
  */
@@ -135,13 +135,6 @@ class CreditCard extends PaymentMethodPluginBase {
    */
   public function orderEditDetails(OrderInterface $order) {
     return t('Use the terminal available through the<br />%button button on the View tab to<br />process credit card payments.', array('%button' => t('Process card')));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSettingsForm() {
-    return \Drupal\uc_credit\Form\CreditSettingsForm::create(\Drupal::getContainer());
   }
 
   /**

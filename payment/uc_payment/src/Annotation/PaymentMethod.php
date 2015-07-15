@@ -57,11 +57,11 @@ class PaymentMethod extends Plugin {
   public $no_gateway;
 
   /**
-   * Whether the plugin has a configuration form.
+   * The class name of the plugin configuration form.
    *
-   * @var boolean
+   * @var string
    */
-  public $configurable;
+  public $settings_form;
 
   /**
    * The plugin weight.

@@ -78,7 +78,7 @@ class PaymentMethodManager extends DefaultPluginManager {
     if (isset($this->methodConfig[$plugin_id]['weight'])) {
       $definition['weight'] = $this->methodConfig[$plugin_id]['weight'];
     }
- }
+  }
 
   /**
    * Returns an instance of the payment method plugin for a specific order.

@@ -20,7 +20,6 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  *   title = @Translation("No payment required"),
  *   checkout = TRUE,
  *   no_gateway = TRUE,
- *   configurable = FALSE,
  *   weight = 0,
  * )
  */

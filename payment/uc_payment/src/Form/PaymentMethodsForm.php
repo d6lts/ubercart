@@ -87,7 +87,7 @@ class PaymentMethodsForm extends ConfigFormBase {
       ),
     );
 
-    foreach (uc_payment_method_list() as $id => $method) {
+    foreach ($this->paymentMethodManager->getDefinitions() as $id => $method) {
       $form['methods'][$id]['#attributes']['class'][] = 'draggable';
       $form['methods'][$id]['status'] = array(
         '#type' => 'checkbox',
@@ -117,17 +117,7 @@ class PaymentMethodsForm extends ConfigFormBase {
 
       $links = array();
 
-      if (!isset($method['configurable'])) {
-        // Determine whether a legacy plugin has a valid settings form.
-        $method_settings = $this->paymentMethodManager->createInstance($id)->getSettingsForm();
-        if ($method_settings != NULL) {
-          $links['settings'] = array(
-            'title' => t('Settings'),
-            'url' => Url::fromRoute('uc_payment.method_settings', ['method' => $id]),
-          );
-        }
-      }
-      elseif ($method['configurable']) {
+      if (!empty($method['settings_form'])) {
         $links['settings'] = array(
           'title' => t('Settings'),
           'url' => Url::fromRoute('uc_payment.method_settings', ['method' => $id]),

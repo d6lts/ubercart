@@ -100,6 +100,10 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
    * {@inheritdoc}
    */
   public function getSettingsForm() {
+    if (!empty($this->pluginDefinition['settings_form'])) {
+      return new $this->pluginDefinition['settings_form'];
+    }
+
     return NULL;
   }
 }

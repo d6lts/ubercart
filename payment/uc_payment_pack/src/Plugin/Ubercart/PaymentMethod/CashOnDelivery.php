@@ -20,7 +20,7 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  *   title = @Translation("Cash on delivery"),
  *   checkout = FALSE,
  *   no_gateway = TRUE,
- *   configurable = TRUE,
+ *   settings_form = "Drupal\uc_payment_pack\Form\CashOnDeliverySettingsForm",
  *   weight = 1,
  * )
  */
@@ -175,13 +175,6 @@ class CashOnDelivery extends PaymentMethodPluginBase {
     db_delete('uc_payment_cod')
       ->condition('order_id', $order->id())
       ->execute();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSettingsForm() {
-    return \Drupal\uc_payment_pack\Form\CashOnDeliverySettingsForm::create(\Drupal::getContainer());
   }
 
   /**
