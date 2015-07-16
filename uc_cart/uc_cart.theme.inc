@@ -33,7 +33,7 @@ function theme_uc_cart_review_table(array $variables) {
 
   // Set up table header.
   $header = array(
-    array('data' => array('#theme' => 'uc_qty_label'), 'class' => array('qty')),
+    array('data' => t('Quantity'), 'class' => array('qty')),
     array('data' => t('Products'), 'class' => array('products')),
     array('data' => t('Price'), 'class' => array('price')),
   );

@@ -112,18 +112,11 @@ function uc_store_theme() {
   return array(
     'uc_price' => array(
       'variables' => array('price' => 0, 'suffixes' => array()),
-      'file' => 'uc_store.theme.inc',
-      'function' => 'theme_uc_price',
-    ),
-    'uc_qty_label' => array(
-      'variables' => array(),
-      'file' => 'uc_store.theme.inc',
-      'function' => 'theme_uc_qty_label',
+      'template' => 'uc-price',
     ),
     'uc_qty' => array(
       'variables' => array('qty' => 1),
-      'file' => 'uc_store.theme.inc',
-      'function' => 'theme_uc_qty',
+      'template' => 'uc-qty',
     ),
     'uc_uid' => array(
       'variables' => array('uid' => 0),
@@ -131,6 +124,15 @@ function uc_store_theme() {
       'function' => 'theme_uc_uid',
     ),
   );
+}
+
+/**
+ * Prepares variables for the price template.
+ *
+ * Default template: uc-price.html.twig.
+ */
+function template_preprocess_uc_price(&$variables) {
+  $variables['price'] = uc_currency_format($variables['price']);
 }
 
 /**

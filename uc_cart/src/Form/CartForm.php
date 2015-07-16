@@ -52,7 +52,7 @@ class CartForm extends FormBase {
           'class' => array('desc'),
         ),
         'qty' => array(
-          'data' => array('#theme' => 'uc_qty_label'),
+          'data' => $this->t('Quantity'),
           'class' => array('qty'),
         ),
         'total' => array(
