@@ -237,11 +237,6 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     // Add a comment to let sales team know this came in through the site.
     uc_order_comment_save($order->id(), 0, $this->t('Order created through website.'), 'admin');
 
-    $page = $cart_config->get('checkout_complete_page');
-    if (!empty($page)) {
-      return new RedirectResponse(Url::fromUri('internal:/' . $page));
-    }
-
     return $build;
   }
 

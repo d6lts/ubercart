@@ -73,13 +73,6 @@ function uc_googleanalytics_display() {
     return TRUE;
   }
 
-  // Or if the URL is the custom completion page.
-  $completion_page = \Drupal::config('uc_cart.settings')->get('checkout_complete_page');
-
-  if (!empty($completion_page) && $completion_page == drupal_get_path_alias(current_path())) {
-    return TRUE;
-  }
-
   // Or if another module says this is the page through hook_ucga_display().
   foreach (\Drupal::moduleHandler()->invokeAll('ucga_display') as $result) {
     if ($result === TRUE) {

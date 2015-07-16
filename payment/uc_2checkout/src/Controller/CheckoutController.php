@@ -83,12 +83,6 @@ class CheckoutController extends ControllerBase {
 
     $build = uc_cart_complete_sale($order, $cart_config->get('new_customer_login'));
 
-    $page = $cart_config->get('checkout_complete_page');
-
-    if (!empty($page)) {
-      drupal_goto($page);
-    }
-
     return $build;
   }
 }

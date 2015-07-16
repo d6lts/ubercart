@@ -229,14 +229,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       '#title' => t('Completion messages'),
       '#group' => 'checkout-settings',
     );
-    $form['completion_messages']['uc_cart_checkout_complete_page'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Alternate checkout completion page'),
-      '#description' => t('Leave blank to use the default completion page (recommended).'),
-      '#default_value' => $cart_config->get('checkout_complete_page'),
-      '#field_prefix' => \Drupal::url('<front>', [], ['absolute' => TRUE]),
-      '#size' => 16,
-    );
     $form['completion_messages']['uc_msg_order_logged_in'] = array(
       '#type' => 'textarea',
       '#title' => t('Logged in users'),
@@ -304,7 +296,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('new_customer_status_active', $form_state->getValue('uc_new_customer_status_active'))
       ->set('default_same_address', $form_state->getValue('uc_cart_default_same_address'))
       ->set('delivery_not_shippable', $form_state->getValue('uc_cart_delivery_not_shippable'))
-      ->set('checkout_complete_page', $form_state->getValue('uc_cart_checkout_complete_page'))
       ->set('panes', $form_state->getValue('panes'))
       ->save();
 

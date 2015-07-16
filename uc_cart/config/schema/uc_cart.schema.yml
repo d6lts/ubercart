@@ -121,9 +121,6 @@ uc_cart.settings:
     checkout_anonymous:
       type: boolean
       label: ''
-    checkout_complete_page:
-      type: uri
-      label: ''
     checkout_enabled:
       type: boolean
       label: ''

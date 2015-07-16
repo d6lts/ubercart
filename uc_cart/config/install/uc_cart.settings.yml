@@ -31,7 +31,6 @@ email_validation: false
 
 default_same_address: false
 checkout_anonymous: true
-checkout_complete_page: ''
 checkout_enabled: true
 
 delivery_not_shippable: true
