@@ -260,7 +260,11 @@ class OrderCreateForm extends FormBase {
         $uid = 0;
     }
 
-    $order = uc_order_new($uid, 'post_checkout');
+    $order = \Drupal\uc_order\Entity\Order::create(array(
+      'uid' => $uid,
+      'order_status' => uc_order_state_default('post_checkout'),
+    ));
+    $order->save();
     uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), t('Order created by the administration.'), 'admin');
 
     $form_state->setRedirect('entity.uc_order.edit_form', ['uc_order' => $order->id()]);

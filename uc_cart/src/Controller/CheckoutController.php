@@ -115,7 +115,10 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       $rebuild = FALSE;
       if (!isset($order)) {
         // Create a new order if necessary.
-        $order = uc_order_new($this->currentUser()->id());
+        $order = \Drupal\uc_order\Entity\Order::create(array(
+          'uid' => $this->currentUser()->id(),
+        ));
+        $order->save();
         $session->set('cart_order', $order->id());
         $rebuild = TRUE;
       }

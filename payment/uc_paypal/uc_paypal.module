@@ -686,7 +686,8 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
 
   list($desc, $subtotal) = _uc_paypal_product_details($items);
 
-  $order = uc_order_new($user->id());
+  $order = \Drupal\uc_order\Entity\Order::create(['uid' => $user->id()]);
+  $order->save();
 
   $nvp_request = array(
     'METHOD' => 'SetExpressCheckout',

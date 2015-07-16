@@ -30,11 +30,16 @@ class OrderTest extends UbercartTestBase {
 
   public function testOrderAPI() {
     // Test defaults.
-    $order = uc_order_new();
+    $order = \Drupal\uc_order\Entity\Order::create();
+    $order->save();
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
-    $order = uc_order_new($this->customer->id(), 'completed');
+    $order = \Drupal\uc_order\Entity\Order::create(array(
+      'uid' => $this->customer->id(),
+      'order_status' => uc_order_state_default('completed'),
+    ));
+    $order->save();
     $this->assertEqual($order->getUserId(), $this->customer->id(), 'New order has correct uid.');
     $this->assertEqual($order->getStatusId(), 'completed', 'New order is marked completed.');
 
@@ -45,7 +50,7 @@ class OrderTest extends UbercartTestBase {
   }
 
   public function testOrderEntity() {
-    $order = \Drupal\uc_order\Entity\Order::create(array());
+    $order = \Drupal\uc_order\Entity\Order::create();
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
@@ -76,7 +81,8 @@ class OrderTest extends UbercartTestBase {
     \Drupal::service('module_installer')->install(array('entity_crud_hook_test'));
 
     $GLOBALS['entity_crud_hook_test'] = [];
-    $order = uc_order_new();
+    $order = \Drupal\uc_order\Entity\Order::create();
+    $order->save();
 
     $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type uc_order');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type uc_order');
@@ -220,7 +226,10 @@ class OrderTest extends UbercartTestBase {
   }
 
   protected function ucCreateOrder($customer) {
-    $order = uc_order_new($customer->id());
+    $order = \Drupal\uc_order\Entity\Order::create(array(
+      'uid' => $customer->id(),
+    ));
+    $order->save();
     uc_order_comment_save($order->id(), 0, t('Order created programmatically.'), 'admin');
 
     $order_ids = \Drupal::entityQuery('uc_order')

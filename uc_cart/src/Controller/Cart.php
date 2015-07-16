@@ -42,9 +42,11 @@ class Cart extends ControllerBase implements CartInterface {
     // Empty that cart...
     $this->emptyCart();
 
-    // Ensure we have the latest order data.
-    // @todo Remove this once uc_payment_enter() can modify order objects.
-    $order->data = unserialize(db_query('SELECT data FROM {uc_orders} WHERE order_id = :order_id', [':order_id' => $order->id()])->fetchField());
+    // Force the order to load from the DB instead of the entity cache.
+    // @todo Remove this once uc_payment_enter() can modify order objects?
+    // @todo Should we be overwriting $order with this newly-loaded db_order?
+    $db_order = \Drupal::entityManager()->getStorage('uc_order')->loadUnchanged($order->id());
+    $order->data = $db_order->data;
 
     // Ensure that user creation and triggers are only run once.
     if (empty($order->data->complete_sale)) {

@@ -504,7 +504,10 @@ function uc_order_product_revive($products, $published = TRUE) {
  *   A fully-populated order entity, or FALSE if the order is not found.
  */
 function uc_order_load($order_id, $reset = FALSE) {
-  return entity_load('uc_order', $order_id, $reset);
+  if ($reset) {
+    \Drupal::entityManager()->getStorage('uc_order')->resetCache([$order_id]);
+  }
+  return \Drupal\uc_order\Entity\Order::load($order_id);
 }
 
 /**
