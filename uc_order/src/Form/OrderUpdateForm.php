@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -107,7 +108,7 @@ class OrderUpdateForm extends FormBase {
 
     // Let Rules send email if requested.
     // if ($form_state->getValue('notify')) {
-    //   $order = uc_order_load($form_state->getValue('order_id'));
+    //   $order = Order::load($form_state->getValue('order_id'));
     //   rules_invoke_event('uc_order_status_email_update', $order);
     // }
 

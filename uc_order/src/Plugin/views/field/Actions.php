@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order\Plugin\views\field;
 
+use Drupal\uc_order\Entity\Order;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -23,8 +24,7 @@ class Actions extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    $order_id = $this->getValue($values);
-    $order = uc_order_load($values->order_id);
+    $order = Order::load($this->getValue($values));
     return uc_order_actions($order, TRUE);
   }
 

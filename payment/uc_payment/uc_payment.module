@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\Xss;
+use Drupal\uc_order\Entity\Order;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\user\Entity\User;
 use Drupal\uc_order\OrderInterface;
@@ -384,7 +385,7 @@ function uc_payment_delete($receipt_id) {
 
   $payment = uc_payment_load($receipt_id);
   $log_message = t('@method payment for @amount deleted.', array('@method' => $payment->method, '@amount' => uc_currency_format($payment->amount)));
-  uc_order_load($payment->order_id)->logChanges(array($log_message));
+  Order::load($payment->order_id)->logChanges(array($log_message));
 
   db_delete('uc_payment_receipts')
     ->condition('receipt_id', $receipt_id)

@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Entity\Order;
 
 /**
  * Processes Instant Payment Notifiations from PayPal.
@@ -36,7 +37,7 @@ function uc_paypal_ipn() {
 
   \Drupal::logger('uc_paypal')->notice('Receiving IPN at URL for order @order_id. <pre>@debug</pre>', array('@order_id' => $order_id, '@debug' => variable_get('uc_paypal_wps_debug_ipn', FALSE) ? print_r($_POST, TRUE) : ''));
 
-  $order = uc_order_load($order_id);
+  $order = Order::load($order_id);
 
   if ($order == FALSE) {
     \Drupal::logger('uc_paypal')->error('IPN attempted for non-existent order @order_id.', array('@order_id' => $order_id));
@@ -173,7 +174,7 @@ function uc_paypal_ipn() {
  * Handles the review page for Express Checkout Mark Flow.
  */
 function uc_paypal_ec_review_redirect() {
-  if (!isset($_SESSION['TOKEN']) || ($order = uc_order_load($_SESSION['cart_order'])) == FALSE) {
+  if (!isset($_SESSION['TOKEN']) || !($order = Order::load($_SESSION['cart_order']))) {
     unset($_SESSION['cart_order']);
     unset($_SESSION['have_details']);
     unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
@@ -197,7 +198,7 @@ function uc_paypal_ec_review_redirect() {
  * Handles the review page for Express Checkout Shortcut Flow.
  */
 function uc_paypal_ec_review() {
-  if (!isset($_SESSION['TOKEN']) || ($order = uc_order_load($_SESSION['cart_order'])) == FALSE) {
+  if (!isset($_SESSION['TOKEN']) || !($order = Order::load($_SESSION['cart_order']))) {
     unset($_SESSION['cart_order']);
     unset($_SESSION['have_details']);
     unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
@@ -319,7 +320,7 @@ function uc_paypal_ec_review_form_validate($form, FormStateInterface $form_state
 }
 
 function uc_paypal_ec_review_form_submit($form, FormStateInterface $form_state) {
-  $order = uc_order_load($_SESSION['cart_order']);
+  $order = Order::load($_SESSION['cart_order']);
 
   if (!$form_state->isValueEmpty('shippable')) {
     $quote_option = explode('---', $form_state->getValue(['quotes', 'quote_option']));
@@ -366,7 +367,7 @@ function uc_paypal_ec_review_form_submit($form, FormStateInterface $form_state) 
  * Presents the final total to the user for checkout!
  */
 function uc_paypal_ec_submit() {
-  if (!isset($_SESSION['TOKEN']) || ($order = uc_order_load($_SESSION['cart_order'])) == FALSE) {
+  if (!isset($_SESSION['TOKEN']) || !($order = Order::load($_SESSION['cart_order']))) {
     unset($_SESSION['cart_order'], $_SESSION['have_details']);
     unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
     drupal_set_message(t('An error has occurred in your PayPal payment. Please review your cart and try again.'));

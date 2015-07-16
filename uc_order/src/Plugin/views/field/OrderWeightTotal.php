@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_store\Plugin\views\field\Weight;
 use Drupal\views\ResultRow;
 
@@ -63,7 +64,7 @@ class OrderWeightTotal extends Weight {
    */
   public function render(ResultRow $values) {
     $oid = $values->{$this->aliases['order_id']};
-    $order = uc_order_load($oid);
+    $order = Order::load($oid);
     $total = 0;
 
     foreach ($order->products as $product) {

@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Tests;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_store\Address;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
@@ -45,7 +46,7 @@ class OrderTest extends UbercartTestBase {
 
     // Test deletion.
     $order->delete();
-    $deleted_order = uc_order_load($order->id(), TRUE);
+    $deleted_order = Order::load($order->id());
     $this->assertFalse($deleted_order, 'Order was successfully deleted');
   }
 

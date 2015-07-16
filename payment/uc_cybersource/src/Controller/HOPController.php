@@ -9,6 +9,7 @@ namespace Drupal\uc_cybersource\Controller;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\uc_order\Entity\Order;
 
 /**
  * Controller routines for HOP postback.
@@ -51,7 +52,7 @@ class HOPController extends ControllerBase {
     $reconciliation_id = SafeMarkup::checkPlain($_POST['reconciliationID']);
     $order_id = SafeMarkup::checkPlain($_POST['orderNumber']);
     $payer_email = SafeMarkup::checkPlain($_POST['billTo_email']);
-    $order = uc_order_load($_POST['orderNumber']);
+    $order = Order::load($_POST['orderNumber']);
 
     switch ($decision) {
       case 'ACCEPT':

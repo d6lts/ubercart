@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_store\Encryption;
 
 define('UC_AUTHORIZENET_TEST_GATEWAY_URL', 'https://test.authorize.net/gateway/transact.dll');
@@ -200,7 +201,7 @@ function uc_authorizenet_payment_gateway_settings_submit($form, &$form_state) {
  */
 function uc_authorizenet_charge($order_id, $amount, $data) {
   // Load the order.
-  $order = uc_order_load($order_id);
+  $order = Order::load($order_id);
 
   // Perform the appropriate action based on the transaction type.
   switch ($data['txn_type']) {

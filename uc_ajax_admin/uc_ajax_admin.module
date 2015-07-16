@@ -8,6 +8,8 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\uc_order\Entity\Order;
+use Drupal\uc_order\Entity\OrderProduct;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -136,10 +138,10 @@ function _uc_ajax_admin_checkout_trigger_options($form) {
  * shippable order if not.
  */
 function _uc_ajax_admin_build_checkout_form() {
-  $order = empty($_SESSION['cart_order']) ? FALSE : uc_order_load($_SESSION['cart_order']);
+  $order = empty($_SESSION['cart_order']) ? FALSE : Order::load($_SESSION['cart_order']);
   if (!$order) {
-    $order = \Drupal\uc_order\Entity\Order::create(array());
-    $order->products = array(\Drupal\uc_order\Entity\OrderProduct::create(array(
+    $order = Order::create(array());
+    $order->products = array(OrderProduct::create(array(
       'title' => 'fake',
       'nid' => 0,
       'qty' => 1,

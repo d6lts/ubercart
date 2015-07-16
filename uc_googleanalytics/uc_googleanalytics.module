@@ -11,6 +11,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\uc_order\Entity\Order;
 
 /**
  * Implements hook_enable().
@@ -34,7 +35,7 @@ function uc_googleanalytics_page_alter(&$page) {
   // Check to see if we are at the order completion page.
   if (uc_googleanalytics_display()) {
     // If so, then if we can load the order...
-    if (!empty($_SESSION['ucga_order_id']) && $order = uc_order_load($_SESSION['ucga_order_id'])) {
+    if (!empty($_SESSION['ucga_order_id']) && $order = Order::load($_SESSION['ucga_order_id'])) {
       // Build the GA tracking code.
       $script = uc_googleanalytics_ecommerce_js($order);
 

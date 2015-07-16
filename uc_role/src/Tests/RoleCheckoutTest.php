@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_role\Tests;
 
+use Drupal\uc_order\Entity\Order;
 use Drupal\user\Entity\User;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
@@ -52,7 +53,7 @@ class RoleCheckoutTest extends UbercartTestBase {
     $account = User::load($uid);
     // @todo Re-enable when Rules is available.
     // $this->assertTrue($account->hasRole($rid), 'New user was granted role.');
-    $order = uc_order_load($order->id());
+    $order = Order::load($order->id());
     $this->assertEqual($order->getStatusId(), 'payment_received', 'Shippable order was set to payment received.');
 
     // 4 e-mails: new account, customer invoice, admin invoice, role assignment
@@ -74,7 +75,7 @@ class RoleCheckoutTest extends UbercartTestBase {
     $account = User::load($this->customer->id());
     // @todo Re-enable when Rules is available.
     // $this->assertTrue($account->hasRole($rid), 'Existing user was granted role.');
-    $order = uc_order_load($order->id());
+    $order = Order::load($order->id());
     $this->assertEqual($order->getStatusId(), 'completed', 'Non-shippable order was set to completed.');
 
     // 3 e-mails: customer invoice, admin invoice, role assignment

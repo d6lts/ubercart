@@ -5,6 +5,7 @@
  * CyberSource's Silent Order POST and Hosted Order Page methods of payment.
  */
 
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_store\Encryption;
 
 /**
@@ -15,7 +16,7 @@ function uc_cybersource_page_alter(&$page) {
   // Add to the review page hidden form fields with data to post to
   // CyberSource HOP.
   if (isset($page[$block->region]['system_main']['#theme']) && $page[$block->region]['system_main']['#theme'] == 'uc_cart_checkout_review' && ($order_id = intval($_SESSION['cart_order'])) > 0) {
-    $order = uc_order_load($order_id);
+    $order = Order::load($order_id);
 
     if ($order->getPaymentMethodId() == 'cybersource_hop') {
       $page[$block->region]['system_main']['#form'] = \Drupal::formBuilder()->getForm('uc_cybersource_hop_form', $order);
@@ -382,7 +383,7 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
  * Charges card.
  */
 function uc_cybersource_charge($order_id, $amount, $data) {
-  $order = uc_order_load($order_id);
+  $order = Order::load($order_id);
 
   $amount = uc_currency_format($amount, FALSE, FALSE, '.');
 

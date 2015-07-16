@@ -13,6 +13,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\uc_order\Entity\Order;
 
 /**
  * Implements hook_menu().
@@ -176,7 +177,7 @@ function uc_paypal_wpp_settings_form($form, &$form_state) {
 function uc_paypal_wpp_charge($order_id, $amount, $data) {
   global $user;
 
-  $order = uc_order_load($order_id);
+  $order = Order::load($order_id);
 
   if ($data['txn_type'] == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
     $nvp_request = array(
@@ -598,7 +599,7 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
 
   $order_id = intval($_SESSION['cart_order']);
 
-  $order = uc_order_load($order_id);
+  $order = Order::load($order_id);
   if (!$order || $order->getStateId() != 'in_checkout') {
     $_SESSION['cart_order'] = NULL;
     unset($_SESSION['cart_order']);
@@ -732,7 +733,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
  * @see uc_cart_checkout_review_form()
  */
 function uc_paypal_ec_submit_form_submit($form, &$form_state) {
-  $order = uc_order_load($_SESSION['cart_order']);
+  $order = Order::load($_SESSION['cart_order']);
 
   list($desc, $subtotal) = _uc_paypal_product_details($order->products);
 

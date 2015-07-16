@@ -8,7 +8,7 @@ Ubercart 4.x
 * Removed uc_weight_sort(), use \Drupal\Component\Utility\SortArray::sortByWeightElement() instead.
 * Removed uc_get_message(), use YAML configuration files instead.
 * Invoice templates are now named 'uc_order_invoice' to avoid theming conflicts.
-* Order objects now have an interface (UcOrderInterface) and a set of methods:
+* Order objects now have an interface (OrderInterface) and a set of methods:
     * $order->order_id => $order->id()
     * $order->uid => $order->getUser(), $order->getUserId() and $order->setUserId()
     * $order->order_status => $order->getStatusId() and $order->setStatusId()
@@ -19,6 +19,7 @@ Ubercart 4.x
     * $order address properties => $order->getAddress() and $order->setAddress()
     * $order->currency => $order->getCurrency()
     * $order->payment_method => $order->getPaymentMethodId() and $order->setPaymentMethodId()
+    * uc_order_load() => Order::load()
     * uc_order_load_line_items() => $order->getLineItems()
     * uc_order_load_line_items_display() => $order->getDisplayLineItems()
     * uc_order_is_shippable() => $order->isShippable()

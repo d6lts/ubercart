@@ -10,6 +10,7 @@ namespace Drupal\uc_2checkout\Controller;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\uc_order\Entity\Order;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -25,7 +26,7 @@ class CheckoutController extends ControllerBase {
     $module_config = \Drupal::config('uc_2checkout.settings');
     \Drupal::logger('2Checkout')->notice('Receiving new order notification for order !order_id.', array('!order_id' => SafeMarkup::checkPlain($_REQUEST['merchant_order_id'])));
 
-    $order = uc_order_load($_REQUEST['merchant_order_id']);
+    $order = Order::load($_REQUEST['merchant_order_id']);
 
     if (!$order || $order->getStateId() != 'in_checkout') {
       return t('An error has occurred during payment.  Please contact us to ensure your order has submitted.');
