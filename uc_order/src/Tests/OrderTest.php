@@ -73,7 +73,7 @@ class OrderTest extends UbercartTestBase {
     $entities = $storage->loadMultiple(array($order->id()));
     $storage->delete($entities);
 
-    $storage->resetCache(array($order->id));
+    $storage->resetCache(array($order->id()));
     $deleted_order = \Drupal\uc_order\Entity\Order::load($order->id());
     $this->assertFalse($deleted_order, 'Order was successfully deleted');
   }

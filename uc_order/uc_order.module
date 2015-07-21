@@ -737,7 +737,7 @@ function uc_order_state_default($state_id) {
 function uc_order_status_options_list() {
   $options = array();
   foreach (OrderStatus::loadMultiple() as $status) {
-    $options[$status->id] = $status->name;
+    $options[$status->id()] = $status->getName();
   }
   return $options;
 }

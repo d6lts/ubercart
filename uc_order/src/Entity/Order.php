@@ -104,8 +104,8 @@ class Order extends ContentEntityBase implements OrderInterface {
     // Record a log entry if the order status has changed.
     if ($update && $this->getStatusId() != $this->original->getStatusId()) {
       $this->logChanges(array(t('Order status') => array(
-        'old' => $this->original->getStatus()->name,
-        'new' => $this->getStatus()->name,
+        'old' => $this->original->getStatus()->getName(),
+        'new' => $this->getStatus()->getName(),
       )));
 
       // rules_invoke_event('uc_order_status_update', $this->original, $this);
@@ -274,7 +274,7 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function getStateId() {
-    return $this->getStatus()->state;
+    return $this->getStatus()->getState();
   }
 
   /**

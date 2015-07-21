@@ -25,7 +25,7 @@ class Status extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     $status = OrderStatus::load($this->getValue($values));
-    return $this->sanitizeValue($status->name);
+    return $this->sanitizeValue($status->getName());
   }
 
 }

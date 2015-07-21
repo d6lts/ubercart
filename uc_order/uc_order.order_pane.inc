@@ -963,7 +963,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, FormStateInter
           array('data' => \Drupal::service('date.formatter')->format($comment->created, 'short'), 'class' => array('date')),
           array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
           array('data' => array('#theme' => 'image', '#uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon), 'class' => array('notified')),
-          array('data' => SafeMarkup::checkPlain($statuses[$comment->order_status]->name), 'class' => array('status')),
+          array('data' => SafeMarkup::checkPlain($statuses[$comment->order_status]->getName()), 'class' => array('status')),
           array('data' => SafeMarkup::checkPlain($comment->message), 'class' => array('message')),
         );
       }
@@ -982,7 +982,7 @@ function uc_order_pane_order_comments($op, $order, &$form = NULL, FormStateInter
         foreach ($comments as $comment) {
           $rows[] = array(
             array('data' => \Drupal::service('date.formatter')->format($comment->created, 'uc_store'), 'class' => array('date')),
-            array('data' => SafeMarkup::checkPlain($statuses[$comment->order_status]->name), 'class' => array('status')),
+            array('data' => SafeMarkup::checkPlain($statuses[$comment->order_status]->getName()), 'class' => array('status')),
             array('data' => SafeMarkup::checkPlain($comment->message), 'class' => array('message')),
           );
         }

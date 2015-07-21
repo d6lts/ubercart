@@ -55,8 +55,8 @@ class OrderWorkflowForm extends ConfigFormBase {
       // Create the select box for specifying a default status per order state.
       $options = array();
       foreach ($statuses as $status) {
-        if ($status->state == $state_id) {
-          $options[$status->id] = $status->name;
+        if ($state_id == $status->getState()) {
+          $options[$status->id()] = $status->getName();
         }
       }
       if (empty($options)) {
@@ -84,34 +84,34 @@ class OrderWorkflowForm extends ConfigFormBase {
     );
 
     foreach ($statuses as $status) {
-      $form['#locked'][$status->id] = $status->locked;
+      $form['#locked'][$status->id()] = $status->isLocked();
 
-      $form['order_statuses']['order_statuses'][$status->id]['id'] = array(
-        '#markup' => $status->id,
+      $form['order_statuses']['order_statuses'][$status->id()]['id'] = array(
+        '#markup' => $status->id(),
       );
-      $form['order_statuses']['order_statuses'][$status->id]['name'] = array(
+      $form['order_statuses']['order_statuses'][$status->id()]['name'] = array(
         '#type' => 'textfield',
-        '#default_value' => $status->name,
+        '#default_value' => $status->getName(),
         '#size' => 32,
         '#required' => TRUE,
       );
-      $form['order_statuses']['order_statuses'][$status->id]['weight'] = array(
+      $form['order_statuses']['order_statuses'][$status->id()]['weight'] = array(
         '#type' => 'weight',
         '#delta' => 20,
-        '#default_value' => $status->weight,
+        '#default_value' => $status->getWeight(),
       );
-      if ($status->locked) {
-        $form['order_statuses']['order_statuses'][$status->id]['state'] = array(
-          '#markup' => $states[$status->state],
+      if ($status->isLocked()) {
+        $form['order_statuses']['order_statuses'][$status->id()]['state'] = array(
+          '#markup' => $states[$status->getState()],
         );
       }
       else {
-        $form['order_statuses']['order_statuses'][$status->id]['state'] = array(
+        $form['order_statuses']['order_statuses'][$status->id()]['state'] = array(
           '#type' => 'select',
           '#options' => $states,
-          '#default_value' => $status->state,
+          '#default_value' => $status->getState(),
         );
-        $form['order_statuses']['order_statuses'][$status->id]['remove'] = array(
+        $form['order_statuses']['order_statuses'][$status->id()]['remove'] = array(
           '#type' => 'checkbox',
         );
       }
@@ -134,15 +134,15 @@ class OrderWorkflowForm extends ConfigFormBase {
       $status = \Drupal\uc_order\Entity\OrderStatus::load($id);
       if (!$form['#locked'][$id] && $value['remove']) {
         $status->delete();
-        drupal_set_message(t('Order status %status removed.', ['%status' => $status->name]));
+        drupal_set_message(t('Order status %status removed.', ['%status' => $status->getName()]));
       }
       else {
-        $status->name = $value['name'];
-        $status->weight = (int) $value['weight'];
+        $status->setName($value['name']);
+        $status->setWeight((int) $value['weight']);
 
         // The state cannot be changed if the status is locked.
         if (!$form['#locked'][$key]) {
-          $status->state = $value['state'];
+          $status->setState($value['state']);
         }
 
         $status->save();

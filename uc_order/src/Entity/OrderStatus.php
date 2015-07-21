@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\uc_order\OrderStatusInterface;
 
 /**
  * Defines the order status entity.
@@ -22,53 +23,106 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "id" = "id",
  *     "label" = "name",
  *     "weight" = "weight",
- *     "uuid" = "uuid",
  *   }
  * )
  */
-class OrderStatus extends ConfigEntityBase {
+class OrderStatus extends ConfigEntityBase implements OrderStatusInterface {
 
   /**
    * The order status ID.
    *
    * @var string
    */
-  public $id;
-
-  /**
-   * The order status UUID.
-   *
-   * @var string
-   */
-  public $uuid;
+  protected $id;
 
   /**
    * Name of the status.
    *
    * @var string
    */
-  public $name;
+  protected $name;
 
   /**
    * Specific state of the status.
    *
    * @var string
    */
-  public $state;
+  protected $state = '';
 
   /**
    * The weight of this status in relation to other statuses.
    *
    * @var integer
    */
-  public $weight = 0;
+  protected $weight = 0;
 
   /**
    * Locked statuses cannot be edited.
    *
    * @var bool
    */
-  public $locked = FALSE;
+  protected $locked = FALSE;
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return $this->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setName($name) {
+    $this->name = $name;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getState() {
+    return $this->state;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setState($state) {
+    $this->state = $state;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return (bool) $this->locked;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLocked($locked) {
+    $this->locked = (bool) $locked;
+    return $this;
+  }
 
   /**
    * {@inheritdoc}

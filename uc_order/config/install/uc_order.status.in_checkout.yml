@@ -1,5 +1,4 @@
 id: in_checkout
-uuid: 8177835c-12cc-4c68-aa50-80f175b37f37
 name: 'In checkout'
 state: in_checkout
 weight: -10

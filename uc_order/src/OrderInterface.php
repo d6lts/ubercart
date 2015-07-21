@@ -70,7 +70,7 @@ interface OrderInterface extends ContentEntityInterface {
   /**
    * Returns the order status.
    *
-   * @return \Drupal\uc_order\Entity\OrderStatus
+   * @return \Drupal\uc_order\OrderStatusInterface
    *   The order status entity.
    */
   public function getStatus();

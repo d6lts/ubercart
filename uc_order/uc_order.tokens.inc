@@ -283,7 +283,7 @@ function uc_order_tokens($type, $tokens, $data = [], $options = []) {
           break;
 
         case 'order-status':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->getStatus()->name) : $order->getStatus()->name;
+          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->getStatus()->getName()) : $order->getStatus()->getName();
           break;
 
         case 'customer':

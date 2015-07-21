@@ -1,5 +1,4 @@
 id: paypal_pending
-uuid: 3d6233d7-f46b-47f7-be00-ac269d242386
 name: 'PayPal pending'
 state: post_checkout
 weight: 7
