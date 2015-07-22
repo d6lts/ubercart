@@ -15,8 +15,7 @@ function uc_cart_uninstall() {
     foreach ($statuses as $status) {
       $status_names[] = $status->label();
       // Allow this status to be deleted manually.
-      $status->locked = FALSE;
-      $status->save();
+      $status->setLocked(FALSE)->save();
     }
     drupal_set_message(\Drupal::translation()->formatPlural(count($status_names),
       'The order status %status has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.',
