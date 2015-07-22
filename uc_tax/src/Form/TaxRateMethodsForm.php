@@ -59,21 +59,21 @@ class TaxRateMethodsForm extends ConfigFormBase {
       // Build a list of operations links.
       $operations = array(
         'edit' => array(
-          'title' => $this->t('edit'), 
+          'title' => $this->t('edit'),
           'url' => Url::fromRoute('uc_tax.rate_edit', ['tax_rate' => $rate_id]),
         ),
 // @todo: Fix when Rules works.
 //      'conditions' => array(
-//        'title' => $this->t('conditions'), 
+//        'title' => $this->t('conditions'),
 //        'url' => Url::fromRoute('admin/store/settings/taxes/manage/uc_tax_', ['rate_id' => $rate_id]),
 //        'weight' => 5,
 //      ),
         'clone' => array(
-          'title' => $this->t('clone'), 
+          'title' => $this->t('clone'),
           'url' => Url::fromRoute('uc_tax.rate_clone', ['tax_rate' => $rate_id]),
         ),
         'delete' => array(
-          'title' => $this->t('delete'), 
+          'title' => $this->t('delete'),
           'url' => Url::fromRoute('uc_tax.rate_delete', ['tax_rate' => $rate_id]),
         ),
       );

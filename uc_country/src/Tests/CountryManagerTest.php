@@ -37,7 +37,7 @@ class CountryManagerTest extends WebTestBase {
     // getEnabledList(): Verify that US and CA are enabled by default.
     $this->assertEqual(count($country_manager->getEnabledList()), 0, 'No Ubercart countries enabled by default');
 
-    // getCountry(): Verify the basic get country config entity works. 
+    // getCountry(): Verify the basic get country config entity works.
     $country_manager->getCountry('US');
 
     // getByProperty(): Verify we can obtain country entities by property.

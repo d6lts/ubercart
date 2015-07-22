@@ -47,7 +47,7 @@ class TaxRateListBuilder extends ConfigEntityListBuilder {
 //      '#default_value' => $entity->getWeight(),
 //      '#attributes' => array('class' => array('uc-tax-method-weight')),
 //    );
-      
+
     //$row['weight']['#attributes'] = array('class' => array('uc-quote-method-weight'));
 
     return $row + parent::buildRow($entity);
@@ -59,7 +59,7 @@ class TaxRateListBuilder extends ConfigEntityListBuilder {
   public function buildOperations(EntityInterface $entity) {
     $build = parent::buildOperations($entity);
     $build['#links']['clone'] = array(
-      'title' => $this->t('Clone'), 
+      'title' => $this->t('Clone'),
       'url' => Url::fromRoute('entity.uc_tax_rate.clone', ['uc_tax_rate' => $entity->id()]),
       'weight' => 10,  // 'edit' is 0, 'delete' is 100
     );

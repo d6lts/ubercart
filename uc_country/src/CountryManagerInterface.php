@@ -48,7 +48,7 @@ interface CountryManagerInterface extends \Drupal\Core\Locale\CountryManagerInte
    * \Drupal\uc_country\Entity\Country may be used. Keep in mind that in most
    * cases these properties are <em>unique</em>, so this method will return
    * only one country configuration entity.
-   * 
+   *
    * @param array $properties
    *   An associative array where the keys are the property names and the values
    *   are the values those properties must have.

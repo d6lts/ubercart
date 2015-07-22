@@ -78,7 +78,7 @@ class CatalogBlock extends BlockBase {
 
     // @todo Remove when catalog block theming is fully converted.
     $catalog_config = \Drupal::configFactory()->getEditable('uc_catalog.settings');
-    
+
     $catalog_config
       ->set('expand_categories', $form_state->getValue('expanded'))
       ->set('block_nodecount', $form_state->getValue('product_count'))

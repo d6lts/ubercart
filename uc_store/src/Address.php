@@ -172,5 +172,5 @@ class Address {
     // to be able to test the Raw output.
     return nl2br($address, FALSE);
   }
- 
+
 }

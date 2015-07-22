@@ -19,7 +19,7 @@ class TaxRateFormBase extends EntityForm {
   /**
    * Returns a Url to redirect to if the current operation is cancelled.
    *
-   * @return \Drupal\Core\Url 
+   * @return \Drupal\Core\Url
    */
   public function getCancelUrl() {
     return new Url('entity.uc_tax_rate.collection');
