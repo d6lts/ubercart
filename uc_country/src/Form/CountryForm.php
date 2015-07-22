@@ -34,7 +34,7 @@ class CountryForm extends EntityForm {
     $form['address_format'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Address format'),
-      '#default_value' => implode("\r\n", $country->address_format),
+      '#default_value' => implode("\r\n", $country->getAddressFormat()),
       '#rows' => 7,
     );
 
@@ -82,7 +82,7 @@ class CountryForm extends EntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     // Save address_format as an array
     $address_format = $form_state->getValue('address_format');
-    $this->entity->address_format = explode("\r\n", $address_format);
+    $this->entity->setAddressFormat(explode("\r\n", $address_format));
 
     $this->entity->save();
     drupal_set_message($this->t('Country settings saved.'));

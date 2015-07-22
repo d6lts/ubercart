@@ -65,7 +65,7 @@ class CountryManager implements CountryManagerInterface {
     $countries = $this->entityManager->getStorage('uc_country')->loadMultiple(NULL);
     $country_names = [];
     foreach ($countries as $alpha_2 => $country) {
-      $country_names[$alpha_2] = t($country->name);
+      $country_names[$alpha_2] = t($country->getName());
     }
     natcasesort($country_names);
     $this->moduleHandler->alter('countries', $country_names);
@@ -79,7 +79,7 @@ class CountryManager implements CountryManagerInterface {
     $countries = $this->entityManager->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
     $country_names = [];
     foreach ($countries as $alpha_2 => $country) {
-      $country_names[$alpha_2] = t($country->name);
+      $country_names[$alpha_2] = t($country->getName());
     }
     natcasesort($country_names);
     $this->moduleHandler->alter('countries', $country_names);
@@ -100,7 +100,7 @@ class CountryManager implements CountryManagerInterface {
     $countries = $this->entityManager->getStorage('uc_country')->loadByProperties($properties);
     $country_names = [];
     foreach ($countries as $alpha_2 => $country) {
-      $country_names[$alpha_2] = t($country->name);
+      $country_names[$alpha_2] = t($country->getName());
     }
     natcasesort($country_names);
     return $country_names;
@@ -111,7 +111,7 @@ class CountryManager implements CountryManagerInterface {
    */
   public function getZoneList($alpha_2) {
     if ($country = $this->entityManager->getStorage('uc_country')->load($alpha_2)) {
-      return $country->zones;
+      return $country->getZones();
     }
     return array();
   }

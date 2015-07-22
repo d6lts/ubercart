@@ -132,12 +132,12 @@ class Address {
     if ($country) {
       $variables += array(
         '!zone_code' => $this->zone ?: t('N/A'),
-        '!zone_name' => isset($country->zones[$this->zone]) ? $country->zones[$this->zone] : t('Unknown'),
-        '!country_name' => t($country->name),
-        '!country_code2' => $country->alpha_2,
-        '!country_code3' => $country->alpha_3,
+        '!zone_name' => isset($country->getZones()[$this->zone]) ? $country->getZones()[$this->zone] : t('Unknown'),
+        '!country_name' => t($country->getName()),
+        '!country_code2' => $country->id(),
+        '!country_code3' => $country->getAlpha3(),
       );
-      $format = implode("\r\n", $country->address_format);
+      $format = implode("\r\n", $country->getAddressFormat());
     }
     else {
       $variables += array(

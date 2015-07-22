@@ -180,7 +180,7 @@ function uc_2checkout_form($form, &$form_state, $order) {
     'city' => Unicode::substr($order->billing_city, 0, 64),
     'state' => $order->billing_zone,
     'zip' => Unicode::substr($order->billing_postal_code, 0, 16),
-    'country' => $country ? $country->alpha_3 : 'USA',
+    'country' => $country ? $country->getAlpha3() : 'USA',
     'email' => Unicode::substr($order->getEmail(), 0, 64),
     'phone' => Unicode::substr($order->billing_phone, 0, 16),
     'id_type' => 1,

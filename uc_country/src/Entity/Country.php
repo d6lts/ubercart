@@ -9,6 +9,7 @@ namespace Drupal\uc_country\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\uc_country\CountryInterface;
 
 /**
  * Defines the uc_country type configuration entity.
@@ -37,55 +38,99 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  *   }
  * )
  */
-class Country extends ConfigEntityBase {
+class Country extends ConfigEntityBase implements CountryInterface {
 
   /**
    * The 2-character ISO 3166-1 code identifying the country.
    *
    * @var string
    */
-  public $alpha_2;
+  protected $alpha_2;
 
   /**
    * The 3-character ISO 3166-1 code identifying the country.
    *
    * @var string
    */
-  public $alpha_3;
+  protected $alpha_3;
 
   /**
    * The human-readable name of the country.
    *
    * @var string
    */
-  public $name;
+  protected $name;
 
   /**
    * The numeric ISO 3166-1 code of the country.
    *
    * @var int
    */
-  public $numeric;
-
-  /**
-   * The address format string for the country.
-   *
-   * @var array
-   */
-  public $address_format;
+  protected $numeric;
 
   /**
    * An associative array of zone names, keyed by ISO 3166-2 zone code.
    *
    * @var array
    */
-  public $zones = array();
+  protected $zones = [];
+
+  /**
+   * The address format string for the country.
+   *
+   * @var array
+   */
+  protected $address_format;
+
 
   /**
    * {@inheritdoc}
    */
   public function id() {
     return $this->alpha_2;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAlpha3() {
+    return $this->alpha_3;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return $this->label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNumeric() {
+    return $this->numeric;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getZones() {
+    return $this->zones;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAddressFormat() {
+    return $this->address_format;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAddressFormat($address_format) {
+    $this->address_format = $address_format;
+    return $this;
   }
 
   /**

@@ -218,9 +218,9 @@ abstract class UbercartTestBase extends WebTestBase {
       );
 
       // Don't try to set the zone unless the store country has zones!
-      if (!empty($country->zones)) {
+      if (!empty($country->getZones())) {
         $edit += array(
-          $prefix . '[zone]' => array_rand($country->zones),
+          $prefix . '[zone]' => array_rand($country->getZones()),
         );
       }
     }
