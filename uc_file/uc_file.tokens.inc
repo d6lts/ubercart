@@ -5,6 +5,8 @@
  * Token hooks for the uc_file module.
  */
 
+use Drupal\Core\Render\BubbleableMetadata;
+
 /**
  * Implements hook_token_info().
  */
@@ -29,7 +31,7 @@ function uc_file_token_info() {
 /**
  * Implements hook_tokens().
  */
-function uc_file_tokens($type, $tokens, $data = array(), $options = array()) {
+function uc_file_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = array();
 
   if ($type == 'uc_file' && !empty($data['uc_file'])) {

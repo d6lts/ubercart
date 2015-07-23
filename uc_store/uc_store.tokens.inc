@@ -5,6 +5,7 @@
  * Token hooks for the uc_store module.
  */
 
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 
 /**
@@ -67,7 +68,7 @@ function uc_store_token_info() {
 /**
  * Implements hook_tokens().
  */
-function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
+function uc_store_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
   $replacements = array();
@@ -132,7 +133,7 @@ function uc_store_tokens($type, $tokens, $data = array(), $options = array()) {
 
     // Handle chaining for tokens that have 'type' defined in hook_token_info()
     if ($link_tokens = $token_service->findWithPrefix($tokens, 'help-url')) {
-      $replacements += $token_service->generate('url', $link_tokens, array('path' => $config->get('help_page')), $options);
+      $replacements += $token_service->generate('url', $link_tokens, array('path' => $config->get('help_page')), $options, $bubbleable_metadata);
     }
   }
 

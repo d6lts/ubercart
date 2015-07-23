@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Render\BubbleableMetadata;
 
 /**
  * Implements hook_token_info().
@@ -28,7 +29,7 @@ function uc_payment_token_info() {
 /**
  * Implements hook_tokens().
  */
-function uc_payment_tokens($type, $tokens, $data = array(), $options = array()) {
+function uc_payment_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $values = array();
 
   if ($type == 'uc_order' && !empty($data['uc_order'])) {

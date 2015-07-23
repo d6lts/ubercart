@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
@@ -247,11 +248,12 @@ function uc_shipping_theme() {
  */
 function template_preprocess_uc_packing_slip(&$variables) {
   $token_service = \Drupal::token();
+  $bubbleable_metadata = new BubbleableMetadata();
 
-  $tokens = $token_service->generate('site', array('logo' => 'logo'));
+  $tokens = $token_service->generate('site', ['logo' => 'logo'], [], [], $bubbleable_metadata);
   $variables['site_logo'] = isset($tokens['logo']) ? $tokens['logo'] : '';
 
-  $tokens = $token_service->generate('store', array('name' => 'name', 'address' => 'address', 'phone' => 'phone'));
+  $tokens = $token_service->generate('store', ['name' => 'name', 'address' => 'address', 'phone' => 'phone'], [], [], $bubbleable_metadata);
   $variables['store_name'] = $tokens['name'];
   $variables['store_address'] = $tokens['address'];
   $variables['store_phone'] = $tokens['phone'];

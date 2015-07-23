@@ -5,6 +5,8 @@
  * Token hooks for the uc_role module.
  */
 
+use Drupal\Core\Render\BubbleableMetadata;
+
 /**
  * Implements hook_token_info().
  */
@@ -34,7 +36,7 @@ function uc_role_token_info() {
 /**
  * Implements hook_tokens().
  */
-function uc_role_tokens($type, $tokens, $data = array(), $options = array()) {
+function uc_role_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
   $sanitize = !empty($options['sanitize']);
@@ -56,7 +58,7 @@ function uc_role_tokens($type, $tokens, $data = array(), $options = array()) {
     }
 
     if ($expiration_tokens = $token_service->findWithPrefix($tokens, 'expiration')) {
-      $replacements += $token_service->generate('date', $expiration_tokens, array('date' => $object->expiration), $options);
+      $replacements += $token_service->generate('date', $expiration_tokens, array('date' => $object->expiration), $options, $bubbleable_metadata);
     }
   }
 

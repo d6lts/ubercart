@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 
 /**
@@ -135,7 +136,7 @@ function uc_order_token_info() {
 /**
  * Implements hook_tokens().
  */
-function uc_order_tokens($type, $tokens, $data = [], $options = []) {
+function uc_order_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
   $sanitize = !empty($options['sanitize']);
@@ -317,23 +318,23 @@ function uc_order_tokens($type, $tokens, $data = [], $options = []) {
 
     // Handles chaining for tokens that have 'type' defined in hook_token_info()
     if ($link_tokens = $token_service->findWithPrefix($tokens, 'url')) {
-      $replacements += $token_service->generate('url', $link_tokens, ['path' => $path], $options);
+      $replacements += $token_service->generate('url', $link_tokens, ['path' => $path], $options, $bubbleable_metadata);
     }
 
     if ($link_tokens = $token_service->findWithPrefix($tokens, 'admin-url')) {
-      $replacements += $token_service->generate('url', $link_tokens, ['path' => $admin_path], $options);
+      $replacements += $token_service->generate('url', $link_tokens, ['path' => $admin_path], $options, $bubbleable_metadata);
     }
 
     if ($customer_tokens = $token_service->findWithPrefix($tokens, 'customer')) {
-      $replacements += $token_service->generate('user', $customer_tokens, ['user' => $order->getUser()], $options);
+      $replacements += $token_service->generate('user', $customer_tokens, ['user' => $order->getUser()], $options, $bubbleable_metadata);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $created_tokens, ['date' => $order->created->value], $options);
+      $replacements += $token_service->generate('date', $created_tokens, ['date' => $order->created->value], $options, $bubbleable_metadata);
     }
 
     if ($changed_tokens = $token_service->findWithPrefix($tokens, 'modified')) {
-      $replacements += $token_service->generate('date', $changed_tokens, ['date' => $order->modified->value], $options);
+      $replacements += $token_service->generate('date', $changed_tokens, ['date' => $order->modified->value], $options, $bubbleable_metadata);
     }
   }
 

@@ -13,6 +13,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
@@ -638,12 +639,16 @@ function template_preprocess_uc_order_invoice(&$variables) {
 
   $token_service = \Drupal::token();
   $token_info = $token_service->getInfo();
+  $bubbleable_metadata = new BubbleableMetadata();
 
   $replacements = array();
   foreach (array('site', 'store', 'uc_order') as $type) {
     $tokens = array_keys($token_info['tokens'][$type]);
-    $replacements[$type] = $token_service->generate($type, array_combine($tokens, $tokens), $types);
+    $replacements[$type] = $token_service->generate($type, array_combine($tokens, $tokens), $types, [], $bubbleable_metadata);
   }
+
+  // @todo: Where do we apply the metadata to?
+  //$bubbleable_metadata->applyTo($build);
 
   foreach ($replacements as $type => $tokens) {
     foreach ($tokens as $token => $value) {
