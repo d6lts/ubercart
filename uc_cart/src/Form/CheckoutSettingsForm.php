@@ -213,11 +213,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       }
     }
 
-    $form['checkout']['uc_cart_default_same_address'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Use the same address for billing and delivery by default.'),
-      '#default_value' => $cart_config->get('default_same_address'),
-    );
     $form['checkout']['uc_cart_delivery_not_shippable'] = array(
       '#type' => 'checkbox',
       '#title' => t('Hide delivery information when carts have no shippable items.'),
@@ -294,7 +289,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('new_customer_email', $form_state->getValue('uc_new_customer_email'))
       ->set('new_customer_login', $form_state->getValue('uc_new_customer_login'))
       ->set('new_customer_status_active', $form_state->getValue('uc_new_customer_status_active'))
-      ->set('default_same_address', $form_state->getValue('uc_cart_default_same_address'))
       ->set('delivery_not_shippable', $form_state->getValue('uc_cart_delivery_not_shippable'))
       ->set('panes', $form_state->getValue('panes'))
       ->save();

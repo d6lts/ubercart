@@ -44,7 +44,6 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
    */
   public function view(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $user = \Drupal::currentUser();
-    $cart_config = \Drupal::config('uc_cart.settings');
     $pane = $this->pluginDefinition['id'];
     $source = $this->sourcePaneId();
 
@@ -54,7 +53,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       $contents['copy_address'] = array(
         '#type' => 'checkbox',
         '#title' => $this->getCopyAddressText(),
-        '#default_value' => $cart_config->get('default_same_address'),
+        '#default_value' => $this->configuration['default_same_address'],
         '#ajax' => array(
           'callback' => array($this, 'ajaxRender'),
           'wrapper' => $pane . '-address-pane',
@@ -96,7 +95,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       $contents['address']['#hidden'] = !$form_state->isValueEmpty(['panes', $pane, 'copy_address']);
     }
     elseif (isset($contents['copy_address'])) {
-      $contents['address']['#hidden'] = $cart_config->get('default_same_address');
+      $contents['address']['#hidden'] = $this->configuration['default_same_address'];
     }
 
     if ($element = $form_state->getTriggeringElement()) {
@@ -174,6 +173,29 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       self::$sourcePaneId = $this->pluginDefinition['id'];
     }
     return self::$sourcePaneId;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm() {
+    if ($this->sourcePaneId() != $this->pluginDefinition['id']) {
+      $form['default_same_address'] = array(
+        '#type' => 'checkbox',
+        '#title' => $this->t('Use the same address for billing and delivery by default.'),
+        '#default_value' => $this->configuration['default_same_address'],
+      );
+      return $form;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return [
+      'default_same_address' => FALSE,
+    ];
   }
 
   /**

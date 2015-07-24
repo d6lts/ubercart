@@ -29,7 +29,6 @@ checkout_email_admin: true
 mail_existing: true
 email_validation: false
 
-default_same_address: false
 checkout_anonymous: true
 checkout_enabled: true
 
