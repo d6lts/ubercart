@@ -141,6 +141,9 @@ class OrderTest extends UbercartTestBase {
     $this->assertResponse(200, 'Customer can view their own order.');
 
     $this->drupalGet('admin/store/orders/' . $order->id());
+    $this->assertResponse(403, 'Customer may not see the admin view of their order.');
+
+    $this->drupalGet('admin/store/orders/' . $order->id() . '/edit');
     $this->assertResponse(403, 'Customer may not edit orders.');
 
     $this->drupalLogin($this->adminUser);
