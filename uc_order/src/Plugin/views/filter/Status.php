@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order\Plugin\views\filter;
 
+use Drupal\uc_order\Entity\OrderStatus;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
@@ -24,7 +25,7 @@ class Status extends InOperator {
   public function getValueOptions() {
     if (!isset($this->valueOptions)) {
       $this->valueTitle = t('Order status');
-      $this->valueOptions = array_merge(array('_active' => t('Active')), uc_order_status_options_list());
+      $this->valueOptions = array_merge(['_active' => t('Active')], OrderStatus::getOptionsList());
     }
   }
 

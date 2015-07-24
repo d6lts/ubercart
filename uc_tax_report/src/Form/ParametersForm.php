@@ -10,7 +10,7 @@ namespace Drupal\uc_tax_report\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-
+use Drupal\uc_order\Entity\OrderStatus;
 
 /**
  * Form to customize parameters on the tax report.
@@ -62,7 +62,7 @@ class ParametersForm extends FormBase {
       '#type' => 'select',
       '#title' => t('Order statuses'),
       '#description' => t('Only orders with selected statuses will be included in the report.') . '<br />' . t('Hold Ctrl + click to select multiple statuses.'),
-      '#options' => uc_order_status_options_list(),
+      '#options' => OrderStatus::getOptionsList(),
       '#default_value' => $stat,
       '#multiple' => TRUE,
       '#size' => 5,

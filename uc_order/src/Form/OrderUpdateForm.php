@@ -10,6 +10,7 @@ namespace Drupal\uc_order\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\Entity\Order;
+use Drupal\uc_order\Entity\OrderStatus;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -65,7 +66,7 @@ class OrderUpdateForm extends FormBase {
       '#type' => 'select',
       '#title' => t('Order status'),
       '#default_value' => $order->getStatusId(),
-      '#options' => uc_order_status_options_list(),
+      '#options' => OrderStatus::getOptionsList(),
     );
     $form['controls']['notify'] = array(
       '#type' => 'checkbox',

@@ -43,6 +43,7 @@ Ubercart 4.x
     * uc_order_update_status() => $order->setStatusId()->save()
     * uc_order_status_list() => OrderStatus::loadMultiple()
     * uc_order_status_data() removed
+    * uc_order_status_options_list() converted to OrderStatus::getOptionsList()
     * uc_order_state_list() converted to uc_order_state_options_list()
     * Order state scopes removed, replaced with order status weights.
 * Payment methods are plugins

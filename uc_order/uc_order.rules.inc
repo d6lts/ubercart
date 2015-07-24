@@ -276,7 +276,7 @@ function uc_order_rules_action_info() {
       'order_status' => array(
         'type' => 'text',
         'label' => t('Status'),
-        'options list' => 'uc_order_status_options_list',
+        'options list' => 'Drupal\uc_order\Entity\OrderStatus::getOptionsList',
       ),
     ),
   );

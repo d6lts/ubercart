@@ -9,6 +9,7 @@ namespace Drupal\uc_report\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Entity\OrderStatus;
 
 class CustomSalesReport extends FormBase {
 
@@ -62,7 +63,7 @@ class CustomSalesReport extends FormBase {
       '#type' => 'checkboxes',
       '#title' => t('Order statuses'),
       '#description' => t('Only orders with selected statuses will be included in the report.'),
-      '#options' => uc_order_status_options_list(),
+      '#options' => OrderStatus::getOptionsList(),
       '#default_value' => $statuses,
     );
 

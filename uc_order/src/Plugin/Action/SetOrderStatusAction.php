@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Plugin\Action;
 
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Entity\OrderStatus;
 
 /**
  * Sets the status of an order.
@@ -49,7 +50,7 @@ class SetOrderStatusAction extends ConfigurableActionBase {
       '#type' => 'select',
       '#title' => t('Order status'),
       '#default_value' => $this->configuration['status'],
-      '#options' => uc_order_status_options_list(),
+      '#options' => OrderStatus::getOptionsList(),
     );
     $form['notify'] = array(
       '#type' => 'checkbox',

@@ -132,4 +132,18 @@ class OrderStatus extends ConfigEntityBase implements OrderStatusInterface {
     uasort($entities, 'static::sort');
   }
 
+  /**
+   * Returns an option list of order statuses.
+   *
+   * @return string[]
+   *   An array of status names, keyed by status ID.
+   */
+  public static function getOptionsList() {
+    $options = [];
+    foreach (static::loadMultiple() as $status) {
+      $options[$status->id()] = $status->getName();
+    }
+    return $options;
+  }
+
 }
