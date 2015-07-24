@@ -142,14 +142,14 @@ function uc_order_pane_customer($op, $order, &$form = NULL, FormStateInterface $
           '#prefix' => t('Customer number') . ': ',
           '#suffix' => '<br />',
           '#title' => $order->getUserId(),
-          '#href' => 'user/' . $order->getUserId(),
+          '#url' => Url::fromRoute('entity.user.canonical', ['user' => $order->getUserId()]),
         );
       }
       $build['primary_email'] = array(
         '#type' => 'link',
         '#prefix' => t('E-mail address') . ': ',
         '#title' => $order->getEmail(),
-        '#href' => 'mailto:' . $order->getEmail(),
+        '#url' => Url::fromUri('mailto:' . $order->getEmail()),
       );
       return $build;
 

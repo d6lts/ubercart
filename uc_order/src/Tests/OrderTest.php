@@ -31,12 +31,12 @@ class OrderTest extends UbercartTestBase {
 
   public function testOrderAPI() {
     // Test defaults.
-    $order = \Drupal\uc_order\Entity\Order::create();
+    $order = Order::create();
     $order->save();
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
-    $order = \Drupal\uc_order\Entity\Order::create(array(
+    $order = Order::create(array(
       'uid' => $this->customer->id(),
       'order_status' => uc_order_state_default('completed'),
     ));
@@ -51,12 +51,12 @@ class OrderTest extends UbercartTestBase {
   }
 
   public function testOrderEntity() {
-    $order = \Drupal\uc_order\Entity\Order::create();
+    $order = Order::create();
     $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
     $name = $this->randomMachineName();
-    $order = \Drupal\uc_order\Entity\Order::create(array(
+    $order = Order::create(array(
       'uid' => $this->customer->id(),
       'order_status' => 'completed',
       'billing_first_name' => $name,
@@ -74,7 +74,7 @@ class OrderTest extends UbercartTestBase {
     $storage->delete($entities);
 
     $storage->resetCache(array($order->id()));
-    $deleted_order = \Drupal\uc_order\Entity\Order::load($order->id());
+    $deleted_order = Order::load($order->id());
     $this->assertFalse($deleted_order, 'Order was successfully deleted');
   }
 
@@ -82,14 +82,14 @@ class OrderTest extends UbercartTestBase {
     \Drupal::service('module_installer')->install(array('entity_crud_hook_test'));
 
     $GLOBALS['entity_crud_hook_test'] = [];
-    $order = \Drupal\uc_order\Entity\Order::create();
+    $order = Order::create();
     $order->save();
 
     $this->assertHookMessage('entity_crud_hook_test_entity_presave called for type uc_order');
     $this->assertHookMessage('entity_crud_hook_test_entity_insert called for type uc_order');
 
     $GLOBALS['entity_crud_hook_test'] = [];
-    $order = \Drupal\uc_order\Entity\Order::load($order->id());
+    $order = Order::load($order->id());
 
     $this->assertHookMessage('entity_crud_hook_test_entity_load called for type uc_order');
 
@@ -130,7 +130,31 @@ class OrderTest extends UbercartTestBase {
     $this->assertText('Pending', 'New order is "Pending".');
   }
 
-  public function testOrderEditing() {
+  public function testOrderView() {
+    $order = $this->ucCreateOrder($this->customer);
+
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/store/orders/' . $order->id());
+
+    $billing_address = $order->getAddress('billing');
+    $this->assertText(Unicode::strtoupper($billing_address->first_name), 'Billing first name found.');
+    $this->assertText(Unicode::strtoupper($billing_address->last_name), 'Billing last name found.');
+    $this->assertText(Unicode::strtoupper($billing_address->street1), 'Billing street 1 found.');
+    $this->assertText(Unicode::strtoupper($billing_address->street2), 'Billing street 2 found.');
+    $this->assertText(Unicode::strtoupper($billing_address->city), 'Billing city found.');
+
+    $delivery_address = $order->getAddress('delivery');
+    $this->assertText(Unicode::strtoupper($delivery_address->first_name), 'Delivery first name found.');
+    $this->assertText(Unicode::strtoupper($delivery_address->last_name), 'Delivery last name found.');
+    $this->assertText(Unicode::strtoupper($delivery_address->street1), 'Delivery street 1 found.');
+    $this->assertText(Unicode::strtoupper($delivery_address->street2), 'Delivery street 2 found.');
+    $this->assertText(Unicode::strtoupper($delivery_address->city), 'Delivery city found.');
+
+    $this->assertLink($order->getUserId(), 0, 'Link to customer account page found.');
+    $this->assertLink($order->getEmail(), 0, 'Link to customer email address found.');
+  }
+
+  public function testOrderCustomerView() {
     $order = $this->ucCreateOrder($this->customer);
 
     $this->drupalLogin($this->customer);
@@ -139,18 +163,20 @@ class OrderTest extends UbercartTestBase {
 
     $this->drupalGet('user/' . $this->customer->id() . '/orders/' . $order->id());
     $this->assertResponse(200, 'Customer can view their own order.');
+    $address = $order->getAddress('billing');
+    $this->assertText(Unicode::strtoupper($address->first_name . ' ' . $address->last_name), 'Found customer name.');
 
     $this->drupalGet('admin/store/orders/' . $order->id());
     $this->assertResponse(403, 'Customer may not see the admin view of their order.');
 
     $this->drupalGet('admin/store/orders/' . $order->id() . '/edit');
     $this->assertResponse(403, 'Customer may not edit orders.');
+  }
+
+  public function testOrderEditing() {
+    $order = $this->ucCreateOrder($this->customer);
 
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('user/' . $this->customer->id() . '/orders/' . $order->id());
-    $address = $order->getAddress('billing');
-    $this->assertText(Unicode::strtoupper($address->first_name . ' ' . $address->last_name), 'Found customer name.');
-
     $edit = array(
       'bill_to[first_name]' => $this->randomMachineName(8),
       'bill_to[last_name]' => $this->randomMachineName(15),
@@ -230,7 +256,7 @@ class OrderTest extends UbercartTestBase {
   }
 
   protected function ucCreateOrder($customer) {
-    $order = \Drupal\uc_order\Entity\Order::create(array(
+    $order = Order::create(array(
       'uid' => $customer->id(),
     ));
     $order->save();
