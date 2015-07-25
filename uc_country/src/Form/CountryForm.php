@@ -28,7 +28,7 @@ class CountryForm extends EntityForm {
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
-      '#default_value' => $country->name,
+      '#default_value' => $country->getName(),
     );
 
     $form['address_format'] = array(
