@@ -40,24 +40,24 @@ class CreditCardTerminalForm extends FormBase {
     $balance = uc_payment_balance($this->order);
 
     $form['order_total'] = array(
-      '#markup' => '<div><strong>' . t('Order total: @total', array('@total' => uc_currency_format($this->order->getTotal()))) . '</strong></div>',
+      '#markup' => '<div><strong>' . $this->t('Order total: @total', array('@total' => uc_currency_format($this->order->getTotal()))) . '</strong></div>',
     );
     $form['balance'] = array(
-      '#markup' => '<div><strong>' . t('Balance: @balance', array('@balance' => uc_currency_format($balance))) . '</strong></div>',
+      '#markup' => '<div><strong>' . $this->t('Balance: @balance', array('@balance' => uc_currency_format($balance))) . '</strong></div>',
     );
 
     // Let the administrator set the amount to charge.
     $form['amount'] = array(
       '#type' => 'uc_price',
-      '#title' => t('Charge Amount'),
+      '#title' => $this->t('Charge Amount'),
       '#default_value' => $balance > 0 ? uc_currency_format($balance, FALSE, FALSE, '.') : 0,
     );
 
     // Build a credit card form.
     $form['specify_card'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Credit card details'),
-      '#description' => t('Use the available buttons in this fieldset to process with the specified card details.'),
+      '#title' => $this->t('Credit card details'),
+      '#description' => $this->t('Use the available buttons in this fieldset to process with the specified card details.'),
     );
     $form['specify_card']['cc_data'] = array(
       '#tree' => TRUE,
@@ -73,7 +73,7 @@ class CreditCardTerminalForm extends FormBase {
     if (in_array(UC_CREDIT_AUTH_CAPTURE, $types)) {
       $form['specify_card']['actions']['charge_card'] = array(
         '#type' => 'submit',
-        '#value' => t('Charge amount'),
+        '#value' => $this->t('Charge amount'),
       );
     }
 
@@ -81,7 +81,7 @@ class CreditCardTerminalForm extends FormBase {
     if (in_array(UC_CREDIT_AUTH_ONLY, $types)) {
       $form['specify_card']['actions']['authorize_card'] = array(
         '#type' => 'submit',
-        '#value' => t('Authorize amount only'),
+        '#value' => $this->t('Authorize amount only'),
       );
     }
 
@@ -89,7 +89,7 @@ class CreditCardTerminalForm extends FormBase {
     if (in_array(UC_CREDIT_REFERENCE_SET, $types)) {
       $form['specify_card']['actions']['reference_set'] = array(
         '#type' => 'submit',
-        '#value' => t('Set a reference only'),
+        '#value' => $this->t('Set a reference only'),
       );
     }
 
@@ -97,7 +97,7 @@ class CreditCardTerminalForm extends FormBase {
     if (in_array(UC_CREDIT_CREDIT, $types)) {
       $form['specify_card']['actions']['credit_card'] = array(
         '#type' => 'submit',
-        '#value' => t('Credit amount to this card'),
+        '#value' => $this->t('Credit amount to this card'),
       );
     }
 
@@ -107,7 +107,7 @@ class CreditCardTerminalForm extends FormBase {
     if (isset($this->order->data->cc_txns['authorizations'])) {
       foreach ($this->order->data->cc_txns['authorizations'] as $auth_id => $data) {
         if (empty($data['captured'])) {
-          $options[$auth_id] = t('@auth_id - @date - @amount authorized', array('@auth_id' => strtoupper($auth_id), '@date' => \Drupal::service('date.formatter')->format($data['authorized'], 'short'), '@amount' => uc_currency_format($data['amount'])));
+          $options[$auth_id] = $this->t('@auth_id - @date - @amount authorized', array('@auth_id' => strtoupper($auth_id), '@date' => \Drupal::service('date.formatter')->format($data['authorized'], 'short'), '@amount' => uc_currency_format($data['amount'])));
         }
       }
     }
@@ -117,13 +117,13 @@ class CreditCardTerminalForm extends FormBase {
       // Display a fieldset with the authorizations and available action buttons.
       $form['authorizations'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Prior authorizations'),
-        '#description' => t('Use the available buttons in this fieldset to select and act on a prior authorization. The charge amount specified above will be captured against the authorization listed below.  Only one capture is possible per authorization, and a capture for more than the amount of the authorization may result in additional fees to you.'),
+        '#title' => $this->t('Prior authorizations'),
+        '#description' => $this->t('Use the available buttons in this fieldset to select and act on a prior authorization. The charge amount specified above will be captured against the authorization listed below.  Only one capture is possible per authorization, and a capture for more than the amount of the authorization may result in additional fees to you.'),
       );
 
       $form['authorizations']['select_auth'] = array(
         '#type' => 'radios',
-        '#title' => t('Select authorization'),
+        '#title' => $this->t('Select authorization'),
         '#options' => $options,
       );
 
@@ -133,7 +133,7 @@ class CreditCardTerminalForm extends FormBase {
       if (in_array(UC_CREDIT_PRIOR_AUTH_CAPTURE, $types)) {
         $form['authorizations']['actions']['auth_capture'] = array(
           '#type' => 'submit',
-          '#value' => t('Capture amount to this authorization'),
+          '#value' => $this->t('Capture amount to this authorization'),
         );
       }
 
@@ -141,7 +141,7 @@ class CreditCardTerminalForm extends FormBase {
       if (in_array(UC_CREDIT_VOID, $types)) {
         $form['authorizations']['actions']['auth_void'] = array(
           '#type' => 'submit',
-          '#value' => t('Void authorization'),
+          '#value' => $this->t('Void authorization'),
         );
       }
 
@@ -159,7 +159,7 @@ class CreditCardTerminalForm extends FormBase {
 
     if (isset($this->order->data->cc_txns['references'])) {
       foreach ($this->order->data->cc_txns['references'] as $ref_id => $data) {
-        $options[$ref_id] = t('@ref_id - @date - (Last 4) @card', array('@ref_id' => strtoupper($ref_id), '@date' => \Drupal::service('date.formatter')->format($data['created'], 'short'), '@card' => $data['card']));
+        $options[$ref_id] = $this->t('@ref_id - @date - (Last 4) @card', array('@ref_id' => strtoupper($ref_id), '@date' => \Drupal::service('date.formatter')->format($data['created'], 'short'), '@card' => $data['card']));
       }
     }
 
@@ -168,13 +168,13 @@ class CreditCardTerminalForm extends FormBase {
       // Display a fieldset with the authorizations and available action buttons.
       $form['references'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Customer references'),
-        '#description' => t('Use the available buttons in this fieldset to select and act on a customer reference.'),
+        '#title' => $this->t('Customer references'),
+        '#description' => $this->t('Use the available buttons in this fieldset to select and act on a customer reference.'),
       );
 
       $form['references']['select_ref'] = array(
         '#type' => 'radios',
-        '#title' => t('Select references'),
+        '#title' => $this->t('Select references'),
         '#options' => $options,
       );
 
@@ -184,7 +184,7 @@ class CreditCardTerminalForm extends FormBase {
       if (in_array(UC_CREDIT_REFERENCE_TXN, $types)) {
         $form['references']['actions']['ref_capture'] = array(
           '#type' => 'submit',
-          '#value' => t('Charge amount to this reference'),
+          '#value' => $this->t('Charge amount to this reference'),
         );
       }
 
@@ -192,7 +192,7 @@ class CreditCardTerminalForm extends FormBase {
       if (in_array(UC_CREDIT_REFERENCE_REMOVE, $types)) {
         $form['references']['actions']['ref_remove'] = array(
           '#type' => 'submit',
-          '#value' => t('Remove reference'),
+          '#value' => $this->t('Remove reference'),
         );
       }
 
@@ -200,7 +200,7 @@ class CreditCardTerminalForm extends FormBase {
       if (in_array(UC_CREDIT_REFERENCE_CREDIT, $types)) {
         $form['references']['actions']['ref_credit'] = array(
           '#type' => 'submit',
-          '#value' => t('Credit amount to this reference'),
+          '#value' => $this->t('Credit amount to this reference'),
         );
       }
 
@@ -222,7 +222,7 @@ class CreditCardTerminalForm extends FormBase {
     // Get the data from the form and replace masked data from the order.
     $cc_data = $form_state->getValue('cc_data');
 
-    if (strpos($cc_data['cc_number'], t('(Last 4) ')) === 0) {
+    if (strpos($cc_data['cc_number'], $this->t('(Last 4) ')) === 0) {
       $cc_data['cc_number'] = $this->order->payment_details['cc_number'];
     }
 
@@ -239,43 +239,43 @@ class CreditCardTerminalForm extends FormBase {
     $data = array();
 
     switch ($form_state->getValue('op')) {
-      case t('Charge amount'):
+      case $this->t('Charge amount'):
         $data['txn_type'] = UC_CREDIT_AUTH_CAPTURE;
         break;
 
-      case t('Authorize amount only'):
+      case $this->t('Authorize amount only'):
         $data['txn_type'] = UC_CREDIT_AUTH_ONLY;
         break;
 
-      case t('Set a reference only'):
+      case $this->t('Set a reference only'):
         $data['txn_type'] = UC_CREDIT_REFERENCE_SET;
         break;
 
-      case t('Credit amount to this card'):
+      case $this->t('Credit amount to this card'):
         $data['txn_type'] = UC_CREDIT_CREDIT;
         break;
 
-      case t('Capture amount to this authorization'):
+      case $this->t('Capture amount to this authorization'):
         $data['txn_type'] = UC_CREDIT_PRIOR_AUTH_CAPTURE;
         $data['auth_id'] = $form_state->getValue('select_auth');
         break;
 
-      case t('Void authorization'):
+      case $this->t('Void authorization'):
         $data['txn_type'] = UC_CREDIT_VOID;
         $data['auth_id'] = $form_state->getValue('select_auth');
         break;
 
-      case t('Charge amount to this reference'):
+      case $this->t('Charge amount to this reference'):
         $data['txn_type'] = UC_CREDIT_REFERENCE_TXN;
         $data['ref_id'] = $form_state->getValue('select_ref');
         break;
 
-      case t('Remove reference'):
+      case $this->t('Remove reference'):
         $data['txn_type'] = UC_CREDIT_REFERENCE_REMOVE;
         $data['ref_id'] = $form_state->getValue('select_ref');
         break;
 
-      case t('Credit amount to this reference'):
+      case $this->t('Credit amount to this reference'):
         $data['txn_type'] = UC_CREDIT_REFERENCE_CREDIT;
         $data['ref_id'] = $form_state->getValue('select_ref');
     }
@@ -284,10 +284,10 @@ class CreditCardTerminalForm extends FormBase {
     _uc_credit_save_cc_data_to_order(uc_credit_cache('load'), $this->order->id());
 
     if ($result) {
-      drupal_set_message(t('The credit card was processed successfully. See the admin comments for more details.'));
+      drupal_set_message($this->t('The credit card was processed successfully. See the admin comments for more details.'));
     }
     else {
-      drupal_set_message(t('There was an error processing the credit card.  See the admin comments for details.'), 'error');
+      drupal_set_message($this->t('There was an error processing the credit card.  See the admin comments for details.'), 'error');
     }
 
     $form_state->setRedirect('uc_order.admin_view', ['uc_order' => $this->order->id()]);

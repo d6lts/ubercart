@@ -21,7 +21,7 @@ class StoreController extends SystemController {
   public function overview($link_id = 'uc_store.admin.store') {
     $build['blocks'] = parent::overview($link_id);
 
-    if ($results = \Drupal::moduleHandler()->invokeAll('uc_store_status')) {
+    if ($results = $this->moduleHandler()->invokeAll('uc_store_status')) {
       foreach ($results as $message) {
         switch ($message['status']) {
           case 'warning': $icon = 'alert.gif'; break;
@@ -41,7 +41,7 @@ class StoreController extends SystemController {
 
       $build['status'] = array(
         '#theme' => 'table',
-        '#caption' => SafeMarkup::format('<h2>' . t('Store status') . '</h2>'),
+        '#caption' => SafeMarkup::format('<h2>' . $this->t('Store status') . '</h2>'),
         '#rows' => $rows,
         '#attributes' => array('class' => array('system-status-report')),
       );

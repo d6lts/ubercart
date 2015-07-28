@@ -61,14 +61,14 @@ abstract class ObjectAttributesAddFormBase extends FormBase {
 
     $form['add_attributes'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Attributes'),
-      '#options' => $unused_attributes ?: array(t('No attributes left to add.')),
+      '#title' => $this->t('Attributes'),
+      '#options' => $unused_attributes ?: array($this->t('No attributes left to add.')),
       '#disabled' => empty($unused_attributes),
     );
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['add'] = array(
       '#type' => 'submit',
-      '#value' => t('Add attributes'),
+      '#value' => $this->t('Add attributes'),
     );
 
     return $form;

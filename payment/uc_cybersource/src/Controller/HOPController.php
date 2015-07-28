@@ -23,7 +23,7 @@ class HOPController extends ControllerBase {
     if (!uc_cybersource_hop_include()) {
       \Drupal::logger('uc_cybersource_hop')->error('Unable to receive HOP POST due to missing or unreadable HOP.php file.');
       drupal_add_http_header('Status', '503 Service unavailable');
-      print t('The site was unable to receive a HOP post because of a missing or unreadble HOP.php');
+      print $this->t('The site was unable to receive a HOP post because of a missing or unreadble HOP.php');
       exit();
     }
     $verify = VerifyTransactionSignature($_POST);
@@ -76,20 +76,20 @@ class HOPController extends ControllerBase {
           ))
           ->execute();
 
-        $comment = t('CyberSource request ID: @txn_id', array('@txn_id' => $request_id));
+        $comment = $this->t('CyberSource request ID: @txn_id', array('@txn_id' => $request_id));
         uc_payment_enter($order_id, 'cybersource_hop', $payment_amount, $order->getUserId(), NULL, $comment);
         uc_cart_complete_sale($order);
-        uc_order_comment_save($order_id, 0, t('Payment of @amount @currency submitted through CyberSource with request ID @rid.', array('@amount' => $payment_amount, '@currency' => $payment_currency, '@rid' => $request_id)), 'order', 'payment_received');
+        uc_order_comment_save($order_id, 0, $this->t('Payment of @amount @currency submitted through CyberSource with request ID @rid.', array('@amount' => $payment_amount, '@currency' => $payment_currency, '@rid' => $request_id)), 'order', 'payment_received');
         break;
       case 'ERROR':
-        uc_order_comment_save($order_id, 0, t("Payment error:@reason with request ID @rid", array('@reason' => $reason, '@rid' => '@request_id')), 'admin');
+        uc_order_comment_save($order_id, 0, $this->t("Payment error:@reason with request ID @rid", array('@reason' => $reason, '@rid' => '@request_id')), 'admin');
         break;
       case 'REJECT':
-        uc_order_comment_save($order_id, 0, t("Payment is rejected:@reason with request ID @rid", array('@reason' => $reason, '@rid' => '@request_id')), 'admin');
+        uc_order_comment_save($order_id, 0, $this->t("Payment is rejected:@reason with request ID @rid", array('@reason' => $reason, '@rid' => '@request_id')), 'admin');
         break;
       case 'REVIEW':
         $order->setStatusId('review')->save();
-        uc_order_comment_save($order_id, 0, t('Payment is in review & not complete: @reason. Request ID @rid', array('@reason' => $reason, '@rid' => '@request_id')), 'admin');
+        uc_order_comment_save($order_id, 0, $this->t('Payment is in review & not complete: @reason. Request ID @rid', array('@reason' => $reason, '@rid' => '@request_id')), 'admin');
         break;
     }
   }
@@ -104,7 +104,7 @@ class HOPController extends ControllerBase {
     // legitimate checkout, the CyberSource POST will still register, so the
     // gets processed correctly. We'll leave an ambiguous message just in case.
     if (intval($_SESSION['cart_order']) != $uc_order->id()) {
-      drupal_set_message(t('Thank you for your order! We will be notified by CyberSource that we have received your payment.'));
+      drupal_set_message($this->t('Thank you for your order! We will be notified by CyberSource that we have received your payment.'));
       drupal_goto('cart');
     }
     // This lets us know it's a legitimate access of the complete page.

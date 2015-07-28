@@ -39,9 +39,9 @@ class ShowForm extends FormBase {
     $form['#tree'] = TRUE;
 
     $header = array(
-      'filename' => array('data' => t('File'), 'field' => 'f.filename', 'sort' => 'asc'),
-      'title' => array('data' => t('Product'), 'field' => 'n.title'),
-      'model' => array('data' => t('SKU'), 'field' => 'fp.model')
+      'filename' => array('data' => $this->t('File'), 'field' => 'f.filename', 'sort' => 'asc'),
+      'title' => array('data' => $this->t('Product'), 'field' => 'n.title'),
+      'model' => array('data' => $this->t('SKU'), 'field' => 'fp.model')
     );
 
     // Create pager.
@@ -73,7 +73,7 @@ class ShowForm extends FormBase {
           'data' => SafeMarkup::checkPlain($file->filename),
           'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
         ),
-        'title' => \Drupal::l($file->title, new Url('entity.node.canonical', ['node' => $file->nid])),
+        'title' => $this->l($file->title, new Url('entity.node.canonical', ['node' => $file->nid])),
         'model' => SafeMarkup::checkPlain($file->model),
       );
     }
@@ -83,18 +83,18 @@ class ShowForm extends FormBase {
       '#type' => 'tableselect',
       '#header' => $header,
       '#options' => $options,
-      '#empty' => t('No file downloads available.'),
+      '#empty' => $this->t('No file downloads available.'),
     );
 
     $form['uc_file_action'] = array(
       '#type' => 'fieldset',
-      '#title' => t('File options'),
+      '#title' => $this->t('File options'),
     );
 
     // Set our default actions.
     $file_actions = array(
-      'uc_file_upload' => t('Upload file'),
-      'uc_file_delete' => t('Delete file(s)'),
+      'uc_file_upload' => $this->t('Upload file'),
+      'uc_file_delete' => $this->t('Delete file(s)'),
     );
 
     // Check if any hook_uc_file_action('info', $args) are implemented
@@ -113,7 +113,7 @@ class ShowForm extends FormBase {
 
     $form['uc_file_action']['action'] = array(
       '#type' => 'select',
-      '#title' => t('Action'),
+      '#title' => $this->t('Action'),
       '#options' => $file_actions,
       '#prefix' => '<div class="duration">',
       '#suffix' => '</div>',
@@ -122,7 +122,7 @@ class ShowForm extends FormBase {
     $form['uc_file_actions']['actions'] = array('#type' => 'actions');
     $form['uc_file_action']['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Perform action'),
+      '#value' => $this->t('Perform action'),
       '#prefix' => '<div class="duration">',
       '#suffix' => '</div>',
     );
@@ -145,7 +145,7 @@ class ShowForm extends FormBase {
           }
         }
         if (count($file_ids) == 0) {
-          $form_state->setErrorByName('', t('You must select at least one file to delete.'));
+          $form_state->setErrorByName('', $this->t('You must select at least one file to delete.'));
         }
         break;
     }
@@ -174,7 +174,7 @@ class ShowForm extends FormBase {
     $form = $variables['form'];
 
     // Render everything.
-    $output = '<p>' . t('File downloads can be attached to any Ubercart product as a product feature. For security reasons the <a href="!download_url">file downloads directory</a> is separated from the Drupal <a href="!file_url">file system</a>. Below is the list of files (and their associated Ubercart products, if any) that can be used for file downloads.', array('!download_url' => \Drupal::url('uc_product.admin', [], ['query' => ['destination' => 'admin/store/products/files']]), '!file_url' => \Drupal::url('system.file_system_settings'))) . '</p>';
+    $output = '<p>' . $this->t('File downloads can be attached to any Ubercart product as a product feature. For security reasons the <a href="!download_url">file downloads directory</a> is separated from the Drupal <a href="!file_url">file system</a>. Below is the list of files (and their associated Ubercart products, if any) that can be used for file downloads.', array('!download_url' => \Drupal::url('uc_product.admin', [], ['query' => ['destination' => 'admin/store/products/files']]), '!file_url' => \Drupal::url('system.file_system_settings'))) . '</p>';
     $output .= drupal_render($form['uc_file_action']);
     $output .= drupal_render($form['file_select']);
     $output .= theme('pager');

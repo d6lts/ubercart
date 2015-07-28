@@ -47,7 +47,7 @@ class AjaxAdminForm extends FormBase {
         throw new NotFoundHttpException();
     }
     $form['#uc_ajax_target'] = $target_form;
-    $config = \Drupal::config('uc_cart.settings')->get('ajax.' . $target_form);
+    $config = $this->config('uc_cart.settings')->get('ajax.' . $target_form);
     $form['#uc_ajax_config'] = $config ?: _uc_ajax_defaults($target_form);
 
     $form['table'] = uc_ajax_admin_table($triggers, $wrappers, $form['#uc_ajax_config']);
@@ -80,7 +80,7 @@ class AjaxAdminForm extends FormBase {
         $config[$key] = $entry['panes'];
       }
     }
-    \Drupal::configFactory()->getEditable('uc_cart.settings')
+    $this->configFactory()->getEditable('uc_cart.settings')
       ->set('ajax.' . $form['#uc_ajax_target'], $config)
       ->save();
     drupal_set_message(t('Your changes have been saved.'));

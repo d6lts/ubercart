@@ -49,7 +49,7 @@ class CatalogSettingsForm extends ConfigFormBase {
 
     $form['uc_catalog_display'] = array(
       '#type' => 'select',
-      '#title' => t('Catalog display'),
+      '#title' => $this->t('Catalog display'),
       '#default_value' => $config->get('display'),
       '#options' => $displays,
     );
@@ -59,7 +59,7 @@ class CatalogSettingsForm extends ConfigFormBase {
       $catalog = \Drupal\taxonomy\Entity\Vocabulary::load($vid);
 
       $form['catalog_vid'] = array(
-        '#markup' => '<p>' . t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => \Drupal::url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()]), '%name' => $catalog->label())) . '</p>',
+        '#markup' => '<p>' . $this->t('The taxonomy vocabulary <a href="!edit-url">%name</a> is set as the product catalog.', array('!edit-url' => $this->url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()]), '%name' => $catalog->label())) . '</p>',
       );
     }
 
@@ -71,14 +71,14 @@ class CatalogSettingsForm extends ConfigFormBase {
 
     $form['uc_catalog_vid'] = array(
       '#type' => 'select',
-      '#title' => t('Catalog vocabulary'),
+      '#title' => $this->t('Catalog vocabulary'),
       '#default_value' => $config->get('vocabulary'),
       '#options' => $vocabs,
     );
 
     $form['uc_catalog_breadcrumb'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display the catalog breadcrumb'),
+      '#title' => $this->t('Display the catalog breadcrumb'),
       '#default_value' => $config->get('breadcrumb'),
     );
     return parent::buildForm($form, $form_state);

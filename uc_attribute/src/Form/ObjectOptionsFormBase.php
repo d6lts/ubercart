@@ -55,12 +55,12 @@ abstract class ObjectOptionsFormBase extends FormBase {
         $form['attributes'][$aid]['options'] = array(
           '#type' => 'table',
           '#header' => array(
-            t('Options'),
-            t('Default'),
-            t('Cost'),
-            t('Price'),
-            t('Weight'),
-            t('List position'),
+            $this->t('Options'),
+            $this->t('Default'),
+            $this->t('Cost'),
+            $this->t('Price'),
+            $this->t('Weight'),
+            $this->t('List position'),
           ),
           '#caption' => '<h2>' . SafeMarkup::checkPlain($attribute->name) . '</h2>',
           '#empty' => $this->t('This attribute does not have any options.'),
@@ -184,7 +184,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
     }
 
     if ($error) {
-      drupal_set_message(t('All attributes with enabled options must specify an enabled option as default.'), 'error');
+      drupal_set_message($this->t('All attributes with enabled options must specify an enabled option as default.'), 'error');
     }
   }
 
@@ -226,7 +226,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
       }
     }
 
-    drupal_set_message(t('The changes have been saved.'));
+    drupal_set_message($this->t('The changes have been saved.'));
   }
 
   /**

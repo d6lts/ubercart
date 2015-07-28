@@ -44,8 +44,8 @@ class OptionEditForm extends OptionFormBase {
       ->key(array('aid' => $form_state->getValue('aid'), 'oid' => $form_state->getValue('oid')))
       ->fields($form_state->getValues())
       ->execute();
-    drupal_set_message(t('Updated option %option.', ['%option' => $form_state->getValue('name')]));
-    \Drupal::logger('uc_attribute')->notice('Updated option %option.', ['%option' => $form_state->getValue('name'), 'link' => 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/' . $form_state->getValue('oid')]);
+    drupal_set_message($this->t('Updated option %option.', ['%option' => $form_state->getValue('name')]));
+    $this->logger('uc_attribute')->notice('Updated option %option.', ['%option' => $form_state->getValue('name'), 'link' => 'admin/store/products/attributes/' . $form_state->getValue('aid') . '/options/' . $form_state->getValue('oid')]);
     $form_state->setRedirect('uc_attribute.options', ['aid' => $form_state->getValue('aid')]);
   }
 

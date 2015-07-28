@@ -45,7 +45,7 @@ class Cart extends ControllerBase implements CartInterface {
     // Force the order to load from the DB instead of the entity cache.
     // @todo Remove this once uc_payment_enter() can modify order objects?
     // @todo Should we be overwriting $order with this newly-loaded db_order?
-    $db_order = \Drupal::entityManager()->getStorage('uc_order')->loadUnchanged($order->id());
+    $db_order = $this->entityManager()->getStorage('uc_order')->loadUnchanged($order->id());
     $order->data = $db_order->data;
 
     // Ensure that user creation and triggers are only run once.
@@ -184,7 +184,7 @@ class Cart extends ControllerBase implements CartInterface {
         ->execute();
 
       if (!empty($result)) {
-        $storage = \Drupal::entityManager()->getStorage('uc_cart_item');
+        $storage = $this->entityManager()->getStorage('uc_cart_item');
         $storage->resetCache(array_keys($result));
         $items[$cid] = $storage->loadMultiple(array_keys($result));
       }
@@ -336,7 +336,7 @@ class Cart extends ControllerBase implements CartInterface {
       ->execute();
 
     if (!empty($result)) {
-      $storage = \Drupal::entityManager()->getStorage('uc_cart_item');
+      $storage = $this->entityManager()->getStorage('uc_cart_item');
       $entities = $storage->loadMultiple(array_keys($result));
       $storage->delete($entities);
     }

@@ -29,8 +29,8 @@ class OrderStatusAddForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['id'] = array(
       '#type' => 'textfield',
-      '#title' => t('Order status ID'),
-      '#description' => t('Must be a unique ID with no spaces.'),
+      '#title' => $this->t('Order status ID'),
+      '#description' => $this->t('Must be a unique ID with no spaces.'),
       '#size' => 32,
       '#maxlength' => 32,
       '#required' => TRUE,
@@ -38,8 +38,8 @@ class OrderStatusAddForm extends FormBase {
 
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Title'),
-      '#description' => t('The order status title displayed to users.'),
+      '#title' => $this->t('Title'),
+      '#description' => $this->t('The order status title displayed to users.'),
       '#size' => 32,
       '#maxlength' => 48,
       '#required' => TRUE,
@@ -47,15 +47,15 @@ class OrderStatusAddForm extends FormBase {
 
     $form['state'] = array(
       '#type' => 'select',
-      '#title' => t('Order state'),
-      '#description' => t('Set which order state this status is for.'),
+      '#title' => $this->t('Order state'),
+      '#description' => $this->t('Set which order state this status is for.'),
       '#options' => uc_order_state_options_list(),
       '#default_value' => 'post_checkout',
     );
 
     $form['weight'] = array(
       '#type' => 'weight',
-      '#title' => t('List position'),
+      '#title' => $this->t('List position'),
       '#delta' => 20,
       '#default_value' => 0,
     );
@@ -63,10 +63,10 @@ class OrderStatusAddForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['create'] = array(
       '#type' => 'submit',
-      '#value' => t('Create'),
+      '#value' => $this->t('Create'),
     );
     $form['actions']['cancel'] = array(
-      '#markup' => \Drupal::l(t('Cancel'), new Url('uc_order.status_add')),
+      '#markup' => $this->l($this->t('Cancel'), new Url('uc_order.status_add')),
     );
 
     return $form;
@@ -78,11 +78,11 @@ class OrderStatusAddForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $id = strtolower(trim($form_state->getValue('id')));
     if (strpos($id, ' ') !== FALSE || $id == 'all') {
-      $form_state->setErrorByName('id', t('You have entered an invalid status ID.'));
+      $form_state->setErrorByName('id', $this->t('You have entered an invalid status ID.'));
     }
 
     if (\Drupal\uc_order\Entity\OrderStatus::load($id)) {
-      $form_state->setErrorByName('id', t('This ID is already in use.  Please specify a unique ID.'));
+      $form_state->setErrorByName('id', $this->t('This ID is already in use.  Please specify a unique ID.'));
     }
   }
 
@@ -97,7 +97,7 @@ class OrderStatusAddForm extends FormBase {
       'weight' => (int) $form_state->getValue('weight'),
     ))->save();
 
-    drupal_set_message(t('Custom order status created.'));
+    drupal_set_message($this->t('Custom order status created.'));
 
     $form_state->setRedirect('uc_order.workflow');
   }

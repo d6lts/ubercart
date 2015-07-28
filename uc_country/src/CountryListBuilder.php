@@ -28,8 +28,8 @@ class CountryListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['title'] = t('Name');
-    $header['code'] = t('Code');
+    $header['title'] = $this->t('Name');
+    $header['code'] = $this->t('Code');
     return $header + parent::buildHeader();
   }
 

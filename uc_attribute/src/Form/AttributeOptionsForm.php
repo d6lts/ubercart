@@ -93,7 +93,7 @@ class AttributeOptionsForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save changes'),
+      '#value' => $this->t('Save changes'),
     );
 
     return $form;
@@ -112,7 +112,7 @@ class AttributeOptionsForm extends FormBase {
         ->execute();
     }
 
-    drupal_set_message(t('The changes have been saved.'));
+    drupal_set_message($this->t('The changes have been saved.'));
   }
 
 }

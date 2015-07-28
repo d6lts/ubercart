@@ -87,7 +87,7 @@ class ProductAdjustmentsForm extends FormBase {
       $result = $query->execute();
 
       $form['original'] = array(
-        '#markup' => '<p><b>' . t('Default product SKU: @sku', ['@sku' => $model]) . '</b></p>',
+        '#markup' => '<p><b>' . $this->t('Default product SKU: @sku', ['@sku' => $model]) . '</b></p>',
       );
       $form['default'] = array(
         '#type' => 'value',
@@ -98,7 +98,7 @@ class ProductAdjustmentsForm extends FormBase {
         '#suffix' => '</table>',
       );
       $form['table']['head'] = array(
-        '#markup' => '<thead><tr>' . $attribute_names . '<th>' . t('Alternate SKU') . '</th></tr></thead>',
+        '#markup' => '<thead><tr>' . $attribute_names . '<th>' . $this->t('Alternate SKU') . '</th></tr></thead>',
         '#weight' => 0,
       );
       $form['table']['body'] = array(
@@ -155,12 +155,12 @@ class ProductAdjustmentsForm extends FormBase {
       $form['actions'] = array('#type' => 'actions');
       $form['actions']['submit'] = array(
         '#type' => 'submit',
-        '#value' => t('Submit'),
+        '#value' => $this->t('Submit'),
       );
     }
     else {
       $form['error'] = array(
-        '#markup' => '<div><br />' . t('This product does not have any attributes that can be used for SKU adjustments.') . '</div>',
+        '#markup' => '<div><br />' . $this->t('This product does not have any attributes that can be used for SKU adjustments.') . '</div>',
       );
     }
 
@@ -194,7 +194,7 @@ class ProductAdjustmentsForm extends FormBase {
           ->execute();
       }
     }
-    drupal_set_message(t('Product adjustments have been saved.'));
+    drupal_set_message($this->t('Product adjustments have been saved.'));
   }
 
 }

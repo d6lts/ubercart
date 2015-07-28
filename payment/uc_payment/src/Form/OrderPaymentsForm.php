@@ -71,14 +71,14 @@ class OrderPaymentsForm extends FormBase {
 
     $form['order_total'] = array(
       '#type' => 'item',
-      '#title' => t('Order total'),
+      '#title' => $this->t('Order total'),
       '#theme' => 'uc_price',
       '#price' => $total,
     );
     $form['payments'] = array(
       '#type' => 'table',
       '#tree' => TRUE,
-      '#header' => array(t('Received'), t('User'), t('Method'), t('Amount'), t('Balance'), t('Comment'), t('Action')),
+      '#header' => array($this->t('Received'), $this->t('User'), $this->t('Method'), $this->t('Amount'), $this->t('Balance'), $this->t('Comment'), $this->t('Action')),
       '#weight' => 10,
     );
 
@@ -93,7 +93,7 @@ class OrderPaymentsForm extends FormBase {
           '#markup' => drupal_render($markup),
         );
         $form['payments'][$payment->receipt_id]['method'] = array(
-          '#markup' => ($payment->method == '') ? t('Unknown') : $payment->method,
+          '#markup' => ($payment->method == '') ? $this->t('Unknown') : $payment->method,
         );
         $form['payments'][$payment->receipt_id]['amount'] = array(
           '#theme' => 'uc_price',
@@ -108,7 +108,7 @@ class OrderPaymentsForm extends FormBase {
           '#markup' => ($payment->comment == '') ? '-' : Xss::filterAdmin($payment->comment),
         );
         if ($account->hasPermission('delete payments')) {
-          $action_value = \Drupal::l(t('Delete'), new Url('uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id]));
+          $action_value = $this->l($this->t('Delete'), new Url('uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id]));
         }
         else {
           $action_value = '-';
@@ -155,7 +155,7 @@ class OrderPaymentsForm extends FormBase {
       );
       $form['payments']['new']['comment'] = array(
         '#type' => 'textfield',
-        '#title' => t('Comment'),
+        '#title' => $this->t('Comment'),
         '#title_display' => 'invisible',
         '#size' => 32,
         '#maxlength' => 256,
@@ -163,7 +163,7 @@ class OrderPaymentsForm extends FormBase {
       $form['payments']['new']['action'] = array('#type' => 'actions');
       $form['payments']['new']['action']['action'] = array(
         '#type' => 'submit',
-        '#value' => t('Enter'),
+        '#value' => $this->t('Enter'),
       );
     }
 

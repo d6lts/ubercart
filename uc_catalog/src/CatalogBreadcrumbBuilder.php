@@ -74,7 +74,7 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected function catalogBreadcrumb($node) {
     $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $breadcrumb[] = new Link(t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
+    $breadcrumb[] = new Link($this->t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
     if ($parents = \Drupal::entityManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->target_id)) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
@@ -89,7 +89,7 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected function catalogTermBreadcrumb($tid) {
     $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $breadcrumb[] = new Link(t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
+    $breadcrumb[] = new Link($this->t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
     if ($parents = \Drupal::entityManager()->getStorage('taxonomy_term')->loadAllParents($tid)) {
       array_shift($parents);
       $parents = array_reverse($parents);
