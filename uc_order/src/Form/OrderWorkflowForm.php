@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Entity\OrderStatus;
 
 /**
  * Displays the order workflow form for order state and status customization.
@@ -36,7 +37,7 @@ class OrderWorkflowForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $states = uc_order_state_options_list();
-    $statuses = \Drupal\uc_order\Entity\OrderStatus::loadMultiple();
+    $statuses = OrderStatus::loadMultiple();
 
     $form['order_states'] = array(
       '#type' => 'details',
@@ -84,8 +85,6 @@ class OrderWorkflowForm extends ConfigFormBase {
     );
 
     foreach ($statuses as $status) {
-      $form['#locked'][$status->id()] = $status->isLocked();
-
       $form['order_statuses']['order_statuses'][$status->id()]['id'] = array(
         '#markup' => $status->id(),
       );
@@ -131,8 +130,8 @@ class OrderWorkflowForm extends ConfigFormBase {
     $config->save();
 
     foreach ($form_state->getValue('order_statuses') as $id => $value) {
-      $status = \Drupal\uc_order\Entity\OrderStatus::load($id);
-      if (!$form['#locked'][$id] && $value['remove']) {
+      $status = OrderStatus::load($id);
+      if (!empty($value['remove'])) {
         $status->delete();
         drupal_set_message(t('Order status %status removed.', ['%status' => $status->getName()]));
       }
@@ -141,7 +140,7 @@ class OrderWorkflowForm extends ConfigFormBase {
         $status->setWeight((int) $value['weight']);
 
         // The state cannot be changed if the status is locked.
-        if (!$form['#locked'][$key]) {
+        if (!$status->isLocked()) {
           $status->setState($value['state']);
         }
 

@@ -90,6 +90,10 @@ class OrderStatus extends ConfigEntityBase implements OrderStatusInterface {
    * {@inheritdoc}
    */
   public function setState($state) {
+    if ($this->isLocked()) {
+      throw new \LogicException('Locked statuses cannot be modified.');
+    }
+
     $this->state = $state;
     return $this;
   }
@@ -122,6 +126,17 @@ class OrderStatus extends ConfigEntityBase implements OrderStatusInterface {
   public function setLocked($locked) {
     $this->locked = (bool) $locked;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete() {
+    if ($this->isLocked()) {
+      throw new \LogicException('Locked statuses cannot be deleted.');
+    }
+
+    parent::delete();
   }
 
   /**

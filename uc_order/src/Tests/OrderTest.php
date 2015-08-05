@@ -253,6 +253,10 @@ class OrderTest extends UbercartTestBase {
     $this->drupalPostForm('admin/store/orders/' . $order->id(), array('status' => $edit['id']), 'Update');
     $this->drupalGet('admin/store/orders/view');
     $this->assertText($edit['name'], 'Order displays custom status title.');
+
+    // Delete the custom order status.
+    $this->drupalPostForm('admin/store/settings/orders', ['order_statuses[' . $edit['id'] . '][remove]' => 1], 'Save configuration');
+    $this->assertNoText($edit['id'], 'Deleted status ID not found.');
   }
 
   protected function ucCreateOrder($customer) {
