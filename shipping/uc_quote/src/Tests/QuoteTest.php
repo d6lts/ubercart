@@ -47,7 +47,7 @@ class QuoteTest extends UbercartTestBase {
       'base_rate' => mt_rand(1, 10),
       'product_rate' => mt_rand(1, 10),
     );
-    $this->drupalPostForm('admin/store/settings/quotes/methods/flatrate/add', $edit, 'Submit');
+    $this->drupalPostForm('admin/store/config/quotes/methods/flatrate/add', $edit, 'Submit');
     $method = db_query("SELECT * FROM {uc_flatrate_methods} ORDER BY mid DESC LIMIT 1")->fetchObject();
     // if ($condition) {
     //   $name = 'get_quote_from_flatrate_' . $method->mid;

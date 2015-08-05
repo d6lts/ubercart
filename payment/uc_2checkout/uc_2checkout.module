@@ -13,7 +13,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 function uc_2checkout_help($path, RouteMatchInterface $route_match) {
   switch ($path) {
-    case 'admin/store/settings/payment/method/%':
+    case 'admin/store/config/payment/method/%':
       if ($arg[5] == '2checkout') {
         return '<p>' . t('To accept PayPal payments in 2Checkout, please ensure that demo mode is disabled and your store currency is one of USD, AUD, CAD, EUR or GBP.') . '</p>';
       }

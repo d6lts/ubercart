@@ -30,20 +30,20 @@ class PaymentPaneTest extends UbercartTestBase {
   public function testPaymentMethodOptions() {
     // No payment methods.
     $edit = array('methods[check][status]' => FALSE);
-    $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertText('Checkout cannot be completed without any payment methods enabled. Please contact an administrator to resolve the issue.');
 
     // Single payment method.
     $edit = array('methods[check][status]' => TRUE);
-    $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertNoText('Select a payment method from the following options.');
     $this->assertFieldByXPath("//input[@name='panes[payment][payment_method]' and @disabled='disabled']");
 
     // Multiple payment methods.
     $edit = array('methods[other][status]' => TRUE);
-    $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertText('Select a payment method from the following options.');
     $this->assertNoFieldByXPath("//input[@name='panes[payment][payment_method]' and @disabled='disabled']");
@@ -56,14 +56,14 @@ class PaymentPaneTest extends UbercartTestBase {
     $edit = array(
       'panes[payment][settings][show_preview]' => TRUE,
     );
-    $this->drupalPostForm('admin/store/settings/checkout', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/checkout', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertText('Order total:');
 
     $edit = array(
       'panes[payment][settings][show_preview]' => FALSE,
     );
-    $this->drupalPostForm('admin/store/settings/checkout', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/checkout', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertNoText('Order total:');
   }
@@ -74,7 +74,7 @@ class PaymentPaneTest extends UbercartTestBase {
   public function testFreeOrders() {
     $free_product = $this->createProduct(array('price' => 0));
     $edit = array('methods[check][status]' => TRUE);
-    $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
 
     // Check that paid products cannot be purchased for free.
     $this->drupalGet('cart/checkout');

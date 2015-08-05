@@ -1,5 +1,5 @@
 uc_ajax_admin.settings:
-  path: '/admin/store/settings/checkout/ajax'
+  path: '/admin/store/config/checkout/ajax'
   defaults:
     _form: '\Drupal\uc_ajax_admin\Form\AjaxAdminForm'
     _title: 'Ajax'

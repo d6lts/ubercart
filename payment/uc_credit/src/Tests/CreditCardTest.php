@@ -71,7 +71,7 @@ class CreditCardTest extends UbercartTestBase {
    */
   protected function configureCreditCard() {
     $this->drupalPostForm(
-      'admin/store/settings/payment',
+      'admin/store/config/payment',
       array('methods[credit][status]' => TRUE),
       t('Save configuration')
     );
@@ -88,7 +88,7 @@ class CreditCardTest extends UbercartTestBase {
     \Drupal::service('file_system')->mkdir('sites/default/files/simpletest.keys', 0755);
 
     $this->drupalPostForm(
-      'admin/store/settings/payment/method/credit',
+      'admin/store/config/payment/method/credit',
       array(
         'uc_credit_encryption_path' => 'sites/default/files/simpletest.keys',
       ),
@@ -114,7 +114,7 @@ class CreditCardTest extends UbercartTestBase {
    */
   protected function configureGateway() {
     $this->drupalPostForm(
-      'admin/store/settings/payment/method/credit',
+      'admin/store/config/payment/method/credit',
       array(
         'uc_payment_credit_gateway' => 'test_gateway',
         'uc_pg_test_gateway_enabled' => TRUE,
@@ -155,11 +155,11 @@ class CreditCardTest extends UbercartTestBase {
     $temp_variable = $config->get('encryption_path');
     $config->set('encryption_path', '')->save();
 
-    $this->drupalGet('admin/store/settings/payment/method/credit');
+    $this->drupalGet('admin/store/config/payment/method/credit');
     $this->assertText(t('Credit card security settings must be configured in the security settings tab.'));
 
     $this->drupalPostForm(
-      'admin/store/settings/payment/method/credit',
+      'admin/store/config/payment/method/credit',
       array(),
       t('Save configuration')
     );
@@ -173,7 +173,7 @@ class CreditCardTest extends UbercartTestBase {
 
     // Try to submit settings form with an empty key file path.
     $this->drupalPostForm(
-      'admin/store/settings/payment/method/credit',
+      'admin/store/config/payment/method/credit',
       array('uc_credit_encryption_path' => ''),
       t('Save configuration')
     );
@@ -181,7 +181,7 @@ class CreditCardTest extends UbercartTestBase {
 
     // Specify non-existent directory
     $this->drupalPostForm(
-      'admin/store/settings/payment/method/credit',
+      'admin/store/config/payment/method/credit',
       array('uc_credit_encryption_path' => 'sites/default/ljkh/asdfasfaaaaa'),
       t('Save configuration')
     );
@@ -190,7 +190,7 @@ class CreditCardTest extends UbercartTestBase {
     // Next, specify existing directory that's write protected.
     // Use /dev, as that should never be accessible.
     $this->drupalPostForm(
-      'admin/store/settings/payment/method/credit',
+      'admin/store/config/payment/method/credit',
       array('uc_credit_encryption_path' => '/dev'),
       t('Save configuration')
     );
@@ -199,7 +199,7 @@ class CreditCardTest extends UbercartTestBase {
     // Next, specify writeable directory, but with excess whitespace
     // and trailing /
     $this->drupalPostForm(
-      'admin/store/settings/payment/method/credit',
+      'admin/store/config/payment/method/credit',
       array('uc_credit_encryption_path' => '  sites/default/files/testkey/ '),
       t('Save configuration')
     );
@@ -219,7 +219,7 @@ class CreditCardTest extends UbercartTestBase {
 
     // Finally, specify good directory
     $this->drupalPostForm(
-      'admin/store/settings/payment/method/credit',
+      'admin/store/config/payment/method/credit',
       array('uc_credit_encryption_path' => 'sites/default/files/testkey'),
       t('Save configuration')
     );

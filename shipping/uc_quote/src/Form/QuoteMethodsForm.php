@@ -59,7 +59,7 @@ class QuoteMethodsForm extends ConfigFormBase {
         $operations = isset($method['operations']) ? $method['operations'] : array();
 //        $operations += array('conditions' => array(
 //          'title' => t('conditions'),
-//          'url' => Url::fromRoute('admin/store/settings/quotes/manage/get_quote_from_', ['id' => $id]),
+//          'url' => Url::fromRoute('admin/store/config/quotes/manage/get_quote_from_', ['id' => $id]),
 //          'weight' => 5,
 //        ));
 

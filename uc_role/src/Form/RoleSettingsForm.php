@@ -47,7 +47,7 @@ class RoleSettingsForm extends ConfigFormBase {
 
     if (!count($default_role_choices)) {
       $form['no_roles'] = array(
-        '#markup' => $this->t('You need to <a href="!url">create new roles</a> before any can be added as product features.', array('!url' => $this->url('user.role_add', [], ['query' => ['destination' => 'admin/store/settings/products']]))),
+        '#markup' => $this->t('You need to <a href="!url">create new roles</a> before any can be added as product features.', array('!url' => $this->url('user.role_add', [], ['query' => ['destination' => 'admin/store/config/products']]))),
         '#prefix' => '<p>',
         '#suffix' => '</p>',
       );

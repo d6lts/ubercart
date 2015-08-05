@@ -80,11 +80,11 @@ function uc_order_menu() {
  * Implements hook_menu_alter().
  */
 function uc_order_menu_alter(&$items) {
-  // Adjust the Field UI tabs on admin/store/settings/orders.
-  $items['admin/store/settings/orders/products/fields']['title'] = 'Ordered product fields';
-  $items['admin/store/settings/orders/products/fields']['weight'] = 3;
+  // Adjust the Field UI tabs on admin/store/config/orders.
+  $items['admin/store/config/orders/products/fields']['title'] = 'Ordered product fields';
+  $items['admin/store/config/orders/products/fields']['weight'] = 3;
   // Disable field display settings for ordered products, as we don't use this anywhere (yet).
-  unset($items['admin/store/settings/orders/products/display']);
+  unset($items['admin/store/config/orders/products/display']);
 }
 
 /**

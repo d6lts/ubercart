@@ -42,7 +42,7 @@ class StoredTaxTest extends UbercartTestBase {
 
     // Enable a payment method for the payment preview checkout pane.
     $edit = array('methods[check][status]' => 1);
-    $this->drupalPostForm('admin/store/settings/payment', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/store/config/payment', $edit, t('Save configuration'));
 
     // Create a 20% inclusive tax rate.
     $rate = (object) array(
@@ -57,10 +57,10 @@ class StoredTaxTest extends UbercartTestBase {
     );
     uc_tax_rate_save($rate);
 
-    $this->drupalGet('admin/store/settings/taxes');
+    $this->drupalGet('admin/store/config/taxes');
     $this->assertText($rate->name, t('Tax was saved successfully.'));
 
-    // $this->drupalGet("admin/store/settings/taxes/manage/uc_tax_$rate->id");
+    // $this->drupalGet("admin/store/config/taxes/manage/uc_tax_$rate->id");
     // $this->assertText(t('Conditions'), t('Rules configuration linked to tax.'));
 
     $this->addToCart($this->product);

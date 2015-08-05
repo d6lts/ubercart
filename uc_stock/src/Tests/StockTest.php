@@ -71,7 +71,7 @@ class StockTest extends UbercartTestBase {
 
     // Enable product quantity field.
     $edit = array('uc_product_add_to_cart_qty' => TRUE);
-    $this->drupalPostForm('admin/store/settings/products', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/products', $edit, 'Save configuration');
 
     $qty = rand(1, 100);
     $edit = array('qty' => $qty);
@@ -85,7 +85,7 @@ class StockTest extends UbercartTestBase {
     $prefix = 'stock[' . $this->product->model->value . ']';
 
     $edit = array('uc_stock_threshold_notification' => 1);
-    $this->drupalPostForm('admin/store/settings/stock', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/stock', $edit, 'Save configuration');
 
     $qty = rand(10, 100);
     $edit = array(

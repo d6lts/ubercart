@@ -1,5 +1,5 @@
 uc_cart_links.settings:
-  path: '/admin/store/settings/cart-links'
+  path: '/admin/store/config/cart-links'
   defaults:
     _form: '\Drupal\uc_cart_links\Form\CartLinksSettingsForm'
     _title: 'Cart Links settings'

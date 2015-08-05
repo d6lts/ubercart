@@ -1,5 +1,5 @@
 uc_stock.settings:
-  path: '/admin/store/settings/stock'
+  path: '/admin/store/config/stock'
   defaults:
     _form: '\Drupal\uc_stock\Form\StockSettingsForm'
     _title: 'Stock notifications'

@@ -383,7 +383,7 @@ class AttributeTest extends UbercartTestBase {
 
     foreach (array('none', 'adjustment', 'total') as $type) {
       $edit['uc_attribute_option_price_format'] = $type;
-      $this->drupalPostForm('admin/store/settings/products', $edit, t('Save configuration'));
+      $this->drupalPostForm('admin/store/config/products', $edit, t('Save configuration'));
 
       $this->drupalGet('node/' . $product->id());
       $this->assertRaw($raw[$type], 'Attribute option pricing is correct.');

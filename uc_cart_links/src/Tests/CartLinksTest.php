@@ -52,14 +52,14 @@ class CartLinksTest extends UbercartTestBase {
    */
   public function testCartLinksUISettingsPage() {
     // Access settings page by anonymous user
-    $this->drupalGet('admin/store/settings/cart-links');
+    $this->drupalGet('admin/store/config/cart-links');
     $this->assertResponse(403);
     $this->assertText(t('Access denied'));
     $this->assertText(t('You are not authorized to access this page.'));
 
     // Access settings page by privileged user
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/store/settings/cart-links');
+    $this->drupalGet('admin/store/config/cart-links');
     $this->assertResponse(200);
     $this->assertText(
       t('View the help page to learn how to create Cart Links.'),
@@ -142,7 +142,7 @@ class CartLinksTest extends UbercartTestBase {
       // Click on link
       $this->clickLink(t('Cart Link #@link', ['@link' => $key]));
       // Check for notice that item was added (this notice is set ON
-      // by default, see admin/store/settings/cart)
+      // by default, see admin/store/config/cart)
       $this->assertText(
         t('@title added to your shopping cart.', ['@title' => $link_data[$key]['title']]),
         format_string('Product @title added to cart.', ['@title' => $link_data[$key]['title']])
@@ -357,7 +357,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->clickLink(t('Cart Link #@link', ['@link' => $test_link_0]));
 
     // Check for notice that item was added (this notice is set ON
-    // by default, see admin/store/settings/cart)
+    // by default, see admin/store/config/cart)
     $this->assertText(
       t('@title added to your shopping cart.', ['@title' => $link_data[$test_link_0]['title']]),
       format_string('Product @title added to cart.', ['@title' => $link_data[$test_link_0]['title']])
@@ -548,7 +548,7 @@ class CartLinksTest extends UbercartTestBase {
    */
   protected function setCartLinksUIProductActionMessage($state = FALSE) {
     $this->drupalPostForm(
-      'admin/store/settings/cart-links',
+      'admin/store/config/cart-links',
       array('uc_cart_links_add_show' => $state),
       t('Save configuration')
     );
@@ -570,7 +570,7 @@ class CartLinksTest extends UbercartTestBase {
    */
   protected function setCartLinksUITrackClicks($state = TRUE) {
     $this->drupalPostForm(
-      'admin/store/settings/cart-links',
+      'admin/store/config/cart-links',
       array('uc_cart_links_track' => 0),
       t('Save configuration')
     );
@@ -592,7 +592,7 @@ class CartLinksTest extends UbercartTestBase {
    */
   protected function setCartLinksUIAllowEmptying($state = TRUE) {
     $this->drupalPostForm(
-      'admin/store/settings/cart-links',
+      'admin/store/config/cart-links',
       array('uc_cart_links_empty' => $state),
       t('Save configuration')
     );
@@ -615,7 +615,7 @@ class CartLinksTest extends UbercartTestBase {
   protected function setCartLinksUIMessages($messages = '') {
     $message_string = implode("\n", $messages);
     $this->drupalPostForm(
-      'admin/store/settings/cart-links',
+      'admin/store/config/cart-links',
       array('uc_cart_links_messages' => $message_string),
       t('Save configuration')
     );
@@ -637,7 +637,7 @@ class CartLinksTest extends UbercartTestBase {
    */
   protected function setCartLinksUIRestrictions($restrictions = '') {
     $this->drupalPostForm(
-      'admin/store/settings/cart-links',
+      'admin/store/config/cart-links',
       array('uc_cart_links_restrictions' => $restrictions),
       t('Save configuration')
     );
@@ -658,7 +658,7 @@ class CartLinksTest extends UbercartTestBase {
    */
   protected function setCartLinksUIRedirect($url = '') {
     $this->drupalPostForm(
-      'admin/store/settings/cart-links',
+      'admin/store/config/cart-links',
       array('uc_cart_links_invalid_page' => $url),
       t('Save configuration')
     );

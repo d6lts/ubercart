@@ -50,7 +50,7 @@ class StoreTest extends UbercartTestBase {
       );
     }
 
-    $this->drupalPostForm('admin/store/settings/store', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/store', $edit, 'Save configuration');
 
     foreach ($edit as $name => $value) {
       $this->assertFieldByName($name, $value);

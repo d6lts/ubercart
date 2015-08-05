@@ -82,7 +82,7 @@ class AjaxTest extends UbercartTestBase {
       'methods[check][status]' => TRUE,
       'methods[other][status]' => TRUE,
     );
-    $this->drupalPostForm('admin/store/settings/payment', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
     // $this->addPaymentZoneCondition('other', 'KS');
 
     // Specify that the billing zone should update the payment pane.

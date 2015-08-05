@@ -24,7 +24,7 @@ class ProductKitTest extends UbercartTestBase {
 
     // Allow the default quantity to be set.
     $edit = array('uc_product_add_to_cart_qty' => TRUE);
-    $this->drupalPostForm('admin/store/settings/products', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/products', $edit, 'Save configuration');
 
     // Create some test products.
     $products = array();

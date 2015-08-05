@@ -191,7 +191,7 @@ class OrderTest extends UbercartTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Check that the default order state and status is correct.
-    $this->drupalGet('admin/store/settings/orders');
+    $this->drupalGet('admin/store/config/orders');
     $this->assertFieldByName('order_states[in_checkout][default]', 'in_checkout', 'State defaults to correct default status.');
     $this->assertEqual(uc_order_state_default('in_checkout'), 'in_checkout', 'uc_order_state_default() returns correct default status.');
     $order = $this->ucCreateOrder($this->customer);
@@ -199,7 +199,7 @@ class OrderTest extends UbercartTestBase {
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'Order has correct default status.');
 
     // Create a custom "in checkout" order status with a lower weight.
-    $this->drupalGet('admin/store/settings/orders');
+    $this->drupalGet('admin/store/config/orders');
     $this->clickLink('Create custom order status');
     $edit = array(
       'id' => strtolower($this->randomMachineName()),
@@ -223,7 +223,7 @@ class OrderTest extends UbercartTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Update an order status label.
-    $this->drupalGet('admin/store/settings/orders');
+    $this->drupalGet('admin/store/config/orders');
     $title = $this->randomMachineName();
     $edit = array(
       'order_statuses[in_checkout][name]' => $title,
@@ -236,7 +236,7 @@ class OrderTest extends UbercartTestBase {
     $this->assertText($title, 'Order displays updated status title.');
 
     // Create a custom order status.
-    $this->drupalGet('admin/store/settings/orders');
+    $this->drupalGet('admin/store/config/orders');
     $this->clickLink('Create custom order status');
     $edit = array(
       'id' => strtolower($this->randomMachineName()),

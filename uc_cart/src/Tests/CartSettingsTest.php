@@ -31,7 +31,7 @@ class CartSettingsTest extends UbercartTestBase {
     $this->assertText($this->product->getTitle() . ' added to your shopping cart.');
 
     $this->drupalPostForm('cart', [], 'Remove');
-    $this->drupalPostForm('admin/store/settings/cart', ['uc_cart_add_item_msg' => FALSE], 'Save configuration');
+    $this->drupalPostForm('admin/store/config/cart', ['uc_cart_add_item_msg' => FALSE], 'Save configuration');
 
     $this->addToCart($this->product);
     $this->assertNoText($this->product->getTitle() . ' added to your shopping cart.');
@@ -39,7 +39,7 @@ class CartSettingsTest extends UbercartTestBase {
 
   public function testAddToCartRedirect() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/store/settings/cart');
+    $this->drupalGet('admin/store/config/cart');
     $this->assertField(
       'uc_add_item_redirect',
       t('Add to cart redirect field exists')
@@ -47,7 +47,7 @@ class CartSettingsTest extends UbercartTestBase {
 
     $redirect = 'admin/store';
     $this->drupalPostForm(
-      'admin/store/settings/cart',
+      'admin/store/config/cart',
       array('uc_add_item_redirect' => $redirect),
       t('Save configuration')
     );
@@ -67,7 +67,7 @@ class CartSettingsTest extends UbercartTestBase {
   public function testAddToCartQueryRedirect() {
     $this->drupalLogin($this->adminUser);
     $this->drupalPostForm(
-      'admin/store/settings/cart',
+      'admin/store/config/cart',
       array('uc_add_item_redirect' => '<none>'),
       t('Save configuration')
     );
@@ -79,7 +79,7 @@ class CartSettingsTest extends UbercartTestBase {
 
   public function testMinimumSubtotal() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/store/settings/cart');
+    $this->drupalGet('admin/store/config/cart');
     $this->assertField(
       'uc_minimum_subtotal',
       t('Minimum order subtotal field exists')
@@ -145,7 +145,7 @@ class CartSettingsTest extends UbercartTestBase {
     );
 
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/store/settings/cart');
+    $this->drupalGet('admin/store/config/cart');
     $this->assertField(
       'uc_continue_shopping_type',
       t('Continue shopping element display field exists')
@@ -181,7 +181,7 @@ class CartSettingsTest extends UbercartTestBase {
 
   public function testCartBreadcrumb() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/store/settings/cart');
+    $this->drupalGet('admin/store/config/cart');
     $this->assertField(
       'uc_cart_breadcrumb_text',
       t('Custom cart breadcrumb text field exists')

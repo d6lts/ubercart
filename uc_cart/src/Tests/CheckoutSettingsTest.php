@@ -18,14 +18,14 @@ class CheckoutSettingsTest extends UbercartTestBase {
 
   public function testEnableCheckout() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/store/settings/checkout');
+    $this->drupalGet('admin/store/config/checkout');
     $this->assertField(
       'uc_checkout_enabled',
       t('Enable checkout field exists')
     );
 
     $this->drupalPostForm(
-      'admin/store/settings/checkout',
+      'admin/store/config/checkout',
       array('uc_checkout_enabled' => FALSE),
       t('Save configuration')
     );
@@ -45,14 +45,14 @@ class CheckoutSettingsTest extends UbercartTestBase {
 
   public function testAnonymousCheckout() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/store/settings/checkout');
+    $this->drupalGet('admin/store/config/checkout');
     $this->assertField(
       'uc_checkout_anonymous',
       t('Anonymous checkout field exists')
     );
 
     $this->drupalPostForm(
-      'admin/store/settings/checkout',
+      'admin/store/config/checkout',
       array('uc_checkout_anonymous' => FALSE),
       t('Save configuration')
     );

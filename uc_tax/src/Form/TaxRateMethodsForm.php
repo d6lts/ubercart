@@ -65,7 +65,7 @@ class TaxRateMethodsForm extends ConfigFormBase {
 // @todo: Fix when Rules works.
 //      'conditions' => array(
 //        'title' => $this->t('conditions'),
-//        'url' => Url::fromRoute('admin/store/settings/taxes/manage/uc_tax_', ['rate_id' => $rate_id]),
+//        'url' => Url::fromRoute('admin/store/config/taxes/manage/uc_tax_', ['rate_id' => $rate_id]),
 //        'weight' => 5,
 //      ),
         'clone' => array(

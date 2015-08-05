@@ -126,7 +126,7 @@ class PaymentMethodsForm extends ConfigFormBase {
 
       // $links['conditions'] = array(
       //   'title' => t('Conditions'),
-      //   'url' => Url::fromRoute('admin/store/settings/payment/manage/uc_payment_method_', ['method' => $id]),
+      //   'url' => Url::fromRoute('admin/store/config/payment/manage/uc_payment_method_', ['method' => $id]),
       // );
 
       $form['methods'][$id]['settings'] = array(

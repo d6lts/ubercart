@@ -15,7 +15,7 @@ uc_order.order_admin:
     _permission: 'access administration pages'
 
 uc_order.workflow:
-  path: '/admin/store/settings/orders'
+  path: '/admin/store/config/orders'
   defaults:
     _form: '\Drupal\uc_order\Form\OrderWorkflowForm'
     _title: 'Order workflow settings'
@@ -23,7 +23,7 @@ uc_order.workflow:
     _permission: 'administer order workflow'
 
 uc_order.status_add:
-  path: '/admin/store/settings/orders/workflow/create'
+  path: '/admin/store/config/orders/workflow/create'
   defaults:
     _form: '\Drupal\uc_order\Form\OrderStatusAddForm'
     _title: 'Create custom order status'

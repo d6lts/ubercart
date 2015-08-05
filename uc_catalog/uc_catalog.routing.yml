@@ -1,5 +1,5 @@
 uc_catalog.settings:
-  path: '/admin/store/settings/catalog'
+  path: '/admin/store/config/catalog'
   defaults:
     _form: '\Drupal\uc_catalog\Form\CatalogSettingsForm'
     _title: 'Catalog settings'
@@ -7,7 +7,7 @@ uc_catalog.settings:
     _permission: 'administer catalog'
 
 uc_catalog.repair:
-  path: '/admin/store/settings/catalog/repair'
+  path: '/admin/store/config/catalog/repair'
   defaults:
     _controller: '\Drupal\uc_catalog\Controller\CatalogAdminController::repairField'
     _title: 'Repair catalog field'

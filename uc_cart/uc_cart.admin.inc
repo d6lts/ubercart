@@ -14,7 +14,7 @@ function uc_cart_checkout_rules() {
     'plugin' => 'reaction rule',
   );
   $options = array(
-    'base path' => 'admin/store/settings/checkout/rules',
+    'base path' => 'admin/store/config/checkout/rules',
     'show plugin' => FALSE,
   );
   $content['rules'] = rules_ui()->overviewTable($conditions, $options);

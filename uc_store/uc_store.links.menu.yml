@@ -10,15 +10,15 @@ uc_store.admin.store.reports:
   route_name: uc_store.reports
   parent: uc_store.admin.store
   weight: 2
-uc_store.admin.store.settings:
+uc_store.admin.store.config:
   title: Configuration
   description: 'Adjust configuration settings for Ubercart.'
-  route_name: uc_store.settings
+  route_name: uc_store.config
   parent: uc_store.admin.store
   weight: 6
-uc_store.admin.store.settings.store:
+uc_store.admin.store.config.store:
   title: Store
   description: 'Configure basic store settings.'
-  route_name: uc_store.settings_form
-  parent: uc_store.admin.store.settings
+  route_name: uc_store.config_form
+  parent: uc_store.admin.store.config
   weight: -1

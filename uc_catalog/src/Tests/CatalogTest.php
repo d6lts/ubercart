@@ -96,7 +96,7 @@ class CatalogTest extends UbercartTestBase {
     $this->drupalGet('admin/store');
     $this->assertText('The catalog taxonomy reference field is missing.', 'Store status message mentions the missing field.');
 
-    $this->drupalGet('admin/store/settings/catalog/repair');
+    $this->drupalGet('admin/store/config/catalog/repair');
     $this->assertText('The catalog taxonomy reference field has been repaired.', 'Repair message is displayed.');
 
     $this->drupalGet('admin/structure/types/manage/product/fields');

@@ -55,7 +55,7 @@ class CountryTest extends WebTestBase {
     $this->assertNoOption(
       'edit-uc-store-country',
       $last_country,
-      format_string('@country not listed in uc_address select country field.', ['%country' => $countries[$last_country]])
+      format_string('%country not listed in uc_address select country field.', ['%country' => $countries[$last_country]])
     );
 
     // Enable the last country.
@@ -108,7 +108,7 @@ class CountryTest extends WebTestBase {
     $this->assertText('No countries are enabled.');
 
     // Verify that the country fields are hidden.
-    $this->drupalGet('admin/store/settings/store');
+    $this->drupalGet('admin/store/config/store');
     $this->assertNoText('State/Province');
     $this->assertNoText('Country');
   }

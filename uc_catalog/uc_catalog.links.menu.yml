@@ -1,8 +1,8 @@
-uc_catalog.admin.store.settings.catalog:
+uc_catalog.admin.store.config.catalog:
   title: Catalog
   description: 'Configure the product catalog pages.'
   route_name: uc_catalog.settings
-  parent: uc_store.admin.store.settings
+  parent: uc_store.admin.store.config
 
 uc_catalog.admin.store.products.orphans:
   title: 'Find orphaned products'

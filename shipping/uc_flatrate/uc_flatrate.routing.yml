@@ -1,19 +1,19 @@
 uc_flatrate.add:
-  path: '/admin/store/settings/quotes/methods/flatrate/add'
+  path: '/admin/store/config/quotes/methods/flatrate/add'
   defaults:
     _form: '\Drupal\uc_flatrate\Form\FlatrateEditForm'
   requirements:
     _permission: 'configure quotes'
 
 uc_flatrate.edit:
-  path: '/admin/store/settings/quotes/methods/flatrate/{mid}'
+  path: '/admin/store/config/quotes/methods/flatrate/{mid}'
   defaults:
     _form: '\Drupal\uc_flatrate\Form\FlatrateEditForm'
   requirements:
     _permission: 'configure quotes'
 
 uc_flatrate.delete:
-  path: '/admin/store/settings/quotes/methods/flatrate/{mid}/delete'
+  path: '/admin/store/config/quotes/methods/flatrate/{mid}/delete'
   defaults:
     _form: '\Drupal\uc_flatrate\Form\FlatrateDeleteForm'
   requirements:

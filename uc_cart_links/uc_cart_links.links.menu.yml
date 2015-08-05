@@ -2,7 +2,7 @@ uc_cart_links.settings:
   title: 'Cart Links'
   description: 'Configure and craft special links to add products directly to the cart.'
   route_name: uc_cart_links.settings
-  parent: uc_store.admin.store.settings
+  parent: uc_store.admin.store.config
 
 uc_cart_links.reports:
   title: 'Cart Links'

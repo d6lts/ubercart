@@ -31,18 +31,18 @@ class PaymentPackTest extends UbercartTestBase {
       'panes[delivery][status]' => FALSE,
       'panes[billing][status]' => FALSE,
     );
-    $this->drupalPostForm('admin/store/settings/checkout', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/store/config/checkout', $edit, t('Save configuration'));
   }
 
   /**
    * Tests for Check payment method.
    */
   public function testCheck() {
-    $this->drupalGet('admin/store/settings/payment');
+    $this->drupalGet('admin/store/config/payment');
     $this->assertText('Check', 'Check payment method found.');
     $this->assertFieldByName('methods[check][status]', 1, 'Check payment method is enabled by default.');
 
-    $this->drupalGet('admin/store/settings/payment/method/check');
+    $this->drupalGet('admin/store/config/payment/method/check');
     $this->assertTitle('Check settings | Drupal');
     $this->assertText(\Drupal::config('uc_payment_pack.check.settings')->get('policy'), 'Default check payment policy found.');
 
@@ -60,7 +60,7 @@ class PaymentPackTest extends UbercartTestBase {
     //$edit = array(
     //  'uc_check_mailing_country' => $address->country,
     //);
-    //$this->drupalPostAjaxForm('admin/store/settings/payment/method/check', $edit, 'uc_check_mailing_country');
+    //$this->drupalPostAjaxForm('admin/store/config/payment/method/check', $edit, 'uc_check_mailing_country');
     $edit = array(
       'uc_check_mailing_name' => $address->first_name,
       'uc_check_mailing_company' => $address->company,
@@ -82,7 +82,7 @@ class PaymentPackTest extends UbercartTestBase {
     // country before we post the form. Otherwise the zone select won't be
     // populated correctly.
     \Drupal::configFactory()->getEditable('uc_payment_pack.check.settings')->set('mailing_address.country', $country_id)->save();
-    $this->drupalPostForm('admin/store/settings/payment/method/check', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/store/config/payment/method/check', $edit, t('Save configuration'));
 
     // Test that check settings show up on checkout page.
     $this->drupalGet('cart/checkout');
@@ -134,7 +134,7 @@ class PaymentPackTest extends UbercartTestBase {
    * Tests for Cash on Delivery payment method.
    */
   public function testCashOnDelivery() {
-    $this->drupalGet('admin/store/settings/payment');
+    $this->drupalGet('admin/store/config/payment');
     $this->assertText('Cash on delivery', 'COD payment method found.');
     $this->assertFieldByName('methods[cod][status]', 0, 'COD payment method is disabled by default.');
     $edit = array(
@@ -143,7 +143,7 @@ class PaymentPackTest extends UbercartTestBase {
     );
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
 
-    $this->drupalGet('admin/store/settings/payment/method/cod');
+    $this->drupalGet('admin/store/config/payment/method/cod');
     $this->assertTitle('Cash on delivery settings | Drupal');
     $this->assertText(\Drupal::config('uc_payment_pack.cod.settings')->get('policy'), 'Default COD policy found.');
     // @todo: Test changing the policy on settings page
@@ -175,7 +175,7 @@ class PaymentPackTest extends UbercartTestBase {
    * Tests for Other payment method.
    */
   public function testOther() {
-    $this->drupalGet('admin/store/settings/payment');
+    $this->drupalGet('admin/store/config/payment');
     $this->assertText('Other', 'Other payment method found.');
     $this->assertFieldByName('methods[other][status]', 0, 'Other payment method is disabled by default.');
     $edit = array(

@@ -114,7 +114,7 @@ class WeightquoteEditForm extends FormBase {
 
       drupal_set_message(t('Created and enabled new weight quote shipping method.'));
       $form_state->setRedirect('uc_quote.methods');
-      //$form_state['redirect'] = 'admin/store/settings/quotes/manage/get_quote_from_weightquote_' . $form_state->getValue('mid');
+      //$form_state['redirect'] = 'admin/store/config/quotes/manage/get_quote_from_weightquote_' . $form_state->getValue('mid');
     }
   }
 

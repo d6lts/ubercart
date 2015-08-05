@@ -1,5 +1,5 @@
 uc_quote.methods:
-  path: '/admin/store/settings/quotes'
+  path: '/admin/store/config/quotes'
   defaults:
     _form: '\Drupal\uc_quote\Form\QuoteMethodsForm'
     _title: 'Shipping quotes'
@@ -7,7 +7,7 @@ uc_quote.methods:
     _permission: 'configure quotes'
 
 uc_quote.settings:
-  path: '/admin/store/settings/quotes/settings'
+  path: '/admin/store/config/quotes/settings'
   defaults:
     _form: '\Drupal\uc_quote\Form\QuoteSettingsForm'
     _title: 'Shipping quote settings'

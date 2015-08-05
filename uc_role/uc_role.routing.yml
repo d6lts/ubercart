@@ -1,5 +1,5 @@
 uc_role.settings:
-  path: 'admin/store/settings/roles'
+  path: 'admin/store/config/roles'
   defaults:
     _form: '\Drupal\uc_role\Form\RoleSettingsForm'
     _title: 'Role settings'

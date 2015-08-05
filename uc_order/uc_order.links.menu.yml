@@ -16,8 +16,8 @@ uc_order.admin.store.orders.create:
   route_name: uc_order.create
   parent: uc_order.admin.store.orders
   weight: -5
-uc_order.admin.store.settings.orders:
+uc_order.admin.store.config.orders:
   title: Orders
   description: 'Configure the workflow and fields for orders.'
   route_name: uc_order.workflow
-  parent: uc_store.admin.store.settings
+  parent: uc_store.admin.store.config

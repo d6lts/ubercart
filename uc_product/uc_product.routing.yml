@@ -15,7 +15,7 @@ uc_product.classes:
     _permission: 'administer product classes'
 
 uc_product.settings:
-  path: '/admin/store/settings/products'
+  path: '/admin/store/config/products'
   defaults:
     _form: '\Drupal\uc_product\Form\ProductSettingsForm'
     _title: 'Product settings'
@@ -23,7 +23,7 @@ uc_product.settings:
     _permission: 'administer products'
 
 uc_product.image_defaults:
-  path: '/admin/store/settings/products/defaults'
+  path: '/admin/store/config/products/defaults'
   defaults:
     _controller: '\Drupal\uc_product\Controller\ProductController::setImageDefaults'
   requirements:

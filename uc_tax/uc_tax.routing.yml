@@ -1,5 +1,5 @@
 uc_tax.methods:
-  path: '/admin/store/settings/taxes'
+  path: '/admin/store/config/taxes'
   defaults:
     _form: '\Drupal\uc_tax\Form\TaxRateMethodsForm'
     _title: 'Taxes'
@@ -7,28 +7,28 @@ uc_tax.methods:
     _permission: 'administer taxes'
 
 uc_tax.rate_add:
-  path: '/admin/store/settings/taxes/add'
+  path: '/admin/store/config/taxes/add'
   defaults:
     _form: '\Drupal\uc_tax\Form\TaxRateAddForm'
   requirements:
     _permission: 'administer taxes'
 
 uc_tax.rate_edit:
-  path: '/admin/store/settings/taxes/{tax_rate}/edit'
+  path: '/admin/store/config/taxes/{tax_rate}/edit'
   defaults:
     _form: '\Drupal\uc_tax\Form\TaxRateEditForm'
   requirements:
     _permission: 'administer taxes'
 
 uc_tax.rate_clone:
-  path: '/admin/store/settings/taxes/{tax_rate}/clone'
+  path: '/admin/store/config/taxes/{tax_rate}/clone'
   defaults:
     _controller: '\Drupal\uc_tax\Controller\TaxController::saveClone'
   requirements:
     _permission: 'administer taxes'
 
 uc_tax.rate_delete:
-  path: '/admin/store/settings/taxes/{tax_rate}/delete'
+  path: '/admin/store/config/taxes/{tax_rate}/delete'
   defaults:
     _form: '\Drupal\uc_tax\Form\TaxRateDeleteForm'
   requirements:

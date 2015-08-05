@@ -254,7 +254,7 @@ class CartCheckoutTest extends UbercartTestBase {
       'uc_cart_new_account_password' => TRUE,
     );
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('admin/store/settings/checkout', $settings, t('Save configuration'));
+    $this->drupalPostForm('admin/store/config/checkout', $settings, t('Save configuration'));
     $this->drupalLogout();
 
     $username = $this->randomMachineName(20);
@@ -314,7 +314,7 @@ class CartCheckoutTest extends UbercartTestBase {
       'panes[delivery][status]' => FALSE,
       'panes[billing][status]' => FALSE,
     );
-    $this->drupalPostForm('admin/store/settings/checkout', $settings, t('Save configuration'));
+    $this->drupalPostForm('admin/store/config/checkout', $settings, t('Save configuration'));
     $this->drupalLogout();
 
     // Test with an account that already exists.
@@ -343,7 +343,7 @@ class CartCheckoutTest extends UbercartTestBase {
       'uc_new_customer_status_active' => FALSE,
     );
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('admin/store/settings/checkout', $settings, t('Save configuration'));
+    $this->drupalPostForm('admin/store/config/checkout', $settings, t('Save configuration'));
     $this->drupalLogout();
 
     // Test as anonymous user.
@@ -364,7 +364,7 @@ class CartCheckoutTest extends UbercartTestBase {
       'uc_new_customer_login' => TRUE,
     );
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('admin/store/settings/checkout', $settings, t('Save configuration'));
+    $this->drupalPostForm('admin/store/config/checkout', $settings, t('Save configuration'));
     $this->drupalLogout();
 
     // Test checkout.

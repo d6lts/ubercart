@@ -1,5 +1,5 @@
-uc_payment.admin.store.settings.payment:
+uc_payment.admin.store.config.payment:
   title: 'Payment methods'
   description: 'Choose and configure available payment methods.'
   route_name: uc_payment.methods
-  parent: uc_store.admin.store.settings
+  parent: uc_store.admin.store.config

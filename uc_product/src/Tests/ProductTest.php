@@ -204,7 +204,7 @@ class ProductTest extends UbercartTestBase {
 
   public function testProductQuantity() {
     $edit = array('uc_product_add_to_cart_qty' => TRUE);
-    $this->drupalPostForm('admin/store/settings/products', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/store/config/products', $edit, 'Save configuration');
 
     // Check zero quantity message.
     $this->addToCart($this->product, array('qty' => 0));
