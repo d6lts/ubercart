@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_tax\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -90,7 +91,7 @@ class StoredTaxTest extends UbercartTestBase {
     $order_id = reset($order_ids);
     if ($order_id) {
       $this->pass(
-        t('Order %order_id has been created', ['%order_id' => $order_id])
+        SafeMarkup::format('Order %order_id has been created', ['%order_id' => $order_id])
       );
 
       $this->drupalGet('admin/store/orders/' . $order_id . '/edit');

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_store\Address;
@@ -123,7 +124,7 @@ class OrderTest extends UbercartTestBase {
       ->condition('uid', $this->customer->id())
       ->execute();
     $order_id = reset($order_ids);
-    $this->assertTrue($order_id, t('Found order ID @order_id', ['@order_id' => $order_id]));
+    $this->assertTrue($order_id, SafeMarkup::format('Found order ID @order_id', ['@order_id' => $order_id]));
 
     $this->drupalGet('admin/store/orders/view');
     $this->assertLinkByHref('admin/store/orders/' . $order_id, 0, 'View link appears on order list.');
@@ -269,7 +270,7 @@ class OrderTest extends UbercartTestBase {
     $order_ids = \Drupal::entityQuery('uc_order')
       ->condition('order_id', $order->id())
       ->execute();
-    $this->assertTrue(in_array($order->id(), $order_ids), t('Found order ID @order_id', ['@order_id' => $order->id()]));
+    $this->assertTrue(in_array($order->id(), $order_ids), SafeMarkup::format('Found order ID @order_id', ['@order_id' => $order->id()]));
 
     $country_manager = \Drupal::service('country_manager');
     $country = array_rand($country_manager->getEnabledList());

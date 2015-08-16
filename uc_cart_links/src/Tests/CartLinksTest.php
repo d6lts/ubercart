@@ -8,6 +8,7 @@
 namespace Drupal\uc_cart_links\Tests;
 
 use Drupal\Core\Url;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -131,12 +132,12 @@ class CartLinksTest extends UbercartTestBase {
       $this->assertLink(
         t('Cart Link #@link', ['@link' => $key]),
         0,
-        format_string('Cart Link #@link found on page.', ['@link' => $key])
+        SafeMarkup::format('Cart Link #@link found on page.', ['@link' => $key])
       );
       $this->assertLinkByHref(
         t('@link', ['@link' => $test_link]),
         0,
-        format_string('Cart Link @link found on page.', ['@link' => $test_link])
+        SafeMarkup::format('Cart Link @link found on page.', ['@link' => $test_link])
       );
 
       // Click on link
@@ -145,7 +146,7 @@ class CartLinksTest extends UbercartTestBase {
       // by default, see admin/store/config/cart)
       $this->assertText(
         t('@title added to your shopping cart.', ['@title' => $link_data[$key]['title']]),
-        format_string('Product @title added to cart.', ['@title' => $link_data[$key]['title']])
+        SafeMarkup::format('Product @title added to cart.', ['@title' => $link_data[$key]['title']])
       );
 
       // Check contents of cart
@@ -164,13 +165,13 @@ class CartLinksTest extends UbercartTestBase {
       foreach ($link_data[$key]['attributes'] as $label => $attribute) {
         $this->assertText(
           $label . ':',
-          format_string('Attribute @label correct in cart.', ['@label' => $label])
+          SafeMarkup::format('Attribute @label correct in cart.', ['@label' => $label])
         );
         foreach ($attribute as $option) {
           // Check for correct option name(s) in cart
           $this->assertText(
             $option,
-            format_string('Option @name correct in cart.', ['@name' => $option])
+            SafeMarkup::format('Option @name correct in cart.', ['@name' => $option])
           );
         }
       }
@@ -181,7 +182,7 @@ class CartLinksTest extends UbercartTestBase {
       // Default add-to-cart message is different when adding a duplicate item
       $this->assertNoText(
         t('Your item(s) have been updated.'),
-        format_string('Default add-to-cart message suppressed.')
+        SafeMarkup::format('Default add-to-cart message suppressed.')
       );
 
       // Empty cart (press remove button)
@@ -360,7 +361,7 @@ class CartLinksTest extends UbercartTestBase {
     // by default, see admin/store/config/cart)
     $this->assertText(
       t('@title added to your shopping cart.', ['@title' => $link_data[$test_link_0]['title']]),
-      format_string('Product @title added to cart.', ['@title' => $link_data[$test_link_0]['title']])
+      SafeMarkup::format('Product @title added to cart.', ['@title' => $link_data[$test_link_0]['title']])
     );
 
     // Pick another link at random, as long as it is different from first
@@ -408,7 +409,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->clickLink(t('Cart Link #@link', ['@link' => $test_link]));
     $this->assertText(
       t('@title added to your shopping cart.', ['@title' => $link_data[$test_link]['title']]),
-      format_string('Product @title added to cart.', ['@title' => $link_data[$test_link]['title']])
+      SafeMarkup::format('Product @title added to cart.', ['@title' => $link_data[$test_link]['title']])
     );
 
     $this->drupalLogout();
@@ -458,7 +459,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->drupalGet($cart_links[$test_link] . '-m' . $message_key);
     $this->assertText(
       t('@message', ['@message' => $message_text[1]]),
-      format_string('Message @key displayed.', ['@key' => $message_key])
+      SafeMarkup::format('Message @key displayed.', ['@key' => $message_key])
     );
 
     // Empty cart (press remove button)
@@ -525,7 +526,7 @@ class CartLinksTest extends UbercartTestBase {
 //    $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-clicks ")]');
       $this->assertTextPattern(
         '/\s+' . preg_quote($id, '/') . '\s+' . preg_quote($clicks, '/') . '\s+/',
-        format_string('Tracking ID @id received @clicks clicks.', ['@id' => $id, '@clicks' => $clicks])
+        SafeMarkup::format('Tracking ID @id received @clicks clicks.', ['@id' => $id, '@clicks' => $clicks])
       );
     }
     $this->assertEqual($total, 50, 'Fifty clicks recorded.');
@@ -555,7 +556,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_add_show',
       $state,
-      format_string('Display Cart Links product action messages is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
+      SafeMarkup::format('Display Cart Links product action messages is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
     );
   }
 
@@ -577,7 +578,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_track',
       $state ? 1 : 0,
-      format_string('Track clicks is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
+      SafeMarkup::format('Track clicks is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
     );
   }
 
@@ -599,7 +600,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_empty',
       $state,
-      format_string('Allow Cart Links to empty carts is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
+      SafeMarkup::format('Allow Cart Links to empty carts is @state.', ['@state' => $state ? 'TRUE' : 'FALSE'])
     );
   }
 
@@ -622,7 +623,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_messages',
       $message_string,
-      format_string('Cart Links messages contains "@messages".', ['@messages' => $message_string])
+      SafeMarkup::format('Cart Links messages contains "@messages".', ['@messages' => $message_string])
     );
   }
 
@@ -644,7 +645,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_restrictions',
       $restrictions,
-      format_string('Cart Links restrictions contains "@restrictions".', ['@restrictions' => $restrictions])
+      SafeMarkup::format('Cart Links restrictions contains "@restrictions".', ['@restrictions' => $restrictions])
     );
   }
 
@@ -665,7 +666,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_invalid_page',
       $url,
-      format_string('Cart Links invalid page URL contains "@url".', ['@url' => $url])
+      SafeMarkup::format('Cart Links invalid page URL contains "@url".', ['@url' => $url])
     );
   }
 

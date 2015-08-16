@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_credit\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -274,10 +275,10 @@ class CreditCardTest extends UbercartTestBase {
         $this->drupalPostForm('admin/store/orders/' . $order->id() . '/credit', $edit, 'Charge amount');
 
         if ($y > $year || $m >= $month) {
-          $this->assertText('The credit card was processed successfully.', t('Card with expiry date @month/@year passed validation.', array('@month' => $m, '@year' => $y)));
+          $this->assertText('The credit card was processed successfully.', SafeMarkup::format('Card with expiry date @month/@year passed validation.', ['@month' => $m, '@year' => $y]));
         }
         else {
-          $this->assertNoText('The credit card was processed successfully.', t('Card with expiry date @month/@year correctly failed validation.', array('@month' => $m, '@year' => $y)));
+          $this->assertNoText('The credit card was processed successfully.', SafeMarkup::format('Card with expiry date @month/@year correctly failed validation.', ['@month' => $m, '@year' => $y]));
         }
       }
     }

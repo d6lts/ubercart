@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_country\Tests;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -37,7 +38,7 @@ class CountryTest extends WebTestBase {
       $this->assertLinkByHref(
         'admin/store/config/country/' . $country_id . '/enable',
         0,
-        format_string('%country is not enabled by default.', ['%country' => $countries[$country_id]])
+        SafeMarkup::format('%country is not enabled by default.', ['%country' => $countries[$country_id]])
       );
 
       // Enable this country.
@@ -46,7 +47,7 @@ class CountryTest extends WebTestBase {
       $this->assertLinkByHref(
         'admin/store/config/country/' . $country_id . '/disable',
         0,
-        format_string('%country is now enabled.', ['%country' => $countries[$country_id]])
+        SafeMarkup::format('%country is now enabled.', ['%country' => $countries[$country_id]])
       );
     }
 
@@ -55,7 +56,7 @@ class CountryTest extends WebTestBase {
     $this->assertNoOption(
       'edit-uc-store-country',
       $last_country,
-      format_string('%country not listed in uc_address select country field.', ['%country' => $countries[$last_country]])
+      SafeMarkup::format('%country not listed in uc_address select country field.', ['%country' => $countries[$last_country]])
     );
 
     // Enable the last country.
@@ -64,7 +65,7 @@ class CountryTest extends WebTestBase {
     $this->assertLinkByHref(
       'admin/store/config/country/' . $last_country . '/disable',
       0,
-      format_string('%country is now enabled.', ['%country' => $countries[$last_country]])
+      SafeMarkup::format('%country is now enabled.', ['%country' => $countries[$last_country]])
     );
 
     // Verify that last random country now shows up as available.
@@ -72,7 +73,7 @@ class CountryTest extends WebTestBase {
     $this->assertOption(
       'edit-uc-store-country',
       $last_country,
-      format_string('%country is listed in uc_address select country field.', ['%country' => $countries[$last_country]])
+      SafeMarkup::format('%country is listed in uc_address select country field.', ['%country' => $countries[$last_country]])
     );
 
     // Disable the last country using the operations button.
@@ -82,7 +83,7 @@ class CountryTest extends WebTestBase {
     $this->assertLinkByHref(
       'admin/store/config/country/' . $last_country . '/enable',
       0,
-      format_string('%country is now disabled.', ['%country' => $countries[$last_country]])
+      SafeMarkup::format('%country is now disabled.', ['%country' => $countries[$last_country]])
     );
   }
 
