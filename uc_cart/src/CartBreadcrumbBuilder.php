@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart;
 
+use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -34,8 +35,11 @@ class CartBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $config = \Drupal::config('uc_cart.settings');
     $text = $config->get('breadcrumb_text');
 
-    $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $breadcrumb[] = new Link($text, Url::fromUri('internal:/' . $config->get('breadcrumb_url'), ['absolute' => TRUE]));
+    $links[] = Link::createFromRoute($this->t('Home'), '<front>');
+    $links[] = new Link($text, Url::fromUri('internal:/' . $config->get('breadcrumb_url'), ['absolute' => TRUE]));
+
+    $breadcrumb = new Breadcrumb();
+    $breadcrumb->setLinks($links);
 
     return $breadcrumb;
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_catalog;
 
+use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityManagerInterface;
@@ -73,14 +74,18 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * Builds the breadcrumb for a catalog page.
    */
   protected function catalogBreadcrumb($node) {
-    $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $breadcrumb[] = new Link($this->t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
+    $links[] = Link::createFromRoute($this->t('Home'), '<front>');
+    $links[] = new Link($this->t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
     if ($parents = \Drupal::entityManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->target_id)) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = new Link($parent->label(), Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]));
+        $links[] = new Link($parent->label(), Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]));
       }
     }
+
+    $breadcrumb = new Breadcrumb();
+    $breadcrumb->setLinks($links);
+
     return $breadcrumb;
   }
 
