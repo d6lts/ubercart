@@ -214,8 +214,8 @@ class QuoteTest extends UbercartTestBase {
         }
       }
       // Verify line item is correct.
-      $this->assertEqual($line['type'], 'shipping', t('The shipping line item was saved to the order.'));
-      $this->assertEqual($quote1->amount, uc_currency_format($line['amount']), t('Stored shipping line item has the correct amount.'));
+      $this->assertEqual($line['type'], 'shipping', 'The shipping line item was saved to the order.');
+      $this->assertEqual($quote1->amount, uc_currency_format($line['amount']), 'Stored shipping line item has the correct amount.');
 
       // Verify order total is correct on order-view form.
       $this->drupalGet('admin/store/orders/' . $order_id);
@@ -223,8 +223,8 @@ class QuoteTest extends UbercartTestBase {
 
       // Verify shipping line item is correct on order edit form.
       $this->drupalGet('admin/store/orders/' . $order_id . '/edit');
-      $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][title]', $quote1->label, t('Found the correct shipping line item title.'));
-      $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][amount]', substr($quote1->amount, 1), t('Found the correct shipping line item title.'));
+      $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][title]', $quote1->label, 'Found the correct shipping line item title.');
+      $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][amount]', substr($quote1->amount, 1), 'Found the correct shipping line item title.');
 
       // Verify that the "get quotes" button works as expected.
       $result = $this->ucPostAjax('admin/store/orders/' . $order_id . '/edit', [], ['op' => t('Get shipping quotes')]);

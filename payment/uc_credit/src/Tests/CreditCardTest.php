@@ -79,7 +79,7 @@ class CreditCardTest extends UbercartTestBase {
     $this->assertFieldByName(
       'methods[credit][status]',
       TRUE,
-      t('Credit card payment method is enabled')
+      'Credit card payment method is enabled'
     );
 
     // Create key directory, make it readable and writeable.
@@ -99,12 +99,12 @@ class CreditCardTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_credit_encryption_path',
       'sites/default/files/simpletest.keys',
-      t('Key file path has been set.')
+      'Key file path has been set.'
     );
 
     $this->assertTrue(
       file_exists('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME),
-      t('Key has been generated and stored.')
+      'Key has been generated and stored.'
     );
     $this->pass('Key = ' . uc_credit_encryption_key());
 
@@ -126,7 +126,7 @@ class CreditCardTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_pg_test_gateway_enabled',
       TRUE,
-      t('Test gateway is enabled')
+      'Test gateway is enabled'
     );
   }
 
@@ -167,7 +167,7 @@ class CreditCardTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_credit_encryption_path',
       t('Not configured.'),
-      t('Key file has not yet been configured.')
+      'Key file has not yet been configured.'
     );
     // Restore variable setting.
     $config->set('encryption_path', $temp_variable)->save();
@@ -209,7 +209,7 @@ class CreditCardTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_credit_encryption_path',
       'sites/default/files/testkey',
-      t('Key file path has been set.')
+      'Key file path has been set.'
     );
     $this->assertText('Credit card encryption key file generated.');
 
@@ -229,11 +229,11 @@ class CreditCardTest extends UbercartTestBase {
     // Test contents - must contain 32-character hexadecimal string.
     $this->assertTrue(
       file_exists('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME),
-      t('Key has been generated and stored.')
+      'Key has been generated and stored.'
     );
     $this->assertTrue(
       preg_match("([0-9a-fA-F]{32})", uc_credit_encryption_key()),
-      t('Valid key detected in key file.')
+      'Valid key detected in key file.'
     );
 
     // Cleanup keys directory after test.

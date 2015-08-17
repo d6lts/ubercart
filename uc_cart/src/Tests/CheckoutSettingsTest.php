@@ -21,7 +21,7 @@ class CheckoutSettingsTest extends UbercartTestBase {
     $this->drupalGet('admin/store/config/checkout');
     $this->assertField(
       'uc_checkout_enabled',
-      t('Enable checkout field exists')
+      'Enable checkout field exists'
     );
 
     $this->drupalPostForm(
@@ -39,7 +39,7 @@ class CheckoutSettingsTest extends UbercartTestBase {
     $buttons = $this->xpath('//input[@value="' . t('Checkout') . '"]');
     $this->assertFalse(
       isset($buttons[0]),
-      t('The checkout button is not shown.')
+      'The checkout button is not shown.'
     );
   }
 
@@ -48,7 +48,7 @@ class CheckoutSettingsTest extends UbercartTestBase {
     $this->drupalGet('admin/store/config/checkout');
     $this->assertField(
       'uc_checkout_anonymous',
-      t('Anonymous checkout field exists')
+      'Anonymous checkout field exists'
     );
 
     $this->drupalPostForm(
@@ -70,7 +70,7 @@ class CheckoutSettingsTest extends UbercartTestBase {
     );
     $this->assertNoText(
       'Enter your billing address and information here.',
-      t('The checkout page is not displayed.')
+      'The checkout page is not displayed.'
     );
   }
 }

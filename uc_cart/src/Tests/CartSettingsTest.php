@@ -42,7 +42,7 @@ class CartSettingsTest extends UbercartTestBase {
     $this->drupalGet('admin/store/config/cart');
     $this->assertField(
       'uc_add_item_redirect',
-      t('Add to cart redirect field exists')
+      'Add to cart redirect field exists'
     );
 
     $redirect = 'admin/store';
@@ -60,7 +60,7 @@ class CartSettingsTest extends UbercartTestBase {
     $url_pass = ($this->getUrl() == Url::fromUri('base:' . $redirect, ['absolute' => TRUE])->toString());
     $this->assertTrue(
       $url_pass,
-      t('Add to cart redirect takes user to the correct URL.')
+      'Add to cart redirect takes user to the correct URL.'
     );
   }
 
@@ -82,7 +82,7 @@ class CartSettingsTest extends UbercartTestBase {
     $this->drupalGet('admin/store/config/cart');
     $this->assertField(
       'uc_minimum_subtotal',
-      t('Minimum order subtotal field exists')
+      'Minimum order subtotal field exists'
     );
 
     $minimum_subtotal = mt_rand(2, 9999);
@@ -109,7 +109,7 @@ class CartSettingsTest extends UbercartTestBase {
     );
     $this->assertRaw(
       'The minimum order subtotal for checkout is',
-      t('Prevented checkout below the minimum order total.')
+      'Prevented checkout below the minimum order total.'
     );
 
     // Add another product to the cart, and verify that we land on the checkout page.
@@ -136,23 +136,23 @@ class CartSettingsTest extends UbercartTestBase {
     $this->assertLink(
       t('Continue shopping'),
       0,
-      t('Continue shopping link appears on the page.')
+      'Continue shopping link appears on the page.'
     );
     $links = $this->xpath('//a[@href="' . \Drupal::url('entity.node.canonical', ['node' => $this->product->id()]) . '"]');
     $this->assertTrue(
       isset($links[0]),
-      t('Continue shopping link returns to the product page.')
+      'Continue shopping link returns to the product page.'
     );
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/store/config/cart');
     $this->assertField(
       'uc_continue_shopping_type',
-      t('Continue shopping element display field exists')
+      'Continue shopping element display field exists'
     );
     $this->assertField(
       'uc_continue_shopping_url',
-      t('Default continue shopping link URL field exists')
+      'Default continue shopping link URL field exists'
     );
 
     // Test continue shopping button that sends users to a fixed URL.
@@ -175,7 +175,7 @@ class CartSettingsTest extends UbercartTestBase {
     $url_pass = ($this->getUrl() == Url::fromUri('base:' . $settings['uc_continue_shopping_url'], ['absolute' => TRUE])->toString());
     $this->assertTrue(
       $url_pass,
-      t('Continue shopping button takes the user to the correct URL.')
+      'Continue shopping button takes the user to the correct URL.'
     );
   }
 
@@ -184,11 +184,11 @@ class CartSettingsTest extends UbercartTestBase {
     $this->drupalGet('admin/store/config/cart');
     $this->assertField(
       'uc_cart_breadcrumb_text',
-      t('Custom cart breadcrumb text field exists')
+      'Custom cart breadcrumb text field exists'
     );
     $this->assertField(
       'uc_cart_breadcrumb_url',
-      t('Custom cart breadcrumb URL')
+      'Custom cart breadcrumb URL'
     );
 
     $settings = array(
@@ -209,12 +209,12 @@ class CartSettingsTest extends UbercartTestBase {
     $this->assertLink(
       $settings['uc_cart_breadcrumb_text'],
       0,
-      t('The breadcrumb link text is set correctly.')
+      'The breadcrumb link text is set correctly.'
     );
     $links = $this->xpath('//a[@href="' . Url::fromUri('internal:/' . $settings['uc_cart_breadcrumb_url'], ['absolute' => TRUE])->toString() . '"]');
     $this->assertTrue(
       isset($links[0]),
-      t('The breadcrumb link is set correctly.')
+      'The breadcrumb link is set correctly.'
     );
   }
 }

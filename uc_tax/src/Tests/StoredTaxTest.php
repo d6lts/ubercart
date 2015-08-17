@@ -31,11 +31,11 @@ class StoredTaxTest extends UbercartTestBase {
   }
 
   protected function assertTaxLineCorrect($line, $rate, $when) {
-    $this->assertTrue($line, t('The tax line item was saved to the order ' . $when));
-    $this->assertTrue(number_format($rate * $this->product->price->value, 2) == number_format($line['amount'], 2), t('Stored tax line item has the correct amount ' . $when));
-    $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][li_id]', $line['line_item_id'], t('Found the tax line item ID ' . $when));
-    $this->assertText($line['title'], t('Found the tax title ' . $when));
-    $this->assertText(uc_currency_format($line['amount']), t('Tax display has the correct amount ' . $when));
+    $this->assertTrue($line, 'The tax line item was saved to the order ' . $when);
+    $this->assertTrue(number_format($rate * $this->product->price->value, 2) == number_format($line['amount'], 2), 'Stored tax line item has the correct amount ' . $when);
+    $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][li_id]', $line['line_item_id'], 'Found the tax line item ID ' . $when);
+    $this->assertText($line['title'], 'Found the tax title ' . $when);
+    $this->assertText(uc_currency_format($line['amount']), 'Tax display has the correct amount ' . $when);
   }
 
   public function testTaxDisplay() {
@@ -59,10 +59,10 @@ class StoredTaxTest extends UbercartTestBase {
     uc_tax_rate_save($rate);
 
     $this->drupalGet('admin/store/config/taxes');
-    $this->assertText($rate->name, t('Tax was saved successfully.'));
+    $this->assertText($rate->name, 'Tax was saved successfully.');
 
     // $this->drupalGet("admin/store/config/taxes/manage/uc_tax_$rate->id");
-    // $this->assertText(t('Conditions'), t('Rules configuration linked to tax.'));
+    // $this->assertText(t('Conditions'), 'Rules configuration linked to tax.');
 
     $this->addToCart($this->product);
 
@@ -70,17 +70,17 @@ class StoredTaxTest extends UbercartTestBase {
     $this->drupalPostForm('cart', array(), 'Checkout');
     $this->assertText(
       t('Enter your billing address and information here.'),
-      t('Viewed cart page: Billing pane has been displayed.')
+      'Viewed cart page: Billing pane has been displayed.'
     );
-    $this->assertRaw($rate->name, t('Tax line item displayed.'));
-    $this->assertRaw(uc_currency_format($rate->rate * $this->product->price->value), t('Correct tax amount displayed.'));
+    $this->assertRaw($rate->name, 'Tax line item displayed.');
+    $this->assertRaw(uc_currency_format($rate->rate * $this->product->price->value), 'Correct tax amount displayed.');
 
     // Submit the checkout page.
     $edit = $this->populateCheckoutForm();
     $this->drupalPostForm('cart/checkout', $edit, t('Review order'));
     $this->assertRaw(t('Your order is almost complete.'));
-    $this->assertRaw($rate->name, t('Tax line item displayed.'));
-    $this->assertRaw(uc_currency_format($rate->rate * $this->product->price->value), t('Correct tax amount displayed.'));
+    $this->assertRaw($rate->name, 'Tax line item displayed.');
+    $this->assertRaw(uc_currency_format($rate->rate * $this->product->price->value), 'Correct tax amount displayed.');
 
     // Complete the review page.
     $this->drupalPostForm(NULL, array(), t('Submit order'));
@@ -124,7 +124,7 @@ class StoredTaxTest extends UbercartTestBase {
       \Drupal\uc_order\Entity\Order::load($order_id)->setStatusId('in_checkout')->save();
       $this->drupalPostForm('admin/store/orders/' . $order_id . '/edit', array(), t('Save changes'));
       $this->assertText(t('Order changes saved.'));
-      $this->assertFalse($this->loadTaxLine($order_id), t('The tax line was removed from the order when order status changed back to in_checkout.'));
+      $this->assertFalse($this->loadTaxLine($order_id), 'The tax line was removed from the order when order status changed back to in_checkout.');
 
       // Restore taxable product and ensure new tax is added.
       $rate->taxed_product_types = array('product');
@@ -134,7 +134,7 @@ class StoredTaxTest extends UbercartTestBase {
       $this->assertTaxLineCorrect($this->loadTaxLine($order_id), $rate->rate, 'when order status changed back to in_checkout');
     }
     else {
-      $this->fail(t('No order was created.'));
+      $this->fail('No order was created.');
     }
   }
 

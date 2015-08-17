@@ -81,7 +81,7 @@ class AddressTest extends UbercartTestBase {
     $address->phone = 'this is not a valid phone number';
     $this->assertTrue(
       $this->test_address[0]->isSamePhysicalLocation($address),
-      t('Physical address comparison ignores non-physical fields.')
+      'Physical address comparison ignores non-physical fields.'
     );
 
     // Use specific address.
@@ -91,14 +91,14 @@ class AddressTest extends UbercartTestBase {
     $address->city = 'vIcToRia';
     $this->assertTrue(
       $this->test_address[1]->isSamePhysicalLocation($address),
-      t('Case-insensitive address comparison works.')
+      'Case-insensitive address comparison works.'
     );
 
     // Modify city and test equality
     $address->city = '		vic toria ';
     $this->assertTrue(
       $this->test_address[1]->isSamePhysicalLocation($address),
-      t('Whitespace-insensitive address comparison works.')
+      'Whitespace-insensitive address comparison works.'
     );
 
   }

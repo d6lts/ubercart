@@ -38,7 +38,7 @@ class AttributeTest extends UbercartTestBase {
     // Check the attribute integrity.
     foreach ($this->attributeFieldsToTest() as $field) {
       if ($loaded_attribute->$field != $attribute->$field) {
-        $this->fail(t('Attribute integrity check failed.'));
+        $this->fail('Attribute integrity check failed.');
         break;
       }
     }
@@ -59,7 +59,7 @@ class AttributeTest extends UbercartTestBase {
     // Check the attribute integrity.
     foreach ($this->attributeFieldsToTest('product') as $field) {
       if ($loaded_attribute->$field != $attribute->$field) {
-        $this->fail(t('Attribute integrity check failed.'));
+        $this->fail('Attribute integrity check failed.');
         break;
       }
     }

@@ -241,7 +241,7 @@ abstract class UbercartTestBase extends WebTestBase {
     $this->drupalPostForm('cart', [], 'Checkout');
     $this->assertText(
       t('Enter your billing address and information here.'),
-      t('Viewed cart page: Billing pane has been displayed.')
+      'Viewed cart page: Billing pane has been displayed.'
     );
 
     $edit = $this->populateCheckoutForm($edit);
@@ -258,13 +258,11 @@ abstract class UbercartTestBase extends WebTestBase {
       ->execute();
     $order_id = reset($order_ids);
     if ($order_id) {
-      $this->pass(
-        t('Order %order_id has been created', ['%order_id' => $order_id])
-      );
+      $this->pass(SafeMarkup::format('Order %order_id has been created', ['%order_id' => $order_id]));
       $order = \Drupal\uc_order\Entity\Order::load($order_id);
     }
     else {
-      $this->fail(t('No order was created.'));
+      $this->fail('No order was created.');
       $order = FALSE;
     }
 

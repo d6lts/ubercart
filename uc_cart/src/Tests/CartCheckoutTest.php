@@ -113,8 +113,8 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Test the cart page.
     $this->drupalGet('cart');
-    $this->assertText($this->product->label(), t('The product is in the cart.'));
-    $this->assertFieldByName('items[0][qty]', 1, t('The product quantity is 1.'));
+    $this->assertText($this->product->label(), 'The product is in the cart.');
+    $this->assertFieldByName('items[0][qty]', 1, 'The product quantity is 1.');
 
     // Add the item again.
     $this->addToCart($this->product);
@@ -123,13 +123,13 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Test the cart page again.
     $this->drupalGet('cart');
-    $this->assertFieldByName('items[0][qty]', 2, t('The product quantity is 2.'));
+    $this->assertFieldByName('items[0][qty]', 2, 'The product quantity is 2.');
 
     // Update the quantity.
     $qty = mt_rand(3, 100);
     $this->drupalPostForm('cart', array('items[0][qty]' => $qty), t('Update cart'));
     $this->assertText('Your cart has been updated.');
-    $this->assertFieldByName('items[0][qty]', $qty, t('The product quantity was updated.'));
+    $this->assertFieldByName('items[0][qty]', $qty, 'The product quantity was updated.');
     $this->assertText('hook_uc_cart_item_update fired');
 
     // Update the quantity to zero.
@@ -170,8 +170,8 @@ class CartCheckoutTest extends UbercartTestBase {
     // Log in and check the items are merged.
     $this->drupalLogin($this->customer);
     $this->drupalGet('cart');
-    $this->assertText($this->product->label(), t('The product remains in the cart after logging in.'));
-    $this->assertFieldByName('items[0][qty]', 2, t('The product quantity is 2.'));
+    $this->assertText($this->product->label(), 'The product remains in the cart after logging in.');
+    $this->assertFieldByName('items[0][qty]', 2, 'The product quantity is 2.');
   }
 
   public function testDeletedCartItem() {
@@ -442,7 +442,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->drupalPostForm('cart', [], 'Checkout');
     $this->assertText(
       t('Enter your billing address and information here.'),
-      t('Viewed cart page: Billing pane has been displayed.')
+      'Viewed cart page: Billing pane has been displayed.'
     );
 
     // Submit the checkout page.
