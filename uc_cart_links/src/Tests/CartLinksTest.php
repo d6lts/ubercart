@@ -182,7 +182,7 @@ class CartLinksTest extends UbercartTestBase {
       // Default add-to-cart message is different when adding a duplicate item
       $this->assertNoText(
         t('Your item(s) have been updated.'),
-        SafeMarkup::format('Default add-to-cart message suppressed.')
+        'Default add-to-cart message suppressed.'
       );
 
       // Empty cart (press remove button)
