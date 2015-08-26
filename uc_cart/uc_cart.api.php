@@ -127,7 +127,7 @@ function hook_uc_cart_display($item) {
   $element['remove'] = array('#type' => 'checkbox');
 
   $element['title'] = array(
-    '#markup' => $node->access('view') ? l($item->title, 'node/' . $item->nid) : SafeMarkup::checkPlain($item->title),
+    '#markup' => $node->access('view') ? l($item->title, 'node/' . $item->nid) : $item->title,
   );
 
 

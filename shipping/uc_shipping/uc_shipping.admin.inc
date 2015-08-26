@@ -136,7 +136,7 @@ function uc_shipping_new_package($form, FormStateInterface $form_state, $order) 
           '#default_value' => 0,
         );
         $product_row['model'] = array(
-          '#markup' => SafeMarkup::checkPlain($product->model)
+          '#markup' => $product->model
         );
         $product_row['name'] = array(
           '#markup' => Xss::filterAdmin($product->title)
@@ -341,7 +341,7 @@ function uc_shipping_package_edit($form, FormStateInterface $form_state, $order,
     if ($product->qty > 0) {
       $product_row = array();
       $product_row['checked'] = array('#type' => 'checkbox', '#default_value' => isset($package->products[$product->order_product_id]));
-      $product_row['model'] = array('#markup' => SafeMarkup::checkPlain($product->model));
+      $product_row['model'] = array('#markup' => $product->model);
       $product_row['name'] = array('#markup' => Xss::filterAdmin($product->title));
       $range = range(1, $product->qty);
       $product_row['qty'] = array(
