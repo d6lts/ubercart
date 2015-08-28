@@ -678,7 +678,7 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
 
   $site_config = \Drupal::config('system.site');
-  $head_title = array('name' => SafeMarkup::checkPlain($site_config->get('name')));
+  $head_title = array('name' => $site_config->get('name'));
   if ($site_config->get('slogan')) {
     $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_config->get('slogan')));
   }

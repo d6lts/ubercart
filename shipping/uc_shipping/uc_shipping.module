@@ -260,11 +260,11 @@ function template_preprocess_uc_packing_slip(&$variables) {
 
   $order = $variables['order'];
   $variables['order_link'] = l($order->id(), url('user/' . $order->getUserId() . '/orders/' . $order->id(), array('absolute' => TRUE)));
-  $variables['order_email'] = SafeMarkup::checkPlain($order->getEmail());
+  $variables['order_email'] = $order->getEmail();
   $variables['billing_address'] = $order->getAddress('billing');
-  $variables['billing_phone'] = SafeMarkup::checkPlain($order->getAddress('billing')->phone);
+  $variables['billing_phone'] = $order->getAddress('billing')->phone;
   $variables['shipping_address'] = $order->getAddress('delivery');
-  $variables['shipping_phone'] = SafeMarkup::checkPlain($order->getAddress('delivery')->phone);
+  $variables['shipping_phone'] = $order->getAddress('delivery')->phone;
 
   if (\Drupal::moduleHandler()->moduleExists('uc_payment')) {
     $variables['payment_method'] = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
@@ -274,8 +274,8 @@ function template_preprocess_uc_packing_slip(&$variables) {
   }
 
   $shipment = $variables['shipment'];
-  $variables['carrier'] = SafeMarkup::checkPlain($shipment->carrier);
-  $variables['tracking_number'] = SafeMarkup::checkPlain($shipment->tracking_number);
+  $variables['carrier'] = $shipment->carrier;
+  $variables['tracking_number'] = $shipment->tracking_number;
   $variables['packages'] = $shipment->packages;
 }
 
@@ -286,8 +286,8 @@ function template_preprocess_uc_packing_slip(&$variables) {
  */
 function template_preprocess_uc_packing_slip_page(&$variables) {
   $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : \Drupal::languageManager()->getDefaultLanguage();
-  $variables['language']          = $language;
-  $variables['language']->dir     = $language->direction ? 'rtl' : 'ltr';
+  $variables['language'] = $language;
+  $variables['language']->dir = $language->direction ? 'rtl' : 'ltr';
 }
 
 /**
