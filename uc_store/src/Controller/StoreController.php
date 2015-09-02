@@ -40,7 +40,7 @@ class StoreController extends SystemController {
 
       $build['status'] = array(
         '#theme' => 'table',
-        '#caption' => '<h2>' . $this->t('Store status') . '</h2>',
+        '#caption' => ['#markup' => '<h2>' . $this->t('Store status') . '</h2>'],
         '#rows' => $rows,
         '#attributes' => array('class' => array('system-status-report')),
       );
