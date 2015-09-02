@@ -17,7 +17,7 @@ abstract class UbercartTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('uc_cart');
+  public static $modules = ['block', 'uc_cart'];
 
   /**
    * Don't check for or validate config schema.
@@ -57,6 +57,10 @@ abstract class UbercartTestBase extends WebTestBase {
    */
   public function setUp() {
     parent::setUp();
+
+    // Place the tabs and actions blocks as various tests use them.
+    $this->drupalPlaceBlock('local_actions_block');
+    $this->drupalPlaceBlock('local_tasks_block');
 
     // Collect admin permissions.
     $class = get_class($this);
