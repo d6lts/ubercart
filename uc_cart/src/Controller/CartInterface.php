@@ -22,7 +22,7 @@ interface CartInterface {
    *
    * @param \Drupal\uc_order\Entity\Order $order
    *   The order entity that has just been completed.
-   * @param $login
+   * @param bool $login
    *   Whether or not to login a new user when this function is called.
    *
    * @return
@@ -41,7 +41,7 @@ interface CartInterface {
   /**
    * Returns the unique cart ID for the current user.
    *
-   * @param $create
+   * @param bool $create
    *   If TRUE, a cart ID will be generated if none is set.
    *
    * @return

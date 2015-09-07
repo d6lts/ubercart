@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 
 /**
- * Provides a listing of tax rate configuration entities.
+ * Provides a listing of uc_tax_rate configuration entities.
  */
 class TaxRateListBuilder extends ConfigEntityListBuilder {
 

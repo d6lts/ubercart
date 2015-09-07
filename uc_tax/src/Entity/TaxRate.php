@@ -130,7 +130,7 @@ class TaxRate extends ConfigEntityBase implements TaxRateInterface {
    * {@inheritdoc}
    */
   public function getLabel() {
-    return $this->label;
+    return $this->label();
   }
 
   /**

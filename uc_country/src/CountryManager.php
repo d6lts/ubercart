@@ -38,7 +38,9 @@ class CountryManager implements CountryManagerInterface {
    * Constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
    */
   public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
     $this->moduleHandler = $module_handler;

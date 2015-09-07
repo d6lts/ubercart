@@ -16,7 +16,6 @@ use Drupal\Component\Utility\String;
 /**
  * Form step values.
  */
-define('UC_FILE_FORM_FILES' , NULL);
 define('UC_FILE_FORM_ACTION', 1   );
 
 

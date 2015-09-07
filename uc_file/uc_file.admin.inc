@@ -12,7 +12,6 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form step values.
  */
-define('UC_FILE_FORM_FILES' , NULL);
 define('UC_FILE_FORM_ACTION', 1   );
 
 /**

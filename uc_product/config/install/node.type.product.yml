@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  module:
+    - uc_product
   enforced:
     module:
       - uc_product

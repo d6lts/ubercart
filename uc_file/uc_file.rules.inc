@@ -307,10 +307,10 @@ function uc_file_action_order_renew($order) {
 
       // Note on the order where the user has gained download permission.
       if (is_dir(uc_file_qualify_file($file->filename))) {
-        $comment = t('User can now download files in the directory %dir.', array('%dir' => $file->filename));
+        $comment = t('User can now download files in the directory %dir.', ['%dir' => $file->filename]);
       }
       else {
-        $comment = t('User can now download the file %file.', array('%file' => drupal_basename($file->filename)));
+        $comment = t('User can now download the file %file.', ['%file' => drupal_basename($file->filename)]);
       }
       uc_order_comment_save($order->id(), $order_user->id(), $comment);
     }

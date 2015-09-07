@@ -198,7 +198,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
   /**
    * Ajax callback to re-render the payment method pane.
    */
-  function ajaxRender($form, &$form_state) {
+  public function ajaxRender($form, &$form_state) {
     return $form['panes']['payment']['details'];
   }
 

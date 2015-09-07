@@ -63,7 +63,7 @@ class Encryption implements EncryptionInterface {
 
       $num2 = strpos(self::$scramble2, $char2);
       if ($num2 === FALSE) {
-        $this->errors[] = t('Source string contains an invalid character (@char)', array('@char' => $char2));
+        $this->errors[] = t('Source string contains an invalid character (@char)', ['@char' => $char2]);
         return;
       }
 
@@ -111,7 +111,7 @@ class Encryption implements EncryptionInterface {
 
       $num1 = strpos(self::$scramble1, $char1);
       if ($num1 === FALSE) {
-        $this->errors[] = t('Source string contains an invalid character (@char)', array('@char' => $char1));
+        $this->errors[] = t('Source string contains an invalid character (@char)', ['@char' => $char1]);
         return;
       }
 
@@ -180,7 +180,7 @@ class Encryption implements EncryptionInterface {
       if (!$alerted) {
         // Throw an error that makes sense so this stops getting reported.
         $this->errors[] = t('No encryption key was found.');
-        drupal_set_message(t('Ubercart cannot find a necessary encryption key. Refer to the store admin <a href="@url">dashboard</a> to isolate which one.', array('@url' => \Drupal::url('uc_store.admin'))), 'error');
+        drupal_set_message(t('Ubercart cannot find a necessary encryption key. Refer to the store admin <a href="@url">dashboard</a> to isolate which one.', ['@url' => \Drupal::url('uc_store.admin')]), 'error');
 
         $alerted = TRUE;
       }
@@ -221,10 +221,10 @@ class Encryption implements EncryptionInterface {
   /**
    * Converts encryption key into an array of numbers.
    *
-   * @param $key
+   * @param string $key
    *   Encryption key.
    *
-   * @return
+   * @return array
    *   Array of integers.
    */
   protected function convertKey($key) {
@@ -243,7 +243,7 @@ class Encryption implements EncryptionInterface {
 
       $num = strpos(self::$scramble1, $char);
       if ($num === FALSE) {
-        $this->errors[] = t('Key contains an invalid character (@char)', array('@char' => $char));
+        $this->errors[] = t('Key contains an invalid character (@char)', ['@char' => $char]);
         return;
       }
 

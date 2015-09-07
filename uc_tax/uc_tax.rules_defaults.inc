@@ -19,7 +19,7 @@ function uc_tax_default_rules_configuration() {
     $set = rules_and(array(
       'order' => array('type' => 'uc_order', 'label' => 'Order'),
     ));
-    $set->label = t('@name conditions', array('@name' => $rate->name));
+    $set->label = t('@name conditions', ['@name' => $rate->name]);
 
     $configs['uc_tax_' . $rate->id] = $set;
   }
