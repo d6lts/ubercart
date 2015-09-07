@@ -54,7 +54,7 @@ function uc_ups_cron() {
   $files = file_scan_directory('public://ups_labels', '/^label-/');
   foreach ($files as $file) {
     if ($cutoff > filectime($file->uri)) {
-      drupal_unlink($file->uri);
+      \Drupal::service('file_system')->unlink($file->uri);
       \Drupal::logger('uc_ups')->notice('Removed uc_ups label file @file.', ['@file' => $file->uri]);
     }
   }

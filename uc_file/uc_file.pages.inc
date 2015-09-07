@@ -140,17 +140,17 @@ function uc_file_user_downloads($account) {
 
     // Expiration set to 'never'
     if ($file->expiration == FALSE) {
-      $file_link = \Drupal::l(drupal_basename($file->filename), 'download/' . $file->fid, $onclick);
+      $file_link = \Drupal::l(\Drupal::service('file_system')->basename($file->filename), 'download/' . $file->fid, $onclick);
     }
 
     // Expired.
     elseif (REQUEST_TIME > $file->expiration) {
-      $file_link = drupal_basename($file->filename);
+      $file_link = \Drupal::service('file_system')->basename($file->filename);
     }
 
     // Able to be downloaded.
     else {
-      $file_link = \Drupal::l(drupal_basename($file->filename), 'download/' . $file->fid, $onclick) . ' (' . t('expires on @date', array('@date' => \Drupal::service('date.formatter')->format($file->expiration, 'uc_store'))) . ')';
+      $file_link = \Drupal::l(\Drupal::service('file_system')->basename($file->filename), 'download/' . $file->fid, $onclick) . ' (' . t('expires on @date', ['@date' => \Drupal::service('date.formatter')->format($file->expiration, 'uc_store')]) . ')';
     }
 
     $files[] = array(
@@ -255,7 +255,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
   $request_cache = cache()->get('uc_file_' . $ip);
   $requests = ($request_cache) ? $request_cache->data + 1 : 1;
 
-  $message_user = ($user->id()) ? t('The user %username', array('%username' => $user->getUsername())) : t('The IP address %ip', array('%ip' => $ip));
+  $message_user = ($user->id()) ? t('The user %username', ['%username' => $user->getUsername()]) : t('The IP address %ip', ['%ip' => $ip]);
 
   if ($requests > UC_FILE_REQUEST_LIMIT) {
     return UC_FILE_ERROR_TOO_MANY_BOGUS_REQUESTS;
@@ -266,7 +266,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
     cache()->set('uc_file_' . $ip, $requests, REQUEST_TIME + 86400);
     if ($requests == UC_FILE_REQUEST_LIMIT) {
       // $message_user has already been sanitized.
-      \Drupal::logger('uc_file')->warning('!username has been temporarily banned from file downloads.', array('!username' => $message_user));
+      \Drupal::logger('uc_file')->warning('!username has been temporarily banned from file downloads.', ['!username' => $message_user]);
     }
 
     return UC_FILE_ERROR_INVALID_DOWNLOAD;
@@ -277,7 +277,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
   // Check the number of locations.
   if (!empty($file_download->address_limit) && !in_array($ip, $addresses) && count($addresses) >= $file_download->address_limit) {
     // $message_user has already been sanitized.
-    \Drupal::logger('uc_file')->warning('!username has been denied a file download by downloading it from too many IP addresses.', array('!username' => $message_user));
+    \Drupal::logger('uc_file')->warning('!username has been denied a file download by downloading it from too many IP addresses.', ['!username' => $message_user]);
 
     return UC_FILE_ERROR_TOO_MANY_LOCATIONS;
   }
@@ -285,7 +285,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
   // Check the downloads so far.
   if (!empty($file_download->download_limit) && $file_download->accessed >= $file_download->download_limit) {
     // $message_user has already been sanitized.
-    \Drupal::logger('uc_file')->warning('!username has been denied a file download by downloading it too many times.', array('!username' => $message_user));
+    \Drupal::logger('uc_file')->warning('!username has been denied a file download by downloading it too many times.', ['!username' => $message_user]);
 
     return UC_FILE_ERROR_TOO_MANY_DOWNLOADS;
   }
@@ -293,7 +293,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
   // Check if it's expired.
   if ($file_download->expiration && REQUEST_TIME >= $file_download->expiration) {
     // $message_user has already been sanitized.
-    \Drupal::logger('uc_file')->warning('!username has been denied an expired file download.', array('!username' => $message_user));
+    \Drupal::logger('uc_file')->warning('!username has been denied an expired file download.', ['!username' => $message_user]);
 
     return UC_FILE_ERROR_EXPIRED;
   }
@@ -310,7 +310,7 @@ function _uc_file_download_validate($file_download, &$user, $ip) {
 
   // Everything's ok!
   // $message_user has already been sanitized.
-  \Drupal::logger('uc_file')->notice('!username has started download of the file %filename.', array('!username' => $message_user, '%filename' => drupal_basename($file_download->filename)));
+  \Drupal::logger('uc_file')->notice('!username has started download of the file %filename.', ['!username' => $message_user, '%filename' => \Drupal::service('file_system')->basename($file_download->filename)]);
 }
 
 /**
