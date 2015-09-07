@@ -50,4 +50,31 @@ class CountryController extends ControllerBase {
     return $this->redirect('entity.uc_country.collection');
   }
 
+  /**
+   * Returns a list of all installed/available countries.
+   *
+   * @return array
+   *   Associative array keyed by the country's ISO 3166-1 alpha_2 country
+   *   code and containing the translated ISO 3166-1 country name.
+   */
+  public static function countryOptionsCallback() {
+    return \Drupal::service('country_manager')->getEnabledList();
+  }
+
+  /**
+   * Helper function to return zone options, grouped by country.
+   */
+  public static function zoneOptionsCallback() {
+    $options = array();
+    $countries = $this->entityManager()->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
+    foreach ($countries as $country) {
+      if (!empty($country->getZones())) {
+        $options[$this->t($country->name)] = $country->getZones();
+      }
+    }
+    uksort($options, 'strnatcasecmp');
+
+    return $options;
+  }
+
 }

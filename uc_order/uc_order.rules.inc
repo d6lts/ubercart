@@ -108,7 +108,7 @@ function uc_order_rules_condition_info() {
       'countries' => array(
         'type' => 'list<integer>',
         'label' => t('Countries'),
-        'options list' => 'uc_country_option_list',
+        'options list' => 'Drupal\uc_country\Controller\CountryController::countryOptionsCallback',
         'restriction' => 'input',
       ),
     ),
@@ -125,7 +125,7 @@ function uc_order_rules_condition_info() {
       'countries' => array(
         'type' => 'list<integer>',
         'label' => t('Countries'),
-        'options list' => 'uc_country_option_list',
+        'options list' => 'Drupal\uc_country\Controller\CountryController::countryOptionsCallback',
         'restriction' => 'input',
       ),
     ),
