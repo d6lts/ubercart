@@ -1040,11 +1040,17 @@ function uc_order_pane_admin_comments($op, $order, &$form = NULL, FormStateInter
       $items = array();
       $comments = uc_order_comments_load($form['order_id']['#value'], TRUE);
       foreach ($comments as $comment) {
-        $username = array(
-          '#theme' => 'uc_uid',
-          '#uid' => $comment->uid,
-        );
-        $items[] = '[' . drupal_render($username) . '] ' . Xss::filterAdmin($comment->message);
+        $items[] = [
+          'username' => [
+            '#theme' => 'uc_uid',
+            '#uid' => $comment->uid,
+            '#prefix' => '[',
+            '#suffix' => '] ',
+          ],
+          'message' => [
+            '#markup' => $comment->message,
+          ]
+        ];
       }
       $item_list = array(
         '#theme' => 'item_list',
