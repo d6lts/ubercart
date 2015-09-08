@@ -140,14 +140,7 @@ class Address {
       $format = implode("\r\n", $country->getAddressFormat());
     }
     else {
-      $variables += array(
-        '!zone_code' => t('N/A'),
-        '!zone_name' => t('Unknown'),
-        '!country_name' => t('Unknown'),
-        '!country_code2' => t('N/A'),
-        '!country_code3' => t('N/A'),
-      );
-      $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
+      $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city\r\n!postal_code";
     }
 
     if (uc_store_default_country() != $this->country) {
