@@ -128,7 +128,7 @@ class Address {
       '!postal_code' => $this->postal_code,
     );
 
-    $country = \Drupal::service('country_manager')->getCountry($this->country);
+    $country = $this->country ? \Drupal::service('country_manager')->getCountry($this->country) : NULL;
     if ($country) {
       $variables += array(
         '!zone_code' => $this->zone ?: t('N/A'),
