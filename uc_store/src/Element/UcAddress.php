@@ -142,7 +142,7 @@ class UcAddress extends Element\FormElement {
           );
 
           $country_id = is_object($value) ? $value->{$prefix . 'country'} : $value[$prefix . 'country'];
-          $zones = \Drupal::service('country_manager')->getZoneList($country_id);
+          $zones = $country_id ? \Drupal::service('country_manager')->getZoneList($country_id) : [];
           if (!empty($zones)) {
             natcasesort($zones);
             $subelement += array(
