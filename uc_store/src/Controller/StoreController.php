@@ -21,29 +21,23 @@ class StoreController extends SystemController {
     $build['blocks'] = parent::overview($link_id);
 
     if ($results = $this->moduleHandler()->invokeAll('uc_store_status')) {
+      $map = [
+        'warning' => REQUIREMENT_WARNING,
+        'error' => REQUIREMENT_ERROR,
+      ];
       foreach ($results as $message) {
-        switch ($message['status']) {
-          case 'warning': $icon = 'alert.gif'; break;
-          case 'error':   $icon = 'error.gif'; break;
-          default:        $icon = 'info.gif';
-        }
-        $icon = array(
-          '#theme' => 'image',
-          '#uri' => drupal_get_path('module', 'uc_store') . '/images/' . $icon,
-        );
-        $rows[] = array(
-          array('data' => $icon, 'class' => array('status-icon')),
-          array('data' => $message['title'], 'class' => array('status-title')),
-          array('data' => $message['desc'], 'class' => array('status-value')),
-        );
+        $requirements[] = [
+          'title' => $message['title'],
+          'description' => $message['desc'],
+          'severity' => isset($map[$message['status']]) ? $map[$message['status']] : REQUIREMENT_INFO,
+        ];
       }
 
-      $build['status'] = array(
-        '#theme' => 'table',
-        '#caption' => ['#markup' => '<h2>' . $this->t('Store status') . '</h2>'],
-        '#rows' => $rows,
-        '#attributes' => array('class' => array('system-status-report')),
-      );
+      $build['status'] = [
+        '#theme' => 'status_report',
+        '#prefix' => '<h2>' . $this->t('Store status') . '</h2>',
+        '#requirements' => $requirements,
+      ];
     }
 
     return $build;
