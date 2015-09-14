@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_cart\Controller;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
+
 /**
  * Handles all things concerning Ubercart's shopping cart.
  *
@@ -15,7 +17,7 @@ namespace Drupal\uc_cart\Controller;
  * adding items to a cart, and checking out.  The module enables the cart,
  * products, and checkout to be extensible.
  */
-interface CartInterface {
+interface CartInterface extends CacheableDependencyInterface {
 
   /**
    * Completes a sale, including adjusting order status and creating user account.
@@ -47,7 +49,7 @@ interface CartInterface {
    * @return
    *   The cart ID. If $create is FALSE, returns FALSE if no cart exists.
    */
-  public function getId($create);
+  public function getId($create = TRUE);
 
   /**
    * Grabs the items in a shopping cart for a user.

@@ -27,12 +27,16 @@ class CartController extends ControllerBase {
 
     // Display the empty cart page if there are no items in the cart.
     if (empty($items)) {
-      return array(
+      $build = [
         '#theme' => 'uc_cart_empty',
-      );
+      ];
+
+      \Drupal::service('renderer')->addCacheableDependency($build, $cart);
+
+      return $build;
     }
 
-    return $this->formBuilder()->getForm('Drupal\uc_cart\Form\CartForm', $items);
+    return $this->formBuilder()->getForm('Drupal\uc_cart\Form\CartForm', $cart);
   }
 
 }

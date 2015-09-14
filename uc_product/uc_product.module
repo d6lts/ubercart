@@ -9,6 +9,7 @@
  */
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -631,6 +632,9 @@ function uc_product_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL
     if ($item->qty->value != $qty) {
       $item->qty->value = $qty;
       $item->save();
+
+      // Invalidate the cache.
+      Cache::invalidateTags(['uc_cart:' . $cid]);
     }
   }
 }

@@ -10,7 +10,10 @@ namespace Drupal\uc_cart\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
+use Drupal\uc_cart\Controller\CartInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays the contents of the customer's cart.
@@ -22,6 +25,32 @@ use Drupal\Core\Url;
 class CartForm extends FormBase {
 
   /**
+   * The renderer.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
+   * Constructs a new CartForm.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
+   */
+  public function __construct(RendererInterface $renderer) {
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('renderer')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -31,7 +60,7 @@ class CartForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $items = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, CartInterface $cart = NULL) {
     $form['#attached']['library'][] = 'uc_cart/uc_cart.styles';
     $cart_config = $this->config('uc_cart.settings');
 
@@ -69,7 +98,7 @@ class CartForm extends FormBase {
 
     $i = 0;
     $subtotal = 0;
-    foreach ($items as $cart_item) {
+    foreach ($cart->getContents() as $cart_item) {
       $item = \Drupal::moduleHandler()->invoke($cart_item->data->module, 'uc_cart_display', array($cart_item));
       if (Element::children($item)) {
         $form['items'][$i]['remove'] = $item['remove'];
@@ -156,6 +185,9 @@ class CartForm extends FormBase {
         '#submit' => array(array($this, 'submitForm'), array($this, 'checkout')),
       );
     }
+
+    $this->renderer->addCacheableDependency($form, $cart);
+    $this->renderer->addCacheableDependency($form, $cart_config);
 
     return $form;
   }

@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_cart\Controller;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\UrlHelper;
@@ -282,6 +283,9 @@ class Cart extends ControllerBase implements CartInterface {
       $this->moduleHandler()->invoke($data['module'], 'uc_update_cart_item', array($nid, $data, min($qty, 999999), $cid));
     }
 
+    // Invalidate the cache.
+    Cache::invalidateTags(['uc_cart:' . $cid]);
+
     // If specified, rebuild the cached cart items array.
     if ($rebuild) {
       $this->getContents($cid, 'rebuild');
@@ -359,4 +363,35 @@ class Cart extends ControllerBase implements CartInterface {
 
     return FALSE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    // Carts vary by session.
+    return ['session'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $tags = [];
+
+    // If a cart ID is available, use it as the cache tag.
+    if ($cid = $this->getId(FALSE)) {
+      $tags[] = 'uc_cart:' . $cid;
+    }
+
+    return $tags;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    // Carts can be cached forever, the tag will be used to invalidate.
+    return Cache::PERMANENT;
+  }
+
 }
