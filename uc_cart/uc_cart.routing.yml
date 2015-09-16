@@ -29,6 +29,8 @@ uc_cart.checkout:
     _controller: '\Drupal\uc_cart\Controller\CheckoutController::checkout'
   requirements:
     _permission: 'access content'
+  options:
+    no_cache: TRUE
 
 uc_cart.checkout_review:
   path: '/cart/checkout/review'
