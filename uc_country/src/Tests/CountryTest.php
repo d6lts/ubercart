@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_country\Tests;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
 
@@ -113,4 +114,18 @@ class CountryTest extends WebTestBase {
     $this->assertNoText('State/Province');
     $this->assertNoText('Country');
   }
+
+  /**
+   * Overrides AssertContentTrait::assertText().
+   *
+   * Workaround for country names with single quote characters; they get
+   * escaped as &#039; but the parent method does not handle this properly.
+   *
+   * @see https://www.drupal.org/node/2534240
+   */
+  protected function assertText($text, $message = '', $group = 'Other') {
+    $text = Html::escape($text);
+    return parent::assertText($text, $message, $group);
+  }
+
 }
