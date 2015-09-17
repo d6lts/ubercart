@@ -43,6 +43,12 @@ class AddressTest extends UbercartTestBase {
   }
 
   public function testAddressFormat() {
+    $address = new Address();
+    $address->country = NULL;
+    $formatted = (string) $address;
+    $expected = '';
+    $this->assertEqual($formatted, $expected, 'Formatted empty address is an empty string.');
+
     $address = $this->test_address[1];
 
     // Expected format depends on the store country.

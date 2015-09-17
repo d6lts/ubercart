@@ -7,13 +7,15 @@
 
 namespace Drupal\uc_store;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines an object to hold Ubercart mailing address information.
  */
 class Address {
+  use StringTranslationTrait;
 
   /** Given name. */
   public $first_name = '';
@@ -48,6 +50,8 @@ class Address {
   /** Email address. */
   public $email = '';
 
+  /** Store default country code. */
+  protected $default_country;
 
   /**
    * Constructor.
@@ -55,7 +59,8 @@ class Address {
    * For convenience, country defaults to store country.
    */
   public function __construct() {
-    $this->country = \Drupal::config('uc_store.settings')->get('address.country');
+    $this->default_country = \Drupal::config('uc_store.settings')->get('address.country');
+    $this->country = $this->default_country;
   }
 
   /**
@@ -131,31 +136,32 @@ class Address {
     $country = $this->country ? \Drupal::service('country_manager')->getCountry($this->country) : NULL;
     if ($country) {
       $variables += array(
-        '!zone_code' => $this->zone ?: t('N/A'),
-        '!zone_name' => isset($country->getZones()[$this->zone]) ? $country->getZones()[$this->zone] : t('Unknown'),
-        '!country_name' => t($country->getName()),
+        '!zone_code' => $this->zone ?: $this->t('N/A'),
+        '!zone_name' => isset($country->getZones()[$this->zone]) ? $country->getZones()[$this->zone] : $this->t('Unknown'),
+        '!country_name' => $this->t($country->getName()),
         '!country_code2' => $country->id(),
         '!country_code3' => $country->getAlpha3(),
       );
-      $format = implode("\r\n", $country->getAddressFormat());
+
+      if ($this->country != $this->default_country) {
+        $variables['!country_name_if'] = $variables['!country_name'];
+        $variables['!country_code2_if'] = $variables['!country_code2'];
+        $variables['!country_code3_if'] = $variables['!country_code3'];
+      }
+      else {
+        $variables['!country_name_if']  = '';
+        $variables['!country_code2_if'] = '';
+        $variables['!country_code3_if'] = '';
+      }
+
+      $format = implode("\n", $country->getAddressFormat());
     }
     else {
-      $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city\r\n!postal_code";
+      $format = "!company\n!first_name !last_name\n!street1\n!street2\n!city\n!postal_code";
     }
 
-    if (uc_store_default_country() != $this->country) {
-      $variables['!country_name_if'] = $variables['!country_name'];
-      $variables['!country_code2_if'] = $variables['!country_code2'];
-      $variables['!country_code3_if'] = $variables['!country_code3'];
-    }
-    else {
-      $variables['!country_name_if']  = '';
-      $variables['!country_code2_if'] = '';
-      $variables['!country_code3_if'] = '';
-    }
-
-    $address = SafeMarkup::checkPlain(strtr($format, $variables));
-    $address = trim(preg_replace(array("/\r/", "/\n+/"), array('', "\n"), $address), "\n");
+    $address = Html::escape(strtr($format, $variables));
+    $address = trim(trim(preg_replace("/\n+/", "\n", $address), "\n"), ' ');
 
     if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
       $address = Unicode::strtoupper($address);
