@@ -690,9 +690,8 @@ function uc_product_is_product($node) {
   elseif (is_string($node)) {
     $type = $node;
   }
-
-  // If no node type was found, go ahead and return FALSE.
-  if (!$type) {
+  else {
+    // If no node type was found, go ahead and return FALSE.
     return FALSE;
   }
 
