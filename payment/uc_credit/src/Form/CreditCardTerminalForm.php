@@ -222,7 +222,7 @@ class CreditCardTerminalForm extends FormBase {
     // Get the data from the form and replace masked data from the order.
     $cc_data = $form_state->getValue('cc_data');
 
-    if (strpos($cc_data['cc_number'], $this->t('(Last 4) ')) === 0) {
+    if (strpos($cc_data['cc_number'], (string) $this->t('(Last 4) ')) === 0) {
       $cc_data['cc_number'] = $this->order->payment_details['cc_number'];
     }
 
