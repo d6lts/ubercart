@@ -855,6 +855,7 @@ function uc_product_feature_data($fid, $key) {
  */
 function uc_product_feature_save(&$data) {
   if (empty($data['pfid'])) {
+    unset($data['pfid']);
     $data['pfid'] = db_insert('uc_product_features')
       ->fields($data)
       ->execute();
