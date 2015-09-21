@@ -10,9 +10,8 @@ namespace Drupal\uc_cart\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\Core\Plugin\Factory\ContainerFactory;
-use Drupal\uc_store\Plugin\Discovery\InfoHookDecorator;
+use Drupal\uc_cart\Annotation\CheckoutPane;
+use Drupal\uc_cart\CheckoutPanePluginInterface;
 
 /**
  * Manages discovery and instantiation of checkout panes.
@@ -44,12 +43,8 @@ class CheckoutPaneManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    $this->discovery = new AnnotatedClassDiscovery('Plugin/Ubercart/CheckoutPane', $namespaces, 'Drupal\uc_cart\Annotation\CheckoutPane');
-    $this->discovery = new InfoHookDecorator($this->discovery, 'uc_checkout_pane', 'Drupal\uc_cart\Plugin\Ubercart\CheckoutPane\LegacyCheckoutPane');
-    $this->factory = new ContainerFactory($this);
-
-    $this->moduleHandler = $module_handler;
-    $this->alterInfo('uc_checkout_pane');
+    parent::__construct('Plugin/Ubercart/CheckoutPane', $namespaces, $module_handler, CheckoutPanePluginInterface::class, CheckoutPane::class);
+    $this->alterInfo('payment_method');
     $this->setCacheBackend($cache_backend, 'uc_checkout_panes');
 
     $this->paneConfig = \Drupal::config('uc_cart.settings')->get('panes');

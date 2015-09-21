@@ -14,6 +14,11 @@ use Drupal\uc_order\OrderInterface;
 
 /**
  * Defines an interface for checkout pane plugins.
+ *
+ * The checkout screen for Ubercart is a compilation of enabled checkout panes.
+ * A checkout pane can be used to display order information, collect data from
+ * the customer, or interact with other panes. Panes are defined in enabled
+ * modules as plugins that implement this interface.
  */
 interface CheckoutPanePluginInterface extends PluginInspectionInterface, ConfigurablePluginInterface {
 
@@ -24,7 +29,7 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface, Configu
    *   The order that is being processed.
    * @param array $form
    *   The checkout form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The checkout form state array.
    */
   public function prepare(OrderInterface $order, array $form, FormStateInterface $form_state);
@@ -36,11 +41,12 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface, Configu
    *   The order that is being processed.
    * @param array $form
    *   The checkout form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The checkout form state array.
    *
    * @return array
-   *   A form array.
+   *   A form array, with an optional '#description' key to provide help text
+   *   for the pane.
    */
   public function view(OrderInterface $order, array $form, FormStateInterface $form_state);
 
@@ -51,11 +57,11 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface, Configu
    *   The order that is being processed.
    * @param array $form
    *   The checkout form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The checkout form state array.
    *
    * @return bool
-   *   TRUE if the pane is valid, FALSE otherwise..
+   *   TRUE if the pane is valid, FALSE otherwise.
    */
   public function process(OrderInterface $order, array $form, FormStateInterface $form_state);
 
@@ -66,7 +72,8 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface, Configu
    *   The order that is being processed.
    *
    * @return array
-   *   A checkout review array.
+   *   A checkout review array. Each item contains contains "title" and "data"
+   *   keys which have HTML to be displayed on the checkout review page.
    */
   public function review(OrderInterface $order);
 
@@ -79,7 +86,7 @@ interface CheckoutPanePluginInterface extends PluginInspectionInterface, Configu
   public function settingsForm();
 
   /**
-   * Returns the title of the checkout pane.
+   * Returns the title of the pane, to be displayed on the checkout form.
    *
    * @return string
    *   The pane title.

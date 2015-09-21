@@ -52,8 +52,8 @@ Ubercart 4.x
     * _uc_payment_method_list() => uc_payment_method_list()
     * _uc_payment_method_data() removed
 * Checkout panes are plugins
-    * hook_uc_checkout_pane() is still supported but can be converted to CheckoutPanePluginInterface plugins
     * plugin.manager.uc_cart.checkout_pane service (CheckoutPaneManager) manages the available plugins
+    * hook_uc_checkout_pane() removed, hook_uc_checkout_pane_alter() is still supported
     * _uc_checkout_pane_list() and _uc_checkout_pane_data() removed
 
 
