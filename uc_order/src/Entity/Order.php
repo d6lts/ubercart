@@ -55,7 +55,7 @@ class Order extends ContentEntityBase implements OrderInterface {
   public $line_items = array();
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::label().
+   * {@inheritdoc}
    */
   public function label($langcode = NULL) {
     return t('Order @order_id', ['@order_id' => $this->id()]);
@@ -103,10 +103,12 @@ class Order extends ContentEntityBase implements OrderInterface {
 
     // Record a log entry if the order status has changed.
     if ($update && $this->getStatusId() != $this->original->getStatusId()) {
-      $this->logChanges(array(t('Order status') => array(
-        'old' => $this->original->getStatus()->getName(),
-        'new' => $this->getStatus()->getName(),
-      )));
+      $this->logChanges([
+        (string) t('Order status') => [
+          'old' => $this->original->getStatus()->getName(),
+          'new' => $this->getStatus()->getName(),
+        ]
+      ]);
 
       // rules_invoke_event('uc_order_status_update', $this->original, $this);
     }
@@ -407,8 +409,8 @@ class Order extends ContentEntityBase implements OrderInterface {
         if (is_array($value)) {
           $items[] = t('@key changed from %old to %new.', ['@key' => $key, '%old' => $value['old'], '%new' => $value['new']]);
         }
-        elseif (is_string($value)) {
-          $items[] = $value;
+        else {
+          $items[] = (string) $value;
         }
       }
 
