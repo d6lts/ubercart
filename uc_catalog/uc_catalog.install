@@ -41,14 +41,3 @@ function uc_catalog_uninstall() {
     ), 'warning');
   }
 }
-
-/**
- * Moves catalog settings from variable to config.
- */
-function uc_catalog_update_8000() {
-  update_variables_to_config('uc_catalog.settings', array(
-    'uc_catalog_display' => 'display',
-    'uc_catalog_vid' => 'vocabulary',
-    'uc_catalog_breadcrumb' => 'breadcrumb',
-  ));
-}

@@ -116,10 +116,3 @@ function uc_product_kit_uninstall() {
   unset($locked['product_kit']);
   \Drupal::state()->set('node.type.locked', $locked);
 }
-
-/**
- * Implements hook_update_last_removed().
- */
-function uc_product_kit_update_last_removed() {
-  return 7001;
-}
