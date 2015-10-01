@@ -103,7 +103,7 @@ class UcProductImageFormatter extends ImageFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
 
     $image_link_setting = $this->getSetting('image_link');
