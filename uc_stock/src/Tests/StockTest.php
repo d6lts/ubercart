@@ -22,6 +22,9 @@ class StockTest extends UbercartTestBase {
   public function setUp() {
     parent::setUp();
 
+    // Need page_title_block because we test page titles
+    $this->drupalPlaceBlock('page_title_block');
+
     // Ensure test mails are logged.
     \Drupal::configFactory()->getEditable('system.mail')
       ->set('interface.uc_stock', 'test_mail_collector')
