@@ -19,6 +19,12 @@ class ProductKitTest extends UbercartTestBase {
   public static $modules = array('uc_product_kit');
   public static $adminPermissions = array('create product_kit content', 'edit any product_kit content');
 
+  public function setUp() {
+    parent::setUp();
+
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
   public function testProductKitNodeForm() {
     $this->drupalLogin($this->adminUser);
 
