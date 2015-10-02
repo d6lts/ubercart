@@ -88,12 +88,12 @@ class PoweredByBlock extends BlockBase {
    * Returns the default message options.
    */
   protected function options() {
-    $url = array('!url' => Url::fromUri('http://www.ubercart.org/')->toString());
+    $url = array(':url' => Url::fromUri('http://www.ubercart.org/')->toString());
     return array(
-      1 => $this->t('<a href="!url">Powered by Ubercart</a>', $url),
-      2 => $this->t('<a href="!url">Drupal e-commerce</a> provided by Ubercart.', $url),
-      3 => $this->t('Supported by Ubercart, an <a href="!url">open source e-commerce suite</a>.', $url),
-      4 => $this->t('Powered by Ubercart, the <a href="!url">free shopping cart software</a>.', $url),
+      1 => $this->t('<a href=":url">Powered by Ubercart</a>', $url),
+      2 => $this->t('<a href=":url">Drupal e-commerce</a> provided by Ubercart.', $url),
+      3 => $this->t('Supported by Ubercart, an <a href=":url">open source e-commerce suite</a>.', $url),
+      4 => $this->t('Powered by Ubercart, the <a href=":url">free shopping cart software</a>.', $url),
     );
   }
 

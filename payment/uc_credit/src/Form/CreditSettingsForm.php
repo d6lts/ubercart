@@ -86,7 +86,7 @@ class CreditSettingsForm extends FormBase {
     $form['cc_security']['uc_credit_encryption_path'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Encryption key directory'),
-      '#description' => $this->t('The card type, expiration date and last four digits of the card number are encrypted and stored temporarily while the customer is in the process of checking out.<br /><b>You must enable encryption</b> by following the <a href="!url">encryption instructions</a> in order to accept credit card payments.<br />In short, you must enter the path of a directory outside of your document root where the encryption key may be stored.<br />Relative paths will be resolved relative to the Drupal installation directory.<br />Once this directory is set, you should not change it.', ['!url' => 'http://drupal.org/node/1309226']),
+      '#description' => $this->t('The card type, expiration date and last four digits of the card number are encrypted and stored temporarily while the customer is in the process of checking out.<br /><b>You must enable encryption</b> by following the <a href=":url">encryption instructions</a> in order to accept credit card payments.<br />In short, you must enter the path of a directory outside of your document root where the encryption key may be stored.<br />Relative paths will be resolved relative to the Drupal installation directory.<br />Once this directory is set, you should not change it.', [':url' => 'http://drupal.org/node/1309226']),
       '#default_value' => uc_credit_encryption_key() ? $credit_config->get('encryption_path') : $this->t('Not configured.'),
     );
 

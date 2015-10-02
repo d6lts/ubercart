@@ -298,7 +298,7 @@ class Reports extends ControllerBase {
         '#markup' => $this->l(t('Show all records'), Url::fromRoute('uc_report.products', ['query' => ['nopage' => '1']])),
       );
     }
-    $build['instructions'] = array('#markup' => '<small>*' . t('Make sure %setting_name is set to %state in the <a href="!url">access log settings page</a> to enable views column.', array('%setting_name' => 'count content views', '%state' => 'enabled', '!url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products']])->toString())) . '</small>');
+    $build['instructions'] = array('#markup' => '<small>*' . t('Make sure %setting_name is set to %state in the <a href=":url">access log settings page</a> to enable views column.', ['%setting_name' => 'count content views', '%state' => 'enabled', ':url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products']])->toString()]) . '</small>');
 
     return $build;
   }
@@ -502,7 +502,7 @@ class Reports extends ControllerBase {
       );
     }
 
-    $build['instructions'] = array('#markup' => '<small>*' . t('Make sure %setting_name is set to %state in the <a href="!url">access log settings page</a> to enable views column.', array('%setting_name' => 'count content views', '%state' => 'enabled', '!url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products/custom']])->toString())) . '</small>');
+    $build['instructions'] = array('#markup' => '<small>*' . t('Make sure %setting_name is set to %state in the <a href=":url">access log settings page</a> to enable views column.', ['%setting_name' => 'count content views', '%state' => 'enabled', ':url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products/custom']])->toString()]) . '</small>');
 
     return $build;
   }

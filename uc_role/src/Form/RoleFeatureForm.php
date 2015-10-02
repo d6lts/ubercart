@@ -88,7 +88,7 @@ class RoleFeatureForm extends FormBase {
       unset($form['buttons']);
 
       $form['no_roles'] = array(
-        '#markup' => $this->t('You need to <a href="!url">create new roles</a> before any can be added as product features.', ['!url' => $this->url('user.role_add', [], ['query' => ['destination' => 'admin/store/config/products']])]),
+        '#markup' => $this->t('You need to <a href=":url">create new roles</a> before any can be added as product features.', [':url' => $this->url('user.role_add', [], ['query' => ['destination' => 'admin/store/config/products']])]),
         '#prefix' => '<p>',
         '#suffix' => '</p>',
       );
@@ -123,7 +123,7 @@ class RoleFeatureForm extends FormBase {
 
     $form['end_override'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->t('Override the <a href="!url">default role expiration</a>.', ['!url' => $this->url('uc_product.settings')]),
+      '#title' => $this->t('Override the <a href=":url">default role expiration</a>.', [':url' => $this->url('uc_product.settings')]),
       '#default_value' => $default_end_override,
     );
 
@@ -228,7 +228,7 @@ class RoleFeatureForm extends FormBase {
 
     // No roles?
     if ($form_state->isValueEmpty('uc_role_role')) {
-      $form_state->setErrorByName('uc_role_role', $this->t('You must have a role to assign. You may need to <a href="!role_url">create a new role</a> or perhaps <a href="!feature_url">set role assignment defaults</a>.', ['!role_url' => $this->url('user.role_add'), '!feature_url' => $this->url('uc_product.settings')]));
+      $form_state->setErrorByName('uc_role_role', $this->t('You must have a role to assign. You may need to <a href=":role_url">create a new role</a> or perhaps <a href=":feature_url">set role assignment defaults</a>.', [':role_url' => $this->url('user.role_add'), ':feature_url' => $this->url('uc_product.settings')]));
     }
 
     // This role already set on this SKU?

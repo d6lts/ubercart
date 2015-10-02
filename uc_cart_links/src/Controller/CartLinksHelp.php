@@ -52,7 +52,7 @@ class CartLinksHelp {
     $rows = array(
       array('p', t('Adds a product to the cart.'), t('A product node number, followed by optional arguments described in the table below.')),
       array('i', t('Sets the ID of the cart link.'), t('An alphanumeric string (32 characters max) to identify the link.')),
-      array('m', t('Displays a message to the customer when the link is clicked.'), t('A <a href="@url">numeric message ID</a> to identify which message to display.', array('@url' => \Drupal::url('uc_cart_links.settings')))),
+      array('m', t('Displays a message to the customer when the link is clicked.'), t('A <a href="@url">numeric message ID</a> to identify which message to display.', ['@url' => \Drupal::url('uc_cart_links.settings')])),
       array('e', t('Empties the cart. If used, this should be the first action.'), t('None.')),
     );
 
@@ -74,7 +74,7 @@ class CartLinksHelp {
       array('q', t('Specifies quantity of this product to add.'), t('A positive integer.')),
       array('a<aid>o<oid>', t('Specifies attribute/option for this product.'), t('aid is the integer attribute ID. oid is the integer option ID for radio, checkbox, and select options, or a url-escaped text string for textfield options.')),
       array('s', t('Silent.  Suppresses add-to-cart message for this product.
-      (The add-to-cart message may be enabled on the <a href="@url">cart settings page</a>).', array('@url' => \Drupal::url('uc_cart.cart_settings'))), t('None.')),
+      (The add-to-cart message may be enabled on the <a href="@url">cart settings page</a>).', ['@url' => \Drupal::url('uc_cart.cart_settings')]), t('None.')),
     );
     $build['args'] = array(
       '#prefix' => t('Optional arguments for "p" allow you to control the quantity, set product attributes and options, and suppress the default product action message normally shown when a product is added to a cart. These optional arguments are appended to the "p" action and separated with an underscore.  Allowed arguments for "p" are:'),
@@ -124,7 +124,7 @@ class CartLinksHelp {
 
     $build['help'] = array(
       '#prefix' => '<p>',
-      '#markup' => t('<a href="!url">Visit the settings page</a> to set preferences, define messages, and restrict links that may be used.', array('!url' => \Drupal::url('uc_cart_links.settings'))),
+      '#markup' => t('<a href=":url">Visit the settings page</a> to set preferences, define messages, and restrict links that may be used.', [':url' => \Drupal::url('uc_cart_links.settings')]),
       '#suffix' => '</p>',
     );
 

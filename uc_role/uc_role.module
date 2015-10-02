@@ -20,7 +20,7 @@ use Drupal\user\Entity\User;
  */
 function uc_role_help($path, RouteMatchInterface $route_match) {
   if ($path == '/node/%/edit/features/%/%' && $arg[4] == 'role') {
-    return '<p>' . t('Add roles through this page and then use the <a href="!url">Rules interface</a> to limit which orders they are applied to. Most important is the order status on which role granting will be triggered.', ['!url' => \Drupal::url('admin/config/workflow/rules/reaction')]) . '</p>';
+    return '<p>' . t('Add roles through this page and then use the <a href=":url">Rules interface</a> to limit which orders they are applied to. Most important is the order status on which role granting will be triggered.', [':url' => \Drupal::url('admin/config/workflow/rules/reaction')]) . '</p>';
   }
   switch ($path) {
     case 'uc_role.expiration':
@@ -384,7 +384,7 @@ function uc_role_uc_store_status() {
     $message[] = array(
       'status' => 'warning',
       'title' => t('Roles'),
-      'desc' => t('There are no product role(s) that can be assigned upon product purchase. Set product roles in the <a href="!url">product settings</a> under the role assignment settings tab.', ['!url' => \Drupal::url('uc_product.settings')]),
+      'desc' => t('There are no product role(s) that can be assigned upon product purchase. Set product roles in the <a href=":url">product settings</a> under the role assignment settings tab.', [':url' => \Drupal::url('uc_product.settings')]),
     );
   }
   else {
@@ -410,7 +410,7 @@ function uc_role_feature_settings($form, FormStateInterface $form_state) {
 
   if (!count($default_role_choices)) {
     $form['no_roles'] = array(
-      '#markup' => t('You need to <a href="!url">create new roles</a> before any can be added as product features.', ['!url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/config/products']])]),
+      '#markup' => t('You need to <a href=":url">create new roles</a> before any can be added as product features.', [':url' => \Drupal::url('user.role_add', [], ['query' => ['destination' => 'admin/store/config/products']])]),
       '#prefix' => '<p>',
       '#suffix' => '</p>',
     );
