@@ -22,6 +22,7 @@ class ProductKitTest extends UbercartTestBase {
   public function setUp() {
     parent::setUp();
 
+    // Need page_title_block because we test page titles
     $this->drupalPlaceBlock('page_title_block');
   }
 

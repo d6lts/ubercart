@@ -26,6 +26,9 @@ class OrderTest extends UbercartTestBase {
   public function setUp() {
     parent::setUp();
 
+    // Need page_title_block because we test page titles
+    $this->drupalPlaceBlock('page_title_block');
+
     // Create a simple customer user account.
     $this->customer = $this->drupalCreateUser(array('view own orders'));
   }
