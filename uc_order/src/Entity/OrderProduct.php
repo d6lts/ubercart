@@ -25,8 +25,6 @@ use Drupal\uc_order\OrderProductInterface;
  *     "view_builder" = "Drupal\uc_order\OrderProductViewBuilder",
  *   },
  *   base_table = "uc_order_products",
- *   fieldable = TRUE,
- *   route_base_path = "admin/store/config/orders/products",
  *   entity_keys = {
  *     "id" = "order_product_id",
  *   }

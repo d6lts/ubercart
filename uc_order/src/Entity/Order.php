@@ -33,7 +33,7 @@ use Drupal\uc_store\Address;
  *     "views_data" = "Drupal\uc_order\OrderViewsData",
  *   },
  *   base_table = "uc_orders",
- *   fieldable = TRUE,
+ *   field_ui_base_route = "uc_order.workflow",
  *   links = {
  *     "canonical" = "/user/{user}/orders",
  *     "delete-form" = "/admin/store/orders/{uc_order}/delete",
