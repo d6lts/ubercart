@@ -20,7 +20,7 @@ class OrderAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  protected function checkAccess(EntityInterface $order, $operation, $langcode, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $order, $operation, AccountInterface $account) {
     switch ($operation) {
       case 'view':
       case 'invoice':
