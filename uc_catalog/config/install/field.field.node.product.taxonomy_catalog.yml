@@ -5,7 +5,7 @@ dependencies:
     - field.storage.node.taxonomy_catalog
     - node.type.product
   module:
-    - entity_reference
+    - taxonomy
 id: node.product.taxonomy_catalog
 field_name: taxonomy_catalog
 entity_type: node
@@ -17,9 +17,11 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
+  handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
       catalog: catalog
+    sort:
+      field: _none
     auto_create: true
-  handler: 'default:taxonomy_term'
 field_type: entity_reference
