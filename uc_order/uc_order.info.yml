@@ -5,6 +5,5 @@ package: Ubercart - core
 core: 8.x
 dependencies:
   - uc_product
-  - rules
   - views
 configure: uc_order.workflow
