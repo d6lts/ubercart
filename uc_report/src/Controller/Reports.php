@@ -811,7 +811,7 @@ class Reports extends ControllerBase {
 
       // Put the order counts into an array by status.
       foreach ($result as $status) {
-        $statuses[] = t('!count - @title', array('!count' => $status->count, '@title' => $status->title));
+        $statuses[] = t('@count - @title', array('@count' => $status->count, '@title' => $status->title));
       }
 
       $order_data = implode('<br />', $statuses);

@@ -250,7 +250,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
     $form['completion_messages']['uc_msg_order_new_user_logged_in'] = array(
       '#type' => 'textarea',
       '#title' => t('New logged in users'),
-      '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href="!user_login_setting_ur">checkout settings</a>.', array('!user_login_setting_ur' => Url::fromRoute('uc_cart.checkout_settings')->toString())),
+      '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href=":url">checkout settings</a>.', array(':url' => Url::fromRoute('uc_cart.checkout_settings')->toString())),
       '#default_value' => $messages->get('new_user_logged_in'),
       '#rows' => 3,
       '#states' => $anon_state,

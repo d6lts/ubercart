@@ -75,7 +75,7 @@ function uc_report_help($path, RouteMatchInterface $route_match) {
 
     // Include the statuses/offset as needed.
     if ($include_offset) {
-      $output .= "<p>" . t('All reports are your local timezone, which is <b>!timezone</b>.', array('!timezone' => date_default_timezone_get())) . "</p>";
+      $output .= "<p>" . t('All reports are your local timezone, which is <b>@timezone</b>.', array('@timezone' => date_default_timezone_get())) . "</p>";
     }
     if ($include_statuses) {
       $statuses = array();

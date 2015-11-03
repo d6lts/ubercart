@@ -217,7 +217,7 @@ class OrderViewsData extends EntityViewsData {
         $data['uc_orders'][$prefix . '_' . $field] = array(
           'group' => $group,
           'title' => $label,
-          'help' => t('The !field of the !address of the order.', ['!field' => Unicode::strtolower($label), '!address' => Unicode::strtolower($address)]),
+          'help' => t('The @field of the @address of the order.', ['@field' => Unicode::strtolower($label), '@address' => Unicode::strtolower($address)]),
           'field' => array(
             'id' => 'standard',
             'click sortable' => TRUE,
@@ -234,7 +234,7 @@ class OrderViewsData extends EntityViewsData {
       $data['uc_orders'][$prefix . '_full_name'] = array(
         'group' => $group,
         'title' => t('Full name'),
-        'help' => t('The !field of the !address of the order.', ['!field' => t('full name'), '!address' => Unicode::strtolower($address)]),
+        'help' => t('The @field of the @address of the order.', ['@field' => t('full name'), '@address' => Unicode::strtolower($address)]),
         'field' => array(
           'id' => 'uc_order_full_name',
           'real field' => $prefix . '_first_name',
@@ -254,7 +254,7 @@ class OrderViewsData extends EntityViewsData {
       );
       $data[$prefix . '_countries']['country_id'] = array(
         'title' => t('ISO country code (numeric)'),
-        'help' => t('The !field of the !address of the order.', ['!field' => t('numeric ISO country code'), '!address' => Unicode::strtolower($address)]),
+        'help' => t('The @field of the @address of the order.', ['@field' => t('numeric ISO country code'), '@address' => Unicode::strtolower($address)]),
         'argument' => array(
           'id' => 'numeric',
           'name field' => 'country_iso_code_2',
@@ -267,7 +267,7 @@ class OrderViewsData extends EntityViewsData {
       );
       $data[$prefix . '_countries']['country_name'] = array(
         'title' => t('Country'),
-        'help' => t('The !field of the !address of the order.', ['!field' => t('country name'), '!address' => Unicode::strtolower($address)]),
+        'help' => t('The @field of the @address of the order.', ['@field' => t('country name'), '@address' => Unicode::strtolower($address)]),
         'field' => array(
           'id' => 'standard',
           'click sortable' => TRUE,
@@ -283,7 +283,7 @@ class OrderViewsData extends EntityViewsData {
       );
       $data[$prefix . '_countries']['country_iso_code_2'] = array(
         'title' => t('ISO country code (2 characters)'),
-        'help' => t('The !field of the !address of the order.', ['!field' => t('ISO country code'), '!address' => Unicode::strtolower($address)]),
+        'help' => t('The @field of the @address of the order.', ['@field' => t('ISO country code'), '@address' => Unicode::strtolower($address)]),
         'field' => array(
           'id' => 'standard',
           'click sortable' => TRUE,
@@ -297,7 +297,7 @@ class OrderViewsData extends EntityViewsData {
       );
       $data[$prefix . '_countries']['country_iso_code_3'] = array(
         'title' => t('ISO country code (3 characters)'),
-        'help' => t('The !field of the !address of the order.', ['!field' => t('ISO country code'), '!address' => Unicode::strtolower($address)]),
+        'help' => t('The @field of the @address of the order.', ['@field' => t('ISO country code'), '@address' => Unicode::strtolower($address)]),
         'field' => array(
           'id' => 'standard',
           'click sortable' => TRUE,
@@ -318,7 +318,7 @@ class OrderViewsData extends EntityViewsData {
       );
       $data[$prefix . '_zones']['zone_name'] = array(
         'title' => t('State/Province'),
-        'help' => t('The !field of the !address of the order.', ['!field' => t('state or province'), '!address' => Unicode::strtolower($address)]),
+        'help' => t('The @field of the @address of the order.', ['@field' => t('state or province'), '@address' => Unicode::strtolower($address)]),
         'field' => array(
           'id' => 'standard',
           'click sortable' => TRUE,
@@ -334,7 +334,7 @@ class OrderViewsData extends EntityViewsData {
       );
       $data[$prefix . '_zones']['zone_code'] = array(
         'title' => t('State/Province code'),
-        'help' => t('The !field of the !address of the order.', ['!field' => t('state or province code'), '!address' => Unicode::strtolower($address)]),
+        'help' => t('The @field of the @address of the order.', ['@field' => t('state or province code'), '@address' => Unicode::strtolower($address)]),
         'field' => array(
           'id' => 'standard',
           'click sortable' => TRUE,
@@ -630,8 +630,8 @@ class OrderViewsData extends EntityViewsData {
 
       $data['uc_order_line_items_' . $line_item_id]['table']['group'] = t('Order: Line item');
       $data['uc_order_line_items_' . $line_item_id]['title'] = array(
-        'title' => t('!line_item_desc title', ['!line_item_desc' => $line_item_desc]),
-        'help' => t('!line_item_desc order line item', ['!line_item_desc' => $line_item_desc]),
+        'title' => t('@line_item title', ['@line_item' => $line_item_desc]),
+        'help' => t('@line_item order line item', ['@line_item' => $line_item_desc]),
         'field' => array(
           'id' => 'standard',
           'click sortable' => TRUE,
@@ -642,8 +642,8 @@ class OrderViewsData extends EntityViewsData {
       );
 
       $data['uc_order_line_items_' . $line_item_id]['amount'] = array(
-        'title' => t('!line_item_desc amount', ['!line_item_desc' => $line_item_desc]),
-        'help' => t('!line_item_desc order line item', ['!line_item_desc' => $line_item_desc]),
+        'title' => t('@line_item amount', ['@line_item' => $line_item_desc]),
+        'help' => t('@line_item order line item', ['@line_item' => $line_item_desc]),
         'field' => array(
           'id' => 'uc_price',
           'click sortable' => TRUE,

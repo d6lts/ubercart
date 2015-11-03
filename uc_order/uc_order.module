@@ -609,7 +609,7 @@ function template_preprocess_uc_order_invoice(&$variables) {
       $variables['products'][$id]->model = $product->model->value;
       $variables['products'][$id]->total_price = uc_currency_format($product->price->value * $product->qty->value);
       if ($product->qty->value > 1) {
-        $variables['products'][$id]->individual_price = t('(!price each)', ['!price' => uc_currency_format($product->price->value)]);
+        $variables['products'][$id]->individual_price = t('(@price each)', ['@price' => uc_currency_format($product->price->value)]);
       }
       else {
         $variables['products'][$id]->individual_price = '';

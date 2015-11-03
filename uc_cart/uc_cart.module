@@ -232,12 +232,12 @@ function uc_cart_uc_checkout_complete($order) {
 
     $cart_config = \Drupal::config('uc_cart.settings');
     if ($cart_config->get('checkout_email_customer')) {
-      $subject = t('Your Order at !store', ['!store' => uc_store_name()]);
+      $subject = t('Your Order at @store', ['@store' => uc_store_name()]);
       uc_order_action_email_invoice($order, uc_store_email_from(), $order->getEmail(), $subject, 'customer', 'checkout-mail');
     }
 
     if ($cart_config->get('checkout_email_admin')) {
-      $subject = t('New Order at !store', ['!store' => uc_store_name()]);
+      $subject = t('New Order at @store', ['@store' => uc_store_name()]);
       uc_order_action_email_invoice($order, uc_store_email_from(), uc_store_email(), $subject, 'admin', 'admin-mail');
     }
   //}

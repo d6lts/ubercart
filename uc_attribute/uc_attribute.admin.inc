@@ -37,7 +37,7 @@ function theme_uc_product_attributes(array $variables) {
         $optionstr .= $option;
       }
       else {
-        $optionstr .= t(', !option', ['!option' => $option]);
+        $optionstr .= t(', @option', ['@option' => $option]);
       }
     }
 

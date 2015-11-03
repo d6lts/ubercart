@@ -201,7 +201,7 @@ class CartForm extends FormBase {
     if (substr($triggering_element['#name'], 0, 7) == 'remove-') {
       $item = substr($triggering_element['#name'], 7);
       $form_state->setValue(['items', $item, 'qty'], 0);
-      drupal_set_message($this->t('<strong>!product-title</strong> removed from your shopping cart.', array('!product-title' => $form['data'][$item]['title']['#value'])));
+      drupal_set_message($this->t('<strong>@product</strong> removed from your shopping cart.', array('@product' => $form['data'][$item]['title']['#value'])));
     }
 
     // Update the items in the shopping cart based on the form values, but only

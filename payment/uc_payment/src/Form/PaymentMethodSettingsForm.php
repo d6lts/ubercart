@@ -50,7 +50,7 @@ class PaymentMethodSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $method = NULL) {
     $definition = \Drupal::service('plugin.manager.uc_payment.method')->getDefinition($method);
-    $form['#title'] = $this->t('!method settings', ['!method' => $definition['name']]);
+    $form['#title'] = $this->t('@method settings', ['@method' => $definition['name']]);
 
     $this->instance = \Drupal::service('plugin.manager.uc_payment.method')->createInstance($method);
     $this->settings = $this->instance->getSettingsForm();

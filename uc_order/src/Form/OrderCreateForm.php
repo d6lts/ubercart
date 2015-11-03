@@ -147,7 +147,7 @@ class OrderCreateForm extends FormBase {
           $form['customer']['uid'] += array(
             '#type' => 'radios',
             '#title' => t('Select customer'),
-            '#description' => $max ? t('More than !limit results found. Refine your search to find other customers.', ['!limit' => $limit - 1]) : '',
+            '#description' => $max ? t('More than @limit results found. Refine your search to find other customers.', ['@limit' => $limit - 1]) : '',
             '#options' => $options,
             '#default_value' => key($options),
           );
