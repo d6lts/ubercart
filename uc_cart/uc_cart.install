@@ -18,12 +18,12 @@ function uc_cart_uninstall() {
       $status->setLocked(FALSE)->save();
     }
     drupal_set_message(\Drupal::translation()->formatPlural(count($status_names),
-      'The order status %status has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.',
-      'The order statuses %statuses have not been deleted. If you need to delete them, <a href="@url">please do so manually</a>.',
+      'The order status %status has not been deleted. If you need to delete it, <a href=":url">please do so manually</a>.',
+      'The order statuses %statuses have not been deleted. If you need to delete them, <a href=":url">please do so manually</a>.',
       array(
         '%status' => $status_names[0],
         '%statuses' => implode(', ', $status_names),
-        '@url' => \Drupal\Core\Url::fromRoute('uc_order.workflow'),
+        ':url' => \Drupal\Core\Url::fromRoute('uc_order.workflow')->toString(),
       )
     ), 'warning');
   }
@@ -35,12 +35,12 @@ function uc_cart_uninstall() {
       $style_names[] = $style->label();
     }
     drupal_set_message(\Drupal::translation()->formatPlural(count($style_names),
-      'The image style %style has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.',
-      'The image styles %styles have not been deleted. If you need to delete them, <a href="@url">please do so manually</a>.',
+      'The image style %style has not been deleted. If you need to delete it, <a href=":url">please do so manually</a>.',
+      'The image styles %styles have not been deleted. If you need to delete them, <a href=":url">please do so manually</a>.',
       array(
         '%style' => $style_names[0],
         '%styles' => implode(', ', $style_names),
-        '@url' => \Drupal\Core\Url::fromRoute('entity.image_style.collection'),
+        ':url' => \Drupal\Core\Url::fromRoute('entity.image_style.collection')->toString(),
       )
     ), 'warning');
   }
