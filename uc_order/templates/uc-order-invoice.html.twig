@@ -67,7 +67,7 @@
           <td>
 
             {% if thank_you_message %}
-            <p><b>{{ 'Thanks for your order, !order_first_name!'|t({'!order_first_name': order_first_name}) }}</b></p>
+            <p><b>{{ 'Thanks for your order, @order_first_name!'|t({'@order_first_name': order_first_name}) }}</b></p>
 
             {% if order.data.new_user_name %}
             <p><b>{{ 'An account has been created for you with the following details:'|t }}</b></p>
@@ -76,7 +76,7 @@
             {% endif %}
 
             <p><b>{{ 'Want to manage your order online?'|t }}</b><br />
-            {{ 'If you need to check the status of your order, please visit our home page at !store_link and click on "My account" in the menu or login with the following link:'|t({'!store_link': store_link}) }}
+            {{ 'If you need to check the status of your order, please visit our home page at @store_link and click on "My account" in the menu or login with the following link:'|t({'@store_link': store_link}) }}
             <br /><br />{{ site_login_link }}</p>
             {% endif %}
 
@@ -258,7 +258,7 @@
 
                   {% if help_text %}
                   <p><b>{{ 'Where can I get help with reviewing my order?'|t }}</b><br />
-                  {{ 'To learn more about managing your orders on !store_link, please visit our <a href="!store_help_url">help page</a>.'|t({'!store_link': store_link, '!store_help_url': store_help_url}) }}
+                  {{ 'To learn more about managing your orders on @store_link, please visit our <a href="@store_help_url">help page</a>.'|t({'@store_link': store_link, '@store_help_url': store_help_url}) }}
                   <br /></p>
                   {% endif %}
 
