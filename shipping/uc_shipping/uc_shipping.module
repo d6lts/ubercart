@@ -160,7 +160,7 @@ function uc_shipping_menu() {
  * Title callback for admin/store/orders/%/shipments/%.
  */
 function uc_shipping_shipment_page_title($shipment) {
-  return t('Shipment !id', array('!id' => $shipment->sid));
+  return t('Shipment @id', ['@id' => $shipment->sid]);
 }
 
 /**
@@ -362,7 +362,7 @@ function uc_shipping_package_view($package) {
   $rows[] = array(t('Package type:'), isset($pkg_type) ? $pkg_type : SafeMarkup::checkPlain($package->pkg_type));
 
   if ($package->length && $package->width && $package->height) {
-    $rows[] = array(t('Dimensions:'), t('!l x !w x !h', array('!l' => uc_length_format($package->length), '!w' => uc_length_format($package->width), '!h' => uc_length_format($package->height))));
+    $rows[] = array(t('Dimensions:'), t('@l x @w x @h', ['@l' => uc_length_format($package->length), '@w' => uc_length_format($package->width), '@h' => uc_length_format($package->height)]));
   }
 
   $rows[] = array(t('Insured value:'), array('data' => array('#theme' => 'uc_price', '#price' => $package->value)));

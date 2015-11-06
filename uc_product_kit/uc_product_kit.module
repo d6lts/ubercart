@@ -732,7 +732,7 @@ function uc_product_kit_add_to_cart_form_validate($form, FormStateInterface $for
 function uc_product_kit_add_to_cart_form_submit($form, FormStateInterface $form_state) {
   if (\Drupal::config('uc_cart.settings')->get('add_item_msg')) {
     $node = node_load($form_state->getValue('nid'));
-    drupal_set_message(t('<strong>!product-title</strong> added to <a href=":url">your shopping cart</a>.', ['!product-title' => $node->label(), ':url' => Url::fromRoute('uc_cart.cart')]));
+    drupal_set_message(t('<strong>@product-title</strong> added to <a href=":url">your shopping cart</a>.', ['@product-title' => $node->label(), ':url' => Url::fromRoute('uc_cart.cart')->toString()]));
   }
   $cart = \Drupal\uc_cart\Controller\Cart::create(\Drupal::getContainer());
   $redirect = $cart->addItem($form_state->getValue('nid'), $form_state->getValue('qty'), $form_state->getValues());

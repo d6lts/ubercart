@@ -445,7 +445,7 @@ function uc_cart_pane_quotes($form, FormStateInterface $form_state, $items) {
         $key = $method . '---' . $accessorial;
 
         if (isset($quote['rate'])) {
-          $quote_options[$key] = t('!label: !price', ['!label' => $quote['option_label'], '!price' => $quote['format']]);
+          $quote_options[$key] = t('@label: @price', ['@label' => $quote['option_label'], '@price' => $quote['format']]);
         }
       }
     }
@@ -607,7 +607,7 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
         $key = $method . '---' . $accessorial;
 
         if (isset($quote['rate'])) {
-          $quote_options[$key] = t('!label: !price', ['!label' => $quote['option_label'], '!price' => $quote['format']]);
+          $quote_options[$key] = t('@label: @price', ['@label' => $quote['option_label'], '@price' => $quote['format']]);
           $return[$key]['rate'] = array(
             '#type' => 'hidden',
             '#value' => $quote['rate'],

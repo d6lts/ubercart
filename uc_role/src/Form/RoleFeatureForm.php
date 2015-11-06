@@ -217,7 +217,7 @@ class RoleFeatureForm extends FormBase {
       ));
 
       if ($form_state->getValue('uc_role_expire_absolute') <= REQUEST_TIME) {
-        $form_state->setErrorByName('uc_role_expire_absolute', $this->t('The specified date !date has already occurred. Please choose another.', ['!date' => \Drupal::service('date.formatter')->format($form_state->getValue('uc_role_expire_absolute'))]));
+        $form_state->setErrorByName('uc_role_expire_absolute', $this->t('The specified date @date has already occurred. Please choose another.', ['@date' => \Drupal::service('date.formatter')->format($form_state->getValue('uc_role_expire_absolute'))]));
       }
     }
     else {
@@ -258,12 +258,12 @@ class RoleFeatureForm extends FormBase {
       'end_time'     => $form_state->getValue('expiration'  ) === 'abs' ? $form_state->getValue('uc_role_expire_absolute') : NULL,
     );
 
-    $description = empty($product_role['model']) ? $this->t('<strong>SKU:</strong> Any<br />') : $this->t('<strong>SKU:</strong> !sku<br />', ['!sku' => $product_role['model']]);
+    $description = empty($product_role['model']) ? $this->t('<strong>SKU:</strong> Any<br />') : $this->t('<strong>SKU:</strong> @sku<br />', ['@sku' => $product_role['model']]);
     $description .=  $this->t('<strong>Role:</strong> @role_name<br />', ['@role_name' => _uc_role_get_name($product_role['rid'])]);
 
     if ($product_role['end_override']) {
       if ($product_role['end_time']) {
-        $description .= $this->t('<strong>Expiration:</strong> !date<br />', ['!date' => \Drupal::service('date.formatter')->format($product_role['end_time'])]);
+        $description .= $this->t('<strong>Expiration:</strong> @date<br />', ['@date' => \Drupal::service('date.formatter')->format($product_role['end_time'])]);
       }
       else {
         switch ($product_role['granularity']) {
@@ -271,16 +271,16 @@ class RoleFeatureForm extends FormBase {
             $description .= $this->t('<strong>Expiration:</strong> never<br />');
             break;
           case 'day':
-            $description .= $this->t('<strong>Expiration:</strong> !qty day(s)<br />', ['!qty' => $product_role['duration']]);
+            $description .= $this->t('<strong>Expiration:</strong> @qty day(s)<br />', ['@qty' => $product_role['duration']]);
             break;
           case 'week':
-            $description .= $this->t('<strong>Expiration:</strong> !qty week(s)<br />', ['!qty' => $product_role['duration']]);
+            $description .= $this->t('<strong>Expiration:</strong> @qty week(s)<br />', ['@qty' => $product_role['duration']]);
             break;
           case 'month':
-            $description .= $this->t('<strong>Expiration:</strong> !qty month(s)<br />', ['!qty' => $product_role['duration']]);
+            $description .= $this->t('<strong>Expiration:</strong> @qty month(s)<br />', ['@qty' => $product_role['duration']]);
             break;
           case 'year':
-            $description .= $this->t('<strong>Expiration:</strong> !qty year(s)<br />', ['!qty' => $product_role['duration']]);
+            $description .= $this->t('<strong>Expiration:</strong> @qty year(s)<br />', ['@qty' => $product_role['duration']]);
             break;
           default:
             break;
@@ -288,7 +288,7 @@ class RoleFeatureForm extends FormBase {
       }
     }
     else {
-      $description .= $this->t('<strong>Expiration:</strong> !link (not overridden)<br />', ['!link' => $this->l(t('Global expiration'), Url::fromRoute('uc_product.settings'))]);
+      $description .= $this->t('<strong>Expiration:</strong> @link (not overridden)<br />', ['@link' => $this->l(t('Global expiration'), Url::fromRoute('uc_product.settings'))]);
     }
     $description .= $product_role['shippable'] ? $this->t('<strong>Shippable:</strong> Yes<br />') : $this->t('<strong>Shippable:</strong> No<br />');
     $description .= $product_role['by_quantity'] ? $this->t('<strong>Multiply by quantity:</strong> Yes') : $this->t('<strong>Multiply by quantity:</strong> No');

@@ -33,8 +33,8 @@ class RoleDeleteForm extends ConfirmFormBase {
       '#name' => SafeMarkup::checkPlain($account->getUsername()),
       '#link_path' => 'user/' . $account->id(),
     );
-    return $this->t('Delete expiration of %role_name role for the user !user?', array(
-      '!user' => drupal_render($username),
+    return $this->t('Delete expiration of %role_name role for the user @user?', array(
+      '@user' => drupal_render($username),
       '%role_name' => $role_name,
     ));
   }
@@ -49,8 +49,8 @@ class RoleDeleteForm extends ConfirmFormBase {
       '#name' => SafeMarkup::checkPlain($account->getUsername()),
       '#link_path' => 'user/' . $account->id(),
     );
-    return $this->t('Deleting the expiration will give !user privileges set by the %role_name role indefinitely unless manually removed.', array(
-      '!user' => drupal_render($username),
+    return $this->t('Deleting the expiration will give @user privileges set by the %role_name role indefinitely unless manually removed.', array(
+      '@user' => drupal_render($username),
       '%role_name' => $role_name,
     ));
   }
