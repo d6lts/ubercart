@@ -181,7 +181,7 @@ function uc_usps_uc_shipping_method() {
   $operations = array(
     'configure' => array(
       'title' => t('configure'),
-      'url' => Url::fromRoute('uc_usps.settings'),
+      'url' => Url::fromRoute('uc_usps.settings')->toString(),
     ),
   );
 

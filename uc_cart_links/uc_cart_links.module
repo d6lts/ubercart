@@ -15,7 +15,7 @@ use Drupal\Core\Url;
 function uc_cart_links_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'uc_cart_links.settings':
-      return '<p>' . t('<a href=":url">View the help page</a> to learn how to create Cart Links.', [':url' => Url::fromRoute('help.page', ['name' => 'uc_cart_links'])]) . '</p>';
+      return '<p>' . t('<a href=":url">View the help page</a> to learn how to create Cart Links.', [':url' => Url::fromRoute('help.page', ['name' => 'uc_cart_links'])->toString()]) . '</p>';
 
     case 'help.page.uc_cart_links':
       $build = \Drupal\uc_cart_links\Controller\CartLinksHelp::creationHelp();

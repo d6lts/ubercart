@@ -178,7 +178,7 @@ function uc_quote_form_node_form_alter(&$form, FormStateInterface $form_state) {
     $form['shipping']['shipping_address'] = array(
       '#type' => 'details',
       '#title' => t('Default product pickup address'),
-      '#description' => t('When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. If this pickup address is left blank, this product will default to the <a href=":url">store pickup address</a>.', [':url' => Url::fromRoute('uc_quote.settings')]),
+      '#description' => t('When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. If this pickup address is left blank, this product will default to the <a href=":url">store pickup address</a>.', [':url' => Url::fromRoute('uc_quote.settings')->toString()]),
       '#weight' => -6,
     );
     $form['shipping']['shipping_address']['#tree'] = TRUE;

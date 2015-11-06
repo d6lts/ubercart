@@ -120,7 +120,7 @@ function uc_cybersource_settings_form($form, &$form_state) {
   $form['uc_cybersource_method'] = array(
     '#type' => 'radios',
     '#title' => t('Payment method'),
-    '#description' => t('You must ensure your CyberSource account and web server are able to use the service you select.<br />Silent Order POST requires a modified <a href=":url">HOP.php</a>.<br />The SOAP Toolkit API requires the SOAP and DOM extensions for PHP.', [':url' => Url::fromRoute('http://www.ubercart.org/contrib/139', ['absolute' => TRUE])]),
+    '#description' => t('You must ensure your CyberSource account and web server are able to use the service you select.<br />Silent Order POST requires a modified <a href=":url">HOP.php</a>.<br />The SOAP Toolkit API requires the SOAP and DOM extensions for PHP.', [':url' => Url::fromRoute('http://www.ubercart.org/contrib/139', ['absolute' => TRUE])->toString()]),
     '#options' => array(
       'post' => t('Silent Order POST'),
       // 'api' => t('Simple Order API'),
@@ -347,9 +347,9 @@ function uc_cybersource_hop_form($form, $form_state, $order) {
   $data['orderPage_sendMerchantReceiptEmail'] = variable_get('uc_cybersource_hop_merchant_receipt_email', 'true');
   $data['orderPage_sendMerchantURLPost'] = 'true';
   // CyberSource posts payment confirmation to this URL.
-  $data['orderPage_merchantURLPostAddress']= Url::fromRoute('cybersource/hop-post', ['absolute' => TRUE]);
+  $data['orderPage_merchantURLPostAddress']= Url::fromRoute('cybersource/hop-post', ['absolute' => TRUE])->toString();
   $data['orderPage_buyButtonText'] = t('Checkout');
-  $receipt_url = Url::fromRoute('cybersource/hop-complete/' . $order->id(), ['absolute' => TRUE]);
+  $receipt_url = Url::fromRoute('cybersource/hop-complete/' . $order->id(), ['absolute' => TRUE])->toString();
   $data['orderPage_receiptResponseURL'] = $receipt_url;
   $data['orderPage_buyButtonText'] = variable_get('uc_cybersource_cs_hop_button_text', t('Process payment'));
   $comments = t('Order @order-id at @store-name', ['@order-id' => $order->id(), '@store-name' => uc_store_name()]);
@@ -739,7 +739,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type) {
   catch (SoapFault $exception) {
     // Log and display errors if Ubercart is unable to connect via SOAP.
     \Drupal::logger('uc_cybersource')->error('Unable to connect to CyberSource via SOAP.');
-    drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href="@url">contact sales</a> to complete your order.', ['@url' => Url::fromRoute('contact')]), 'error');
+    drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href=":url">contact sales</a> to complete your order.', [':url' => Url::fromRoute('contact')->toString()]), 'error');
   }
 
   // Process a reply from CyberSource.
@@ -969,7 +969,7 @@ function uc_cybersource_uc_calculate_tax($order) {
   catch (SoapFault $exception) {
     // Log and display errors if Ubercart is unable to connect via SOAP.
     \Drupal::logger('uc_cybersource')->error('Unable to connect to CyberSource via SOAP.');
-    drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href="@url">contact sales</a> to complete your order.', ['@url' => Url::fromRoute('contact')]), 'error');
+    drupal_set_message(t('We apologize for the delay, but we are unable to process your credit card at this time. Please <a href=":url">contact sales</a> to complete your order.', [':url' => Url::fromRoute('contact')->toString()]), 'error');
   }
 
   // Process a reply from CyberSource.

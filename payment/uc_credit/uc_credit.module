@@ -165,7 +165,7 @@ function uc_credit_uc_store_status() {
     $statuses[] = array(
       'status' => 'error',
       'title' => t('Credit card encryption'),
-      'desc' => t('You must review your <a href="@url">credit card security settings</a> and enable encryption before you can accept credit card payments.', ['@url' => Url::fromRoute('uc_payment.method_settings', ['method' => 'credit'])]),
+      'desc' => t('You must review your <a href=":url">credit card security settings</a> and enable encryption before you can accept credit card payments.', [':url' => Url::fromRoute('uc_payment.method_settings', ['method' => 'credit'])->toString()]),
     );
   }
 

@@ -258,7 +258,7 @@ function uc_ups_uc_shipping_method() {
     'operations' => array(
       'configure' => array(
         'title' => t('configure'),
-        'url' => Url::fromRoute('uc_ups.settings'),
+        'url' => Url::fromRoute('uc_ups.settings')->toString(),
       ),
     ),
     'quote' => array(
@@ -304,7 +304,7 @@ function uc_ups_uc_store_status() {
     $messages[] = array(
       'status' => 'error',
       'title' => t('UPS Online Tools'),
-      'desc' => t('More information is needed to access UPS Online Tools. Please enter it <a href="@url">here</a>.', ['@url' => Url::fromRoute('uc_ups.settings')]),
+      'desc' => t('More information is needed to access UPS Online Tools. Please enter it <a href=":url">here</a>.', [':url' => Url::fromRoute('uc_ups.settings')->toString()]),
     );
   }
 
