@@ -21,7 +21,7 @@ function uc_catalog_install() {
 function uc_catalog_uninstall() {
   if ($vid = \Drupal::config('uc_catalog.settings')->get('vocabulary')) {
     $vocab = \Drupal\taxonomy\Entity\Vocabulary::load($vid);
-    drupal_set_message(t('The Ubercart %catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', ['%catalog' => $vocab->label(), '@url' => \Drupal::url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $vocab->id()])]), 'warning');
+    drupal_set_message(t('The Ubercart %catalog vocabulary has not been deleted. If you need to delete it, <a href="@url">please do so manually</a>.', ['%catalog' => $vocab->label(), '@url' => \Drupal\Core\Url::fromRoute('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $vocab->id()])]), 'warning');
   }
 
   $styles = \Drupal\image\Entity\ImageStyle::loadMultiple(['uc_category', 'uc_product_list']);
@@ -36,7 +36,7 @@ function uc_catalog_uninstall() {
       array(
         '%style' => $style_names[0],
         '%styles' => implode(', ', $style_names),
-        '@url' => \Drupal::url('entity.image_style.collection'),
+        '@url' => \Drupal\Core\Url::fromRoute('entity.image_style.collection'),
       )
     ), 'warning');
   }

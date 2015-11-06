@@ -28,7 +28,7 @@ function uc_catalog_help($route_name, RouteMatchInterface $route_match) {
 
     case 'uc_catalog.settings':
       if (!\Drupal::moduleHandler()->moduleExists('views_ui')) {
-        return '<p>' . t('<a href="@modules">Enable the Views UI module</a> to edit the catalog display.', ['@modules' => \Drupal::url('system.modules_list', [], ['fragment' => 'edit-modules-views'])]) . '</p>';
+        return '<p>' . t('<a href="@modules">Enable the Views UI module</a> to edit the catalog display.', ['@modules' => Url::fromRoute('system.modules_list', [], ['fragment' => 'edit-modules-views'])]) . '</p>';
       }
       break;
   }
@@ -120,7 +120,7 @@ function uc_catalog_uc_store_status() {
     return array(array(
       'status' => 'error',
       'title' => t('Catalog field'),
-      'desc' => t('The catalog taxonomy reference field is missing. <a href="@url">Click here to create it</a>.', ['@url' => \Drupal::url('uc_catalog.repair')]),
+      'desc' => t('The catalog taxonomy reference field is missing. <a href="@url">Click here to create it</a>.', ['@url' => Url::fromRoute('uc_catalog.repair')]),
     ));
   }
 
@@ -161,7 +161,7 @@ function uc_catalog_uc_store_status() {
     $statuses[] = array(
       'status' => 'error',
       'title' => t('Catalog vocabulary'),
-      'desc' => t('No vocabulary has been recognized as the Ubercart catalog. Choose one on <a href="@admin_catalog">this page</a> or add one on the <a href="@admin_vocab">taxonomy admin page</a> first, if needed.', ['@admin_catalog' => \Drupal::url('uc_catalog.settings'), '@admin_vocab' => \Drupal::url('entity.taxonomy_vocabulary.collection')]),
+      'desc' => t('No vocabulary has been recognized as the Ubercart catalog. Choose one on <a href="@admin_catalog">this page</a> or add one on the <a href="@admin_vocab">taxonomy admin page</a> first, if needed.', ['@admin_catalog' => Url::fromRoute('uc_catalog.settings'), '@admin_vocab' => Url::fromRoute('entity.taxonomy_vocabulary.collection')]),
     );
   }
 

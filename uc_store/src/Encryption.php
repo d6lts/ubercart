@@ -8,10 +8,14 @@
 namespace Drupal\uc_store;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Url;
 use Drupal\uc_store\EncryptionInterface;
 
 /**
  * Handles encryption of credit-card information.
+ *
+ * This class is provided for backwards-compatibility with Drupal 6 and
+ * Drupal 7 Ubercart sites.
  *
  * Trimmed down version of GPL class by Tony Marston.  Details available at
  * http://www.tonymarston.co.uk/php-mysql/encryption.html
@@ -180,7 +184,7 @@ class Encryption implements EncryptionInterface {
       if (!$alerted) {
         // Throw an error that makes sense so this stops getting reported.
         $this->errors[] = t('No encryption key was found.');
-        drupal_set_message(t('Ubercart cannot find a necessary encryption key. Refer to the store admin <a href="@url">dashboard</a> to isolate which one.', ['@url' => \Drupal::url('uc_store.admin')]), 'error');
+        drupal_set_message(t('Ubercart cannot find a necessary encryption key. Refer to the store admin <a href="@url">dashboard</a> to isolate which one.', ['@url' => Url::fromRoute('uc_store.admin')]), 'error');
 
         $alerted = TRUE;
       }

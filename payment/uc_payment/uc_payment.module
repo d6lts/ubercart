@@ -239,7 +239,7 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
 
   // Head back to the order if a redirect was specified.
   if ($redirect) {
-    return new RedirectResponse(\Drupal::url('uc_order.admin_view', ['uc_order' => $order_id]));
+    return new RedirectResponse(Url::fromRoute('uc_order.admin_view', ['uc_order' => $order_id]));
   }
 
   return $result['success'];

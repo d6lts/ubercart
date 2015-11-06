@@ -23,7 +23,7 @@ function uc_cart_uninstall() {
       array(
         '%status' => $status_names[0],
         '%statuses' => implode(', ', $status_names),
-        '@url' => \Drupal::url('uc_order.workflow'),
+        '@url' => \Drupal\Core\Url::fromRoute('uc_order.workflow'),
       )
     ), 'warning');
   }
@@ -40,7 +40,7 @@ function uc_cart_uninstall() {
       array(
         '%style' => $style_names[0],
         '%styles' => implode(', ', $style_names),
-        '@url' => \Drupal::url('entity.image_style.collection'),
+        '@url' => \Drupal\Core\Url::fromRoute('entity.image_style.collection'),
       )
     ), 'warning');
   }

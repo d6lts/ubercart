@@ -121,7 +121,7 @@ function uc_file_user_form($form, FormStateInterface $form_state, $account) {
     $form['file']['file_message'] = array(
       '#markup' => '<p>' . t(
         'You must add files at the <a href=":url">Ubercart file download administration page</a> in order to attach them to a user.',
-        [':url' => \Drupal::url('uc_file.downloads', [], ['query' => ['destination' => 'user/' . $account->id() . '/edit']])]
+        [':url' => Url::fromRoute('uc_file.downloads', [], ['query' => ['destination' => 'user/' . $account->id() . '/edit']])]
       ) . '</p>',
     );
 
@@ -429,7 +429,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
         // But still show the message if it does.
         drupal_set_message(t('You already have privileges to <a href=":url">download %file</a>. If you complete the purchase of this item, your new download limit will be %download_limit, your access location limit will be %address_limit, and your new expiration time will be %expiration.',
           array(
-            ':url' => $user->id() ? \Drupal::url('user/' . $user->id() . '/purchased-files') : \Drupal::url('user.login'),
+            ':url' => $user->id() ? Url::fromRoute('user/' . $user->id() . '/purchased-files') : Url::fromRoute('user.login'),
             '%file' => $product_feature->filename,
             '%download_limit' => $file_user['download_limit'] ? $file_user['download_limit'] : t('unlimited'),
             '%address_limit'  => $file_user['address_limit' ] ? $file_user['address_limit' ] : t('unlimited'),
@@ -440,7 +440,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
         return array(array(
           'success' => FALSE,
           'message' => t('You already have privileges to <a href=":url">download %file</a>.', array(
-            ':url' => $user->id() ? \Drupal::url('user/' . $user->id() . '/purchased-files') : \Drupal::url('user.login'),
+            ':url' => $user->id() ? Url::fromRoute('user/' . $user->id() . '/purchased-files') : Url::fromRoute('user.login'),
             '%file' => $product_feature->filename,
           )),
         ));
@@ -496,7 +496,7 @@ function uc_file_uc_store_status() {
     $message[] = array(
       'status' => 'warning',
       'title' => t('File downloads'),
-      'desc' => t('The file downloads directory is not valid or set. Set a valid directory in the <a href="@url">product settings</a> under the file download settings tab.', array('@url' => \Drupal::url('uc_product.settings'))),
+      'desc' => t('The file downloads directory is not valid or set. Set a valid directory in the <a href="@url">product settings</a> under the file download settings tab.', array('@url' => Url::fromRoute('uc_product.settings'))),
     );
   }
   else {

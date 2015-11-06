@@ -115,7 +115,7 @@ function uc_order_page_attachments(&$page) {
       substr($route, 0, 15) == 'view.uc_orders.' ||
       substr($route, 0, 18) == 'view.uc_customers.') {
     $page['#attached']['library'][] = 'uc_order/uc_order.scripts';
-    $page['#attached']['drupalSettings']['ucURL']['adminOrders'] = \Drupal::url('uc_order.order_admin');
+    $page['#attached']['drupalSettings']['ucURL']['adminOrders'] = Url::fromRoute('uc_order.order_admin');
   }
 }
 

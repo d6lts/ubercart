@@ -8,6 +8,7 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Form step values.
@@ -200,7 +201,7 @@ function theme_uc_file_admin_files_form_show(array $variables) {
   $form = $variables['form'];
 
   // Render everything.
-  $output = '<p>' . t('File downloads can be attached to any Ubercart product as a product feature. For security reasons the <a href="!download_url">file downloads directory</a> is separated from the Drupal <a href="!file_url">file system</a>. Below is the list of files (and their associated Ubercart products, if any) that can be used for file downloads.', array('!download_url' => \Drupal::url('uc_product.admin', [], ['query' => ['destination' => 'admin/store/products/files']]), '!file_url' => \Drupal::url('system.file_system_settings'))) . '</p>';
+  $output = '<p>' . t('File downloads can be attached to any Ubercart product as a product feature. For security reasons the <a href="!download_url">file downloads directory</a> is separated from the Drupal <a href="!file_url">file system</a>. Below is the list of files (and their associated Ubercart products, if any) that can be used for file downloads.', array('!download_url' => Url::fromRoute('uc_product.admin', [], ['query' => ['destination' => 'admin/store/products/files']]), '!file_url' => Url::fromRoute('system.file_system_settings'))) . '</p>';
   $output .= drupal_render($form['uc_file_action']);
   $output .= drupal_render($form['file_select']);
   $output .= theme('pager');

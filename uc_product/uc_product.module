@@ -572,7 +572,7 @@ function uc_product_uc_store_status() {
   }
   else {
     $status = 'warning';
-    $description = t('<a href=":url">Click here</a> to automatically configure core image support.', [':url' => \Drupal::url('uc_product.image_defaults')])
+    $description = t('<a href=":url">Click here</a> to automatically configure core image support.', [':url' => Url::fromRoute('uc_product.image_defaults')])
       . ' ' . t('(This action is not required and should not be taken if you do not need images or have implemented your own image support.)');
   }
 
