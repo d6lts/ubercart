@@ -8,11 +8,9 @@
 namespace Drupal\uc_cart\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
-use Drupal\uc_cart\Controller\Cart;
 
 /**
  * Provides the shopping cart block.
@@ -92,7 +90,7 @@ class CartBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    $cart = Cart::create(\Drupal::getContainer());
+    $cart = \Drupal::service('uc_cart.manager')->get();
     $product_count = count($cart->getContents());
 
     // Display nothing if the block is set to hide on empty and there are no

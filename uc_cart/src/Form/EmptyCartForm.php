@@ -10,7 +10,6 @@ namespace Drupal\uc_cart\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\uc_cart\Controller\Cart;
 
 /**
  * Confirm that the customer wants to empty their cart.
@@ -42,8 +41,7 @@ class EmptyCartForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $cart = Cart::create(\Drupal::getContainer());
-    $cart->emptyCart();
+    \Drupal::service('uc_cart.manager')->emptyCart();
     $form_state->setRedirect('uc_cart.cart');
   }
 

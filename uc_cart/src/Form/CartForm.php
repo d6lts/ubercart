@@ -12,7 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
-use Drupal\uc_cart\Controller\CartInterface;
+use Drupal\uc_cart\CartInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

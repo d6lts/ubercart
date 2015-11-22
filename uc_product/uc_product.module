@@ -617,12 +617,10 @@ function uc_product_uc_cart_display($item) {
  * Implements hook_uc_update_cart_item().
  */
 function uc_product_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
-  if (!$nid) return NULL;
-  $cart = \Drupal\uc_cart\Controller\Cart::create(\Drupal::getContainer());
-  $cid = !(is_null($cid) || empty($cid)) ? $cid : $cart->getId();
+  $cart = \Drupal::service('uc_cart.manager')->get($cid);
 
   $result = \Drupal::entityQuery('uc_cart_item')
-    ->condition('cart_id', $cid)
+    ->condition('cart_id', $cart->getId())
     ->condition('nid', $nid)
     ->condition('data', serialize($data))
     ->execute();

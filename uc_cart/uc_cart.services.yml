@@ -6,3 +6,6 @@ services:
     class: Drupal\uc_cart\CartBreadcrumbBuilder
     tags:
       - { name: breadcrumb_builder, priority: 100 }
+  uc_cart.manager:
+    class: Drupal\uc_cart\CartManager
+    arguments: ['@current_user', '@session']

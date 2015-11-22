@@ -734,7 +734,7 @@ function uc_product_kit_add_to_cart_form_submit($form, FormStateInterface $form_
     $node = node_load($form_state->getValue('nid'));
     drupal_set_message(t('<strong>@product-title</strong> added to <a href=":url">your shopping cart</a>.', ['@product-title' => $node->label(), ':url' => Url::fromRoute('uc_cart.cart')->toString()]));
   }
-  $cart = \Drupal\uc_cart\Controller\Cart::create(\Drupal::getContainer());
+  $cart = \Drupal::service('uc_cart.manager')->get();
   $redirect = $cart->addItem($form_state->getValue('nid'), $form_state->getValue('qty'), $form_state->getValues());
   if (isset($redirect)) {
     $form_state->setRedirectUrl($redirect);
@@ -787,8 +787,8 @@ function uc_product_kit_buy_it_now_form_submit($form, FormStateInterface $form_s
     }
   }
   $msg = \Drupal::config('uc_cart.settings')->get('add_item_msg');
-  $cart = \Drupal\uc_cart\Controller\Cart::create(\Drupal::getContainer());
-  $path = $cart->addItem($form_state->getValue('nid'), 1, $form_state->getValues(), NULL, $msg);
+  $cart = \Drupal::service('uc_cart.manager')->get();
+  $redirect = $cart->addItem($form_state->getValue('nid'), 1, $form_state->getValues(), $msg);
   if (isset($redirect)) {
     $form_state->setRedirectUrl($redirect);
   }
@@ -800,8 +800,7 @@ function uc_product_kit_buy_it_now_form_submit($form, FormStateInterface $form_s
 function uc_product_kit_uc_add_to_cart($nid, $qty, $kit_data) {
   $node = node_load($nid);
   if ($node->getType() == 'product_kit') {
-    $cart_manager = \Drupal\uc_cart\Controller\Cart::create(\Drupal::getContainer());
-    $cart = $cart_manager->getContents();
+    $cart = \Drupal::service('uc_cart.manager')->get();
     $unique = uniqid('', TRUE);
     $update = array();
     $product_data = array();
@@ -809,7 +808,7 @@ function uc_product_kit_uc_add_to_cart($nid, $qty, $kit_data) {
     foreach ($node->products as $product) {
       $data = array('kit_id' => $node->id(), 'module' => 'uc_product_kit') + \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($kit_data['products'][$product->id()]));
       $product_data[$product->id()] = $data;
-      foreach ($cart as $item) {
+      foreach ($cart->getContents() as $item) {
         if ($item->nid == $product->id() && isset($item->data['kit_id']) && $item->data['kit_id'] == $node->id()) {
           // There is something in the cart like the product kit. Update
           // by default, but check that it's possible.
@@ -830,18 +829,15 @@ function uc_product_kit_uc_add_to_cart($nid, $qty, $kit_data) {
       foreach ($node->products as $product) {
         $data = $product_data[$product->id()];
         $data['unique_id'] = $unique;
-        $cart_manager->addItem($product->id(), $product->qty * $qty, $data, NULL, FALSE, FALSE, FALSE);
+        $cart->addItem($product->id(), $product->qty * $qty, $data, FALSE);
       }
     }
     else {
       foreach ($node->products as $product) {
         $data = $product_data[$product->id()];
-        $cart_manager->addItem($product->id(), $product->qty * $qty, $data, NULL, FALSE, FALSE, FALSE);
+        $cart->addItem($product->id(), $product->qty * $qty, $data, FALSE);
       }
     }
-
-    // Rebuild the cart items cache.
-    $cart_manager->getContents(NULL, 'rebuild');
 
     return array(array('success' => FALSE, 'silent' => TRUE, 'message' => ''));
   }
@@ -1005,10 +1001,6 @@ function uc_product_kit_uc_cart_display($item) {
  * Handles individual products or entire kits.
  */
 function uc_product_kit_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
-  if (!$nid) return NULL;
-  $cart = \Drupal\uc_cart\Controller\Cart::create(\Drupal::getContainer());
-  $cid = !(is_null($cid) || empty($cid)) ? $cid : $cart->getId();
-
   if (isset($data['kit_id'])) {
     // Product was listed individually.
     uc_product_uc_update_cart_item($nid, $data, $qty, $cid);

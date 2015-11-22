@@ -13,7 +13,6 @@ use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\uc_cart\Controller\Cart;
 
 /**
  * Preprocesses a cart link, confirming with the user for destructive actions.
@@ -80,7 +79,7 @@ class CartLinksForm extends ConfirmFormBase {
     }
 
     // Confirm with the user if the form contains a destructive action.
-    $cart = Cart::create(\Drupal::getContainer());
+    $cart = \Drupal::service('uc_cart.manager')->get();
     $items = $cart->getContents();
     if ($cart_links_config->get('empty') && !empty($items)) {
       $actions = explode('-', urldecode($this->actions));
@@ -105,11 +104,10 @@ class CartLinksForm extends ConfirmFormBase {
     $cart_links_config = $this->config('uc_cart_links.settings');
 
     $actions = explode('-', urldecode($this->actions));
-    $rebuild_cart = FALSE;
     $messages = array();
     $id = $this->t('(not specified)');
 
-    $cart = Cart::create(\Drupal::getContainer());
+    $cart = \Drupal::service('uc_cart.manager')->get();
     foreach ($actions as $action) {
       switch (Unicode::substr($action, 0, 1)) {
         // Set the ID of the Cart Link.
@@ -186,8 +184,7 @@ class CartLinksForm extends ConfirmFormBase {
                   );
                 }
               }
-              $cart->addItem($p['nid'], $p['qty'], $p['data'] + \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($p)), NULL, $msg, FALSE, FALSE);
-              $rebuild_cart = TRUE;
+              $cart->addItem($p['nid'], $p['qty'], $p['data'] + \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($p)), $msg);
             }
             else {
               $this->logger('uc_cart_link')->error('Cart Link on %url tried to add an unpublished product to the cart.', array('%url' => $this->getRequest()->server->get('HTTP_REFERER')));
@@ -221,11 +218,6 @@ class CartLinksForm extends ConfirmFormBase {
             drupal_set_message($messages[$mkey]);
           }
           break;
-      }
-
-      // Rebuild the cart cache if necessary.
-      if ($rebuild_cart) {
-        $cart->getContents(NULL, 'rebuild');
       }
     }
 

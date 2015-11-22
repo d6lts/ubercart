@@ -11,7 +11,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
-use Drupal\uc_cart\Controller\Cart;
 
 /**
  * Defines a simple form for adding a product to the cart.
@@ -61,8 +60,8 @@ class BuyItNowForm extends FormBase {
     if (!$form_state->getRedirect()) {
       $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValues()));
       $msg = $this->config('uc_cart.settings')->get('add_item_msg');
-      $cart = Cart::create(\Drupal::getContainer());
-      $redirect = $cart->addItem($form_state->getValue('nid'), $form_state->getValue('qty'), $data, NULL, $msg);
+      $cart = \Drupal::service('uc_cart.manager')->get();
+      $redirect = $cart->addItem($form_state->getValue('nid'), $form_state->getValue('qty'), $data, $msg);
       if (isset($redirect)) {
         $form_state->setRedirectUrl($redirect);
       }

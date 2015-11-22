@@ -9,6 +9,8 @@ namespace Drupal\uc_cart\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\uc_cart\CartInterface;
+use Drupal\uc_cart\CartManagerInterface;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,21 +28,23 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
   protected $checkoutPaneManager;
 
   /**
-   * The cart controller.
+   * The cart manager.
    *
-   * @var \Drupal\uc_cart\Controller\Cart
+   * @var \Drupal\uc_cart\CartManager
    */
-  protected $cart;
+  protected $cartManager;
 
   /**
    * Constructs a CheckoutController.
    *
    * @param \Drupal\uc_cart\Plugin\CheckoutPaneManager $checkout_pane_manager
    *   The checkout pane plugin manager.
+   * @param \Drupal\uc_cart\CartManagerInterface $cart_manager
+   *   The cart manager.
    */
-  public function __construct(CheckoutPaneManager $checkout_pane_manager, CartInterface $cart) {
+  public function __construct(CheckoutPaneManager $checkout_pane_manager, CartManagerInterface $cart_manager) {
     $this->checkoutPaneManager = $checkout_pane_manager;
-    $this->cart = $cart;
+    $this->cartManager = $cart_manager;
   }
 
   /**
@@ -49,7 +53,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.uc_cart.checkout_pane'),
-      Cart::create($container)
+      $container->get('uc_cart.manager')
     );
   }
 
@@ -59,7 +63,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
   public function checkout() {
     $cart_config = $this->config('uc_cart.settings');
 
-    $items = $this->cart->getContents();
+    $items = $this->cartManager->get()->getContents();
     if (count($items) == 0 || !$cart_config->get('checkout_enabled')) {
       return $this->redirect('uc_cart.cart');
     }
@@ -82,8 +86,8 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
         // there has been no activity for 10 minutes (to prevent identity theft).
         if ($order->getStateId() != 'in_checkout' ||
             ($this->currentUser()->isAuthenticated() && $this->currentUser()->id() != $order->getUserId()) ||
-            $order->modified->value < REQUEST_TIME - Cart::CHECKOUT_TIMEOUT) {
-          if ($order->getStateId() == 'in_checkout' && $order->modified->value < REQUEST_TIME - Cart::CHECKOUT_TIMEOUT) {
+            $order->modified->value < REQUEST_TIME - CartInterface::CHECKOUT_TIMEOUT) {
+          if ($order->getStateId() == 'in_checkout' && $order->modified->value < REQUEST_TIME - CartInterface::CHECKOUT_TIMEOUT) {
             // Mark expired orders as abandoned.
             $order->setStatusId('abandoned')->save();
           }
@@ -230,7 +234,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     }
 
     $cart_config = $this->config('uc_cart.settings');
-    $build = $this->cart->completeSale($order, $cart_config->get('new_customer_login'));
+    $build = $this->cartManager->completeSale($order, $cart_config->get('new_customer_login'));
     $session->remove('cart_order');
     unset($_SESSION['uc_checkout'][$order->id()]);
 

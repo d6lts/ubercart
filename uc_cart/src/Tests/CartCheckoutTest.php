@@ -7,7 +7,7 @@
 
 namespace Drupal\uc_cart\Tests;
 
-use Drupal\uc_cart\Controller\Cart;
+use Drupal\uc_cart\CartInterface;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -22,7 +22,18 @@ class CartCheckoutTest extends UbercartTestBase {
   /** Authenticated but unprivileged user. */
   protected $customer;
 
-  /** Instance of the Cart controller. */
+  /**
+   * The cart manager.
+   *
+   * @var \Drupal\uc_cart\CartManagerInterface
+   */
+  protected $cartManager;
+
+  /**
+   * The test user's cart.
+   *
+   * @var CartInterface
+   */
   protected $cart;
 
 
@@ -30,7 +41,8 @@ class CartCheckoutTest extends UbercartTestBase {
     parent::setUp();
 
     // Create a simple customer user account.
-    $this->cart = Cart::create(\Drupal::getContainer());
+    $this->cartManager = \Drupal::service('uc_cart.manager');
+    $this->cart = $this->cartManager->get();
 
     // Create a simple customer user account.
     $this->customer = $this->drupalCreateUser();
@@ -85,8 +97,6 @@ class CartCheckoutTest extends UbercartTestBase {
     foreach ($items as $item) {
       $item->delete();
     }
-    // @TODO: remove the need for this
-    $this->cart->getContents(NULL, 'rebuild');
 
     $items = $this->cart->getContents();
     $this->assertEqual(count($items), 0, 'Cart is empty after removal.');
@@ -387,7 +397,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $order_data = array('primary_email' => 'simpletest@ubercart.org');
     $order = $this->createOrder($order_data);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
-    $output = $this->cart->completeSale($order);
+    $output = $this->cartManager->completeSale($order);
 
     // Check that a new account was created.
     $this->assertTrue(strpos($output['#message'], 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
@@ -406,7 +416,7 @@ class CartCheckoutTest extends UbercartTestBase {
     // Different user, sees the checkout page first.
     $order_data = array('primary_email' => 'simpletest2@ubercart.org');
     $order = $this->createOrder($order_data);
-    $output = $this->cart->completeSale($order, TRUE);
+    $output = $this->cartManager->completeSale($order, TRUE);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // 3 e-mails: new account, customer invoice, admin invoice
@@ -422,7 +432,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Same user, new order.
     $order = $this->createOrder($order_data);
-    $output = $this->cart->completeSale($order, TRUE);
+    $output = $this->cartManager->completeSale($order, TRUE);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // Check that no new account was created.
@@ -471,7 +481,7 @@ class CartCheckoutTest extends UbercartTestBase {
       // @todo: Can we set modified through the Entity API rather than DBTNG?
       db_update('uc_orders')
         ->fields(array(
-            'modified' => time() - Cart::ORDER_TIMEOUT - 1,
+            'modified' => time() - CartInterface::ORDER_TIMEOUT - 1,
           ))
         ->condition('order_id', $order_id)
         ->execute();
