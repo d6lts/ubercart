@@ -202,16 +202,16 @@ function uc_order_entity_extra_field_info() {
 /**
  * Implements hook_user_view().
  */
-function uc_order_user_view($account, $view_mode) {
+function uc_order_user_view(array &$build, \Drupal\Core\Entity\EntityInterface $account, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
   $user = \Drupal::currentUser();
 
   if ($view_mode == 'full' &&
       $user->isAuthenticated() &&
       (($user->id() == $account->id() && $user->hasPermission('view own orders')) || $user->hasPermission('view all orders'))) {
-    $account->content['orders'] = array(
+    $build['orders'] = array(
       '#type' => 'item',
       '#title' => t('Orders'),
-      '#markup' => \Drupal::l(t('Click here to view your order history.'), new Url('user/' . $account->id() . '/orders', ['user' => $account->id()])),
+      '#markup' => \Drupal::l(t('Click here to view your order history.'), Url::fromRoute('view.uc_order_history.page_1', ['user' => $account->id()])),
     );
   }
 }
