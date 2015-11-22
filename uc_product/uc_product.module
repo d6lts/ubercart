@@ -797,9 +797,6 @@ function uc_product_get_picture($nid, $style = 'uc_product') {
  * hook_uc_product_description_alter(). By default, all descriptions supplied
  * by modules via hook_uc_product_description() are concatenated together.
  *
- * NOTE: hook_uc_product_description() supercedes the deprecated
- * hook_cart_item_description().
- *
  * @param $product
  *   Product.
  *
@@ -866,8 +863,6 @@ function uc_product_feature_save(&$data) {
       ->execute();
     drupal_set_message(t('The product feature has been updated.'));
   }
-
-  // drupal_set_message(t('The product feature was unable to be saved.'));
 }
 
 /**
