@@ -76,7 +76,7 @@ class FullName extends FieldPluginBase {
     $account = \Drupal::currentUser();
     if (!empty($this->options['link_to_user']) && $account->hasPermission('access user profiles')) {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'user/' . $this->getValue($values, 'uid');;
+      $this->options['alter']['path'] = 'user/' . $this->getValue($values, 'uid');
     }
     return $data;
   }
