@@ -484,39 +484,5 @@ function hook_uc_order_product_can_ship($product) {
 }
 
 /**
- * Registers static order states.
- *
- * Order states are module-defined categories for order statuses. Each state
- * will have a default status that is used when modules need to move orders to
- * new state, but don't know which status to use.
- *
- * @return
- *   An array of order state definitions. Each definition is an array keyed by
- *   the machine name of the state, with the following members:
- *   - title: The human-readable, translated name.
- *   - weight: The list position of the state.
- */
-function hook_uc_order_state() {
-  $states['canceled'] = array(
-    'title' => t('Canceled'),
-    'weight' => -20,
-  );
-  $states['in_checkout'] = array(
-    'title' => t('In checkout'),
-    'weight' => -10,
-  );
-  $states['post_checkout'] = array(
-    'title' => t('Post checkout'),
-    'weight' => 0,
-  );
-  $states['completed'] = array(
-    'title' => t('Completed'),
-    'weight' => 20,
-  );
-
-  return $states;
-}
-
-/**
  * @} End of "addtogroup hooks".
  */

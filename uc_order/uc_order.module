@@ -10,6 +10,7 @@
  * displayed to customers.
  */
 
+use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
@@ -366,30 +367,6 @@ function uc_order_uc_order_pane() {
 }
 
 /**
- * Implements hook_uc_order_state().
- */
-function uc_order_uc_order_state() {
-  $states['canceled'] = array(
-    'title' => t('Canceled'),
-    'weight' => -20,
-  );
-  $states['in_checkout'] = array(
-    'title' => t('In checkout'),
-    'weight' => -10,
-  );
-  $states['post_checkout'] = array(
-    'title' => t('Post checkout'),
-    'weight' => 0,
-  );
-  $states['completed'] = array(
-    'title' => t('Completed'),
-    'weight' => 20,
-  );
-
-  return $states;
-}
-
-/**
  * Implements hook_uc_line_item().
  */
 function uc_order_uc_line_item() {
@@ -701,12 +678,16 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
  * Returns an option list of order states.
  */
 function uc_order_state_options_list() {
-  $states = \Drupal::moduleHandler()->invokeAll('uc_order_state');
+  $discovery = new YamlDiscovery('uc_order_state', \Drupal::moduleHandler()->getModuleDirectories());
+  $states = [];
+  foreach ($discovery->findAll() as $file) {
+    $states = array_merge($states, $file);
+  }
   uasort($states, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
   $options = array();
   foreach ($states as $id => $state) {
-    $options[$id] = $state['title'];
+    $options[$id] = $state['label'];
   }
   return $options;
 }

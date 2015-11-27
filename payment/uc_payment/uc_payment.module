@@ -106,18 +106,6 @@ function uc_payment_uc_order_pane() {
 }
 
 /**
- * Implements hook_uc_order_state().
- */
-function uc_payment_uc_order_state() {
-  $states['payment_received'] = array(
-    'title' => t('Payment received'),
-    'weight' => 10,
-  );
-
-  return $states;
-}
-
-/**
  * Implements hook_uc_payment_method_checkout_alter().
  */
 function uc_payment_uc_payment_method_checkout_alter(array &$methods, OrderInterface $order) {
