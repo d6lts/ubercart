@@ -8,9 +8,11 @@
 namespace Drupal\uc_cart\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\uc_cart\CartItemInterface;
 
 /**
  * Defines the cart item entity class.
@@ -29,7 +31,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   }
  * )
  */
-class CartItem extends ContentEntityBase {
+class CartItem extends ContentEntityBase implements CartItemInterface {
+
+  use EntityChangedTrait;
 
   public $product;
   public $title;
@@ -38,13 +42,6 @@ class CartItem extends ContentEntityBase {
   public $price;
   public $weight;
   public $weight_units;
-
-  /**
-   * The timestamp when this item was last updated.
-   *
-   * @var integer
-   */
-  public $changed;
 
   /**
    * Converts a cart item into an order product.
@@ -107,10 +104,9 @@ class CartItem extends ContentEntityBase {
       ->setDescription(t('The number of this product in the cart.'))
       ->setSetting('default_value', 0)
       ->setSetting('unsigned', TRUE);
-    $fields['changed'] = BaseFieldDefinition::create('integer')
+    $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setDescription(t('The Unix timestamp indicating the time the product in the cart was changed.'))
-      ->setSetting('default_value', 0);
+      ->setDescription(t('The time that the cart item was last edited.'));
     $fields['data'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
       ->setDescription(t('A serialized array of extra data.'));

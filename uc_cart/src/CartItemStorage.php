@@ -27,7 +27,7 @@ class CartItemStorage extends SqlContentEntityStorage {
       }
     }
     else {
-      $entity->changed = REQUEST_TIME;
+      $entity->setChangedTime(REQUEST_TIME);
       parent::save($entity);
     }
   }

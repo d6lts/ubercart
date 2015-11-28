@@ -86,8 +86,8 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
         // there has been no activity for 10 minutes (to prevent identity theft).
         if ($order->getStateId() != 'in_checkout' ||
             ($this->currentUser()->isAuthenticated() && $this->currentUser()->id() != $order->getUserId()) ||
-            $order->modified->value < REQUEST_TIME - CartInterface::CHECKOUT_TIMEOUT) {
-          if ($order->getStateId() == 'in_checkout' && $order->modified->value < REQUEST_TIME - CartInterface::CHECKOUT_TIMEOUT) {
+            $order->getChangedTime() < REQUEST_TIME - CartInterface::CHECKOUT_TIMEOUT) {
+          if ($order->getStateId() == 'in_checkout' && $order->getChangedTime() < REQUEST_TIME - CartInterface::CHECKOUT_TIMEOUT) {
             // Mark expired orders as abandoned.
             $order->setStatusId('abandoned')->save();
           }

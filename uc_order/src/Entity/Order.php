@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -50,6 +51,8 @@ use Drupal\uc_store\Address;
  */
 class Order extends ContentEntityBase implements OrderInterface {
 
+  use EntityChangedTrait;
+
   public $products = array();
   public $line_items = array();
 
@@ -88,7 +91,7 @@ class Order extends ContentEntityBase implements OrderInterface {
     $this->order_total->value = $this->getTotal();
     $this->product_count->value = $this->getProductCount();
     $this->host->value = \Drupal::request()->getClientIp();
-    $this->modified->value = REQUEST_TIME;
+    $this->setChangedTime(REQUEST_TIME);
   }
 
   /**
@@ -142,6 +145,22 @@ class Order extends ContentEntityBase implements OrderInterface {
       // Log the action in the database.
       \Drupal::logger('uc_order')->notice('Order @order_id deleted by user @uid.', ['@order_id' => $order_id, '@uid' => \Drupal::currentUser()->id()]);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreatedTime() {
+    return $this->get('created')->value;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCreatedTime($timestamp) {
+    $this->set('created', $timestamp);
+    return $this;
   }
 
   /**
@@ -556,14 +575,12 @@ class Order extends ContentEntityBase implements OrderInterface {
     $fields['data'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
       ->setDescription(t('A serialized array of extra data.'));
-    $fields['created'] = BaseFieldDefinition::create('integer')
+    $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The Unix timestamp indicating when the order was created.'))
-      ->setSetting('default_value', 0);
-    $fields['modified'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Modified'))
-      ->setDescription(t('The Unix timestamp indicating when the order was last modified.'))
-      ->setSetting('default_value', 0);
+      ->setDescription(t('The time that the order was created.'));
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the order was last edited.'));
     $fields['host'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Host'))
       ->setDescription(t('Host IP address of the person paying for the order.'))

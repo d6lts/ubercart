@@ -18,7 +18,7 @@ class CartItemViewsData extends EntityViewsData {
    * {@inheritdoc}
    */
   public function getViewsData() {
-    parent::getViewsData();
+    $data = parent::getViewsData();
 
     // Cart items table.
     $data['uc_cart_products']['table']['group'] = t('Cart item');
@@ -89,21 +89,7 @@ class CartItemViewsData extends EntityViewsData {
       ),
     );
 
-    $data['uc_cart_products']['changed'] = array(
-      'title' => t('Last modified'),
-      'help' => t('The time the cart item was last modified.'),
-      'field' => array(
-        'id' => 'date',
-        'click sortable' => TRUE,
-      ),
-      'sort' => array(
-        'id' => 'date',
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
-    );
-
     return $data;
   }
+
 }

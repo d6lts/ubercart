@@ -5,6 +5,8 @@
  * Token hooks for the uc_order module.
  */
 
+use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
@@ -112,13 +114,13 @@ function uc_order_token_info() {
     'type' => 'user',
   );
   $tokens['created'] = array(
-    'name' => t('Created'),
+    'name' => t('Date created'),
     'description' => t('The date and time when the order was created.'),
     'type' => 'date',
   );
-  $tokens['modified'] = array(
-    'name' => t('Modified'),
-    'description' => t('The date and time when the order was last modified.'),
+  $tokens['changed'] = array(
+    'name' => t('Date changed'),
+    'description' => t('The date the order was most recently updated.'),
     'type' => 'date',
   );
 
@@ -139,12 +141,19 @@ function uc_order_token_info() {
 function uc_order_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
+  if (isset($options['langcode'])) {
+    $langcode = $options['langcode'];
+  }
+  else {
+    $langcode = LanguageInterface::LANGCODE_DEFAULT;
+  }
+
   $sanitize = !empty($options['sanitize']);
 
   $replacements = [];
 
   if ($type == 'uc_order' && !empty($data['uc_order'])) {
-
+    /** @var \Drupal\uc_order\OrderInterface $order */
     $order = $data['uc_order'];
     $path = 'user/' . $order->getUserId() . '/orders/' . $order->id();
     $admin_path = 'admin/store/orders/' . $order->id();
@@ -292,11 +301,15 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'created':
-          $replacements[$original] = \Drupal::service('date.formatter')->format($order->created->value, 'short');
+          $date_format = DateFormat::load('short');
+          $bubbleable_metadata->addCacheableDependency($date_format);
+          $replacements[$original] = \Drupal::service('date.formatter')->format($order->getCreatedTime(), 'short', '', NULL, $langcode);
           break;
 
-        case 'modified':
-          $replacements[$original] = \Drupal::service('date.formatter')->format($order->modified->value, 'short');
+        case 'changed':
+          $date_format = DateFormat::load('short');
+          $bubbleable_metadata->addCacheableDependency($date_format);
+          $replacements[$original] = \Drupal::service('date.formatter')->format($order->getChangedTime(), 'short', '', NULL, $langcode);
           break;
 
         case 'products':
@@ -330,11 +343,11 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $created_tokens, ['date' => $order->created->value], $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('date', $created_tokens, ['date' => $order->getCreatedTime()], $options, $bubbleable_metadata);
     }
 
-    if ($changed_tokens = $token_service->findWithPrefix($tokens, 'modified')) {
-      $replacements += $token_service->generate('date', $changed_tokens, ['date' => $order->modified->value], $options, $bubbleable_metadata);
+    if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
+      $replacements += $token_service->generate('date', $changed_tokens, ['date' => $order->getChangedTime()], $options, $bubbleable_metadata);
     }
   }
 

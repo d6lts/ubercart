@@ -122,7 +122,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: null
+            max_length: 0
             word_boundary: true
             ellipsis: true
             more_link: false
@@ -144,9 +144,15 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          date_format: short
-          custom_date_format: ''
-          timezone: ''
+          click_sort_column: value
+          type: timestamp
+          settings:
+            date_format: short
+            custom_date_format: ''
+            timezone: ''
+          entity_type: uc_order
+          entity_field: created
+          plugin_id: field
         order_id:
           id: order_id
           table: uc_orders

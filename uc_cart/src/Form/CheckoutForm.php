@@ -132,8 +132,8 @@ class CheckoutForm extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $order = $form_state->get('order');
 
-    // Update the order "modified" time to prevent timeout on ajax requests.
-    $order->modified->value = REQUEST_TIME;
+    // Update the order "changed" time to prevent timeout on ajax requests.
+    $order->setChangedTime(REQUEST_TIME);
 
     // Validate/process the cart panes.  A FALSE value results in failed checkout.
     $form_state->set('checkout_valid', TRUE);

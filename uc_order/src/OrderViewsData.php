@@ -19,7 +19,7 @@ class OrderViewsData extends EntityViewsData {
    * {@inheritdoc}
    */
   public function getViewsData() {
-    parent::getViewsData();
+    $data = parent::getViewsData();
 
     // Orders table.
     $data['uc_orders']['table']['group'] = t('Order');
@@ -136,36 +136,6 @@ class OrderViewsData extends EntityViewsData {
       ),
       'filter' => array(
         'id' => 'numeric',
-      ),
-    );
-
-    $data['uc_orders']['created'] = array(
-      'title' => t('Creation date'),
-      'help' => t('The date and time the order was created.'),
-      'field' => array(
-        'id' => 'date',
-        'click sortable' => TRUE,
-      ),
-      'sort' => array(
-        'id' => 'date'
-      ),
-      'filter' => array(
-        'id' => 'date',
-      ),
-    );
-
-    $data['uc_orders']['modified'] = array(
-      'title' => t('Last modified'),
-      'help' => t('The time the order was last modified.'),
-      'field' => array(
-        'id' => 'date',
-        'click sortable' => TRUE,
-      ),
-      'sort' => array(
-        'id' => 'date'
-      ),
-      'filter' => array(
-        'id' => 'date',
       ),
     );
 

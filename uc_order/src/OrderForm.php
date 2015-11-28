@@ -26,7 +26,7 @@ class OrderForm extends ContentEntityForm {
     $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
     $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->getUserId());
 
-    $modified = $form_state->getValue('order_modified') ?: $order->modified->value;
+    $modified = $form_state->getValue('order_modified') ?: $order->getChangedTime();
     $form['order_modified'] = array('#type' => 'hidden', '#value' => $modified);
 
     $panes = _uc_order_pane_list('edit');
@@ -63,7 +63,7 @@ class OrderForm extends ContentEntityForm {
   public function validate(array $form, FormStateInterface $form_state) {
     $order = $this->buildEntity($form, $form_state);
 
-    if ($form_state->getValue('order_modified') != $order->modified->value) {
+    if ($form_state->getValue('order_modified') != $order->getChangedTime()) {
       $form_state->setErrorByName('order_modified', t('This order has been modified by another user, changes cannot be saved.'));
     }
 

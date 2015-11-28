@@ -7,13 +7,33 @@
 
 namespace Drupal\uc_order;
 
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\uc_store\Address;
 
 /**
  * Provides an interface defining an Ubercart order entity.
  */
-interface OrderInterface extends ContentEntityInterface {
+interface OrderInterface extends ContentEntityInterface, EntityChangedInterface {
+
+  /**
+   * Gets the order creation timestamp.
+   *
+   * @return int
+   *   Creation timestamp of the order.
+   */
+  public function getCreatedTime();
+
+  /**
+   * Sets the order creation timestamp.
+   *
+   * @param int $timestamp
+   *   The order creation timestamp.
+   *
+   * @return \Drupal\uc_order\OrderInterface
+   *   The called order entity.
+   */
+  public function setCreatedTime($timestamp);
 
   /**
    * Returns an array containing an order's line items ordered by weight.
