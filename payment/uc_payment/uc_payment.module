@@ -216,7 +216,7 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
   }
   else {
     // Otherwise display the failure message in the logs.
-    \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message', ['@order_id' => $order_id, '@message' => $result['message'], 'link' => \Drupal::l(t('view order'), new Url('uc_order.admin_view', ['uc_order' => $order_id]))]);
+    \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message', ['@order_id' => $order_id, '@message' => $result['message'], 'link' => \Drupal::l(t('view order'), new Url('entity.uc_order.canonical', ['uc_order' => $order_id]))]);
   }
 
   // If we have a message for display and aren't simply charging with the
@@ -227,7 +227,7 @@ function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $
 
   // Head back to the order if a redirect was specified.
   if ($redirect) {
-    return new RedirectResponse(Url::fromRoute('uc_order.admin_view', ['uc_order' => $order_id]));
+    return new RedirectResponse(Url::fromRoute('entity.uc_order.canonical', ['uc_order' => $order_id]));
   }
 
   return $result['success'];

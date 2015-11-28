@@ -38,14 +38,6 @@ uc_order.create:
   requirements:
     _permission: 'create orders'
 
-uc_order.admin_view:
-  path: '/admin/store/orders/{uc_order}'
-  defaults:
-    _entity_view: 'uc_order.view'
-    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
-  requirements:
-    _permission: 'view all orders'
-
 uc_order.admin_invoice:
   path: '/admin/store/orders/{uc_order}/invoice'
   defaults:
@@ -72,21 +64,6 @@ uc_order.admin_invoice_mail:
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _permission: 'view all orders'
-
-entity.uc_order.edit_form:
-  path: '/admin/store/orders/{uc_order}/edit'
-  defaults:
-    _entity_form: 'uc_order.edit'
-    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
-  requirements:
-    _permission: 'edit orders'
-
-entity.uc_order.delete_form:
-  path: '/admin/store/orders/{uc_order}/delete'
-  defaults:
-    _entity_form: 'uc_order.delete'
-  requirements:
-    _entity_access: 'uc_order.delete'
 
 uc_order.admin_log:
   path: '/admin/store/orders/{uc_order}/log'

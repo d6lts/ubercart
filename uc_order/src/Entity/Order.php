@@ -22,35 +22,34 @@ use Drupal\uc_store\Address;
  *   label = @Translation("Order"),
  *   module = "uc_order",
  *   handlers = {
+ *     "storage" = "Drupal\uc_order\OrderStorage",
+ *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",
  *     "access" = "Drupal\uc_order\OrderAccessControlHandler",
+ *     "views_data" = "Drupal\uc_order\OrderViewsData",
  *     "form" = {
  *       "default" = "Drupal\uc_order\OrderForm",
  *       "delete" = "Drupal\uc_order\Form\OrderDeleteForm",
- *       "edit" = "Drupal\uc_order\OrderForm",
+ *       "edit" = "Drupal\uc_order\OrderForm"
  *     },
- *     "storage" = "Drupal\uc_order\OrderStorage",
- *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",
- *     "views_data" = "Drupal\uc_order\OrderViewsData",
+ *     "route_provider" = {
+ *       "html" = "Drupal\uc_order\Entity\OrderRouteProvider",
+ *     },
  *   },
  *   base_table = "uc_orders",
+ *   entity_keys = {
+ *     "id" = "order_id",
+ *   },
  *   field_ui_base_route = "uc_order.workflow",
  *   links = {
  *     "canonical" = "/user/{user}/orders",
  *     "delete-form" = "/admin/store/orders/{uc_order}/delete",
  *     "edit-form" = "/admin/store/orders/{uc_order}/edit",
  *     "admin-form" = "/admin/store/orders",
- *   },
- *   entity_keys = {
- *     "id" = "order_id",
  *   }
  * )
  */
 class Order extends ContentEntityBase implements OrderInterface {
 
-// @todo
-// *     "route_provider" = {
-// *       "html" = "Drupal\uc_order\Entity\OrderRouteProvider",
-// *     },
   public $products = array();
   public $line_items = array();
 

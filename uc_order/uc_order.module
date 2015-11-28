@@ -279,7 +279,7 @@ function uc_order_form_views_exposed_form_alter(&$form, FormStateInterface $form
  */
 function uc_order_form_views_exposed_form_submit($form, FormStateInterface $form_state) {
   if (!$form_state->isValueEmpty('order_id') && Order::load($form_state->getValue('order_id'))) {
-    $form_state->setRedirect('uc_order.admin_view', ['uc_order' => $form_state->getValue('order_id')]);
+    $form_state->setRedirect('entity.uc_order.canonical', ['uc_order' => $form_state->getValue('order_id')]);
     $form_state->disableRedirect(FALSE);
   }
 }
@@ -734,7 +734,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($user->hasPermission('view all orders')) {
     $actions['view'] = array(
       'title' => t('View'),
-      'url' => Url::fromRoute('uc_order.admin_view', ['uc_order' => $order->id()]),
+      'url' => Url::fromRoute('entity.uc_order.canonical', ['uc_order' => $order->id()]),
       'weight' => 0,
     );
     $actions['print'] = array(
