@@ -5,7 +5,6 @@
  * Token hooks for the uc_stock module.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
@@ -41,8 +40,6 @@ function uc_stock_token_info() {
  * Implements hook_tokens().
  */
 function uc_stock_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
-  $sanitize = !empty($options['sanitize']);
-
   $replacements = array();
 
   if ($type == 'uc_stock' && !empty($data['uc_stock'])) {
@@ -55,7 +52,7 @@ function uc_stock_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'model':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($object->sku) : $object->sku;
+          $replacements[$original] = $object->sku;
           break;
 
         case 'threshold':

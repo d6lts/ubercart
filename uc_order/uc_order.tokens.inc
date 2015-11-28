@@ -7,7 +7,6 @@
 
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 
@@ -148,8 +147,6 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
     $langcode = LanguageInterface::LANGCODE_DEFAULT;
   }
 
-  $sanitize = !empty($options['sanitize']);
-
   $replacements = [];
 
   if ($type == 'uc_order' && !empty($data['uc_order'])) {
@@ -162,7 +159,7 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
       switch ($name) {
         case 'new-username':
           if (isset($order->data->new_user_name)) {
-            $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->data->new_user_name) : $order->data->new_user_name;
+            $replacements[$original] = $order->data->new_user_name;
           }
           break;
 
@@ -223,7 +220,7 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
 
         case 'email':
         case 'mail':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->getEmail()) : $order->getEmail();
+          $replacements[$original] = $order->getEmail();
           break;
 
         case 'shipping-method':
@@ -245,7 +242,7 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'shipping-phone':
-          $replacements[$original] = SafeMarkup::checkPlain($order->getAddress('delivery')->phone);
+          $replacements[$original] = $order->getAddress('delivery')->phone;
           break;
 
         case 'billing-address':
@@ -255,45 +252,39 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'billing-phone':
-          $replacements[$original] = SafeMarkup::checkPlain($order->getAddress('billing')->phone);
+          $replacements[$original] = $order->getAddress('billing')->phone;
           break;
 
         case 'first-name':
           if (\Drupal::config('uc_store.settings')->get('customer_address') == 'shipping') {
-            $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->getAddress('delivery')->first_name) : $order->getAddress('delivery')->first_name;
+            $replacements[$original] = $order->getAddress('delivery')->first_name;
           }
           else {
-            $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->getAddress('billing')->first_name) : $order->getAddress('billing')->first_name;
+            $replacements[$original] = $order->getAddress('billing')->first_name;
           }
           break;
 
         case 'last-name':
           if (\Drupal::config('uc_store.settings')->get('customer_address') == 'shipping') {
-            $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->getAddress('delivery')->last_name) : $order->getAddress('delivery')->last_name;
+            $replacements[$original] = $order->getAddress('delivery')->last_name;
           }
           else {
-            $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->getAddress('billing')->last_name) : $order->getAddress('billing')->last_name;
+            $replacements[$original] = $order->getAddress('billing')->last_name;
           }
           break;
 
         case 'comments':
           $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid = :uid ORDER BY created DESC", 0, 1, [':order_id' => $order->id(), ':uid' => 0])->fetchField();
-          if ($sanitize) {
-            $result = SafeMarkup::checkPlain($result);
-          }
           $replacements[$original] = empty($result) ? t('<i>No comments left.</i>') : $result;
           break;
 
         case 'last-comment':
           $result = db_query_range("SELECT message FROM {uc_order_comments} WHERE order_id = :order_id AND uid > :uid ORDER BY created DESC", 0, 1, [':order_id' => $order->id(), ':uid' => 0])->fetchField();
-          if ($sanitize) {
-            $result = SafeMarkup::checkPlain($result);
-          }
           $replacements[$original] = empty($result) ? t('<i>No comment found.</i>') : $result;
           break;
 
         case 'order-status':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($order->getStatus()->getName()) : $order->getStatus()->getName();
+          $replacements[$original] = $order->getStatus()->getName();
           break;
 
         case 'customer':
@@ -320,9 +311,6 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
               '#qty' => $product->qty->value,
             );
             $products[] = drupal_render($qty) . ' ' . $product->title->value;
-          }
-          if ($sanitize) {
-            $products = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', $products);
           }
           $replacements[$original] = implode("<br />\n", $products);
           break;

@@ -5,7 +5,6 @@
  * Token hooks for the uc_product module.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
@@ -124,7 +123,6 @@ function uc_product_token_info() {
  * Implements hook_tokens().
  */
 function uc_product_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
-  $sanitize = !empty($options['sanitize']);
   $replacements = array();
 
   if ($type == 'node' && !empty($data['node']) && uc_product_is_product($data['node'])) {
@@ -133,7 +131,7 @@ function uc_product_tokens($type, $tokens, array $data, array $options, Bubbleab
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'product:model':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($product->model) : $product->model;
+          $replacements[$original] = $product->model;
           break;
 
         case 'product:cost':

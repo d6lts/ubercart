@@ -5,7 +5,6 @@
  * Token hooks for the uc_shipping module.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
@@ -29,7 +28,6 @@ function uc_shipping_token_info() {
  */
 function uc_shipping_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = array();
-  $sanitize = !empty($options['sanitize']);
 
   if ($type == 'uc_order' && !empty($data['uc_order'])) {
     $order = $data['uc_order'];
@@ -43,8 +41,7 @@ function uc_shipping_tokens($type, $tokens, array $data, array $options, Bubblea
               $tracking_numbers[] = $record->tracking_number;
             }
           }
-          $tracking = implode(', ', $tracking_numbers);
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain($tracking) : $tracking;
+          $replacements[$original] = implode(', ', $tracking_numbers);
           break;
       }
     }
