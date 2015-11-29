@@ -7,10 +7,8 @@
 
 namespace Drupal\uc_stock\Form;
 
-use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
 /**

@@ -7,9 +7,7 @@
 
 namespace Drupal\uc_order\Plugin\views\field;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_store\Plugin\views\field\Weight;
-use Drupal\views\ResultRow;
 
 /**
  * Total weight field handler.

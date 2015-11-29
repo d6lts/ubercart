@@ -10,7 +10,6 @@ namespace Drupal\uc_file\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 
 /**

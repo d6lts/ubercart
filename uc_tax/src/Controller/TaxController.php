@@ -8,8 +8,6 @@
 namespace Drupal\uc_tax\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;
 
 /**
  * Controller routines for tax routes.

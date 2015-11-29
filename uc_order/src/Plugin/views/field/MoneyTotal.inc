@@ -7,8 +7,6 @@
 
 namespace Drupal\uc_order\Plugin\views\field;
 
-use Drupal\views\Plugin\views\field\FieldPluginBase;
-
 /**
  * Total price field handler.
  *

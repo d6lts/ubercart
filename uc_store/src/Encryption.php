@@ -9,7 +9,6 @@ namespace Drupal\uc_store;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
-use Drupal\uc_store\EncryptionInterface;
 
 /**
  * Handles encryption of credit-card information.

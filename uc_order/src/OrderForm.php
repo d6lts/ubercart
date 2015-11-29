@@ -9,7 +9,6 @@ namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\OrderInterface;
 
 /**
  * Form controller for the Ubercart order form.

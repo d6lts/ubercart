@@ -5,8 +5,6 @@
  * Hooks provided by the Cart module.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
-
 /**
  * @addtogroup hooks
  * @{

@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_tax_report\Controller;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**

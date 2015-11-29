@@ -9,7 +9,6 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\Entity\OrderStatus;
 use Drupal\uc_order\OrderInterface;
 

@@ -7,8 +7,6 @@
 
 namespace Drupal\uc_catalog;
 
-use \Drupal\taxonomy\TermInterface;
-
 /**
  * Data structure to mimic Drupal's menu system.
  */
