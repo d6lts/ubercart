@@ -39,8 +39,6 @@ function uc_role_token_info() {
 function uc_role_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
-  $sanitize = !empty($options['sanitize']);
-
   $replacements = array();
 
   if ($type == 'uc_role' && !empty($data['uc_role'])) {
@@ -51,8 +49,9 @@ function uc_role_tokens($type, $tokens, array $data, array $options, BubbleableM
         case 'expiration':
           $replacements[$original] = \Drupal::service('date.formatter')->format($object->expiration, 'medium');
           break;
+
         case 'name':
-          $replacements[$original] = $sanitize ? SafeMarkup::checkPlain(_uc_role_get_name($object->rid)) : _uc_role_get_name($object->rid);
+          $replacements[$original] = _uc_role_get_name($object->rid);
           break;
       }
     }
