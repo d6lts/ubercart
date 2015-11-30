@@ -77,7 +77,7 @@ class HOPController extends ControllerBase {
           ->execute();
 
         $comment = $this->t('CyberSource request ID: @txn_id', array('@txn_id' => $request_id));
-        uc_payment_enter($order_id, 'cybersource_hop', $payment_amount, $order->getUserId(), NULL, $comment);
+        uc_payment_enter($order_id, 'cybersource_hop', $payment_amount, $order->getOwnerId(), NULL, $comment);
         uc_cart_complete_sale($order);
         uc_order_comment_save($order_id, 0, $this->t('Payment of @amount @currency submitted through CyberSource with request ID @rid.', array('@amount' => $payment_amount, '@currency' => $payment_currency, '@rid' => $request_id)), 'order', 'payment_received');
         break;

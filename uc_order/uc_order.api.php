@@ -90,7 +90,7 @@ function hook_uc_line_item() {
  *   The order object containing the line item.
  */
 function hook_uc_line_item_alter(&$item, $order) {
-  rules_invoke_event('calculate_line_item_discounts', $item, $order->getUser());
+  rules_invoke_event('calculate_line_item_discounts', $item, $order->getOwner());
 }
 
 /**

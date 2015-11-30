@@ -270,7 +270,7 @@ function uc_file_action_order_renew($order) {
   $user_downloads = array();
 
   // Load user.
-  if (!($order_user = $order->getUser())) {
+  if (!($order_user = $order->getOwner())) {
     return;
   }
 

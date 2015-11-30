@@ -30,7 +30,7 @@ function uc_order_pane_print_button($op, $order, &$form = NULL, FormStateInterfa
       if ($order->access('invoice')) {
         $link = t('Click to open a window with a printable invoice.');
         $build = array(
-          '#markup' => \Drupal::l($link, new Url('uc_order.user_invoice_print', ['user' => $order->getUserId(), 'uc_order' => $order->id()], array(
+          '#markup' => \Drupal::l($link, new Url('uc_order.user_invoice_print', ['user' => $order->getOwnerId(), 'uc_order' => $order->id()], array(
             'attributes' => array(
               'onclick' => "window.open(this.href, '" . t('Invoice') . "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=600,height=480,left=50,top=50'); return false;",
             ),
@@ -136,13 +136,13 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, FormStateInterface $f
 function uc_order_pane_customer($op, $order, &$form = NULL, FormStateInterface $form_state = NULL) {
   switch ($op) {
     case 'view':
-      if ($order->getUserId()) {
+      if ($order->getOwnerId()) {
         $build['uid'] = array(
           '#type' => 'link',
           '#prefix' => t('Customer number') . ': ',
           '#suffix' => '<br />',
-          '#title' => $order->getUserId(),
-          '#url' => Url::fromRoute('entity.user.canonical', ['user' => $order->getUserId()]),
+          '#title' => $order->getOwnerId(),
+          '#url' => Url::fromRoute('entity.user.canonical', ['user' => $order->getOwnerId()]),
         );
       }
       $build['primary_email'] = array(
@@ -156,12 +156,12 @@ function uc_order_pane_customer($op, $order, &$form = NULL, FormStateInterface $
     case 'edit-form':
       $form['customer']['uid'] = array(
         '#type' => 'hidden',
-        '#default_value' => $order->getUserId(),
+        '#default_value' => $order->getOwnerId(),
       );
       $form['customer']['uid_text'] = array(
         '#type' => 'textfield',
         '#title' => t('Customer number'),
-        '#default_value' => $order->getUserId(),
+        '#default_value' => $order->getOwnerId(),
         '#maxlength' => 10,
         '#size' => 10,
         '#disabled' => TRUE,
@@ -189,7 +189,7 @@ function uc_order_pane_customer($op, $order, &$form = NULL, FormStateInterface $
       return $output;
 
     case 'edit-process':
-      $order->setUserId($form_state->getValue('uid'));
+      $order->setOwnerId($form_state->getValue('uid'));
       $order->setEmail($form_state->getValue('primary_email'));
   }
 }

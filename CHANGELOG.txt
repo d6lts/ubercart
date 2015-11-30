@@ -10,7 +10,7 @@ Ubercart 4.x
 * Invoice templates are now named 'uc_order_invoice' to avoid theming conflicts.
 * Order objects now have an interface (OrderInterface) and a set of methods:
     * $order->order_id => $order->id()
-    * $order->uid => $order->getUser(), $order->getUserId() and $order->setUserId()
+    * $order->uid => $order->getOwner(), $order->setOwner(), $order->getOwnerId() and $order->setOwnerId()
     * $order->order_status => $order->getStatusId() and $order->setStatusId()
     * uc_order_status_data($order, 'state') => $order->getStateId()
     * $order->primary_email => $order->getEmail() and $order->setEmail()

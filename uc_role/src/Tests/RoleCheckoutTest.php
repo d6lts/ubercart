@@ -43,7 +43,9 @@ class RoleCheckoutTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, array('uc_role_role' => $rid), t('Save feature'));
 
     // Process an anonymous, shippable order.
-    $order = $this->createOrder();
+    $order = $this->createOrder([
+      'uid' => 0,
+    ]);
     $order->products[1]->data->shippable = 1;
     $order->save();
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
@@ -67,6 +69,7 @@ class RoleCheckoutTest extends UbercartTestBase {
 
     // Test again with an existing authenticated user and a non-shippable order.
     $order = $this->createOrder(array(
+      'uid' => 0,
       'primary_email' => $this->customer->getEmail(),
     ));
     $order->products[2]->data->shippable = 0;

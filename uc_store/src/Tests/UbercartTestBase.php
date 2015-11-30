@@ -240,6 +240,9 @@ abstract class UbercartTestBase extends WebTestBase {
 
   /**
    * Executes the checkout process.
+   *
+   * @return \Drupal\uc_order\Entity\Order|FALSE
+   *   The created order, or FALSE if the order could not be created.
    */
   protected function checkout($edit = []) {
     $this->drupalPostForm('cart', [], 'Checkout');

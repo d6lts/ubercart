@@ -21,6 +21,8 @@ class OrderAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $order, $operation, AccountInterface $account) {
+    /** @var \Drupal\uc_order\OrderInterface $order */
+
     switch ($operation) {
       case 'view':
       case 'invoice':
@@ -30,7 +32,7 @@ class OrderAccessControlHandler extends EntityAccessControlHandler {
         }
         // Non-anonymous users can view their own orders and invoices with permission.
         $permission = $operation == 'view' ? 'view own orders' : 'view own invoices';
-        if ($account->id() && $account->id() == $order->getUserId() && $account->hasPermission($permission)) {
+        if ($account->id() && $account->id() == $order->getOwnerId() && $account->hasPermission($permission)) {
           return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($order);
         }
         return AccessResult::forbidden()->cachePerPermissions()->cachePerUser()->cacheUntilEntityChanges($order);

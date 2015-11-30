@@ -130,7 +130,7 @@ function uc_stock_is_active($sku) {
 function _uc_stock_send_mail($order, $node, $stock) {
   $token_service = \Drupal::token();
 
-  $account = $order->getUser();
+  $account = $order->getOwner();
   $token_filters = array('uc_order' => $order, 'user' => $account, 'uc_stock' => $stock, 'node' => $node);
 
   $to = \Drupal::config('uc_stock.settings')->get('recipients');

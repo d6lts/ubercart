@@ -102,7 +102,7 @@ class PaymentPackTest extends UbercartTestBase {
     $order = \Drupal\uc_order\Entity\Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'check', 'Order has check payment method.');
 
-    $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
+    $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
     $this->assertText('Method: Check', 'Check payment method displayed.');
 
     // Test admin order view - receive check
@@ -124,7 +124,7 @@ class PaymentPackTest extends UbercartTestBase {
     $this->assertText('Clear Date: ' . $formatted, 'Check clear date found.');
 
     // Test that user order view shows check received
-    $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
+    $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
     $this->assertText('Check received');
     $this->assertText('Expected clear date:');
     $this->assertText($formatted, 'Check clear date found.');
@@ -163,7 +163,7 @@ class PaymentPackTest extends UbercartTestBase {
     $order = \Drupal\uc_order\Entity\Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'cod', 'Order has COD payment method.');
 
-    $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
+    $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
     $this->assertText('Method: Cash on delivery', 'COD payment method displayed.');
 
     // Test admin order view
@@ -197,7 +197,7 @@ class PaymentPackTest extends UbercartTestBase {
     $order = \Drupal\uc_order\Entity\Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'other', 'Order has other payment method.');
 
-    $this->drupalGet('user/' . $order->getUserId() . '/orders/' . $order->id());
+    $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
     $this->assertText('Method: Other', 'Other payment method displayed.');
 
     // Test admin order view

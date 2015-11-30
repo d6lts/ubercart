@@ -152,7 +152,7 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
   if ($type == 'uc_order' && !empty($data['uc_order'])) {
     /** @var \Drupal\uc_order\OrderInterface $order */
     $order = $data['uc_order'];
-    $path = 'user/' . $order->getUserId() . '/orders/' . $order->id();
+    $path = 'user/' . $order->getOwnerId() . '/orders/' . $order->id();
     $admin_path = 'admin/store/orders/' . $order->id();
 
     foreach ($tokens as $name => $original) {
@@ -288,7 +288,7 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'customer':
-          $replacements[$original] = $order->getUserId();
+          $replacements[$original] = $order->getOwnerId();
           break;
 
         case 'created':
@@ -327,7 +327,7 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
     }
 
     if ($customer_tokens = $token_service->findWithPrefix($tokens, 'customer')) {
-      $replacements += $token_service->generate('user', $customer_tokens, ['user' => $order->getUser()], $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('user', $customer_tokens, ['user' => $order->getOwner()], $options, $bubbleable_metadata);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {

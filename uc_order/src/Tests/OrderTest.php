@@ -37,7 +37,7 @@ class OrderTest extends UbercartTestBase {
     // Test defaults.
     $order = Order::create();
     $order->save();
-    $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
+    $this->assertEqual($order->getOwnerId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
     $order = Order::create(array(
@@ -45,7 +45,7 @@ class OrderTest extends UbercartTestBase {
       'order_status' => uc_order_state_default('completed'),
     ));
     $order->save();
-    $this->assertEqual($order->getUserId(), $this->customer->id(), 'New order has correct uid.');
+    $this->assertEqual($order->getOwnerId(), $this->customer->id(), 'New order has correct uid.');
     $this->assertEqual($order->getStatusId(), 'completed', 'New order is marked completed.');
 
     // Test deletion.
@@ -56,7 +56,7 @@ class OrderTest extends UbercartTestBase {
 
   public function testOrderEntity() {
     $order = Order::create();
-    $this->assertEqual($order->getUserId(), 0, 'New order is anonymous.');
+    $this->assertEqual($order->getOwnerId(), 0, 'New order is anonymous.');
     $this->assertEqual($order->getStatusId(), 'in_checkout', 'New order is in checkout.');
 
     $name = $this->randomMachineName();
@@ -66,7 +66,7 @@ class OrderTest extends UbercartTestBase {
       'billing_first_name' => $name,
       'billing_last_name' => $name,
     ));
-    $this->assertEqual($order->getUserId(), $this->customer->id(), 'New order has correct uid.');
+    $this->assertEqual($order->getOwnerId(), $this->customer->id(), 'New order has correct uid.');
     $this->assertEqual($order->getStatusId(), 'completed', 'New order is marked completed.');
     $this->assertEqual($order->getAddress('billing')->first_name, $name, 'New order has correct name.');
     $this->assertEqual($order->getAddress('billing')->last_name, $name, 'New order has correct name.');
@@ -154,7 +154,7 @@ class OrderTest extends UbercartTestBase {
     $this->assertText(Unicode::strtoupper($delivery_address->street2), 'Delivery street 2 found.');
     $this->assertText(Unicode::strtoupper($delivery_address->city), 'Delivery city found.');
 
-    $this->assertLink($order->getUserId(), 0, 'Link to customer account page found.');
+    $this->assertLink($order->getOwnerId(), 0, 'Link to customer account page found.');
     $this->assertLink($order->getEmail(), 0, 'Link to customer email address found.');
   }
 

@@ -23,7 +23,7 @@ class OrderForm extends ContentEntityForm {
 
     $form['#order'] = $order;
     $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
-    $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->getUserId());
+    $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->getOwnerId());
 
     $modified = $form_state->getValue('order_modified') ?: $order->getChangedTime();
     $form['order_modified'] = array('#type' => 'hidden', '#value' => $modified);

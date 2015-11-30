@@ -19,7 +19,11 @@ class CartCheckoutTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack');
 
-  /** Authenticated but unprivileged user. */
+  /**
+   * Authenticated but unprivileged user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
   protected $customer;
 
   /**
@@ -213,9 +217,11 @@ class CartCheckoutTest extends UbercartTestBase {
   public function testAuthenticatedCheckout() {
     $this->drupalLogin($this->customer);
     $this->addToCart($this->product);
-    $this->checkout();
+    $order = $this->checkout();
     $this->assertRaw('Your order is complete!');
     $this->assertRaw('While logged in');
+    $this->assertEqual($order->getOwnerId(), $this->customer->id(), 'Order has the correct user ID.');
+    $this->assertEqual($order->getEmail(), $this->customer->getEmail(), 'Order has the correct email address.');
 
     // Check that cart is now empty.
     $this->drupalGet('cart');
@@ -394,7 +400,10 @@ class CartCheckoutTest extends UbercartTestBase {
 
   public function testCheckoutComplete() {
     // Payment notification is received first.
-    $order_data = array('primary_email' => 'simpletest@ubercart.org');
+    $order_data = [
+      'uid' => 0,
+      'primary_email' => 'simpletest@ubercart.org',
+    ];
     $order = $this->createOrder($order_data);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
     $output = $this->cartManager->completeSale($order);
@@ -414,7 +423,10 @@ class CartCheckoutTest extends UbercartTestBase {
     \Drupal::state()->set('system.test_email_collector', []);
 
     // Different user, sees the checkout page first.
-    $order_data = array('primary_email' => 'simpletest2@ubercart.org');
+    $order_data = [
+      'uid' => 0,
+      'primary_email' => 'simpletest2@ubercart.org',
+    ];
     $order = $this->createOrder($order_data);
     $output = $this->cartManager->completeSale($order, TRUE);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());

@@ -260,7 +260,7 @@ function _uc_authorizenet_cim_profile_create_request($order) {
   return array(
     'refId' => substr($order->id() . '-' . REQUEST_TIME, 0, 20),
     'profile' => array(
-      'merchantCustomerId' => substr($order->getUserId(), 0, 20),
+      'merchantCustomerId' => substr($order->getOwnerId(), 0, 20),
       'description' => substr(t('Order @order taking place at @date', array('@order' => $order->id(), '@date' => \Drupal::service('date.formatter')->format(REQUEST_TIME))), 0, 255),
       'email' => substr($order->getEmail(), 0, 255),
       'paymentProfiles' => array(
@@ -453,7 +453,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     'x_phone' => substr($order->billing_phone, 0, 25),
     // 'x_fax' => substr('', 0, 25),
     'x_email' => substr($order->getEmail(), 0, 255),
-    'x_cust_id' => $order->getUserId(),
+    'x_cust_id' => $order->getOwnerId(),
     'x_customer_ip' => substr(Drupal::request()->getClientIp(), 0, 15),
 
     // Shipping information.

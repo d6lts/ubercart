@@ -14,6 +14,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Address;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the order entity class.
@@ -81,6 +83,30 @@ class Order extends ContentEntityBase implements OrderInterface {
 
       // Load line items... has to be last after everything has been loaded.
       $order->line_items = $order->getLineItems();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+    parent::preCreate($storage, $values);
+
+    // Set default values.
+    $store_config = \Drupal::config('uc_store.settings');
+    $values += [
+      'order_status' => uc_order_state_default('in_checkout'),
+      'currency' => $store_config->get('currency.code'),
+      'billing_country' => $store_config->get('address.country'),
+      'delivery_country' => $store_config->get('address.country'),
+      'created' => REQUEST_TIME,
+    ];
+
+    // Take the primary email address from the user, if necessary.
+    if (empty($values['primary_email']) && !empty($values['uid'])) {
+      if ($account = User::load($values['uid'])) {
+        $values['primary_email'] = $account->getEmail();
+      }
     }
   }
 
@@ -249,21 +275,29 @@ class Order extends ContentEntityBase implements OrderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getUser() {
+  public function getOwner() {
     return $this->get('uid')->entity;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getUserId() {
+  public function setOwner(UserInterface $account) {
+    $this->set('uid', $account->id());
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOwnerId() {
     return $this->get('uid')->target_id;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setUserId($uid) {
+  public function setOwnerId($uid) {
     $this->set('uid', $uid);
     return $this;
   }
@@ -463,7 +497,7 @@ class Order extends ContentEntityBase implements OrderInterface {
       ->setLabel(t('Customer'))
       ->setDescription(t('The user that placed the order.'))
       ->setSetting('target_type', 'user')
-      ->setSetting('default_value', 0);
+      ->setDefaultValueCallback('Drupal\uc_order\Entity\Order::getCurrentUserId');
     $fields['order_status'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Order status'))
       ->setDescription(t('The uc_order_status entity ID indicating the order status'))
@@ -593,6 +627,18 @@ class Order extends ContentEntityBase implements OrderInterface {
       ->setSetting('max_length', 3);
 
     return $fields;
+  }
+
+  /**
+   * Default value callback for 'uid' base field definition.
+   *
+   * @see ::baseFieldDefinitions()
+   *
+   * @return array
+   *   An array of default values.
+   */
+  public static function getCurrentUserId() {
+    return array(\Drupal::currentUser()->id());
   }
 
 }

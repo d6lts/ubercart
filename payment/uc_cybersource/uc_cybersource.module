@@ -659,7 +659,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type) {
       $billTo->phoneNumber = $order->billing_phone;
     }
     $billTo->email = $order->getEmail();
-    $billTo->customerID = $order->getUserId();
+    $billTo->customerID = $order->getOwnerId();
     $request->billTo = $billTo;
 
     // Add the credit card details if needed.
@@ -889,7 +889,7 @@ function uc_cybersource_uc_calculate_tax($order) {
       $billTo->phoneNumber = $order->billing_phone;
     }
     $billTo->email = $order->getEmail();
-    $billTo->customerID = $order->getUserId();
+    $billTo->customerID = $order->getOwnerId();
     $request->billTo = $billTo;
 
     // Add the shipping information.

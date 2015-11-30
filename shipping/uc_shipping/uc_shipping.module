@@ -259,7 +259,7 @@ function template_preprocess_uc_packing_slip(&$variables) {
   $variables['store_phone'] = $tokens['phone'];
 
   $order = $variables['order'];
-  $variables['order_link'] = l($order->id(), url('user/' . $order->getUserId() . '/orders/' . $order->id(), array('absolute' => TRUE)));
+  $variables['order_link'] = l($order->id(), url('user/' . $order->getOwnerId() . '/orders/' . $order->id(), array('absolute' => TRUE)));
   $variables['order_email'] = $order->getEmail();
   $variables['billing_address'] = $order->getAddress('billing');
   $variables['billing_phone'] = $order->getAddress('billing')->phone;

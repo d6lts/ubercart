@@ -102,16 +102,12 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
    * {@inheritdoc}
    */
   public function process(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $user = \Drupal::currentUser();
-    $cart_config = \Drupal::config('uc_cart.settings');
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $cart_config = \Drupal::config('uc_cart.settings');
 
-    $pane = $form_state->getValue(['panes', 'customer']);
-    $order->setEmail($pane['primary_email']);
+      $pane = $form_state->getValue(['panes', 'customer']);
+      $order->setEmail($pane['primary_email']);
 
-    if ($user->isAuthenticated()) {
-      $order->setUserId($user->id());
-    }
-    else {
       // Check if the email address is already taken.
       $mail_taken = (bool) \Drupal::entityQuery('user')
         ->condition('mail', $pane['primary_email'])

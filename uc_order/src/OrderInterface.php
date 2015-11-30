@@ -10,11 +10,12 @@ namespace Drupal\uc_order;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\uc_store\Address;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * Provides an interface defining an Ubercart order entity.
  */
-interface OrderInterface extends ContentEntityInterface, EntityChangedInterface {
+interface OrderInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
    * Gets the order creation timestamp.
@@ -59,33 +60,6 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface 
    *   - weight: The line item weight.
    */
   public function getDisplayLineItems();
-
-  /**
-   * Returns the order user entity.
-   *
-   * @return \Drupal\user\UserInterface
-   *   The user entity.
-   */
-  public function getUser();
-
-  /**
-   * Returns the order user ID.
-   *
-   * @return int
-   *   The user ID.
-   */
-  public function getUserId();
-
-  /**
-   * Sets the order user ID.
-   *
-   * @param int $uid
-   *   The user ID.
-   *
-   * @return \Drupal\uc_order\OrderInterface
-   *   The called owner entity.
-   */
-  public function setUserId($uid);
 
   /**
    * Returns the order status.

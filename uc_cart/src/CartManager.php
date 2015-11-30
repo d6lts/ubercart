@@ -99,7 +99,7 @@ class CartManager implements CartManagerInterface {
       $order->save();
 
       // Invoke the checkout complete trigger and hook.
-      $account = $order->getUser();
+      $account = $order->getOwner();
       \Drupal::moduleHandler()->invokeAll('uc_checkout_complete', array($order, $account));
       // rules_invoke_event('uc_checkout_complete', $order);
     }
@@ -109,7 +109,7 @@ class CartManager implements CartManagerInterface {
     // Log in new users, if requested.
     if ($type == 'new_user' && $login && $this->currentUser->isAnonymous()) {
       $type = 'new_user_logged_in';
-      user_login_finalize($order->getUser());
+      user_login_finalize($order->getOwner());
     }
 
     $message = \Drupal::config('uc_cart.messages')->get($type);
@@ -134,14 +134,14 @@ class CartManager implements CartManagerInterface {
    */
   protected function completeSaleAccount($order) {
     // Order already has a user ID, so the user was logged in during checkout.
-    if ($order->getUserId()) {
+    if ($order->getOwnerId()) {
       $order->data->complete_sale = 'logged_in';
       return;
     }
 
     // Email address matches an existing account.
     if ($account = user_load_by_mail($order->getEmail())) {
-      $order->setUserId($account->id());
+      $order->setOwner($account);
       $order->data->complete_sale = 'existing_user';
       return;
     }
@@ -182,7 +182,7 @@ class CartManager implements CartManagerInterface {
       \Drupal::service('plugin.manager.mail')->mail('user', $type, $order->getEmail(), uc_store_mail_recipient_langcode($order->getEmail()), array('account' => $account), uc_store_email_from());
     }
 
-    $order->setUserId($account->id());
+    $order->setOwner($account);
     $order->data->new_user_name = $fields['name'];
     $order->data->complete_sale =  'new_user';
   }

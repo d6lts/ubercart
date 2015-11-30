@@ -38,7 +38,7 @@ class RoleTest extends UbercartTestBase {
 
     // Test that the role was granted.
     // @todo Re-enable when Rules is available.
-    // $this->assertTrue($order->getUser()->hasRole($rid), 'Existing user was granted role.');
+    // $this->assertTrue($order->getOwner()->hasRole($rid), 'Existing user was granted role.');
 
     // Test that the email is correct.
     $role = \Drupal\user\Entity\Role::load($rid);
@@ -46,7 +46,7 @@ class RoleTest extends UbercartTestBase {
     // $this->assertMailString('subject', $role->label(), 4, 'Role assignment email mentions role in subject line.');
 
     // Test that the role product / user relation is deleted with the user.
-    user_delete($order->getUserId());
+    user_delete($order->getOwnerId());
 
     // Run cron to ensure deleted users are handled correctly.
     $this->cronRun();
