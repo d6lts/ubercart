@@ -32,7 +32,7 @@ class UcDimensionsFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       $dimensions = [];
       foreach (['length', 'width', 'height'] as $dimension) {
-        if ($item->$dimension) {
+        if ((float) $item->$dimension) {
           $dimensions[] = uc_length_format($item->$dimension, $item->units);
         }
       }
