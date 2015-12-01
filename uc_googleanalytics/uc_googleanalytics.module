@@ -86,15 +86,17 @@ function uc_googleanalytics_display() {
 /**
  * Build the e-commerce JS passed to Google Analytics for order tracking.
  *
+ * Supports Google Analytics 2.x, 3.x and 4.x.
+ *
  * @param $order
  *   The fully loaded order object to convert into GA JS.
  * @return
  *   The JS that should be added to the page footer.
  */
 function uc_googleanalytics_ecommerce_js($order) {
-  // Support both Google Analytics versions 2.x and 3.x.
   $script2 = '';
   $script3 = '';
+  $script4 = 'ga("require", "ecommerce");';
 
   // Lookup the name of the country or default to the ID if it can't be found
   // for some reason.
@@ -148,9 +150,22 @@ function uc_googleanalytics_ecommerce_js($order) {
     drupal_to_js($trans['country']),
   );
 
+  // Create Google Universal Analytics friendly associative array.
+  $universal_args = array(
+    'id' => $trans['order_id'],
+    'affiliation' => $trans['store'],
+    'revenue' => $trans['total'],
+    'tax' => $trans['tax'],
+    'shipping' => $trans['shipping'],
+    'city' => $trans['city'],
+    'region' => $trans['state'],
+    'country' => $trans['country'],
+  );
+
   // Add the transaction line to the JS.
   $script2 .= 'pageTracker._addTrans('. implode(', ', $args) .');';
   $script3 .= '_gaq.push(["_addTrans", '. implode(', ', $args) .']);';
+  $script4 .= 'ga("ecommerce:addTransaction", ' . drupal_to_js($universal_args) . ');';
 
   // Loop through the products on the order.
   foreach ($order->products as $product) {
@@ -204,16 +219,36 @@ function uc_googleanalytics_ecommerce_js($order) {
       '"'. $item['qty'] .'"',
     );
 
+    // Create Google Universal Analytics friendly associative array.
+    $universal_args = array(
+      'id' => $item['order_id'],
+      'sku' => $item['sku'],
+      'name' => $item['name'],
+      'category' => (string) $item['category'],
+      'price' => uc_price($item['price'], $context),
+      'quantity' => $item['qty'],
+    );
+
     // Add the item line to the JS.
     $script2 .= 'pageTracker._addItem('. implode(', ', $args) .');';
     $script3 .= '_gaq.push(["_addItem", '. implode(', ', $args) .']);';
+    $script4 .= 'ga("ecommerce:addItem", ' . drupal_to_js($universal_args) . ');';
   }
 
   // Add the function to submit the transaction to GA.
   $script2 .= 'pageTracker._trackTrans();';
   $script3 .= '_gaq.push(["_trackTrans"]);';
+  $script4 .= 'ga("ecommerce:send");';
 
-  // Google Analytics 3.x starts with schema version 6300.
+  // Detect Google Analytics module version.
   $version = db_result(db_query("SELECT schema_version FROM {system} WHERE type = 'module' AND name = 'googleanalytics'"));
-  return $version >= 6300 ? $script3 : $script2;
+  if ($version >= 6400) {
+    return $script4;
+  }
+  elseif ($version >= 6300) {
+    return $script3;
+  }
+  else {
+    return $script2;
+  }
 }
