@@ -372,25 +372,6 @@ function uc_order_uc_line_item() {
 }
 
 /**
- * Generates and saves a new order.
- *
- * @param $uid
- *   The user ID to assign the order to.
- * @param $state
- *   The initial state of the order.
- */
-function uc_order_new($uid = 0, $state = 'in_checkout') {
-  $order = Order::create(array(
-    'uid' => $uid,
-    'order_status' => uc_order_state_default($state),
-  ));
-
-  $order->save();
-
-  return $order;
-}
-
-/**
  * Save a product to an order.
  */
 function uc_order_product_save($order_id, $product) {
