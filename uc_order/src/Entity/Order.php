@@ -114,6 +114,8 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
     $this->order_total->value = $this->getTotal();
     $this->product_count->value = $this->getProductCount();
     $this->host->value = \Drupal::request()->getClientIp();
@@ -124,6 +126,8 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+
     foreach ($this->products as $product) {
       \Drupal::moduleHandler()->alter('uc_order_product', $product, $this);
       uc_order_product_save($this->id(), $product);
@@ -146,6 +150,8 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageInterface $storage, array $orders) {
+    parent::postDelete($storage, $orders);
+
     // Delete data from the appropriate Ubercart order tables.
     $ids = array_keys($orders);
     $result = \Drupal::entityQuery('uc_order_product')
