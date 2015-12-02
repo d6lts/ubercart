@@ -38,6 +38,13 @@ uc_order.create:
   requirements:
     _permission: 'create orders'
 
+uc_order.create_for_user:
+  path: '/admin/store/orders/create/{user}'
+  defaults:
+    _controller: '\Drupal\uc_order\Controller\OrderController::createForUser'
+  requirements:
+    _permission: 'create orders'
+
 uc_order.admin_invoice:
   path: '/admin/store/orders/{uc_order}/invoice'
   defaults:

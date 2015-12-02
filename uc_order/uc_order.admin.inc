@@ -9,16 +9,6 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Creates a new order for the specified customer, ready for editing.
- */
-function uc_order_create_for_user($account) {
-  $order = uc_order_new($account->uid, 'post_checkout');
-  uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), t('Order created by the administration.'), 'admin');
-
-  drupal_goto('admin/store/orders/' . $order->id() . '/edit');
-}
-
-/**
  * Displays a form to select a previously entered address.
  *
  * @see uc_order_address_book_form()

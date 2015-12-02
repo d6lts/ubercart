@@ -132,6 +132,13 @@ class OrderTest extends UbercartTestBase {
     $this->drupalGet('admin/store/orders/view');
     $this->assertLinkByHref('admin/store/orders/' . $order_id, 0, 'View link appears on order list.');
     $this->assertText('Pending', 'New order is "Pending".');
+
+    $this->drupalGet('admin/store/customers/orders/' . $this->customer->id());
+    $this->assertLinkByHref('admin/store/orders/' . $order_id, 0, 'View link appears on customer order list.');
+
+    $this->clickLink('Create order for this customer');
+    $this->assertText('Order created by the administration.');
+    $this->assertFieldByName('uid_text', $this->customer->id(), 'The customer UID appears on the page.');
   }
 
   public function testOrderView() {

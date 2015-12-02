@@ -9,12 +9,29 @@ namespace Drupal\uc_order\Controller;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Controller routines for order routes.
  */
 class OrderController extends ControllerBase {
+
+  /**
+   * Creates an order for the specified user, and redirects to the edit page.
+   */
+  public function createForUser(UserInterface $user) {
+    $order = Order::create([
+      'uid' => $user->id(),
+      'order_status' => uc_order_state_default('post_checkout'),
+    ]);
+    $order->save();
+
+    uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), $this->t('Order created by the administration.'), 'admin');
+
+    return $this->redirect('entity.uc_order.edit_form', ['uc_order' => $order->id()]);
+  }
 
   /**
    * Displays an order invoice.
