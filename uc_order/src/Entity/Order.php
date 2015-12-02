@@ -25,7 +25,7 @@ use Drupal\user\UserInterface;
  *   label = @Translation("Order"),
  *   module = "uc_order",
  *   handlers = {
- *     "storage" = "Drupal\uc_order\OrderStorage",
+ *     "storage_schema" = "Drupal\uc_order\OrderStorageSchema",
  *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",
  *     "access" = "Drupal\uc_order\OrderAccessControlHandler",
  *     "views_data" = "Drupal\uc_order\OrderViewsData",

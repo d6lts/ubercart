@@ -2,23 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\OrderStorage.
+ * Contains \Drupal\uc_order\OrderStorageSchema.
  */
 
 namespace Drupal\uc_order;
 
-use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 
 /**
- * Controller class for orders.
+ * Defines the uc_order schema handler.
  */
-class OrderStorage extends SqlContentEntityStorage {
+class OrderStorageSchema extends SqlContentEntityStorageSchema {
 
   /**
    * {@inheritdoc}
    */
-  public function getSchema() {
-    $schema = parent::getSchema();
+  protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
+    $schema = parent::getEntitySchema($entity_type, $reset);
+
     // @todo Create a numeric field type and use that instead.
     $schema['uc_orders']['fields']['order_total']['type'] = 'numeric';
     $schema['uc_orders']['fields']['order_total']['precision'] = 16;
@@ -39,6 +41,7 @@ class OrderStorage extends SqlContentEntityStorage {
         'columns' => array('uid' => 'uid'),
       ),
     );
+
     return $schema;
   }
 
