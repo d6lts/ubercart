@@ -60,28 +60,6 @@ class QuoteSettingsForm extends ConfigFormBase {
       '#default_value' => $quote_config->get('require_quote'),
     );
 
-    $form['uc_quote_pane_description'] = array(
-      '#type' => 'details',
-      '#title' => t('Shipping quote pane description'),
-      '#tree' => TRUE,
-    );
-    $form['uc_quote_pane_description']['text'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Message text'),
-      '#default_value' => $quote_config->get('pane_description'),
-    );
-
-    $form['uc_quote_error_message'] = array(
-      '#type' => 'details',
-      '#title' => t('Shipping quote error message'),
-      '#tree' => TRUE,
-    );
-    $form['uc_quote_error_message']['text'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Message text'),
-      '#default_value' => $quote_config->get('error_message'),
-    );
-
     $form['default_address'] = array(
       '#type' => 'details',
       '#title' => t('Default pickup address'),

@@ -668,7 +668,7 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
   }
   elseif ($show_errors) {
     $return['error'] = array(
-      '#markup' => Xss::filterAdmin($quote_config->get('error_message')),
+      '#markup' => t('There were problems getting a shipping quote. Please verify the delivery address and try again.'),
     );
   }
 

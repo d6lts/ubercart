@@ -89,7 +89,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
         $contents['new_account'] += array(
           '#type' => 'details',
           '#title' => t('New account details'),
-          '#description' => $this->configuration['new_account_details'],
+          '#description' => $this->t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.'),
           '#open' => TRUE,
         );
       }
@@ -173,31 +173,6 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
   public function review(OrderInterface $order) {
     $review[] = array('title' => t('E-mail'), 'data' => SafeMarkup::checkPlain($order->getEmail()));
     return $review;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsForm() {
-    $cart_config = \Drupal::config('uc_cart.settings');
-
-    $form['new_account_details'] = array(
-      '#type' => 'textarea',
-      '#title' => t('New account details help message'),
-      '#description' => t('Enter the help message displayed in the new account details fieldset when shown.'),
-      '#default_value' => $this->configuration['new_account_details'],
-    );
-
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
-    return array(
-      'new_account_details' => t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.'),
-    );
   }
 
 }

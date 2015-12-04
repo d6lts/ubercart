@@ -28,7 +28,7 @@ class QuotePane extends CheckoutPanePluginBase {
    * {@inheritdoc}
    */
   public function view(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $contents['#description'] = Xss::filterAdmin(\Drupal::config('uc_quote.settings')->get('pane_description'));
+    $contents['#description'] = $this->t('Shipping quotes are generated automatically when you enter your address and may be updated manually with the button below.');
 
     $contents['#attached']['library'][] = 'uc_quote/uc_quote.styles';
 

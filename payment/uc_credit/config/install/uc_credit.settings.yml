@@ -15,7 +15,5 @@ visa: true
 mastercard: true
 discover: true
 amex: true
-policy: 'Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.'
-fail_message: 'We were unable to process your credit card payment. Please verify your details and try again.  If the problem persists, contact us to complete your order.'
 #uc_pg_' . $id . '_enabled', TRUE),
 #uc_pg_' . $id . '_cc_txn_type', UC_CREDIT_AUTH_CAPTURE),

@@ -164,28 +164,6 @@ class CreditSettingsForm extends FormBase {
       '#default_value' => $credit_config->get('amex'),
     );
 
-    // Form elements that deal with credit card messages to customers.
-    $form['cc_messages'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Customer messages'),
-      '#description' => $this->t('Here you can alter messages displayed to customers using credit cards.'),
-      '#group' => 'uc_credit',
-      '#weight' => 10,
-    );
-    $form['cc_messages']['uc_credit_policy'] = array(
-      '#type' => 'textarea',
-      '#title' => $this->t('Credit card payment policy'),
-      '#description' => $this->t('Instructions for customers on the checkout page above the credit card fields.'),
-      '#default_value' => $credit_config->get('policy'),
-      '#rows' => 3,
-    );
-    $form['cc_messages']['uc_credit_fail_message'] = array(
-      '#type' => 'textarea',
-      '#title' => $this->t('Card processing failure message'),
-      '#description' => $this->t('Error message displayed to customers when an attempted payment fails at checkout.'),
-      '#default_value' => $credit_config->get('fail_message'),
-    );
-
     $txn_types = array(
       UC_CREDIT_AUTH_ONLY => $this->t('Authorization only'),
       UC_CREDIT_AUTH_CAPTURE => $this->t('Authorize and capture immediately'),
@@ -360,7 +338,6 @@ class CreditSettingsForm extends FormBase {
       ->set('issue_enabled', $form_state->getValue('uc_credit_issue_enabled'))
       ->set('bank_enabled', $form_state->getValue('uc_credit_bank_enabled'))
       ->set('type_enabled', $form_state->getValue('uc_credit_type_enabled'))
-      ->set('policy', $form_state->getValue('uc_credit_policy'))
       ->set('accepted_types', explode("\r\n", $form_state->getValue('uc_credit_accepted_types')))
       ->save();
   }

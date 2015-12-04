@@ -197,8 +197,7 @@ function uc_credit_uc_order($op, $order, $arg2) {
         // If the payment failed, store the data back in the session and
         // halt the checkout process.
         if (!$pass) {
-          $message = $credit_config->get('fail_message');
-          return array(array('pass' => FALSE, 'message' => $message));
+          return array(array('pass' => FALSE, 'message' => t('We were unable to process your credit card payment. Please verify your details and try again.')));
         }
       }
       break;
@@ -298,7 +297,7 @@ function uc_payment_method_credit_form($form, FormStateInterface $form_state, $o
   }
 
   $form['cc_policy'] = array(
-    '#markup' => '<p>' . $credit_config->get('policy') . '</p>'
+    '#markup' => '<p>' . t('Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.') . '</p>'
   );
 
   $types = $credit_config->get('accepted_types');
