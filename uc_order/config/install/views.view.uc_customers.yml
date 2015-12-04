@@ -4,6 +4,7 @@ dependencies:
   config:
     - system.menu.admin
   module:
+    - uc_country
     - uc_order
     - user
 id: uc_customers
@@ -16,31 +17,19 @@ base_field: uid
 core: 8.x
 display:
   default:
-    display_plugin: default
-    id: default
-    display_title: Master
-    position: 1
     display_options:
       access:
         type: perm
         options:
           perm: 'view customers'
-        perm: 'access user profiles'
       cache:
         type: none
-        options: {  }
       query:
         type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          slave: false
-          query_comment: ''
-          query_tags: {  }
       exposed_form:
         type: basic
         options:
-          submit_button: Apply
+          submit_button: Filter
           reset_button: false
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
@@ -51,23 +40,11 @@ display:
         type: full
         options:
           items_per_page: 30
-          offset: 0
-          id: 0
-          total_pages: null
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 20, 40, 60'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
           tags:
             previous: '‹ previous'
             next: 'next ›'
             first: '« first'
             last: 'last »'
-          quantity: 9
       style:
         type: table
         options:
@@ -85,8 +62,8 @@ display:
             billing_full_name: billing_full_name
             primary_email: primary_email
             billing_city: billing_city
-            zone_code: billing_city
-            country_name: billing_city
+            billing_zone_name: billing_city
+            billing_country_name: billing_city
             order_id: order_id
             order_total: order_total
           info:
@@ -125,14 +102,14 @@ display:
               separator: ', '
               empty_column: false
               responsive: ''
-            zone_code:
+            billing_zone_name:
               sortable: false
               default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-            country_name:
+            billing_country_name:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -160,7 +137,7 @@ display:
       fields:
         uid:
           id: uid
-          table: users
+          table: users_field_data
           field: uid
           relationship: none
           group_type: group
@@ -184,7 +161,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: null
+            max_length: 0
             word_boundary: true
             ellipsis: true
             more_link: false
@@ -206,12 +183,27 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: false
-          plugin_id: user
-          provider: user
+          click_sort_column: value
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: user
+          entity_field: uid
+          plugin_id: field
         name:
           id: name
-          table: users
+          table: users_field_data
           field: name
           relationship: none
           group_type: group
@@ -235,7 +227,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: null
+            max_length: 0
             word_boundary: false
             ellipsis: false
             more_link: false
@@ -257,11 +249,13 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: 1
-          overwrite_anonymous: 0
-          anonymous_text: ''
-          format_username: 1
-          provider: user
+          click_sort_column: value
+          type: user_name
+          settings:
+            link_to_entity: true
+          entity_type: user
+          entity_field: name
+          plugin_id: field
         billing_full_name:
           id: billing_full_name
           table: uc_orders
@@ -310,10 +304,8 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: 0
           format: first_last
           plugin_id: uc_order_full_name
-          provider: uc_order
         primary_email:
           id: primary_email
           table: uc_orders
@@ -340,7 +332,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: null
+            max_length: 0
             word_boundary: true
             ellipsis: true
             more_link: false
@@ -362,9 +354,22 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: true
-          plugin_id: user_mail
-          provider: user
+          click_sort_column: value
+          type: email_mailto
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: uc_order
+          entity_field: primary_email
+          plugin_id: field
         billing_city:
           id: billing_city
           table: uc_orders
@@ -414,11 +419,10 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: standard
-          provider: views
-        zone_code:
-          id: zone_code
-          table: billing_zones
-          field: zone_code
+        billing_zone_name:
+          id: billing_zone_name
+          table: uc_orders
+          field: billing_zone_name
           relationship: uc_orders
           group_type: group
           admin_label: ''
@@ -463,12 +467,12 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: standard
-          provider: views
-        country_name:
-          id: country_name
-          table: billing_countries
-          field: country_name
+          entity_type: uc_order
+          plugin_id: uc_zone
+        billing_country_name:
+          id: billing_country_name
+          table: uc_orders
+          field: billing_country_name
           relationship: uc_orders
           group_type: group
           admin_label: ''
@@ -513,8 +517,8 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          plugin_id: standard
-          provider: views
+          entity_type: uc_order
+          plugin_id: uc_country
         order_id:
           id: order_id
           table: uc_orders
@@ -527,8 +531,8 @@ display:
           alter:
             alter_text: false
             text: ''
-            make_link: false
-            path: ''
+            make_link: true
+            path: 'admin/store/customers/orders/{{ uid }}'
             absolute: false
             external: false
             replace_spaces: false
@@ -563,9 +567,16 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          set_precision: false
+          precision: 0
+          decimal: .
+          separator: ','
+          format_plural: 0
+          format_plural_string: "1\x03@count"
+          prefix: ''
+          suffix: ''
           link_to_order: 0
           plugin_id: uc_order
-          provider: uc_order
         order_total:
           id: order_total
           table: uc_orders
@@ -625,11 +636,10 @@ display:
           suffix: ''
           format: uc_price
           plugin_id: uc_price
-          provider: uc_store
       filters:
         uid_raw:
           id: uid_raw
-          table: users
+          table: users_field_data
           field: uid_raw
           relationship: none
           group_type: group
@@ -665,40 +675,39 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          entity_type: user
           plugin_id: numeric
-          provider: views
       sorts: {  }
       title: Customers
-      header: {  }
-      footer: {  }
       empty: {  }
+      arguments: {  }
       relationships:
         uc_orders:
           id: uc_orders
-          table: users
+          table: users_field_data
           field: uc_orders
-          relationship: none
-          group_type: group
           admin_label: Orders
           required: true
           plugin_id: standard
-          provider: views
-      arguments: {  }
       filter_groups:
         operator: AND
         groups: {  }
       group_by: true
       display_extenders: {  }
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: 0
     cache_metadata:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   admin_page:
-    display_plugin: page
-    id: admin_page
-    display_title: Page
-    position: 1
     display_options:
       path: admin/store/customers/view
       menu:
@@ -710,8 +719,16 @@ display:
         weight: -10
         context: '0'
       display_extenders: {  }
+    display_plugin: page
+    display_title: Page
+    id: admin_page
+    position: 1
     cache_metadata:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }

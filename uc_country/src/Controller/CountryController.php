@@ -66,13 +66,13 @@ class CountryController extends ControllerBase {
    */
   public static function zoneOptionsCallback() {
     $options = array();
-    $countries = $this->entityManager()->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
+    $countries = \Drupal::entityTypeManager()->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
     foreach ($countries as $country) {
-      if (!empty($country->getZones())) {
-        $options[$this->t($country->name)] = $country->getZones();
+      foreach ($country->getZones() as $id => $zone) {
+        $options[$id] = $country->label() . ': ' . $zone;
       }
     }
-    uksort($options, 'strnatcasecmp');
+    uasort($options, 'strnatcasecmp');
 
     return $options;
   }

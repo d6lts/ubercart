@@ -21,123 +21,15 @@ class OrderViewsData extends EntityViewsData {
   public function getViewsData() {
     $data = parent::getViewsData();
 
-    // Orders table.
-    $data['uc_orders']['table']['group'] = t('Order');
-    $data['uc_orders']['table']['base'] = array(
-      'field' => 'order_id',
-      'title' => t('Orders'),
-      'help' => t('Orders placed in your Ubercart store.'),
-    );
+    $data['uc_orders']['order_status']['filter']['id'] = 'uc_order_status';
 
-    // Order ID field.
-    $data['uc_orders']['order_id'] = array(
-      'title' => t('Order ID'),
-      'help' => t('The order ID.'),
-      'field' => array(
-        'id' => 'uc_order_id',
-        'click sortable' => TRUE,
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'numeric',
-      ),
-      'argument' => array(
-        'id' => 'numeric',
-        'name field' => 'title',
-        'numeric' => TRUE,
-        'validate type' => 'order_id',
-      ),
-    );
+    $data['uc_orders']['uid']['help'] = t('The user ID that the order belongs to.');
+    $data['uc_orders']['uid']['filter']['id'] = 'user_name';
+    $data['uc_orders']['uid']['relationship']['title'] = t('Customer');
+    $data['uc_orders']['uid']['relationship']['help'] = t('Relate an order to the user who placed it.');
+    $data['uc_orders']['uid']['relationship']['label'] = t('customer');
 
-    // Order status field.
-    $data['uc_orders']['order_status'] = array(
-      'title' => t('Order status'),
-      'help' => t('The order status.'),
-      'field' => array(
-        'id' => 'uc_order_status',
-        'click sortable' => TRUE,
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'uc_order_status',
-      ),
-    );
-
-    $data['uc_orders']['uid'] = array(
-      'title' => t('Uid'),
-      'help' => t('The user ID that the order belongs to.'),
-      'field' => array(
-        'id' => 'user',
-        'click sortable' => TRUE,
-      ),
-      'argument' => array(
-        'id' => 'user_uid',
-        'name field' => 'name', // display this field in the summary
-      ),
-      'filter' => array(
-        'title' => t('Name'),
-        'id' => 'user_name',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'relationship' => array(
-        'title' => t('Customer'),
-        'help' => t('Relate an order to the user who placed it.'),
-        'base' => 'users',
-        'field' => 'uid',
-        'id' => 'standard',
-        'label' => t('customer'),
-      ),
-    );
-
-    // Expose the uid as a relationship to users.
-    $data['users']['uc_orders'] = array(
-      'title' => t('Orders'),
-      'help' => t('Relate a user to the orders they have placed. This relationship will create one record for each order placed by the user.'),
-      'relationship' => array(
-        'base' => 'uc_orders',
-        'base field' => 'uid',
-        'relationship field' => 'uid',
-        'id' => 'standard',
-        'label' => t('orders'),
-      ),
-    );
-
-    // Changed field handler to display as a price
-    $data['uc_orders']['order_total'] = array(
-      'title' => t('Order total'),
-      'help' => t('The total amount to be paid for the order.'),
-      'field' => array(
-        'id' => 'uc_price',
-        'click sortable' => TRUE,
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'numeric',
-      ),
-    );
-
-    $data['uc_orders']['product_count'] = array(
-      'title' => t('Product count'),
-      'help' => t('The total number of products in the order.'),
-      'field' => array(
-        'id' => 'numeric',
-        'click sortable' => TRUE,
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'numeric',
-      ),
-    );
+    $data['uc_orders']['order_total']['field']['id'] = 'uc_price';
 
     $data['uc_orders']['actions'] = array(
       'title' => t('Actions'),
@@ -149,174 +41,89 @@ class OrderViewsData extends EntityViewsData {
       ),
     );
 
-    $data['uc_orders']['primary_email'] = array(
-      'title' => t('Email address'),
-      'help' => t('The email address of the customer.'),
+    $data['uc_orders']['billing_country']['filter']['id'] = 'in_operator';
+    $data['uc_orders']['billing_country']['filter']['options callback'] = 'Drupal\uc_country\Controller\CountryController::countryOptionsCallback';
+    $data['uc_orders']['delivery_country']['filter']['id'] = 'in_operator';
+    $data['uc_orders']['delivery_country']['filter']['options callback'] = 'Drupal\uc_country\Controller\CountryController::countryOptionsCallback';
+
+    $data['uc_orders']['billing_country_name'] = array(
+      'title' => t('Billing country name'),
+      'help' =>  t('The country name where the bill will be sent.'),
       'field' => array(
-        'id' => 'user_mail',
-        'click sortable' => TRUE,
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-      'filter' => array(
-        'id' => 'string',
+        'id' => 'uc_country',
+        'real field' => 'billing_country',
       ),
     );
 
-    $addresses = array(
-      'billing' => t('Billing address'),
-      'delivery' => t('Delivery address'),
+    $data['uc_orders']['delivery_country_name'] = array(
+      'title' => t('Delivery country name'),
+      'help' =>  t('The country name of the delivery location.'),
+      'field' => array(
+        'id' => 'uc_country',
+        'real field' => 'delivery_country',
+      ),
     );
 
-    $fields = array(
-      'first_name' => t('First name'),
-      'last_name' => t('Last name'),
-      'phone' => t('Phone number'),
-      'company' => t('Company'),
-      'street1' => t('Street address 1'),
-      'street2' => t('Street address 2'),
-      'city' => t('City'),
-      'postal_code' => t('Postal code'),
+    $data['uc_orders']['billing_zone']['filter']['id'] = 'in_operator';
+    $data['uc_orders']['billing_zone']['filter']['options callback'] = 'Drupal\uc_country\Controller\CountryController::zoneOptionsCallback';
+    $data['uc_orders']['delivery_zone']['filter']['id'] = 'in_operator';
+    $data['uc_orders']['delivery_zone']['filter']['options callback'] = 'Drupal\uc_country\Controller\CountryController::zoneOptionsCallback';
+
+    $data['uc_orders']['billing_zone_name'] = array(
+      'title' => t('Billing state/province name'),
+      'help' =>  t('The state/zone/province ID where the bill will be sent.'),
+      'field' => array(
+        'id' => 'uc_zone',
+        'real field' => 'billing_zone',
+        'additional fields' => array(
+          'country' => array(
+            'field' => 'billing_country'
+          ),
+        ),
+      ),
     );
 
-    foreach ($addresses as $prefix => $address) {
-      $group = t('Order') . ': ' . $address;
-
-      foreach ($fields as $field => $label) {
-        $data['uc_orders'][$prefix . '_' . $field] = array(
-          'group' => $group,
-          'title' => $label,
-          'help' => t('The @field of the @address of the order.', ['@field' => Unicode::strtolower($label), '@address' => Unicode::strtolower($address)]),
-          'field' => array(
-            'id' => 'standard',
-            'click sortable' => TRUE,
-          ),
-          'sort' => array(
-            'id' => 'standard',
-          ),
-          'filter' => array(
-            'id' => 'string',
-          ),
-        );
-      }
-
-      $data['uc_orders'][$prefix . '_full_name'] = array(
-        'group' => $group,
-        'title' => t('Full name'),
-        'help' => t('The @field of the @address of the order.', ['@field' => t('full name'), '@address' => Unicode::strtolower($address)]),
-        'field' => array(
-          'id' => 'uc_order_full_name',
-          'real field' => $prefix . '_first_name',
-          'additional fields' => array(
-            'last_name' => array(
-              'field' => $prefix . '_last_name'
-            ),
+    $data['uc_orders']['delivery_zone_name'] = array(
+      'title' => t('Delivery state/province name'),
+      'help' =>  t('The state/zone/province ID of the delivery location.'),
+      'field' => array(
+        'id' => 'uc_zone',
+        'real field' => 'delivery_zone',
+        'additional fields' => array(
+          'country' => array(
+            'field' => 'delivery_country'
           ),
         ),
-      );
+      ),
+    );
 
-      $data[$prefix . '_countries']['table']['group'] = $group;
-      $data[$prefix . '_countries']['table']['join']['uc_orders'] = array(
-        'table' => 'uc_countries',
-        'left_field' => $prefix . '_country',
-        'field' => 'country_id',
-      );
-      $data[$prefix . '_countries']['country_id'] = array(
-        'title' => t('ISO country code (numeric)'),
-        'help' => t('The @field of the @address of the order.', ['@field' => t('numeric ISO country code'), '@address' => Unicode::strtolower($address)]),
-        'argument' => array(
-          'id' => 'numeric',
-          'name field' => 'country_iso_code_2',
-          'numeric' => TRUE,
-          'validate type' => 'country_id',
+    $data['uc_orders']['billing_full_name'] = array(
+      'title' => t('Billing full name'),
+      'help' => t('The full name of the person paying for the order.'),
+      'field' => array(
+        'id' => 'uc_order_full_name',
+        'real field' => 'billing_first_name',
+        'additional fields' => array(
+          'last_name' => array(
+            'field' => 'billing_last_name'
+          ),
         ),
-        'filter' => array(
-          'id' => 'numeric',
-        ),
-      );
-      $data[$prefix . '_countries']['country_name'] = array(
-        'title' => t('Country'),
-        'help' => t('The @field of the @address of the order.', ['@field' => t('country name'), '@address' => Unicode::strtolower($address)]),
-        'field' => array(
-          'id' => 'standard',
-          'click sortable' => TRUE,
-        ),
-        'sort' => array(
-          'id' => 'standard',
-        ),
-        'filter' => array(
-          'id' => 'in_operator',
-          'real field' => 'country_id',
-          'options callback' => 'Drupal\uc_country\Controller\CountryController::countryOptionsCallback',
-        ),
-      );
-      $data[$prefix . '_countries']['country_iso_code_2'] = array(
-        'title' => t('ISO country code (2 characters)'),
-        'help' => t('The @field of the @address of the order.', ['@field' => t('ISO country code'), '@address' => Unicode::strtolower($address)]),
-        'field' => array(
-          'id' => 'standard',
-          'click sortable' => TRUE,
-        ),
-        'sort' => array(
-          'id' => 'standard',
-        ),
-        'filter' => array(
-          'id' => 'string',
-        ),
-      );
-      $data[$prefix . '_countries']['country_iso_code_3'] = array(
-        'title' => t('ISO country code (3 characters)'),
-        'help' => t('The @field of the @address of the order.', ['@field' => t('ISO country code'), '@address' => Unicode::strtolower($address)]),
-        'field' => array(
-          'id' => 'standard',
-          'click sortable' => TRUE,
-        ),
-        'sort' => array(
-          'id' => 'standard',
-        ),
-        'filter' => array(
-          'id' => 'string',
-        ),
-      );
+      ),
+    );
 
-      $data[$prefix . '_zones']['table']['group'] = $group;
-      $data[$prefix . '_zones']['table']['join']['uc_orders'] = array(
-        'table' => 'uc_countries_zones',
-        'left_field' => $prefix . '_zone',
-        'field' => 'zone_id',
-      );
-      $data[$prefix . '_zones']['zone_name'] = array(
-        'title' => t('State/Province'),
-        'help' => t('The @field of the @address of the order.', ['@field' => t('state or province'), '@address' => Unicode::strtolower($address)]),
-        'field' => array(
-          'id' => 'standard',
-          'click sortable' => TRUE,
+    $data['uc_orders']['delivery_full_name'] = array(
+      'title' => t('Delivery full name'),
+      'help' => t('The full name of the person receiving shipment.'),
+      'field' => array(
+        'id' => 'uc_order_full_name',
+        'real field' => 'delivery_first_name',
+        'additional fields' => array(
+          'last_name' => array(
+            'field' => 'delivery_last_name'
+          ),
         ),
-        'sort' => array(
-          'id' => 'standard',
-        ),
-        'filter' => array(
-          'id' => 'in_operator',
-          'real field' => 'zone_code',
-          'options callback' => 'Drupal\uc_country\Controller\CountryController::zoneOptionsCallback',
-        ),
-      );
-      $data[$prefix . '_zones']['zone_code'] = array(
-        'title' => t('State/Province code'),
-        'help' => t('The @field of the @address of the order.', ['@field' => t('state or province code'), '@address' => Unicode::strtolower($address)]),
-        'field' => array(
-          'id' => 'standard',
-          'click sortable' => TRUE,
-        ),
-        'sort' => array(
-          'id' => 'standard',
-        ),
-        'filter' => array(
-          'id' => 'string',
-        ),
-      );
-    }
+      ),
+    );
 
     $data['uc_orders']['total_weight'] = array(
       'title' => t('Total weight'),
@@ -327,6 +134,20 @@ class OrderViewsData extends EntityViewsData {
         'additional fields' => array(
           'order_id' => 'order_id',
         ),
+      ),
+    );
+
+    // Expose the uid as a relationship to users.
+    $data['users_field_data']['uc_orders'] = array(
+      'title' => t('Orders'),
+      'help' => t('Relate a user to the orders they have placed. This relationship will create one record for each order placed by the user.'),
+      'relationship' => array(
+        'title' => t('Order'),
+        'label' => t('Order'),
+        'base' => 'uc_orders',
+        'base field' => 'uid',
+        'relationship field' => 'uid',
+        'id' => 'standard',
       ),
     );
 

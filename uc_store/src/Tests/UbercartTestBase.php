@@ -53,9 +53,9 @@ abstract class UbercartTestBase extends WebTestBase {
   protected $product;
 
   /**
-   * Overrides WebTestBase::setUp().
+   * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     parent::setUp();
 
     // Place the tabs and actions blocks as various tests use them.
