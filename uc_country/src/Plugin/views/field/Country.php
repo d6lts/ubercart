@@ -48,7 +48,7 @@ class Country extends FieldPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getStorage('uc_country')
+      $container->get('entity_type.manager')->getStorage('uc_country')
     );
   }
 
