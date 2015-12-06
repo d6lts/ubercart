@@ -10,7 +10,7 @@ namespace Drupal\uc_catalog;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -29,22 +29,22 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $config;
 
   /**
-   * Stores the Entity manager.
+   * Stores the entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * Constructs a new CatalogBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\Core\Config\ConfigFactory $configFactory
    *   The configuration factory.
    */
-  public function __construct(EntityManagerInterface $entity_manager, ConfigFactory $configFactory) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $configFactory) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->config = $configFactory->get('uc_catalog.settings');
   }
 
@@ -76,7 +76,7 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected function catalogBreadcrumb($node) {
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
     $links[] = new Link($this->t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
-    if ($parents = \Drupal::entityManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->target_id)) {
+    if ($parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->target_id)) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
         $links[] = new Link($parent->label(), Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]));
@@ -95,7 +95,7 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected function catalogTermBreadcrumb($tid) {
     $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
     $breadcrumb[] = new Link($this->t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
-    if ($parents = \Drupal::entityManager()->getStorage('taxonomy_term')->loadAllParents($tid)) {
+    if ($parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($tid)) {
       array_shift($parents);
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {

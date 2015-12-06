@@ -24,9 +24,9 @@ class UcCountryServiceProvider extends ServiceProviderBase {
 
     // Overrides country_manager class to add additional functionality.
     $definition->setClass('Drupal\uc_country\CountryManager');
-    // Inject the entity.manager service, which is not available in
+    // Inject the entity_type.manager service, which is not available in
     // the core country_manager.
-    $definition->addArgument(new Reference('entity.manager'));
+    $definition->addArgument(new Reference('entity_type.manager'));
 
   }
 }

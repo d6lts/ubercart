@@ -8,7 +8,7 @@
 namespace Drupal\uc_country;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides list of countries.
@@ -23,11 +23,11 @@ class CountryManager implements CountryManagerInterface {
   protected $moduleHandler;
 
   /**
-   * The module handler service.
+   * Stores the entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * An array of country code => country name pairs.
@@ -39,12 +39,12 @@ class CountryManager implements CountryManagerInterface {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
-   *   The entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityManagerInterface $entity_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager) {
     $this->moduleHandler = $module_handler;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -64,7 +64,7 @@ class CountryManager implements CountryManagerInterface {
    * {@inheritdoc}
    */
   public function getAvailableList() {
-    $countries = $this->entityManager->getStorage('uc_country')->loadMultiple(NULL);
+    $countries = $this->entityTypeManager->getStorage('uc_country')->loadMultiple(NULL);
     $country_names = [];
     foreach ($countries as $alpha_2 => $country) {
       $country_names[$alpha_2] = t($country->getName());
@@ -78,7 +78,7 @@ class CountryManager implements CountryManagerInterface {
    * {@inheritdoc}
    */
   public function getEnabledList() {
-    $countries = $this->entityManager->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
+    $countries = $this->entityTypeManager->getStorage('uc_country')->loadByProperties(['status' => TRUE]);
     $country_names = [];
     foreach ($countries as $alpha_2 => $country) {
       $country_names[$alpha_2] = t($country->getName());
@@ -92,14 +92,14 @@ class CountryManager implements CountryManagerInterface {
    * {@inheritdoc}
    */
   public function getCountry($alpha_2) {
-    return $this->entityManager->getStorage('uc_country')->load($alpha_2);
+    return $this->entityTypeManager->getStorage('uc_country')->load($alpha_2);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getByProperty(array $properties) {
-    $countries = $this->entityManager->getStorage('uc_country')->loadByProperties($properties);
+    $countries = $this->entityTypeManager->getStorage('uc_country')->loadByProperties($properties);
     $country_names = [];
     foreach ($countries as $alpha_2 => $country) {
       $country_names[$alpha_2] = t($country->getName());
@@ -112,7 +112,7 @@ class CountryManager implements CountryManagerInterface {
    * {@inheritdoc}
    */
   public function getZoneList($alpha_2) {
-    if ($country = $this->entityManager->getStorage('uc_country')->load($alpha_2)) {
+    if ($country = $this->entityTypeManager->getStorage('uc_country')->load($alpha_2)) {
       return $country->getZones();
     }
     return array();
