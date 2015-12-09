@@ -513,7 +513,7 @@ class CartCheckoutTest extends UbercartTestBase {
       $this->assertNotEqual($order_id, $new_order_id, 'New order was created after timeout.');
 
       // Force the order to load from the DB instead of the entity cache.
-      $old_order = \Drupal::entityManager()->getStorage('uc_order')->loadUnchanged($order_id);
+      $old_order = \Drupal::entityTypeManager()->getStorage('uc_order')->loadUnchanged($order_id);
       // Verify that the status of old order is abandoned.
       $this->assertEqual($old_order->getStatusId(), 'abandoned', 'Original order was marked abandoned.');
     }

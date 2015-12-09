@@ -73,7 +73,7 @@ class OrderTest extends UbercartTestBase {
 
     // Test deletion.
     $order->save();
-    $storage = \Drupal::entityManager()->getStorage('uc_order');
+    $storage = \Drupal::entityTypeManager()->getStorage('uc_order');
     $entities = $storage->loadMultiple(array($order->id()));
     $storage->delete($entities);
 
@@ -311,7 +311,7 @@ class OrderTest extends UbercartTestBase {
       ->save();
 
     // Force the order to load from the DB instead of the entity cache.
-    $db_order = \Drupal::entityManager()->getStorage('uc_order')->loadUnchanged($order->id());
+    $db_order = \Drupal::entityTypeManager()->getStorage('uc_order')->loadUnchanged($order->id());
     // Compare delivery and billing addresses to those loaded from the database.
     $db_delivery_address = $db_order->getAddress('delivery');
     $db_billing_address = $db_order->getAddress('billing');

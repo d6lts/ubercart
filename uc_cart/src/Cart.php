@@ -51,7 +51,7 @@ class Cart implements CartInterface {
       ->execute();
 
     if (!empty($result)) {
-      $items = \Drupal::entityManager()->getStorage('uc_cart_item')->loadMultiple(array_keys($result));
+      $items = \Drupal::entityTypeManager()->getStorage('uc_cart_item')->loadMultiple(array_keys($result));
     }
 
     // Allow other modules a chance to alter the fully loaded cart object.
@@ -178,7 +178,7 @@ class Cart implements CartInterface {
       ->execute();
 
     if (!empty($result)) {
-      $storage = \Drupal::entityManager()->getStorage('uc_cart_item');
+      $storage = \Drupal::entityTypeManager()->getStorage('uc_cart_item');
       $entities = $storage->loadMultiple(array_keys($result));
       $storage->delete($entities);
     }

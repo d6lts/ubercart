@@ -132,7 +132,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
           ->condition('order_id', $order->id())
           ->execute();
         if (!empty($result)) {
-          $storage = $this->entityManager()->getStorage('uc_order_product');
+          $storage = $this->entityTypeManager()->getStorage('uc_order_product');
           $entities = $storage->loadMultiple(array_keys($result));
           $storage->delete($entities);
         }

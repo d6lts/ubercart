@@ -21,7 +21,7 @@ class ProductController extends ControllerBase {
    * Displays a list of product classes.
    */
   public function classOverview() {
-    $classes = \Drupal::entityManager()->getStorage('node_type')->loadByProperties(array(
+    $classes = \Drupal::entityTypeManager()->getStorage('node_type')->loadByProperties(array(
       'third_party_settings.uc_product.product' => TRUE,
     ));
     $header = array($this->t('Class ID'), $this->t('Name'), $this->t('Description'), $this->t('Operations'));

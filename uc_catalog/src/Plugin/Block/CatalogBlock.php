@@ -91,7 +91,7 @@ class CatalogBlock extends BlockBase {
   public function build() {
     // Get the vocabulary tree information.
     $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');
-    $tree = \Drupal::entityManager()->getStorage('taxonomy_term')->loadTree($vid);
+    $tree = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid);
 
     // Then convert it into an actual tree structure.
     $seq = 0;

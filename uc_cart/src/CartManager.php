@@ -84,7 +84,7 @@ class CartManager implements CartManagerInterface {
     // Force the order to load from the DB instead of the entity cache.
     // @todo Remove this once uc_payment_enter() can modify order objects?
     // @todo Should we be overwriting $order with this newly-loaded db_order?
-    $db_order = \Drupal::entityManager()->getStorage('uc_order')->loadUnchanged($order->id());
+    $db_order = \Drupal::entityTypeManager()->getStorage('uc_order')->loadUnchanged($order->id());
     $order->data = $db_order->data;
 
     // Ensure that user creation and triggers are only run once.
