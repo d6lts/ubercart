@@ -12,6 +12,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\uc_cart\CartInterface;
 use Drupal\uc_cart\CartManagerInterface;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
+use Drupal\uc_order\Entity\Order;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -118,7 +119,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       $rebuild = FALSE;
       if (!isset($order)) {
         // Create a new order if necessary.
-        $order = \Drupal\uc_order\Entity\Order::create(array(
+        $order = Order::create(array(
           'uid' => $this->currentUser()->id(),
         ));
         $order->save();

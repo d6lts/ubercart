@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_quote\Tests;
 
+use Drupal\uc_country\Entity\Country;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -25,8 +27,8 @@ class QuoteTest extends UbercartTestBase {
 
     // In order to test zone-based conditions, this particular test class
     // assumes that US is enabled as default, and CA is also enabled.
-    \Drupal\uc_country\Entity\Country::load('US')->enable()->save();
-    \Drupal\uc_country\Entity\Country::load('CA')->enable()->save();
+    Country::load('US')->enable()->save();
+    Country::load('CA')->enable()->save();
     \Drupal::configFactory()->getEditable('uc_store.settings')->set('address.country', 'US')->save();
   }
 
@@ -207,7 +209,7 @@ class QuoteTest extends UbercartTestBase {
     $order_id = reset($order_ids);
 
     if ($order_id) {
-      $order = \Drupal\uc_order\Entity\Order::load($order_id);
+      $order = Order::load($order_id);
       foreach ($order->line_items as $line) {
         if ($line['type'] == 'shipping') {
           break;

@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\Entity\OrderStatus;
 use Drupal\uc_order\OrderInterface;
 
@@ -97,7 +98,7 @@ class OrderUpdateForm extends FormBase {
     }
 
     if ($form_state->getValue('status') != $form_state->getValue('current_status')) {
-      \Drupal\uc_order\Entity\Order::load($form_state->getValue('order_id'))
+      Order::load($form_state->getValue('order_id'))
         ->setStatusId($form_state->getValue('status'))
         ->save();
 

@@ -9,6 +9,9 @@ namespace Drupal\uc_store\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\simpletest\WebTestBase;
+use Drupal\uc_country\Entity\Country;
+use Drupal\uc_order\Entity\Order;
+use Drupal\uc_order\Entity\OrderProduct;
 
 abstract class UbercartTestBase extends WebTestBase {
 
@@ -78,7 +81,7 @@ abstract class UbercartTestBase extends WebTestBase {
     $country_ids = array_rand($countries, 8);
     foreach ($country_ids as $country_id) {
       // Don't use the country UI, we're not testing that here...
-      \Drupal\uc_country\Entity\Country::load($country_id)->enable()->save();
+      Country::load($country_id)->enable()->save();
     }
     // Last one of the 8 gets to be the store default country.
     \Drupal::configFactory()->getEditable('uc_store.settings')->set('address.country', $country_id)->save();
@@ -266,7 +269,7 @@ abstract class UbercartTestBase extends WebTestBase {
     $order_id = reset($order_ids);
     if ($order_id) {
       $this->pass(SafeMarkup::format('Order %order_id has been created', ['%order_id' => $order_id]));
-      $order = \Drupal\uc_order\Entity\Order::load($order_id);
+      $order = Order::load($order_id);
     }
     else {
       $this->fail('No order was created.');
@@ -284,10 +287,10 @@ abstract class UbercartTestBase extends WebTestBase {
       $edit['primary_email'] = $this->randomString() . '@example.org';
     }
 
-    $order = \Drupal\uc_order\Entity\Order::create($edit);
+    $order = Order::create($edit);
 
     if (!isset($fields['products'])) {
-      $order->products[] = \Drupal\uc_order\Entity\OrderProduct::create(array(
+      $order->products[] = OrderProduct::create(array(
         'nid' => $this->product->nid->target_id,
         'title' => $this->product->title->value,
         'model' => $this->product->model,
@@ -301,7 +304,7 @@ abstract class UbercartTestBase extends WebTestBase {
 
     $order->save();
 
-    return \Drupal\uc_order\Entity\Order::load($order->id());
+    return Order::load($order->id());
   }
 
   /**

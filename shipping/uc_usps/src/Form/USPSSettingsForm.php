@@ -10,6 +10,7 @@ namespace Drupal\uc_usps\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\uc_usps\USPSUtilities;
 
 /**
  * Configures USPS settings.
@@ -81,7 +82,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('USPS envelope services'),
       '#default_value' => $usps_config->get('env_services'),
-      '#options' => \Drupal\uc_usps\USPSUtilities::envelopeServices(),
+      '#options' => USPSUtilities::envelopeServices(),
       '#description' => $this->t('Select the USPS services that are available to customers. Be sure to include the services that the Postal Service agrees are available to you.'),
     );
 
@@ -89,7 +90,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('USPS parcel services'),
       '#default_value' => $usps_config->get('services'),
-      '#options' => \Drupal\uc_usps\USPSUtilities::services(),
+      '#options' => USPSUtilities::services(),
       '#description' => $this->t('Select the USPS services that are available to customers. Be sure to include the services that the Postal Service agrees are available to you.'),
     );
 
@@ -104,7 +105,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('USPS international envelope services'),
       '#default_value' => $usps_config->get('intl_env_services'),
-      '#options' => \Drupal\uc_usps\USPSUtilities::internationalEnvelopeServices(),
+      '#options' => USPSUtilities::internationalEnvelopeServices(),
       '#description' => $this->t('Select the USPS services that are available to customers. Be sure to include the services that the Postal Service agrees are available to you.'),
     );
 
@@ -112,7 +113,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('USPS international parcel services'),
       '#default_value' => $usps_config->get('intl_services'),
-      '#options' => \Drupal\uc_usps\USPSUtilities::internationalServices(),
+      '#options' => USPSUtilities::internationalServices(),
       '#description' => $this->t('Select the USPS services that are available to customers. Be sure to include the services that the Postal Service agrees are available to you.'),
     );
 

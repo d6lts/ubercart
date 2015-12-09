@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_role\Form;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -121,7 +122,7 @@ class RoleSettingsForm extends ConfigFormBase {
       ),
     );
     $date = $roles_config->get('default_end_time');
-    $date = !empty($date) ? \Drupal\Core\Datetime\DrupalDateTime::createFromTimestamp($date) : \Drupal\Core\Datetime\DrupalDateTime::createFromTimestamp(REQUEST_TIME);
+    $date = !empty($date) ? DrupalDateTime::createFromTimestamp($date) : DrupalDateTime::createFromTimestamp(REQUEST_TIME);
     $form['role_lifetime']['absolute']['uc_role_default_end_time'] = array(
       '#type' => 'datetime',
       '#description' => $this->t('Expire the role at the beginning of this day.'),

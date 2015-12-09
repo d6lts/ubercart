@@ -8,6 +8,7 @@
 namespace Drupal\uc_tax_report\Controller;
 
 use Drupal\Core\Url;
+use Drupal\uc_report\Controller\Reports;
 
 /**
  * Displays sales tax report.
@@ -160,7 +161,7 @@ class SalesTaxReport {
     $csv_rows[] = $row;
 
     // Cache the CSV export.
-    $controller = new \Drupal\uc_report\Controller\Reports();
+    $controller = new Reports();
     $csv_data = $controller->store_csv('uc_tax_report', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.

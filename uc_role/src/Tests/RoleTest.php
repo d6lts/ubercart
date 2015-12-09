@@ -8,6 +8,7 @@
 namespace Drupal\uc_role\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests the role purchase functionality.
@@ -41,7 +42,7 @@ class RoleTest extends UbercartTestBase {
     // $this->assertTrue($order->getOwner()->hasRole($rid), 'Existing user was granted role.');
 
     // Test that the email is correct.
-    $role = \Drupal\user\Entity\Role::load($rid);
+    $role = Role::load($rid);
     // @todo Re-enable when Rules is available.
     // $this->assertMailString('subject', $role->label(), 4, 'Role assignment email mentions role in subject line.');
 

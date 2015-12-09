@@ -10,6 +10,7 @@ namespace Drupal\uc_order\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\uc_order\Entity\OrderStatus;
 
 /**
  * Presents the form to create a custom order status.
@@ -81,7 +82,7 @@ class OrderStatusAddForm extends FormBase {
       $form_state->setErrorByName('id', $this->t('You have entered an invalid status ID.'));
     }
 
-    if (\Drupal\uc_order\Entity\OrderStatus::load($id)) {
+    if (OrderStatus::load($id)) {
       $form_state->setErrorByName('id', $this->t('This ID is already in use.  Please specify a unique ID.'));
     }
   }
@@ -90,7 +91,7 @@ class OrderStatusAddForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    \Drupal\uc_order\Entity\OrderStatus::create(array(
+    OrderStatus::create(array(
       'id' => strtolower(trim($form_state->getValue('id'))),
       'name' => $form_state->getValue('name'),
       'state' => $form_state->getValue('state'),

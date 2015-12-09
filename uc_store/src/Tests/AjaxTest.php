@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_store\Tests;
 
+use Drupal\uc_country\Entity\Country;
+
 /**
  * Tests Ajax updating of checkout and order pages.
  *
@@ -27,7 +29,7 @@ class AjaxTest extends UbercartTestBase {
 
     // In order to test zone-based conditions, this particular test class
     // assumes that US is enabled and set as the store country.
-    \Drupal\uc_country\Entity\Country::load('US')->enable()->save();
+    Country::load('US')->enable()->save();
     \Drupal::configFactory()->getEditable('uc_store.settings')->set('address.country', 'US')->save();
   }
 

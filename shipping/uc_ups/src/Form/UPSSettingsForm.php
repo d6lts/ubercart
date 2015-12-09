@@ -10,6 +10,7 @@ namespace Drupal\uc_ups\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\uc_ups\UPSUtilities;
 
 /**
  * Configures UPS settings.
@@ -104,7 +105,7 @@ class UPSSettingsForm extends ConfigFormBase {
       '#type' => 'checkboxes',
       '#title' => $this->t('UPS services'),
       '#default_value' => $ups_config->get('services'),
-      '#options' => \Drupal\uc_ups\UPSUtilities::services(),
+      '#options' => UPSUtilities::services(),
       '#description' => $this->t('Select the UPS services that are available to customers.'),
     );
 
@@ -132,7 +133,7 @@ class UPSSettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('Default Package Type'),
       '#default_value' => $ups_config->get('package_type'),
-      '#options' => \Drupal\uc_ups\UPSUtilities::packageTypes(),
+      '#options' => UPSUtilities::packageTypes(),
       '#description' => $this->t('Type of packaging to be used.  May be overridden on a per-product basis via the product node edit form.'),
     );
     $form['uc_ups_quote_options']['uc_ups_classification'] = array(

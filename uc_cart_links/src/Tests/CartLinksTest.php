@@ -9,6 +9,7 @@ namespace Drupal\uc_cart_links\Tests;
 
 use Drupal\Core\Url;
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -44,7 +45,7 @@ class CartLinksTest extends UbercartTestBase {
 
     // Create Full HTML text format, needed because we want links
     // to appear on pages.
-    $full_html_format = \Drupal\filter\Entity\FilterFormat::create(array(
+    $full_html_format = FilterFormat::create(array(
       'format' => 'full_html',
       'name' => 'Full HTML',
     ));

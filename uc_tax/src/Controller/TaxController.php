@@ -8,6 +8,7 @@
 namespace Drupal\uc_tax\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\uc_tax\Entity\TaxRate;
 
 /**
  * Controller routines for tax routes.
@@ -19,7 +20,7 @@ class TaxController extends ControllerBase {
    */
   public function saveClone($uc_tax_rate) {
     // Load the source rate entity.
-    $rate = \Drupal\uc_tax\Entity\TaxRate::load($uc_tax_rate);
+    $rate = TaxRate::load($uc_tax_rate);
     $name = $rate->label();
 
     // Tweak the name and unset the rate ID.

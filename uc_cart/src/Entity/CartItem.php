@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\uc_cart\CartItemInterface;
+use Drupal\uc_order\Entity\OrderProduct;
 
 /**
  * Defines the cart item entity class.
@@ -47,7 +48,7 @@ class CartItem extends ContentEntityBase implements CartItemInterface {
    * Converts a cart item into an order product.
    */
   public function toOrderProduct() {
-    $order_product = \Drupal\uc_order\Entity\OrderProduct::create(array(
+    $order_product = OrderProduct::create(array(
       'nid' => $this->nid->target_id,
       'title' => $this->title,
       'model' => $this->model,

@@ -9,6 +9,7 @@ namespace Drupal\uc_stock\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
+use Drupal\uc_report\Controller\Reports;
 
 /**
  * Displays a stock report for products with stock tracking enabled.
@@ -82,7 +83,7 @@ class StockReports extends ControllerBase {
     }
 
     // Cache the CSV export.
-    $controller = new \Drupal\uc_report\Controller\Reports();
+    $controller = new Reports();
     $csv_data = $controller->store_csv('uc_stock', $csv_rows);
 
     $build['form'] = \Drupal::formBuilder()->getForm('\Drupal\uc_stock\Form\StockReportForm');

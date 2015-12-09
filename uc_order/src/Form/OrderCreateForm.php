@@ -9,6 +9,8 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Entity\Order;
+use Drupal\user\Entity\User;
 
 /**
  * Creates a new order and redirect to its edit screen.
@@ -244,7 +246,7 @@ class OrderCreateForm extends FormBase {
           'pass' => user_password(),
           'status' => $this->config('uc_cart.settings')->get('new_customer_status_active') ? 1 : 0,
         );
-        $account = \Drupal\user\Entity\User::create($fields);
+        $account = User::create($fields);
         $account->save();
         $uid = $account->id();
 
@@ -260,7 +262,7 @@ class OrderCreateForm extends FormBase {
         $uid = 0;
     }
 
-    $order = \Drupal\uc_order\Entity\Order::create(array(
+    $order = Order::create(array(
       'uid' => $uid,
       'order_status' => uc_order_state_default('post_checkout'),
     ));

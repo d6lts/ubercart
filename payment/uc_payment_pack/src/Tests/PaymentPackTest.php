@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment_pack\Tests;
 
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_store\Tests\UbercartTestBase;
 use Drupal\uc_store\Address;
 
@@ -99,7 +100,7 @@ class PaymentPackTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
     // Test user order view
-    $order = \Drupal\uc_order\Entity\Order::load(1);
+    $order = Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'check', 'Order has check payment method.');
 
     $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
@@ -160,7 +161,7 @@ class PaymentPackTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
     // Test user order view
-    $order = \Drupal\uc_order\Entity\Order::load(1);
+    $order = Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'cod', 'Order has COD payment method.');
 
     $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
@@ -194,7 +195,7 @@ class PaymentPackTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
     // Test user order view
-    $order = \Drupal\uc_order\Entity\Order::load(1);
+    $order = Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), 'other', 'Order has other payment method.');
 
     $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
