@@ -51,6 +51,9 @@ class CartCheckoutTest extends UbercartTestBase {
     // Create a simple customer user account.
     $this->customer = $this->drupalCreateUser();
 
+    // Create a payment method.
+    $this->createPaymentMethod('check');
+
     // Ensure test mails are logged.
     \Drupal::configFactory()->getEditable('system.mail')
       ->set('interface.uc_order', 'test_mail_collector')

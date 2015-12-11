@@ -55,7 +55,7 @@ class CountryTest extends WebTestBase {
     // Verify that last random country doesn't show up as available.
     $this->drupalGet('admin/store/config/store');
     $this->assertNoOption(
-      'edit-uc-store-country',
+      'edit-address-country',
       $last_country,
       SafeMarkup::format('%country not listed in uc_address select country field.', ['%country' => $countries[$last_country]])
     );
@@ -72,7 +72,7 @@ class CountryTest extends WebTestBase {
     // Verify that last random country now shows up as available.
     $this->drupalGet('admin/store/config/store');
     $this->assertOption(
-      'edit-uc-store-country',
+      'edit-address-country',
       $last_country,
       SafeMarkup::format('%country is listed in uc_address select country field.', ['%country' => $countries[$last_country]])
     );

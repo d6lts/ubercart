@@ -30,10 +30,10 @@ class StoreTest extends UbercartTestBase {
       'uc_store_phone' => $this->randomMachineName(),
       'uc_store_fax' => $this->randomMachineName(),
       'uc_store_help_page' => $this->randomMachineName(),
-      'uc_store_street1' => $this->randomMachineName(),
-      'uc_store_street2' => $this->randomMachineName(),
-      'uc_store_city' => $this->randomMachineName(),
-      'uc_store_postal_code' => $this->randomMachineName(),
+      'address[street1]' => $this->randomMachineName(),
+      'address[street2]' => $this->randomMachineName(),
+      'address[city]' => $this->randomMachineName(),
+      'address[postal_code]' => $this->randomMachineName(),
       'uc_currency_code' => $this->randomMachineName(3),
       'uc_currency_sign' => $this->randomMachineName(1),
       'uc_currency_thou' => $this->randomMachineName(1),
@@ -46,7 +46,7 @@ class StoreTest extends UbercartTestBase {
     $zone_list = \Drupal::service('country_manager')->getZoneList($country_id);
     if (!empty($zone_list)) {
       $edit += array(
-        'uc_store_zone' => array_rand($zone_list),
+        'address[zone]' => array_rand($zone_list),
       );
     }
 

@@ -87,6 +87,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
     $contents['address'] = array(
       '#type' => 'uc_address',
       '#default_value' => $order->getAddress($pane),
+      '#parents' => ['panes', $pane],
       '#prefix' => '<div id="' . $pane . '-address-pane">',
       '#suffix' => '</div>',
     );

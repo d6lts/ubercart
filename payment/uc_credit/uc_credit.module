@@ -5,11 +5,9 @@
  * Defines the credit card payment method and hooks in payment gateways.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Encryption;
 
 /** Just authorize an amount on a credit card account. */
@@ -165,69 +163,11 @@ function uc_credit_uc_store_status() {
     $statuses[] = array(
       'status' => 'error',
       'title' => t('Credit card encryption'),
-      'desc' => t('You must review your <a href=":url">credit card security settings</a> and enable encryption before you can accept credit card payments.', [':url' => Url::fromRoute('uc_payment.method_settings', ['method' => 'credit'])->toString()]),
+      'desc' => t('You must review your <a href=":url">credit card security settings</a> and enable encryption before you can accept credit card payments.', [':url' => Url::fromRoute('uc_credit.settings')->toString()]),
     );
   }
 
   return $statuses;
-}
-
-/**
- * Implements hook_uc_order().
- */
-function uc_credit_uc_order($op, $order, $arg2) {
-  $credit_config = \Drupal::config('uc_credit.settings');
-  $session = \Drupal::service('session');
-  switch ($op) {
-    case 'submit':
-      if ($order->getPaymentMethodId() == 'credit') {
-        // Clear out that session variable denoting this as a CC paid order.
-        $session->remove('cc_pay');
-
-        // Process CC transactions when an order is submitted after review.
-        $gateway_id = uc_credit_default_gateway();
-        $data = array(
-          'txn_type' => $credit_config->get('uc_pg_' . $gateway_id . '_cc_txn_type'),
-        );
-
-        // Attempt to process the CC payment.
-        $order->payment_details = uc_credit_cache('load');
-        $pass = uc_payment_process_payment('credit', $order->id(), $order->getTotal(), $data, TRUE, NULL, FALSE);
-
-        // If the payment failed, store the data back in the session and
-        // halt the checkout process.
-        if (!$pass) {
-          return array(array('pass' => FALSE, 'message' => t('We were unable to process your credit card payment. Please verify your details and try again.')));
-        }
-      }
-      break;
-  }
-}
-
-/**
- * Implements hook_uc_order_load().
- */
-function uc_credit_uc_order_load($orders) {
-  foreach ($orders as $order) {
-    if ($order->getPaymentMethodId() == 'credit') {
-      // Load the CC details from the credit cache if available.
-      $order->payment_details = uc_credit_cache('load');
-
-      // Otherwise load any details that might be stored in the data array.
-      if (empty($order->payment_details) && isset($order->data->cc_data)) {
-        $order->payment_details = uc_credit_cache('save', $order->data->cc_data);
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_uc_order_update().
- */
-function uc_credit_uc_order_update(OrderInterface $order) {
-  if ($order->getPaymentMethodId() == 'credit' && !empty($order->payment_details)) {
-    _uc_credit_save_cc_data_to_order($order->payment_details, $order->id());
-  }
 }
 
 /**
@@ -325,7 +265,7 @@ function uc_payment_method_credit_form($form, FormStateInterface $form_state, $o
   if ($session->has('clear_cc') || !isset($order->payment_details['cc_number'])) {
     $default_num = NULL;
   }
-  elseif ($credit_config->get('validate_numbers') && !_uc_credit_valid_card_number($order->payment_details['cc_number'])) {
+  elseif (!_uc_credit_valid_card_number($order->payment_details['cc_number'])) {
     // Display the number as is if it does not validate so it can be corrected.
     $default_num = $order->payment_details['cc_number'];
   }

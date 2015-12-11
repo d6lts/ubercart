@@ -33,9 +33,10 @@ class RoleTest extends UbercartTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save feature'));
 
     // Check out with the test product.
+    $method = $this->createPaymentMethod('other');
     $this->addToCart($this->product);
     $order = $this->checkout();
-    uc_payment_enter($order->id(), 'other', $order->getTotal());
+    uc_payment_enter($order->id(), $method['id'], $order->getTotal());
 
     // Test that the role was granted.
     // @todo Re-enable when Rules is available.

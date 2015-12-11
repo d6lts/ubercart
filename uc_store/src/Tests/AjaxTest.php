@@ -80,12 +80,9 @@ class AjaxTest extends UbercartTestBase {
 
   public function testCheckoutAjax() {
     // Enable two payment methods and set a condition on one.
-    $edit = array(
-      'methods[check][status]' => TRUE,
-      'methods[other][status]' => TRUE,
-    );
-    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
-    // $this->addPaymentZoneCondition('other', 'KS');
+    $this->createPaymentMethod('check');
+    $other = $this->createPaymentMethod('other');
+    // $this->addPaymentZoneCondition($other['id'], 'KS');
 
     // Specify that the billing zone should update the payment pane.
     $config = _uc_ajax_defaults('checkout');
@@ -100,17 +97,17 @@ class AjaxTest extends UbercartTestBase {
     $this->addToCart($product);
     $this->drupalPostForm('cart', array('items[0][qty]' => 1), t('Checkout'));
     // @todo Re-enable when shipping quote conditions are available.
-    // $this->assertNoText('Other');
+    // $this->assertNoEscaped($other['label']);
 
     // Change the billing zone and verify that payment pane updates.
     $edit = array();
     $edit['panes[billing][zone]'] = 'KS';
     $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
-    $this->assertText('Other');
+    $this->assertEscaped($other['label']);
     $edit['panes[billing][zone]'] = 'AL';
     $this->ucPostAjax(NULL, $edit, 'panes[billing][zone]');
     // Not in Kansas any more...
     // @todo Re-enable when shipping quote conditions are available.
-    // $this->assertNoText('Other');
+    // $this->assertNoEscaped($other['label']);
   }
 }

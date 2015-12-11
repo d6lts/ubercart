@@ -5,4 +5,4 @@ package: Ubercart - core (optional)
 core: 8.x
 dependencies:
   - uc_order
-configure: uc_payment.methods
+configure: entity.uc_payment_method.collection

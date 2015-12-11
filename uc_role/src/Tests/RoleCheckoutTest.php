@@ -36,6 +36,9 @@ class RoleCheckoutTest extends UbercartTestBase {
   }
 
   public function testCheckoutRoleAssignment() {
+    $this->drupalLogin($this->adminUser);
+    $method = $this->createPaymentMethod('other');
+
     // Add role assignment to the test product.
     $rid = $this->drupalCreateRole(array('access content'));
     $this->drupalLogin($this->adminUser);
@@ -45,10 +48,11 @@ class RoleCheckoutTest extends UbercartTestBase {
     // Process an anonymous, shippable order.
     $order = $this->createOrder([
       'uid' => 0,
+      'payment_method' => $method['id'],
     ]);
     $order->products[1]->data->shippable = 1;
     $order->save();
-    uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
+    uc_payment_enter($order->id(), $method['id'], $order->getTotal());
 
     // Find the order uid.
     $uid = db_query('SELECT uid FROM {uc_orders} ORDER BY order_id DESC')->fetchField();
@@ -71,10 +75,11 @@ class RoleCheckoutTest extends UbercartTestBase {
     $order = $this->createOrder(array(
       'uid' => 0,
       'primary_email' => $this->customer->getEmail(),
+      'payment_method' => $method['id'],
     ));
     $order->products[2]->data->shippable = 0;
     $order->save();
-    uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
+    uc_payment_enter($order->id(), $method['id'], $order->getTotal());
     $account = User::load($this->customer->id());
     // @todo Re-enable when Rules is available.
     // $this->assertTrue($account->hasRole($rid), 'Existing user was granted role.');

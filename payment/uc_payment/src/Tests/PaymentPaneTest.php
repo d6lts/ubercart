@@ -29,23 +29,22 @@ class PaymentPaneTest extends UbercartTestBase {
    */
   public function testPaymentMethodOptions() {
     // No payment methods.
-    $edit = array('methods[check][status]' => FALSE);
-    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
     $this->drupalGet('cart/checkout');
     $this->assertText('Checkout cannot be completed without any payment methods enabled. Please contact an administrator to resolve the issue.');
 
     // Single payment method.
-    $edit = array('methods[check][status]' => TRUE);
-    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
+    $check = $this->createPaymentMethod('check');
     $this->drupalGet('cart/checkout');
     $this->assertNoText('Select a payment method from the following options.');
+    $this->assertEscaped($check['label']);
     $this->assertFieldByXPath("//input[@name='panes[payment][payment_method]' and @disabled='disabled']");
 
     // Multiple payment methods.
-    $edit = array('methods[other][status]' => TRUE);
-    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
+    $other = $this->createPaymentMethod('other');
     $this->drupalGet('cart/checkout');
     $this->assertText('Select a payment method from the following options.');
+    $this->assertEscaped($check['label']);
+    $this->assertEscaped($other['label']);
     $this->assertNoFieldByXPath("//input[@name='panes[payment][payment_method]' and @disabled='disabled']");
   }
 
@@ -73,19 +72,18 @@ class PaymentPaneTest extends UbercartTestBase {
    */
   public function testFreeOrders() {
     $free_product = $this->createProduct(array('price' => 0));
-    $edit = array('methods[check][status]' => TRUE);
-    $this->drupalPostForm('admin/store/config/payment', $edit, 'Save configuration');
+    $check = $this->createPaymentMethod('check');
 
     // Check that paid products cannot be purchased for free.
     $this->drupalGet('cart/checkout');
-    $this->assertText('Check or money order');
+    $this->assertEscaped($check['label']);
     $this->assertNoText('No payment required');
     $this->assertNoText('Subtotal: $0.00');
 
     // Check that a mixture of free and paid products cannot be purchased for free.
     $this->addToCart($free_product);
     $this->drupalGet('cart/checkout');
-    $this->assertText('Check or money order');
+    $this->assertEscaped($check['label']);
     $this->assertNoText('No payment required');
     $this->assertNoText('Subtotal: $0.00');
 
@@ -94,7 +92,7 @@ class PaymentPaneTest extends UbercartTestBase {
     $this->drupalPostForm('cart', array(), t('Remove'));
     $this->addToCart($free_product);
     $this->drupalGet('cart/checkout');
-    $this->assertNoText('Check or money order');
+    $this->assertNoEscaped($check['label']);
     $this->assertText('No payment required');
     $this->assertText('Continue with checkout to complete your order.');
     $this->assertText('Subtotal: $0.00');

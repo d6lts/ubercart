@@ -24,6 +24,7 @@ class QuoteTest extends UbercartTestBase {
   public function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
+    $this->createPaymentMethod('check');
 
     // In order to test zone-based conditions, this particular test class
     // assumes that US is enabled as default, and CA is also enabled.

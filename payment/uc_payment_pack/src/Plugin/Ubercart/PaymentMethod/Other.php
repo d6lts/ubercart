@@ -13,13 +13,9 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
 /**
  * Defines a generic payment method.
  *
- * @PaymentMethod(
+ * @UbercartPaymentMethod(
  *   id = "other",
  *   name = @Translation("Other"),
- *   title = @Translation("Other"),
- *   checkout = FALSE,
- *   no_gateway = TRUE,
- *   weight = 10,
  * )
  */
 class Other extends PaymentMethodPluginBase {

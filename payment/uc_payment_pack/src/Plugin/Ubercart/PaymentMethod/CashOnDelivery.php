@@ -14,14 +14,9 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
 /**
  * Defines the cash on delivery payment method.
  *
- * @PaymentMethod(
+ * @UbercartPaymentMethod(
  *   id = "cod",
  *   name = @Translation("Cash on delivery"),
- *   title = @Translation("Cash on delivery"),
- *   checkout = FALSE,
- *   no_gateway = TRUE,
- *   settings_form = "Drupal\uc_payment_pack\Form\CashOnDeliverySettingsForm",
- *   weight = 1,
  * )
  */
 class CashOnDelivery extends PaymentMethodPluginBase {
@@ -29,20 +24,62 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
+  public function defaultConfiguration() {
+    return [
+      'policy' => 'Full payment is expected upon delivery or prior to pick-up.',
+      'max_order' => 0,
+      'delivery_date' => FALSE,
+    ];
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form['policy'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Policy message'),
+      '#default_value' => $this->configuration['policy'],
+      '#description' => t('Help message shown at checkout.'),
+    );
+    $form['max_order'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Maximum order total eligible for COD'),
+      '#default_value' => $this->configuration['max_order'],
+      '#description' => t('Set to 0 for no maximum order limit.'),
+    );
+    $form['delivery_date'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Let customers enter a desired delivery date.'),
+      '#default_value' => $this->configuration['delivery_date'],
+    );
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->configuration['policy'] = $form_state->getValue('policy');
+    $this->configuration['max_order'] = $form_state->getValue('max_order');
+    $this->configuration['delivery_date'] = $form_state->getValue('delivery_date');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $build['policy'] = array(
-      '#markup' => '<p>' . $cod_config->get('policy') . '</p>'
+      '#markup' => '<p>' . $this->configuration['policy'] . '</p>'
     );
 
-    if (($max = $cod_config->get('max_order')) > 0 && is_numeric($max)) {
+    if (($max = $this->configuration['max_order']) > 0 && is_numeric($max)) {
       $build['eligibility'] = array(
         '#markup' => '<p>' . t('Orders totalling more than @amount are <b>not eligible</b> for COD.', ['@amount' => uc_currency_format($max)]) . '</p>'
       );
     }
 
-    if ($cod_config->get('delivery_date')) {
+    if ($this->configuration['delivery_date']) {
       $build += $this->deliveryDateForm($order);
     }
 
@@ -53,9 +90,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
-
-    if ($cod_config->get('delivery_date')) {
+    if ($this->configuration['delivery_date']) {
       $order->payment_details = $form_state->getValue(['panes', 'payment', 'details']);
     }
 
@@ -66,11 +101,9 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartReview(OrderInterface $order) {
-    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
-
     $review = array();
 
-    if ($cod_config->get('delivery_date')) {
+    if ($this->configuration['delivery_date']) {
       $date = uc_date_format(
         $order->payment_details['delivery_month'],
         $order->payment_details['delivery_day'],
@@ -86,11 +119,9 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderView(OrderInterface $order) {
-    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
-
     $build = array();
 
-    if ($cod_config->get('delivery_date') &&
+    if ($this->configuration['delivery_date'] &&
       isset($order->payment_details['delivery_month']) &&
       isset($order->payment_details['delivery_day']) &&
       isset($order->payment_details['delivery_year'])) {
@@ -109,11 +140,9 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderEditDetails(OrderInterface $order) {
-    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
-
     $build = array();
 
-    if ($cod_config->get('delivery_date')) {
+    if ($this->configuration['delivery_date']) {
       $build = $this->deliveryDateForm($order);
     }
 
@@ -156,8 +185,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderSubmit(OrderInterface $order) {
-    $cod_config = \Drupal::config('uc_payment_pack.cod.settings');
-    $max = $cod_config->get('max_order');
+    $max = $this->configuration['max_order'];
 
     if ($max > 0 && $order->getTotal() > $max) {
       $result[] = array(

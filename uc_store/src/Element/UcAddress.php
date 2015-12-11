@@ -192,7 +192,6 @@ class UcAddress extends Element\FormElement {
       $element[$field] = $subelement + array(
         '#title' => $labels[$base_field],
         '#default_value' => is_object($value) ? $value->$field : $value[$field],
-        '#parents' => array_merge(array_slice($element['#parents'], 0, -1), array($field)),
         '#access' => !$element['#hidden'] && !empty($config[$base_field]['status']),
         '#required' => $element['#required'] && !empty($config[$base_field]['required']),
         '#weight' => isset($config[$base_field]['weight']) ? $config[$base_field]['weight'] : 0,

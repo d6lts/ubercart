@@ -16,6 +16,7 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\uc_payment\Entity\PaymentMethod;
 
 /**
  * Handles the Payment order pane.
@@ -61,11 +62,16 @@ function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $f
       return $build;
 
     case 'edit-form':
+      $options = array();
+      foreach (PaymentMethod::loadMultiple() as $method) {
+        $options[$method->id()] = $method->label();
+      }
+
       $form['payment']['payment_method'] = array(
         '#type' => 'select',
         '#title' => t('Payment method'),
         '#default_value' => $order->getPaymentMethodId(),
-        '#options' => \Drupal::service('plugin.manager.uc_payment.method')->listOptions(),
+        '#options' => $options,
         '#ajax' => array(
           'callback' => 'uc_payment_order_pane_ajax_callback',
           'progress' => array('type' => 'throbber'),
@@ -80,7 +86,7 @@ function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $f
       );
 
       $method = $form_state->getValue('payment_method') ?: $order->getPaymentMethodId();
-      if ($method && $details = \Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->orderEditDetails($order)) {
+      if ($method && $details = PaymentMethod::load($method)->getPlugin()->orderEditDetails($order)) {
         if (is_array($details)) {
           $form['payment']['payment_details'] += $details;
         }

@@ -308,6 +308,28 @@ abstract class UbercartTestBase extends WebTestBase {
   }
 
   /**
+   * Defines a new payment method.
+   */
+  protected function createPaymentMethod($plugin_id, $values = []) {
+    $has_user = $this->loggedInUser;
+    if (!$has_user) {
+      $this->drupalLogin($this->adminUser);
+    }
+
+    $values += [
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+    ];
+    $this->drupalPostForm('admin/store/config/payment/add/' . $plugin_id, $values, 'Save');
+
+    if (!$has_user) {
+      $this->drupalLogout();
+    }
+
+    return $values;
+  }
+
+  /**
    * Asserts that the most recently sent e-mails do not have the string in it.
    *
    * @param $field_name

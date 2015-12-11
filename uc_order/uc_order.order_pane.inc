@@ -56,9 +56,9 @@ function uc_order_pane_ship_to($op, $order, &$form = NULL, FormStateInterface $f
       return $build;
 
     case 'edit-form':
-      $form['ship_to']['#tree'] = TRUE;
       $form['ship_to']['address'] = array(
         '#type' => 'uc_address',
+        '#parents' => ['ship_to'],
         '#default_value' => $order->getAddress('delivery'),
         '#required' => FALSE,
       );
@@ -99,9 +99,9 @@ function uc_order_pane_bill_to($op, $order, &$form = NULL, FormStateInterface $f
       return $build;
 
     case 'edit-form':
-      $form['bill_to']['#tree'] = TRUE;
       $form['bill_to']['address'] = array(
         '#type' => 'uc_address',
+        '#parents' => ['bill_to'],
         '#default_value' => $order->getAddress('billing'),
         '#required' => FALSE,
       );

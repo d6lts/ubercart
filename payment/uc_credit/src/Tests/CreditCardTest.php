@@ -53,6 +53,8 @@ class CreditCardTest extends UbercartTestBase {
     '4012888818888',
   );
 
+  protected $paymentMethod;
+
   public static $modules = array('uc_payment', 'uc_credit', 'test_gateway');
   public static $adminPermissions = array('administer credit cards', 'process credit cards');
 
@@ -71,17 +73,6 @@ class CreditCardTest extends UbercartTestBase {
    * Helper function to configure Credit Card payment method settings.
    */
   protected function configureCreditCard() {
-    $this->drupalPostForm(
-      'admin/store/config/payment',
-      array('methods[credit][status]' => TRUE),
-      t('Save configuration')
-    );
-    $this->assertFieldByName(
-      'methods[credit][status]',
-      TRUE,
-      'Credit card payment method is enabled'
-    );
-
     // Create key directory, make it readable and writeable.
     // Putting this under sites/default/files because SimpleTest needs to be
     // able to create the directory - this is NOT where you'd put the key file
@@ -89,7 +80,7 @@ class CreditCardTest extends UbercartTestBase {
     \Drupal::service('file_system')->mkdir('sites/default/files/simpletest.keys', 0755);
 
     $this->drupalPostForm(
-      'admin/store/config/payment/method/credit',
+      'admin/store/config/payment/credit',
       array(
         'uc_credit_encryption_path' => 'sites/default/files/simpletest.keys',
       ),
@@ -114,20 +105,7 @@ class CreditCardTest extends UbercartTestBase {
    * Helper function to configure Credit Card gateway.
    */
   protected function configureGateway() {
-    $this->drupalPostForm(
-      'admin/store/config/payment/method/credit',
-      array(
-        'uc_payment_credit_gateway' => 'test_gateway',
-        'uc_pg_test_gateway_enabled' => TRUE,
-      ),
-      t('Save configuration')
-    );
-
-    $this->assertFieldByName(
-      'uc_pg_test_gateway_enabled',
-      TRUE,
-      'Test gateway is enabled'
-    );
+    $this->paymentMethod = $this->createPaymentMethod('test_gateway');
   }
 
   /**
@@ -156,11 +134,14 @@ class CreditCardTest extends UbercartTestBase {
     $temp_variable = $config->get('encryption_path');
     $config->set('encryption_path', '')->save();
 
-    $this->drupalGet('admin/store/config/payment/method/credit');
+    $this->drupalGet('admin/store');
+    $this->assertText('You must review your credit card security settings and enable encryption before you can accept credit card payments.');
+
+    $this->drupalGet('admin/store/config/payment/credit');
     $this->assertText(t('Credit card security settings must be configured in the security settings tab.'));
 
     $this->drupalPostForm(
-      'admin/store/config/payment/method/credit',
+      'admin/store/config/payment/credit',
       array(),
       t('Save configuration')
     );
@@ -174,7 +155,7 @@ class CreditCardTest extends UbercartTestBase {
 
     // Try to submit settings form with an empty key file path.
     $this->drupalPostForm(
-      'admin/store/config/payment/method/credit',
+      'admin/store/config/payment/credit',
       array('uc_credit_encryption_path' => ''),
       t('Save configuration')
     );
@@ -182,7 +163,7 @@ class CreditCardTest extends UbercartTestBase {
 
     // Specify non-existent directory
     $this->drupalPostForm(
-      'admin/store/config/payment/method/credit',
+      'admin/store/config/payment/credit',
       array('uc_credit_encryption_path' => 'sites/default/ljkh/asdfasfaaaaa'),
       t('Save configuration')
     );
@@ -191,7 +172,7 @@ class CreditCardTest extends UbercartTestBase {
     // Next, specify existing directory that's write protected.
     // Use /dev, as that should never be accessible.
     $this->drupalPostForm(
-      'admin/store/config/payment/method/credit',
+      'admin/store/config/payment/credit',
       array('uc_credit_encryption_path' => '/dev'),
       t('Save configuration')
     );
@@ -200,7 +181,7 @@ class CreditCardTest extends UbercartTestBase {
     // Next, specify writeable directory, but with excess whitespace
     // and trailing /
     $this->drupalPostForm(
-      'admin/store/config/payment/method/credit',
+      'admin/store/config/payment/credit',
       array('uc_credit_encryption_path' => '  sites/default/files/testkey/ '),
       t('Save configuration')
     );
@@ -220,7 +201,7 @@ class CreditCardTest extends UbercartTestBase {
 
     // Finally, specify good directory
     $this->drupalPostForm(
-      'admin/store/config/payment/method/credit',
+      'admin/store/config/payment/credit',
       array('uc_credit_encryption_path' => 'sites/default/files/testkey'),
       t('Save configuration')
     );
@@ -259,7 +240,7 @@ class CreditCardTest extends UbercartTestBase {
    * Tests that expiry date validation functions correctly.
    */
   public function testExpiryDate() {
-    $order = $this->createOrder(array('payment_method' => 'credit'));
+    $order = $this->createOrder(array('payment_method' => $this->paymentMethod['id']));
 
     $year = date('Y');
     $month = date('n');

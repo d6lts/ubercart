@@ -14,13 +14,10 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
 /**
  * Defines a free order payment method.
  *
- * @PaymentMethod(
+ * @UbercartPaymentMethod(
  *   id = "free_order",
  *   name = @Translation("Free order"),
- *   title = @Translation("No payment required"),
- *   checkout = TRUE,
- *   no_gateway = TRUE,
- *   weight = 0,
+ *   no_ui = TRUE
  * )
  */
 class FreeOrder extends PaymentMethodPluginBase {

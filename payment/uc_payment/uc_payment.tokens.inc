@@ -5,8 +5,8 @@
  * Token hooks for the uc_payment module.
  */
 
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\uc_payment\Entity\PaymentMethod;
 
 /**
  * Implements hook_token_info().
@@ -37,12 +37,8 @@ function uc_payment_tokens($type, $tokens, array $data, array $options, Bubbleab
 
     if (isset($tokens['payment-method'])) {
       $original = $tokens['payment-method'];
-      try {
-        $values[$original] = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->cartReviewTitle();
-      }
-      catch (PluginException $e) {
-        $values[$original] = t('Other');
-      }
+      $method = PaymentMethod::loadFromOrder($order);
+      $values[$original] = $method ? $method->getPlugin()->cartReviewTitle() : t('Other');
     }
 
     if (isset($tokens['payment-balance'])) {

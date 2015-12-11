@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_payment\Entity\PaymentMethod;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -83,14 +84,14 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
     $form_state->setUserInput($input);
 
     $options = array();
-    foreach (uc_payment_method_list() as $id => $method) {
+    foreach (PaymentMethod::loadMultiple() as $method) {
       // $set = rules_config_load('uc_payment_method_' . $method['id']);
       // if ($set && !$set->execute($order)) {
       //   continue;
       // }
 
-      if ($method['checkout'] && !isset($method['express'])) {
-        $options[$id] = $method['title'];
+      if ($method->status()) {
+        $options[$method->id()] = $method->label();
       }
     }
 
@@ -131,14 +132,16 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
       '#suffix' => '</div>',
     );
 
-    try {
-      $details = $this->paymentMethodManager->createFromOrder($order)->cartDetails($order, $form, $form_state);
-      if ($details) {
-        unset($contents['details']['#markup']);
-        $contents['details'] += $details;
+    if ($order->getPaymentMethodId()) {
+      try {
+        $details = $this->paymentMethodManager->createFromOrder($order)->cartDetails($order, $form, $form_state);
+        if ($details) {
+          unset($contents['details']['#markup']);
+          $contents['details'] += $details;
+        }
       }
-    }
-    catch (PluginException $e) {
+      catch (PluginException $e) {
+      }
     }
 
     return $contents;

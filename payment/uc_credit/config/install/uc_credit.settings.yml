@@ -1,4 +1,3 @@
-validate_numbers: true
 encryption_path: 'Not configured.'
 cvv_enabled: true
 owner_enabled: false
@@ -15,5 +14,3 @@ visa: true
 mastercard: true
 discover: true
 amex: true
-#uc_pg_' . $id . '_enabled', TRUE),
-#uc_pg_' . $id . '_cc_txn_type', UC_CREDIT_AUTH_CAPTURE),

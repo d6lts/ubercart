@@ -1,15 +1,48 @@
-uc_payment.methods:
+entity.uc_payment_method.collection:
   path: '/admin/store/config/payment'
   defaults:
-    _form: '\Drupal\uc_payment\Form\PaymentMethodsForm'
+    _entity_list: 'uc_payment_method'
     _title: 'Payment methods'
   requirements:
     _permission: 'administer store'
 
-uc_payment.method_settings:
-  path: '/admin/store/config/payment/method/{method}'
+entity.uc_payment_method.add_form:
+  path: '/admin/store/config/payment/add/{plugin_id}'
   defaults:
-    _form: '\Drupal\uc_payment\Form\PaymentMethodSettingsForm'
+    _controller: '\Drupal\uc_payment\Controller\PaymentMethodController::addForm'
+    _title: 'Add payment method'
+  requirements:
+    _permission: 'administer store'
+
+entity.uc_payment_method.edit_form:
+  path: '/admin/store/config/payment/method/{uc_payment_method}'
+  defaults:
+    _entity_form: 'uc_payment_method'
+    _title: 'Edit payment method'
+  requirements:
+    _permission: 'administer store'
+
+entity.uc_payment_method.enable:
+  path: '/admin/store/config/payment/method/{uc_payment_method}/enable'
+  defaults:
+    _controller: '\Drupal\uc_payment\Controller\PaymentMethodController::performOperation'
+    op: 'enable'
+  requirements:
+    _permission: 'administer store'
+
+entity.uc_payment_method.disable:
+  path: '/admin/store/config/payment/method/{uc_payment_method}/disable'
+  defaults:
+    _controller: '\Drupal\uc_payment\Controller\PaymentMethodController::performOperation'
+    op: 'disable'
+  requirements:
+    _permission: 'administer store'
+
+entity.uc_payment_method.delete_form:
+  path: '/admin/store/config/payment/method/{uc_payment_method}/delete'
+  defaults:
+    _entity_form: 'uc_payment_method.delete'
+    _title: 'Delete'
   requirements:
     _permission: 'administer store'
 

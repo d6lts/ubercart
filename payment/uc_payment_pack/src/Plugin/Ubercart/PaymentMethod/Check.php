@@ -16,54 +16,83 @@ use Drupal\uc_store\Address;
 /**
  * Defines the check payment method.
  *
- * @PaymentMethod(
+ * @UbercartPaymentMethod(
  *   id = "check",
  *   name = @Translation("Check", context = "cheque"),
- *   title = @Translation("Check or money order"),
- *   checkout = TRUE,
- *   no_gateway = TRUE,
- *   settings_form = "Drupal\uc_payment_pack\Form\CheckSettingsForm",
- *   weight = 1,
  * )
  */
 class Check extends PaymentMethodPluginBase {
+
+  public function defaultConfiguration() {
+    $config = \Drupal::config('uc_store.settings');
+    return [
+      'policy' => $this->t('Personal and business checks will be held for up to 10 business days to ensure payment clears before an order is shipped.'),
+      'name' => '',
+      'address' => $config->get('address') + ['company' => $config->get('name')],
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form['policy'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Check payment policy', [], ['context' => 'cheque']),
+      '#description' => t('Instructions for customers on the checkout page.'),
+      '#default_value' => $this->configuration['policy'],
+      '#rows' => 3,
+    );
+    $form['name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Contact'),
+      '#description' => t('Direct checks to a person or department.'),
+      '#default_value' => $this->configuration['name'],
+    );
+    $form['address'] = array(
+      '#type' => 'uc_address',
+      '#tree' => TRUE,
+      '#default_value' => $this->configuration['address'],
+      '#required' => FALSE,
+    );
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->configuration['policy'] = $form_state->getValue('policy');
+    $this->configuration['name'] = $form_state->getValue('name');
+    $this->configuration['address'] = $form_state->getValue('address');
+  }
 
   /**
    * {@inheritdoc}
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $check_config = \Drupal::config('uc_payment_pack.check.settings');
-
     $build['instructions'] = array(
       '#markup' => t('Checks should be made out to:')
     );
 
-    if (!$check_config->get('mailing_address.street1')) {
-      $build['address'] = array(
-        '#markup' => uc_store_address(),
-        '#prefix' => '<p>',
-        '#suffix' => '</p>',
-      );
-    }
-    else {
-      $address = new Address();
-      $address->first_name = $check_config->get('mailing_address.name');
-      $address->company = $check_config->get('mailing_address.company');
-      $address->street1 = $check_config->get('mailing_address.street1');
-      $address->street2 = $check_config->get('mailing_address.street2');
-      $address->city = $check_config->get('mailing_address.city');
-      $address->zone = $check_config->get('mailing_address.zone');
-      $address->postal_code = $check_config->get('mailing_address.postal_code');
-      $address->country = $check_config->get('mailing_address.country');
-      $build['address'] = array(
-        '#markup' => (string) $address,
-        '#prefix' => '<p>',
-        '#suffix' => '</p>',
-      );
-    }
+    $address = new Address();
+    $address->first_name = $this->configuration['name'];
+    $address->company = $this->configuration['address']['company'];
+    $address->street1 = $this->configuration['address']['street1'];
+    $address->street2 = $this->configuration['address']['street2'];
+    $address->city = $this->configuration['address']['city'];
+    $address->zone = $this->configuration['address']['zone'];
+    $address->postal_code = $this->configuration['address']['postal_code'];
+    $address->country = $this->configuration['address']['country'];
+    $build['address'] = array(
+      '#markup' => (string) $address,
+      '#prefix' => '<p>',
+      '#suffix' => '</p>',
+    );
 
     $build['policy'] = array(
-      '#markup' => '<p>' . $check_config->get('policy') . '</p>'
+      '#markup' => '<p>' . $this->configuration['policy'] . '</p>'
     );
 
     return $build;
@@ -73,30 +102,20 @@ class Check extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartReview(OrderInterface $order) {
-    $check_config = \Drupal::config('uc_payment_pack.check.settings');
+    $address = new Address();
+    $address->first_name = $this->configuration['name'];
+    $address->company = $this->configuration['address']['company'];
+    $address->street1 = $this->configuration['address']['street1'];
+    $address->street2 = $this->configuration['address']['street2'];
+    $address->city = $this->configuration['address']['city'];
+    $address->zone = $this->configuration['address']['zone'];
+    $address->postal_code = $this->configuration['address']['postal_code'];
+    $address->country = $this->configuration['address']['country'];
 
-    if (!$check_config->get('mailing_address.street1')) {
-      $review[] = array(
-        'title' => t('Mail to'),
-        'data' => uc_store_address(),
-      );
-    }
-    else {
-      $address = new Address();
-      $address->first_name = $check_config->get('mailing_address.name');
-      $address->company = $check_config->get('mailing_address.company');
-      $address->street1 = $check_config->get('mailing_address.street1');
-      $address->street2 = $check_config->get('mailing_address.street2');
-      $address->city = $check_config->get('mailing_address.city');
-      $address->zone = $check_config->get('mailing_address.zone');
-      $address->postal_code = $check_config->get('mailing_address.postal_code');
-      $address->country = $check_config->get('mailing_address.country');
-
-      $review[] = array(
-        'title' => t('Mail to'),
-        'data' => (string) $address,
-      );
-    }
+    $review[] = array(
+      'title' => t('Mail to'),
+      'data' => (string) $address,
+    );
 
     return $review;
   }

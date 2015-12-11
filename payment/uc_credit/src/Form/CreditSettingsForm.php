@@ -7,14 +7,13 @@
 
 namespace Drupal\uc_credit\Form;
 
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Credit card settings form.
  */
-class CreditSettingsForm extends FormBase {
+class CreditSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -27,23 +26,9 @@ class CreditSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $credit_config = $this->config('uc_credit.settings');
-    $account = $this->currentUser();
-    if (!$account->hasPermission('administer credit cards')) {
-      $form['notice'] = array(
-        '#markup' => '<div>' . $this->t('You must have access to <b>administer credit cards</b> to adjust these settings.') . '</div>',
-      );
-      return $form;
-    }
+    $form = parent::buildForm($form, $form_state);
 
-    $gateways = _uc_payment_gateway_list('credit');
-    if (!count($gateways)) {
-      $form['notice'] = array(
-        '#markup' => '<div>' . $this->t('Please enable a credit card gateway module for your chosen payment provider.') . '</div>',
-      );
-// @todo - This is commented out to test this form without a gateway
-//      return $form;
-    }
+    $credit_config = $this->config('uc_credit.settings');
 
     $form['uc_credit'] = array(
       '#type' => 'vertical_tabs',
@@ -52,28 +37,6 @@ class CreditSettingsForm extends FormBase {
           'uc_credit/uc_credit.scripts',
         ),
       ),
-    );
-
-    $form['cc_basic'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Basic settings'),
-      '#group' => 'uc_credit',
-    );
-    $options = array();
-    foreach ($gateways as $id => $gateway) {
-      $options[$id] = $gateway['title'];
-    }
-    $form['cc_basic']['uc_payment_credit_gateway'] = array(
-      '#type' => 'radios',
-      '#title' => $this->t('Default gateway'),
-      '#options' => $options,
-      '#default_value' => uc_credit_default_gateway(),
-    );
-    $form['cc_basic']['uc_credit_validate_numbers'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Validate credit card numbers at checkout.'),
-      '#description' => $this->t('Invalid card numbers will show an error message to the user so they can correct it.'),
-      '#default_value' => $credit_config->get('validate_numbers'),
     );
 
     // Form elements that deal specifically with card number security.
@@ -170,45 +133,6 @@ class CreditSettingsForm extends FormBase {
       UC_CREDIT_REFERENCE_SET => $this->t('Set a reference only'),
     );
 
-    foreach ($gateways as $id => $gateway) {
-      $form['gateways'][$id] = array(
-        '#type' => 'details',
-        '#title' => SafeMarkup::checkPlain($gateway['title']),
-        '#group' => 'uc_credit',
-        '#weight' => 5,
-      );
-      $form['gateways'][$id]['uc_pg_' . $id . '_enabled'] = array(
-        '#type' => 'checkbox',
-        '#title' => $this->t('Enable this payment gateway for use.'),
-        '#default_value' => $credit_config->get('uc_pg_' . $id . '_enabled'),
-        '#weight' => -10,
-      );
-
-      // Get the transaction types associated with this gateway.
-      $gateway_types = uc_credit_gateway_txn_types($id);
-      $options = array();
-      foreach ($txn_types as $type => $title) {
-        if (in_array($type, $gateway_types)) {
-          $options[$type] = $title;
-        }
-      }
-      $form['gateways'][$id]['uc_pg_' . $id . '_cc_txn_type'] = array(
-        '#type' => 'radios',
-        '#title' => $this->t('Default credit transaction type'),
-        '#description' => $this->t('Only available transaction types are listed. The default will be used unless an administrator chooses otherwise through the terminal.'),
-        '#options' => $options,
-        '#default_value' => $credit_config->get('uc_pg_' . $id . '_cc_txn_type'),
-        '#weight' => -5,
-      );
-
-      if (isset($gateway['settings']) && function_exists($gateway['settings'])) {
-        $gateway_settings = $gateway['settings'](array(), $form_state);
-        if (is_array($gateway_settings)) {
-          $form['gateways'][$id] += $gateway_settings;
-        }
-      }
-    }
-
     if (empty($_POST) && !uc_credit_encryption_key()) {
       drupal_set_message($this->t('Credit card security settings must be configured in the security settings tab.'), 'warning');
     }
@@ -303,6 +227,8 @@ class CreditSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
     // Check to see if we need to create an encryption key file.
     if ($form_state->getValue('update_cc_encrypt_dir')) {
       $key_path = $form_state->getValue('uc_credit_encryption_path');
@@ -325,12 +251,7 @@ class CreditSettingsForm extends FormBase {
       }
     }
 
-    // Need to use configFactory() and getEditable() here, because this form is
-    // wrapped by PaymentMethodSettingsForm so $this->getEditableConfigNames()
-    // never gets called
-    $credit_config = \Drupal::configFactory()->getEditable('uc_credit.settings');
-    $credit_config
-      ->set('validate_numbers', $form_state->getValue('uc_credit_validate_numbers'))
+    $this->config('uc_credit.settings')
       ->set('encryption_path', $form_state->getValue('uc_credit_encryption_path'))
       ->set('cvv_enabled', $form_state->getValue('uc_credit_cvv_enabled'))
       ->set('owner_enabled', $form_state->getValue('uc_credit_owner_enabled'))
@@ -341,4 +262,14 @@ class CreditSettingsForm extends FormBase {
       ->set('accepted_types', explode("\r\n", $form_state->getValue('uc_credit_accepted_types')))
       ->save();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return [
+      'uc_credit.settings',
+    ];
+  }
+
 }

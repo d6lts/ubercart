@@ -89,16 +89,8 @@ class StoreSettingsForm extends ConfigFormBase {
     );
     $form['address']['address'] = array(
       '#type' => 'uc_address',
-      '#default_value' => array(
-        'uc_store_street1' => $config->get('address.street1'),
-        'uc_store_street2' => $config->get('address.street2'),
-        'uc_store_city' => $config->get('address.city'),
-        'uc_store_zone' => $config->get('address.zone'),
-        'uc_store_country' => $form_state->hasValue('uc_store_country') ? $form_state->getValue('uc_store_country') : $config->get('address.country'),
-        'uc_store_postal_code' => $config->get('address.postal_code'),
-      ),
+      '#default_value' => $config->get('address'),
       '#required' => FALSE,
-      '#key_prefix' => 'uc_store',
     );
 
     $form['currency'] = array(
@@ -263,12 +255,7 @@ class StoreSettingsForm extends ConfigFormBase {
       ->set('phone', $form_state->getValue('uc_store_phone'))
       ->set('fax', $form_state->getValue('uc_store_fax'))
       ->set('help_page', $form_state->getValue('uc_store_help_page'))
-      ->set('address.street1', $form_state->getValue('uc_store_street1'))
-      ->set('address.street2', $form_state->getValue('uc_store_street2'))
-      ->set('address.city', $form_state->getValue('uc_store_city'))
-      ->set('address.zone', $form_state->getValue('uc_store_zone'))
-      ->set('address.country', $form_state->getValue('uc_store_country'))
-      ->set('address.postal_code', $form_state->getValue('uc_store_postal_code'))
+      ->set('address', $form_state->getValue('address'))
       ->set('currency.code', $form_state->getValue('uc_currency_code'))
       ->set('currency.symbol', $form_state->getValue('uc_currency_sign'))
       ->set('currency.symbol_after', $form_state->getValue('uc_sign_after_amount'))

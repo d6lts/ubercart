@@ -12,16 +12,27 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\Xss;
 use Drupal\uc_order\Entity\Order;
+use Drupal\uc_payment\Entity\PaymentMethod;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\user\Entity\User;
 use Drupal\uc_order\OrderInterface;
 
 require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
 
+
+/**
+ * Implements hook_help().
+ */
+function uc_payment_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'entity.uc_payment_method.collection':
+      return '<p>' . t('By default, only the "Free order" payment method is listed here. To see additional payment methods you must <a href="@install">install additional modules</a>. The "Payment Method Pack" module that comes with Ubercart provides "Check" and "COD" payment methods. The "Credit Card" module that comes with Ubercart provides a credit card payment method, although you will need an additional module to provide a payment gateway for your credit card. For more information about payment methods and settings please read the <a href="@doc">Ubercart Documentation</a>.', ['@install' => Url::fromRoute('system.modules_list')->toString(), '@doc' => Url::fromUri('http://www.drupal.org/documentation/modules/ubercart')->toString()]) . '</p>';
+  }
+}
 
 /**
  * Implements hook_theme().
@@ -55,11 +66,12 @@ function template_preprocess_uc_payment_totals(&$variables) {
  * Adds express buttons for enabled payment modules directly to the cart page.
  */
 function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $form_state) {
-  foreach (uc_payment_method_list() as $id => $method) {
-    if ($method['checkout'] && isset($method['express']) && $express = $method['express'](array(), $form_state)) {
-      $form['actions']['checkout'][$id] = $express;
-    }
-  }
+// @todo Add express payment methods
+//  foreach (uc_payment_method_list() as $id => $method) {
+//    if ($method['checkout'] && isset($method['express']) && $express = $method['express'](array(), $form_state)) {
+//      $form['actions']['checkout'][$id] = $express;
+//    }
+//  }
 }
 
 /**
@@ -260,12 +272,8 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
   $order = uc_order_load($order_id, TRUE);
   $account = User::load($uid);
 
-  try {
-    $method_name = \Drupal::service('plugin.manager.uc_payment.method')->createInstance($method)->cartReviewTitle();
-  }
-  catch (PluginException $e) {
-    $method_name = t('Other');
-  }
+  $method_entity = PaymentMethod::load($method);
+  $method_name = $method_entity ? $method_entity->getPlugin()->cartReviewTitle() : t('Other');
 
   if (is_array($data)) {
     $data = serialize($data);

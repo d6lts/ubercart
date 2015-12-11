@@ -19,6 +19,62 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->configuration += $this->defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $this->configuration = $configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return array();
   }
@@ -34,7 +90,7 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
    * {@inheritdoc}
    */
   public function cartReviewTitle() {
-    return !empty($this->pluginDefinition['review']) ? $this->pluginDefinition['review'] : $this->pluginDefinition['name'];
+    return $this->pluginDefinition['name'];
   }
 
   /**
@@ -96,14 +152,4 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
     return $this->orderView($order);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getSettingsForm() {
-    if (!empty($this->pluginDefinition['settings_form'])) {
-      return new $this->pluginDefinition['settings_form'];
-    }
-
-    return NULL;
-  }
 }

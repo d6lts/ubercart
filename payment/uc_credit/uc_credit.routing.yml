@@ -1,3 +1,11 @@
+uc_credit.settings:
+  path: '/admin/store/config/payment/credit'
+  defaults:
+    _form: '\Drupal\uc_credit\Form\CreditSettingsForm'
+    _title: 'Credit card security'
+  requirements:
+    _permission: 'administer credit cards'
+
 uc_credit.terminal:
   path: '/admin/store/orders/{uc_order}/credit'
   defaults:

@@ -7,14 +7,16 @@
 
 namespace Drupal\uc_payment;
 
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\uc_order\OrderInterface;
 
 /**
  * Defines an interface for payment method plugins.
  */
-interface PaymentMethodPluginInterface extends PluginInspectionInterface {
+interface PaymentMethodPluginInterface extends PluginInspectionInterface, PluginFormInterface, ConfigurablePluginInterface {
 
   /**
    * Returns the form or render array to be displayed at checkout.
@@ -23,7 +25,7 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
    *   The order which is being processed.
    * @param array $form
    *   The checkout form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The checkout form state array.
    *
    * @return array
@@ -41,7 +43,7 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
    *   The order which is being processed.
    * @param array $form
    *   The checkout form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The checkout form state array.
    *
    * @return bool
@@ -94,7 +96,7 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
    *   The order that is being edited.
    * @param array $form
    *   The form array.
-   * @param array $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state array.
    *
    * @return array
@@ -147,13 +149,5 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface {
    *   A render array.
    */
   public function customerView(OrderInterface $order);
-
-  /**
-   * Form instance for the payment method settings form.
-   *
-   * @return \Drupal\Core\Form\FormInterface
-   *   An instance of the settings form.
-   */
-  public function getSettingsForm();
 
 }
