@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_quote\Plugin\Ubercart\CheckoutPane;
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\OrderInterface;
