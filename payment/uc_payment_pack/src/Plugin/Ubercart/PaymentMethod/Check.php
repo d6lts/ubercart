@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
@@ -92,7 +93,7 @@ class Check extends PaymentMethodPluginBase {
     );
 
     $build['policy'] = array(
-      '#markup' => '<p>' . $this->configuration['policy'] . '</p>'
+      '#markup' => '<p>' . Html::escape($this->configuration['policy']) . '</p>'
     );
 
     return $build;

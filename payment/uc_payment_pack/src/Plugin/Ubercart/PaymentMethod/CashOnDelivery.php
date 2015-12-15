@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
@@ -70,7 +71,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $build['policy'] = array(
-      '#markup' => '<p>' . $this->configuration['policy'] . '</p>'
+      '#markup' => '<p>' . Html::escape($this->configuration['policy']) . '</p>'
     );
 
     if (($max = $this->configuration['max_order']) > 0 && is_numeric($max)) {

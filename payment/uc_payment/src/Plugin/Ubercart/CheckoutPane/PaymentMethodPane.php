@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment\Plugin\Ubercart\CheckoutPane;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
@@ -91,7 +92,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
       // }
 
       if ($method->status()) {
-        $options[$method->id()] = $method->label();
+        $options[$method->id()] = Html::escape($method->label());
       }
     }
 
