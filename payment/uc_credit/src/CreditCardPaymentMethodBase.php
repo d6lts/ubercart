@@ -9,6 +9,7 @@ namespace Drupal\uc_credit;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 use Drupal\uc_store\Encryption;
@@ -36,11 +37,218 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
   }
 
   /**
+   * Returns the set of card types which are used by this payment method.
+   *
+   * @return array
+   *   An array with keys as needed by the chargeCard() method and values
+   *   that can be displayed to the customer.
+   */
+  protected function getEnabledTypes() {
+    return [
+      'visa' => $this->t('Visa'),
+      'mastercard' => $this->t('MasterCard'),
+      'discover' => $this->t('Discover'),
+      'amex' => $this->t('American Express'),
+    ];
+  }
+
+  /**
+   * Returns the set of transaction types allowed by this payment method.
+   *
+   * @return array
+   *   An array with values UC_CREDIT_AUTH_ONLY, UC_CREDIT_PRIOR_AUTH_CAPTURE,
+   *   UC_CREDIT_AUTH_CAPTURE, UC_CREDIT_REFERENCE_SET, UC_CREDIT_REFERENCE_TXN,
+   *   UC_CREDIT_REFERENCE_REMOVE, UC_CREDIT_REFERENCE_CREDIT, UC_CREDIT_CREDIT
+   *   and UC_CREDIT_VOID.
+   */
+  public function getTransactionTypes() {
+    return [UC_CREDIT_AUTH_CAPTURE];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return [
+      'txn_type' => UC_CREDIT_AUTH_CAPTURE,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form['txn_type'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Transaction type'),
+      '#default_value' => $this->configuration['txn_type'],
+      '#options' => [
+        UC_CREDIT_AUTH_CAPTURE => $this->t('Authorize and capture immediately'),
+        UC_CREDIT_AUTH_ONLY => $this->t('Authorization only'),
+      ],
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->configuration['txn_type'] = $form_state->getValue('txn_type');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $details = uc_payment_method_credit_form(array(), $form_state, $order);
-    return $details;
+    $session = \Drupal::service('session');
+
+    // Normally the CC data is posted in via AJAX.
+    if ($form_state->hasValue('payment_details_data') && \Drupal::routeMatch()->getRouteName() == 'uc_cart.cart') {
+      $order->payment_details = uc_credit_cache('save', $form_state->getValue('payment_details_data'));
+    }
+
+    // But we have to accommodate failed checkout form validation here.
+    if ($session->has('sescrd')) {
+      $order->payment_details = uc_credit_cache('save', $session->get('sescrd'));
+      $session->remove('sescrd');
+    }
+
+    if (!isset($order->payment_details) && $form_state->hasValue(['panes', 'payment', 'details'])) {
+      $order->payment_details = $form_state->getValue(['panes', 'payment', 'details']);
+      $order->payment_details['cc_number'] = str_replace(' ', '', $order->payment_details['cc_number']);
+    }
+
+    if (!isset($order->payment_details)) {
+      $order->payment_details = array();
+    }
+
+    $form['cc_policy'] = array(
+      '#markup' => '<p>' . t('Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.') . '</p>'
+    );
+
+    $fields = $this->getEnabledFields();
+    if (!empty($fields['type'])) {
+      $form['cc_type'] = array(
+        '#type' => 'select',
+        '#title' => t('Card type'),
+        '#options' => $this->getEnabledTypes(),
+        '#default_value' => isset($order->payment_details['cc_type']) ? $order->payment_details['cc_type'] : NULL,
+      );
+    }
+
+    if (!empty($fields['owner'])) {
+      $form['cc_owner'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Card owner'),
+        '#default_value' => isset($order->payment_details['cc_owner']) ? $order->payment_details['cc_owner'] : '',
+        '#attributes' => array('autocomplete' => 'off'),
+        '#size' => 32,
+        '#maxlength' => 64,
+      );
+    }
+
+    // Set up the default CC number on the credit card form.
+    if ($session->has('clear_cc') || !isset($order->payment_details['cc_number'])) {
+      $default_num = NULL;
+    }
+    elseif (!_uc_credit_valid_card_number($order->payment_details['cc_number'])) {
+      // Display the number as is if it does not validate so it can be corrected.
+      $default_num = $order->payment_details['cc_number'];
+    }
+    else {
+      // Otherwise default to the last 4 digits.
+      $default_num = t('(Last 4) ') . substr($order->payment_details['cc_number'], -4);
+    }
+
+    $form['cc_number'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Card number'),
+      '#default_value' => $default_num,
+      '#attributes' => array('autocomplete' => 'off'),
+      '#size' => 20,
+      '#maxlength' => 19,
+    );
+
+    if (!empty($fields['start'])) {
+      $month = isset($order->payment_details['cc_start_month']) ? $order->payment_details['cc_start_month'] : NULL;
+      $year = isset($order->payment_details['cc_start_year']) ? $order->payment_details['cc_start_year'] : NULL;
+      $form['cc_start_month'] = uc_select_month(t('Start date'), $month, TRUE);
+      $form['cc_start_year'] = uc_select_year(t('Start year'), $year, date('Y') - 10, date('Y'), TRUE);
+      $form['cc_start_year']['#field_suffix'] = t('(if present)');
+    }
+
+    $month = isset($order->payment_details['cc_exp_month']) ? $order->payment_details['cc_exp_month'] : 1;
+    $year = isset($order->payment_details['cc_exp_year']) ? $order->payment_details['cc_exp_year'] : date('Y');
+    $form['cc_exp_month'] = uc_select_month(t('Expiration date'), $month);
+    $form['cc_exp_year'] = uc_select_year(t('Expiration year'), $year);
+
+    if (!empty($fields['issue'])) {
+      // Set up the default Issue Number on the credit card form.
+      if (empty($order->payment_details['cc_issue'])) {
+        $default_card_issue = NULL;
+      }
+      elseif (!_uc_credit_valid_card_issue($order->payment_details['cc_issue'])) {
+        // Display the Issue Number as is if it does not validate so it can be
+        // corrected.
+        $default_card_issue = $order->payment_details['cc_issue'];
+      }
+      else {
+        // Otherwise mask it with dashes.
+        $default_card_issue = str_repeat('-', strlen($order->payment_details['cc_issue']));
+      }
+
+      $form['cc_issue'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Issue number'),
+        '#default_value' => $default_card_issue,
+        '#attributes' => array('autocomplete' => 'off'),
+        '#size' => 2,
+        '#maxlength' => 2,
+        '#field_suffix' => t('(if present)'),
+      );
+    }
+
+    if (!empty($fields['cvv'])) {
+      // Set up the default CVV  on the credit card form.
+      if ($session->has('clear_cc') || empty($order->payment_details['cc_cvv'])) {
+        $default_cvv = NULL;
+      }
+      elseif (!_uc_credit_valid_cvv($order->payment_details['cc_cvv'])) {
+        // Display the CVV as is if it does not validate so it can be corrected.
+        $default_cvv = $order->payment_details['cc_cvv'];
+      }
+      else {
+        // Otherwise mask it with dashes.
+        $default_cvv = str_repeat('-', strlen($order->payment_details['cc_cvv']));
+      }
+
+      $form['cc_cvv'] = array(
+        '#type' => 'textfield',
+        '#title' => t('CVV'),
+        '#default_value' => $default_cvv,
+        '#attributes' => array('autocomplete' => 'off'),
+        '#size' => 4,
+        '#maxlength' => 4,
+        '#field_suffix' => array('#theme' => 'uc_credit_cvv_help'),
+      );
+    }
+
+    if (!empty($fields['bank'])) {
+      $form['cc_bank'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Issuing bank'),
+        '#default_value' => isset($order->payment_details['cc_bank']) ? $order->payment_details['cc_bank'] : '',
+        '#attributes' => array('autocomplete' => 'off'),
+        '#size' => 32,
+        '#maxlength' => 64,
+      );
+    }
+
+    $session->remove('clear_cc');
+
+    return $form;
   }
 
   /**
@@ -118,15 +326,20 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       }
 
       $build['cc_info'] = array(
-        '#prefix' => '<a href="#" onclick="jQuery(this).hide().next().show();">' . t('Show card details') . '</a><div style="display: none;">',
-        '#markup' => implode('<br />', $rows),
-        '#suffix' => '</div>',
+        '#markup' => implode('<br />', $rows) . '<br />',
       );
+    }
 
-      // Add the form to process the card if applicable.
-      if ($account->hasPermission('process credit cards')) {
-        $build['terminal'] = \Drupal::formBuilder()->getForm('uc_credit_order_view_form', $order->id());
-      }
+    // Add the form to process the card if applicable.
+    if ($account->hasPermission('process credit cards')) {
+      $build['terminal'] = [
+        '#type' => 'link',
+        '#title' => $this->t('Process card'),
+        '#url' => Url::fromRoute('uc_credit.terminal', [
+          'uc_order' => $order->id(),
+          'uc_payment_method' => $order->getPaymentMethodId(),
+        ]),
+      ];
     }
 
     return $build;
@@ -168,10 +381,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
     $cc_data['cc_number'] = str_replace(' ', '', $cc_data['cc_number']);
 
-    array_walk($cc_data, '\Drupal\Component\Utility\SafeMarkup::checkPlain');
-
-    // Recover cached CC data in
-    // $form_state->getValue(['panes', 'payment', 'details']) if it exists.
+    // Recover cached CC data in form state, if it exists.
     if ($form_state->hasValue(['panes', 'payment', 'details', 'payment_details_data'])) {
       $cache = uc_credit_cache('save', $form_state->getValue(['panes', 'payment', 'details', 'payment_details_data']));
     }
@@ -300,16 +510,8 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     // Clear out that session variable denoting this as a CC paid order.
     \Drupal::service('session')->remove('cc_pay');
 
-    // Process CC transactions when an order is submitted after review.
-    $credit_config = \Drupal::config('uc_credit.settings');
-    $gateway_id = uc_credit_default_gateway();
-    $data = array(
-      'txn_type' => $credit_config->get('uc_pg_' . $gateway_id . '_cc_txn_type'),
-    );
-
     // Attempt to process the CC payment.
-    $order->payment_details = uc_credit_cache('load');
-    $pass = uc_payment_process_payment('credit', $order->id(), $order->getTotal(), $data, TRUE, NULL, FALSE);
+    $pass = $this->processPayment($order, $order->getTotal(), $this->configuration['txn_type']);
 
     // If the payment failed, store the data back in the session and
     // halt the checkout process.
@@ -317,5 +519,67 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       return array(array('pass' => FALSE, 'message' => t('We were unable to process your credit card payment. Please verify your details and try again.')));
     }
   }
+
+  /**
+   * Process a payment through the credit card gateway.
+   *
+   * @param $order
+   *   The order that is being processed.
+   * @param $amount
+   *   The amount of the payment we're attempting to collect.
+   * @param $txn_type
+   *   The transaction type, one of the UC_CREDIT_* constants.
+   * @param $reference
+   *   (optional) The payment reference, where needed for specific transaction
+   *   types.
+   *
+   * @return bool
+   *   TRUE or FALSE indicating whether or not the payment was processed.
+   */
+  public function processPayment($order, $amount, $txn_type, $reference = NULL) {
+    // Ensure the cached details are loaded.
+    // @todo Figure out which parts of this call are strictly necessary.
+    $this->orderLoad($order);
+
+    $result = $this->chargeCard($order, $amount, $txn_type, $reference);
+
+    // If the payment processed successfully...
+    if ($result['success'] === TRUE) {
+      // Log the payment to the order if not disabled.
+      if (!isset($result['log_payment']) || $result['log_payment'] !== FALSE) {
+        uc_payment_enter($order->id(), $this->getPluginDefinition()['id'], $amount, empty($result['uid']) ? 0 : $result['uid'], empty($result['data']) ? '' : $result['data'], empty($result['comment']) ? '' : $result['comment']);
+      }
+    }
+    else {
+      // Otherwise display the failure message in the logs.
+      \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message', ['@order_id' => $order->id(), '@message' => $result['message'], 'link' => \Drupal::l(t('view order'), new Url('entity.uc_order.canonical', ['uc_order' => $order->id()]))]);
+    }
+
+    return $result['success'];
+  }
+
+  /**
+   * Called when a credit card should be processed.
+   *
+   * @param $order
+   *   The order that is being processed. Credit card details supplied by the
+   *   user are available in $order->payment_details[].
+   * @param $amount
+   *   The amount that should be charged.
+   * @param $txn_type
+   *   The transaction type, one of the UC_CREDIT_* constants.
+   * @param $reference
+   *   (optional) The payment reference, where needed for specific transaction
+   *   types.
+   *
+   * @return array
+   *   Returns an associative array with the following members:
+   *   - "success": TRUE if the transaction succeeded, FALSE otherwise.
+   *   - "message": a human-readable message describing the result of the
+   *     transaction.
+   *   - "log_payment": TRUE if the transaction should be regarded as a
+   *     successful payment.
+   */
+  abstract protected function chargeCard($order, $amount, $txn_type, $reference = NULL);
 
 }

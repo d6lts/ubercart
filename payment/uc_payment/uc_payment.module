@@ -17,7 +17,6 @@ use Drupal\Core\Url;
 use Drupal\Component\Utility\Xss;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_payment\Entity\PaymentMethod;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\user\Entity\User;
 use Drupal\uc_order\OrderInterface;
 
@@ -135,114 +134,6 @@ function uc_payment_uc_payment_method_checkout_alter(array &$methods, OrderInter
       unset($methods['free_order']);
     }
   }
-}
-
-/**
- * Processes a payment through an enabled payment gateway.
- *
- * @param $method
- *   The ID of the payment method to use to process the payment.
- * @param $order_id
- *   The ID of the order associated with this payment.
- * @param $amount
- *   The amount of the payment we're attempting to collect.
- * @param $data
- *   An array of data passed on to the payment gateway module used to process
- *   the payment for the specified payment method.
- * @param $default
- *   TRUE or FALSE to indicate we're forcing the use of the default gateway for
- *   the specified payment method. When TRUE, admin messages related to the
- *   payment will be hidden from display so customers don't see them.
- * @param $selected
- *   The ID of a payment gateway to use to process the payment; normally comes
- *   from the payment gateway select form.
- * @param $redirect
- *   TRUE or FALSE to indicate whether or not to redirect back to the admin
- *   order view page for the order referenced in $order_id.
- *
- * @return
- *   TRUE or FALSE indicating whether or not the payment was processed.
- */
-function uc_payment_process_payment($method, $order_id, $amount, $data = NULL, $default = FALSE, $selected = NULL, $redirect = TRUE) {
-  $result = array();
-
-  // Get an array of enabled payment gateways available for the payment method.
-  $gateways = _uc_payment_gateway_list($method, TRUE);
-
-  // Fail if no gateways were found for the specified method.
-  if (empty($gateways)) {
-    // Display an error message if messages weren't silenced.
-    if (!$default) {
-      drupal_set_message(t('You are not able to process %type payments.', array('%type' => $method)));
-    }
-
-    return FALSE;
-  }
-
-  // Find the default gateway if requested.
-  if ($default) {
-    $default = variable_get('uc_payment_' . $method . '_gateway', '');
-  }
-
-  // If we only found one gateway for this payment method...
-  if (count($gateways) == 1) {
-    $gateway = reset($gateways);
-  }
-  elseif ($default && isset($gateways[$default])) {
-    // The default gateway was forced.
-    $gateway = $gateways[$default];
-  }
-  elseif ($selected && isset($gateways[$selected])) {
-    // A specific gateway was selected.
-    $gateway = $gateways[$selected];
-  }
-  else {
-    // No gateway available.
-    $gateway = array($method => '');
-  }
-
-  // Check to see if the function exists and process the payment.
-  if (function_exists($gateway[$method])) {
-    // Reset the entity cache, so the latest data saved in the credit card cache
-    // is guaranteed to be available in the charge function.
-    uc_order_load($order_id, TRUE);
-
-    $result = $gateway[$method]($order_id, $amount, $data);
-  }
-  else {
-    // Otherwise display an error message to administrators.
-    $result['success'] = FALSE;
-    $result['message'] = t('An error has occurred with your payment gateway. The charge function could not be found.');
-    $account = \Drupal::currentUser();
-    if ($account->hasPermission('administer store')) {
-      drupal_set_message($result['message']);
-    }
-  }
-
-  // If the payment processed successfully...
-  if ($result['success'] === TRUE) {
-    // Log the payment to the order if not disabled.
-    if (!isset($result['log_payment']) || $result['log_payment'] !== FALSE) {
-      uc_payment_enter($order_id, $method, $amount, empty($result['uid']) ? 0 : $result['uid'], empty($result['data']) ? '' : $result['data'], empty($result['comment']) ? '' : $result['comment']);
-    }
-  }
-  else {
-    // Otherwise display the failure message in the logs.
-    \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message', ['@order_id' => $order_id, '@message' => $result['message'], 'link' => \Drupal::l(t('view order'), new Url('entity.uc_order.canonical', ['uc_order' => $order_id]))]);
-  }
-
-  // If we have a message for display and aren't simply charging with the
-  // default gateway for a customer...
-  if (!empty($result['message']) && !$default) {
-    drupal_set_message($result['message']);
-  }
-
-  // Head back to the order if a redirect was specified.
-  if ($redirect) {
-    return new RedirectResponse(Url::fromRoute('entity.uc_order.canonical', ['uc_order' => $order_id]));
-  }
-
-  return $result['success'];
 }
 
 /**
@@ -449,54 +340,4 @@ function uc_payment_load_payments($order_id) {
  */
 function uc_payment_method_list() {
   return \Drupal::service('plugin.manager.uc_payment.method')->getDefinitions();
-}
-
-/**
- * Builds a list of payment gateways defined in the enabled modules.
- */
-function _uc_payment_gateway_list($filter = NULL, $enabled_only = FALSE) {
-  $gateways = array();
-
-  foreach (\Drupal::moduleHandler()->invokeAll('uc_payment_gateway') as $id => $gateway) {
-    // Preserve backward compatibility for gateways with no key specified.
-    if (is_numeric($id)) {
-      $id = $gateway['id'];
-    }
-
-    $gateways[$id] = array_merge($gateway, array(
-      'id' => $id,
-      'enabled' => variable_get('uc_pg_' . $id . '_enabled', TRUE),
-    ));
-  }
-
-  // Allow other modules to alter the payment gateways.
-  \Drupal::moduleHandler()->alter('uc_payment_gateway', $gateways);
-
-  foreach ($gateways as $id => $gateway) {
-    if ($filter && (!isset($gateway[$filter]) || !function_exists($gateway[$filter]))) {
-      unset($gateways[$id]);
-      continue;
-    }
-    if ($enabled_only && !$gateway['enabled']) {
-      unset($gateways[$id]);
-    }
-  }
-
-  return $gateways;
-}
-
-/**
- * Returns data from a payment gateway by gateway ID and the array key.
- *
- * @param $gateway_id
- *   The ID of the payment gateway to query.
- * @param $key
- *   The key of the data being requested.
- *
- * @return
- *   The requested data.
- */
-function _uc_payment_gateway_data($gateway_id, $key) {
-  $gateways = _uc_payment_gateway_list();
-  return isset($gateways[$gateway_id][$key]) ? $gateways[$gateway_id][$key] : NULL;
 }

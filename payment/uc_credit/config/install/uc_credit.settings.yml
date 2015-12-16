@@ -1,15 +1,4 @@
 encryption_path: 'Not configured.'
-cvv_enabled: true
-owner_enabled: false
-start_enabled: false
-issue_enabled: false
-bank_enabled: false
-type_enabled: false
-accepted_types:
-  - 'Visa'
-  - 'Mastercard'
-  - 'Discover'
-  - 'American Express'
 visa: true
 mastercard: true
 discover: true

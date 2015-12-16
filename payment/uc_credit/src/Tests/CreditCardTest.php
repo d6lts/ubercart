@@ -253,7 +253,7 @@ class CreditCardTest extends UbercartTestBase {
           'cc_data[cc_exp_month]' => $m,
           'cc_data[cc_exp_year]' => $y,
         );
-        $this->drupalPostForm('admin/store/orders/' . $order->id() . '/credit', $edit, 'Charge amount');
+        $this->drupalPostForm('admin/store/orders/' . $order->id() . '/credit/' . $this->paymentMethod['id'], $edit, 'Charge amount');
 
         if ($y > $year || $m >= $month) {
           $this->assertText('The credit card was processed successfully.', SafeMarkup::format('Card with expiry date @month/@year passed validation.', ['@month' => $m, '@year' => $y]));

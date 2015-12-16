@@ -10,6 +10,7 @@ namespace Drupal\uc_credit\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_payment\Entity\PaymentMethod;
 
 /**
  * Displays the credit card terminal form for administrators.
@@ -22,6 +23,11 @@ class CreditCardTerminalForm extends FormBase {
   protected $order;
 
   /**
+   * The payment method that is in use.
+   */
+  protected $paymentMethod;
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId() {
@@ -31,11 +37,12 @@ class CreditCardTerminalForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, PaymentMethod $uc_payment_method = NULL) {
     $this->order = $uc_order;
+    $this->paymentMethod = $uc_payment_method;
 
     // Get the transaction types available to our default gateway.
-    $types = uc_credit_gateway_txn_types(uc_credit_default_gateway());
+    $types = $this->paymentMethod->getPlugin()->getTransactionTypes();
 
     $balance = uc_payment_balance($this->order);
 
@@ -64,7 +71,7 @@ class CreditCardTerminalForm extends FormBase {
       '#prefix' => '<div class="payment-details-credit clearfix">',
       '#suffix' => '</div>',
     );
-    $form['specify_card']['cc_data'] += uc_payment_method_credit_form(array(), $form_state, $this->order);
+    $form['specify_card']['cc_data'] += $this->paymentMethod->getPlugin()->cartDetails($this->order, array(), $form_state);
     unset($form['specify_card']['cc_data']['cc_policy']);
 
     $form['specify_card']['actions'] = array('#type' => 'actions');
@@ -236,51 +243,52 @@ class CreditCardTerminalForm extends FormBase {
     uc_credit_cache('save', $cc_data, FALSE);
 
     // Build the data array passed on to the payment gateway.
-    $data = array();
+    $txn_type = NULL;
+    $reference = NULL;
 
     switch ($form_state->getValue('op')) {
       case $this->t('Charge amount'):
-        $data['txn_type'] = UC_CREDIT_AUTH_CAPTURE;
+        $txn_type = UC_CREDIT_AUTH_CAPTURE;
         break;
 
       case $this->t('Authorize amount only'):
-        $data['txn_type'] = UC_CREDIT_AUTH_ONLY;
+        $txn_type = UC_CREDIT_AUTH_ONLY;
         break;
 
       case $this->t('Set a reference only'):
-        $data['txn_type'] = UC_CREDIT_REFERENCE_SET;
+        $txn_type = UC_CREDIT_REFERENCE_SET;
         break;
 
       case $this->t('Credit amount to this card'):
-        $data['txn_type'] = UC_CREDIT_CREDIT;
+        $txn_type = UC_CREDIT_CREDIT;
         break;
 
       case $this->t('Capture amount to this authorization'):
-        $data['txn_type'] = UC_CREDIT_PRIOR_AUTH_CAPTURE;
-        $data['auth_id'] = $form_state->getValue('select_auth');
+        $txn_type = UC_CREDIT_PRIOR_AUTH_CAPTURE;
+        $reference = $form_state->getValue('select_auth');
         break;
 
       case $this->t('Void authorization'):
-        $data['txn_type'] = UC_CREDIT_VOID;
-        $data['auth_id'] = $form_state->getValue('select_auth');
+        $txn_type = UC_CREDIT_VOID;
+        $reference = $form_state->getValue('select_auth');
         break;
 
       case $this->t('Charge amount to this reference'):
-        $data['txn_type'] = UC_CREDIT_REFERENCE_TXN;
-        $data['ref_id'] = $form_state->getValue('select_ref');
+        $txn_type = UC_CREDIT_REFERENCE_TXN;
+        $reference = $form_state->getValue('select_ref');
         break;
 
       case $this->t('Remove reference'):
-        $data['txn_type'] = UC_CREDIT_REFERENCE_REMOVE;
-        $data['ref_id'] = $form_state->getValue('select_ref');
+        $txn_type = UC_CREDIT_REFERENCE_REMOVE;
+        $reference = $form_state->getValue('select_ref');
         break;
 
       case $this->t('Credit amount to this reference'):
-        $data['txn_type'] = UC_CREDIT_REFERENCE_CREDIT;
-        $data['ref_id'] = $form_state->getValue('select_ref');
+        $txn_type = UC_CREDIT_REFERENCE_CREDIT;
+        $reference = $form_state->getValue('select_ref');
     }
 
-    $result = uc_payment_process_payment('credit', $this->order->id(), $form_state->getValue('amount'), $data, TRUE, NULL, FALSE);
+    $result = $this->paymentMethod->getPlugin()->processPayment($this->order, $form_state->getValue('amount'), $txn_type, $reference);
     _uc_credit_save_cc_data_to_order(uc_credit_cache('load'), $this->order->id());
 
     if ($result) {

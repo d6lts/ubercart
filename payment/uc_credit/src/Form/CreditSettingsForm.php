@@ -53,53 +53,6 @@ class CreditSettingsForm extends ConfigFormBase {
       '#default_value' => uc_credit_encryption_key() ? $credit_config->get('encryption_path') : $this->t('Not configured.'),
     );
 
-    // Form elements that deal with the type of data requested at checkout.
-    $form['cc_fields'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Credit card fields'),
-      '#description' => $this->t('Specify what information to collect from customers in addition to the card number.'),
-      '#group' => 'uc_credit',
-      '#weight' => 10,
-    );
-    $form['cc_fields']['uc_credit_cvv_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable CVV text field on checkout form.'),
-      '#description' => $this->t('The CVV is an added security measure on credit cards. On Visa, Mastercard, and Discover cards it is a three digit number, and on AmEx cards it is a four digit number. If your credit card processor or payment gateway requires this information, you should enable this feature here.'),
-      '#default_value' => $credit_config->get('cvv_enabled'),
-    );
-    $form['cc_fields']['uc_credit_owner_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable card owner text field on checkout form.'),
-      '#default_value' => $credit_config->get('owner_enabled'),
-    );
-    $form['cc_fields']['uc_credit_start_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable card start date on checkout form.'),
-      '#default_value' => $credit_config->get('start_enabled'),
-    );
-    $form['cc_fields']['uc_credit_issue_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable card issue number text field on checkout form.'),
-      '#default_value' => $credit_config->get('issue_enabled'),
-    );
-    $form['cc_fields']['uc_credit_bank_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable issuing bank text field on checkout form.'),
-      '#default_value' => $credit_config->get('bank_enabled'),
-    );
-    $form['cc_fields']['uc_credit_type_enabled'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enable card type selection on checkout form.'),
-      '#description' => $this->t('If enabled, specify in the textarea below which card options to populate the select box with.'),
-      '#default_value' => $credit_config->get('type_enabled'),
-    );
-    $form['cc_fields']['uc_credit_accepted_types'] = array(
-      '#type' => 'textarea',
-      '#title' => $this->t('Card type select box options'),
-      '#description' => $this->t('Enter one card type per line. These fields will populate the card type select box if it is enabled.'),
-      '#default_value' => implode("\r\n", $credit_config->get('accepted_types')),
-    );
-
     // Form elements that deal with card types accepted.
     $form['cc_fields']['cc_types'] = array(
       '#type' => 'details',
@@ -125,12 +78,6 @@ class CreditSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('American Express'),
       '#default_value' => $credit_config->get('amex'),
-    );
-
-    $txn_types = array(
-      UC_CREDIT_AUTH_ONLY => $this->t('Authorization only'),
-      UC_CREDIT_AUTH_CAPTURE => $this->t('Authorize and capture immediately'),
-      UC_CREDIT_REFERENCE_SET => $this->t('Set a reference only'),
     );
 
     if (empty($_POST) && !uc_credit_encryption_key()) {
@@ -253,13 +200,10 @@ class CreditSettingsForm extends ConfigFormBase {
 
     $this->config('uc_credit.settings')
       ->set('encryption_path', $form_state->getValue('uc_credit_encryption_path'))
-      ->set('cvv_enabled', $form_state->getValue('uc_credit_cvv_enabled'))
-      ->set('owner_enabled', $form_state->getValue('uc_credit_owner_enabled'))
-      ->set('start_enabled', $form_state->getValue('uc_credit_start_enabled'))
-      ->set('issue_enabled', $form_state->getValue('uc_credit_issue_enabled'))
-      ->set('bank_enabled', $form_state->getValue('uc_credit_bank_enabled'))
-      ->set('type_enabled', $form_state->getValue('uc_credit_type_enabled'))
-      ->set('accepted_types', explode("\r\n", $form_state->getValue('uc_credit_accepted_types')))
+      ->set('visa', $form_state->getValue('uc_credit_visa'))
+      ->set('mastercard', $form_state->getValue('uc_credit_mastercard'))
+      ->set('discover', $form_state->getValue('uc_credit_discover'))
+      ->set('amex', $form_state->getValue('uc_credit_amex'))
       ->save();
   }
 
