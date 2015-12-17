@@ -29,14 +29,15 @@ zones:
   ML: Meghalaya
   MZ: Mizoram
   NL: Nagaland
-  OR: Orissa
+  OR: Odisha
   PY: Puducherry
   PB: Punjab
   RJ: Rajasthan
   SK: Sikkim
+  TG: Telangana
   TN: 'Tamil Nadu'
   TR: Tripura
-  UL: Uttarakhand
+  UT: Uttarakhand
   UP: 'Uttar Pradesh'
   WB: 'West Bengal'
 address_format:
