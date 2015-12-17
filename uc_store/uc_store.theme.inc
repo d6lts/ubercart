@@ -14,6 +14,9 @@ use Drupal\user\Entity\User;
  *   An associative array containing:
  *   - uid: A user ID value.
  *
+ * @return string
+ *   Formatted HTML.
+ *
  * @ingroup themeable
  */
 function theme_uc_uid(array $variables) {

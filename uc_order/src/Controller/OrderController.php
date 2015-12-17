@@ -80,9 +80,13 @@ class OrderController extends ControllerBase {
   }
 
   /**
-   * The title callback for the Order view routes.
+   * The title callback for order view routes.
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
+   *   The order that is being viewed.
+   *
+   * @return string
+   *   The page title.
    */
   public function pageTitle(OrderInterface $uc_order) {
     return SafeMarkup::checkPlain($uc_order->label());

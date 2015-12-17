@@ -65,11 +65,14 @@ function uc_order_update_line_item($id, $title, $amount, $data = NULL) {
 /**
  * Deletes a specific line item, or every line item in an order.
  *
- * @param $id
+ * @param int $id
  *   The line item ID, or order ID.
- * @param $order_id
+ * @param bool $order
  *   If FALSE, deletes the line item with the specified ID (default).
  *   If TRUE, deletes all line items on the order with the specified ID.
+ *
+ * @return bool
+ *   Always TRUE.
  */
 function uc_order_delete_line_item($id, $order = FALSE) {
   if ($order === FALSE) {

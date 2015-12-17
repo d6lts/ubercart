@@ -206,8 +206,11 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Helper function to fill-in required fields on the checkout page.
    *
-   * @param $edit
+   * @param array $edit
    *   The form-values array to which to add required fields.
+   *
+   * @return array
+   *   The values array ready to pass to the checkout page.
    */
   protected function populateCheckoutForm($edit = []) {
     foreach (array('billing', 'delivery') as $pane) {

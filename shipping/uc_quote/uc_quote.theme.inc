@@ -14,6 +14,9 @@ use Drupal\Core\Render\Element;
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
+ * @return string
+ *   Formatted HTML.
+ *
  * @ingroup themeable
  */
 function theme_uc_cart_pane_quotes(array $variables) {
@@ -31,6 +34,9 @@ function theme_uc_cart_pane_quotes(array $variables) {
  * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
+ *
+ * @return string
+ *   Formatted HTML.
  *
  * @ingroup themeable
  */

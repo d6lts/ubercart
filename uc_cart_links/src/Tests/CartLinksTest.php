@@ -679,6 +679,9 @@ class CartLinksTest extends UbercartTestBase {
    *
    * @param $links
    *   Array of Cart Links to appear on page.
+   *
+   * @return \Drupal\node\NodeInterface
+   *   The created node entity.
    */
   protected function createCartLinksPage($links = array()) {
     $item_list = array(

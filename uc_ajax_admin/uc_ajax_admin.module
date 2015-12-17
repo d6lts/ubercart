@@ -24,12 +24,15 @@ function uc_ajax_admin_help($path, RouteMatchInterface $route_match) {
 /**
  * TAPIr table callback for the uc_ajax administrative form.
  *
- * @param $trigger_options
+ * @param array $trigger_options
  *   The select options for triggering elements.
- * @param $wrapper_options
+ * @param array $wrapper_options
  *   The select options for wrappers.
- * @param $config
+ * @param array $config
  *   The existing configuration.
+ *
+ * @return array
+ *   A render array for the table.
  */
 function uc_ajax_admin_table($trigger_options, $wrapper_options, $config) {
   $build = array(

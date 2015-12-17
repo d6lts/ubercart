@@ -14,6 +14,9 @@ use Drupal\Core\Render\Element;
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
+ * @return string
+ *   Formatted HTML.
+ *
  * @ingroup themeable
  */
 function theme_uc_file_hook_user_file_downloads(array $variables) {

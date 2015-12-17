@@ -14,6 +14,9 @@ use Drupal\Component\Utility\SafeMarkup;
  *   An associative array containing:
  *   - form: A render element representing the form.
  *
+ * @return string
+ *   Formatted HTML.
+ *
  * @ingroup themeable
  */
 function theme_uc_role_user_new(array $variables) {
@@ -39,6 +42,9 @@ function theme_uc_role_user_new(array $variables) {
  * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form.
+ *
+ * @return string
+ *   Formatted HTML.
  *
  * @ingroup themeable
  */

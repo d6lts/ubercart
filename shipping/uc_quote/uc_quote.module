@@ -743,6 +743,9 @@ function uc_quote_order_update_rates($form, FormStateInterface $form_state) {
  *
  * @param $all
  *   If FALSE, only enabled shipping methods are returned.
+ *
+ * @return array
+ *   An array of available shipping quote methods.
  */
 function uc_quote_methods($all = FALSE) {
   $quote_config = \Drupal::config('uc_quote.settings');

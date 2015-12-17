@@ -44,6 +44,9 @@ define('UC_FILE_ERROR_HOOK_ERROR'             , 7);
  *     - addresses: Integer number of IP addresses used.
  *     - address_limit: Integer limit on IP addresses.
  *
+ * @return string
+ *   Formatted HTML.
+ *
  * @see theme_table()
  * @ingroup themeable
  */

@@ -257,7 +257,6 @@ function hook_uc_checkout_pane_alter(array &$panes) {
  *   should be retrieved with uc_cart_get_id().
  */
 function hook_uc_update_cart_item($nid, $data = array(), $qty, $cid = NULL) {
-  if (!$nid) return NULL;
   $cid = !(is_null($cid) || empty($cid)) ? $cid : uc_cart_get_id();
 
   $result = \Drupal::entityQuery('uc_cart_item')

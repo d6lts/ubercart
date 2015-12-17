@@ -15,6 +15,9 @@
  *   - service: The USPS service name.
  *   - packages: Package information.
  *
+ * @return string
+ *   Formatted HTML.
+ *
  * @ingroup themeable
  */
 function theme_uc_usps_option_label(array $variables) {

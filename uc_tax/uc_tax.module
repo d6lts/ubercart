@@ -650,6 +650,10 @@ function uc_tax_apply_tax($order, $tax) {
  *
  * @param $product
  *   The product whose included taxes are to be calculated.
+ *
+ * @return array
+ *   An array with two items: the taxed amount and any suffixes that should
+ *   be printed after the product price.
  */
 function uc_tax_get_included_tax($product, $order = NULL) {
   $amount = 0;

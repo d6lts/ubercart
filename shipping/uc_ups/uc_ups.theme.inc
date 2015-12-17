@@ -15,6 +15,9 @@
  *   - service: The UPS service name.
  *   - packages: Package information.
  *
+ * @return string
+ *   Formatted HTML.
+ *
  * @ingroup themeable
  */
 function theme_uc_ups_option_label(array $variables) {

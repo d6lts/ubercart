@@ -17,6 +17,9 @@ use Drupal\Core\Template\Attribute;
  *     - #attributes: (optional) Array of attributes to apply to enclosing DIV.
  *     - #title: (optional) Title to be used as label.
  *
+ * @return string
+ *   Formatted HTML.
+ *
  * @ingroup themeable
  */
 function theme_uc_product_price(array $variables) {

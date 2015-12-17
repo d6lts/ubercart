@@ -504,6 +504,9 @@ function uc_select_address($uid, $type = 'billing', $onchange = '', $title = NUL
  *   The user's ID to search for in the orders table.
  * @param $type
  *   Choose either 'shipping' or 'billing'.
+ *
+ * @return array
+ *   An array of address options.
  */
 function uc_select_addresses($uid, $type = 'billing') {
   $addresses = uc_get_addresses($uid, $type);
@@ -652,6 +655,9 @@ function uc_store_email_from() {
  *
  * @param $name
  *   The text string to convert to a RFC 2822 quoted string.
+ *
+ * @return string
+ *   A valid RFC 2822 quoted string.
  */
 function uc_store_rfc2822_display_name($name) {
   // Base64 encode $name string if it contains non-ASCII characters.

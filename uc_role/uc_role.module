@@ -863,6 +863,9 @@ function _uc_role_flush_menu_cache($account) {
  * @param $time
  *   The current time to use as a starting point for relative expiration
  *   calculation.
+ *
+ * @return int
+ *   The expiration time as a Unix timestamp.
  */
 function _uc_role_product_get_expiration($role_product, $quantity, $time) {
   // Override the end expiration?

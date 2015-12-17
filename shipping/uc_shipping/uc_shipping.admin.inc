@@ -751,6 +751,9 @@ function uc_shipping_shipment_view($order, $shipment) {
  *   An order-type object.
  * @param $type
  *   The key prefix to use to extract the address.
+ *
+ * @return string
+ *   An address object.
  */
 function uc_shipment_address($order, $type) {
   $name = $order->{$type . '_first_name'} . ' ' . $order->{$type . '_last_name'};
