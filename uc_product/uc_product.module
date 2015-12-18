@@ -1790,21 +1790,24 @@ function uc_product_get_picture($node_id, $format = 'product') {
 function uc_product_get_image_widget() {
   static $got_widget = FALSE, $image_widget = array();
 
-  // Get the current image widget. (if any)
+  // Get the current image widget, if any.
   if (!$got_widget) {
-    // Invoke hook to find widgets
+    // Invoke hook to find widgets.
     $image_widgets = uc_store_get_image_widgets();
 
-    // Find widget preference, if any
+    // Find widget preference, if any.
     $widget_name = variable_get('uc_product_image_widget', NULL);
 
-    if ($widget_name != NULL) {
-      // Widget to use has been set in admin menu
+    if ($widget_name == 'none') {
+      // Don't use any image widgets.
+    }
+    elseif ($widget_name != NULL) {
+      // Widget to use has been set in admin menu.
       $image_widget = $image_widgets[$widget_name];
     }
     else {
-      // Widget to use has not been chosen, so default to
-      // first element of array, if any
+      // Widget to use has not been chosen, so default to first element of
+      // array, if any.
       $keys = array_keys($image_widgets);
       if ($keys) {
         $image_widget = $image_widgets[$keys[0]];
