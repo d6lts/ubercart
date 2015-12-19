@@ -2,24 +2,36 @@
  * @file
  * Styles for uc_product module.
  */
+
 .uc-product-image {
   overflow: auto;
   width: 100%;
 }
 
 .uc-product-image .field-item + .field-item img {
-  float: left;
-  margin-right: 1em;
+  float: left; /* LTR */
+  margin-right: 1em; /* LTR */
+}
+[dir="rtl"] .uc-product-image .field-item + .field-item img {
+  float: right;
+  margin-right: auto;
+  margin-left: 1em;
 }
 
 .display-price {
-  clear: right;
-  float: right;
+  clear: right; /* LTR */
+  float: right; /* LTR */
   font-size: 1.3em;
   font-weight: bold;
   padding-bottom: 4px;
-  padding-left: 4px;
+  padding-left: 4px; /* LTR */
   text-align: center;
+}
+[dir="rtl"] .display-price {
+  clear: left;
+  float: left;
+  padding-left: auto;
+  padding-right: 4px;
 }
 
 .uc-product-features td {

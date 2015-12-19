@@ -27,13 +27,22 @@
 
 .order-review-table .title-col {
   font-weight: bold;
-  padding-left: 3em;
-  text-align: right;
+  padding-left: 3em; /* LTR */
+  text-align: right; /* LTR */
   white-space: nowrap;
+}
+[dir="rtl"] .order-review-table .title-col {
+  padding-left: inherit;
+  padding-right: 3em;
+  text-align: left;
 }
 
 .order-review-table .data-col {
-  padding-right: 3em;
+  padding-right: 3em; /* LTR */
+}
+[dir="rtl"] .order-review-table .data-col {
+  padding-right: inherit;
+  padding-left: 3em;
 }
 
 .order-review-table .row-border-top {
@@ -51,7 +60,10 @@
 
 .order-review-table .review-button-row td {
   padding-top: 1em;
-  text-align: right;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] .order-review-table .review-button-row td {
+  text-align: left;
 }
 
 .order-review-table .review-button-row div,
@@ -70,14 +82,23 @@
 }
 
 #uc-cart-view-form img {
-  padding-right: .8em;
-  float: left;
+  padding-right: .8em; /* LTR */
+  float: left; /* LTR */
+}
+[dir="rtl"] #uc-cart-view-form img {
+  padding-right: inherit;
+  padding-left: .8em;
+  float: right;
 }
 
 .address-book-icon {
   position: relative;
-  margin-left: 2px;
+  margin-left: 2px; /* LTR */
   top: 2px;
+}
+[dir="rtl"] .address-book-icon {
+  margin-left: inherit;
+  margin-right: 2px;
 }
 
 /**
@@ -98,17 +119,28 @@
 
 #uc-cart-view-form .form-actions {
   margin-top: 0;
-  text-align: right;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] #uc-cart-view-form .form-actions {
+  text-align: left;
 }
 
 #uc-cart-view-form .form-actions a {
-  float: left;
+  float: left; /* LTR */
   margin: .5em;
+}
+[dir="rtl"] #uc-cart-view-form .form-actions a {
+  float: right;
 }
 
 #uc-cart-view-form #edit-continue-shopping {
-  float: left;
-  margin-left: .5em;
+  float: left; /* LTR */
+  margin-left: .5em; /* LTR */
+}
+[dir="rtl"] #uc-cart-view-form #edit-continue-shopping {
+  float: right;
+  margin-left: inherit;
+  margin-right: .5em;
 }
 
 #uc-cart-view-form .form-actions input {
@@ -116,8 +148,12 @@
 }
 
 .uc-cart-checkout-button {
-  float: right;
-  clear: right;
+  float: right; /* LTR */
+  clear: right; /* LTR */
+}
+[dir="rtl"] .uc-cart-checkout-button {
+  float: left;
+  clear: left;
 }
 
 .uc-cart-checkout-button-separator {
@@ -133,8 +169,11 @@ td.qty {
 }
 
 td.price {
-  text-align: right;
+  text-align: right; /* LTR */
   white-space: nowrap;
+}
+[dir="rtl"] td.price {
+  text-align: left;
 }
 
 td.products {
@@ -142,7 +181,10 @@ td.products {
 }
 
 td.subtotal {
-  text-align: right;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] td.subtotal {
+  text-align: left;
 }
 
 #subtotal-title {
@@ -153,5 +195,8 @@ td.subtotal {
  * CSS rules for the bottom of the checkout form at /cart/checkout.
  */
 .uc-cart-checkout-form .form-actions {
-  text-align: right;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] .uc-cart-checkout-form .form-actions {
+  text-align: left;
 }

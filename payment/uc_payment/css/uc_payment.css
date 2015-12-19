@@ -21,8 +21,13 @@
 
 .payment-details-cod .form-item {
   display: block;
-  float: left;
-  padding-right: 5px;
+  float: left; /* LTR */
+  padding-right: 5px; /* LTR */
+}
+[dir="rtl"] .payment-details-cod .form-item {
+  float: right;
+  padding-right: auto;
+  padding-left: 5px;
 }
 
 .payment-details-credit .form-item {
@@ -30,17 +35,25 @@
 }
 
 .payment-details-credit label {
-  clear: left;
-  float: left;
+  clear: left; /* LTR */
+  float: left; /* LTR */
   margin: 2px 0;
   padding-top: 5px;
   width: 10em;
 }
+[dir="rtl"] .payment-details-credit label {
+  clear: right;
+  float: right;
+}
 
 .payment-details-credit input,
 .payment-details-credit select {
-  float: left;
+  float: left; /* LTR */
   margin: 2px;
+}
+[dir="rtl"] .payment-details-credit input,
+[dir="rtl"] .payment-details-credit select {
+  float: right;
 }
 
 .form-item-panes-payment-details-cc-start-year label,
@@ -51,20 +64,32 @@
 }
 
 .payment-details-credit .field-suffix {
-  float: left;
+  float: left; /* LTR */
   margin: 2px;
   padding-top: 5px;
+}
+[dir="rtl"] .payment-details-credit .field-suffix {
+  float: right;
 }
 
 img.uc-2checkout-logo {
   position: relative;
-  left: 2.2em;
+  left: 2.2em; /* LTR */
+}
+[dir="rtl"] img.uc-2checkout-logo {
+  left: auto;
+  right: 2.2em;
 }
 
 .uc-payment-totals {
-  float: right;
-  margin-left: 1em;
+  float: right; /* LTR */
+  margin-left: 1em; /* LTR */
   width: auto;
+}
+[dir="rtl"] .uc-payment-totals {
+  float: left;
+  margin-left: auto;
+  margin-right: 1em;
 }
 
 .uc-payment-totals td.title {
@@ -72,10 +97,16 @@ img.uc-2checkout-logo {
 }
 
 #uc-payment-by-order-form .form-type-item {
-  float: left;
+  float: left; /* LTR */
   width: 10em;
+}
+[dir="rtl"] #uc-payment-by-order-form .form-type-item {
+  float: right;
 }
 
 #uc-payment-by-order-form table {
-  clear: left;
+  clear: left; /* LTR */
+}
+[dir="rtl"] #uc-payment-by-order-form table {
+  clear: right;
 }

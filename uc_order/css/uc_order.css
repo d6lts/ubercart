@@ -13,16 +13,27 @@
 
 .view-uc-orders #edit-delivery-first-name-wrapper,
 .view-uc-orders #edit-created-wrapper {
-  clear: left;
+  clear: left; /* LTR */
+}
+[dir="rtl"] .view-uc-orders #edit-delivery-first-name-wrapper,
+[dir="rtl"] .view-uc-orders #edit-created-wrapper {
+  clear: right;
 }
 
 .view-uc-orders #edit-created-min-wrapper,
 .view-uc-orders #edit-created-max-wrapper {
-  float: left;
+  float: left; /* LTR */
+}
+[dir="rtl"] .view-uc-orders #edit-created-min-wrapper,
+[dir="rtl"] .view-uc-orders #edit-created-max-wrapper {
+  float: right;
 }
 
 .view-uc-orders .form-type-date-select .date-padding {
-  padding: 0 22px 0 0;
+  padding: 0 22px 0 0; /* LTR */
+}
+[dir="rtl"] .view-uc-orders .form-type-date-select .date-padding {
+  padding: 0 0 0 22px;
 }
 
 .view-uc-orders .form-type-date-select {
@@ -39,8 +50,12 @@
 
 .order-pane-icons {
   position: absolute;
-  right: .5em;
+  right: .5em; /* LTR */
   top: 5px;
+}
+[dir="rtl"] .order-pane-icons {
+  right: auto;
+  left: .5em;
 }
 
 .order-pane-icons img {
@@ -53,17 +68,26 @@
 }
 
 .order-pane.pos-left {
-  float: left;
+  float: left; /* LTR */
+}
+[dir="rtl"] .order-pane.pos-left {
+  float: right;
 }
 
 .order-pane.abs-left {
   border: 0;
-  clear: left;
+  clear: left; /* LTR */
   padding: .5em 0;
+}
+[dir="rtl"] .order-pane.abs-left {
+  clear: right;
 }
 
 .order-pane.abs-left .form-submit {
-  margin: 0.5em 0.5em 0.5em 0;
+  margin: 0.5em 0.5em 0.5em 0; /* LTR */
+}
+[dir="rtl"] .order-pane.abs-left .form-submit {
+  margin: 0.5em 0 0.5em 0.5em;
 }
 
 .uc-order-edit-form .form-actions {
@@ -72,9 +96,15 @@
 
 .order-pane #edit-add-line-item,
 .order-pane #edit-add-line-item .form-item {
-  float: left;
-  margin-right: 1em;
+  float: left; /* LTR */
+  margin-right: 1em; /* LTR */
   padding-top: 0;
+}
+[dir="rtl"] .order-pane #edit-add-line-item,
+[dir="rtl"] .order-pane #edit-add-line-item .form-item {
+  float: right;
+  margin-right: auto;
+  margin-left: 1em;
 }
 
 .order-pane .line-item-table {
@@ -103,8 +133,13 @@
 .order-pane-table td.cost,
 .order-pane-table td.price,
 .order-pane-table td.total {
-  text-align: right;
+  text-align: right; /* LTR */
   white-space: nowrap;
+}
+[dir="rtl"] .order-pane-table td.cost,
+[dir="rtl"] .order-pane-table td.price,
+[dir="rtl"] .order-pane-table td.total {
+  text-align: left;
 }
 
 #order-edit-products .form-remove {
@@ -133,8 +168,12 @@
   border: solid 1px #999;
   margin-bottom: 1em;
   padding-bottom: 1em;
-  padding-left: 1em;
+  padding-left: 1em; /* LTR */
   width: auto;
+}
+[dir="rtl"] .address-select-box {
+  padding-left: auto;
+  padding-right: 1em;
 }
 
 .customer-select-box {
@@ -155,13 +194,19 @@
 
 .line-item-table .li-title {
   font-weight: bold;
-  text-align: right;
+  text-align: right; /* LTR */
   width: 100%;
+}
+[dir="rtl"] .line-item-table .li-title {
+  text-align: left;
 }
 
 .line-item-table .li-amount {
-  text-align: right;
+  text-align: right; /* LTR */
   white-space: nowrap;
+}
+[dir="rtl"] .line-item-table .li-amount {
+  text-align: left;
 }
 
 .line-item-table .form-item {
@@ -191,7 +236,10 @@
 }
 
 #uc-order-view-update-form .form-actions {
-  clear: left;
+  clear: left; /* LTR */
+}
+[dir="rtl"] #uc-order-view-update-form .form-actions {
+  clear: right;
 }
 
 .address-select-box #uc-order-address-book-form {
@@ -204,6 +252,9 @@
 
 #order-pane-print_button {
   border: 1px solid #bbb;
-  padding: 0.5em 0.5em 0.5em 2em;
+  padding: 0.5em 0.5em 0.5em 2em; /* LTR */
   background: url("../../uc_store/images/print.gif") no-repeat 0.5em 50%;
+}
+[dir="rtl"] #order-pane-print_button {
+  padding: 0.5em 2em 0.5em 0.5em;
 }

@@ -13,7 +13,11 @@
 }
 
 #uc-cart-pane-quotes .form-submit {
-  margin-left: 16em;
+  margin-left: 16em; /* LTR */
+}
+[dir="rtl"] #uc-cart-pane-quotes .form-submit {
+  margin-left: auto;
+  margin-right: 16em;
 }
 
 #quote {
@@ -32,7 +36,11 @@
 }
 
 .quote-notes {
-  margin-left: 25px;
+  margin-left: 25px; /* LTR */
+}
+[dir="rtl"] .quote-notes {
+  margin-left: auto;
+  margin-right: 25px;
 }
 
 /**
