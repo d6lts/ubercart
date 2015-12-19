@@ -35,7 +35,7 @@ class CustomerAdminTest extends UbercartTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+   * @var string[]
    */
   public static $modules = array('views');
 

@@ -99,14 +99,14 @@ class TaxRate extends ConfigEntityBase implements TaxRateInterface {
   /**
    * Line item types subject to this tax rate.
    *
-   * @var array
+   * @var string[]
    */
   protected $line_item_types;
 
   /**
    * Product item types subject to this tax rate.
    *
-   * @var array
+   * @var string[]
    */
   protected $product_types;
 

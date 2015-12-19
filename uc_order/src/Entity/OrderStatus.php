@@ -52,7 +52,7 @@ class OrderStatus extends ConfigEntityBase implements OrderStatusInterface {
   /**
    * The weight of this status in relation to other statuses.
    *
-   * @var integer
+   * @var int
    */
   protected $weight = 0;
 

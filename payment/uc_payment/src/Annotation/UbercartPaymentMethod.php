@@ -35,7 +35,7 @@ class UbercartPaymentMethod extends Plugin {
   /**
    * If TRUE, the plugin will be hidden from the UI.
    *
-   * @var boolean
+   * @var bool
    */
   public $no_ui = FALSE;
 

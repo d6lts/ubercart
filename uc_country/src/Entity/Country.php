@@ -71,14 +71,14 @@ class Country extends ConfigEntityBase implements CountryInterface {
   /**
    * An associative array of zone names, keyed by ISO 3166-2 zone code.
    *
-   * @var array
+   * @var string[]
    */
   protected $zones = [];
 
   /**
    * The address format string for the country.
    *
-   * @var array
+   * @var string[]
    */
   protected $address_format;
 

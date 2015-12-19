@@ -36,7 +36,7 @@ class CheckoutPane extends Plugin {
   /**
    * The plugin weight.
    *
-   * @var integer
+   * @var int
    */
   public $weight;
 

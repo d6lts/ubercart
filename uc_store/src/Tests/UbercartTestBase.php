@@ -18,7 +18,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Modules to enable.
    *
-   * @var array
+   * @var string[]
    */
   public static $modules = ['block', 'uc_cart'];
 
@@ -247,7 +247,7 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Executes the checkout process.
    *
-   * @return \Drupal\uc_order\Entity\Order|FALSE
+   * @return \Drupal\uc_order\Entity\Order|false
    *   The created order, or FALSE if the order could not be created.
    */
   protected function checkout($edit = []) {
