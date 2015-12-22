@@ -133,11 +133,11 @@ function uc_flatrate_uc_shipping_method() {
       'operations' => array(
         'edit' => array(
           'title' => t('edit'),
-          'url' => new Url('uc_flatrate.edit', ['mid' => $method->mid]),
+          'url' => Url::fromRoute('uc_flatrate.edit', ['mid' => $method->mid]),
         ),
         'delete' => array(
           'title' => t('delete'),
-          'url' => new Url('uc_flatrate.delete', ['mid' => $method->mid]),
+          'url' => Url::fromRoute('uc_flatrate.delete', ['mid' => $method->mid]),
         ),
       ),
       'quote' => array(

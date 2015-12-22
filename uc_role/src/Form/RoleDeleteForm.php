@@ -73,7 +73,7 @@ class RoleDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_role.expiration');
+    return Url::fromRoute('uc_role.expiration');
   }
 
   /**

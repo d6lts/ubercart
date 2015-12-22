@@ -71,7 +71,7 @@ class ShowForm extends FormBase {
           'data' => SafeMarkup::checkPlain($file->filename),
           'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
         ),
-        'title' => $this->l($file->title, new Url('entity.node.canonical', ['node' => $file->nid])),
+        'title' => $this->l($file->title, Url::fromRoute('entity.node.canonical', ['node' => $file->nid])),
         'model' => SafeMarkup::checkPlain($file->model),
       );
     }

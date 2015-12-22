@@ -61,7 +61,7 @@ function theme_uc_file_downloads_token(array $variables) {
       continue;
     }
 
-    $output .= \Drupal::l($file_download->filename, new Url('download/' . $file_download->fid, [], ['absolute' => TRUE])) . "\n";
+    $output .= \Drupal::l($file_download->filename, Url::fromRoute('download/' . $file_download->fid, [], ['absolute' => TRUE])) . "\n";
   }
 
   return $output;

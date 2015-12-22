@@ -89,7 +89,7 @@ function uc_file_admin_files_form_show_files($form, FormStateInterface $form_sta
         'data' => SafeMarkup::checkPlain($file->filename),
         'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
       ),
-      'title' => \Drupal::l($file->title, new Url('entity.node.canonical', ['node' => $file->nid])),
+      'title' => \Drupal::l($file->title, Url::fromRoute('entity.node.canonical', ['node' => $file->nid])),
       'model' => SafeMarkup::checkPlain($file->model),
     );
   }

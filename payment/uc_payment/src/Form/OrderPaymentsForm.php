@@ -108,7 +108,7 @@ class OrderPaymentsForm extends FormBase {
           '#markup' => ($payment->comment == '') ? '-' : Xss::filterAdmin($payment->comment),
         );
         if ($account->hasPermission('delete payments')) {
-          $action_value = $this->l($this->t('Delete'), new Url('uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id]));
+          $action_value = $this->l($this->t('Delete'), Url::fromRoute('uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id]));
         }
         else {
           $action_value = '-';

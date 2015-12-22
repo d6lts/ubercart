@@ -22,7 +22,7 @@ class TaxRateFormBase extends EntityForm {
    * @return \Drupal\Core\Url
    */
   public function getCancelUrl() {
-    return new Url('entity.uc_tax_rate.collection');
+    return Url::fromRoute('entity.uc_tax_rate.collection');
   }
 
   /**

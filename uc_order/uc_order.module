@@ -32,7 +32,7 @@ function uc_order_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('Order statuses with a list position below zero are considered inactive when filtering lists of orders.') . '</p>';
     case 'field_ui.overview_uc_order':
       return '<p>' . t('Attach fields to order product entities.  These entities represent the product line items that appear in orders.  Fields attached here are not visible in the current version of Ubercart, but they are available in Views.  A ')
-        . \Drupal::l(t('Computed Field'), new Url('http://drupal.org/project/computed_field'))
+        . \Drupal::l(t('Computed Field'), Url::fromUri('http://drupal.org/project/computed_field'))
         . t(' is useful for attaching custom data to each product as it is ordered.') . '</p>';
   }
 }

@@ -30,7 +30,7 @@ function uc_order_pane_print_button($op, $order, &$form = NULL, FormStateInterfa
       if ($order->access('invoice')) {
         $link = t('Click to open a window with a printable invoice.');
         $build = array(
-          '#markup' => \Drupal::l($link, new Url('uc_order.user_invoice_print', ['user' => $order->getOwnerId(), 'uc_order' => $order->id()], array(
+          '#markup' => \Drupal::l($link, Url::fromRoute('uc_order.user_invoice_print', ['user' => $order->getOwnerId(), 'uc_order' => $order->id()], array(
             'attributes' => array(
               'onclick' => "window.open(this.href, '" . t('Invoice') . "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=600,height=480,left=50,top=50'); return false;",
             ),
@@ -245,7 +245,7 @@ function uc_order_pane_products($op, $order, &$form = NULL, FormStateInterface $
           '#qty' => $product->qty->value,
           '#cell_attributes' => array('class' => array('qty')),
         );
-        $title = $product->nid->entity && $product->nid->entity->access('view') ? \Drupal::l($product->title->value, new Url('entity.node.canonical', ['node' => $product->nid->target_id])) : $product->title->value;
+        $title = $product->nid->entity && $product->nid->entity->access('view') ? \Drupal::l($product->title->value, Url::fromRoute('entity.node.canonical', ['node' => $product->nid->target_id])) : $product->title->value;
         $build[$id]['product'] = array(
           '#markup' => $title . uc_product_get_description($product),
           '#cell_attributes' => array('class' => array('product')),

@@ -132,7 +132,7 @@ class Check extends PaymentMethodPluginBase {
       $build['#markup'] = t('Clear Date:') . ' ' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');
     }
     else {
-      $build['#markup'] = \Drupal::l(t('Receive Check'), new Url('uc_payment_pack.check.receive', ['uc_order' => $order->id()]));
+      $build['#markup'] = \Drupal::l(t('Receive Check'), Url::fromRoute('uc_payment_pack.check.receive', ['uc_order' => $order->id()]));
     }
 
     return $build;

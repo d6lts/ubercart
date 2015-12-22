@@ -47,7 +47,7 @@ class AttributeDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_attribute.overview');
+    return Url::fromRoute('uc_attribute.overview');
   }
 
   /**

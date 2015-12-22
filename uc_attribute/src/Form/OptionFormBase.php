@@ -76,7 +76,7 @@ abstract class OptionFormBase extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
-      '#suffix' => $this->l($this->t('Cancel'), new Url('uc_attribute.options', ['aid' => $aid])),
+      '#suffix' => $this->l($this->t('Cancel'), Url::fromRoute('uc_attribute.options', ['aid' => $aid])),
       '#weight' => 10,
     );
 

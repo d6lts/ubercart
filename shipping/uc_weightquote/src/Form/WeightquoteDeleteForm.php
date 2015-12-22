@@ -46,7 +46,7 @@ class WeightquoteDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_quote.methods');
+    return Url::fromRoute('uc_quote.methods');
   }
 
   /**

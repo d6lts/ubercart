@@ -67,7 +67,7 @@ class OrderStatusAddForm extends FormBase {
       '#value' => $this->t('Create'),
     );
     $form['actions']['cancel'] = array(
-      '#markup' => $this->l($this->t('Cancel'), new Url('uc_order.status_add')),
+      '#markup' => $this->l($this->t('Cancel'), Url::fromRoute('uc_order.status_add')),
     );
 
     return $form;

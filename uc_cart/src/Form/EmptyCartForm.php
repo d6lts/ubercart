@@ -27,7 +27,7 @@ class EmptyCartForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_cart.cart');
+    return Url::fromRoute('uc_cart.cart');
   }
 
   /**

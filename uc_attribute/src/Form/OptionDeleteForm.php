@@ -39,7 +39,7 @@ class OptionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_attribute.options', ['aid' => $this->option->aid]);
+    return Url::fromRoute('uc_attribute.options', ['aid' => $this->option->aid]);
   }
 
   /**

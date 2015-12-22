@@ -221,7 +221,7 @@ function uc_file_user_form($form, FormStateInterface $form_state, $account) {
       '#multiple' => TRUE,
       '#size' => 6,
       '#title' => t('Add file'),
-      '#description' => t('Select a file to add as a download. Newly added files will inherit the settings at the !url.', array('!url' => \Drupal::l(t('Ubercart product settings page'), new Url('uc_product.settings')))),
+      '#description' => t('Select a file to add as a download. Newly added files will inherit the settings at the @url.', ['@url' => \Drupal::l(t('Ubercart product settings page'), Url::fromRoute('uc_product.settings'))]),
       '#options' => $available_files,
       '#tree' => TRUE,
     );
@@ -496,7 +496,7 @@ function uc_file_uc_store_status() {
     $message[] = array(
       'status' => 'warning',
       'title' => t('File downloads'),
-      'desc' => t('The file downloads directory is not valid or set. Set a valid directory in the <a href=":url">product settings</a> under the file download settings tab.', array(':url' => Url::fromRoute('uc_product.settings')->toString())),
+      'desc' => t('The file downloads directory is not valid or set. Set a valid directory in the <a href=":url">product settings</a> under the file download settings tab.', [':url' => Url::fromRoute('uc_product.settings')->toString()]),
     );
   }
   else {

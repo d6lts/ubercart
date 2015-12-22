@@ -20,7 +20,7 @@ function theme_uc_product_kit_list_item(array $variables) {
   if ($product instanceof NodeInterface) {
     $node = node_load($product->id());
     if ($node->access('view')) {
-      $title = \Drupal::l($product->label(), new Url('entity.node.canonical', ['node' => $product->id()]));
+      $title = \Drupal::l($product->label(), Url::fromRoute('entity.node.canonical', ['node' => $product->id()]));
     }
     else {
       $title = SafeMarkup::checkPlain($product->label());
@@ -30,7 +30,7 @@ function theme_uc_product_kit_list_item(array $variables) {
   else {
     $node = node_load($product->nid->target_id);
     if ($node->access('view')) {
-      $title = \Drupal::l($product->title, new Url('entity.node.canonical', ['node' => $product->nid->target_id]));
+      $title = \Drupal::l($product->title, Url::fromRoute('entity.node.canonical', ['node' => $product->nid->target_id]));
     }
     else {
       $title = SafeMarkup::checkPlain($product->title);

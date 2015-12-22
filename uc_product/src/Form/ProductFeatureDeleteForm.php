@@ -57,7 +57,7 @@ class ProductFeatureDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('uc_product.features', ['node' => $this->node->id()]);
+    return Url::fromRoute('uc_product.features', ['node' => $this->node->id()]);
   }
 
   /**

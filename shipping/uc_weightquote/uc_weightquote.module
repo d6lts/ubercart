@@ -137,11 +137,11 @@ function uc_weightquote_uc_shipping_method() {
       'operations' => array(
         'edit' => array(
           'title' => t('edit'),
-          'url' => new Url('uc_weightquote.edit', ['mid' => $method->mid]),
+          'url' => Url::fromRoute('uc_weightquote.edit', ['mid' => $method->mid]),
         ),
         'delete' => array(
           'title' => t('delete'),
-          'url' => new Url('uc_weightquote.delete', ['mid' => $method->mid]),
+          'url' => Url::fromRoute('uc_weightquote.delete', ['mid' => $method->mid]),
         ),
       ),
       'quote' => array(

@@ -20,7 +20,7 @@ class TaxRateEditForm extends TaxRateFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $rate = $this->entity;
     // Set title to show what rate we're editing.
-    $form['#title'] = $this->t('Edit %rate', array('%rate' => $rate->label()));
+    $form['#title'] = $this->t('Edit %rate', ['%rate' => $rate->label()]);
     return parent::buildForm($form, $form_state);
   }
 
