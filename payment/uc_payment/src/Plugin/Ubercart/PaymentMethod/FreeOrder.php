@@ -27,7 +27,7 @@ class FreeOrder extends PaymentMethodPluginBase {
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     return array(
-      '#markup' => t('Continue with checkout to complete your order.'),
+      '#markup' => $this->t('Continue with checkout to complete your order.'),
     );
   }
 
@@ -38,11 +38,11 @@ class FreeOrder extends PaymentMethodPluginBase {
     if ($order->getTotal() >= 0.01) {
       return array(array(
         'pass' => FALSE,
-        'message' => t('We cannot process your order without payment.'),
+        'message' => $this->t('We cannot process your order without payment.'),
       ));
     }
 
-    uc_payment_enter($order->id(), 'free_order', 0, 0, NULL, t('Checkout completed for a free order.'));
+    uc_payment_enter($order->id(), 'free_order', 0, 0, NULL, $this->t('Checkout completed for a free order.'));
   }
 
 }

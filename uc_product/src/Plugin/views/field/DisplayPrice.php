@@ -25,7 +25,7 @@ class DisplayPrice extends Price {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    $options['label']['default'] = t('Price');
+    $options['label']['default'] = $this->t('Price');
 
     return $options;
   }

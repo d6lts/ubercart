@@ -29,13 +29,13 @@ class ParametersForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $values = NULL) {
     $form['params'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Customize tax report parameters'),
-      '#description' => t('Adjust these values and update the report to build your sales tax report. Once submitted, the report may be bookmarked for easy reference in the future.'),
+      '#title' => $this->t('Customize tax report parameters'),
+      '#description' => $this->t('Adjust these values and update the report to build your sales tax report. Once submitted, the report may be bookmarked for easy reference in the future.'),
     );
 
     $form['params']['start_date'] = array(
       '#type' => 'date',
-      '#title' => t('Start date'),
+      '#title' => $this->t('Start date'),
       '#default_value' => array(
         'month' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'n'),
         'day' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'j'),
@@ -44,7 +44,7 @@ class ParametersForm extends FormBase {
     );
     $form['params']['end_date'] = array(
       '#type' => 'date',
-      '#title' => t('End date'),
+      '#title' => $this->t('End date'),
       '#default_value' => array(
         'month' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'n'),
         'day' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'j'),
@@ -59,8 +59,8 @@ class ParametersForm extends FormBase {
 
     $form['params']['status'] = array(
       '#type' => 'select',
-      '#title' => t('Order statuses'),
-      '#description' => t('Only orders with selected statuses will be included in the report.') . '<br />' . t('Hold Ctrl + click to select multiple statuses.'),
+      '#title' => $this->t('Order statuses'),
+      '#description' => $this->t('Only orders with selected statuses will be included in the report.') . '<br />' . $this->t('Hold Ctrl + click to select multiple statuses.'),
       '#options' => OrderStatus::getOptionsList(),
       '#default_value' => $stat,
       '#multiple' => TRUE,
@@ -70,7 +70,7 @@ class ParametersForm extends FormBase {
     $form['params']['actions'] = array('#type' => 'actions');
     $form['params']['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Update report'),
+      '#value' => $this->t('Update report'),
     );
 
     return $form;
@@ -81,7 +81,7 @@ class ParametersForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->isValueEmpty('status')) {
-      $form_state->setErrorByName('status', t('You must select at least one order status.'));
+      $form_state->setErrorByName('status', $this->t('You must select at least one order status.'));
     }
   }
 

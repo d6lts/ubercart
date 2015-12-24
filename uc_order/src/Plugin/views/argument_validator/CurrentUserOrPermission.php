@@ -44,9 +44,9 @@ class CurrentUserOrPermission extends ArgumentValidatorPluginBase {
     $form['perm'] = array(
       '#type' => 'select',
       '#options' => $options,
-      '#title' => t('Permission'),
+      '#title' => $this->t('Permission'),
       '#default_value' => $this->options['perm'],
-      '#description' => t('Users with the selected permission flag will be able to bypass validation.'),
+      '#description' => $this->t('Users with the selected permission flag will be able to bypass validation.'),
     );
   }
 

@@ -66,18 +66,18 @@ class TestGateway extends CreditCardPaymentMethodBase {
      drupal_set_message('<pre>' . print_r($order->payment_details, TRUE) . '</pre>');
 
     if ($success) {
-      $message = t('Credit card charged: @amount', ['@amount' => uc_currency_format($amount)]);
+      $message = $this->t('Credit card charged: @amount', ['@amount' => uc_currency_format($amount)]);
       uc_order_comment_save($order->id(), $user->id(), $message, 'admin');
     }
     else {
-      $message = t('Credit card charge failed.');
+      $message = $this->t('Credit card charge failed.');
       uc_order_comment_save($order->id(), $user->id(), $message, 'admin');
     }
 
     $result = array(
       'success' => $success,
-      'comment' => t('Card charged, resolution code: 0022548315'),
-      'message' => $success ? t('Credit card payment processed successfully.') : t('Credit card charge failed.'),
+      'comment' => $this->t('Card charged, resolution code: 0022548315'),
+      'message' => $success ? $this->t('Credit card payment processed successfully.') : $this->t('Credit card charge failed.'),
       'uid' => $user->id(),
     );
 

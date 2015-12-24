@@ -24,8 +24,8 @@ class Status extends InOperator {
    */
   public function getValueOptions() {
     if (!isset($this->valueOptions)) {
-      $this->valueTitle = t('Order status');
-      $this->valueOptions = array_merge(['_active' => t('Active')], OrderStatus::getOptionsList());
+      $this->valueTitle = $this->t('Order status');
+      $this->valueOptions = array_merge(['_active' => $this->t('Active')], OrderStatus::getOptionsList());
     }
   }
 

@@ -39,15 +39,15 @@ class Check extends PaymentMethodPluginBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['policy'] = array(
       '#type' => 'textarea',
-      '#title' => t('Check payment policy', [], ['context' => 'cheque']),
-      '#description' => t('Instructions for customers on the checkout page.'),
+      '#title' => $this->t('Check payment policy', [], ['context' => 'cheque']),
+      '#description' => $this->t('Instructions for customers on the checkout page.'),
       '#default_value' => $this->configuration['policy'],
       '#rows' => 3,
     );
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Contact'),
-      '#description' => t('Direct checks to a person or department.'),
+      '#title' => $this->t('Contact'),
+      '#description' => $this->t('Direct checks to a person or department.'),
       '#default_value' => $this->configuration['name'],
     );
     $form['address'] = array(
@@ -74,7 +74,7 @@ class Check extends PaymentMethodPluginBase {
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $build['instructions'] = array(
-      '#markup' => t('Checks should be made out to:')
+      '#markup' => $this->t('Checks should be made out to:')
     );
 
     $address = new Address();
@@ -114,7 +114,7 @@ class Check extends PaymentMethodPluginBase {
     $address->country = $this->configuration['address']['country'];
 
     $review[] = array(
-      'title' => t('Mail to'),
+      'title' => $this->t('Mail to'),
       'data' => (string) $address,
     );
 
@@ -129,11 +129,11 @@ class Check extends PaymentMethodPluginBase {
 
     $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', [':id' => $order->id()]);
     if ($clear_date = $result->fetchField()) {
-      $build['#markup'] = t('Clear Date:') . ' ' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');
+      $build['#markup'] = $this->t('Clear Date:') . ' ' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');
     }
     else {
       $build['#type'] = 'link';
-      $build['#title'] = t('Receive Check');
+      $build['#title'] = $this->t('Receive Check');
       $build['#url'] = Url::fromRoute('uc_payment_pack.check.receive', ['uc_order' => $order->id()]);
     }
 
@@ -148,8 +148,8 @@ class Check extends PaymentMethodPluginBase {
 
     $result = db_query('SELECT clear_date FROM {uc_payment_check} WHERE order_id = :id ', [':id' => $order->id()]);
     if ($clear_date = $result->fetchField()) {
-      $build['#markup'] = t('Check received') . '<br />' .
-        t('Expected clear date:') . '<br />' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');
+      $build['#markup'] = $this->t('Check received') . '<br />' .
+        $this->t('Expected clear date:') . '<br />' . \Drupal::service('date.formatter')->format($clear_date, 'uc_store');
     }
 
     return $build;

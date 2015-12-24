@@ -40,7 +40,7 @@ class AddressFieldsForm extends ConfigFormBase {
 
     $form['fields'] = array(
       '#type' => 'table',
-      '#header' => array(t('Field'), t('Required'), t('List position')),
+      '#header' => array($this->t('Field'), $this->t('Required'), $this->t('List position')),
       '#tabledrag' => array(
         array(
           'action' => 'order',
@@ -51,16 +51,16 @@ class AddressFieldsForm extends ConfigFormBase {
     );
 
     $fields = array(
-      'first_name' => t('First name'),
-      'last_name' => t('Last name'),
-      'company' => t('Company'),
-      'street1' => t('Street address 1'),
-      'street2' => t('Street address 2'),
-      'city' => t('City'),
-      'zone' => t('State/Province'),
-      'country' => t('Country'),
-      'postal_code' => t('Postal code'),
-      'phone' => t('Phone number'),
+      'first_name' => $this->t('First name'),
+      'last_name' => $this->t('Last name'),
+      'company' => $this->t('Company'),
+      'street1' => $this->t('Street address 1'),
+      'street2' => $this->t('Street address 2'),
+      'city' => $this->t('City'),
+      'zone' => $this->t('State/Province'),
+      'country' => $this->t('Country'),
+      'postal_code' => $this->t('Postal code'),
+      'phone' => $this->t('Phone number'),
     );
 
     foreach ($fields as $field => $label) {
@@ -73,13 +73,13 @@ class AddressFieldsForm extends ConfigFormBase {
       );
       $form['fields'][$field]['required'] = array(
         '#type' => 'checkbox',
-        '#title' => t('@title is required', array('@title' => $label)),
+        '#title' => $this->t('@title is required', ['@title' => $label]),
         '#title_display' => 'invisible',
         '#default_value' => $config[$field]['required'],
       );
       $form['fields'][$field]['weight'] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', ['@title' => $label]),
+        '#title' => $this->t('Weight for @title', ['@title' => $label]),
         '#title_display' => 'invisible',
         '#default_value' => $config[$field]['weight'],
         '#attributes' => array('class' => array('uc-store-address-fields-weight')),

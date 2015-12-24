@@ -40,13 +40,13 @@ class OrderWeightTotal extends Weight {
 
     $form['weight_units'] = array(
       '#type' => 'select',
-      '#title' => t('Unit of measurement'),
+      '#title' => $this->t('Unit of measurement'),
       '#default_value' => $this->options['weight_units'],
       '#options' => array(
-        'lb' => t('Pounds'),
-        'kg' => t('Kilograms'),
-        'oz' => t('Ounces'),
-        'g' => t('Grams'),
+        'lb' => $this->t('Pounds'),
+        'kg' => $this->t('Kilograms'),
+        'oz' => $this->t('Ounces'),
+        'g' => $this->t('Grams'),
       ),
     );
   }

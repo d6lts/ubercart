@@ -99,11 +99,11 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
     \Drupal::moduleHandler()->alter('uc_payment_method_checkout', $options, $order);
 
     if (!$options) {
-      $contents['#description'] = t('Checkout cannot be completed without any payment methods enabled. Please contact an administrator to resolve the issue.');
-      $options[''] = t('No payment methods available');
+      $contents['#description'] = $this->t('Checkout cannot be completed without any payment methods enabled. Please contact an administrator to resolve the issue.');
+      $options[''] = $this->t('No payment methods available');
     }
     elseif (count($options) > 1) {
-      $contents['#description'] = t('Select a payment method from the following options.');
+      $contents['#description'] = $this->t('Select a payment method from the following options.');
     }
 
     if (!$order->getPaymentMethodId() || !isset($options[$order->getPaymentMethodId()])) {
@@ -112,7 +112,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
 
     $contents['payment_method'] = array(
       '#type' => 'radios',
-      '#title' => t('Payment method'),
+      '#title' => $this->t('Payment method'),
       '#title_display' => 'invisible',
       '#options' => $options,
       '#default_value' => $order->getPaymentMethodId(),
@@ -129,7 +129,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
 
     $contents['details'] = array(
       '#prefix' => '<div id="payment-details" class="clearfix payment-details-' . $order->getPaymentMethodId() . '">',
-      '#markup' => t('Continue with checkout to complete payment.'),
+      '#markup' => $this->t('Continue with checkout to complete payment.'),
       '#suffix' => '</div>',
     );
 
@@ -153,7 +153,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
    */
   public function process(OrderInterface $order, array $form, FormStateInterface $form_state) {
     if (!$form_state->getValue(['panes', 'payment', 'payment_method'])) {
-      $form_state->setErrorByName('panes][payment][payment_method', t('You cannot check out without selecting a payment method.'));
+      $form_state->setErrorByName('panes][payment][payment_method', $this->t('You cannot check out without selecting a payment method.'));
       return FALSE;
     }
     $order->setPaymentMethodId($form_state->getValue(['panes', 'payment', 'payment_method']));
@@ -170,7 +170,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
       $review[] = array('title' => $line_item['title'], 'data' => uc_currency_format($line_item['amount']));
     }
     $method = $this->paymentMethodManager->createFromOrder($order);
-    $review[] = array('border' => 'top', 'title' => t('Paying by'), 'data' => $method->cartReviewTitle());
+    $review[] = array('border' => 'top', 'title' => $this->t('Paying by'), 'data' => $method->cartReviewTitle());
     $result = $method->cartReview($order);
     if (is_array($result)) {
       $review = array_merge($review, $result);
@@ -184,7 +184,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
   public function settingsForm() {
     $form['show_preview'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Show the order total preview on the payment pane.'),
+      '#title' => $this->t('Show the order total preview on the payment pane.'),
       '#default_value' => $this->configuration['show_preview'],
     );
     return $form;

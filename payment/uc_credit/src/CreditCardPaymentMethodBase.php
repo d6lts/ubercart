@@ -126,14 +126,14 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
 
     $form['cc_policy'] = array(
-      '#markup' => '<p>' . t('Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.') . '</p>'
+      '#markup' => '<p>' . $this->t('Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.') . '</p>'
     );
 
     $fields = $this->getEnabledFields();
     if (!empty($fields['type'])) {
       $form['cc_type'] = array(
         '#type' => 'select',
-        '#title' => t('Card type'),
+        '#title' => $this->t('Card type'),
         '#options' => $this->getEnabledTypes(),
         '#default_value' => isset($order->payment_details['cc_type']) ? $order->payment_details['cc_type'] : NULL,
       );
@@ -142,7 +142,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     if (!empty($fields['owner'])) {
       $form['cc_owner'] = array(
         '#type' => 'textfield',
-        '#title' => t('Card owner'),
+        '#title' => $this->t('Card owner'),
         '#default_value' => isset($order->payment_details['cc_owner']) ? $order->payment_details['cc_owner'] : '',
         '#attributes' => array('autocomplete' => 'off'),
         '#size' => 32,
@@ -160,12 +160,12 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
     else {
       // Otherwise default to the last 4 digits.
-      $default_num = t('(Last 4) ') . substr($order->payment_details['cc_number'], -4);
+      $default_num = $this->t('(Last 4) ') . substr($order->payment_details['cc_number'], -4);
     }
 
     $form['cc_number'] = array(
       '#type' => 'textfield',
-      '#title' => t('Card number'),
+      '#title' => $this->t('Card number'),
       '#default_value' => $default_num,
       '#attributes' => array('autocomplete' => 'off'),
       '#size' => 20,
@@ -175,15 +175,15 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     if (!empty($fields['start'])) {
       $month = isset($order->payment_details['cc_start_month']) ? $order->payment_details['cc_start_month'] : NULL;
       $year = isset($order->payment_details['cc_start_year']) ? $order->payment_details['cc_start_year'] : NULL;
-      $form['cc_start_month'] = uc_select_month(t('Start date'), $month, TRUE);
-      $form['cc_start_year'] = uc_select_year(t('Start year'), $year, date('Y') - 10, date('Y'), TRUE);
-      $form['cc_start_year']['#field_suffix'] = t('(if present)');
+      $form['cc_start_month'] = uc_select_month($this->t('Start date'), $month, TRUE);
+      $form['cc_start_year'] = uc_select_year($this->t('Start year'), $year, date('Y') - 10, date('Y'), TRUE);
+      $form['cc_start_year']['#field_suffix'] = $this->t('(if present)');
     }
 
     $month = isset($order->payment_details['cc_exp_month']) ? $order->payment_details['cc_exp_month'] : 1;
     $year = isset($order->payment_details['cc_exp_year']) ? $order->payment_details['cc_exp_year'] : date('Y');
-    $form['cc_exp_month'] = uc_select_month(t('Expiration date'), $month);
-    $form['cc_exp_year'] = uc_select_year(t('Expiration year'), $year);
+    $form['cc_exp_month'] = uc_select_month($this->t('Expiration date'), $month);
+    $form['cc_exp_year'] = uc_select_year($this->t('Expiration year'), $year);
 
     if (!empty($fields['issue'])) {
       // Set up the default Issue Number on the credit card form.
@@ -202,12 +202,12 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
       $form['cc_issue'] = array(
         '#type' => 'textfield',
-        '#title' => t('Issue number'),
+        '#title' => $this->t('Issue number'),
         '#default_value' => $default_card_issue,
         '#attributes' => array('autocomplete' => 'off'),
         '#size' => 2,
         '#maxlength' => 2,
-        '#field_suffix' => t('(if present)'),
+        '#field_suffix' => $this->t('(if present)'),
       );
     }
 
@@ -227,7 +227,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
       $form['cc_cvv'] = array(
         '#type' => 'textfield',
-        '#title' => t('CVV'),
+        '#title' => $this->t('CVV'),
         '#default_value' => $default_cvv,
         '#attributes' => array('autocomplete' => 'off'),
         '#size' => 4,
@@ -239,7 +239,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     if (!empty($fields['bank'])) {
       $form['cc_bank'] = array(
         '#type' => 'textfield',
-        '#title' => t('Issuing bank'),
+        '#title' => $this->t('Issuing bank'),
         '#default_value' => isset($order->payment_details['cc_bank']) ? $order->payment_details['cc_bank'] : '',
         '#attributes' => array('autocomplete' => 'off'),
         '#size' => 32,
@@ -266,22 +266,22 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     $fields = $this->getEnabledFields();
 
     if (!empty($fields['type'])) {
-      $review[] = array('title' => t('Card type'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_type']));
+      $review[] = array('title' => $this->t('Card type'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_type']));
     }
     if (!empty($fields['owner'])) {
-      $review[] = array('title' => t('Card owner'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_owner']));
+      $review[] = array('title' => $this->t('Card owner'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_owner']));
     }
-    $review[] = array('title' => t('Card number'), 'data' => uc_credit_display_number($order->payment_details['cc_number']));
+    $review[] = array('title' => $this->t('Card number'), 'data' => uc_credit_display_number($order->payment_details['cc_number']));
     if (!empty($fields['start'])) {
       $start = $order->payment_details['cc_start_month'] . '/' . $order->payment_details['cc_start_year'];
-      $review[] = array('title' => t('Start date'), 'data' => strlen($start) > 1 ? $start : '');
+      $review[] = array('title' => $this->t('Start date'), 'data' => strlen($start) > 1 ? $start : '');
     }
-    $review[] = array('title' => t('Expiration'), 'data' => $order->payment_details['cc_exp_month'] . '/' . $order->payment_details['cc_exp_year']);
+    $review[] = array('title' => $this->t('Expiration'), 'data' => $order->payment_details['cc_exp_month'] . '/' . $order->payment_details['cc_exp_year']);
     if (!empty($fields['issue'])) {
-      $review[] = array('title' => t('Issue number'), 'data' => $order->payment_details['cc_issue']);
+      $review[] = array('title' => $this->t('Issue number'), 'data' => $order->payment_details['cc_issue']);
     }
     if (!empty($fields['bank'])) {
-      $review[] = array('title' => t('Issuing bank'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_bank']));
+      $review[] = array('title' => $this->t('Issuing bank'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_bank']));
     }
 
     return $review;
@@ -299,31 +299,31 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $rows = array();
 
       if (!empty($order->payment_details['cc_type'])) {
-        $rows[] = t('Card type') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_type']);
+        $rows[] = $this->t('Card type') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_type']);
       }
 
       if (!empty($order->payment_details['cc_owner'])) {
-        $rows[] = t('Card owner') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_owner']);
+        $rows[] = $this->t('Card owner') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_owner']);
       }
 
       if (!empty($order->payment_details['cc_number'])) {
-        $rows[] = t('Card number') . ': ' . uc_credit_display_number($order->payment_details['cc_number']);
+        $rows[] = $this->t('Card number') . ': ' . uc_credit_display_number($order->payment_details['cc_number']);
       }
 
       if (!empty($order->payment_details['cc_start_month']) && !empty($order->payment_details['cc_start_year'])) {
-        $rows[] = t('Start date') . ': ' . $order->payment_details['cc_start_month'] . '/' . $order->payment_details['cc_start_year'];
+        $rows[] = $this->t('Start date') . ': ' . $order->payment_details['cc_start_month'] . '/' . $order->payment_details['cc_start_year'];
       }
 
       if (!empty($order->payment_details['cc_exp_month']) && !empty($order->payment_details['cc_exp_year'])) {
-        $rows[] = t('Expiration') . ': ' . $order->payment_details['cc_exp_month'] . '/' . $order->payment_details['cc_exp_year'];
+        $rows[] = $this->t('Expiration') . ': ' . $order->payment_details['cc_exp_month'] . '/' . $order->payment_details['cc_exp_year'];
       }
 
       if (!empty($order->payment_details['cc_issue'])) {
-        $rows[] = t('Issue number') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_issue']);
+        $rows[] = $this->t('Issue number') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_issue']);
       }
 
       if (!empty($order->payment_details['cc_bank'])) {
-        $rows[] = t('Issuing bank') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_bank']);
+        $rows[] = $this->t('Issuing bank') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_bank']);
       }
 
       $build['cc_info'] = array(
@@ -353,7 +353,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     $build = array();
 
     if (!empty($order->payment_details['cc_number'])) {
-      $build['#markup'] = t('Card number') . ':<br />' . uc_credit_display_number($order->payment_details['cc_number']);
+      $build['#markup'] = $this->t('Card number') . ':<br />' . uc_credit_display_number($order->payment_details['cc_number']);
     }
 
     return $build;
@@ -364,7 +364,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderEditDetails(OrderInterface $order) {
-    return t('Use the terminal available through the<br />%button button on the View tab to<br />process credit card payments.', array('%button' => t('Process card')));
+    return $this->t('Use the terminal available through the<br />%button button on the View tab to<br />process credit card payments.', ['%button' => $this->t('Process card')]);
   }
 
   /**
@@ -388,7 +388,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
 
     // Account for partial CC numbers when masked by the system.
-    if (substr($cc_data['cc_number'], 0, strlen(t('(Last4)'))) == t('(Last4)')) {
+    if (substr($cc_data['cc_number'], 0, strlen(t('(Last4)'))) == $this->t('(Last4)')) {
       // Recover the number from the encrypted data in the form if truncated.
       if (isset($cache['cc_number'])) {
         $cc_data['cc_number'] = $cache['cc_number'];
@@ -417,26 +417,26 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
     // Make sure an owner value was entered.
     if (!empty($fields['owner']) && empty($cc_data['cc_owner'])) {
-      $form_state->setErrorByName('panes][payment][details][cc_owner', t('Enter the owner name as it appears on the card.'));
+      $form_state->setErrorByName('panes][payment][details][cc_owner', $this->t('Enter the owner name as it appears on the card.'));
       $return = FALSE;
     }
 
     // Validate the credit card number.
     if (!_uc_credit_valid_card_number($cc_data['cc_number'])) {
-      $form_state->setErrorByName('panes][payment][details][cc_number', t('You have entered an invalid credit card number.'));
+      $form_state->setErrorByName('panes][payment][details][cc_number', $this->t('You have entered an invalid credit card number.'));
       $return = FALSE;
     }
 
     // Validate the start date (if entered).
     if (!empty($fields['start']) && !_uc_credit_valid_card_start($cc_data['cc_start_month'], $cc_data['cc_start_year'])) {
-      $form_state->setErrorByName('panes][payment][details][cc_start_month', t('The start date you entered is invalid.'));
+      $form_state->setErrorByName('panes][payment][details][cc_start_month', $this->t('The start date you entered is invalid.'));
       $form_state->setErrorByName('panes][payment][details][cc_start_year');
       $return = FALSE;
     }
 
     // Validate the card expiration date.
     if (!_uc_credit_valid_card_expiration($cc_data['cc_exp_month'], $cc_data['cc_exp_year'])) {
-      $form_state->setErrorByName('panes][payment][details][cc_exp_month', t('The credit card you entered has expired.'));
+      $form_state->setErrorByName('panes][payment][details][cc_exp_month', $this->t('The credit card you entered has expired.'));
       $form_state->setErrorByName('panes][payment][details][cc_exp_year');
       $return = FALSE;
     }
@@ -444,19 +444,19 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     // Validate the issue number (if entered).  With issue numbers, '01' is
     // different from '1', but is_numeric() is still appropriate.
     if (!empty($fields['issue']) && !_uc_credit_valid_card_issue($cc_data['cc_issue'])) {
-      $form_state->setErrorByName('panes][payment][details][cc_issue', t('The issue number you entered is invalid.'));
+      $form_state->setErrorByName('panes][payment][details][cc_issue', $this->t('The issue number you entered is invalid.'));
       $return = FALSE;
     }
 
     // Validate the CVV number if enabled.
     if (!empty($fields['cvv']) && !_uc_credit_valid_cvv($cc_data['cc_cvv'])) {
-      $form_state->setErrorByName('panes][payment][details][cc_cvv', t('You have entered an invalid CVV number.'));
+      $form_state->setErrorByName('panes][payment][details][cc_cvv', $this->t('You have entered an invalid CVV number.'));
       $return = FALSE;
     }
 
     // Validate the bank name if enabled.
     if (!empty($fields['bank']) && empty($cc_data['cc_bank'])) {
-      $form_state->setErrorByName('panes][payment][details][cc_bank', t('You must enter the issuing bank for that card.'));
+      $form_state->setErrorByName('panes][payment][details][cc_bank', $this->t('You must enter the issuing bank for that card.'));
       $return = FALSE;
     }
 
@@ -517,7 +517,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     // If the payment failed, store the data back in the session and
     // halt the checkout process.
     if (!$pass) {
-      return array(array('pass' => FALSE, 'message' => t('We were unable to process your credit card payment. Please verify your details and try again.')));
+      return array(array('pass' => FALSE, 'message' => $this->t('We were unable to process your credit card payment. Please verify your details and try again.')));
     }
   }
 

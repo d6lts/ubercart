@@ -39,19 +39,19 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['policy'] = array(
       '#type' => 'textarea',
-      '#title' => t('Policy message'),
+      '#title' => $this->t('Policy message'),
       '#default_value' => $this->configuration['policy'],
-      '#description' => t('Help message shown at checkout.'),
+      '#description' => $this->t('Help message shown at checkout.'),
     );
     $form['max_order'] = array(
       '#type' => 'textfield',
-      '#title' => t('Maximum order total eligible for COD'),
+      '#title' => $this->t('Maximum order total eligible for COD'),
       '#default_value' => $this->configuration['max_order'],
-      '#description' => t('Set to 0 for no maximum order limit.'),
+      '#description' => $this->t('Set to 0 for no maximum order limit.'),
     );
     $form['delivery_date'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Let customers enter a desired delivery date.'),
+      '#title' => $this->t('Let customers enter a desired delivery date.'),
       '#default_value' => $this->configuration['delivery_date'],
     );
     return $form;
@@ -76,7 +76,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
 
     if (($max = $this->configuration['max_order']) > 0 && is_numeric($max)) {
       $build['eligibility'] = array(
-        '#markup' => '<p>' . t('Orders totalling more than @amount are <b>not eligible</b> for COD.', ['@amount' => uc_currency_format($max)]) . '</p>'
+        '#markup' => '<p>' . $this->t('Orders totalling more than @amount are <b>not eligible</b> for COD.', ['@amount' => uc_currency_format($max)]) . '</p>'
       );
     }
 
@@ -110,7 +110,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
         $order->payment_details['delivery_day'],
         $order->payment_details['delivery_year']
       );
-      $review[] = array('title' => t('Delivery date'), 'data' => $date);
+      $review[] = array('title' => $this->t('Delivery date'), 'data' => $date);
     }
 
     return $review;
@@ -126,7 +126,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
       isset($order->payment_details['delivery_month']) &&
       isset($order->payment_details['delivery_day']) &&
       isset($order->payment_details['delivery_year'])) {
-      $build['#markup'] = t('Desired delivery date:') . '<br />' .
+      $build['#markup'] = $this->t('Desired delivery date:') . '<br />' .
         uc_date_format(
           $order->payment_details['delivery_month'],
           $order->payment_details['delivery_day'],
@@ -191,7 +191,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
     if ($max > 0 && $order->getTotal() > $max) {
       $result[] = array(
         'pass' => FALSE,
-        'message' => t('Your final order total exceeds the maximum for COD payment.  Please go back and select a different method of payment.')
+        'message' => $this->t('Your final order total exceeds the maximum for COD payment.  Please go back and select a different method of payment.')
       );
       return $result;
     }
@@ -215,7 +215,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
     $year  = !empty($order->payment_details['delivery_year'])  ? $order->payment_details['delivery_year']  : \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y');
 
     $form['description'] = array(
-      '#markup' => '<div>' . t('Enter a desired delivery date:') . '</div>',
+      '#markup' => '<div>' . $this->t('Enter a desired delivery date:') . '</div>',
     );
     $form['delivery_month'] = uc_select_month(NULL, $month);
     $form['delivery_day']   = uc_select_day(NULL, $day);

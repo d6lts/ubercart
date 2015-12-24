@@ -49,19 +49,19 @@ class FullName extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['link_to_user'] = array(
-      '#title' => t('Link this field to its user'),
-      '#description' => t("Enable to override this field's links."),
+      '#title' => $this->t('Link this field to its user'),
+      '#description' => $this->t("Enable to override this field's links."),
       '#type' => 'checkbox',
       '#default_value' => $this->options['link_to_user'],
     );
 
     $form['format'] =  array(
       '#type' => 'select',
-      '#title' => t('Format'),
+      '#title' => $this->t('Format'),
       '#options' => array(
-        'first_last' => t('First Last'),
-        'last_c_first' => t('Last, First'),
-        'last_first' => t('Last First'),
+        'first_last' => $this->t('First Last'),
+        'last_c_first' => $this->t('Last, First'),
+        'last_first' => $this->t('Last First'),
       ),
       '#default_value' => $this->options['format'],
     );

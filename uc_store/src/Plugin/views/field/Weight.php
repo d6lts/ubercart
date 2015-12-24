@@ -38,11 +38,11 @@ class Weight extends NumericField {
     parent::buildOptionsForm($form, $form_state);
 
     $form['format'] =  array(
-      '#title' => t('Format'),
+      '#title' => $this->t('Format'),
       '#type' => 'radios',
       '#options' => array(
-        'uc_weight' => t('Ubercart weight'),
-        'numeric' => t('Numeric'),
+        'uc_weight' => $this->t('Ubercart weight'),
+        'numeric' => $this->t('Numeric'),
       ),
       '#default_value' => $this->options['format'],
       '#weight' => -1,

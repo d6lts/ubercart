@@ -38,11 +38,11 @@ class Price extends NumericField {
     parent::buildOptionsForm($form, $form_state);
 
     $form['format'] =  array(
-      '#title' => t('Format'),
+      '#title' => $this->t('Format'),
       '#type' => 'radios',
       '#options' => array(
-        'uc_price' => t('Ubercart price'),
-        'numeric' => t('Numeric'),
+        'uc_price' => $this->t('Ubercart price'),
+        'numeric' => $this->t('Numeric'),
       ),
       '#default_value' => $this->options['format'],
       '#weight' => -1,
