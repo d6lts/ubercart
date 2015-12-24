@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Shipping quote module that defines a weight-based shipping rate for each
- * product.
+ * Shipping quote module that defines a weight-based rate for each product.
  */
 
 use Drupal\Component\Utility\SafeMarkup;
@@ -37,8 +36,8 @@ function uc_weightquote_form_node_form_alter(&$form, &$form_state, $form_id) {
         '#type' => 'uc_price',
         '#title' => SafeMarkup::checkPlain($method->title),
         '#default_value' => isset($form['#node']->weightquote[$method->mid]) ? $form['#node']->weightquote[$method->mid] : '',
-        '#description' => t('Default rate: %price per @unit', array('%price' => uc_currency_format($method->product_rate), '@unit' => $unit)),
-        '#field_suffix' => t('per @unit', array('@unit' => $unit)),
+        '#description' => t('Default rate: %price per @unit', ['%price' => uc_currency_format($method->product_rate), '@unit' => $unit]),
+        '#field_suffix' => t('per @unit', ['@unit' => $unit]),
         '#weight' => $weight['weightquote_' . $method->mid],
         '#empty_zero' => FALSE,
       );
@@ -96,7 +95,7 @@ function uc_weightquote_node_load($nodes) {
   }
 
   if ($vids) {
-    $result = db_query("SELECT nid, mid, rate FROM {uc_weightquote_products} WHERE vid IN (:vids[])", array(':vids[]' => $vids));
+    $result = db_query("SELECT nid, mid, rate FROM {uc_weightquote_products} WHERE vid IN (:vids[])", [':vids[]' => $vids]);
     foreach ($result as $method) {
       $nodes[$method->nid]->weightquote[$method->mid] = $method->rate;
     }
@@ -168,14 +167,14 @@ function uc_weightquote_uc_shipping_method() {
  * @param $method
  *   The shipping method to use to create the quote.
  *
- * @return
+ * @return array
  *   An array containing the shipping quote for the order.
  */
 function uc_weightquote_quote($products, $details, $method) {
   $method = explode('_', $method['id']);
   $mid = $method[1];
 
-  if ($method = db_query("SELECT * FROM {uc_weightquote_methods} WHERE mid = :mid", array(':mid' => $mid))->fetchObject()) {
+  if ($method = db_query("SELECT * FROM {uc_weightquote_methods} WHERE mid = :mid", [':mid' => $mid])->fetchObject()) {
     // Start at the base rate.
     $rate = $method->base_rate;
 

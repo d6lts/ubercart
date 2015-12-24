@@ -34,7 +34,7 @@ function uc_flatrate_form_node_form_alter(&$form, &$form_state, $form_id) {
         '#type' => 'uc_price',
         '#title' => SafeMarkup::checkPlain($method->title),
         '#default_value' => isset($form['#node']->flatrate[$method->mid]) ? $form['#node']->flatrate[$method->mid] : '',
-        '#description' => t('Default rate: %price', array('%price' => uc_currency_format($method->product_rate))),
+        '#description' => t('Default rate: %price', ['%price' => uc_currency_format($method->product_rate)]),
         '#weight' => $weight['flatrate_' . $method->mid],
         '#empty_zero' => FALSE,
       );
@@ -92,7 +92,7 @@ function uc_flatrate_node_load($nodes) {
   }
 
   if ($vids) {
-    $result = db_query("SELECT nid, mid, rate FROM {uc_flatrate_products} WHERE vid IN (:vids[])", array(':vids[]' => $vids));
+    $result = db_query("SELECT nid, mid, rate FROM {uc_flatrate_products} WHERE vid IN (:vids[])", [':vids[]' => $vids]);
     foreach ($result as $method) {
       $nodes[$method->nid]->flatrate[$method->mid] = $method->rate;
     }
@@ -164,14 +164,14 @@ function uc_flatrate_uc_shipping_method() {
  * @param $method
  *   The shipping method to use to create the quote.
  *
- * @return
+ * @return array
  *   An array containing the shipping quote for the order.
  */
 function uc_flatrate_quote($products, $details, $method) {
   $method = explode('_', $method['id']);
   $mid = $method[1];
 
-  if ($method = db_query("SELECT * FROM {uc_flatrate_methods} WHERE mid = :mid", array(':mid' => $mid))->fetchObject()) {
+  if ($method = db_query("SELECT * FROM {uc_flatrate_methods} WHERE mid = :mid", [':mid' => $mid])->fetchObject()) {
     // Start at the base rate.
     $rate = $method->base_rate;
 

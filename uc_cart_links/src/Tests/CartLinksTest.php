@@ -670,7 +670,7 @@ class CartLinksTest extends UbercartTestBase {
     $this->assertFieldByName(
       'uc_cart_links_invalid_page',
       $url,
-      SafeMarkup::format('Cart Links invalid page URL contains "@url".', ['@url' => $url])
+      SafeMarkup::format('Cart Links invalid page URL contains ":url".', [':url' => $url])
     );
   }
 

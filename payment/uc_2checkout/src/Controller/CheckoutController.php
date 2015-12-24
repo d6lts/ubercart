@@ -24,7 +24,7 @@ class CheckoutController extends ControllerBase {
   public function complete($cart_id = 0) {
     $cart_config = \Drupal::config('uc_cart.settings');
     $module_config = \Drupal::config('uc_2checkout.settings');
-    \Drupal::logger('2Checkout')->notice('Receiving new order notification for order !order_id.', array('!order_id' => SafeMarkup::checkPlain($_REQUEST['merchant_order_id'])));
+    $this->logger('2Checkout')->notice('Receiving new order notification for order @order_id.', ['@order_id' => SafeMarkup::checkPlain($_REQUEST['merchant_order_id'])]);
 
     $order = Order::load($_REQUEST['merchant_order_id']);
 
@@ -41,7 +41,7 @@ class CheckoutController extends ControllerBase {
     }
 
     if ($_REQUEST['demo'] == 'Y' xor $module_config->get('demo')) {
-      \Drupal::logger('uc_2checkout')->error('The 2checkout payment for order <a href="@order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
+      $this->logger('uc_2checkout')->error('The 2checkout payment for order <a href="@order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
         '@order_url' => url('admin/store/orders/' . $order->id()),
         '@order_id' => $order->id(),
         '%flag' => $_REQUEST['demo'] == 'Y' ? 'Y' : 'N',
@@ -63,16 +63,16 @@ class CheckoutController extends ControllerBase {
     $order->save();
 
     if (Unicode::strtolower($_REQUEST['email']) !== Unicode::strtolower($order->getEmail())) {
-      uc_order_comment_save($order->id(), 0, t('Customer used a different e-mail address during payment: !email', array('!email' => SafeMarkup::checkPlain($_REQUEST['email']))), 'admin');
+      uc_order_comment_save($order->id(), 0, t('Customer used a different e-mail address during payment: @email', ['@email' => SafeMarkup::checkPlain($_REQUEST['email'])]), 'admin');
     }
 
     if ($_REQUEST['credit_card_processed'] == 'Y' && is_numeric($_REQUEST['total'])) {
-      $comment = t('Paid by !type, 2Checkout.com order #!order.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('credit card') : t('echeck'), '!order' => SafeMarkup::checkPlain($_REQUEST['order_number'])));
+      $comment = t('Paid by @type, 2Checkout.com order #@order.', ['@type' => $_REQUEST['pay_method'] == 'CC' ? t('credit card') : t('echeck'), '@order' => SafeMarkup::checkPlain($_REQUEST['order_number'])]);
       uc_payment_enter($order->id(), '2checkout', $_REQUEST['total'], 0, NULL, $comment);
     }
     else {
       drupal_set_message(t('Your order will be processed as soon as your payment clears at 2Checkout.com.'));
-      uc_order_comment_save($order->id(), 0, t('!type payment is pending approval at 2Checkout.com.', array('!type' => $_REQUEST['pay_method'] == 'CC' ? t('Credit card') : t('eCheck'))), 'admin');
+      uc_order_comment_save($order->id(), 0, t('@type payment is pending approval at 2Checkout.com.', ['@type' => $_REQUEST['pay_method'] == 'CC' ? t('Credit card') : t('eCheck'))], 'admin');
     }
 
     // Empty that cart...

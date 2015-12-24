@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_store\Encryption;
 
@@ -138,7 +139,7 @@ function uc_authorizenet_settings_form($form, &$form_state) {
   $form['arb_settings']['uc_authnet_report_arb_post'] = array(
     '#type' => 'checkbox',
     '#title' => t('Log reported ARB payments in watchdog.'),
-    '#description' => t('Make sure you have set your Silent POST URL in Authorize.Net to @url.', array('@url' => url('authnet/silent-post', array('absolute' => TRUE)))),
+    '#description' => t('Make sure you have set your Silent POST URL in Authorize.Net to :url.', [':url' => Url::fromUri('base:authnet/silent-post', ['absolute' => TRUE])->toString()]),
     '#default_value' => variable_get('uc_authnet_report_arb_post', FALSE),
   );
 

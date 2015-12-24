@@ -23,7 +23,7 @@ function uc_cybersource_requirements($phase) {
     );
     if (!$has_soap || !$has_dom) {
       $requirements['uc_cybersource_soap_and_dom']['severity'] = REQUIREMENT_ERROR;
-      $requirements['uc_cybersource_soap_and_dom']['description'] = t("CyberSource's SOAP Toolkit API requires the PHP <a href='!soap_url'>SOAP</a> and <a href='!dom_url'>DOM</a> libraries.", array('!soap_url' => 'http://php.net/manual/en/soap.setup.php', '!dom_url' => 'http://php.net/manual/en/dom.setup.php'));
+      $requirements['uc_cybersource_soap_and_dom']['description'] = t('CyberSource\'s SOAP Toolkit API requires the PHP <a href=":soap_url">SOAP</a> and <a href=":dom_url">DOM</a> libraries.', [':soap_url' => Url::fromUri('http://php.net/manual/en/soap.setup.php')->toString(), ':dom_url' => Url::fromUri('http://php.net/manual/en/dom.setup.php')->toString()]);
     }
   }
 
