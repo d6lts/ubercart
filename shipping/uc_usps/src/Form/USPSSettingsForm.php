@@ -218,7 +218,9 @@ class USPSSettingsForm extends ConfigFormBase {
       '#value' => $this->t('Save configuration'),
     );
     $form['actions']['cancel'] = array(
-      '#markup' => $this->l($this->t('Cancel'), Url::fromRoute('uc_quote.methods')),
+      '#type' => 'link',
+      '#title' => $this->t('Cancel'),
+      '#url' => Url::fromRoute('uc_quote.methods'),
     );
 
     if (!empty($_POST) && $form_state->getErrors()) {
