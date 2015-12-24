@@ -17,7 +17,7 @@ class TaxController extends ControllerBase {
   /**
    * Displays the taxes for an order.
    */
-  function calculate($uc_order) {
+  public function calculate($uc_order) {
     // Fetch the taxes for the order.
     $data = uc_cybersource_uc_calculate_tax($uc_order);
 
