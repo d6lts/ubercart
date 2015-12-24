@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -78,7 +79,7 @@ function uc_store_tokens($type, $tokens, array $data, array $options, Bubbleable
       switch ($name) {
         case 'login-link':
           $login_link = Url::fromRoute('user.page', [], ['absolute' => TRUE])->toString();
-          $replacements[$original] = \Drupal::l($login_link, Url::fromUri($login_link));
+          $replacements[$original] = Link::fromTextAndUrl($login_link, Url::fromUri($login_link))->toString();
           break;
 
         case 'logo':
@@ -106,7 +107,7 @@ function uc_store_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'link':
-          $replacements[$original] = \Drupal::l(uc_store_name(), Url::fromRoute('<front>', [], ['absolute' => TRUE]));
+          $replacements[$original] = Link::createFromRoute(uc_store_name(), '<front>', [], ['absolute' => TRUE])->toString();
           break;
 
         case 'email':

@@ -33,9 +33,9 @@ function uc_attribute_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     // Help messages for the attributes overview on products and classes.
     case 'uc_attribute.product_attributes':
-      return '<p>' . t('Add attributes to this product using the <a href=":url">add attributes form</a>. You may then adjust the settings for these attributes on this page and go on to configure their options in the <em>Options</em> tab.', [':url' => Url::fromRoute('uc_attribute.product_attributes_add', ['node' => $route_match->getRawParameter('node')])]) . '</p>';
+      return '<p>' . t('Add attributes to this product using the <a href=":url">add attributes form</a>. You may then adjust the settings for these attributes on this page and go on to configure their options in the <em>Options</em> tab.', [':url' => Url::fromRoute('uc_attribute.product_attributes_add', ['node' => $route_match->getRawParameter('node')])->toString()]) . '</p>';
     case 'uc_attribute.product_class_attributes':
-      return '<p>' . t('Add attributes to the product class using the <a href=":url">add attributes form</a>. You may then adjust the settings for these attributes on this page and go on to configure their options in the <em>Options</em> tab.', [':url' => Url::fromRoute('uc_attribute.product_class_attributes_add', ['node_type' => $route_match->getRawParameter('node_type')])]) . '</p>';
+      return '<p>' . t('Add attributes to the product class using the <a href=":url">add attributes form</a>. You may then adjust the settings for these attributes on this page and go on to configure their options in the <em>Options</em> tab.', [':url' => Url::fromRoute('uc_attribute.product_class_attributes_add', ['node_type' => $route_match->getRawParameter('node_type')])->toString()]) . '</p>';
 
     // Help message for adding an attribute to a product or class.
     case 'uc_attribute.product_attributes_add':

@@ -182,8 +182,10 @@ class SalesTaxReport {
     }
 
     $build['export_csv'] = array(
-      '#markup' => \Drupal::l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#type' => 'link',
       '#prefix' => '<div class="uc-reports-links">',
+      '#title' => t('Export to CSV file.'),
+      '#url' => Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']]),
       '#suffix' => '</div>',
     );
 

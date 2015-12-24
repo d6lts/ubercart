@@ -9,6 +9,7 @@ namespace Drupal\uc_country;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -77,7 +78,7 @@ class CountryListBuilder extends ConfigEntityListBuilder {
         . " shipping address.</p>"
         . "<p>You may also use the 'Edit' widget in the 'Operations' column to"
         . " edit a country's name or address format.</p>",
-        ['@iso' => \Drupal::l('ISO 3166', Url::fromUri('http://en.wikipedia.org/wiki/ISO_3166'))]
+        ['@iso' => Link::fromTextAndUrl('ISO 3166', Url::fromUri('http://en.wikipedia.org/wiki/ISO_3166'))->toString()]
       ),
     );
     $build += parent::render();

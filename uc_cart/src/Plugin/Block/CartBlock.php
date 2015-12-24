@@ -107,7 +107,8 @@ class CartBlock extends BlockBase {
             $items[] = array(
               'nid' => $display_item['nid']['#value'],
               'qty' => $display_item['qty']['#default_value'],
-              'title' => $display_item['title']['#markup'],
+              // $display_item['title'] can be either #markup or #type => 'link', so render it.
+              'title' => drupal_render($display_item['title']),
               'price' => $display_item['#total'],
               'desc' => isset($display_item['description']['#markup']) ? $display_item['description']['#markup'] : FALSE,
             );

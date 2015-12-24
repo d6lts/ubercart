@@ -108,7 +108,7 @@ class StockReports extends ControllerBase {
 
 //    if (isset($_GET['nopage'])) {
 //      $build['links']['toggle_pager'] = array(
-//        '#markup' => $this->l($this->t('Show paged records'), new Url('admin/store/reports/stock')),
+//        '#markup' => $this->l($this->t('Show paged records'), Url::fromRoute('base:admin/store/reports/stock')),
 //      );
 //    }
 //    else {

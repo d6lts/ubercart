@@ -9,6 +9,7 @@ namespace Drupal\uc_credit;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
@@ -552,7 +553,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
     else {
       // Otherwise display the failure message in the logs.
-      \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message', ['@order_id' => $order->id(), '@message' => $result['message'], 'link' => \Drupal::l(t('view order'), Url::fromRoute('entity.uc_order.canonical', ['uc_order' => $order->id()]))]);
+      \Drupal::logger('uc_payment')->warning('Payment failed for order @order_id: @message', ['@order_id' => $order->id(), '@message' => $result['message'], 'link' => Link::createFromRoute(t('view order'), 'entity.uc_order.canonical', ['uc_order' => $order->id()])->toString()]);
     }
 
     return $result['success'];

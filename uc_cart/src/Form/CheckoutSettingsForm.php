@@ -192,7 +192,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       );
       $form['checkout']['panes'][$id]['weight'] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $pane->getTitle())),
+        '#title' => t('Weight for @title', ['@title' => $pane->getTitle()]),
         '#title_display' => 'invisible',
         '#default_value' => $pane->getWeight(),
         '#attributes' => array(
@@ -206,7 +206,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       if (!empty($pane_settings)) {
         $form['checkout']['pane_settings'][$id] = $pane_settings + array(
           '#type' => 'details',
-          '#title' => t('@pane pane', array('@pane' => $pane->getTitle())),
+          '#title' => t('@pane pane', ['@pane' => $pane->getTitle()]),
           '#group' => 'checkout-settings',
           '#parents' => array('panes', $id, 'settings'),
         );
@@ -250,7 +250,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
     $form['completion_messages']['uc_msg_order_new_user_logged_in'] = array(
       '#type' => 'textarea',
       '#title' => t('New logged in users'),
-      '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href=":url">checkout settings</a>.', array(':url' => Url::fromRoute('uc_cart.checkout_settings')->toString())),
+      '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href=":url">checkout settings</a>.', [':url' => Url::fromRoute('uc_cart.checkout_settings')->toString()]),
       '#default_value' => $messages->get('new_user_logged_in'),
       '#rows' => 3,
       '#states' => $anon_state,

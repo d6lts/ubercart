@@ -12,6 +12,7 @@
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
 
@@ -252,7 +253,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'DESC' => substr($desc, 0, 127),
       'INVNUM' => $order_id . '-' . REQUEST_TIME,
       'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
-      'NOTIFYURL' => Url::fromRoute(new Url('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE]))->toString(),
+      'NOTIFYURL' => Url::fromUri('base:uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
       'EMAIL' => substr($order->getEmail(), 0, 127),
       'PHONENUM' => substr($order->billing_phone, 0, 20),
     );
@@ -284,7 +285,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
         array(
           '!paypal_message' => _uc_paypal_build_error_messages($nvp_response),
           '@type' => $types[$data['txn_type']],
-          'link' => \Drupal::l(t('view order'), 'admin/store/orders/' . $order_id),
+          'link' => Link::fromTextAndUrl(t('view order'), Url::fromUri('base:admin/store/orders/' . $order_id)),
         )
       );
       // Fall through.
@@ -520,7 +521,7 @@ function uc_payment_method_paypal_ec($op, &$order) {
       $form['api'] = array(
         '#type' => 'fieldset',
         '#title' => t('API credentials'),
-        '#description' => t('!link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', array('!link' => \Drupal::l(t('Click here'), Url::fromUri('https://www.paypal.com/IntegrationCenter/ic_certificate.html')))),
+        '#description' => t('@link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', ['@link' => Link::fromTextAndUrl(t('Click here'), Url::fromUri('https://www.paypal.com/IntegrationCenter/ic_certificate.html'))->toString()]),
       );
       $form['api']['uc_paypal_api_username'] = array(
         '#type' => 'textfield',

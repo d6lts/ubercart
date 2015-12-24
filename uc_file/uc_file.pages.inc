@@ -5,6 +5,8 @@
  * File menu items.
  */
 
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -143,7 +145,7 @@ function uc_file_user_downloads($account) {
 
     // Expiration set to 'never'
     if ($file->expiration == FALSE) {
-      $file_link = \Drupal::l(\Drupal::service('file_system')->basename($file->filename), 'download/' . $file->fid, $onclick);
+      $file_link = Link::fromTextAndUrl(\Drupal::service('file_system')->basename($file->filename), 'download/' . $file->fid, $onclick)->toString();
     }
 
     // Expired.
@@ -153,7 +155,7 @@ function uc_file_user_downloads($account) {
 
     // Able to be downloaded.
     else {
-      $file_link = \Drupal::l(\Drupal::service('file_system')->basename($file->filename), 'download/' . $file->fid, $onclick) . ' (' . t('expires on @date', ['@date' => \Drupal::service('date.formatter')->format($file->expiration, 'uc_store')]) . ')';
+      $file_link = Link::fromTextAndUrl(\Drupal::service('file_system')->basename($file->filename), 'download/' . $file->fid, $onclick)->toString() . ' (' . t('expires on @date', ['@date' => \Drupal::service('date.formatter')->format($file->expiration, 'uc_store')]) . ')';
     }
 
     $files[] = array(
@@ -456,7 +458,7 @@ function _uc_file_download_redirect($uid = NULL) {
   // Redirect users back to their file page.
   else {
     if (!headers_sent()) {
-      drupal_goto('user/' . $uid . '/purchased-files');
+      return new RedirectResponse(Url::fromRoute('user/' . $uid . '/purchased-files'));
     }
   }
 }

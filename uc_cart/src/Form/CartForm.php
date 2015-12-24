@@ -121,7 +121,8 @@ class CartForm extends FormBase {
         $form['data'][$i]['data'] = $item['data'];
         $form['data'][$i]['title'] = array(
           '#type' => 'value',
-          '#value' => $item['title']['#markup'],
+          // $item['title'] can be either #markup or #type => 'link', so render it.
+          '#value' => drupal_render($item['title']),
         );
 
         $subtotal += $item['#total'];
@@ -146,7 +147,9 @@ class CartForm extends FormBase {
       // Add the element to the form based on the element type.
       if ($cart_config->get('continue_shopping_type') == 'link') {
         $form['actions']['continue_shopping'] = array(
-          '#markup' => $this->l($this->t('Continue shopping'), Url::fromUri('internal:' . $this->continueShoppingUrl())),
+          '#type' => 'link',
+          '#title' => $this->t('Continue shopping'),
+          '#url' => Url::fromUri('internal:' . $this->continueShoppingUrl()),
         );
       }
       elseif ($cart_config->get('continue_shopping_type') == 'button') {
@@ -201,7 +204,7 @@ class CartForm extends FormBase {
     if (substr($triggering_element['#name'], 0, 7) == 'remove-') {
       $item = substr($triggering_element['#name'], 7);
       $form_state->setValue(['items', $item, 'qty'], 0);
-      drupal_set_message($this->t('<strong>@product</strong> removed from your shopping cart.', array('@product' => $form['data'][$item]['title']['#value'])));
+      drupal_set_message($this->t('<strong>@product</strong> removed from your shopping cart.', ['@product' => $form['data'][$item]['title']['#value']]));
     }
 
     // Update the items in the shopping cart based on the form values, but only

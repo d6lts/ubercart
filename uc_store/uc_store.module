@@ -13,6 +13,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_store\Address;
 
@@ -144,8 +145,8 @@ function uc_store_help($route_name, RouteMatchInterface $route_match) {
       $output = '<h3>' . t('Ubercart') . '</h3>';
       $output .= '<p>' . t('Use the following links to find documentation and support:') . '</p>';
       $output .= '<ul>';
-      $output .= '<li>' . \Drupal::l(t("Ubercart User's Guide"), Url::fromUri('http://www.ubercart.org/docs/user')) . '</li>';
-      $output .= '<li>' . \Drupal::l(t('Support Forums'), Url::fromUri('http://www.ubercart.org/forum')) . '</li>';
+      $output .= '<li>' . Link::fromTextAndUrl(t("Ubercart User's Guide"), Url::fromUri('http://www.ubercart.org/docs/user'))->toString() . '</li>';
+      $output .= '<li>' . Link::fromTextAndUrl(t('Support Forums'), Url::fromUri('http://www.ubercart.org/forum'))->toString() . '</li>';
       $output .= '</ul>';
       return $output;
 

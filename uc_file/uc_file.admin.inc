@@ -8,6 +8,7 @@
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -89,7 +90,7 @@ function uc_file_admin_files_form_show_files($form, FormStateInterface $form_sta
         'data' => SafeMarkup::checkPlain($file->filename),
         'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
       ),
-      'title' => \Drupal::l($file->title, Url::fromRoute('entity.node.canonical', ['node' => $file->nid])),
+      'title' => Link::createFromRoute($file->title, 'entity.node.canonical', ['node' => $file->nid]),
       'model' => SafeMarkup::checkPlain($file->model),
     );
   }
@@ -201,7 +202,7 @@ function theme_uc_file_admin_files_form_show(array $variables) {
   $form = $variables['form'];
 
   // Render everything.
-  $output = '<p>' . t('File downloads can be attached to any Ubercart product as a product feature. For security reasons the <a href="!download_url">file downloads directory</a> is separated from the Drupal <a href="!file_url">file system</a>. Below is the list of files (and their associated Ubercart products, if any) that can be used for file downloads.', array('!download_url' => Url::fromRoute('uc_product.admin', [], ['query' => ['destination' => 'admin/store/products/files']]), '!file_url' => Url::fromRoute('system.file_system_settings'))) . '</p>';
+  $output = '<p>' . t('File downloads can be attached to any Ubercart product as a product feature. For security reasons the <a href="@download_url">file downloads directory</a> is separated from the Drupal <a href="@file_url">file system</a>. Below is the list of files (and their associated Ubercart products, if any) that can be used for file downloads.', ['@download_url' => Url::fromRoute('uc_product.admin', [], ['query' => ['destination' => 'admin/store/products/files']])->toString(), '@file_url' => Url::fromRoute('system.file_system_settings')->toString()]) . '</p>';
   $output .= drupal_render($form['uc_file_action']);
   $output .= drupal_render($form['file_select']);
   $output .= theme('pager');

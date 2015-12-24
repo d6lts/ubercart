@@ -36,7 +36,7 @@ class CartBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $text = $config->get('breadcrumb_text');
 
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $links[] = new Link($text, Url::fromUri('internal:/' . $config->get('breadcrumb_url'), ['absolute' => TRUE]));
+    $links[] = Link::fromTextAndUrl($text, Url::fromUri('internal:/' . $config->get('breadcrumb_url'), ['absolute' => TRUE]));
 
     $breadcrumb = new Breadcrumb();
     $breadcrumb->setLinks($links);

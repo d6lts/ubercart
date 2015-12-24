@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 
 /**
  * Displays a form to select a previously entered address.
@@ -332,7 +333,7 @@ function uc_order_add_line_item_form($form, FormStateInterface $form_state, $ord
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Add line item'),
-    '#suffix' => \Drupal::l(t('Cancel'), Url::fromRoute('entity.uc_order.edit_form', ['uc_order' => $order->id()])),
+    '#suffix' => Link::createFromRoute(t('Cancel'), 'entity.uc_order.edit_form', ['uc_order' => $order->id()])->toString(),
   );
 
   return $form;

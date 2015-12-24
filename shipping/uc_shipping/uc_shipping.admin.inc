@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -34,7 +35,7 @@ function uc_shipping_order_packages($order) {
     $row[] = '<ul><li>' . implode('</li><li>', $product_list) . '</li></ul>';
     $row[] = isset($shipping_type_options[$package->shipping_type]) ? $shipping_type_options[$package->shipping_type] : strtr($package->shipping_type, '_', ' ');
     $row[] = SafeMarkup::checkPlain($package->pkg_type);
-    $row[] = isset($package->sid) ? \Drupal::l($package->sid, new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/view', array('order_id' => $order->id(), 'shipment_id' => $package->sid))) : '';
+    $row[] = isset($package->sid) ? Link::fromTextAndUrl($package->sid, Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/view', ['order_id' => $order->id(), 'shipment_id' => $package->sid])) : '';
     $row[] = isset($package->tracking_number) ? SafeMarkup::checkPlain($package->tracking_number) : '';
 
     if ($package->label_image && $image = file_load($package->label_image)) {
@@ -46,26 +47,26 @@ function uc_shipping_order_packages($order) {
 
     if (isset($package->sid) && isset($package->label_image)) {
       $method = db_query("SELECT shipping_method FROM {uc_shipments} WHERE sid = :sid", array(':sid' => $package->sid))->fetchField();
-      $row[] = \Drupal::l(
+      $row[] = Link::fromTextAndUrl(
         theme('image_style', array(
           'style_name' => 'uc_thumbnail',
           'uri' => $package->label_image->uri,
           'alt' => t('Shipping label'),
           'title' => t('Shipping label'),
         )),
-        new Url('admin/store/orders/{order_id}/shipments/labels/{method}/{image_uri}', ['order_id' => $order->id(), 'method' => $method, 'image_uri' => $package->label_image->uri])
+        Url::fromUri('base:admin/store/orders/{order_id}/shipments/labels/{method}/{image_uri}', ['order_id' => $order->id(), 'method' => $method, 'image_uri' => $package->label_image->uri])
       );
     }
     else {
       $row[] = '';
     }
 
-    $row[] = \Drupal::l(t('edit'), new Url('admin/store/orders/{order_id}/packages/{package_id}/edit', array('order_id' => $order->id(), 'package_id' => $package->package_id)));
-    $row[] = \Drupal::l(t('ship'), new Url('admin/store/orders/{order_id}/shipments/new', array('order_id' => $order->id())), array('query' => array('pkgs' => array($package->package_id))));
-    $row[] = \Drupal::l(t('delete'), new Url('admin/store/orders/{order_id}/packages/{package_id}/delete', array('order_id' => $order->id(), 'package_id' => $package->package_id)));
+    $row[] = Link::fromTextAndUrl(t('edit'), Url::fromUri('base:admin/store/orders/{order_id}/packages/{package_id}/edit', ['order_id' => $order->id(), 'package_id' => $package->package_id]));
+    $row[] = Link::fromTextAndUrl(t('ship'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/new', ['order_id' => $order->id()]), ['query' => ['pkgs' => [$package->package_id]]]);
+    $row[] = Link::fromTextAndUrl(t('delete'), Url::fromUri('base:admin/store/orders/{order_id}/packages/{package_id}/delete', ['order_id' => $order->id(), 'package_id' => $package->package_id]));
 
     if ($package->sid) {
-      $row[] = \Drupal::l(t('cancel shipment'), new Url('admin/store/orders/{order_id}/packages/{package_id}/cancel', array('order_id' => $order->id(), 'package_id' => $package->package_id)));
+      $row[] = Link::fromTextAndUrl(t('cancel shipment'), Url::fromUri('base:admin/store/orders/{order_id}/packages/{package_id}/cancel', ['order_id' => $order->id(), 'package_id' => $package->package_id]));
     }
     else {
       $row[] = '';
@@ -516,11 +517,11 @@ function uc_shipping_order_shipments($order) {
     $row[] = \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store');
     $row[] = \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store');
     $row[] = is_null($shipment->tracking_number) ? t('n/a') : SafeMarkup::checkPlain($shipment->tracking_number);
-    $row[] = \Drupal::l(t('view'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/view', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
-    $row[] = \Drupal::l(t('edit'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/edit', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
-    $row[] = \Drupal::l(t('print'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/print', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
-    $row[] = \Drupal::l(t('packing slip'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/packing_slip', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
-    $row[] = \Drupal::l(t('delete'), new Url('admin/store/orders/{order_id}/shipments/{shipment_id}/delete', array('order_id' => $order->id(), 'shipment_id' => $shipment->sid)));
+    $row[] = Link::fromTextAndUrl(t('view'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/view', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
+    $row[] = Link::fromTextAndUrl(t('edit'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/edit', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
+    $row[] = Link::fromTextAndUrl(t('print'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/print', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
+    $row[] = Link::fromTextAndUrl(t('packing slip'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/packing_slip', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
+    $row[] = Link::fromTextAndUrl(t('delete'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/delete', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
     $rows[] = $row;
   }
 
@@ -1190,7 +1191,7 @@ function uc_shipping_make_shipment($order) {
   $args = func_get_args();
   if (count($args) > 2) {
     $breadcrumb = drupal_get_breadcrumb();
-    $breadcrumb[] = \Drupal::l(t('Shipments'), new Url('admin/store/orders/{order_id}/shipments', array('order_id' => $order->id())));
+    $breadcrumb[] = Link::fromTextAndUrl(t('Shipments'), Url::fromUri('base:admin/store/orders/{order_id}/shipments', ['order_id' => $order->id()]));
     drupal_set_breadcrumb($breadcrumb);
 
     $order = array_shift($args);

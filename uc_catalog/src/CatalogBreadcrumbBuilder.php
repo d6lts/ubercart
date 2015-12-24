@@ -13,7 +13,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Url;
+use Drupal\Core\Link;
 
 /**
  * Provides a custom breadcrumb builder for catalog node pages.
@@ -75,11 +75,11 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected function catalogBreadcrumb($node) {
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $links[] = new Link($this->t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
+    $links[] = Link::createFromRoute($this->t('Catalog'), 'view.uc_catalog.page_1');
     if ($parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->target_id)) {
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $links[] = new Link($parent->label(), Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]));
+        $links[] = Link::createFromRoute($parent->label(), 'view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]);
       }
     }
 
@@ -94,12 +94,12 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected function catalogTermBreadcrumb($tid) {
     $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $breadcrumb[] = new Link($this->t('Catalog'), Url::fromRoute('view.uc_catalog.page_1'));
+    $breadcrumb[] = Link::createFromRoute($this->t('Catalog'), 'view.uc_catalog.page_1');
     if ($parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($tid)) {
       array_shift($parents);
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = new Link($parent->label(), Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]));
+        $breadcrumb[] = Link::createFromRoute($parent->label(), 'view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]);
       }
     }
     return $breadcrumb;

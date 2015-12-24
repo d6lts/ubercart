@@ -114,7 +114,7 @@ class Cart implements CartInterface {
       ));
       $item_entity->save();
       if ($msg) {
-        drupal_set_message(t('<strong>@product-title</strong> added to <a href="@url">your shopping cart</a>.', ['@product-title' => $node->label(), '@url' => \Drupal::url('uc_cart.cart')]));
+        drupal_set_message(t('<strong>@product-title</strong> added to <a href=":url">your shopping cart</a>.', ['@product-title' => $node->label(), ':url' => Url::fromRoute('uc_cart.cart')->toString()]));
       }
     }
     else {

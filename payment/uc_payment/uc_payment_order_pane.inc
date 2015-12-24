@@ -29,7 +29,11 @@ function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $f
       $account = \Drupal::currentUser();
       if ($account->hasPermission('view payments')) {
         $build['view_payments'] = array(
-          '#markup' => ' (' . \Drupal::l(t('View'), Url::fromRoute('uc_payments.order_payments', ['uc_order' => $order->id()])) . ')',
+          '#type' => 'link',
+          '#prefix' => ' (',
+          '#title' => t('View'),
+          '#url' => Url::fromRoute('uc_payments.order_payments', ['uc_order' => $order->id()]),
+          '#suffix' => ')',
         );
       }
 

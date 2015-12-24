@@ -5,6 +5,8 @@
  * Token hooks for the uc_file module.
  */
 
+use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
@@ -61,7 +63,7 @@ function theme_uc_file_downloads_token(array $variables) {
       continue;
     }
 
-    $output .= \Drupal::l($file_download->filename, Url::fromRoute('download/' . $file_download->fid, [], ['absolute' => TRUE])) . "\n";
+    $output .= Link::fromTextAndUrl($file_download->filename, Url::fromUri('base:download/' . $file_download->fid, [], ['absolute' => TRUE]))->toString() . "\n";
   }
 
   return $output;

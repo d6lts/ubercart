@@ -8,6 +8,7 @@
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -176,7 +177,7 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'link':
-          $replacements[$original] = \Drupal::l($order->id(), Url::fromUri('internal:/' . $path, ['absolute' => TRUE]));
+          $replacements[$original] = Link::fromTextAndUrl($order->id(), Url::fromUri('internal:/' . $path, ['absolute' => TRUE]))->toString();
           break;
 
         case 'admin-url':
@@ -184,7 +185,7 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'admin-link':
-          $replacements[$original] = \Drupal::l($order->id(), Url::fromUri('internal:/' . $admin_path, ['absolute' => TRUE]));
+          $replacements[$original] = Link::fromTextAndUrl($order->id(), Url::fromUri('internal:/' . $admin_path, ['absolute' => TRUE]))->toString();
           break;
 
         case 'subtotal':
