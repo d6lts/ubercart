@@ -10,6 +10,7 @@ namespace Drupal\uc_2checkout\Controller;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -41,8 +42,8 @@ class CheckoutController extends ControllerBase {
     }
 
     if ($_REQUEST['demo'] == 'Y' xor $module_config->get('demo')) {
-      $this->logger('uc_2checkout')->error('The 2checkout payment for order <a href="@order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
-        '@order_url' => url('admin/store/orders/' . $order->id()),
+      $this->logger('uc_2checkout')->error('The 2checkout payment for order <a href=":order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
+        ':order_url' => Url::fromRoute('entity.uc_order.canonical', ['uc_order' => $order->id()])->toString(),
         '@order_id' => $order->id(),
         '%flag' => $_REQUEST['demo'] == 'Y' ? 'Y' : 'N',
         '%mode' => $module_config->get('demo') ? 'Y' : 'N',
@@ -72,7 +73,7 @@ class CheckoutController extends ControllerBase {
     }
     else {
       drupal_set_message(t('Your order will be processed as soon as your payment clears at 2Checkout.com.'));
-      uc_order_comment_save($order->id(), 0, t('@type payment is pending approval at 2Checkout.com.', ['@type' => $_REQUEST['pay_method'] == 'CC' ? t('Credit card') : t('eCheck'))], 'admin');
+      uc_order_comment_save($order->id(), 0, t('@type payment is pending approval at 2Checkout.com.', ['@type' => $_REQUEST['pay_method'] == 'CC' ? t('Credit card') : t('eCheck')]), 'admin');
     }
 
     // Empty that cart...

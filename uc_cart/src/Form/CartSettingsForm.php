@@ -9,6 +9,7 @@ namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Configure general shopping cart settings for this site.
@@ -63,7 +64,7 @@ class CartSettingsForm extends ConfigFormBase {
       '#description' => t('Enter the page to redirect to when a customer adds an item to their cart, or &lt;none&gt; for no redirect.'),
       '#default_value' => $cart_config->get('add_item_redirect'),
       '#size' => 32,
-      '#field_prefix' => $this->url('<front>', [], ['absolute' => TRUE]),
+      '#field_prefix' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
     );
 
     $form['general']['uc_cart_empty_button'] = array(
@@ -161,7 +162,7 @@ class CartSettingsForm extends ConfigFormBase {
       '#title' => t('Default <em>continue shopping</em> destination'),
       '#default_value' => $cart_config->get('continue_shopping_url'),
       '#size' => 32,
-      '#field_prefix' => $this->url('<front>', [], ['absolute' => TRUE]),
+      '#field_prefix' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
     );
 
     $form['breadcrumb'] = array(
@@ -181,7 +182,7 @@ class CartSettingsForm extends ConfigFormBase {
       '#title' => t('Cart page breadcrumb destination'),
       '#default_value' => $cart_config->get('breadcrumb_url'),
       '#size' => 32,
-      '#field_prefix' => $this->url('<front>', [], ['absolute' => TRUE]),
+      '#field_prefix' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
     );
 
     return parent::buildForm($form, $form_state);

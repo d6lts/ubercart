@@ -10,6 +10,7 @@ namespace Drupal\uc_role\Form;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 
 /**
@@ -48,7 +49,7 @@ class RoleSettingsForm extends ConfigFormBase {
 
     if (!count($default_role_choices)) {
       $form['no_roles'] = array(
-        '#markup' => $this->t('You need to <a href=":url">create new roles</a> before any can be added as product features.', [':url' => $this->url('user.role_add', [], ['query' => ['destination' => 'admin/store/config/products']])]),
+        '#markup' => $this->t('You need to <a href=":url">create new roles</a> before any can be added as product features.', [':url' => Url::fromRoute('user.role_add', [], ['query' => ['destination' => 'admin/store/config/products']])->toString()]),
         '#prefix' => '<p>',
         '#suffix' => '</p>',
       );

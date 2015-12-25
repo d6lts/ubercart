@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -171,7 +172,7 @@ function uc_2checkout_form($form, &$form_state, $order) {
     'demo' => $module_config->get('demo') ? 'Y' : 'N',
     'fixed' => 'Y',
     'lang' => $module_config->get('language'),
-    'x_receipt_link_url' => url('cart/2checkout/complete/' . uc_cart_get_id(), array('absolute' => TRUE)),
+    'x_receipt_link_url' => Url::fromRoute('uc_2checkout.complete', ['cart_id' => uc_cart_get_id()], ['absolute' => TRUE])->toString(),
     'merchant_order_id' => $order->id(),
     'pay_method' => isset($_SESSION['pay_method']) ? $_SESSION['pay_method'] : 'CC',
     'card_holder_name' => Unicode::substr($order->billing_first_name . ' ' . $order->billing_last_name, 0, 128),

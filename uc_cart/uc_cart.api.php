@@ -125,7 +125,7 @@ function hook_uc_cart_display($item) {
   $element['remove'] = array('#type' => 'checkbox');
 
   $element['title'] = array(
-    '#markup' => $node->access('view') ? l($item->title, 'node/' . $item->nid) : $item->title,
+    '#markup' => $node->access('view') ? \Drupal\Core\Link::createFromRoute($item->title, 'entity.node.canonical', ['node' => $item->nid])->toString() : $item->title,
   );
 
 
@@ -197,7 +197,7 @@ function hook_uc_cart_item_delete($entity) {
 function hook_uc_checkout_complete($order, $account) {
   // Get previous records of customer purchases.
   $nids = array();
-  $result = db_query("SELECT uid, nid, qty FROM {uc_customer_purchases} WHERE uid = :uid", array(':uid' => $account->id()));
+  $result = db_query("SELECT uid, nid, qty FROM {uc_customer_purchases} WHERE uid = :uid", [':uid' => $account->id()]);
   foreach ($result as $record) {
     $nids[$record->nid] = $record->qty;
   }

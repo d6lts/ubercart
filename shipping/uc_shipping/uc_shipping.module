@@ -13,6 +13,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
@@ -259,7 +260,7 @@ function template_preprocess_uc_packing_slip(&$variables) {
   $variables['store_phone'] = $tokens['phone'];
 
   $order = $variables['order'];
-  $variables['order_link'] = l($order->id(), url('user/' . $order->getOwnerId() . '/orders/' . $order->id(), array('absolute' => TRUE)));
+  $variables['order_link'] = Link::createFromRoute($order->id(), 'uc_order.user_view', ['user' => $order->getOwnerId(), 'uc_order' => $order->id()], ['absolute' => TRUE])->toString();
   $variables['order_email'] = $order->getEmail();
   $variables['billing_address'] = $order->getAddress('billing');
   $variables['billing_phone'] = $order->getAddress('billing')->phone;
@@ -373,7 +374,7 @@ function uc_shipping_package_view($package) {
 
   if ($shipment && isset($package->label_image) &&
       file_exists($package->label_image->uri)) {
-    $rows[] = array(t('Label:'), l(t('Click to view.'), 'admin/store/orders/' . $package->order_id . '/shipments/labels/' . $shipment->shipping_method . '/' . $package->label_image->uri));
+    $rows[] = array(t('Label:'), Link::fromTextAndUrl(t('Click to view.'), Url::fromUri('admin/store/orders/' . $package->order_id . '/shipments/labels/' . $shipment->shipping_method . '/' . $package->label_image->uri))->toString());
   }
   else {
     $rows[] = array(t('Label:'), t('n/a'));

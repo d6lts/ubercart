@@ -8,6 +8,7 @@
 namespace Drupal\uc_report\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -38,7 +39,7 @@ class Reports extends ControllerBase {
     );
     $csv_rows[] = array($this->t('#'), $this->t('Customer'), $this->t('Username'), $this->t('Orders'), $this->t('Products'), $this->t('Total'), $this->t('Average'));
 
-    $query = db_select('users_field_data', 'u', array('fetch' => \PDO::FETCH_ASSOC))
+    $query = db_select('users_field_data', 'u', ['fetch' => \PDO::FETCH_ASSOC])
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->extend('Drupal\Core\Database\Query\TableSortExtender');
     $query->leftJoin('uc_orders', 'ou', 'u.uid = ou.uid');
@@ -52,10 +53,10 @@ class Reports extends ControllerBase {
       ))
       ->condition('u.uid', 0, '>')
       ->groupBy('u.uid');
-    $query->addExpression("(SELECT COUNT(DISTINCT(order_id)) FROM {uc_orders} o WHERE o.uid = u.uid AND o.order_status IN (:statuses[]))", 'orders', array(':statuses[]' => $order_statuses));
-    $query->addExpression("(SELECT SUM(qty) FROM {uc_order_products} ps LEFT JOIN {uc_orders} os ON ps.order_id = os.order_id WHERE os.order_status IN (:statuses2[]) AND os.uid = u.uid)", 'products', array(':statuses2[]' => $order_statuses));
-    $query->addExpression("(SELECT SUM(ot.order_total) FROM {uc_orders} ot WHERE ot.uid = u.uid AND ot.order_status IN (:statuses3[]))", 'total', array(':statuses3[]' => $order_statuses));
-    $query->addExpression("ROUND((SELECT SUM(ot.order_total) FROM {uc_orders} ot WHERE ot.uid = u.uid AND ot.order_status IN (:sum_statuses[]))/(SELECT COUNT(DISTINCT(order_id)) FROM {uc_orders} o WHERE o.uid = u.uid AND o.order_status IN (:count_statuses[])), 2)", 'average', array(':sum_statuses[]' => $order_statuses, ':count_statuses[]' => $order_statuses));
+    $query->addExpression("(SELECT COUNT(DISTINCT(order_id)) FROM {uc_orders} o WHERE o.uid = u.uid AND o.order_status IN (:statuses[]))", 'orders', [':statuses[]' => $order_statuses]);
+    $query->addExpression("(SELECT SUM(qty) FROM {uc_order_products} ps LEFT JOIN {uc_orders} os ON ps.order_id = os.order_id WHERE os.order_status IN (:statuses2[]) AND os.uid = u.uid)", 'products', [':statuses2[]' => $order_statuses]);
+    $query->addExpression("(SELECT SUM(ot.order_total) FROM {uc_orders} ot WHERE ot.uid = u.uid AND ot.order_status IN (:statuses3[]))", 'total', [':statuses3[]' => $order_statuses]);
+    $query->addExpression("ROUND((SELECT SUM(ot.order_total) FROM {uc_orders} ot WHERE ot.uid = u.uid AND ot.order_status IN (:sum_statuses[]))/(SELECT COUNT(DISTINCT(order_id)) FROM {uc_orders} o WHERE o.uid = u.uid AND o.order_status IN (:count_statuses[])), 2)", 'average', [':sum_statuses[]' => $order_statuses, ':count_statuses[]' => $order_statuses]);
 
     $count_query = db_select('users_field_data', 'u');
     $count_query->leftJoin('uc_orders', 'ou', 'u.uid = ou.uid');
@@ -73,7 +74,7 @@ class Reports extends ControllerBase {
     $customers = $query->execute();
 
     foreach ($customers as $customer) {
-      $name = (!empty($customer[$last_name]) || !empty($customer[$first_name])) ? $this->l($customer[$last_name] . ', ' . $customer[$first_name], Url::fromUri('base:admin/store/customers/orders/' . $customer['uid'])) : $this->l($customer['name'], Url::fromUri('base:admin/store/customers/orders/' . $customer['uid']));
+      $name = (!empty($customer[$last_name]) || !empty($customer[$first_name])) ? Link::fromTextAndUrl($customer[$last_name] . ', ' . $customer[$first_name], Url::fromUri('base:admin/store/customers/orders/' . $customer['uid']))->toString() : Link::fromTextAndUrl($customer['name'], Url::fromUri('base:admin/store/customers/orders/' . $customer['uid']))->toString();
       $customer_number = ($page * variable_get('uc_report_table_size', 30)) + (count($rows) + 1);
       $customer_order_name = (!empty($customer[$last_name]) || !empty($customer[$first_name])) ? $customer[$last_name] . ', ' . $customer[$first_name] : $customer['name'];
       $customer_name = $customer['name'];
@@ -84,7 +85,7 @@ class Reports extends ControllerBase {
       $rows[] = array(
         array('data' => $customer_number),
         array('data' => $name),
-        array('data' => $this->l($customer_name, Url::fromRoute('entity.user.canonical', ['user' => $customer['uid']]))),
+        array('data' => Link::createFromRoute($customer_name, 'entity.user.canonical', ['user' => $customer['uid']])->toString()),
         array('data' => $orders),
         array('data' => $products),
         array('data' => $total_revenue),
@@ -109,17 +110,17 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l($this->t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => Link::createFromRoute($this->t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l($this->t('Show paged records'), Url::fromUri('base:admin/store/reports/customers')),
+        '#markup' => Link::createFromRoute($this->t('Show paged records'), 'uc_report.customers')->toString(),
       );
     }
     else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l($this->t('Show all records'), Url::fromUri('base:admin/store/reports/customers', array('query' => array('nopage' => '1')))),
+        '#markup' => Link::createFromRoute($this->t('Show all records'), 'uc_report.customers', ['query' => ['nopage' => '1']])->toString(),
       );
     }
 
@@ -151,16 +152,16 @@ class Reports extends ControllerBase {
       }
     }
 
-    $query = db_select('node_field_data', 'n', array('fetch' => \PDO::FETCH_ASSOC))
+    $query = db_select('node_field_data', 'n', ['fetch' => \PDO::FETCH_ASSOC])
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->extend('Drupal\Core\Database\Query\TableSortExtender')
       ->limit($page_size);
 
     $query->addField('n', 'nid');
     $query->addField('n', 'title');
-    $query->addExpression("(SELECT SUM(uop.qty) FROM {uc_order_products} uop LEFT JOIN {uc_orders} uo ON uop.order_id = uo.order_id WHERE uo.order_status IN (:statuses[]) AND uop.nid = n.nid)", 'sold', array(':statuses[]' => $order_statuses));
-    $query->addExpression("(SELECT (SUM(uop.price * uop.qty) - SUM(uop.cost * uop.qty)) FROM {uc_order_products} uop LEFT JOIN {uc_orders} uo ON uop.order_id = uo.order_id WHERE uo.order_status IN (:statuses2[]) AND uop.nid = n.nid)", 'gross', array(':statuses2[]' => $order_statuses));
-    $query->addExpression("(SELECT (SUM(uop.price * uop.qty)) FROM {uc_order_products} uop LEFT JOIN {uc_orders} uo ON uop.order_id = uo.order_id WHERE uo.order_status IN (:statuses3[]) AND uop.nid = n.nid)", 'revenue', array(':statuses3[]' => $order_statuses));
+    $query->addExpression("(SELECT SUM(uop.qty) FROM {uc_order_products} uop LEFT JOIN {uc_orders} uo ON uop.order_id = uo.order_id WHERE uo.order_status IN (:statuses[]) AND uop.nid = n.nid)", 'sold', [':statuses[]' => $order_statuses]);
+    $query->addExpression("(SELECT (SUM(uop.price * uop.qty) - SUM(uop.cost * uop.qty)) FROM {uc_order_products} uop LEFT JOIN {uc_orders} uo ON uop.order_id = uo.order_id WHERE uo.order_status IN (:statuses2[]) AND uop.nid = n.nid)", 'gross', [':statuses2[]' => $order_statuses]);
+    $query->addExpression("(SELECT (SUM(uop.price * uop.qty)) FROM {uc_order_products} uop LEFT JOIN {uc_orders} uo ON uop.order_id = uo.order_id WHERE uo.order_status IN (:statuses3[]) AND uop.nid = n.nid)", 'revenue', [':statuses3[]' => $order_statuses]);
 
     $header = array(
       array('data' => t('#')),
@@ -189,7 +190,7 @@ class Reports extends ControllerBase {
 
     $products = $query->execute();
     foreach ($products as $product) {
-      $product_cell = $this->l($product['title'], Url::fromRoute('entity.node.canonical', ['node' => $product['nid']]));
+      $product_cell = Link::createFromRoute($product['title'], 'entity.node.canonical', ['node' => $product['nid']])->toString();
       $product_csv = $product['title'];
       $sold_cell = empty($product['sold']) ? 0 : $product['sold'];
       $sold_csv = $sold_cell;
@@ -224,9 +225,9 @@ class Reports extends ControllerBase {
         $models = uc_report_product_get_skus($product['nid']);
         // Add the product breakdown rows
         foreach ($models as $model) {
-          $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", array(':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']))->fetchField();
-          $revenue = db_query("SELECT SUM(p.price * p.qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", array(':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']))->fetchField();
-          $gross = db_query("SELECT (SUM(p.price * p.qty) - SUM(p.cost * p.qty)) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", array(':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']))->fetchField();
+          $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", [':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']])->fetchField();
+          $revenue = db_query("SELECT SUM(p.price * p.qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", [':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']])->fetchField();
+          $gross = db_query("SELECT (SUM(p.price * p.qty) - SUM(p.cost * p.qty)) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", [':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']])->fetchField();
           $breakdown_product = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$model";
           $product_csv = "     $model";
 
@@ -285,17 +286,17 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => Link::createFromRoute(t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l(t('Show paged records'), Url::fromRoute('uc_report.products')),
+        '#markup' => Link::createFromRoute(t('Show paged records'), 'uc_report.products')->toString(),
       );
     }
     else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l(t('Show all records'), Url::fromRoute('uc_report.products', ['query' => ['nopage' => '1']])),
+        '#markup' => Link::createFromRoute(t('Show all records'), 'uc_report.products', ['query' => ['nopage' => '1']])->toString(),
       );
     }
     $build['instructions'] = array('#markup' => '<small>*' . t('Make sure %setting_name is set to %state in the <a href=":url">access log settings page</a> to enable views column.', ['%setting_name' => 'count content views', '%state' => 'enabled', ':url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products']])->toString()]) . '</small>');
@@ -367,7 +368,7 @@ class Reports extends ControllerBase {
       );
     }
 
-    $query = db_select('node', 'n', array('fetch' => \PDO::FETCH_ASSOC))
+    $query = db_select('node', 'n', ['fetch' => \PDO::FETCH_ASSOC])
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->extend('Drupal\Core\Database\Query\TableSortExtender')
       ->limit($page_size)
@@ -378,9 +379,9 @@ class Reports extends ControllerBase {
       ->condition('type', $product_types, 'IN')
       ->groupBy('n.nid');
 
-    $query->addExpression("(SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.nid = n.nid AND o.created >= :start AND o.created <= :end)", 'sold', array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']));
-    $query->addExpression("(SELECT (SUM(p2.price * p2.qty)) FROM {uc_order_products} p2 LEFT JOIN {uc_orders} o ON p2.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p2.nid = n.nid AND o.created >= :start AND o.created <= :end)", 'revenue', array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']));
-    $query->addExpression("(SELECT (SUM(p3.price * p3.qty) - SUM(p3.cost * p3.qty)) FROM {uc_order_products} p3 LEFT JOIN {uc_orders} o ON p3.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p3.nid = n.nid AND o.created >= :start AND o.created <= :end)", 'gross', array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']));
+    $query->addExpression("(SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.nid = n.nid AND o.created >= :start AND o.created <= :end)", 'sold', [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']]);
+    $query->addExpression("(SELECT (SUM(p2.price * p2.qty)) FROM {uc_order_products} p2 LEFT JOIN {uc_orders} o ON p2.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p2.nid = n.nid AND o.created >= :start AND o.created <= :end)", 'revenue', [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']]);
+    $query->addExpression("(SELECT (SUM(p3.price * p3.qty) - SUM(p3.cost * p3.qty)) FROM {uc_order_products} p3 LEFT JOIN {uc_orders} o ON p3.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p3.nid = n.nid AND o.created >= :start AND o.created <= :end)", 'gross', [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']]);
 
     $header = array(
       array('data' => t('#')),
@@ -406,7 +407,7 @@ class Reports extends ControllerBase {
     $products = $query->execute();
     foreach ($products as $product) {
       $row_cell = ($page * variable_get('uc_report_table_size', 30)) + count($rows) + 1;
-      $product_cell = $this->l($product['title'], Url::fromRoute('entity.node.canonical', ['node' => $product['nid']]));
+      $product_cell = Link::createFromRoute($product['title'], 'entity.node.canonical', ['node' => $product['nid']])->toString();
       $product_csv = $product['title'];
       $sold_cell = empty($product['sold']) ? 0 : $product['sold'];
       $sold_csv = $sold_cell;
@@ -422,11 +423,11 @@ class Reports extends ControllerBase {
         $models = uc_report_product_get_skus($product['nid']);
         // Add the product breakdown rows
         foreach ($models as $model) {
-          $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid AND o.created >= :start AND o.created <= :end", array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date'], ':model' => $model, ':nid' => $product['nid']))->fetchField();
+          $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid AND o.created >= :start AND o.created <= :end", [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date'], ':model' => $model, ':nid' => $product['nid']])->fetchField();
           $sold = empty($sold) ? 0 : $sold;
-          $revenue = db_query("SELECT SUM(p.price * p.qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid AND o.created >= :start AND o.created <= :end", array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date'], ':model' => $model, ':nid' => $product['nid']))->fetchField();
+          $revenue = db_query("SELECT SUM(p.price * p.qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid AND o.created >= :start AND o.created <= :end", [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date'], ':model' => $model, ':nid' => $product['nid']])->fetchField();
           $revenue = empty($revenue) ? 0 : $revenue;
-          $gross = db_query("SELECT (SUM(p.price * p.qty) - SUM(p.cost * p.qty)) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid AND o.created >= :start AND o.created <= :end", array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date'], ':model' => $model, ':nid' => $product['nid']))->fetchField();
+          $gross = db_query("SELECT (SUM(p.price * p.qty) - SUM(p.cost * p.qty)) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid AND o.created >= :start AND o.created <= :end", [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date'], ':model' => $model, ':nid' => $product['nid']])->fetchField();
           $gross = empty($gross) ? 0 : $gross;
 
           $breakdown_product .= "<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$model";
@@ -488,17 +489,17 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => Link::createFromRoute(t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l(t('Show paged records'), Url::fromUri('base:admin/store/reports/products/custom')),
+        '#markup' => Link::createFromRoute(t('Show paged records'), 'uc_reports.custom_report')->toString(),
       );
     }
     else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l(t('Show all records'), Url::fromUri('base:admin/store/reports/products/custom', array('query' => array('nopage' => '1')))),
+        '#markup' => Link::createFromRoute(t('Show all records'), 'uc_reports.custom_report', ['query' => ['nopage' => '1']])->toString(),
       );
     }
 
@@ -527,7 +528,7 @@ class Reports extends ControllerBase {
     $today = self::get_sales($today_start);
 
     $rows[] = array(
-      $this->l(t('Today, !date', array('!date' => \Drupal::service('date.formatter')->format($today_start, 'uc_store'))), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $today_start . '/' . $today_end)),
+      Link::fromTextAndUrl(t('Today, @date', ['@date' => \Drupal::service('date.formatter')->format($today_start, 'uc_store')]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $today_start . '/' . $today_end))->toString(),
       $today['total'],
       array('data' => array('#theme' => 'uc_price', '#price' => $today['income'])),
       array('data' => array('#theme' => 'uc_price', '#price' => $today['average'])),
@@ -537,7 +538,7 @@ class Reports extends ControllerBase {
     $yesterday = self::get_sales($today_start - 86400);
 
     $rows[] = array(
-      $this->l(t('Yesterday, !date', array('!date' => \Drupal::service('date.formatter')->format($today_start - 86400, 'uc_store'))), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . ($today_start - 86400) . '/' . ($today_end - 86400))),
+      Link::fromTextAndUrl(t('Yesterday, @date', ['@date' => \Drupal::service('date.formatter')->format($today_start - 86400, 'uc_store')]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . ($today_start - 86400) . '/' . ($today_end - 86400)))->toString(),
       $yesterday['total'],
       array('data' => array('#theme' => 'uc_price', '#price' => $yesterday['income'])),
       array('data' => array('#theme' => 'uc_price', '#price' => $yesterday['average'])),
@@ -549,7 +550,7 @@ class Reports extends ControllerBase {
 
     // Add the month-to-date details to the report table.
     $rows[] = array(
-      $this->l(t('Month-to-date, @month', array('@month' => $month_title)), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $month_start . '/' . $month_end)),
+      Link::fromTextAndUrl(t('Month-to-date, @month', ['@month' => $month_title]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $month_start . '/' . $month_end))->toString(),
       $month['total'],
       array('data' => array('#theme' => 'uc_price', '#price' => $month['income'])),
       array('data' => array('#theme' => 'uc_price', '#price' => $month['average'])),
@@ -568,7 +569,7 @@ class Reports extends ControllerBase {
 
     // Add the daily averages for the month to the report table.
     $rows[] = array(
-      t('Daily average for @month', array('@month' => $month_title)),
+      t('Daily average for @month', ['@month' => $month_title]),
       $daily_orders,
       array('data' => array('#theme' => 'uc_price', '#price' => $daily_revenue)),
       '',
@@ -579,7 +580,7 @@ class Reports extends ControllerBase {
 
     // Add the projected totals for the month to the report table.
     $rows[] = array(
-      t('Projected totals for @date', array('@date' => $month_title)),
+      t('Projected totals for @date', ['@date' => $month_title]),
       round($month['total'] + ($daily_orders * $remaining_days), 2),
       array('data' => array('#theme' => 'uc_price', '#price' => round($month['income'] + ($daily_revenue * $remaining_days), 2))),
       '',
@@ -597,10 +598,10 @@ class Reports extends ControllerBase {
     $header = array(array('data' => t('Statistics'), 'width' => '50%'), '');
 
     $rows = array(
-      array(array('data' => t('Grand total sales')), array('data' => array('#theme' => 'uc_price', '#price' => db_query("SELECT SUM(order_total) FROM {uc_orders} WHERE order_status IN (:statuses[])", array(':statuses[]' => $order_statuses))->fetchField()))),
-      array(array('data' => t('Customers total')), array('data' => db_query("SELECT COUNT(DISTINCT uid) FROM {uc_orders} WHERE order_status IN (:statuses[])", array(':statuses[]' => $order_statuses))->fetchField())),
-      array(array('data' => t('New customers today')), array('data' => db_query("SELECT COUNT(DISTINCT uid) FROM {uc_orders} WHERE order_status IN (:statuses[]) AND :start <= created AND created <= :end", array(':statuses[]' => $order_statuses, ':start' => $today_start, ':end' => $today_end))->fetchField())),
-      array(array('data' => t('Online customers')), array('data' => db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s LEFT JOIN {uc_orders} o ON s.uid = o.uid WHERE s.uid > 0 AND o.order_status IN (:statuses[])", array(':statuses[]' => $order_statuses))->fetchField())),
+      array(array('data' => t('Grand total sales')), array('data' => array('#theme' => 'uc_price', '#price' => db_query("SELECT SUM(order_total) FROM {uc_orders} WHERE order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField()))),
+      array(array('data' => t('Customers total')), array('data' => db_query("SELECT COUNT(DISTINCT uid) FROM {uc_orders} WHERE order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField())),
+      array(array('data' => t('New customers today')), array('data' => db_query("SELECT COUNT(DISTINCT uid) FROM {uc_orders} WHERE order_status IN (:statuses[]) AND :start <= created AND created <= :end", [':statuses[]' => $order_statuses, ':start' => $today_start, ':end' => $today_end])->fetchField())),
+      array(array('data' => t('Online customers')), array('data' => db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s LEFT JOIN {uc_orders} o ON s.uid = o.uid WHERE s.uid > 0 AND o.order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField())),
     );
 
     // Add the statistics table to the output.
@@ -623,7 +624,7 @@ class Reports extends ControllerBase {
       if (!empty($status['title'])) {
         // Add the total number of orders with this status to the table.
         $rows[] = array(
-          $this->l($status['title'], Url::fromUri('base:admin/store/orders/view', ['query' => ['order_status' => $status['order_status_id']]])),
+          Link::fromTextAndUrl($status['title'], Url::fromUri('base:admin/store/orders/view', ['query' => ['order_status' => $status['order_status_id']]]))->toString(),
           $status['order_count'],
         );
       }
@@ -690,7 +691,7 @@ class Reports extends ControllerBase {
 
       // Add the month's row to the report table.
       $rows[] = array(
-        $this->l(date('M Y', $month_start), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $month_start . '/' . $month_end)),
+        Link::fromTextAndUrl(date('M Y', $month_start), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $month_start . '/' . $month_end))->toString(),
         $month_sales['total'],
         uc_currency_format($month_sales['income']),
         uc_currency_format($month_average),
@@ -722,7 +723,7 @@ class Reports extends ControllerBase {
 
     // Add the total row to the report table.
     $rows[] = array(
-      $this->l(t('Total @year', array('@year' => $year)), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $year_start . '/' . $year_end)),
+      Link::fromTextAndUrl(t('Total @year', ['@year' => $year]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $year_start . '/' . $year_end))->toString(),
       $year_sales['total'],
       uc_currency_format($year_sales['income']),
       uc_currency_format($year_average),
@@ -730,7 +731,7 @@ class Reports extends ControllerBase {
 
     // Add the total data to the CSV export.
     $csv_rows[] = array(
-      t('Total @year', array('@year' => $year)),
+      t('Total @year', ['@year' => $year]),
       $year_sales['total'],
       $year_sales['income'],
       $year_average,
@@ -753,7 +754,7 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => Link::createFromRoute(t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
     );
 
     return $build;
@@ -806,12 +807,12 @@ class Reports extends ControllerBase {
       }
 
       // Build the order data for the subreport.
-      $result = db_query("SELECT COUNT(*) as count, title FROM {uc_orders} LEFT JOIN {uc_order_statuses} ON order_status_id = order_status WHERE :start <= created AND created <= :end AND order_status IN (:statuses[]) GROUP BY order_status, {uc_order_statuses}.title, {uc_order_statuses}.weight ORDER BY weight ASC", array(':statuses[]' => $args['status'], ':start' => $subreport['start'], ':end' => $subreport['end']));
+      $result = db_query("SELECT COUNT(*) as count, title FROM {uc_orders} LEFT JOIN {uc_order_statuses} ON order_status_id = order_status WHERE :start <= created AND created <= :end AND order_status IN (:statuses[]) GROUP BY order_status, {uc_order_statuses}.title, {uc_order_statuses}.weight ORDER BY weight ASC", [':statuses[]' => $args['status'], ':start' => $subreport['start'], ':end' => $subreport['end']]);
       $statuses = array();
 
       // Put the order counts into an array by status.
       foreach ($result as $status) {
-        $statuses[] = t('@count - @title', array('@count' => $status->count, '@title' => $status->title));
+        $statuses[] = t('@count - @title', ['@count' => $status->count, '@title' => $status->title]);
       }
 
       $order_data = implode('<br />', $statuses);
@@ -820,20 +821,20 @@ class Reports extends ControllerBase {
       // Build the product data for the subreport.
       if ($args['detail']) {
         // Grab the detailed product breakdown if selected.
-        $result = db_query("SELECT SUM(op.qty) as count, n.title, n.nid FROM {uc_order_products} op LEFT JOIN {uc_orders} o ON o.order_id = op.order_id LEFT JOIN {node_field_data} n ON n.nid = op.nid WHERE :start <= o.created AND o.created <= :end AND o.order_status IN (:statuses[]) GROUP BY n.nid ORDER BY count DESC, n.title ASC", array(':statuses[]' => $args['status'], ':start' => $subreport['start'], ':end' => $subreport['end']));
+        $result = db_query("SELECT SUM(op.qty) as count, n.title, n.nid FROM {uc_order_products} op LEFT JOIN {uc_orders} o ON o.order_id = op.order_id LEFT JOIN {node_field_data} n ON n.nid = op.nid WHERE :start <= o.created AND o.created <= :end AND o.order_status IN (:statuses[]) GROUP BY n.nid ORDER BY count DESC, n.title ASC", [':statuses[]' => $args['status'], ':start' => $subreport['start'], ':end' => $subreport['end']]);
         foreach ($result as $product_breakdown) {
-          $product_data .= $product_breakdown->count . ' x ' . $this->l($product_breakdown->title, Url::fromRoute('entity.node.canonical', ['node' => $product_breakdown->nid])) . "<br />\n";
+          $product_data .= $product_breakdown->count . ' x ' . Link::createFromRoute($product_breakdown->title, 'entity.node.canonical', ['node' => $product_breakdown->nid])->toString() . "<br />\n";
           $product_csv .= $product_breakdown->count . ' x ' . $product_breakdown->title . "\n";
         }
       }
       else {
         // Otherwise just display the total number of products sold.
-        $product_data = db_query("SELECT SUM(qty) FROM {uc_orders} o LEFT JOIN {uc_order_products} op ON o.order_id = op.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", array(':statuses[]' => $args['status'], ':start' => $subreport['start'], ':end' => $subreport['end']))->fetchField();
+        $product_data = db_query("SELECT SUM(qty) FROM {uc_orders} o LEFT JOIN {uc_order_products} op ON o.order_id = op.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", [':statuses[]' => $args['status'], ':start' => $subreport['start'], ':end' => $subreport['end']])->fetchField();
         $product_csv = $product_data;
       }
 
       // Tally up the revenue from the orders.
-      $revenue_count = db_query("SELECT SUM(order_total) FROM {uc_orders} WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", array(':statuses[]' => $args['status'], ':start' => $subreport['start'], ':end' => $subreport['end']))->fetchField();
+      $revenue_count = db_query("SELECT SUM(order_total) FROM {uc_orders} WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", [':statuses[]' => $args['status'], ':start' => $subreport['start'], ':end' => $subreport['end']])->fetchField();
 
       // Add the subreport's row to the report table.
       $rows[] = array(
@@ -853,9 +854,9 @@ class Reports extends ControllerBase {
     }
 
     // Calculate the totals for the report.
-    $order_total = db_query("SELECT COUNT(*) FROM {uc_orders} WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']))->fetchField();
-    $product_total = db_query("SELECT SUM(qty) FROM {uc_orders} o LEFT JOIN {uc_order_products} op ON o.order_id = op.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']))->fetchField();
-    $revenue_total = db_query("SELECT SUM(order_total) FROM {uc_orders} WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", array(':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']))->fetchField();
+    $order_total = db_query("SELECT COUNT(*) FROM {uc_orders} WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']])->fetchField();
+    $product_total = db_query("SELECT SUM(qty) FROM {uc_orders} o LEFT JOIN {uc_order_products} op ON o.order_id = op.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']])->fetchField();
+    $revenue_total = db_query("SELECT SUM(order_total) FROM {uc_orders} WHERE :start <= created AND created <= :end AND order_status IN (:statuses[])", [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']])->fetchField();
 
     // Add the total row to the report table.
     $rows[] = array(
@@ -889,7 +890,7 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l(t('Export to CSV file.'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => Link::createFromRoute(t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
     );
 
     return $build;
@@ -986,13 +987,13 @@ class Reports extends ControllerBase {
 
     // Get the total value of the orders.
     $output = array('income' => 0);
-    $orders = db_query("SELECT o.order_total FROM {uc_orders} o WHERE o.order_status IN (:statuses[]) AND :start <= created AND created <= :end", array(':statuses[]' => $order_statuses, ':start' => $start, ':end' => $end));
+    $orders = db_query("SELECT o.order_total FROM {uc_orders} o WHERE o.order_status IN (:statuses[]) AND :start <= created AND created <= :end", [':statuses[]' => $order_statuses, ':start' => $start, ':end' => $end]);
     while ($order = $orders->fetchObject()) {
       $output['income'] += $order->order_total;
     }
 
     // Get the total amount of orders.
-    $count = db_query("SELECT COUNT(o.order_total) FROM {uc_orders} o WHERE o.order_status IN (:statuses[]) AND :start <= created AND created <= :end", array(':statuses[]' => $order_statuses, ':start' => $start, ':end' => $end))->fetchField();
+    $count = db_query("SELECT COUNT(o.order_total) FROM {uc_orders} o WHERE o.order_status IN (:statuses[]) AND :start <= created AND created <= :end", [':statuses[]' => $order_statuses, ':start' => $start, ':end' => $end])->fetchField();
     $output['total'] = $count;
 
     // Average for this period.

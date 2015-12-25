@@ -8,7 +8,7 @@
 namespace Drupal\uc_stock\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\uc_report\Controller\Reports;
 
 /**
@@ -63,14 +63,14 @@ class StockReports extends ControllerBase {
     foreach ($result as $stock) {
       $op = array();
       if ($this->currentUser()->hasPermission('administer product stock')) {
-        $op[] = $this->l($this->t('edit'), Url::fromRoute('uc_stock.edit', ['node' => $stock->nid], ['query' => ['destination' => 'admin/store/reports/stock']]));
+        $op[] = Link::createFromRoute($this->t('edit'), 'uc_stock.edit', ['node' => $stock->nid], ['query' => ['destination' => 'admin/store/reports/stock']])->toString();
       }
 
       // Add the data to a table row for display.
       $rows[] = array(
         'data' => array(
           array('data' => $stock->sku),
-          array('data' => $this->l($stock->title, Url::fromRoute('uc_stock.edit', ['node' => $stock->nid]))),
+          array('data' => Link::createFromRoute($stock->title, 'uc_stock.edit', ['node' => $stock->nid])->toString()),
           array('data' => $stock->stock),
           array('data' => $stock->threshold),
           array('data' => implode(' ', $op)),
@@ -102,18 +102,18 @@ class StockReports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => $this->l($this->t('Export to CSV file'), Url::fromRoute('uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])),
+      '#markup' => Link::createFromRoute($this->t('Export to CSV file'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
 
 //    if (isset($_GET['nopage'])) {
 //      $build['links']['toggle_pager'] = array(
-//        '#markup' => $this->l($this->t('Show paged records'), Url::fromRoute('base:admin/store/reports/stock')),
+//        '#markup' => Link::createFromRoute($this->t('Show paged records'), 'uc_stock.reports')->toString(),
 //      );
 //    }
 //    else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => $this->l($this->t('Show all records'), Url::fromRoute('uc_stock.reports'), [], ['query' => ['nopage' => '1']]),
+        '#markup' => Link::createFromRoute($this->t('Show all records'), 'uc_stock.reports', [], ['query' => ['nopage' => '1']])->toString(),
       );
 //    }
 

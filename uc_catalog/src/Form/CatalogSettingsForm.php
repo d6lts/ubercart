@@ -9,6 +9,7 @@ namespace Drupal\uc_catalog\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\views\Views;
 
@@ -60,7 +61,7 @@ class CatalogSettingsForm extends ConfigFormBase {
       $catalog = Vocabulary::load($vid);
 
       $form['catalog_vid'] = array(
-        '#markup' => '<p>' . $this->t('The taxonomy vocabulary <a href=":edit-url">%name</a> is set as the product catalog.', array(':edit-url' => $this->url('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()]), '%name' => $catalog->label())) . '</p>',
+        '#markup' => '<p>' . $this->t('The taxonomy vocabulary <a href=":edit-url">%name</a> is set as the product catalog.', [':edit-url' => Url::fromRoute('entity.taxonomy_vocabulary.edit_form', ['taxonomy_vocabulary' => $catalog->id()])->toString(), '%name' => $catalog->label()]) . '</p>',
       );
     }
 

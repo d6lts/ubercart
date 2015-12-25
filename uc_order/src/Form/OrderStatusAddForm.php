@@ -9,7 +9,7 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\uc_order\Entity\OrderStatus;
 
 /**
@@ -67,7 +67,7 @@ class OrderStatusAddForm extends FormBase {
       '#value' => $this->t('Create'),
     );
     $form['actions']['cancel'] = array(
-      '#markup' => $this->l($this->t('Cancel'), Url::fromRoute('uc_order.status_add')),
+      '#markup' => Link::createFromRoute($this->t('Cancel'), 'uc_order.status_add')->toString(),
     );
 
     return $form;

@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\uc_order\Entity\Order;
 
 /**
@@ -35,12 +36,12 @@ function uc_paypal_ipn() {
     $order_id = intval($_POST['invoice']);
   }
 
-  \Drupal::logger('uc_paypal')->notice('Receiving IPN at URL for order @order_id. <pre>@debug</pre>', array('@order_id' => $order_id, '@debug' => variable_get('uc_paypal_wps_debug_ipn', FALSE) ? print_r($_POST, TRUE) : ''));
+  \Drupal::logger('uc_paypal')->notice('Receiving IPN at URL for order @order_id. <pre>@debug</pre>', ['@order_id' => $order_id, '@debug' => variable_get('uc_paypal_wps_debug_ipn', FALSE) ? print_r($_POST, TRUE) : '']);
 
   $order = Order::load($order_id);
 
   if ($order == FALSE) {
-    \Drupal::logger('uc_paypal')->error('IPN attempted for non-existent order @order_id.', array('@order_id' => $order_id));
+    \Drupal::logger('uc_paypal')->error('IPN attempted for non-existent order @order_id.', ['@order_id' => $order_id]);
     return;
   }
 
@@ -84,14 +85,14 @@ function uc_paypal_ipn() {
     ->send();
 
   if ($response->isError()) {
-    \Drupal::logger('uc_paypal')->error('IPN failed with HTTP error @error, code @code.', array('@error' => $response->getReasonPhrase(), '@code' => $response->getStatusCode()));
+    \Drupal::logger('uc_paypal')->error('IPN failed with HTTP error @error, code @code.', ['@error' => $response->getReasonPhrase(), '@code' => $response->getStatusCode()]);
     return;
   }
 
   if (strcmp($response->getBody(TRUE), 'VERIFIED') == 0) {
     \Drupal::logger('uc_paypal')->notice('IPN transaction verified.');
 
-    $duplicate = (bool) db_query_range('SELECT 1 FROM {uc_payment_paypal_ipn} WHERE txn_id = :id AND status <> :status', 0, 1, array(':id' => $txn_id, ':status' => 'Pending'))->fetchField();
+    $duplicate = (bool) db_query_range('SELECT 1 FROM {uc_payment_paypal_ipn} WHERE txn_id = :id AND status <> :status', 0, 1, [':id' => $txn_id, ':status' => 'Pending'])->fetchField();
     if ($duplicate) {
       if ($order->getPaymentMethodId() != 'credit') {
         \Drupal::logger('uc_paypal')->notice('IPN transaction ID has been processed before.');
@@ -114,17 +115,17 @@ function uc_paypal_ipn() {
 
     switch ($payment_status) {
       case 'Canceled_Reversal':
-        uc_order_comment_save($order_id, 0, t('PayPal has canceled the reversal and returned !amount !currency to your account.', array('!amount' => uc_currency_format($payment_amount, FALSE), '!currency' => $payment_currency)), 'admin');
+        uc_order_comment_save($order_id, 0, t('PayPal has canceled the reversal and returned @amount @currency to your account.', ['@amount' => uc_currency_format($payment_amount, FALSE), '@currency' => $payment_currency]), 'admin');
         break;
 
       case 'Completed':
         if (abs($payment_amount - $order->getTotal()) > 0.01) {
-          \Drupal::logger('uc_paypal')->warning('Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->id(), 'link' => l(t('view'), 'admin/store/orders/' . $order->id())));
+          \Drupal::logger('uc_paypal')->warning('Payment @txn_id for order @order_id did not equal the order total.', ['@txn_id' => $txn_id, '@order_id' => $order->id(), 'link' => Link::createFromRoute(t('view'), 'entity.uc_order.canonical', ['uc_order' => $order->id()])->toString()]);
         }
-        $comment = t('PayPal transaction ID: @txn_id', array('@txn_id' => $txn_id));
+        $comment = t('PayPal transaction ID: @txn_id', ['@txn_id' => $txn_id]);
         uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->getOwnerId(), NULL, $comment);
         uc_cart_complete_sale($order);
-        uc_order_comment_save($order_id, 0, t('PayPal IPN reported a payment of @amount @currency.', array('@amount' => uc_currency_format($payment_amount, FALSE), '@currency' => $payment_currency)));
+        uc_order_comment_save($order_id, 0, t('PayPal IPN reported a payment of @amount @currency.', ['@amount' => uc_currency_format($payment_amount, FALSE), '@currency' => $payment_currency]));
         break;
 
       case 'Denied':
@@ -141,18 +142,18 @@ function uc_paypal_ipn() {
 
       case 'Pending':
         $order->setStatusId('paypal_pending')->save();
-        uc_order_comment_save($order_id, 0, t('Payment is pending at PayPal: @reason', array('@reason' => _uc_paypal_pending_message(SafeMarkup::checkPlain($_POST['pending_reason'])))), 'admin');
+        uc_order_comment_save($order_id, 0, t('Payment is pending at PayPal: @reason', ['@reason' => _uc_paypal_pending_message(SafeMarkup::checkPlain($_POST['pending_reason']))]), 'admin');
         break;
 
       // You, the merchant, refunded the payment.
       case 'Refunded':
-        $comment = t('PayPal transaction ID: @txn_id', array('@txn_id' => $txn_id));
+        $comment = t('PayPal transaction ID: @txn_id', ['@txn_id' => $txn_id]);
         uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->getOwnerId(), NULL, $comment);
         break;
 
       case 'Reversed':
         \Drupal::logger('uc_paypal')->error('PayPal has reversed a payment!');
-        uc_order_comment_save($order_id, 0, t('Payment has been reversed by PayPal: @reason', array('@reason' => _uc_paypal_reversal_message(SafeMarkup::checkPlain($_POST['reason_code'])))), 'admin');
+        uc_order_comment_save($order_id, 0, t('Payment has been reversed by PayPal: @reason', ['@reason' => _uc_paypal_reversal_message(SafeMarkup::checkPlain($_POST['reason_code']))]), 'admin');
         break;
 
       case 'Processed':
@@ -334,7 +335,7 @@ function uc_paypal_ec_review_form_submit($form, FormStateInterface $form_state) 
     $quote_option = $form_state->getValue(['quotes', 'quote_option']);
     $order->quote['rate'] = $form_state->getValue(['quotes', $quote_option, 'rate']);
 
-    $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", array(':id' => $order->id(), ':type' => 'shipping'));
+    $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", [':id' => $order->id(), ':type' => 'shipping']);
     if ($lid = $result->fetchField()) {
       uc_order_update_line_item($lid, $label, $order->quote['rate']);
     }

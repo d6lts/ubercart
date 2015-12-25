@@ -9,6 +9,7 @@ namespace Drupal\uc_cart\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Url;
 use Drupal\uc_cart\CartInterface;
 use Drupal\uc_cart\CartManagerInterface;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
@@ -72,7 +73,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     if ($this->currentUser()->isAnonymous() && !$cart_config->get('checkout_anonymous')) {
       drupal_set_message($this->t('You must login before you can proceed to checkout.'));
       if ($this->config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
-        drupal_set_message($this->t('If you do not have an account yet, you should <a href=":url">register now</a>.', [':url' => $this->url('user.register', [], ['query' => drupal_get_destination()])]));
+        drupal_set_message($this->t('If you do not have an account yet, you should <a href=":url">register now</a>.', [':url' => Url::fromRoute('user.register', [], ['query' => drupal_get_destination()])->toString()]));
       }
       return $this->redirect('user.page', [], ['query' => drupal_get_destination()]);
     }
@@ -156,7 +157,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
 
     $min = $cart_config->get('minimum_subtotal');
     if ($min > 0 && $order->getSubtotal() < $min) {
-      drupal_set_message($this->t('The minimum order subtotal for checkout is @min.', array('@min' => uc_currency_format($min))), 'error');
+      drupal_set_message($this->t('The minimum order subtotal for checkout is @min.', ['@min' => uc_currency_format($min)]), 'error');
       return $this->redirect('uc_cart.cart');
     }
 

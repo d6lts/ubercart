@@ -9,7 +9,7 @@ namespace Drupal\uc_tax\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Link;
 
 /**
  * Defines the tax rate add/edit form.
@@ -177,16 +177,16 @@ class TaxRateFormBase extends EntityForm {
     $status = $tax_rate->save();
 
     // Create an edit link.
-    $edit_link = $this->l($this->t('Edit'), $tax_rate->urlInfo());
+    $edit_link = Link::fromTextAndUrl($this->t('Edit'), $tax_rate->urlInfo())->toString();
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
-      drupal_set_message($this->t('Tax rate %label has been updated.', array('%label' => $tax_rate->label())));
+      drupal_set_message($this->t('Tax rate %label has been updated.', ['%label' => $tax_rate->label()]));
       $this->logger('contact')->notice('Tax rate %label has been updated.', ['%label' => $tax_rate->label(), 'link' => $edit_link]);
     }
     else {
       // If we created a new entity...
-      drupal_set_message($this->t('Tax rate %label has been added.', array('%label' => $tax_rate->label())));
+      drupal_set_message($this->t('Tax rate %label has been added.', ['%label' => $tax_rate->label()]));
       $this->logger('contact')->notice('Tax rate %label has been added.', ['%label' => $tax_rate->label(), 'link' => $edit_link]);
     }
 
@@ -202,7 +202,7 @@ class TaxRateFormBase extends EntityForm {
 
     // Change the submit button text.
     $actions['submit']['#value'] = $this->t('Save');
-    $actions['submit']['#suffix'] = $this->l($this->t('Cancel'), $this->getCancelUrl());
+    $actions['submit']['#suffix'] = Link::fromTextAndUrl($this->t('Cancel'), $this->getCancelUrl())->toString();
 
     return $actions;
   }

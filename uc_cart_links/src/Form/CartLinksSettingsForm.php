@@ -9,6 +9,7 @@ namespace Drupal\uc_cart_links\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Configure general shopping cart settings for this site.
@@ -70,7 +71,7 @@ class CartLinksSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Enter the URL to redirect to when an invalid cart link is used.'),
       '#default_value' => $cart_links_config->get('invalid_page'),
       '#size' => 32,
-      '#field_prefix' => $this->url('<front>', [], ['absolute' => TRUE]),
+      '#field_prefix' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
     );
 
     return parent::buildForm($form, $form_state);

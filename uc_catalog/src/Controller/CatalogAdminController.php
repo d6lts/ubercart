@@ -8,7 +8,7 @@
 namespace Drupal\uc_catalog\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -53,7 +53,7 @@ class CatalogAdminController extends ControllerBase {
 
       $rows = array();
       while ($node = $result->fetchObject()) {
-        $rows[] = $this->l($node->title, Url::fromRoute('entity.node.edit_form', ['node' => $node->nid], ['query' => ['destination' => 'admin/store/products/orphans']]));
+        $rows[] = Link::createFromRoute($node->title, 'entity.node.edit_form', ['node' => $node->nid], ['query' => ['destination' => 'admin/store/products/orphans']])->toString();
       }
 
       if (count($rows) > 0) {

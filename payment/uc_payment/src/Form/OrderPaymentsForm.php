@@ -10,7 +10,7 @@ namespace Drupal\uc_payment\Form;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Link;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -108,7 +108,7 @@ class OrderPaymentsForm extends FormBase {
           '#markup' => ($payment->comment == '') ? '-' : Xss::filterAdmin($payment->comment),
         );
         if ($account->hasPermission('delete payments')) {
-          $action_value = $this->l($this->t('Delete'), Url::fromRoute('uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id]));
+          $action_value = Link::createFromRoute($this->t('Delete'), 'uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id])->toString();
         }
         else {
           $action_value = '-';
