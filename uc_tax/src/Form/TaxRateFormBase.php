@@ -177,7 +177,7 @@ class TaxRateFormBase extends EntityForm {
     $status = $tax_rate->save();
 
     // Create an edit link.
-    $edit_link = Link::fromTextAndUrl($this->t('Edit'), $tax_rate->urlInfo())->toString();
+    $edit_link = Link::fromTextAndUrl($this->t('Edit'), $tax_rate->toUrl())->toString();
 
     if ($status == SAVED_UPDATED) {
       // If we edited an existing entity...
