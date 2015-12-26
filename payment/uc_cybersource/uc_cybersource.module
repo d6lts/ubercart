@@ -7,7 +7,6 @@
 
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
-use Drupal\uc_store\Encryption;
 
 /**
  * Implements hook_page_alter().
@@ -41,7 +40,7 @@ function uc_cybersource_payment_gateway_settings_submit($form, &$form_state) {
   // If CC encryption has been configured properly.
   if ($key = uc_credit_encryption_key()) {
     // Setup our encryption object.
-    $crypt = new Encryption();
+    $crypt = \Drupal::service('uc_store.encryption');
 
     // Encrypt the Merchant ID and Transaction key.
     if (!empty($form_state['values']['uc_cybersource_soap_merchant_id'])) {
@@ -1081,7 +1080,7 @@ function _uc_cybersource_soap_login_data() {
   // If CC encryption has been configured properly.
   if ($key = uc_credit_encryption_key()) {
     // Setup our encryption object.
-    $crypt = new Encryption();
+    $crypt = \Drupal::service('uc_store.encryption');
 
     // Decrypt the Merchant ID and Transaction key.
     if (!empty($merchant_id)) {

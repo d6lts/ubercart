@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_store\Encryption.
+ * Contains \Drupal\uc_store\MarstonEncryption.
  */
 
 namespace Drupal\uc_store;
@@ -20,8 +20,8 @@ use Drupal\Core\Url;
  * http://www.tonymarston.co.uk/php-mysql/encryption.html
  *
  * Usage:
- * 1) Create an encryption object.
- *    ex: $crypt = new Encryption();
+ * 1) Obtain the encryption object.
+ *    ex: $crypt = \Drupal::service('uc_store.encryption');
  * 2) To encrypt string data, use the encrypt method with the key.
  *    ex: $encrypted = $crypt->encrypt($key, $string);
  * 3) To decrypt string data, use the decrypt method with the original key.
@@ -29,7 +29,7 @@ use Drupal\Core\Url;
  * 4) To check for errors, use the errors method to return an array of errors.
  *    ex: $errors = $crypt->getErrors();
  */
-class Encryption implements EncryptionInterface {
+class MarstonEncryption implements EncryptionInterface {
 
   protected static $scramble1 = '! #$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`"abcdefghijklmnopqrstuvwxyz{|}~';
   protected static $scramble2 = 'f^jAE]okIOzU[2&q1{3`h5w_794p@6s8?BgP>dFV=m" D<TcS%Ze|r:lGK/uCy.Jx)HiQ!#$~(;Lt-R}Ma,NvW+Ynb*0X';
@@ -38,50 +38,6 @@ class Encryption implements EncryptionInterface {
   protected $adj = 1.75;
   protected $mod = 3;
 
-
-  /**
-   * {@inheritdoc}
-   */
-  public function decrypt($key, $source) {
-    $this->errors = array();
-
-    // Convert key into sequence of numbers
-    $fudgefactor = $this->convertKey($key);
-    if ($this->errors) {
-      return;
-    }
-
-    if (empty($source)) {
-      // Commented out to prevent errors getting logged for use cases that may
-      // have variable encryption/decryption requirements. -RS
-      // $this->errors[] = t('No value has been supplied for decryption');
-      return;
-    }
-
-    $target = NULL;
-    $factor2 = 0;
-
-    for ($i = 0; $i < strlen($source); $i++) {
-      $char2 = substr($source, $i, 1);
-
-      $num2 = strpos(self::$scramble2, $char2);
-      if ($num2 === FALSE) {
-        $this->errors[] = t('Source string contains an invalid character (@char)', ['@char' => $char2]);
-        return;
-      }
-
-      $adj = $this->applyFudgeFactor($fudgefactor);
-      $factor1 = $factor2 + $adj;
-      $num1 = $num2 - round($factor1);
-      $num1 = $this->checkRange($num1);
-      $factor2 = $factor1 + $num2;
-
-      $char1 = substr(self::$scramble1, $num1, 1);
-      $target .= $char1;
-    }
-
-    return rtrim($target);
-  }
 
   /**
    * {@inheritdoc}
@@ -128,6 +84,50 @@ class Encryption implements EncryptionInterface {
     }
 
     return $target;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function decrypt($key, $source) {
+    $this->errors = array();
+
+    // Convert key into sequence of numbers
+    $fudgefactor = $this->convertKey($key);
+    if ($this->errors) {
+      return;
+    }
+
+    if (empty($source)) {
+      // Commented out to prevent errors getting logged for use cases that may
+      // have variable encryption/decryption requirements. -RS
+      // $this->errors[] = t('No value has been supplied for decryption');
+      return;
+    }
+
+    $target = NULL;
+    $factor2 = 0;
+
+    for ($i = 0; $i < strlen($source); $i++) {
+      $char2 = substr($source, $i, 1);
+
+      $num2 = strpos(self::$scramble2, $char2);
+      if ($num2 === FALSE) {
+        $this->errors[] = t('Source string contains an invalid character (@char)', ['@char' => $char2]);
+        return;
+      }
+
+      $adj = $this->applyFudgeFactor($fudgefactor);
+      $factor1 = $factor2 + $adj;
+      $num1 = $num2 - round($factor1);
+      $num1 = $this->checkRange($num1);
+      $factor2 = $factor1 + $num2;
+
+      $char1 = substr(self::$scramble1, $num1, 1);
+      $target .= $char1;
+    }
+
+    return rtrim($target);
   }
 
   /**

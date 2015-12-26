@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_credit\Plugin\views\field;
 
-use Drupal\uc_store\Encryption;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -26,7 +25,7 @@ class DataField extends FieldPluginBase {
   public function render(ResultRow $values) {
     // Initialize the encryption key and class.
     $key = uc_credit_encryption_key();
-    $crypt = new Encryption();
+    $crypt = \Drupal::service('uc_store.encryption');
     $data = unserialize($values->{$this->field_alias});
     if (isset($data['cc_data'])) {
       $cc_data = $crypt->decrypt($key, $data['cc_data']);

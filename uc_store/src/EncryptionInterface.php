@@ -14,19 +14,6 @@ namespace Drupal\uc_store;
 interface EncryptionInterface {
 
   /**
-   * Decrypts cyphertext.
-   *
-   * @param string $key
-   *   Key used for encryption.
-   * @param string $source
-   *   Cyphertext. Text string containing encrypted $source.
-   *
-   * @return string
-   *   Plaintext. Text string to be encrypted.
-   */
-  public function decrypt($key, $source);
-
-  /**
    * Encrypts plaintext.
    *
    * @param string $key
@@ -43,12 +30,31 @@ interface EncryptionInterface {
   public function encrypt($key, $source, $sourcelen);
 
   /**
+   * Decrypts cyphertext.
+   *
+   * @param string $key
+   *   Key used for encryption.
+   * @param string $source
+   *   Cyphertext. Text string containing encrypted $source.
+   *
+   * @return string
+   *   Plaintext. Text string to be encrypted.
+   */
+  public function decrypt($key, $source);
+
+  /**
    * Accessor for errors property.
+   *
+   * @return array
+   *   Array of text strings containing error messages.
    */
   public function getErrors();
 
   /**
    * Mutator for errors property.
+   *
+   * @param array $errors
+   *   Array of text strings containing error messages.
    */
   public function setErrors(array $errors);
 }

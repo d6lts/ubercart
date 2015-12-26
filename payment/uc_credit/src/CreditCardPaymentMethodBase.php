@@ -13,7 +13,6 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
-use Drupal\uc_store\Encryption;
 
 /**
  * Defines a base credit card payment method plugin implementation.
@@ -462,7 +461,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
     // Initialize the encryption key and class.
     $key = uc_credit_encryption_key();
-    $crypt = new Encryption();
+    $crypt = \Drupal::service('uc_store.encryption');
 
     // Store the encrypted details in the session for the next pageload.
     // We are using base64_encode() because the encrypt function works with a

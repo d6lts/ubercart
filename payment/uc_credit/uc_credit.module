@@ -8,7 +8,6 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\uc_store\Encryption;
 
 /** Just authorize an amount on a credit card account. */
 define('UC_CREDIT_AUTH_ONLY', 'authorize');
@@ -239,7 +238,7 @@ function uc_credit_cache($op, $data = NULL, $encrypted = TRUE) {
     if ($encrypted) {
       // Initialize the encryption key and class.
       $key = uc_credit_encryption_key();
-      $crypt = new Encryption();
+      $crypt = \Drupal::service('uc_store.encryption');
 
       // Save the unencrypted CC details for the duration of this request.
       // In recent versions, we base64_encode() the payment details before
@@ -463,7 +462,7 @@ function _uc_credit_save_cc_data_to_order($cc_data, $order_id) {
   $data = unserialize($data);
 
   // Stuff the serialized and encrypted CC details into the array.
-  $crypt = new Encryption();
+  $crypt = \Drupal::service('uc_store.encryption');
   $data['cc_data'] = $crypt->encrypt(uc_credit_encryption_key(), base64_encode(serialize($cc_data)));
   uc_store_encryption_errors($crypt, 'uc_credit');
 
