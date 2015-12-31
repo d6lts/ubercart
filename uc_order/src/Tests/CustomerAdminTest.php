@@ -39,6 +39,9 @@ class CustomerAdminTest extends UbercartTestBase {
    */
   public static $modules = array('views');
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

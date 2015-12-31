@@ -19,7 +19,10 @@ class ProductKitTest extends UbercartTestBase {
   public static $modules = array('uc_product_kit');
   public static $adminPermissions = array('create product_kit content', 'edit any product_kit content');
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Need page_title_block because we test page titles

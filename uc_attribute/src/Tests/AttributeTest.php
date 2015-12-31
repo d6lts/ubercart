@@ -19,7 +19,10 @@ class AttributeTest extends UbercartTestBase {
   public static $modules = array('uc_attribute');
   public static $adminPermissions = array('administer attributes', 'administer product attributes', 'administer product options');
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Need page_title_block because we test page titles

@@ -23,7 +23,10 @@ class CartBlockTest extends UbercartTestBase {
    */
   protected $block;
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
     $this->block = $this->drupalPlaceBlock('uc_cart');
   }

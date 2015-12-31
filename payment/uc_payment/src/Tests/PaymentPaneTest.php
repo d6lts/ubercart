@@ -18,7 +18,10 @@ class PaymentPaneTest extends UbercartTestBase {
 
   public static $modules = array('uc_payment', 'uc_payment_pack');
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
     $this->addToCart($this->product);

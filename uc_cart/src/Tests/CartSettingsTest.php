@@ -19,7 +19,10 @@ class CartSettingsTest extends UbercartTestBase {
 
   public static $modules = array('uc_cart', 'block');
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
   }

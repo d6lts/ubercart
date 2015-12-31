@@ -19,7 +19,10 @@ class StockTest extends UbercartTestBase {
   public static $modules = array('uc_stock');
   public static $adminPermissions = array('administer product stock');
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Need page_title_block because we test page titles

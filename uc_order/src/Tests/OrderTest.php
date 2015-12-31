@@ -23,7 +23,10 @@ class OrderTest extends UbercartTestBase {
   /** Authenticated but unprivileged user. */
   protected $customer;
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Need page_title_block because we test page titles

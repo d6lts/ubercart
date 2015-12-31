@@ -58,7 +58,10 @@ class CreditCardTest extends UbercartTestBase {
   public static $modules = array('uc_payment', 'uc_credit', 'test_gateway');
   public static $adminPermissions = array('administer credit cards', 'process credit cards');
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Need admin permissions in order to change credit card settings.
@@ -109,9 +112,9 @@ class CreditCardTest extends UbercartTestBase {
   }
 
   /**
-   * Implements WebTestBase::tearDown().
+   * {@inheritdoc}
    */
-  public function tearDown() {
+  protected function tearDown() {
     // Cleanup keys directory after test.
     \Drupal::service('file_system')->unlink('sites/default/files/simpletest.keys/' . UC_CREDIT_KEYFILE_NAME);
     \Drupal::service('file_system')->rmdir('sites/default/files/simpletest.keys');

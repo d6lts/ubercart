@@ -19,7 +19,10 @@ class ProductTest extends UbercartTestBase {
   public static $modules = array('path', 'uc_product');
   public static $adminPermissions = array('administer content types');
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
   }

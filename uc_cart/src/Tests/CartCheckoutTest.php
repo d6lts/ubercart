@@ -40,8 +40,10 @@ class CartCheckoutTest extends UbercartTestBase {
    */
   protected $cart;
 
-
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Create a simple customer user account.

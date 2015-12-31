@@ -19,7 +19,10 @@ class AddressTest extends UbercartTestBase {
   /** Array of Address objects */
   protected $test_address = array();
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Create a random address object for use in tests.

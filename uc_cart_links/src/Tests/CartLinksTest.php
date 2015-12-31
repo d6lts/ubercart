@@ -22,7 +22,10 @@ class CartLinksTest extends UbercartTestBase {
   public static $modules = array('uc_cart_links', 'uc_attribute', 'help', 'block');
   public static $adminPermissions = array('administer cart links', 'view cart links report', 'access administration pages');
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Set front page so we have someplace to redirect to for invalid Cart Links.

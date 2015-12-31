@@ -23,7 +23,10 @@ class RoleCheckoutTest extends UbercartTestBase {
   /** Authenticated but unprivileged user. */
   protected $customer;
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
 
     // Create a simple customer user account.

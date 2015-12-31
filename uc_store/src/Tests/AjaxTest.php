@@ -19,7 +19,10 @@ class AjaxTest extends UbercartTestBase {
   public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack');
   public static $adminPermissions = array(/*'administer rules', 'bypass rules access'*/);
 
-  public function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
 
