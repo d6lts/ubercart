@@ -13,6 +13,9 @@ use Drupal\uc_country\Entity\Country;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\Entity\OrderProduct;
 
+/**
+ * Base class for Ubercart tests.
+ */
 abstract class UbercartTestBase extends WebTestBase {
 
   /**

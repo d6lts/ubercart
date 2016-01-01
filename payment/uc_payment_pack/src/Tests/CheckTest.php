@@ -2,41 +2,21 @@
 
 /**
  * @file
- * Contains \Drupal\uc_payment_pack\Tests\PaymentPackTest.
+ * Contains \Drupal\uc_payment_pack\Tests\CheckTest.
  */
 
 namespace Drupal\uc_payment_pack\Tests;
 
 use Drupal\uc_order\Entity\Order;
-use Drupal\uc_store\Tests\UbercartTestBase;
+use Drupal\uc_payment_pack\Tests\PaymentPackTestBase;
 use Drupal\uc_store\Address;
 
 /**
- * Tests the payment method pack.
+ * Tests the payment method pack Check payment method.
  *
  * @group Ubercart
  */
-class PaymentPackTest extends UbercartTestBase {
-
-  public static $modules = array('uc_payment', 'uc_payment_pack');
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp() {
-    parent::setUp();
-
-    // Log in and add a product to the cart for testing.
-    $this->drupalLogin($this->adminUser);
-    $this->addToCart($this->product);
-
-    // Disable address panes during checkout.
-    $edit = array(
-      'panes[delivery][status]' => FALSE,
-      'panes[billing][status]' => FALSE,
-    );
-    $this->drupalPostForm('admin/store/config/checkout', $edit, t('Save configuration'));
-  }
+class CheckTest extends PaymentPackTestBase {
 
   /**
    * Tests for Check payment method.
@@ -128,75 +108,6 @@ class PaymentPackTest extends UbercartTestBase {
     $this->assertText('Check received');
     $this->assertText('Expected clear date:');
     $this->assertText($formatted, 'Check clear date found.');
-  }
-
-  /**
-   * Tests for Cash on Delivery payment method.
-   */
-  public function testCashOnDelivery() {
-    $this->drupalGet('admin/store/config/payment/add/cod');
-    $this->assertFieldByName('settings[policy]', 'Full payment is expected upon delivery or prior to pick-up.', 'Default COD policy found.');
-
-    $cod = $this->createPaymentMethod('cod', [
-      'settings[policy]' => $this->randomString(),
-    ]);
-    // @todo: Test enabling delivery date on settings page
-
-    // Test checkout page
-    $this->drupalGet('cart/checkout');
-    $this->assertFieldByName('panes[payment][payment_method]', $cod['id'], 'COD payment method is selected at checkout.');
-    $this->assertEscaped($cod['settings[policy]'], 'COD policy found at checkout.');
-
-    // Test review order page
-    $this->drupalPostForm(NULL, array(), 'Review order');
-    $this->assertText('Cash on delivery', 'COD payment method found on review page.');
-    $this->drupalPostForm(NULL, array(), 'Submit order');
-
-    // Test user order view
-    $order = Order::load(1);
-    $this->assertEqual($order->getPaymentMethodId(), $cod['id'], 'Order has COD payment method.');
-
-    $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
-    $this->assertText('Method: Cash on delivery', 'COD payment method displayed.');
-
-    // Test admin order view
-    $this->drupalGet('admin/store/orders/' . $order->id());
-    $this->assertText('Method: Cash on delivery', 'COD payment method displayed.');
-  }
-
-  /**
-   * Tests for Other payment method.
-   */
-  public function testOther() {
-    $other = $this->createPaymentMethod('other');
-
-    // Test checkout page
-    $this->drupalGet('cart/checkout');
-    $this->assertFieldByName('panes[payment][payment_method]', $other['id'], 'Other payment method is selected at checkout.');
-
-    // Test review order page
-    $this->drupalPostForm(NULL, array(), 'Review order');
-    $this->assertText('Other', 'Other payment method found on review page.');
-    $this->drupalPostForm(NULL, array(), 'Submit order');
-
-    // Test user order view
-    $order = Order::load(1);
-    $this->assertEqual($order->getPaymentMethodId(), $other['id'], 'Order has other payment method.');
-
-    $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
-    $this->assertText('Method: Other', 'Other payment method displayed.');
-
-    // Test admin order view
-    $this->drupalGet('admin/store/orders/' . $order->id());
-    $this->assertText('Method: Other', 'Other payment method displayed.');
-
-    $this->drupalGet('admin/store/orders/' . $order->id() . '/edit');
-    $this->assertFieldByName('payment_method', $other['id'], 'Other payment method is selected in the order edit form.');
-    $edit = array(
-      'payment_details[description]' => $this->randomString(),
-    );
-    $this->drupalPostForm(NULL, array(), 'Save changes');
-    // @todo: Test storage of payment details.
   }
 
 }
