@@ -341,3 +341,13 @@ function uc_payment_load_payments($order_id) {
 function uc_payment_method_list() {
   return \Drupal::service('plugin.manager.uc_payment.method')->getDefinitions();
 }
+
+/**
+ * Temporary shim for removed variable_get().
+ * @TODO: Remove!
+ */
+if (!function_exists('variable_get')) {
+  function variable_get($name, $default = NULL) {
+    return $default;
+  }
+}

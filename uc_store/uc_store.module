@@ -820,13 +820,3 @@ function uc_store_uc_store_status() {
 
   return $messages;
 }
-
-/**
- * Temporary shim for removed variable_get().
- * @TODO: Remove!
- */
-if (!function_exists('variable_get')) {
-  function variable_get($name, $default = NULL) {
-    return $default;
-  }
-}
