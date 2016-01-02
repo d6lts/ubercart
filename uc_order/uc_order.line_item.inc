@@ -141,8 +141,11 @@ function _uc_line_item_list($action = NULL) {
 
     // Merge in any settings.
     $items[$id] = array_merge($item, array(
-      'enabled' => variable_get('uc_li_' . $id . '_enabled', $item['enabled']),
-      'weight' => variable_get('uc_li_' . $id . '_weight', $item['weight']),
+//      @todo: Is something needed here to replace variable_get ?
+//      'enabled' => variable_get('uc_li_' . $id . '_enabled', $item['enabled']),
+//      'weight' => variable_get('uc_li_' . $id . '_weight', $item['weight']),
+      'enabled' => $item['enabled'],
+      'weight' => $item['weight'],
     ));
   }
 
