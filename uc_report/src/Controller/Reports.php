@@ -12,6 +12,11 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * The maximum number of records.
+ */
+define('UC_REPORT_MAX_RECORDS', PHP_INT_MAX);
+
 
 class Reports extends ControllerBase {
 
@@ -23,7 +28,7 @@ class Reports extends ControllerBase {
     $first_name = ($address_preference == 'billing') ? 'billing_first_name' : 'delivery_first_name';
     $last_name = ($address_preference == 'billing') ? 'billing_last_name' : 'delivery_last_name';
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : variable_get('uc_report_table_size', 30);
+    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : $this->config('uc_report.settings')->get('table_size');
     $order_statuses = uc_report_order_statuses();
     $rows = array();
     $csv_rows = array();
@@ -75,7 +80,7 @@ class Reports extends ControllerBase {
 
     foreach ($customers as $customer) {
       $name = (!empty($customer[$last_name]) || !empty($customer[$first_name])) ? Link::fromTextAndUrl($customer[$last_name] . ', ' . $customer[$first_name], Url::fromUri('base:admin/store/customers/orders/' . $customer['uid']))->toString() : Link::fromTextAndUrl($customer['name'], Url::fromUri('base:admin/store/customers/orders/' . $customer['uid']))->toString();
-      $customer_number = ($page * variable_get('uc_report_table_size', 30)) + (count($rows) + 1);
+      $customer_number = ($page * $this->config('uc_report.settings')->get('table_size')) + (count($rows) + 1);
       $customer_order_name = (!empty($customer[$last_name]) || !empty($customer[$first_name])) ? $customer[$last_name] . ', ' . $customer[$first_name] : $customer['name'];
       $customer_name = $customer['name'];
       $orders = !empty($customer['orders']) ? $customer['orders'] : 0;
@@ -134,9 +139,9 @@ class Reports extends ControllerBase {
     $views_column = \Drupal::moduleHandler()->moduleExists('statistics') && $this->config('statistics.settings')->get('count_content_views');
 
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : variable_get('uc_report_table_size', 30);
+    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : $this->config('uc_report.settings')->get('table_size');
     $order_statuses = uc_report_order_statuses();
-    $row_cell = $page * variable_get('uc_report_table_size', 30) + 1;
+    $row_cell = $page * $this->config('uc_report.settings')->get('table_size') + 1;
     $rows = array();
     $csv_rows = array();
 
@@ -222,7 +227,7 @@ class Reports extends ControllerBase {
 
       if (\Drupal::moduleHandler()->moduleExists('uc_attribute')) {
         // Get the SKUs from this product.
-        $models = uc_report_product_get_skus($product['nid']);
+        $models = $this->product_get_skus($product['nid']);
         // Add the product breakdown rows
         foreach ($models as $model) {
           $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", [':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']])->fetchField();
@@ -336,7 +341,7 @@ class Reports extends ControllerBase {
     $views_column = \Drupal::moduleHandler()->moduleExists('statistics') && $this->config('statistics.settings')->get('count_content_views');
 
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : variable_get('uc_report_table_size', 30);
+    $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : $this->config('uc_report.settings')->get('table_size');
     $rows = array();
     $csv_rows = array();
 
@@ -406,7 +411,7 @@ class Reports extends ControllerBase {
 
     $products = $query->execute();
     foreach ($products as $product) {
-      $row_cell = ($page * variable_get('uc_report_table_size', 30)) + count($rows) + 1;
+      $row_cell = ($page * $this->config('uc_report.settings')->get('table_size')) + count($rows) + 1;
       $product_cell = Link::createFromRoute($product['title'], 'entity.node.canonical', ['node' => $product['nid']])->toString();
       $product_csv = $product['title'];
       $sold_cell = empty($product['sold']) ? 0 : $product['sold'];
@@ -420,7 +425,7 @@ class Reports extends ControllerBase {
         $breakdown_product = $breakdown_sold = $breakdown_revenue = $breakdown_gross = '';
 
         // Get the SKUs from this product.
-        $models = uc_report_product_get_skus($product['nid']);
+        $models = $this->product_get_skus($product['nid']);
         // Add the product breakdown rows
         foreach ($models as $model) {
           $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid AND o.created >= :start AND o.created <= :end", [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date'], ':model' => $model, ':nid' => $product['nid']])->fetchField();
@@ -791,7 +796,7 @@ class Reports extends ControllerBase {
     $csv_rows = array(array(t('Date'), t('Number of orders'), t('Products sold'), t('Total revenue')));
 
     // Grab the subreports based on the date range and the report breakdown.
-    $subreports = uc_report_subreport_intervals($args['start_date'], $args['end_date'], $args['length']);
+    $subreports = $this->subreport_intervals($args['start_date'], $args['end_date'], $args['length']);
 
     // Loop through the subreports and build the report table.
     foreach ($subreports as $subreport) {

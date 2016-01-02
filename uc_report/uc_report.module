@@ -16,12 +16,6 @@ use Drupal\Core\Url;
 use Drupal\uc_order\Entity\OrderStatus;
 
 /**
- * The maximum number of records.
- */
-define('UC_REPORT_MAX_RECORDS', PHP_INT_MAX);
-
-
-/**
  * Implements hook_help().
  */
 function uc_report_help($path, RouteMatchInterface $route_match) {
@@ -70,20 +64,20 @@ function uc_report_help($path, RouteMatchInterface $route_match) {
     }
     if (strpos($path, 'admin/store/reports/sales/year') === 0) {
       $year = $arg[5] ? $arg[5] : \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', "Y");
-      $output .= t('This is the monthly break down of sales for the year @year. Clicking on each link will take you to a list of orders during that month.', array('@year' => $year));
+      $output .= t('This is the monthly break down of sales for the year @year. Clicking on each link will take you to a list of orders during that month.', ['@year' => $year]);
     }
     $output .= '</p>';
 
     // Include the statuses/offset as needed.
     if ($include_offset) {
-      $output .= "<p>" . t('All reports are your local timezone, which is <b>@timezone</b>.', array('@timezone' => date_default_timezone_get())) . "</p>";
+      $output .= "<p>" . t('All reports are your local timezone, which is <b>@timezone</b>.', ['@timezone' => date_default_timezone_get()]) . "</p>";
     }
     if ($include_statuses) {
       $statuses = array();
       foreach (uc_report_order_statuses() as $status) {
         $statuses[] = SafeMarkup::checkPlain(OrderStatus::load($status)->name);
       }
-      $order_statuses = t('<b>Order statuses used:</b> @statuses', array('@statuses' => implode(', ', array_filter($statuses))));
+      $order_statuses = t('<b>Order statuses used:</b> @statuses', ['@statuses' => implode(', ', array_filter($statuses))]);
 
       $output .= "<p>$order_statuses</p>";
     }
@@ -262,6 +256,8 @@ function uc_report_page_attachments(&$page) {
  * Implements hook_form_FORM_ID_alter() for uc_store_settings_form().
  */
 function uc_report_form_uc_store_settings_form_alter(&$form, &$form_state) {
+  $report_config = \Drupal::config('uc_report.settings');
+
   $form['reports'] = array(
     '#type' => 'details',
     '#title' => t('Report settings'),
@@ -271,7 +267,7 @@ function uc_report_form_uc_store_settings_form_alter(&$form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Number of rows to show in reports'),
     '#description' => t('The maximum number of rows displayed on one page for a report table.'),
-    '#default_value' => variable_get('uc_report_table_size', 30),
+    '#default_value' => $report_config->get('table_size'),
     '#size' => 5,
   );
   $form['reports']['uc_report_reported_statuses'] = array(
@@ -279,7 +275,7 @@ function uc_report_form_uc_store_settings_form_alter(&$form, &$form_state) {
     '#title' => t('Reported statuses'),
     '#description' => t('Only orders with selected statuses will be included in reports.'),
     '#options' => OrderStatus::getOptionsList(),
-    '#default_value' => variable_get('uc_report_reported_statuses', array('completed')),
+    '#default_value' => $report_config->get('reported_statuses'),
     '#multiple' => TRUE,
   );
 }
@@ -290,7 +286,7 @@ function uc_report_form_uc_store_settings_form_alter(&$form, &$form_state) {
 function uc_report_order_statuses() {
   $statuses = array();
   foreach (OrderStatus::loadMultiple() as $status) {
-    $statuses[$status->id] = $status->name;
+    $statuses[$status->id()] = $status->label();
   }
   return $statuses;
 }
