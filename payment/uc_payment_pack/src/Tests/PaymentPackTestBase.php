@@ -12,8 +12,6 @@ use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Base class for payment method pack tests.
- *
- * @group Ubercart
  */
 abstract class PaymentPackTestBase extends UbercartTestBase {
 
