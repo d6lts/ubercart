@@ -28,7 +28,8 @@ class OrderWeightTotal extends Weight {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['weight_units'] = array('default' => variable_get('uc_weight_unit', 'lb'));
+    $store_config = \Drupal::config('uc_store.settings');
+    $options['weight_units'] = array('default' => $store_config->get('weight.units'));
     return $options;
   }
 
