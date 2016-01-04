@@ -27,7 +27,7 @@ class OrderStatusTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp() {
     $this->orderStatus = new OrderStatus([], 'order_status');
   }
 
