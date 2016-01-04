@@ -5,7 +5,7 @@ uc_cart_links.settings:
   parent: uc_store.admin.store.config
 
 uc_cart_links.reports:
-  title: 'Cart Links'
+  title: 'Cart Links reports'
   description: 'Track clicks through Cart Links.'
   route_name: view.uc_cart_links.report
   parent: uc_store.admin.store.reports

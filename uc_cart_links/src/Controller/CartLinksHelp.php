@@ -18,7 +18,10 @@ use Drupal\Core\Url;
 class CartLinksHelp {
 
   /**
+   * Explains Cart Links syntax for help purposes.
    *
+   * @return array
+   *   A render array for the Help page.
    */
   public static function creationHelp() {
     $build = array(
