@@ -86,7 +86,7 @@ class CartLinksSettingsForm extends ConfigFormBase {
       $data = explode("\n", $messages);
       foreach ($data as $message) {
         // Ignore blank lines.
-        if (preg_match('/^\s?$/', $message)) {
+        if (preg_match('/^\s*$/', $message)) {
            continue;
         }
         // Check for properly formattted messages.
