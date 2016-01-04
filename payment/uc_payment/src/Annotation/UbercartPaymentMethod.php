@@ -39,4 +39,20 @@ class UbercartPaymentMethod extends Plugin {
    */
   public $no_ui = FALSE;
 
+  /**
+   * Name of a class that implements \Drupal\Core\Form\FormBase and provides
+   * a Submit button on the /cart/checkout/review page redirecting to an
+   * external payment site.
+   *
+   * @var string
+   */
+  public $redirect = NULL;
+
+  /**
+   * Name of a class that implements \Drupal\Core\Form\FormBase and provides
+   * an express checkout button for the /cart page.
+   *
+   * @var string
+   */
+  public $express = NULL;
 }

@@ -71,6 +71,13 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $for
 //      $form['actions']['checkout'][$id] = $express;
 //    }
 //  }
+  $definitions = \Drupal::service('plugin.manager.uc_payment.method')->getDefinitions();
+  foreach ($definitions as $key => $definition) {
+    if (!empty($definition['express'])) {
+      $express = \Drupal::formBuilder()->getForm($definition['express']);
+      $form['actions']['checkout'][] = drupal_render($express);
+    }
+  }
 }
 
 /**
@@ -83,7 +90,7 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInt
   $order = $form_state->get('uc_order');
   $definition = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->getPluginDefinition();
 
-  if (isset($definition['redirect'])) {
+  if (!empty($definition['redirect'])) {
     unset($form['actions']['submit']);
     $suffix = \Drupal::formBuilder()->getForm($definition['redirect'], $order);
     $form['#suffix'] = drupal_render($suffix);
