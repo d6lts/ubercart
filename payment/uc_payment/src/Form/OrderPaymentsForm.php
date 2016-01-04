@@ -121,7 +121,7 @@ class OrderPaymentsForm extends FormBase {
 
     $form['balance'] = array(
       '#type' => 'item',
-      '#title' => t('Current balance'),
+      '#title' => $this->t('Current balance'),
       '#theme' => 'uc_price',
       '#price' => $total,
     );
@@ -140,13 +140,13 @@ class OrderPaymentsForm extends FormBase {
       );
       $form['payments']['new']['method'] = array(
         '#type' => 'select',
-        '#title' => t('Method'),
+        '#title' => $this->t('Method'),
         '#title_display' => 'invisible',
         '#options' => $this->paymentMethodManager->listOptions(),
       );
       $form['payments']['new']['amount'] = array(
         '#type' => 'textfield',
-        '#title' => t('Amount'),
+        '#title' => $this->t('Amount'),
         '#title_display' => 'invisible',
         '#size' => 6,
       );
@@ -175,7 +175,7 @@ class OrderPaymentsForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!is_numeric($form_state->getValue(['payments', 'new', 'amount']))) {
-      $form_state->setErrorByName('payments][new][amount', t('You must enter a number for the amount.'));
+      $form_state->setErrorByName('payments][new][amount', $this->t('You must enter a number for the amount.'));
     }
   }
 
@@ -195,7 +195,7 @@ class OrderPaymentsForm extends FormBase {
 
     uc_payment_enter($this->order->id(), $payment['method'], $payment['amount'], \Drupal::currentUser()->id(), '', $payment['comment'], $received);
 
-    drupal_set_message(t('Payment entered.'));
+    drupal_set_message($this->t('Payment entered.'));
   }
 
 }
