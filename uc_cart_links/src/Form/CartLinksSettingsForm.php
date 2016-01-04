@@ -80,6 +80,32 @@ class CartLinksSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $messages = (string) $form_state->getValue('uc_cart_links_messages');
+    if (!empty($messages)) {
+      $data = explode("\n", $messages);
+      foreach ($data as $message) {
+        // Ignore blank lines.
+        if (preg_match('/^\s?$/', $message)) {
+           continue;
+        }
+        // Check for properly formattted messages.
+        // Each line must be one or more numeric characters for the key followed
+        // by "|" followed by one or more characters for the value. Both the key
+        // and the value may have leading and/or trailing whitespace.
+        else if (!preg_match('/^\s*[1-9][0-9]*\s*\|\s*\S+.*$/', $message)) {
+           $form_state->setErrorByName('uc_cart_links_messages', $this->t('Invalid Cart Links message "%message". Messages must be a numeric key followed by "|" followed by a value.', ['%message' => $message]));
+           break;
+        }
+      }
+    }
+
+    return parent::validateForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $cart_links_config = $this->config('uc_cart_links.settings');
 

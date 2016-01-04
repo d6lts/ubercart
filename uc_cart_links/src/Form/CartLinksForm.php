@@ -207,6 +207,10 @@ class CartLinksForm extends ConfirmFormBase {
           if (empty($messages)) {
             $data = explode("\n", $cart_links_config->get('messages'));
             foreach ($data as $message) {
+              // Skip blank lines.
+              if (preg_match('/^\s?$/', $message)) {
+                 continue;
+              }
               list($mkey, $mdata) = explode('|', $message, 2);
               $messages[trim($mkey)] = trim($mdata);
             }
