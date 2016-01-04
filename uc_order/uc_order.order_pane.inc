@@ -482,9 +482,10 @@ function uc_order_edit_products_form($form, FormStateInterface $form_state, $pro
     $form['products'][$i]['remove'] = array(
       '#type' => 'image_button',
       '#title' => t('Remove this product.'),
+      '#name' => "products[$i][remove]",
       '#src' => drupal_get_path('module', 'uc_store') . '/images/error.gif',
       '#button_type' => 'remove',
-      '#submit' => array('uc_order_edit_products_remove', 'uc_order_edit_form_submit'),
+      '#submit' => array('uc_order_edit_products_remove', '::submitForm'),
       '#return_value' => $product->order_product_id->value,
     );
     $form['data'][$i]['order_product_id'] = array(
@@ -552,7 +553,7 @@ function uc_order_edit_products_form($form, FormStateInterface $form_state, $pro
     );
     $form['data'][$i]['data'] = array(
       '#type' => 'hidden',
-      '#value' => serialize($product->data->first()->toArray()),
+      '#value' => serialize($product->data->first() ? $product->data->first()->toArray() : NULL),
     );
   }
 
@@ -566,7 +567,7 @@ function uc_order_pane_products_select($form, FormStateInterface $form_state) {
   $types = uc_product_types();
   $options = array();
 
-  $query = db_select('node', 'n')
+  $query = db_select('node_field_data', 'n')
     ->fields('n', array('nid', 'title'))
     ->condition('n.type', $types, 'IN')
     ->orderBy('n.title')
@@ -623,13 +624,13 @@ function uc_order_edit_products_add_blank($form, FormStateInterface $form_state)
   $form_state->set('refresh_products', TRUE);
   $form_state->setRebuild();
 
-  $build_info = $form_state->getBuildInfo();
-  $order = $build_info['args'][0];
+  $order = $form['#order'];
 
-  $product = new stdClass();
-  $product->qty = 1;
-  $product->order_id = $order->id();
-  uc_order_product_save($order->id(), $product);
+  $product = OrderProduct::create(array(
+    'qty' => 1,
+    'order_id' => $order->id(),
+  ));
+  $product->save();
 
   $order->products[] = $product;
   $order->logChanges(array('add' => t('Added new product line to order.')));
@@ -643,17 +644,19 @@ function uc_order_edit_products_add($form, FormStateInterface $form_state) {
   $form_state->set('refresh_products', TRUE);
   $form_state->setRebuild();
 
-  $build_info = $form_state->getBuildInfo();
-  $order = $build_info['args'][0];
+  $order = $form['#order'];
 
   $data = \Drupal::moduleHandler()->invokeAll('uc_add_to_cart_data', array($form_state->getValue('product_controls')));
-  $product = uc_product_load_variant(intval($form_state->getValue(['product_controls', 'nid'])), $data);
-  $product->qty = $form_state->getValue(['product_controls', 'qty']);
+  $values = uc_product_load_variant(intval($form_state->getValue(['product_controls', 'nid'])), $data)->toArray();
+  $values['qty'] = $form_state->getValue(['product_controls', 'qty']);
+  $values['order_id'] = $order->id();
 
+  $product = OrderProduct::create($values);
   \Drupal::moduleHandler()->alter('uc_order_product', $product, $order);
-  uc_order_product_save($order->id(), $product);
+  $product->save();
+
   $order->products[] = $product;
-  $order->logChanges(array('add' => t('Added (@qty) @title to order.', array('@qty' => $product->qty, '@title' => $product->title))));
+  $order->logChanges([t('Added (@qty) @title to order.', array('@qty' => $product->qty->value, '@title' => $product->title->value))]);
 
   // Decrement stock.
   if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
@@ -662,7 +665,7 @@ function uc_order_edit_products_add($form, FormStateInterface $form_state) {
 
   // Add this product to the form values for accurate tax calculations.
   $products = $form_state->getValue('products');
-  $products[] = (array) $product;
+  $products[] = $product;
   $form_state->setValue('products', $products);
 }
 
@@ -672,25 +675,22 @@ function uc_order_edit_products_add($form, FormStateInterface $form_state) {
 function uc_order_edit_products_remove($form, FormStateInterface $form_state) {
   $form_state->set('refresh_products', TRUE);
 
+  /** @var \Drupal\uc_order\Entity\Order $order */
+  $order = $form['#order'];
+
   $triggering_element = $form_state->getTriggeringElement();
   $order_product_id = intval($triggering_element['#return_value']);
+  /** @var \Drupal\uc_order\Entity\OrderProduct $product */
+  $product = $order->products[$order_product_id];
 
   if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
     // Replace stock immediately.
-    $product = OrderProduct::load($order_product_id);
-    uc_stock_adjust($product->model, $product->qty);
+    uc_stock_adjust($product->model->value, $product->qty->value);
   }
 
-  entity_delete_multiple('uc_order_product', array($order_product_id));
-
-  $build_info = $form_state->getBuildInfo();
-  $order = $build_info['args'][0];
-  $matches = array();
-  preg_match('/products\[(\d+)\]/', $triggering_element['#name'], $matches);
-  $key = $matches[1];
-
-  unset($order->products[$key]);
-  $order->products = array_values($order->products);
+  $product->delete();
+  unset($order->products[$order_product_id]);
+  $order->logChanges([t('Removed @title from order.', array('@title' => $product->title->value))]);
 }
 
 /**

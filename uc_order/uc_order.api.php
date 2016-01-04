@@ -365,7 +365,7 @@ function uc_order_pane_callback($op, $order, &$form = NULL, &$form_state = NULL)
  *   Nothing should be returned. Hook implementations should receive the
  *   $product object by reference and alter it directly.
  */
-function hook_uc_order_product_alter(&$product, $order) {
+function hook_uc_order_product_alter(\Drupal\uc_order\OrderProductInterface &$product, \Drupal\uc_order\OrderInterface $order) {
   $product->model = 'SKU';
 }
 

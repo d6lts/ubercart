@@ -16,6 +16,8 @@ use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
+use Drupal\uc_order\OrderInterface;
+use Drupal\uc_order\OrderProductInterface;
 
 define('UC_PRODUCT_KIT_UNMUTABLE_NO_LIST', -1);
 define('UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST', 0);
@@ -876,7 +878,7 @@ function uc_product_kit_uc_product_alter(&$variant) {
  * @param $order
  *   The order being edited.
  */
-function uc_product_kit_uc_order_product_alter(&$product, $order) {
+function uc_product_kit_uc_order_product_alter(OrderProductInterface &$product, OrderInterface $order) {
   if (empty($product->type) || $product->type !== 'product_kit') {
     return;
   }

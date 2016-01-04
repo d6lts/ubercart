@@ -25,6 +25,8 @@ use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\uc_cart\Entity\CartItem;
+use Drupal\uc_order\OrderInterface;
+use Drupal\uc_order\OrderProductInterface;
 
 /**
  * Implements hook_help().
@@ -302,7 +304,7 @@ function uc_attribute_uc_add_to_cart_data($form_values) {
 /**
  * Implements hook_uc_order_product_alter().
  */
-function uc_attribute_uc_order_product_alter(&$product, $order) {
+function uc_attribute_uc_order_product_alter(OrderProductInterface &$product, OrderInterface $order) {
   // Convert the attribute and option ids to their current names. This
   // preserves the important data in case the attributes or options are
   // changed later.

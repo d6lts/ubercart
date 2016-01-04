@@ -105,7 +105,7 @@ class OrderForm extends ContentEntityForm {
 
     if (is_array($form_state->getValue('products'))) {
       foreach ($form_state->getValue('products') as $product) {
-        if (!isset($product['remove']) && intval($product['qty']) > 0) {
+        if (isset($order->products[$product['order_product_id']])) {
           foreach (array('qty', 'title', 'model', 'weight', 'weight_units', 'cost', 'price') as $field) {
             $order->products[$product['order_product_id']]->$field = $product[$field];
           }
@@ -117,9 +117,6 @@ class OrderForm extends ContentEntityForm {
             uc_stock_adjust_product_stock($product, 0, $order);
             $product->qty = $temp;
           }
-        }
-        else {
-          $log['remove_' . $product['nid']] = $product['title'] . ' removed from order.';
         }
       }
     }
