@@ -1,0 +1,36 @@
+# Schema for the configuration files of the uc_2checkout module.
+
+uc_2checkout.settings:
+  type: config_object
+  label: '2Checkout settings'
+  mapping:
+    check:
+      type: boolean
+      label: ''
+    checkout_type:
+      type: string
+      label: 'Use direct or dynamic checkout'
+    currency_code:
+      type: string
+      label: 'Currency to use for transaction'
+    demo:
+      type: boolean
+      label: 'Flag to indicate demo mode for gateway - no actual money will be transfered if TRUE'
+    language:
+      type: string
+      label: 'Language code'
+    method_title:
+      type: label
+      label: 'Default title for this payment method'
+    notification_url:
+      type: uri
+      label: 'Notification callback URL'
+    secret_word:
+      type: string
+      label: ''
+    server_url:
+      type: uri
+      label: '2Checkout server for POSTing transaction'
+    sid:
+      type: string
+      label: ''

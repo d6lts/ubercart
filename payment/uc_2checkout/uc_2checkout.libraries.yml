@@ -1,0 +1,3 @@
+2checkout.direct:
+  js:
+    https://www.2checkout.com/static/checkout/javascript/direct.min.js: { type: external, minified: true }

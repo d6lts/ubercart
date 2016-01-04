@@ -3,5 +3,6 @@ language: 'en'
 sid: ''
 secret_word: 'tango'
 demo: TRUE
-checkout_type: 'multi'
+checkout_type: 'dynamic'
 check: FALSE
+server_url: 'https://www.2checkout.com/checkout/purchase'
