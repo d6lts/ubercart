@@ -21,8 +21,8 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Implements hook_help().
  */
-function uc_shipping_help($path, RouteMatchInterface $route_match) {
-  switch ($path) {
+function uc_shipping_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
     case 'admin/store/orders/%/packages/new':
       return '<p>' . t('Organize products into packages. Package numbers in multiple shipping types are of the first shipping type they appear in. All packages are given a unique ID when they are saved. Choose the default package "Sep." to automatically create a package for each of the selected quantity of products in that row.') . '</p>';
       break;
