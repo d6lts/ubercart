@@ -78,7 +78,7 @@ class WeightquoteDeleteForm extends ConfirmFormBase {
 
     // rules_config_delete(array('get_quote_from_weightquote_' . $mid));
 
-    drupal_set_message(t('Weight quote shipping method deleted.'));
+    drupal_set_message($this->t('Weight quote shipping method deleted.'));
     $form_state->setRedirect('uc_quote.methods');
   }
 

@@ -41,28 +41,28 @@ class StockSettingsForm extends ConfigFormBase {
 
     $form['uc_stock_threshold_notification'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Send email notification when stock level reaches its threshold value'),
+      '#title' => $this->t('Send email notification when stock level reaches its threshold value'),
       '#default_value' => $config->get('notify'),
     );
 
     $form['uc_stock_threshold_notification_recipients'] = array(
       '#type' => 'textfield',
-      '#title' => t('Notification recipients'),
+      '#title' => $this->t('Notification recipients'),
       '#default_value' => $config->get('recipients'),
-      '#description' => t('The list of comma-separated email addresses that will receive the notification.'),
+      '#description' => $this->t('The list of comma-separated email addresses that will receive the notification.'),
     );
 
     $form['uc_stock_threshold_notification_subject'] = array(
       '#type' => 'textfield',
-      '#title' => t('Message subject'),
+      '#title' => $this->t('Message subject'),
       '#default_value' => $mail->get('threshold_notification.subject'),
     );
 
     $form['uc_stock_threshold_notification_message'] = array(
       '#type' => 'textarea',
-      '#title' => t('Message text'),
+      '#title' => $this->t('Message text'),
       '#default_value' => $mail->get('threshold_notification.body'),
-      '#description' => t('The message the user receives when the stock level reaches its threshold value.'),
+      '#description' => $this->t('The message the user receives when the stock level reaches its threshold value.'),
       '#rows' => 10,
     );
 

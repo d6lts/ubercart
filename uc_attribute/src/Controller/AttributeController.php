@@ -21,13 +21,13 @@ class AttributeController extends ControllerBase {
    */
   public function overview() {
     $header = array(
-      array('data' => t('Name'), 'field' => 'a.name', 'sort' => 'asc'),
-      array('data' => t('Label'), 'field' => 'a.label'),
-      t('Required'),
-      array('data' => t('List position'), 'field' => 'a.ordering'),
-      t('Number of options'),
-      t('Display type'),
-      array('data' => t('Operations'), 'colspan' => 3),
+      array('data' => $this->t('Name'), 'field' => 'a.name', 'sort' => 'asc'),
+      array('data' => $this->t('Label'), 'field' => 'a.label'),
+      $this->t('Required'),
+      array('data' => $this->t('List position'), 'field' => 'a.ordering'),
+      $this->t('Number of options'),
+      $this->t('Display type'),
+      array('data' => $this->t('Operations'), 'colspan' => 1),
     );
 
     $display_types = _uc_attribute_display_types();
@@ -39,7 +39,11 @@ class AttributeController extends ControllerBase {
       ->orderByHeader($header)
       ->limit(30);
 
-    $rows = array();
+    $build['attributes'] = array(
+      '#type' => 'table',
+      '#header' => $header,
+      '#empty' => $this->t('No product attributes have been added yet.'),
+    );
 
     $result = $query->execute();
     foreach ($result as $attr) {
@@ -47,25 +51,45 @@ class AttributeController extends ControllerBase {
       if (empty($attr->label)) {
         $attr->label = $attr->name;
       }
-      $rows[] = array(
-        SafeMarkup::checkPlain($attr->name),
-        SafeMarkup::checkPlain($attr->label),
-        $attr->required == 1 ? t('Yes') : t('No'),
-        $attr->ordering,
-        $attr->options,
-        $display_types[$attr->display],
-        \Drupal::l(t('edit'), new Url('uc_attribute.edit', ['aid' => $attr->aid])),
-        \Drupal::l(t('options'), new Url('uc_attribute.options', ['aid' => $attr->aid])),
-        \Drupal::l(t('delete'), new Url('uc_attribute.delete', ['aid' => $attr->aid])),
+      $build['attributes'][] = array(
+        'name' => array(
+          '#markup' => $attr->name,
+        ),
+        'label' => array(
+          '#markup' => $attr->label,
+        ),
+        'required' => array(
+          '#markup' => $attr->required == 1 ? $this->t('Yes') : $this->t('No'),
+        ),
+        'ordering' => array(
+          '#markup' => $attr->ordering,
+        ),
+        'options' => array(
+          '#markup' => $attr->options,
+        ),
+        'display' => array(
+          '#markup' => $display_types[$attr->display],
+        ),
+        'operations' => array(
+          '#type' => 'operations',
+          '#links' => array(
+            'edit' => array(
+              'title' => $this->t('Edit'),
+              'url' => Url::fromRoute('uc_attribute.edit', ['aid' => $attr->aid]),
+            ),
+            'options' => array(
+              'title' => $this->t('Options'),
+              'url' => Url::fromRoute('uc_attribute.options', ['aid' => $attr->aid]),
+            ),
+            'delete' => array(
+              'title' => $this->t('Delete'),
+              'url' => Url::fromRoute('uc_attribute.delete', ['aid' => $attr->aid]),
+            ),
+          ),
+        ),
       );
     }
 
-    $build['attributes'] = array(
-      '#theme' => 'table',
-      '#header' => $header,
-      '#rows' => $rows,
-      '#empty' => t('No product attributes have been added yet.'),
-    );
     $build['pager'] = array(
       '#type' => 'pager',
     );

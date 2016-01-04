@@ -43,29 +43,29 @@ class FlatrateEditForm extends FormBase {
 
     $form['title'] = array(
       '#type' => 'textfield',
-      '#title' => t('Shipping method title'),
-      '#description' => t('The name shown to administrators distinguish this method from other flatrate methods.'),
+      '#title' => $this->t('Shipping method title'),
+      '#description' => $this->t('The name shown to administrators distinguish this method from other flatrate methods.'),
       '#default_value' => $method->title,
       '#required' => TRUE,
     );
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Line item label'),
-      '#description' => t('The name shown to the customer when they choose a shipping method at checkout.'),
+      '#title' => $this->t('Line item label'),
+      '#description' => $this->t('The name shown to the customer when they choose a shipping method at checkout.'),
       '#default_value' => $method->label,
       '#required' => TRUE,
     );
     $form['base_rate'] = array(
       '#type' => 'uc_price',
-      '#title' => t('Base price'),
-      '#description' => t('The starting price for shipping costs.'),
+      '#title' => $this->t('Base price'),
+      '#description' => $this->t('The starting price for shipping costs.'),
       '#default_value' => $method->base_rate,
       '#required' => TRUE,
     );
     $form['product_rate'] = array(
       '#type' => 'uc_price',
-      '#title' => t('Default product shipping rate'),
-      '#description' => t('Additional shipping cost per product in cart.'),
+      '#title' => $this->t('Default product shipping rate'),
+      '#description' => $this->t('Additional shipping cost per product in cart.'),
       '#default_value' => $method->product_rate,
       '#required' => TRUE,
     );
@@ -73,14 +73,14 @@ class FlatrateEditForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
       '#button_type' => 'primary',
     );
 
     if (isset($form['mid'])) {
       $form['actions']['delete'] = array(
         '#type' => 'submit',
-        '#value' => t('Delete'),
+        '#value' => $this->t('Delete'),
         '#submit' => array(array($this, 'delete')),
         '#button_type' => 'danger',
       );
@@ -99,7 +99,7 @@ class FlatrateEditForm extends FormBase {
         ->key(array('mid' => $form_state->getValue('mid')))
         ->fields($form_state->getValues())
         ->execute();
-      drupal_set_message(t('Flat rate shipping method was updated.'));
+      drupal_set_message($this->t('Flat rate shipping method was updated.'));
       $form_state->setRedirect('uc_quote.methods');
     }
     else {
@@ -110,7 +110,7 @@ class FlatrateEditForm extends FormBase {
       // Ensure Rules picks up the new condition.
       // entity_flush_caches();
 
-      drupal_set_message(t('Created and enabled new flat rate shipping method.'));
+      drupal_set_message($this->t('Created and enabled new flat rate shipping method.'));
       $form_state->setRedirect('uc_quote.methods');
       //$form_state['redirect'] = 'admin/store/config/quotes/manage/get_quote_from_flatrate_' . $form_state->getValue('mid');
     }

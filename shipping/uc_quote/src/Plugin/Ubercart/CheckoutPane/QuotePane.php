@@ -37,14 +37,14 @@ class QuotePane extends CheckoutPanePluginBase {
     );
     $contents['quote_button'] = array(
       '#type' => 'submit',
-      '#value' => t('Click to calculate shipping'),
+      '#value' => $this->t('Click to calculate shipping'),
       '#submit' => [[$this, 'paneSubmit']],
       '#weight' => 0,
       '#ajax' => array(
         'effect' => 'slide',
         'progress' => array(
           'type' => 'bar',
-          'message' => t('Receiving quotes...'),
+          'message' => $this->t('Receiving quotes...'),
         ),
       ),
       // Shipping quotes can be retrieved even if the form doesn't validate.
@@ -136,7 +136,7 @@ class QuotePane extends CheckoutPanePluginBase {
     $this->prepare($order, $form, $form_state);
 
     if (!isset($order->quote) && \Drupal::config('uc_quote.settings')->get('require_quote')) {
-      $form_state->setErrorByName('panes][quotes][quotes][quote_option', t('You must select a shipping option before continuing.'));
+      $form_state->setErrorByName('panes][quotes][quotes][quote_option', $this->t('You must select a shipping option before continuing.'));
       return FALSE;
     }
 

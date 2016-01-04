@@ -42,7 +42,7 @@ class OrderDeleteForm extends ContentEntityConfirmFormBase {
    */
   public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
-    drupal_set_message(t('Order @order_id completely removed from the database.', ['@order_id' => $this->entity->id()]));
+    drupal_set_message($this->t('Order @order_id completely removed from the database.', ['@order_id' => $this->entity->id()]));
     $form_state->setRedirect('view.uc_orders.page_1');
   }
 

@@ -88,7 +88,8 @@ class UPSSettingsForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('Server mode'),
       '#description' => $this->t('Use the Testing server while developing and configuring your site. Switch to the Production server only after you have demonstrated that transactions on the Testing server are working and you are ready to go live.'),
-      '#options' => array('https://wwwcie.ups.com/ups.app/xml/' => $this->t('Testing'),
+      '#options' => array(
+        'https://wwwcie.ups.com/ups.app/xml/' => $this->t('Testing'),
         'https://onlinetools.ups.com/ups.app/xml/' => $this->t('Production'),
       ),
       '#default_value' => $ups_config->get('connection_address'),
@@ -216,7 +217,7 @@ class UPSSettingsForm extends ConfigFormBase {
       '#options' => array(
         'percentage' => $this->t('Percentage (%)'),
         'multiplier' => $this->t('Multiplier (×)'),
-        'currency' => $this->t('Addition (!currency)', array('!currency' => \Drupal::config('uc_store.settings')->get('currency.symbol'))),
+        'currency' => $this->t('Addition (@currency)', ['@currency' => \Drupal::config('uc_store.settings')->get('currency.symbol')]),
       ),
     );
 
@@ -236,7 +237,7 @@ class UPSSettingsForm extends ConfigFormBase {
       '#options'       => array(
         'percentage' => $this->t('Percentage (%)'),
         'multiplier' => $this->t('Multiplier (×)'),
-        'mass'       => $this->t('Addition (!mass)', array('!mass' => '#')),
+        'mass'       => $this->t('Addition (@mass)', ['@mass' => '#']),
       ),
       '#disabled' => TRUE,
     );

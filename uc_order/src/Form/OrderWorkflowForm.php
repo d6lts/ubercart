@@ -41,11 +41,11 @@ class OrderWorkflowForm extends ConfigFormBase {
 
     $form['order_states'] = array(
       '#type' => 'details',
-      '#title' => t('Order states'),
+      '#title' => $this->t('Order states'),
     );
     $form['order_states']['order_states'] = array(
       '#type' => 'table',
-      '#header' => array(t('State'), t('Default order status')),
+      '#header' => array($this->t('State'), $this->t('Default order status')),
     );
 
     foreach ($states as $state_id => $title) {
@@ -62,7 +62,7 @@ class OrderWorkflowForm extends ConfigFormBase {
       }
       if (empty($options)) {
         $form['order_states']['order_states'][$state_id]['default'] = array(
-          '#markup' => t('- N/A -'),
+          '#markup' => $this->t('- N/A -'),
         );
       }
       else {
@@ -76,12 +76,12 @@ class OrderWorkflowForm extends ConfigFormBase {
 
     $form['order_statuses'] = array(
       '#type' => 'details',
-      '#title' => t('Order statuses'),
+      '#title' => $this->t('Order statuses'),
       '#open' => TRUE,
     );
     $form['order_statuses']['order_statuses'] = array(
       '#type' => 'table',
-      '#header' => array(t('ID'), t('Title'), t('List position'), t('State'), t('Remove')),
+      '#header' => array($this->t('ID'), $this->t('Title'), $this->t('List position'), $this->t('State'), $this->t('Remove')),
     );
 
     foreach ($statuses as $status) {
@@ -133,7 +133,7 @@ class OrderWorkflowForm extends ConfigFormBase {
       $status = OrderStatus::load($id);
       if (!empty($value['remove'])) {
         $status->delete();
-        drupal_set_message(t('Order status %status removed.', ['%status' => $status->getName()]));
+        drupal_set_message($this->t('Order status %status removed.', ['%status' => $status->getName()]));
       }
       else {
         $status->setName($value['name']);

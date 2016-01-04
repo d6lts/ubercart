@@ -44,7 +44,7 @@ class ActionForm extends FormBase {
           // Gather a list of user-selected filenames.
           $file = uc_file_get_by_id($file_id);
           $filename = $file->filename;
-          $file_list[] = (substr($filename, -1) == "/") ? $filename . ' (' . t('directory') . ')' : $filename;
+          $file_list[] = (substr($filename, -1) == "/") ? $filename . ' (' . $this->t('directory') . ')' : $filename;
 
           // Determine if there are any directories in this list.
           $path = uc_file_qualify_file($filename);
@@ -63,17 +63,17 @@ class ActionForm extends FormBase {
         );
 
         $form = confirm_form(
-          $form, t('Delete file(s)'),
+          $form, $this->t('Delete file(s)'),
           'admin/store/products/files',
-          t('Deleting a file will remove all its associated file downloads and product features. Removing a directory will remove any files it contains and their associated file downloads and product features.'),
-          t('Delete affected files'), t('Cancel')
+          $this->t('Deleting a file will remove all its associated file downloads and product features. Removing a directory will remove any files it contains and their associated file downloads and product features.'),
+          $this->t('Delete affected files'), $this->t('Cancel')
         );
 
         // Don't even show the recursion checkbox unless we have any directories.
         if ($has_directory && $affected_list[TRUE] !== FALSE ) {
           $form['recurse_directories'] = array(
             '#type' => 'checkbox',
-            '#title' => t('Delete selected directories and their sub directories'),
+            '#title' => $this->t('Delete selected directories and their sub directories'),
           );
 
           // Default to FALSE. Although we have the JS behavior to update with the
@@ -82,7 +82,7 @@ class ActionForm extends FormBase {
           $form['affected_files'] = array(
             '#theme' => 'item_list',
             '#items' => $affected_list[FALSE],
-            '#title' => t('Affected files'),
+            '#title' => $this->t('Affected files'),
             '#attributes' => array(
               'class' => array('affected-file-name'),
             ),
@@ -107,29 +107,29 @@ class ActionForm extends FormBase {
         $directories = array('' => '/');
         $files = db_query("SELECT * FROM {uc_files}");
         foreach ($files as $file) {
-          if (is_dir(\Drupal::config('uc_file.settings')->get('base_dir') . "/" . $file->filename)) {
+          if (is_dir($this->config('uc_file.settings')->get('base_dir') . "/" . $file->filename)) {
             $directories[$file->filename] = $file->filename;
           }
         }
 
         $form['upload_dir'] = array(
           '#type' => 'select',
-          '#title' => t('Directory'),
-          '#description' => t('The directory on the server where the file should be put. The default directory is the root of the file downloads directory.'),
+          '#title' => $this->t('Directory'),
+          '#description' => $this->t('The directory on the server where the file should be put. The default directory is the root of the file downloads directory.'),
           '#options' => $directories,
         );
         $form['upload'] = array(
           '#type' => 'file',
-          '#title' => t('File'),
-          '#description' => t('The maximum file size that can be uploaded is %size bytes. You will need to use a different method to upload the file to the directory (e.g. (S)FTP, SCP) if your file exceeds this size. Files you upload using one of these alternate methods will be automatically detected.', ['%size' => number_format($max_bytes)]),
+          '#title' => $this->t('File'),
+          '#description' => $this->t('The maximum file size that can be uploaded is %size bytes. You will need to use a different method to upload the file to the directory (e.g. (S)FTP, SCP) if your file exceeds this size. Files you upload using one of these alternate methods will be automatically detected.', ['%size' => number_format($max_bytes)]),
         );
 
         $form['#attributes']['class'][] = 'foo';
         $form = confirm_form(
-          $form, t('Upload file'),
+          $form, $this->t('Upload file'),
           'admin/store/products/files',
           '',
-          t('Upload file'), t('Cancel')
+          $this->t('Upload file'), $this->t('Cancel')
         );
 
         // Must add this after confirm_form, as it runs over $form['#attributes'].
@@ -176,7 +176,7 @@ class ActionForm extends FormBase {
           $form_state->set('temp_file', $temp_file);
         }
         else {
-          $form_state->setErrorByName('', t('An error occurred while uploading the file'));
+          $form_state->setErrorByName('', $this->t('An error occurred while uploading the file'));
         }
 
         break;
@@ -211,10 +211,10 @@ class ActionForm extends FormBase {
         $status = uc_file_remove_by_id($form_state->getValue('file_ids'), !$form_state->isValueEmpty('recurse_directories')) && $status;
 
         if ($status) {
-          drupal_set_message(t('The selected file(s) have been deleted.'));
+          drupal_set_message($this->t('The selected file(s) have been deleted.'));
         }
         else {
-          drupal_set_message(t('One or more files could not be deleted.'));
+          drupal_set_message($this->t('One or more files could not be deleted.'));
         }
 
         break;
@@ -223,7 +223,7 @@ class ActionForm extends FormBase {
 
         // Build the destination location. We start with the base directory,
         // then add any directory which was explicitly selected.
-        $dir = \Drupal::config('uc_file.settings')->get('base_dir') . '/' . $form_state->getValue('upload_dir');
+        $dir = $this->config('uc_file.settings')->get('base_dir') . '/' . $form_state->getValue('upload_dir');
         if (is_dir($dir)) {
 
           // Retrieve our uploaded file.
@@ -242,14 +242,14 @@ class ActionForm extends FormBase {
             // Update the file list
             uc_file_refresh();
 
-            drupal_set_message(t('The file %file has been uploaded to %dir', array('%file' => $file_object->filename, '%dir' => $dir)));
+            drupal_set_message($this->t('The file %file has been uploaded to %dir', ['%file' => $file_object->filename, '%dir' => $dir]));
           }
           else {
-            drupal_set_message(t('An error occurred while copying the file to %dir', array('%dir' => $dir)));
+            drupal_set_message($this->t('An error occurred while copying the file to %dir', ['%dir' => $dir]));
           }
         }
         else {
-          drupal_set_message(t('Can not move file to %dir', array('%dir' => $dir)));
+          drupal_set_message($this->t('Can not move file to %dir', ['%dir' => $dir]));
         }
 
         break;

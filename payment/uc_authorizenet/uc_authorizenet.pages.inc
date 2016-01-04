@@ -16,11 +16,11 @@ function uc_authorizenet_silent_post() {
   // Log ARB payment notification, if enabled.
   if (variable_get('uc_authnet_report_arb_post', FALSE)) {
     $args = array(
-      '!arb' => $arb ? 'ARB ' : '',
+      '@arb' => $arb ? 'ARB ' : '',
       '@order_id' => $_POST['x_invoice_num'],
       '@post' => print_r($_POST, TRUE),
     );
-    \Drupal::logger('uc_authorizenet')->notice('!arbSilent POST received for order @order_id: <pre>@post</pre>', $args);
+    \Drupal::logger('uc_authorizenet')->notice('@arbSilent POST received for order @order_id: <pre>@post</pre>', $args);
   }
 
   // Decrypt the Auth.Net API login data.

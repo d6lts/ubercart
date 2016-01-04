@@ -178,7 +178,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#options' => array(
         'percentage' => $this->t('Percentage (%)'),
         'multiplier' => $this->t('Multiplier (×)'),
-        'currency' => $this->t('Addition (!currency)', array('!currency' => \Drupal::config('uc_store.settings')->get('currency.symbol'))),
+        'currency' => $this->t('Addition (@currency)', ['@currency' => \Drupal::config('uc_store.settings')->get('currency.symbol')]),
       ),
     );
     $form['uc_usps_markups']['uc_usps_rate_markup'] = array(
@@ -196,7 +196,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#options'       => array(
         'percentage' => $this->t('Percentage (%)'),
         'multiplier' => $this->t('Multiplier (×)'),
-        'mass'       => $this->t('Addition (!mass)', array('!mass' => '#')),
+        'mass'       => $this->t('Addition (@mass)', ['@mass' => '#']),
       ),
       '#disabled' => TRUE,
     );

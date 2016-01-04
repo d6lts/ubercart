@@ -19,13 +19,13 @@ class CustomSalesReport extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $values, $statuses) {
     $form['search'] = array(
       '#type' => 'details',
-      '#title' => t('Customize sales report parameters'),
-      '#description' => t('Adjust these values and update the report to build your custom sales summary. Once submitted, the report may be bookmarked for easy reference in the future.'),
+      '#title' => $this->t('Customize sales report parameters'),
+      '#description' => $this->t('Adjust these values and update the report to build your custom sales summary. Once submitted, the report may be bookmarked for easy reference in the future.'),
     );
 
     $form['search']['start_date'] = array(
       '#type' => 'date',
-      '#title' => t('Start date'),
+      '#title' => $this->t('Start date'),
       '#default_value' => array(
         'month' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'n'),
         'day' => \Drupal::service('date.formatter')->format($values['start_date'], 'custom', 'j'),
@@ -34,7 +34,7 @@ class CustomSalesReport extends FormBase {
     );
     $form['search']['end_date'] = array(
       '#type' => 'date',
-      '#title' => t('End date'),
+      '#title' => $this->t('End date'),
       '#default_value' => array(
         'month' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'n'),
         'day' => \Drupal::service('date.formatter')->format($values['end_date'], 'custom', 'j'),
@@ -44,13 +44,13 @@ class CustomSalesReport extends FormBase {
 
     $form['search']['length'] = array(
       '#type' => 'select',
-      '#title' => t('Results breakdown'),
-      '#description' => t('Large daily reports may take a long time to display.'),
+      '#title' => $this->t('Results breakdown'),
+      '#description' => $this->t('Large daily reports may take a long time to display.'),
       '#options' => array(
-        'day' => t('daily'),
-        'week' => t('weekly'),
-        'month' => t('monthly'),
-        'year' => t('yearly'),
+        'day' => $this->t('daily'),
+        'week' => $this->t('weekly'),
+        'month' => $this->t('monthly'),
+        'year' => $this->t('yearly'),
       ),
       '#default_value' => $values['length'],
     );
@@ -61,22 +61,22 @@ class CustomSalesReport extends FormBase {
 
     $form['search']['status'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Order statuses'),
-      '#description' => t('Only orders with selected statuses will be included in the report.'),
+      '#title' => $this->t('Order statuses'),
+      '#description' => $this->t('Only orders with selected statuses will be included in the report.'),
       '#options' => OrderStatus::getOptionsList(),
       '#default_value' => $statuses,
     );
 
     $form['search']['detail'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Show a detailed list of products ordered.'),
+      '#title' => $this->t('Show a detailed list of products ordered.'),
       '#default_value' => $values['detail'],
     );
 
     $form['search']['actions'] = array('#type' => 'actions');
     $form['search']['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Update report'),
+      '#value' => $this->t('Update report'),
     );
 
     return $form;
@@ -87,7 +87,7 @@ class CustomSalesReport extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->isValueEmpty('status')) {
-      $form_state->setErrorByName('status', t('You must select at least one order status.'));
+      $form_state->setErrorByName('status', $this->t('You must select at least one order status.'));
     }
   }
 

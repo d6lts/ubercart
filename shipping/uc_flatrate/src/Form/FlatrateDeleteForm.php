@@ -78,7 +78,7 @@ class FlatrateDeleteForm extends ConfirmFormBase {
 
     // rules_config_delete(array('get_quote_from_flatrate_' . $mid));
 
-    drupal_set_message(t('Flat rate shipping method deleted.'));
+    drupal_set_message($this->t('Flat rate shipping method deleted.'));
     $form_state->setRedirect('uc_quote.methods');
   }
 

@@ -36,14 +36,14 @@ class OrderMailInvoiceForm extends FormBase {
 
     $form['email'] = array(
       '#type' => 'email',
-      '#title' => t('Recipient e-mail address'),
+      '#title' => $this->t('Recipient e-mail address'),
       '#default_value' => $uc_order->getEmail(),
       '#required' => TRUE,
     );
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit' ] = array(
       '#type' => 'submit',
-      '#value' => t('Mail invoice'),
+      '#value' => $this->t('Mail invoice'),
     );
 
     return $form;
@@ -57,7 +57,7 @@ class OrderMailInvoiceForm extends FormBase {
     $params = array('order' => $this->order);
     \Drupal::service('plugin.manager.mail')->mail('uc_order', 'invoice', $recipient, uc_store_mail_recipient_langcode($recipient), $params, uc_store_email_from());
 
-    $message = t('Invoice e-mailed to @email.', ['@email' => $recipient]);
+    $message = $this->t('Invoice e-mailed to @email.', ['@email' => $recipient]);
     drupal_set_message($message);
     $this->order->logChanges(array($message));
   }

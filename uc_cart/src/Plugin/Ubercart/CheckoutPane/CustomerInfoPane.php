@@ -33,18 +33,18 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
 
     if ($user->isAuthenticated()) {
       $email = $user->getEmail();
-      $contents['#description'] = t('Order information will be sent to your account e-mail listed below.');
+      $contents['#description'] = $this->t('Order information will be sent to your account e-mail listed below.');
       $contents['primary_email'] = array('#type' => 'hidden', '#value' => $email);
       $contents['email_text'] = array(
-        '#markup' => '<div>' . t('<b>E-mail address:</b> @email (<a href=":url">edit</a>)', ['@email' => $email, ':url' => Url::fromRoute('entity.user.edit_form', ['user' => $user->id()], ['query' => drupal_get_destination()])->toString()]) . '</div>',
+        '#markup' => '<div>' . $this->t('<b>E-mail address:</b> @email (<a href=":url">edit</a>)', ['@email' => $email, ':url' => Url::fromRoute('entity.user.edit_form', ['user' => $user->id()], ['query' => drupal_get_destination()])->toString()]) . '</div>',
       );
     }
     else {
       $email = $order->getEmail();
-      $contents['#description'] = t('Enter a valid email address for this order or <a href=":url">click here</a> to login with an existing account and return to checkout.', [':url' => Url::fromRoute('user.login', [], ['query' => drupal_get_destination()])->toString()]);
+      $contents['#description'] = $this->t('Enter a valid email address for this order or <a href=":url">click here</a> to login with an existing account and return to checkout.', [':url' => Url::fromRoute('user.login', [], ['query' => drupal_get_destination()])->toString()]);
       $contents['primary_email'] = array(
         '#type' => 'email',
-        '#title' => t('E-mail address'),
+        '#title' => $this->t('E-mail address'),
         '#default_value' => $email,
         '#required' => TRUE,
       );
@@ -52,7 +52,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
       if ($cart_config->get('email_validation')) {
         $contents['primary_email_confirm'] = array(
           '#type' => 'email',
-          '#title' => t('Confirm e-mail address'),
+          '#title' => $this->t('Confirm e-mail address'),
           '#default_value' => $email,
           '#required' => TRUE,
         );
@@ -63,7 +63,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
       if ($cart_config->get('new_account_name')) {
         $contents['new_account']['name'] = array(
           '#type' => 'textfield',
-          '#title' => t('Username'),
+          '#title' => $this->t('Username'),
           '#default_value' => isset($order->data->new_user_name) ? $order->data->new_user_name : '',
           '#maxlength' => 60,
           '#size' => 32,
@@ -72,14 +72,14 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
       if ($cart_config->get('new_account_password')) {
         $contents['new_account']['pass'] = array(
           '#type' => 'password',
-          '#title' => t('Password'),
+          '#title' => $this->t('Password'),
           '#maxlength' => 32,
           '#size' => 32,
         );
         $contents['new_account']['pass_confirm'] = array(
           '#type' => 'password',
-          '#title' => t('Confirm password'),
-          '#description' => t('Passwords must match to proceed.'),
+          '#title' => $this->t('Confirm password'),
+          '#description' => $this->t('Passwords must match to proceed.'),
           '#maxlength' => 32,
           '#size' => 32,
         );
@@ -88,7 +88,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
       if (!empty($contents['new_account'])) {
         $contents['new_account'] += array(
           '#type' => 'details',
-          '#title' => t('New account details'),
+          '#title' => $this->t('New account details'),
           '#description' => $this->t('<b>Optional.</b> New customers may supply custom account details.<br />We will create these for you if no values are entered.'),
           '#open' => TRUE,
         );
@@ -116,19 +116,19 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
         ->execute();
 
       if ($cart_config->get('email_validation') && $pane['primary_email'] !== $pane['primary_email_confirm']) {
-        $form_state->setErrorByName('panes][customer][primary_email_confirm', t('The e-mail address did not match.'));
+        $form_state->setErrorByName('panes][customer][primary_email_confirm', $this->t('The e-mail address did not match.'));
       }
 
       // Invalidate if an account already exists for this e-mail address, and the user is not logged into that account
       if (!$cart_config->get('mail_existing') && !empty($pane['primary_email']) && $mail_taken) {
-        $form_state->setErrorByName('panes][customer][primary_email', t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
+        $form_state->setErrorByName('panes][customer][primary_email', $this->t('An account already exists for your e-mail address. You will either need to login with this e-mail address or use a different e-mail address.'));
       }
 
       // If new users can specify names or passwords then...
       if ($cart_config->get('new_account_name') || $cart_config->get('new_account_password')) {
         // Skip if an account already exists for this e-mail address.
         if ($cart_config->get('mail_existing') && $mail_taken) {
-          drupal_set_message(t('An account already exists for your e-mail address. The new account details you entered will be disregarded.'));
+          drupal_set_message($this->t('An account already exists for your e-mail address. The new account details you entered will be disregarded.'));
         }
         else {
           // Validate the username.
@@ -144,7 +144,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
               $form_state->setErrorByName('panes][customer][new_account][name', $message);
             }
             elseif ($name_taken) {
-              $form_state->setErrorByName('panes][customer][new_account][name', t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
+              $form_state->setErrorByName('panes][customer][new_account][name', $this->t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
             }
             else {
               $order->data->new_user_name = $pane['new_account']['name'];
@@ -154,7 +154,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
           // Validate the password.
           if ($cart_config->get('new_account_password')) {
             if (strcmp($pane['new_account']['pass'], $pane['new_account']['pass_confirm'])) {
-              $form_state->setErrorByName('panes][customer][new_account][pass_confirm', t('The passwords you entered did not match. Please try again.'));
+              $form_state->setErrorByName('panes][customer][new_account][pass_confirm', $this->t('The passwords you entered did not match. Please try again.'));
             }
             if (!empty($pane['new_account']['pass'])) {
               $order->data->new_user_hash = \Drupal::service('password')->hash(trim($pane['new_account']['pass']));
@@ -171,7 +171,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
    * {@inheritdoc}
    */
   public function review(OrderInterface $order) {
-    $review[] = array('title' => t('E-mail'), 'data' => SafeMarkup::checkPlain($order->getEmail()));
+    $review[] = array('title' => $this->t('E-mail'), 'data' => SafeMarkup::checkPlain($order->getEmail()));
     return $review;
   }
 

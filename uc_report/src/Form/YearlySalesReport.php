@@ -18,7 +18,7 @@ class YearlySalesReport extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $year) {
     $form['year'] = array(
       '#type' => 'textfield',
-      '#title' => t('Sales year'),
+      '#title' => $this->t('Sales year'),
       '#default_value' => $year,
       '#maxlength' => 4,
       '#size' => 4,
@@ -29,7 +29,7 @@ class YearlySalesReport extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('View'),
+      '#value' => $this->t('View'),
       '#prefix' => '<div class="sales-year">',
       '#suffix' => '</div>',
     );

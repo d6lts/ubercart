@@ -87,14 +87,14 @@ class CheckoutSettingsForm extends ConfigFormBase {
 
     $form['checkout'] = array(
       '#type' => 'details',
-      '#title' => t('Basic settings'),
+      '#title' => $this->t('Basic settings'),
       '#group' => 'checkout-settings',
       '#weight' => -10,
     );
     $form['checkout']['uc_checkout_enabled'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Enable checkout.'),
-      '#description' => t('Disable this to use only third party checkout services, such as PayPal Express Checkout.'),
+      '#title' => $this->t('Enable checkout.'),
+      '#description' => $this->t('Disable this to use only third party checkout services, such as PayPal Express Checkout.'),
       '#default_value' => $cart_config->get('checkout_enabled'),
     );
 
@@ -102,70 +102,70 @@ class CheckoutSettingsForm extends ConfigFormBase {
     //if (!\Drupal::moduleHandler()->moduleExists('rules')) {
       $form['checkout']['uc_checkout_email_customer'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Send e-mail invoice to customer after checkout.'),
+        '#title' => $this->t('Send e-mail invoice to customer after checkout.'),
         '#default_value' => $cart_config->get('checkout_email_customer'),
       );
       $form['checkout']['uc_checkout_email_admin'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Send e-mail order notification to admin after checkout.'),
+        '#title' => $this->t('Send e-mail order notification to admin after checkout.'),
         '#default_value' => $cart_config->get('checkout_email_admin'),
       );
     //}
 
     $form['anonymous'] = array(
       '#type' => 'details',
-      '#title' => t('Anonymous checkout'),
+      '#title' => $this->t('Anonymous checkout'),
       '#group' => 'checkout-settings',
       '#weight' => -5,
     );
     $form['anonymous']['uc_checkout_anonymous'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Enable anonymous checkout.'),
-      '#description' => t('Disable this to force users to log in before the checkout page.'),
+      '#title' => $this->t('Enable anonymous checkout.'),
+      '#description' => $this->t('Disable this to force users to log in before the checkout page.'),
       '#default_value' => $cart_config->get('checkout_anonymous'),
     );
     $anon_state = array('visible' => array('input[name="uc_checkout_anonymous"]' => array('checked' => TRUE)));
     $form['anonymous']['uc_cart_mail_existing'] = array(
       '#type' => 'checkbox',
-      '#title' => t("Allow anonymous customers to use an existing account's email address."),
+      '#title' => $this->t("Allow anonymous customers to use an existing account's email address."),
       '#default_value' => $cart_config->get('mail_existing'),
-      '#description' => t('If enabled, orders will be attached to the account matching the email address. If disabled, anonymous users using a registered email address must log in or use a different email address.'),
+      '#description' => $this->t('If enabled, orders will be attached to the account matching the email address. If disabled, anonymous users using a registered email address must log in or use a different email address.'),
       '#states' => $anon_state,
     );
     $form['anonymous']['uc_cart_email_validation'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Require e-mail confirmation for anonymous customers.'),
+      '#title' => $this->t('Require e-mail confirmation for anonymous customers.'),
       '#default_value' => $cart_config->get('email_validation'),
       '#states' => $anon_state,
     );
     $form['anonymous']['uc_cart_new_account_name'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Allow new customers to specify a username.'),
+      '#title' => $this->t('Allow new customers to specify a username.'),
       '#default_value' => $cart_config->get('new_account_name'),
       '#states' => $anon_state,
     );
     $form['anonymous']['uc_cart_new_account_password'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Allow new customers to specify a password.'),
+      '#title' => $this->t('Allow new customers to specify a password.'),
       '#default_value' => $cart_config->get('new_account_password'),
       '#states' => $anon_state,
     );
     $form['anonymous']['uc_new_customer_email'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Send new customers a separate e-mail with their account details.'),
+      '#title' => $this->t('Send new customers a separate e-mail with their account details.'),
       '#default_value' => $cart_config->get('new_customer_email'),
       '#states' => $anon_state,
     );
     $form['anonymous']['uc_new_customer_login'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Log in new customers after checkout.'),
+      '#title' => $this->t('Log in new customers after checkout.'),
       '#default_value' => $cart_config->get('new_customer_login'),
       '#states' => $anon_state,
     );
     $form['anonymous']['uc_new_customer_status_active'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Set new customer accounts to active.'),
-      '#description' => t('Uncheck to create new accounts but make them blocked.'),
+      '#title' => $this->t('Set new customer accounts to active.'),
+      '#description' => $this->t('Uncheck to create new accounts but make them blocked.'),
       '#default_value' => $cart_config->get('new_customer_status_active'),
       '#states' => $anon_state,
     );
@@ -173,7 +173,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
     $panes = $this->checkoutPaneManager->getPanes();
     $form['checkout']['panes'] = array(
       '#type' => 'table',
-      '#header' => array(t('Pane'), t('List position')),
+      '#header' => array($this->t('Pane'), $this->t('List position')),
       '#tabledrag' => array(
         array(
           'action' => 'order',
@@ -192,7 +192,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       );
       $form['checkout']['panes'][$id]['weight'] = array(
         '#type' => 'weight',
-        '#title' => t('Weight for @title', ['@title' => $pane->getTitle()]),
+        '#title' => $this->t('Weight for @title', ['@title' => $pane->getTitle()]),
         '#title_display' => 'invisible',
         '#default_value' => $pane->getWeight(),
         '#attributes' => array(
@@ -206,7 +206,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       if (!empty($pane_settings)) {
         $form['checkout']['pane_settings'][$id] = $pane_settings + array(
           '#type' => 'details',
-          '#title' => t('@pane pane', ['@pane' => $pane->getTitle()]),
+          '#title' => $this->t('@pane pane', ['@pane' => $pane->getTitle()]),
           '#group' => 'checkout-settings',
           '#parents' => array('panes', $id, 'settings'),
         );
@@ -215,42 +215,42 @@ class CheckoutSettingsForm extends ConfigFormBase {
 
     $form['checkout']['uc_cart_delivery_not_shippable'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Hide delivery information when carts have no shippable items.'),
+      '#title' => $this->t('Hide delivery information when carts have no shippable items.'),
       '#default_value' => $cart_config->get('delivery_not_shippable'),
     );
 
     $form['completion_messages'] = array(
       '#type' => 'details',
-      '#title' => t('Completion messages'),
+      '#title' => $this->t('Completion messages'),
       '#group' => 'checkout-settings',
     );
     $form['completion_messages']['uc_msg_order_logged_in'] = array(
       '#type' => 'textarea',
-      '#title' => t('Logged in users'),
-      '#description' => t('Message displayed upon checkout for a user who is logged in.'),
+      '#title' => $this->t('Logged in users'),
+      '#description' => $this->t('Message displayed upon checkout for a user who is logged in.'),
       '#default_value' => $messages->get('logged_in'),
       '#rows' => 3,
     );
     $form['completion_messages']['uc_msg_order_existing_user'] = array(
       '#type' => 'textarea',
-      '#title' => t('Existing users'),
-      '#description' => t("Message displayed upon checkout for a user who has an account but wasn't logged in."),
+      '#title' => $this->t('Existing users'),
+      '#description' => $this->t("Message displayed upon checkout for a user who has an account but wasn't logged in."),
       '#default_value' => $messages->get('existing_user'),
       '#rows' => 3,
       '#states' => $anon_state,
     );
     $form['completion_messages']['uc_msg_order_new_user'] = array(
       '#type' => 'textarea',
-      '#title' => t('New users'),
-      '#description' => t("Message displayed upon checkout for a new user whose account was just created. You may use the special tokens !new_username for the username of a newly created account and !new_password for that account's password."),
+      '#title' => $this->t('New users'),
+      '#description' => $this->t("Message displayed upon checkout for a new user whose account was just created. You may use the special tokens !new_username for the username of a newly created account and !new_password for that account's password."),
       '#default_value' => $messages->get('new_user'),
       '#rows' => 3,
       '#states' => $anon_state,
     );
     $form['completion_messages']['uc_msg_order_new_user_logged_in'] = array(
       '#type' => 'textarea',
-      '#title' => t('New logged in users'),
-      '#description' => t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href=":url">checkout settings</a>.', [':url' => Url::fromRoute('uc_cart.checkout_settings')->toString()]),
+      '#title' => $this->t('New logged in users'),
+      '#description' => $this->t('Message displayed upon checkout for a new user whose account was just created and also <em>"Login users when new customer accounts are created at checkout."</em> is set on the <a href=":url">checkout settings</a>.', [':url' => Url::fromRoute('uc_cart.checkout_settings')->toString()]),
       '#default_value' => $messages->get('new_user_logged_in'),
       '#rows' => 3,
       '#states' => $anon_state,

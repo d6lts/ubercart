@@ -54,7 +54,7 @@ class AjaxAdminForm extends FormBase {
       '#type' => 'actions',
       'submit' => array(
         '#type' => 'submit',
-        '#value' => t('Submit'),
+        '#value' => $this->t('Submit'),
       ),
     );
     return $form;
@@ -82,7 +82,7 @@ class AjaxAdminForm extends FormBase {
     $this->configFactory()->getEditable('uc_cart.settings')
       ->set('ajax.' . $form['#uc_ajax_target'], $config)
       ->save();
-    drupal_set_message(t('Your changes have been saved.'));
+    drupal_set_message($this->t('Your changes have been saved.'));
   }
 
 }

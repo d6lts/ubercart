@@ -169,17 +169,17 @@ class Reports extends ControllerBase {
     $query->addExpression("(SELECT (SUM(uop.price * uop.qty)) FROM {uc_order_products} uop LEFT JOIN {uc_orders} uo ON uop.order_id = uo.order_id WHERE uo.order_status IN (:statuses3[]) AND uop.nid = n.nid)", 'revenue', [':statuses3[]' => $order_statuses]);
 
     $header = array(
-      array('data' => t('#')),
-      array('data' => t('Product'), 'field' => 'n.title'),
-      array('data' => t('Sold'), 'field' => 'sold'),
-      array('data' => t('Revenue'), 'field' => 'revenue', 'sort' => 'desc'),
-      array('data' => t('Gross'), 'field' => 'gross'),
+      array('data' => $this->t('#')),
+      array('data' => $this->t('Product'), 'field' => 'n.title'),
+      array('data' => $this->t('Sold'), 'field' => 'sold'),
+      array('data' => $this->t('Revenue'), 'field' => 'revenue', 'sort' => 'desc'),
+      array('data' => $this->t('Gross'), 'field' => 'gross'),
     );
-    $csv_rows[] = array(t('#'), t('Product'), t('Sold'), t('Revenue'), t('Gross'));
+    $csv_rows[] = array($this->t('#'), $this->t('Product'), $this->t('Sold'), $this->t('Revenue'), $this->t('Gross'));
 
     if ($views_column) {
-      $header[] = array('data' => t('Views'), 'field' => 'nc.totalcount');
-      $csv_rows[0][] = t('Views');
+      $header[] = array('data' => $this->t('Views'), 'field' => 'nc.totalcount');
+      $csv_rows[0][] = $this->t('Views');
     }
 
     $query->orderByHeader($header);
@@ -280,7 +280,7 @@ class Reports extends ControllerBase {
       '#header' => $header,
       '#rows' => $rows,
       '#attributes' => array('width' => '100%', 'class' => array('uc-sales-table')),
-      '#empty' => t('No products found'),
+      '#empty' => $this->t('No products found'),
     );
     $build['pager'] = array(
       '#type' => 'pager',
@@ -291,20 +291,20 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => Link::createFromRoute(t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
+      '#markup' => Link::createFromRoute($this->t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
       $build['links']['toggle_pager'] = array(
-        '#markup' => Link::createFromRoute(t('Show paged records'), 'uc_report.products')->toString(),
+        '#markup' => Link::createFromRoute($this->t('Show paged records'), 'uc_report.products')->toString(),
       );
     }
     else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => Link::createFromRoute(t('Show all records'), 'uc_report.products', ['query' => ['nopage' => '1']])->toString(),
+        '#markup' => Link::createFromRoute($this->t('Show all records'), 'uc_report.products', ['query' => ['nopage' => '1']])->toString(),
       );
     }
-    $build['instructions'] = array('#markup' => '<small>*' . t('Make sure %setting_name is set to %state in the <a href=":url">access log settings page</a> to enable views column.', ['%setting_name' => 'count content views', '%state' => 'enabled', ':url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products']])->toString()]) . '</small>');
+    $build['instructions'] = array('#markup' => '<small>*' . $this->t('Make sure %setting_name is set to %state in the <a href=":url">access log settings page</a> to enable views column.', ['%setting_name' => 'count content views', '%state' => 'enabled', ':url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products']])->toString()]) . '</small>');
 
     return $build;
   }
@@ -389,17 +389,17 @@ class Reports extends ControllerBase {
     $query->addExpression("(SELECT (SUM(p3.price * p3.qty) - SUM(p3.cost * p3.qty)) FROM {uc_order_products} p3 LEFT JOIN {uc_orders} o ON p3.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p3.nid = n.nid AND o.created >= :start AND o.created <= :end)", 'gross', [':statuses[]' => $args['status'], ':start' => $args['start_date'], ':end' => $args['end_date']]);
 
     $header = array(
-      array('data' => t('#')),
-      array('data' => t('Product'), 'field' => 'n.title'),
-      array('data' => t('Sold'), 'field' => 'sold'),
-      array('data' => t('Revenue'), 'field' => 'revenue', 'sort' => 'desc'),
-      array('data' => t('Gross'), 'field' => 'gross'),
+      array('data' => $this->t('#')),
+      array('data' => $this->t('Product'), 'field' => 'n.title'),
+      array('data' => $this->t('Sold'), 'field' => 'sold'),
+      array('data' => $this->t('Revenue'), 'field' => 'revenue', 'sort' => 'desc'),
+      array('data' => $this->t('Gross'), 'field' => 'gross'),
     );
-    $csv_rows[] = array(t('#'), t('Product'), t('Sold'), t('Revenue'), t('Gross'));
+    $csv_rows[] = array($this->t('#'), $this->t('Product'), $this->t('Sold'), $this->t('Revenue'), $this->t('Gross'));
 
     if ($views_column) {
-      $header[] = array('data' => t('Views'), 'field' => 'nc.totalcount');
-      $csv_rows[0][] = t('Views');
+      $header[] = array('data' => $this->t('Views'), 'field' => 'nc.totalcount');
+      $csv_rows[0][] = $this->t('Views');
     }
 
     $query->orderByHeader($header);
@@ -484,7 +484,7 @@ class Reports extends ControllerBase {
       '#header' => $header,
       '#rows' => $rows,
       '#attributes' => array('width' => '100%', 'class' => array('uc-sales-table')),
-      '#empty' => t('No products found'),
+      '#empty' => $this->t('No products found'),
     );
     $build['pager'] = array(
       '#type' => 'pager',
@@ -494,21 +494,21 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => Link::createFromRoute(t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
+      '#markup' => Link::createFromRoute($this->t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
       '#suffix' => '&nbsp;&nbsp;&nbsp;',
     );
     if (isset($_GET['nopage'])) {
       $build['links']['toggle_pager'] = array(
-        '#markup' => Link::createFromRoute(t('Show paged records'), 'uc_reports.custom_report')->toString(),
+        '#markup' => Link::createFromRoute($this->t('Show paged records'), 'uc_reports.custom_report')->toString(),
       );
     }
     else {
       $build['links']['toggle_pager'] = array(
-        '#markup' => Link::createFromRoute(t('Show all records'), 'uc_reports.custom_report', ['query' => ['nopage' => '1']])->toString(),
+        '#markup' => Link::createFromRoute($this->t('Show all records'), 'uc_reports.custom_report', ['query' => ['nopage' => '1']])->toString(),
       );
     }
 
-    $build['instructions'] = array('#markup' => '<small>*' . t('Make sure %setting_name is set to %state in the <a href=":url">access log settings page</a> to enable views column.', ['%setting_name' => 'count content views', '%state' => 'enabled', ':url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products/custom']])->toString()]) . '</small>');
+    $build['instructions'] = array('#markup' => '<small>*' . $this->t('Make sure %setting_name is set to %state in the <a href=":url">access log settings page</a> to enable views column.', ['%setting_name' => 'count content views', '%state' => 'enabled', ':url' => Url::fromUri('base:admin/config/system/statistics', ['query' => ['destination' => 'admin/store/reports/products/custom']])->toString()]) . '</small>');
 
     return $build;
   }
@@ -527,13 +527,13 @@ class Reports extends ControllerBase {
     $today_end = mktime(23, 59, 59);
 
     // Build the report table header.
-    $header = array(t('Sales data'), t('Number of orders'), t('Total revenue'), t('Average order'));
+    $header = array($this->t('Sales data'), $this->t('Number of orders'), $this->t('Total revenue'), $this->t('Average order'));
 
     // Calculate and add today's sales summary to the report table.
     $today = self::get_sales($today_start);
 
     $rows[] = array(
-      Link::fromTextAndUrl(t('Today, @date', ['@date' => \Drupal::service('date.formatter')->format($today_start, 'uc_store')]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $today_start . '/' . $today_end))->toString(),
+      Link::fromTextAndUrl($this->t('Today, @date', ['@date' => \Drupal::service('date.formatter')->format($today_start, 'uc_store')]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $today_start . '/' . $today_end))->toString(),
       $today['total'],
       array('data' => array('#theme' => 'uc_price', '#price' => $today['income'])),
       array('data' => array('#theme' => 'uc_price', '#price' => $today['average'])),
@@ -543,7 +543,7 @@ class Reports extends ControllerBase {
     $yesterday = self::get_sales($today_start - 86400);
 
     $rows[] = array(
-      Link::fromTextAndUrl(t('Yesterday, @date', ['@date' => \Drupal::service('date.formatter')->format($today_start - 86400, 'uc_store')]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . ($today_start - 86400) . '/' . ($today_end - 86400)))->toString(),
+      Link::fromTextAndUrl($this->t('Yesterday, @date', ['@date' => \Drupal::service('date.formatter')->format($today_start - 86400, 'uc_store')]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . ($today_start - 86400) . '/' . ($today_end - 86400)))->toString(),
       $yesterday['total'],
       array('data' => array('#theme' => 'uc_price', '#price' => $yesterday['income'])),
       array('data' => array('#theme' => 'uc_price', '#price' => $yesterday['average'])),
@@ -555,7 +555,7 @@ class Reports extends ControllerBase {
 
     // Add the month-to-date details to the report table.
     $rows[] = array(
-      Link::fromTextAndUrl(t('Month-to-date, @month', ['@month' => $month_title]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $month_start . '/' . $month_end))->toString(),
+      Link::fromTextAndUrl($this->t('Month-to-date, @month', ['@month' => $month_title]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $month_start . '/' . $month_end))->toString(),
       $month['total'],
       array('data' => array('#theme' => 'uc_price', '#price' => $month['income'])),
       array('data' => array('#theme' => 'uc_price', '#price' => $month['average'])),
@@ -574,7 +574,7 @@ class Reports extends ControllerBase {
 
     // Add the daily averages for the month to the report table.
     $rows[] = array(
-      t('Daily average for @month', ['@month' => $month_title]),
+      $this->t('Daily average for @month', ['@month' => $month_title]),
       $daily_orders,
       array('data' => array('#theme' => 'uc_price', '#price' => $daily_revenue)),
       '',
@@ -585,7 +585,7 @@ class Reports extends ControllerBase {
 
     // Add the projected totals for the month to the report table.
     $rows[] = array(
-      t('Projected totals for @date', ['@date' => $month_title]),
+      $this->t('Projected totals for @date', ['@date' => $month_title]),
       round($month['total'] + ($daily_orders * $remaining_days), 2),
       array('data' => array('#theme' => 'uc_price', '#price' => round($month['income'] + ($daily_revenue * $remaining_days), 2))),
       '',
@@ -600,13 +600,13 @@ class Reports extends ControllerBase {
     );
 
     // Build the header statistics table header.
-    $header = array(array('data' => t('Statistics'), 'width' => '50%'), '');
+    $header = array(array('data' => $this->t('Statistics'), 'width' => '50%'), '');
 
     $rows = array(
-      array(array('data' => t('Grand total sales')), array('data' => array('#theme' => 'uc_price', '#price' => db_query("SELECT SUM(order_total) FROM {uc_orders} WHERE order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField()))),
-      array(array('data' => t('Customers total')), array('data' => db_query("SELECT COUNT(DISTINCT uid) FROM {uc_orders} WHERE order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField())),
-      array(array('data' => t('New customers today')), array('data' => db_query("SELECT COUNT(DISTINCT uid) FROM {uc_orders} WHERE order_status IN (:statuses[]) AND :start <= created AND created <= :end", [':statuses[]' => $order_statuses, ':start' => $today_start, ':end' => $today_end])->fetchField())),
-      array(array('data' => t('Online customers')), array('data' => db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s LEFT JOIN {uc_orders} o ON s.uid = o.uid WHERE s.uid > 0 AND o.order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField())),
+      array(array('data' => $this->t('Grand total sales')), array('data' => array('#theme' => 'uc_price', '#price' => db_query("SELECT SUM(order_total) FROM {uc_orders} WHERE order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField()))),
+      array(array('data' => $this->t('Customers total')), array('data' => db_query("SELECT COUNT(DISTINCT uid) FROM {uc_orders} WHERE order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField())),
+      array(array('data' => $this->t('New customers today')), array('data' => db_query("SELECT COUNT(DISTINCT uid) FROM {uc_orders} WHERE order_status IN (:statuses[]) AND :start <= created AND created <= :end", [':statuses[]' => $order_statuses, ':start' => $today_start, ':end' => $today_end])->fetchField())),
+      array(array('data' => $this->t('Online customers')), array('data' => db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s LEFT JOIN {uc_orders} o ON s.uid = o.uid WHERE s.uid > 0 AND o.order_status IN (:statuses[])", [':statuses[]' => $order_statuses])->fetchField())),
     );
 
     // Add the statistics table to the output.
@@ -618,7 +618,7 @@ class Reports extends ControllerBase {
     );
 
     // Build the total orders by status table header.
-    $header = array(array('data' => t('Total orders by status'), 'width' => '50%'), '');
+    $header = array(array('data' => $this->t('Total orders by status'), 'width' => '50%'), '');
     $rows = array();
     $unknown = 0;
 
@@ -643,7 +643,7 @@ class Reports extends ControllerBase {
     // Add the unknown status count to the table.
     if ($unknown > 0) {
       $rows[] = array(
-        t('Unknown status'),
+        $this->t('Unknown status'),
         $unknown,
       );
     }
@@ -672,10 +672,10 @@ class Reports extends ControllerBase {
     }
 
     // Build the header for the report table.
-    $header = array(t('Month'), t('Number of orders'), t('Total revenue'), t('Average order'));
+    $header = array($this->t('Month'), $this->t('Number of orders'), $this->t('Total revenue'), $this->t('Average order'));
 
     // Build the header to the CSV export.
-    $csv_rows = array(array(t('Month'), t('Number of orders'), t('Total revenue'), t('Average order')));
+    $csv_rows = array(array($this->t('Month'), $this->t('Number of orders'), $this->t('Total revenue'), $this->t('Average order')));
 
     // For each month of the year...
     for ($i = 1; $i <= 12; $i++) {
@@ -728,7 +728,7 @@ class Reports extends ControllerBase {
 
     // Add the total row to the report table.
     $rows[] = array(
-      Link::fromTextAndUrl(t('Total @year', ['@year' => $year]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $year_start . '/' . $year_end))->toString(),
+      Link::fromTextAndUrl($this->t('Total @year', ['@year' => $year]), Url::fromUri('base:admin/store/orders/search/results/0/0/0/0/0/0/' . $year_start . '/' . $year_end))->toString(),
       $year_sales['total'],
       uc_currency_format($year_sales['income']),
       uc_currency_format($year_average),
@@ -736,7 +736,7 @@ class Reports extends ControllerBase {
 
     // Add the total data to the CSV export.
     $csv_rows[] = array(
-      t('Total @year', ['@year' => $year]),
+      $this->t('Total @year', ['@year' => $year]),
       $year_sales['total'],
       $year_sales['income'],
       $year_average,
@@ -759,7 +759,7 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => Link::createFromRoute(t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
+      '#markup' => Link::createFromRoute($this->t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
     );
 
     return $build;
@@ -790,10 +790,10 @@ class Reports extends ControllerBase {
     }
 
     // Build the header for the report table.
-    $header = array(t('Date'), t('Number of orders'), t('Products sold'), t('Total revenue'));
+    $header = array($this->t('Date'), $this->t('Number of orders'), $this->t('Products sold'), $this->t('Total revenue'));
 
     // Build the header to the CSV export.
-    $csv_rows = array(array(t('Date'), t('Number of orders'), t('Products sold'), t('Total revenue')));
+    $csv_rows = array(array($this->t('Date'), $this->t('Number of orders'), $this->t('Products sold'), $this->t('Total revenue')));
 
     // Grab the subreports based on the date range and the report breakdown.
     $subreports = $this->subreport_intervals($args['start_date'], $args['end_date'], $args['length']);
@@ -817,7 +817,7 @@ class Reports extends ControllerBase {
 
       // Put the order counts into an array by status.
       foreach ($result as $status) {
-        $statuses[] = t('@count - @title', ['@count' => $status->count, '@title' => $status->title]);
+        $statuses[] = $this->t('@count - @title', ['@count' => $status->count, '@title' => $status->title]);
       }
 
       $order_data = implode('<br />', $statuses);
@@ -865,7 +865,7 @@ class Reports extends ControllerBase {
 
     // Add the total row to the report table.
     $rows[] = array(
-      t('Total'),
+      $this->t('Total'),
       $order_total,
       $product_total,
       uc_currency_format($revenue_total),
@@ -873,7 +873,7 @@ class Reports extends ControllerBase {
 
     // Add the total data to the CSV export.
     $csv_rows[] = array(
-      t('Total'),
+      $this->t('Total'),
       $order_total,
       $product_total,
       $revenue_total,
@@ -895,7 +895,7 @@ class Reports extends ControllerBase {
       '#suffix' => '</div>',
     );
     $build['links']['export_csv'] = array(
-      '#markup' => Link::createFromRoute(t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
+      '#markup' => Link::createFromRoute($this->t('Export to CSV file.'), 'uc_report.getcsv', ['report_id' => $csv_data['report'], 'user_id' => $csv_data['user']])->toString(),
     );
 
     return $build;
@@ -943,7 +943,7 @@ class Reports extends ControllerBase {
     $csv_data = \Drupal::cache()->get('uc_report_' . $report_id . '_' . $user_id);
 
     if (!$csv_data || $user_id != $user_check) {
-      drupal_set_message(t("The CSV data could not be retrieved. It's possible the data might have expired. Refresh the report page and try to retrieve the CSV file again."), 'error');
+      drupal_set_message($this->t("The CSV data could not be retrieved. It's possible the data might have expired. Refresh the report page and try to retrieve the CSV file again."), 'error');
       throw new NotFoundHttpException();
     }
     else {

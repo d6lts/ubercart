@@ -46,24 +46,24 @@ class QuoteSettingsForm extends ConfigFormBase {
 
     $form['uc_quote_log_errors'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Log errors during checkout to watchdog'),
+      '#title' => $this->t('Log errors during checkout to watchdog'),
       '#default_value' => $quote_config->get('log_errors'),
     );
     $form['uc_quote_display_debug'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display debug information to administrators.'),
+      '#title' => $this->t('Display debug information to administrators.'),
       '#default_value' => $quote_config->get('display_debug'),
     );
     $form['uc_quote_require_quote'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Prevent the customer from completing an order if a shipping quote is not selected.'),
+      '#title' => $this->t('Prevent the customer from completing an order if a shipping quote is not selected.'),
       '#default_value' => $quote_config->get('require_quote'),
     );
 
     $form['default_address'] = array(
       '#type' => 'details',
-      '#title' => t('Default pickup address'),
-      '#description' => t("When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. This form provides the default location for all products in the store. If a product's individual pickup address is blank, Ubercart uses the store's default pickup address specified here."),
+      '#title' => $this->t('Default pickup address'),
+      '#description' => $this->t("When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. This form provides the default location for all products in the store. If a product's individual pickup address is blank, Ubercart uses the store's default pickup address specified here."),
     );
     $form['default_address']['address'] = array(
       '#type' => 'uc_address',

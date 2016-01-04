@@ -47,7 +47,7 @@ class ProductSettingsForm extends ConfigFormBase {
     );
 
     $form['product']['empty'] = array(
-      '#markup' => t('There are currently no settings choices for your products. When enabled, the Cart module and other modules that provide product features (such as Role assignment and File downloads) will add settings choices here.'),
+      '#markup' => $this->t('There are currently no settings choices for your products. When enabled, the Cart module and other modules that provide product features (such as Role assignment and File downloads) will add settings choices here.'),
     );
 
     $form['#submit'][] = array($this, 'submitForm');

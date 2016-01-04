@@ -27,7 +27,7 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
    * {@inheritdoc}
    */
   public function view(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $build['#description'] = t('Use this area for special instructions or questions regarding your order.');
+    $build['#description'] = $this->t('Use this area for special instructions or questions regarding your order.');
 
     if ($order->id()) {
       $default = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()))->fetchField();
@@ -37,7 +37,7 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
     }
     $build['comments'] = array(
       '#type' => 'textarea',
-      '#title' => t('Order comments'),
+      '#title' => $this->t('Order comments'),
       '#default_value' => $default,
     );
 
@@ -66,7 +66,7 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
     $review = NULL;
     $result = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()));
     if ($comment = $result->fetchObject()) {
-      $review[] = array('title' => t('Comment'), 'data' => SafeMarkup::checkPlain($comment->message));
+      $review[] = array('title' => $this->t('Comment'), 'data' => SafeMarkup::checkPlain($comment->message));
     }
     return $review;
   }

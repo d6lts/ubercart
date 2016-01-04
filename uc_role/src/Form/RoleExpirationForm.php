@@ -38,10 +38,10 @@ class RoleExpirationForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Create the header for the pager.
     $header = array(
-      array('data' => t('Username'), 'field' => 'u.name'),
-      array('data' => t('Role'), 'field' => 'e.rid'),
-      array('data' => t('Expiration date'), 'field' => 'e.expiration', 'sort' => 'asc'),
-      array('data' => t('Operations'), 'colspan' => 2),
+      array('data' => $this->t('Username'), 'field' => 'u.name'),
+      array('data' => $this->t('Role'), 'field' => 'e.rid'),
+      array('data' => $this->t('Expiration date'), 'field' => 'e.expiration', 'sort' => 'asc'),
+      array('data' => $this->t('Operations'), 'colspan' => 2),
     );
 
     // Grab all the info to build the pager.
@@ -92,7 +92,7 @@ class RoleExpirationForm extends FormBase {
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => t('No expirations set to occur'),
+      '#empty' => $this->t('No expirations set to occur'),
     );
 
     return $form;

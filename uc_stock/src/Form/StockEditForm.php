@@ -74,7 +74,7 @@ class StockEditForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['save'] = array(
       '#type' => 'submit',
-      '#value' => t('Save changes'),
+      '#value' => $this->t('Save changes'),
     );
 
     return $form;
@@ -104,7 +104,7 @@ class StockEditForm extends FormBase {
         ->execute();
     }
 
-    drupal_set_message(t('Stock settings saved.'));
+    drupal_set_message($this->t('Stock settings saved.'));
   }
 
 }

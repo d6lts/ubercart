@@ -54,7 +54,7 @@ class SalesTaxReport {
 
     // Query to get the tax line items in this date range
 
-    $result = db_query("SELECT li.amount, li.title, li.data FROM {uc_orders} o LEFT JOIN {uc_order_line_items} li ON o.order_id = li.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[]) AND li.type = :type", array(':start' => $args['start_date'], ':end' => $args['end_date'], ':statuses[]' => $order_statuses, ':type' => 'tax'));
+    $result = db_query("SELECT li.amount, li.title, li.data FROM {uc_orders} o LEFT JOIN {uc_order_line_items} li ON o.order_id = li.order_id WHERE :start <= created AND created <= :end AND order_status IN (:statuses[]) AND li.type = :type", [':start' => $args['start_date'], ':end' => $args['end_date'], ':statuses[]' => $order_statuses, ':type' => 'tax']);
 
     // add up the amounts by jurisdiction
     $totals = array();

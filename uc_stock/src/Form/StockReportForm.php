@@ -29,7 +29,7 @@ class StockReportForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL) {
     $form['threshold'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Only show SKUs that are below their threshold.'),
+      '#title' => $this->t('Only show SKUs that are below their threshold.'),
       '#default_value' => /* @todo remove arg(): arg(4) == 'threshold' ? TRUE :*/ FALSE,
       '#attributes' => array('onchange' => 'this.form.submit();'),
     );
@@ -37,7 +37,7 @@ class StockReportForm extends FormBase {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Update'),
+      '#value' => $this->t('Update'),
       '#attributes' => array('style' => "display:none;"),
     );
 

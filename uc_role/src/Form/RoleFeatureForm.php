@@ -289,7 +289,7 @@ class RoleFeatureForm extends FormBase {
       }
     }
     else {
-      $description .= $this->t('<strong>Expiration:</strong> @link (not overridden)<br />', ['@link' => Link::createFromRoute(t('Global expiration'), 'uc_product.settings')->toString()]);
+      $description .= $this->t('<strong>Expiration:</strong> @link (not overridden)<br />', ['@link' => Link::createFromRoute($this->t('Global expiration'), 'uc_product.settings')->toString()]);
     }
     $description .= $product_role['shippable'] ? $this->t('<strong>Shippable:</strong> Yes<br />') : $this->t('<strong>Shippable:</strong> No<br />');
     $description .= $product_role['by_quantity'] ? $this->t('<strong>Multiply by quantity:</strong> Yes') : $this->t('<strong>Multiply by quantity:</strong> No');

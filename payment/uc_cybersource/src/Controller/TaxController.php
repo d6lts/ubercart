@@ -24,12 +24,12 @@ class TaxController extends ControllerBase {
     // Build an item list for the taxes.
     $items = array();
     foreach ($data as $tax) {
-      $items[] = t('@tax: @amount', array('@tax' => $tax['name'], '@amount' => uc_currency_format($tax['amount'])));
+      $items[] = $this->t('@tax: @amount', ['@tax' => $tax['name'], '@amount' => uc_currency_format($tax['amount'])]);
     }
 
     // Display a message if there are no taxes.
     if (empty($items)) {
-      $items[] = t('No taxes returned for this order.');
+      $items[] = $this->t('No taxes returned for this order.');
     }
 
     return array(

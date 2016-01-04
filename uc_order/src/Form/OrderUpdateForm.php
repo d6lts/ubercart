@@ -31,20 +31,20 @@ class OrderUpdateForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
     $form['order_comment_field'] = array(
       '#type' => 'details',
-      '#title' => t('Add an order comment'),
+      '#title' => $this->t('Add an order comment'),
     );
     $form['order_comment_field']['order_comment'] = array(
       '#type' => 'textarea',
-      '#description' => t('Order comments are used primarily to communicate with the customer.'),
+      '#description' => $this->t('Order comments are used primarily to communicate with the customer.'),
     );
 
     $form['admin_comment_field'] = array(
       '#type' => 'details',
-      '#title' => t('Add an admin comment'),
+      '#title' => $this->t('Add an admin comment'),
     );
     $form['admin_comment_field']['admin_comment'] = array(
       '#type' => 'textarea',
-      '#description' => t('Admin comments are only seen by store administrators.'),
+      '#description' => $this->t('Admin comments are only seen by store administrators.'),
     );
 
     $form['current_status'] = array(
@@ -64,19 +64,19 @@ class OrderUpdateForm extends FormBase {
     );
     $form['controls']['status'] = array(
       '#type' => 'select',
-      '#title' => t('Order status'),
+      '#title' => $this->t('Order status'),
       '#default_value' => $order->getStatusId(),
       '#options' => OrderStatus::getOptionsList(),
     );
     $form['controls']['notify'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Send e-mail notification on update.'),
+      '#title' => $this->t('Send e-mail notification on update.'),
     );
 
     $form['controls']['actions'] = array('#type' => 'actions');
     $form['controls']['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Update'),
+      '#value' => $this->t('Update'),
       '#button_type' => 'primary',
     );
 
@@ -87,7 +87,7 @@ class OrderUpdateForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $uid = \Drupal::currentUser()->id();
+    $uid = $this->currentUser()->id();
 
     if (!$form_state->isValueEmpty('order_comment')) {
       uc_order_comment_save($form_state->getValue('order_id'), $uid, $form_state->getValue('order_comment'), 'order', $form_state->getValue('status'), $form_state->getValue('notify'));
@@ -113,7 +113,7 @@ class OrderUpdateForm extends FormBase {
     //   rules_invoke_event('uc_order_status_email_update', $order);
     // }
 
-    drupal_set_message(t('Order updated.'));
+    drupal_set_message($this->t('Order updated.'));
   }
 
 }

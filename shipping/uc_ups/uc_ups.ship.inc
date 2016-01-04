@@ -55,11 +55,11 @@ function uc_ups_fulfill_order($form, FormStateInterface $form_state, $order, $pa
         $declared_value += $product->qty * $product->price;
       }
       // Use last product in package to determine package type
-      $ups_data = db_query("SELECT pkg_type FROM {uc_ups_products} WHERE nid = :nid", array(':nid' => $product->nid))->fetchAssoc();
+      $ups_data = db_query("SELECT pkg_type FROM {uc_ups_products} WHERE nid = :nid", [':nid' => $product->nid])->fetchAssoc();
       $product->ups = $ups_data;
       $pkg_form = array(
         '#type' => 'fieldset',
-        '#title' => t('Package !id', array('!id' => $id)),
+        '#title' => t('Package @id', ['@id' => $id]),
       );
       $pkg_form['products'] = array(
         '#theme' => 'item_list',
@@ -170,7 +170,7 @@ function uc_ups_fulfill_order($form, FormStateInterface $form_state, $order, $pa
   $form['shipment']['shipping_choice'] = array(
     '#type'   => 'markup',
     '#prefix' => '<div>',
-    '#markup' => t('Customer selected "@method" as the shipping method and paid @rate', array('@method' => $method, '@rate' => uc_currency_format($order->quote['rate']))),
+    '#markup' => t('Customer selected "@method" as the shipping method and paid @rate', ['@method' => $method, '@rate' => uc_currency_format($order->quote['rate'])]),
     '#suffix' => '</div>',
   );
 
@@ -635,7 +635,7 @@ function uc_ups_confirm_shipment_submit($form, FormStateInterface $form_state) {
     $error_severity = (string) $error->ErrorSeverity;
     $error_code = (string) $error->ErrorCode;
     $error_description = (string) $error->ErrorDescription;
-    drupal_set_message(t('(@severity error @code) @description', array('@severity' => $error_severity, '@code' => $error_code, '@description' => $error_description)), 'error');
+    drupal_set_message(t('(@severity error @code) @description', ['@severity' => $error_severity, '@code' => $error_code, '@description' => $error_description]), 'error');
     if ($error_severity == 'HardError') {
       $form_state['redirect'] = 'admin/store/orders/' . $order_id . '/shipments/ups/' . implode('/', $packages);
       return;
@@ -682,7 +682,7 @@ function uc_ups_confirm_shipment_submit($form, FormStateInterface $form_state) {
       }
     }
     else {
-      drupal_set_message(t('Could not find or create the directory %directory in the file system path.', array('%directory' => $directory)), 'error');
+      drupal_set_message(t('Could not find or create the directory %directory in the file system path.', ['%directory' => $directory]), 'error');
     }
     unset($package);
     next($shipment->packages);

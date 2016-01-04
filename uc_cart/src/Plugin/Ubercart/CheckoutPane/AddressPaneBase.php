@@ -67,7 +67,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
     if ($user->isAuthenticated() && $addresses = uc_select_addresses($user->id(), $pane)) {
       $contents['select_address'] = array(
         '#type' => 'select',
-        '#title' => t('Saved addresses'),
+        '#title' => $this->t('Saved addresses'),
         '#options' => $addresses['#options'],
         '#ajax' => array(
           'callback' => array($this, 'ajaxRender'),
@@ -159,9 +159,9 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
   public function review(OrderInterface $order) {
     $pane = $this->pluginDefinition['id'];
     $address = $order->getAddress($pane);
-    $review[] = array('title' => t('Address'), 'data' => $address);
+    $review[] = array('title' => $this->t('Address'), 'data' => $address);
     if (uc_address_field_enabled('phone') && !empty($address->phone)) {
-      $review[] = array('title' => t('Phone'), 'data' => SafeMarkup::checkPlain($address->phone));
+      $review[] = array('title' => $this->t('Phone'), 'data' => SafeMarkup::checkPlain($address->phone));
     }
     return $review;
   }

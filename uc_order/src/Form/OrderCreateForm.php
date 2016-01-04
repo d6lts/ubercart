@@ -31,9 +31,9 @@ class OrderCreateForm extends FormBase {
     $form['customer_type'] = array(
       '#type' => 'radios',
       '#options' => array(
-        'search' => t('Search for an existing customer.'),
-        'create' => t('Create a new customer account.'),
-        'none'   => t('No customer account required.'),
+        'search' => $this->t('Search for an existing customer.'),
+        'create' => $this->t('Create a new customer account.'),
+        'none'   => $this->t('No customer account required.'),
       ),
       '#required' => TRUE,
       '#default_value' => 'search',
@@ -57,40 +57,40 @@ class OrderCreateForm extends FormBase {
       // Container for customer search fields.
       $form['customer'] += array(
         '#type' => 'fieldset',
-        '#title' => t('Customer search'),
-        '#description' => t('Enter full or partial information in one or more of the following fields, then press the "Search" button. Search results will match all the provided information.'),
+        '#title' => $this->t('Customer search'),
+        '#description' => $this->t('Enter full or partial information in one or more of the following fields, then press the "Search" button. Search results will match all the provided information.'),
       );
       // Customer first name.
       $form['customer']['first_name'] = array(
         '#type' => 'textfield',
-        '#title' => t('First name'),
+        '#title' => $this->t('First name'),
         '#size' => 24,
         '#maxlength' => 32,
       );
       // Customer last name.
       $form['customer']['last_name'] = array(
         '#type' => 'textfield',
-        '#title' => t('Last name'),
+        '#title' => $this->t('Last name'),
         '#size' => 24,
         '#maxlength' => 32,
       );
       // Customer e-mail address.
       $form['customer']['email'] = array(
         '#type' => 'textfield',
-        '#title' => t('E-mail'),
+        '#title' => $this->t('E-mail'),
         '#size' => 24,
         '#maxlength' => 96,
       );
       // Customer username.
       $form['customer']['username'] = array(
         '#type' => 'textfield',
-        '#title' => t('Username'),
+        '#title' => $this->t('Username'),
         '#size' => 24,
         '#maxlength' => 96,
       );
       $form['customer']['search'] = array(
         '#type' => 'button',
-        '#value' => t('Search'),
+        '#value' => $this->t('Search'),
         '#limit_validation_errors' => array(),
         '#submit' => array(),
         '#ajax' => array(
@@ -148,8 +148,8 @@ class OrderCreateForm extends FormBase {
           // Display search results.
           $form['customer']['uid'] += array(
             '#type' => 'radios',
-            '#title' => t('Select customer'),
-            '#description' => $max ? t('More than @limit results found. Refine your search to find other customers.', ['@limit' => $limit - 1]) : '',
+            '#title' => $this->t('Select customer'),
+            '#description' => $max ? $this->t('More than @limit results found. Refine your search to find other customers.', ['@limit' => $limit - 1]) : '',
             '#options' => $options,
             '#default_value' => key($options),
           );
@@ -157,7 +157,7 @@ class OrderCreateForm extends FormBase {
         else {
           // No search results found.
           $form['customer']['uid'] += array(
-            '#markup' => '<p>' . t('Search returned no results.') . '</p>',
+            '#markup' => '<p>' . $this->t('Search returned no results.') . '</p>',
           );
         }
       }
@@ -168,26 +168,26 @@ class OrderCreateForm extends FormBase {
       // Container for new customer information.
       $form['customer'] += array(
         '#type'  => 'fieldset',
-        '#title' => t('New customer details'),
+        '#title' => $this->t('New customer details'),
       );
       // Customer e-mail address.
       $form['customer']['email'] = array(
         '#type' => 'email',
-        '#title' => t('Customer e-mail address'),
+        '#title' => $this->t('Customer e-mail address'),
         '#size' => 24,
         '#maxlength' => 96,
       );
       // Option to notify customer.
       $form['customer']['sendmail'] = array(
         '#type'  => 'checkbox',
-        '#title' => t('E-mail account details to customer.'),
+        '#title' => $this->t('E-mail account details to customer.'),
       );
     }
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Create order'),
+      '#value' => $this->t('Create order'),
     );
 
     return $form;
@@ -214,7 +214,7 @@ class OrderCreateForm extends FormBase {
     switch ($form_state->getValue('customer_type')) {
       case 'search':
         if (!$form_state->hasValue(['customer', 'uid'])) {
-          $form_state->setErrorByName('customer][uid', t('Please select a customer.'));
+          $form_state->setErrorByName('customer][uid', $this->t('Please select a customer.'));
         }
         break;
 
@@ -222,7 +222,7 @@ class OrderCreateForm extends FormBase {
         $email = trim($form_state->getValue(['customer', 'email']));
         $uid = db_query('SELECT uid FROM {users_field_data} WHERE mail LIKE :mail', [':mail' => $email])->fetchField();
         if ($uid) {
-          $form_state->setErrorByName('customer][mail', t('An account already exists for that e-mail.'));
+          $form_state->setErrorByName('customer][mail', $this->t('An account already exists for that e-mail.'));
         }
         break;
     }
@@ -254,7 +254,7 @@ class OrderCreateForm extends FormBase {
           // Manually set the password so it appears in the e-mail.
           $account->password = $fields['pass'];
           \Drupal::service('plugin.manager.mail')->mail('user', 'register_admin_created', $email, uc_store_mail_recipient_langcode($email), array('account' => $account), uc_store_email_from());
-          drupal_set_message(t('A welcome message has been e-mailed to the new user.'));
+          drupal_set_message($this->t('A welcome message has been e-mailed to the new user.'));
         }
         break;
 
@@ -267,7 +267,7 @@ class OrderCreateForm extends FormBase {
       'order_status' => uc_order_state_default('post_checkout'),
     ));
     $order->save();
-    uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), t('Order created by the administration.'), 'admin');
+    uc_order_comment_save($order->id(), $this->currentUser()->id(), $this->t('Order created by the administration.'), 'admin');
 
     $form_state->setRedirect('entity.uc_order.edit_form', ['uc_order' => $order->id()]);
   }

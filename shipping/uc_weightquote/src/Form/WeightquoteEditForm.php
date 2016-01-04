@@ -43,46 +43,46 @@ class WeightquoteEditForm extends FormBase {
 
     $form['title'] = array(
       '#type' => 'textfield',
-      '#title' => t('Shipping method title'),
-      '#description' => t('The name shown to administrators distinguish this method from other weight quote methods.'),
+      '#title' => $this->t('Shipping method title'),
+      '#description' => $this->t('The name shown to administrators distinguish this method from other weight quote methods.'),
       '#default_value' => $method->title,
       '#required' => TRUE,
     );
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Line item label'),
-      '#description' => t('The name shown to the customer when they choose a shipping method at checkout.'),
+      '#title' => $this->t('Line item label'),
+      '#description' => $this->t('The name shown to the customer when they choose a shipping method at checkout.'),
       '#default_value' => $method->label,
       '#required' => TRUE,
     );
     $form['base_rate'] = array(
       '#type' => 'uc_price',
-      '#title' => t('Base price'),
-      '#description' => t('The starting price for weight-based shipping costs.'),
+      '#title' => $this->t('Base price'),
+      '#description' => $this->t('The starting price for weight-based shipping costs.'),
       '#default_value' => $method->base_rate,
       '#required' => TRUE,
     );
-    $unit = \Drupal::config('uc_store.settings')->get('weight.units');
+    $unit = $this->config('uc_store.settings')->get('weight.units');
     $form['product_rate'] = array(
       '#type' => 'uc_price',
-      '#title' => t('Default cost adjustment per !unit', ['!unit' => $unit]),
-      '#description' => t('The amount per weight unit to add to the shipping cost for an item.'),
+      '#title' => $this->t('Default cost adjustment per @unit', ['@unit' => $unit]),
+      '#description' => $this->t('The amount per weight unit to add to the shipping cost for an item.'),
       '#default_value' => $method->product_rate,
-      '#field_suffix' => t('per @unit', ['@unit' => $unit]),
+      '#field_suffix' => $this->t('per @unit', ['@unit' => $unit]),
       '#required' => TRUE,
     );
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
       '#button_type' => 'primary',
     );
 
     if (isset($form['mid'])) {
       $form['actions']['delete'] = array(
         '#type' => 'submit',
-        '#value' => t('Delete'),
+        '#value' => $this->t('Delete'),
         '#submit' => array(array($this, 'delete')),
         '#button_type' => 'danger',
       );
@@ -101,7 +101,7 @@ class WeightquoteEditForm extends FormBase {
         ->key(array('mid' => $form_state->getValue('mid')))
         ->fields($form_state->getValues())
         ->execute();
-      drupal_set_message(t('Weight quote shipping method was updated.'));
+      drupal_set_message($this->t('Weight quote shipping method was updated.'));
       $form_state->setRedirect('uc_quote.methods');
     }
     else {
@@ -112,7 +112,7 @@ class WeightquoteEditForm extends FormBase {
       // Ensure Rules picks up the new condition.
       // entity_flush_caches();
 
-      drupal_set_message(t('Created and enabled new weight quote shipping method.'));
+      drupal_set_message($this->t('Created and enabled new weight quote shipping method.'));
       $form_state->setRedirect('uc_quote.methods');
       //$form_state['redirect'] = 'admin/store/config/quotes/manage/get_quote_from_weightquote_' . $form_state->getValue('mid');
     }
