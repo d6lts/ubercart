@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Integrates various PayPal payment services and Instant Payment Notifications
- * (IPN) with Ubercart!
+ * Integrates various PayPal payment services and IPN with Ubercart.
  *
  * You should turn on Instant Payment Notifications in your PayPal profile and
  * set the IPN URL to http://{yoursite.com}/uc_paypal/ipn. See
@@ -20,26 +19,10 @@ use Drupal\uc_order\Entity\Order;
  * Implements hook_menu().
  */
 function uc_paypal_menu() {
-  // Always accessible, helps for testing while site is offline.
-  $items['uc_paypal/ipn'] = array(
-    'title' => 'PayPal IPN',
-    'page callback' => 'uc_paypal_ipn',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_paypal.pages.inc',
-  );
-
   // Callback functions for Express Checkout.
   $items['cart/echeckout/selected'] = array(
     'title' => 'Review order',
     'page callback' => 'uc_paypal_ec_review_redirect',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_paypal.pages.inc',
-  );
-  $items['cart/echeckout/review'] = array(
-    'title' => 'Review payment',
-    'page callback' => 'uc_paypal_ec_review',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'uc_paypal.pages.inc',
@@ -57,13 +40,6 @@ function uc_paypal_menu() {
     'title' => 'PayPal payment complete',
     'page callback' => 'uc_paypal_complete',
     'page arguments' => array(3),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_paypal.pages.inc',
-  );
-  $items['uc_paypal/wps/cancel'] = array(
-    'title' => 'PayPal payment canceled',
-    'page callback' => 'uc_paypal_cancel',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'uc_paypal.pages.inc',
@@ -157,6 +133,7 @@ function uc_paypal_uc_payment_method() {
     'checkout' => FALSE,
     'no_gateway' => TRUE,
     'express' => 'uc_paypal_ec_form',
+    'settings_form' => '\Drupal\uc_paypal\Form\ExpressCheckoutSettingsForm',
   );
 
   return $methods;
@@ -229,7 +206,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       }
     }
 
-    // Paypal doesn't accept IPv6 addresses.
+    // PayPal doesn't accept IPv6 addresses.
     $ip_address = ltrim(Drupal::request()->getClientIp(), '::ffff:');
 
     $nvp_request = array(
@@ -253,7 +230,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'DESC' => substr($desc, 0, 127),
       'INVNUM' => $order_id . '-' . REQUEST_TIME,
       'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
-      'NOTIFYURL' => Url::fromUri('base:uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
+      'NOTIFYURL' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
       'EMAIL' => substr($order->getEmail(), 0, 127),
       'PHONENUM' => substr($order->billing_phone, 0, 20),
     );
@@ -281,7 +258,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
 
   switch ($nvp_response['ACK']) {
     case 'SuccessWithWarning':
-      \Drupal::logger('uc_payment')->warning('<b>@type succeeded with a warning.</b>@paypal_message',
+      \Drupal::logger('uc_paypal')->warning('<b>@type succeeded with a warning.</b>@paypal_message',
         array(
           '@paypal_message' => _uc_paypal_build_error_messages($nvp_response),
           '@type' => $types[$data['txn_type']],
@@ -491,100 +468,6 @@ function uc_payment_method_paypal_ec($op, &$order) {
 
       $build['#markup'] = t('Transaction ID:<br />@txn_id', ['@txn_id' => $txn_id]);
       return $build;
-
-    case 'settings':
-      $form['uc_paypal_wps_email'] = array(
-        '#type' => 'email',
-        '#title' => t('PayPal e-mail address'),
-        '#description' => t('The e-mail address you use for the PayPal account you want to receive payments.'),
-        '#default_value' => variable_get('uc_paypal_wps_email', ''),
-      );
-      // The DoDirectPayment API call allows fewer currencies than PayPal
-      // in general.
-      $form['uc_paypal_wpp_currency'] = array(
-        '#type' => 'select',
-        '#title' => t('Currency code'),
-        '#description' => t('Transactions can only be processed in one of the listed currencies.'),
-        '#options' => _uc_paypal_currency_array(),
-        '#default_value' => variable_get('uc_paypal_wpp_currency', 'USD'),
-      );
-      $form['uc_paypal_wpp_server'] = array(
-        '#type' => 'select',
-        '#title' => t('API server'),
-        '#description' => t('Sign up for and use a Sandbox account for testing.'),
-        '#options' => array(
-          'https://api-3t.sandbox.paypal.com/nvp' => t('Sandbox'),
-          'https://api-3t.paypal.com/nvp' => t('Live'),
-        ),
-        '#default_value' => variable_get('uc_paypal_wpp_server', 'https://api-3t.sandbox.paypal.com/nvp'),
-      );
-      $form['api'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('API credentials'),
-        '#description' => t('@link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', ['@link' => Link::fromTextAndUrl(t('Click here'), Url::fromUri('https://www.paypal.com/IntegrationCenter/ic_certificate.html'))->toString()]),
-      );
-      $form['api']['uc_paypal_api_username'] = array(
-        '#type' => 'textfield',
-        '#title' => t('API username'),
-        '#default_value' => variable_get('uc_paypal_api_username', ''),
-      );
-      $form['api']['uc_paypal_api_password'] = array(
-        '#type' => 'textfield',
-        '#title' => t('API password'),
-        '#default_value' => variable_get('uc_paypal_api_password', ''),
-      );
-      $form['api']['uc_paypal_api_signature'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Signature'),
-        '#default_value' => variable_get('uc_paypal_api_signature', ''),
-      );
-      $form['ec']['uc_paypal_ec_landingpage_style'] = array(
-        '#type' => 'radios',
-        '#title' => t('Default PayPal landing page'),
-        '#options' => array(
-          'Billing' => t('Credit card submission form.'),
-          'Login' => t('Account login form.'),
-        ),
-        '#default_value' => variable_get('uc_paypal_ec_landingpage_style', 'Billing'),
-      );
-      $form['ec']['uc_paypal_ec_rqconfirmed_addr'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Require Express Checkout users to use a PayPal confirmed shipping address.'),
-        '#default_value' => variable_get('uc_paypal_ec_rqconfirmed_addr', FALSE),
-      );
-      $form['ec']['uc_paypal_ec_review_shipping'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Enable the shipping select form on the Review payment page.'),
-        '#default_value' => variable_get('uc_paypal_ec_review_shipping', TRUE),
-      );
-      $form['ec']['uc_paypal_ec_review_company'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Enable the company name box on the Review payment page.'),
-        '#default_value' => variable_get('uc_paypal_ec_review_company', TRUE),
-      );
-      $form['ec']['uc_paypal_ec_review_phone'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Enable the contact phone number box on the Review payment page.'),
-        '#default_value' => variable_get('uc_paypal_ec_review_phone', TRUE),
-      );
-      $form['ec']['uc_paypal_ec_review_comment'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Enable the comment text box on the Review payment page.'),
-        '#default_value' => variable_get('uc_paypal_ec_review_comment', TRUE),
-      );
-      $form['ec']['uc_pg_paypal_wpp_cc_txn_type'] = array(
-        '#type' => 'radios',
-        '#title' => t('Payment action'),
-        '#description' => t('"Complete sale" will authorize and capture the funds at the time the payment is processed.<br>"Authorization" will only reserve funds on the card to be captured later through your PayPal account.'),
-        '#options' => array(
-          // The keys here are constants defined in uc_credit,
-          // but uc_credit is not a dependency.
-          'auth_capture' => t('Complete sale'),
-          'authorize' => t('Authorization'),
-       ),
-        '#default_value' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture'),
-      );
-      return $form;
   }
 }
 
@@ -614,7 +497,7 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
   $nvp_request = array(
     'METHOD' => 'SetExpressCheckout',
     'RETURNURL' => Url::fromRoute('cart/echeckout/selected', [], ['absolute' => TRUE])->toString(),
-    'CANCELURL' => Url::fromRoute('uc_paypal/wps/cancel', [], ['absolute' => TRUE])->toString(),
+    'CANCELURL' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
     'AMT' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
     'CURRENCYCODE' => variable_get('uc_paypal_wpp_currency', 'USD'),
     'PAYMENTACTION' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture') == 'authorize' ? 'Authorization' : 'Sale',
@@ -623,7 +506,7 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'ADDROVERRIDE' => 1,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => Url::fromRoute('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
+    'NOTIFYURL' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
     'SHIPTONAME' => substr($order->delivery_first_name . ' ' . $order->delivery_last_name, 0, 32),
     'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
     'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
@@ -669,6 +552,7 @@ function uc_paypal_ec_form($form, &$form_state) {
     '#src' => 'https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif',
     '#title' => t('Checkout with PayPal.'),
     '#submit' => array('uc_cart_view_form_submit', 'uc_paypal_ec_form_submit'),
+    '#value' => 'PayPal Express Checkout',
   );
 
   return $form;
@@ -680,23 +564,22 @@ function uc_paypal_ec_form($form, &$form_state) {
  * @see uc_paypal_ec_form()
  */
 function uc_paypal_ec_form_submit($form, &$form_state) {
-  global $user;
-  $items = uc_cart_get_contents();
+  $items = \Drupal::service('uc_cart.manager')->get()->getContents();
 
-  if (!is_array($items) || count($items) == 0) {
+  if (empty($items)) {
     drupal_set_message(t('You do not have any items in your shopping cart.'));
     return;
   }
 
   list($desc, $subtotal) = _uc_paypal_product_details($items);
 
-  $order = \Drupal\uc_order\Entity\Order::create(['uid' => $user->id()]);
+  $order = \Drupal\uc_order\Entity\Order::create(['uid' => \Drupal::currentUser()->id()]);
   $order->save();
 
   $nvp_request = array(
     'METHOD' => 'SetExpressCheckout',
-    'RETURNURL' => Url::fromRoute('cart/echeckout/review', [], ['absolute' => TRUE])->toString(),
-    'CANCELURL' => Url::fromRoute('uc_paypal/wps/cancel', [], ['absolute' => TRUE])->toString(),
+    'RETURNURL' => Url::fromRoute('uc_paypal.ec_review', [], ['absolute' => TRUE])->toString(),
+    'CANCELURL' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
     'AMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
     'CURRENCYCODE' => variable_get('uc_paypal_wpp_currency', 'USD'),
     'PAYMENTACTION' => variable_get('uc_pg_paypal_wpp_cc_txn_type', 'auth_capture') == 'authorize' ? 'Authorization' : 'Sale',
@@ -704,7 +587,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
     'INVNUM' => $order->id() . '-' . REQUEST_TIME,
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => Url::fromRoute('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
+    'NOTIFYURL' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
     'LANDINGPAGE' => variable_get('uc_paypal_ec_landingpage_style', 'Billing'),
   );
 
@@ -767,7 +650,7 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
     'DESC' => substr($desc, 0, 127),
     'INVNUM' => $order->id() . '-' . REQUEST_TIME,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => Url::fromRoute('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
+    'NOTIFYURL' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
     'ITEMAMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
     'SHIPPINGAMT' => uc_currency_format($shipping, FALSE, FALSE, '.'),
     'TAXAMT' => uc_currency_format($tax, FALSE, FALSE, '.'),
@@ -837,10 +720,10 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
     'charset' => 'utf-8',
 
     // IPN control notify URL.
-    'notify_url' => Url::fromRoute('uc_paypal/ipn/', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
+    'notify_url' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
 
     // Display information.
-    'cancel_return' => Url::fromRoute('uc_paypal/wps/cancel', [], ['absolute' => TRUE])->toString(),
+    'cancel_return' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
     'no_note' => 1,
     'no_shipping' => variable_get('uc_paypal_wps_no_shipping', 1),
     'return' => Url::fromRoute('uc_paypal/wps/complete/', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
@@ -921,7 +804,7 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
   else {
     // List the whole cart as a single item to account for fees/discounts.
     $data['amount_1'] = uc_currency_format($order->getTotal() - $shipping - $tax, FALSE, FALSE, '.');
-    $data['item_name_1'] = t('Order @order_id at !store', ['@order_id' => $order->id(), '!store' => uc_store_name()]);
+    $data['item_name_1'] = t('Order @order_id at @store', ['@order_id' => $order->id(), '@store' => uc_store_name()]);
     $data['on0_1'] = t('Product count');
     $data['os0_1'] = count($order->products);
   }
@@ -946,27 +829,35 @@ function uc_paypal_wps_form($form, &$form_state, $order) {
 /**
  * Sends a request to PayPal and returns a response array.
  */
-function uc_paypal_api_request($request, $server) {
-  // We use $request += to add API credentials so that if a key already exists,
+function uc_paypal_api_request($params, $server) {
+  // We use $params += to add API credentials so that if a key already exists
   // it will not be overridden.
-  $request += array(
+  $params += array(
     'USER' => variable_get('uc_paypal_api_username', ''),
     'PWD' => variable_get('uc_paypal_api_password', ''),
     'VERSION' => '3.0',
     'SIGNATURE' => variable_get('uc_paypal_api_signature', ''),
   );
 
+// @todo: figure out the right way to send the data.
+//  $response = \Drupal::httpClient()
+//    ->setSslVerification(TRUE, TRUE, 2)
+//    ->setConfig(array('curl.options' => array(CURLOPT_FOLLOWLOCATION => FALSE)))
+//    ->post($server, NULL, $params)
+//    ->send();
   $response = \Drupal::httpClient()
-    ->setSslVerification(TRUE, TRUE, 2)
-    ->setConfig(array('curl.options' => array(CURLOPT_FOLLOWLOCATION => FALSE)))
-    ->post($server, NULL, $request)
-    ->send();
+    ->post($server, array(
+      'form_params' => $params,
+      'verify' => TRUE,
+    ));
 
-  if ($response->isError()) {
-    \Drupal::logger('uc_paypal')->error('!error', ['!error' => $response-getReasonPhrase()]);
+// @todo: Which one? isError() was D7, 200 doesn't allow for redirects etc
+//  if ($response->isError()) {
+  if ($response->getStatusCode() != 200) {
+    \Drupal::logger('uc_paypal')->error('@error', ['@error' => $response->getReasonPhrase()]);
   }
 
-  return _uc_paypal_nvp_to_array($response->getBody(TRUE));
+  return _uc_paypal_nvp_to_array($response->getBody());
 }
 
 /**
@@ -981,8 +872,8 @@ function _uc_paypal_product_details($items) {
       if (!empty($desc)) {
         $desc .= ' / ';
       }
-      $desc .= $item->qty . 'x ' . $item->title;
-      $subtotal += $item->qty * $item->price;
+      $desc .= $item->qty->value . 'x ' . $item->title;
+      $subtotal += $item->qty->value * $item->price->value;
     }
   }
 

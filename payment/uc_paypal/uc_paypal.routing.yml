@@ -1,0 +1,20 @@
+uc_paypal.ec_review:
+  path: '/cart/echeckout/review'
+  defaults:
+    _controller: '\Drupal\uc_paypal\Controller\PayPalController::ecReview'
+  requirements:
+    _access: 'TRUE'
+
+uc_paypal.wps_cancel:
+  path: '/uc_paypal/wps/cancel'
+  defaults:
+    _controller: '\Drupal\uc_paypal\Controller\PayPalController::wpsCancel'
+  requirements:
+    _access: 'TRUE'
+
+uc_paypal.ipn:
+  path: '/uc_paypal/ipn'
+  defaults:
+    _controller: '\Drupal\uc_paypal\Controller\PayPalController::ipn'
+  requirements:
+    _access: 'TRUE'
