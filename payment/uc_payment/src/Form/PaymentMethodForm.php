@@ -55,7 +55,7 @@ class PaymentMethodForm extends EntityForm {
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $this->entity->label(),
-      '#description' => $this->t('The name shown to the customer when they choose this payment method at checkout.'),
+      '#description' => $this->t('The name shown to customers when they choose this payment method at checkout.'),
       '#required' => TRUE,
     );
     $form['id'] = array(
