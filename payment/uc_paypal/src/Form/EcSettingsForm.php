@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_paypal\src\Form\ExpressCheckoutSettingsForm.
+ * Contains \Drupal\uc_paypal\src\Form\EcSettingsForm.
  */
 
 namespace Drupal\uc_paypal\Form;
@@ -15,13 +15,13 @@ use Drupal\Core\Url;
 /**
  * Configure PayPal Express Checkout settings for this site.
  */
-class ExpressCheckoutSettingsForm extends FormBase {
+class EcSettingsForm extends FormBase {
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'uc_paypal_express_checkout_settings';
+    return 'uc_paypal_ec_form';
   }
 
   /**

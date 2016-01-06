@@ -10,7 +10,8 @@ namespace Drupal\uc_paypal\Controller;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
-use Drupal\uc_order\OrderInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Returns responses for PayPal routes.
@@ -18,89 +19,23 @@ use Drupal\uc_order\OrderInterface;
 class PayPalController extends ControllerBase {
 
   /**
-   * Handles the review page for Express Checkout Shortcut Flow.
-   */
-  public function ecReview() {
-    if (!isset($_SESSION['TOKEN']) || !($order = Order::load($_SESSION['cart_order']))) {
-      unset($_SESSION['cart_order']);
-      unset($_SESSION['have_details']);
-      unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
-      drupal_set_message($this->t('An error has occurred in your PayPal payment. Please review your cart and try again.'));
-      return $this->redirect('uc_cart.cart');
-    }
-
-    if (!isset($_SESSION['have_details'][$order->id()])) {
-      $nvp_request = array(
-        'METHOD' => 'GetExpressCheckoutDetails',
-        'TOKEN' => $_SESSION['TOKEN'],
-      );
-
-      $nvp_response = uc_paypal_api_request($nvp_request, variable_get('uc_paypal_wpp_server', 'https://api-3t.sandbox.paypal.com/nvp'));
-
-      $_SESSION['PAYERID'] = $nvp_response['PAYERID'];
-
-      $shipname = SafeMarkup::checkPlain($nvp_response['SHIPTONAME']);
-      if (strpos($shipname, ' ') > 0) {
-        $order->delivery_first_name = substr($shipname, 0, strrpos(trim($shipname), ' '));
-        $order->delivery_last_name = substr($shipname, strrpos(trim($shipname), ' ') + 1);
-      }
-      else {
-        $order->delivery_first_name = $shipname;
-        $order->delivery_last_name = '';
-      }
-
-      $order->delivery_street1 = SafeMarkup::checkPlain($nvp_response['SHIPTOSTREET']);
-      $order->delivery_street2 = isset($nvp_response['SHIPTOSTREET2']) ? SafeMarkup::checkPlain($nvp_response['SHIPTOSTREET2']) : '';
-      $order->delivery_city = SafeMarkup::checkPlain($nvp_response['SHIPTOCITY']);
-      $order->delivery_zone = $nvp_response['SHIPTOSTATE'];
-      $order->delivery_postal_code = SafeMarkup::checkPlain($nvp_response['SHIPTOZIP']);
-      $order->delivery_country = $nvp_response['SHIPTOCOUNTRYCODE'];
-
-      $order->billing_first_name = SafeMarkup::checkPlain($nvp_response['FIRSTNAME']);
-      $order->billing_last_name = SafeMarkup::checkPlain($nvp_response['LASTNAME']);
-      $order->billing_street1 = SafeMarkup::checkPlain($nvp_response['EMAIL']);
-
-      if (!$order->getEmail()) {
-        $order->setEmail($nvp_response['EMAIL']);
-      }
-      $order->setPaymentMethodId('paypal_ec');
-
-      $order->save();
-
-      $_SESSION['have_details'][$order->id()] = TRUE;
-    }
-
-    $build['instructions'] = array('#markup' => $this->t("Your order is almost complete!  Please fill in the following details and click 'Continue checkout' to finalize the purchase."));
-
-    $build['form'] = $this->formBuilder()->getForm('uc_paypal_ec_review_form', $order);
-
-    return $build;
-  }
-
-  /**
-   * Handles a canceled Website Payments Standard sale.
-   */
-  public function wpsCancel() {
-    $config = $this->config('uc_paypal.settings');
-
-    unset($_SESSION['cart_order']);
-
-    drupal_set_message($this->t('Your PayPal payment was canceled. Please feel free to continue shopping or contact us for assistance.'));
-
-    $this->redirect($config->get('uc_paypal_wps_cancel_return_url'));
-  }
-
-  /**
    * Processes Instant Payment Notifiations from PayPal.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request of the page.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   An empty Response with HTTP status code 200.
    */
-  public function ipn() {
-    if (!isset($_POST['invoice'])) {
+  public function ipn(Request $request) {
+    if (!$request->request->has('invoice')) {
       \Drupal::logger('uc_paypal')->error('IPN attempted with invalid order ID.');
-      return;
+      return new Response();
     }
+    $paypal_config = $this->config('uc_paypal.settings');
 
-    if (strpos($_POST['invoice'], '-') > 0) {
-      list($order_id, $cart_id) = explode('-', $_POST['invoice']);
+    if (strpos($request->request->get('invoice'), '-') > 0) {
+      list($order_id, $cart_id) = explode('-', $request->request->get('invoice'));
 
       // Sanitize order ID and cart ID
       $order_id = intval($order_id);
@@ -112,52 +47,58 @@ class PayPalController extends ControllerBase {
       }
     }
     else {
-      $order_id = intval($_POST['invoice']);
+      $order_id = intval($request->request->get('invoice'));
     }
 
-    \Drupal::logger('uc_paypal')->notice('Receiving IPN at URL for order @order_id. <pre>@debug</pre>', ['@order_id' => $order_id, '@debug' => variable_get('uc_paypal_wps_debug_ipn', FALSE) ? print_r($_POST, TRUE) : '']);
+    // Log IPN receipt and (optionally) IPN contents.
+    if ($paypal_config->get('wps_debug_ipn')) {
+      \Drupal::logger('uc_paypal')->notice('Receiving IPN at URL for order @order_id. <pre>@debug</pre>', ['@order_id' => $order_id, '@debug' => print_r($request->request->all(), TRUE)]);
+    }
+    else {
+      \Drupal::logger('uc_paypal')->notice('Receiving IPN at URL for order @order_id.', ['@order_id' => $order_id]);
+    }
 
     $order = Order::load($order_id);
 
     if ($order == FALSE) {
       \Drupal::logger('uc_paypal')->error('IPN attempted for non-existent order @order_id.', ['@order_id' => $order_id]);
-      return;
+      return new Response();
     }
 
     // Assign posted variables to local variables
-    $payment_status = SafeMarkup::checkPlain($_POST['payment_status']);
-    $payment_amount = SafeMarkup::checkPlain($_POST['mc_gross']);
-    $payment_currency = SafeMarkup::checkPlain($_POST['mc_currency']);
-    $receiver_email = SafeMarkup::checkPlain($_POST['business']);
+    $payment_status = SafeMarkup::checkPlain($request->request->get('payment_status'));
+    $payment_amount = SafeMarkup::checkPlain($request->request->get('mc_gross'));
+    $payment_currency = SafeMarkup::checkPlain($request->request->get('mc_currency'));
+    $receiver_email = SafeMarkup::checkPlain($request->request->get('business'));
     if ($receiver_email == '') {
-      $receiver_email = SafeMarkup::checkPlain($_POST['receiver_email']);
+      $receiver_email = SafeMarkup::checkPlain($request->request->get('receiver_email'));
     }
-    $txn_id = SafeMarkup::checkPlain($_POST['txn_id']);
-    $txn_type = SafeMarkup::checkPlain($_POST['txn_type']);
-    $payer_email = SafeMarkup::checkPlain($_POST['payer_email']);
+    $txn_id = SafeMarkup::checkPlain($request->request->get('txn_id'));
+    $txn_type = SafeMarkup::checkPlain($request->request->get('txn_type'));
+    $payer_email = SafeMarkup::checkPlain($request->request->get('payer_email'));
 
     // Express Checkout IPNs may not have the WPS email stored. But if it is,
     // make sure that the right account is being paid.
-    $uc_paypal_wps_email = trim(variable_get('uc_paypal_wps_email', ''));
+    $uc_paypal_wps_email = trim($paypal_config->get('wps_email'));
     if (!empty($uc_paypal_wps_email) && Unicode::strtolower($receiver_email) != Unicode::strtolower($uc_paypal_wps_email)) {
       \Drupal::logger('uc_paypal')->error('IPN for a different PayPal account attempted.');
-      return;
+      return new Response();
     }
 
     $req = '';
 
-    foreach ($_POST as $key => $value) {
+    foreach ($request->request->all() as $key => $value) {
       $value = urlencode(stripslashes($value));
       $req .= $key . '=' . $value . '&';
     }
 
     $req .= 'cmd=_notify-validate';
 
-    if (variable_get('uc_paypal_wpp_server', '') == 'https://api-3t.paypal.com/nvp') {
+    if ($paypal_config->get('wpp_server') == 'https://api-3t.paypal.com/nvp') {
       $host = 'https://www.paypal.com/cgi-bin/webscr';
     }
     else {
-      $host = variable_get('uc_paypal_wps_server', 'https://www.sandbox.paypal.com/cgi-bin/webscr');
+      $host = $paypal_config->get('wps_server');
     }
     $response = \Drupal::httpClient()
       ->post($host, NULL, $req)
@@ -165,7 +106,7 @@ class PayPalController extends ControllerBase {
 
     if ($response->isError()) {
       \Drupal::logger('uc_paypal')->error('IPN failed with HTTP error @error, code @code.', ['@error' => $response->getReasonPhrase(), '@code' => $response->getStatusCode()]);
-      return;
+      return new Response();
     }
 
     if (strcmp($response->getBody(TRUE), 'VERIFIED') == 0) {
@@ -176,7 +117,7 @@ class PayPalController extends ControllerBase {
         if ($order->getPaymentMethodId() != 'credit') {
           \Drupal::logger('uc_paypal')->notice('IPN transaction ID has been processed before.');
         }
-        return;
+        return new Response();
       }
 
       db_insert('uc_payment_paypal_ipn')
@@ -221,7 +162,7 @@ class PayPalController extends ControllerBase {
 
         case 'Pending':
           $order->setStatusId('paypal_pending')->save();
-          uc_order_comment_save($order_id, 0, $this->t('Payment is pending at PayPal: @reason', ['@reason' => _uc_paypal_pending_message(SafeMarkup::checkPlain($_POST['pending_reason']))]), 'admin');
+          uc_order_comment_save($order_id, 0, $this->t('Payment is pending at PayPal: @reason', ['@reason' => $this->pendingMessage(SafeMarkup::checkPlain($request->request->get('pending_reason')))]), 'admin');
           break;
 
         // You, the merchant, refunded the payment.
@@ -232,7 +173,7 @@ class PayPalController extends ControllerBase {
 
         case 'Reversed':
           \Drupal::logger('uc_paypal')->error('PayPal has reversed a payment!');
-          uc_order_comment_save($order_id, 0, $this->t('Payment has been reversed by PayPal: @reason', ['@reason' => _uc_paypal_reversal_message(SafeMarkup::checkPlain($_POST['reason_code']))]), 'admin');
+          uc_order_comment_save($order_id, 0, $this->t('Payment has been reversed by PayPal: @reason', ['@reason' => $this->reversalMessage(SafeMarkup::checkPlain($request->request->get('reason_code')))]), 'admin');
           break;
 
         case 'Processed':
@@ -247,6 +188,55 @@ class PayPalController extends ControllerBase {
     elseif (strcmp($response->getBody(TRUE), 'INVALID') == 0) {
       \Drupal::logger('uc_paypal')->error('IPN transaction failed verification.');
       uc_order_comment_save($order_id, 0, $this->t('An IPN transaction failed verification for this order.'), 'admin');
+    }
+
+    return new Response();
+  }
+
+  /**
+   * Returns a message for the pending reason of a PayPal payment.
+   */
+  protected function pendingMessage($reason) {
+    switch ($reason) {
+      case 'address':
+        return t('Customer did not include a confirmed shipping address per your address settings.');
+      case 'authorization':
+        return t('Waiting on you to capture the funds per your authorization settings.');
+      case 'echeck':
+        return t('eCheck has not yet cleared.');
+      case 'intl':
+        return t('You must manually accept or deny this international payment from your Account Overview.');
+      case 'multi-currency':
+      case 'multi_currency':
+        return t('You must manually accept or deny a payment of this currency from your Account Overview.');
+      case 'unilateral':
+        return t('Your e-mail address is not yet registered or confirmed.');
+      case 'upgrade':
+        return t('You must upgrade your account to Business or Premier status to receive credit card payments.');
+      case 'verify':
+        return t('You must verify your account before you can accept this payment.');
+      case 'other':
+      default:
+        return t('Reason "@reason" unknown; contact PayPal Customer Service for more information.', ['@reason' => $reason]);
+    }
+  }
+
+  /**
+   * Returns a message for the reason code of a PayPal reversal.
+   */
+  protected function reversalMessage($reason) {
+    switch ($reason) {
+      case 'chargeback':
+        return t('The customer has initiated a chargeback.');
+      case 'guarantee':
+        return t('The customer triggered a money-back guarantee.');
+      case 'buyer-complaint':
+        return t('The customer filed a complaint about the transaction.');
+      case 'refund':
+        return t('You gave the customer a refund.');
+      case 'other':
+      default:
+        return t('Reason "@reason" unknown; contact PayPal Customer Service for more information.', ['@reason' => $reason]);
     }
   }
 
