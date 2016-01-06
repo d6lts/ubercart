@@ -86,7 +86,7 @@ class StockReports extends ControllerBase {
     $controller = new Reports();
     $csv_data = $controller->store_csv('uc_stock', $csv_rows);
 
-    $build['form'] = \Drupal::formBuilder()->getForm('\Drupal\uc_stock\Form\StockReportForm');
+    $build['form'] = $this->formBuilder()->getForm('\Drupal\uc_stock\Form\StockReportForm');
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,

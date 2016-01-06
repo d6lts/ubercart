@@ -136,7 +136,7 @@ class Reports extends ControllerBase {
    * Displays the product reports.
    */
   public function products() {
-    $views_column = \Drupal::moduleHandler()->moduleExists('statistics') && $this->config('statistics.settings')->get('count_content_views');
+    $views_column = $this->moduleHandler()->moduleExists('statistics') && $this->config('statistics.settings')->get('count_content_views');
 
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
     $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : $this->config('uc_report.settings')->get('table_size');
@@ -225,7 +225,7 @@ class Reports extends ControllerBase {
       $rows[] = $row;
       $csv_rows[] = $csv_row;
 
-      if (\Drupal::moduleHandler()->moduleExists('uc_attribute')) {
+      if ($this->moduleHandler()->moduleExists('uc_attribute')) {
         // Get the SKUs from this product.
         $models = $this->product_get_skus($product['nid']);
         // Add the product breakdown rows
@@ -338,7 +338,7 @@ class Reports extends ControllerBase {
    * Displays the custom product report.
    */
   public function customProducts() {
-    $views_column = \Drupal::moduleHandler()->moduleExists('statistics') && $this->config('statistics.settings')->get('count_content_views');
+    $views_column = $this->moduleHandler()->moduleExists('statistics') && $this->config('statistics.settings')->get('count_content_views');
 
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
     $page_size = isset($_GET['nopage']) ? UC_REPORT_MAX_RECORDS : $this->config('uc_report.settings')->get('table_size');
@@ -421,7 +421,7 @@ class Reports extends ControllerBase {
       $gross_csv = empty($product['gross']) ? 0 : $product['gross'];
       $gross_cell = uc_currency_format($gross_csv);
 
-      if (\Drupal::moduleHandler()->moduleExists('uc_attribute')) {
+      if ($this->moduleHandler()->moduleExists('uc_attribute')) {
         $breakdown_product = $breakdown_sold = $breakdown_revenue = $breakdown_gross = '';
 
         // Get the SKUs from this product.
@@ -478,7 +478,7 @@ class Reports extends ControllerBase {
     $csv_data = $this->store_csv('uc_products', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.
-    $build['form'] = \Drupal::formBuilder()->getForm('uc_report_products_custom_form', $args);
+    $build['form'] = $this->formBuilder()->getForm('uc_report_products_custom_form', $args);
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,
@@ -746,7 +746,7 @@ class Reports extends ControllerBase {
     $csv_data = $this->store_csv('uc_sales_yearly', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.
-    $build['form'] = \Drupal::formBuilder()->getForm('uc_report_sales_year_form', $year);
+    $build['form'] = $this->formBuilder()->getForm('uc_report_sales_year_form', $year);
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,
@@ -883,7 +883,7 @@ class Reports extends ControllerBase {
     $csv_data = $this->store_csv('uc_sales_custom', $csv_rows);
 
     // Build the page output holding the form, table, and CSV export link.
-    $build['form'] = \Drupal::formBuilder()->getForm('uc_report_sales_custom_form', $args, $args['status']);
+    $build['form'] = $this->formBuilder()->getForm('uc_report_sales_custom_form', $args, $args['status']);
     $build['report'] = array(
       '#theme' => 'table',
       '#header' => $header,
