@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_product\Form;
 
+use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -15,13 +16,42 @@ use Drupal\node\NodeInterface;
 /**
  * Defines a simple form for adding a product to the cart.
  */
-class BuyItNowForm extends FormBase {
+class BuyItNowForm extends FormBase implements BaseFormIdInterface {
+
+  /**
+   * Node ID of product this form is attached to.
+   *
+   * @var string
+   */
+  protected $nid;
+
+  /**
+   * Constructs a BuyItNowForm.
+   *
+   * @param string $nid
+   *   The node ID.
+   */
+  public function __construct($nid) {
+    $this->nid = $nid;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBaseFormId() {
+    // Base Form ID allows us to theme all buy-it-now-forms using the same
+    // CSS class and twig template, and allows us to hook_form_BASE_ID_ALTER()
+    // all buy-it-now-forms, rather than having to target each individual form.
+    return 'uc_product_buy_it_now_form';
+  }
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'uc_product_buy_it_now_form';
+    // Form ID must be unique to the product so that we may have multiple
+    // buy-it-now forms on a page (e.g. in a catalog view).
+    return 'uc_product_buy_it_now_form_' . $this->nid;
   }
 
   /**

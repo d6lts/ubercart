@@ -129,7 +129,7 @@ function uc_quote_node_delete($node) {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  *
  * Adds a default shipping origin address for products. If left blank, the
  * store's default origin address will be used.

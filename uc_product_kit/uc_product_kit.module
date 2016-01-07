@@ -105,7 +105,7 @@ function uc_product_kit_uc_form_alter(&$form, FormStateInterface $form_state, $f
       $form = array_merge(array('sub_products' => $products), $form);
     }
   }
-  elseif ($form_id == 'uc_product_add_to_cart_form') {
+  elseif (strpos($form_id, 'uc_product_add_to_cart_form') !== FALSE) {
     $kit = $form['node']['#value'];
     if ($kit->getType() !== 'product_kit') {
       return;
@@ -121,7 +121,7 @@ function uc_product_kit_uc_form_alter(&$form, FormStateInterface $form_state, $f
     $form['#validate'][] = 'uc_product_kit_add_to_cart_form_validate';
     $form['#submit'][] = 'uc_product_kit_add_to_cart_form_submit';
   }
-  elseif ($form_id == 'uc_product_buy_it_now_form') {
+  elseif (strpos($form_id, 'uc_product_buy_it_now_form') !== FALSE) {
     $kit = $form['node']['#value'];
     if ($kit->getType() !== 'product_kit') {
       return;

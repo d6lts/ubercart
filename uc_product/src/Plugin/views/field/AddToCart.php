@@ -26,7 +26,8 @@ class AddToCart extends FieldPluginBase {
     $nid = $this->getValue($values);
     $node = node_load($nid);
     if (uc_product_is_product($node)) {
-      $form = \Drupal::formBuilder()->getForm('\Drupal\uc_product\Form\AddToCartForm', $node);
+      $form_object = new \Drupal\uc_product\Form\AddToCartForm($node->id());
+      $form = \Drupal::formBuilder()->getForm($form_object, $node);
       return drupal_render($form);
     }
   }

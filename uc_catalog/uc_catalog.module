@@ -61,7 +61,7 @@ function uc_catalog_theme() {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for taxonomy_vocabulary_form().
  */
 function uc_catalog_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_id) {
   $vid = \Drupal::config('uc_catalog.settings')->get('vocabulary');

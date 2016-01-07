@@ -26,7 +26,8 @@ class BuyItNow extends FieldPluginBase {
     $nid = $this->getValue($values);
     $node = node_load($nid);
     if (uc_product_is_product($node)) {
-      $form = \Drupal::formBuilder()->getForm('\Drupal\uc_product\Form\BuyItNowForm', $node);
+      $form_object = new \Drupal\uc_product\Form\BuyItNowForm($node->id());
+      $form = \Drupal::formBuilder()->getForm($form_object, $node);
       return drupal_render($form);
     }
   }

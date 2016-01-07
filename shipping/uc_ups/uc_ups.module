@@ -87,7 +87,7 @@ function uc_ups_theme() {
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form().
  *
  * Adds package type to products.
  *

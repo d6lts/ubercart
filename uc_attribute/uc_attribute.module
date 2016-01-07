@@ -167,7 +167,7 @@ function uc_attribute_uc_form_alter(&$form, FormStateInterface $form_state, $for
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for uc_product_buy_it_now_form().
+ * Implements hook_form_BASE_FORM_ID_alter() for uc_product_buy_it_now_form().
  */
 function uc_attribute_form_uc_product_buy_it_now_form_alter(&$form, FormStateInterface $form_state) {
   $form['#validate'][] = 'uc_attribute_buy_it_now_form_validate';

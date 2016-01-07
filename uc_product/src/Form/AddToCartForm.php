@@ -16,10 +16,32 @@ use Drupal\node\NodeInterface;
 class AddToCartForm extends BuyItNowForm {
 
   /**
+   * Constructs an AddToCartForm.
+   *
+   * @param string $nid
+   *   The node ID.
+   */
+  public function __construct($nid) {
+    parent::__construct($nid);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBaseFormId() {
+    // Base Form ID allows us to theme all add-to-cart-forms using the same
+    // CSS class and twig template, and allows us to hook_form_BASE_ID_ALTER()
+    // all add-to-cart-forms, rather than having to target each individual form.
+    return 'uc_product_add_to_cart_form';
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'uc_product_add_to_cart_form';
+    // Form ID must be unique to the product so that we may have multiple
+    // add-to-cart forms on a page (e.g. in a catalog view).
+    return 'uc_product_add_to_cart_form_' . $this->nid;
   }
 
   /**
