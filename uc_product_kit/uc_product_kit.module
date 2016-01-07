@@ -18,6 +18,7 @@ use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_order\OrderProductInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 define('UC_PRODUCT_KIT_UNMUTABLE_NO_LIST', -1);
 define('UC_PRODUCT_KIT_UNMUTABLE_WITH_LIST', 0);
@@ -757,7 +758,7 @@ function uc_product_kit_buy_it_now_form_validate($form, FormStateInterface $form
         $attributes = uc_product_get_attributes($nid);
         if (!empty($attributes)) {
           drupal_set_message(t('This product has options that need to be selected before purchase. Please select them in the form below.'), 'error');
-          drupal_goto('node/' . $form_state->getValue('nid'));
+          return new RedirectResponse(Url::fromRoute('entity.node.canonical', ['node' => $form_state->getValue('nid')])->toString());
         }
       }
     }

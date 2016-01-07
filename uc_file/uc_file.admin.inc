@@ -10,6 +10,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Form step values.
@@ -472,7 +473,7 @@ function uc_file_admin_files_form_action_submit($form, FormStateInterface $form_
 
   // Return to the original form state.
   $form_state->setRebuild(FALSE);
-  drupal_goto('admin/store/products/files');
+  return new RedirectResponse(Url::fromRoute('uc_file.downloads')->toString());
 }
 
 /**

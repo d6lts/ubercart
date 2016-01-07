@@ -268,7 +268,7 @@ class ActionForm extends FormBase {
 
     // Return to the original form state.
     $form_state->setRebuild(FALSE);
-    drupal_goto('admin/store/products/files');
+    $this->redirect('uc_file.downloads');
   }
 
   /**
