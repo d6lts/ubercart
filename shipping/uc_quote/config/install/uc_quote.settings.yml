@@ -1,5 +1,3 @@
-# Settings tab
-log_errors: false
 display_debug: false
 require_quote: true
 store_default_address:
@@ -13,10 +11,6 @@ store_default_address:
   country: US
   postal_code: ''
   phone: ''
-
-# Methods tab
-method_weight: ""
 shipping_type: 'small_package'
 type_weight:
   small_package: 0
-enabled: false

@@ -1,8 +1,48 @@
-uc_quote.methods:
+entity.uc_quote.collection:
   path: '/admin/store/config/quotes'
   defaults:
-    _form: '\Drupal\uc_quote\Form\QuoteMethodsForm'
+    _entity_list: 'uc_quote'
     _title: 'Shipping quotes'
+  requirements:
+    _permission: 'configure quotes'
+
+entity.uc_quote.add_form:
+  path: '/admin/store/config/quotes/add/{plugin_id}'
+  defaults:
+    _controller: '\Drupal\uc_quote\Controller\ShippingQuoteMethodController::addForm'
+    _title: 'Add shipping method'
+  requirements:
+    _permission: 'configure quotes'
+
+entity.uc_quote.edit_form:
+  path: '/admin/store/config/quotes/{uc_quote}'
+  defaults:
+    _entity_form: 'uc_quote.default'
+    _title: 'Edit shipping method'
+  requirements:
+    _permission: 'configure quotes'
+
+entity.uc_quote.enable:
+  path: '/admin/store/config/quotes/{uc_quote}/enable'
+  defaults:
+    _controller: '\Drupal\uc_quote\Controller\ShippingQuoteMethodController::performOperation'
+    op: 'enable'
+  requirements:
+    _permission: 'configure quotes'
+
+entity.uc_quote.disable:
+  path: '/admin/store/config/quotes/{uc_quote}/disable'
+  defaults:
+    _controller: '\Drupal\uc_quote\Controller\ShippingQuoteMethodController::performOperation'
+    op: 'disable'
+  requirements:
+    _permission: 'configure quotes'
+
+entity.uc_quote.delete_form:
+  path: '/admin/store/config/quotes/{uc_quote}/delete'
+  defaults:
+    _entity_form: 'uc_quote.delete'
+    _title: 'Delete shipping method'
   requirements:
     _permission: 'configure quotes'
 

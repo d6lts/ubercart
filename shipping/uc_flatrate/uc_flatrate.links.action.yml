@@ -1,5 +1,0 @@
-uc_flatrate_add:
-  route_name: uc_flatrate.add
-  title: 'Add flat rate quote'
-  appears_on:
-    - uc_quote.methods

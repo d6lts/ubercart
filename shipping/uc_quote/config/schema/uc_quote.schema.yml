@@ -1,0 +1,12 @@
+uc_quote.method.*:
+  type: config_entity
+  label: 'Shipping method config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string

@@ -1,0 +1,15 @@
+uc_flatrate_add:
+  route_name: entity.uc_quote.add_form
+  route_parameters:
+    plugin_id: flatrate
+  title: 'Add flat rate quote'
+  appears_on:
+    - entity.uc_quote.collection
+
+uc_weightquote_add:
+  route_name: entity.uc_quote.add_form
+  route_parameters:
+    plugin_id: weightquote
+  title: 'Add weight quote'
+  appears_on:
+    - entity.uc_quote.collection

@@ -9,6 +9,7 @@ namespace Drupal\uc_quote\Tests;
 
 use Drupal\uc_country\Entity\Country;
 use Drupal\uc_order\Entity\Order;
+use Drupal\uc_quote\Entity\ShippingQuoteMethod;
 use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
@@ -18,7 +19,7 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  */
 class QuoteTest extends UbercartTestBase {
 
-  public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack', 'uc_quote', 'uc_flatrate');
+  public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack', 'uc_quote');
   public static $adminPermissions = array('configure quotes'/*, 'administer rules', 'bypass rules access'*/);
 
   /**
@@ -39,22 +40,29 @@ class QuoteTest extends UbercartTestBase {
   /**
    * Creates a flat rate shipping quote with optional conditions.
    *
-   * @param $edit
-   *   Data to use to create shipping quote, same format as the values
-   *   submitted from the add flatrate method form.
-   * @param $condition
+   * @param array $edit
+   *   Data to use to create shipping quote.
+   * @param bool $condition
    *   If specified, a RulesAnd component defining the conditions to apply
    *   for this method.
+   *
+   * @return \Drupal\uc_quote\Entity\ShippingQuoteMethod
+   *   The shipping quote configuration entity.
    */
   protected function createQuote($edit = [], $condition = FALSE) {
-    $edit += array(
-      'title' => $this->randomMachineName(8),
-      'label' => $this->randomMachineName(8),
-      'base_rate' => mt_rand(1, 10),
-      'product_rate' => mt_rand(1, 10),
-    );
-    $this->drupalPostForm('admin/store/config/quotes/methods/flatrate/add', $edit, 'Submit');
-    $method = db_query("SELECT * FROM {uc_flatrate_methods} ORDER BY mid DESC LIMIT 1")->fetchObject();
+    $edit += [
+      'id' => $this->randomMachineName(),
+      'label' => $this->randomMachineName(),
+      'status' => 1,
+      'weight' => 0,
+      'plugin' => 'flatrate',
+      'settings' => [
+        'base_rate' => mt_rand(1, 10),
+        'product_rate' => mt_rand(1, 10),
+      ],
+    ];
+    $method = ShippingQuoteMethod::create($edit);
+    $method->save();
     // if ($condition) {
     //   $name = 'get_quote_from_flatrate_' . $method->mid;
     //   $condition['LABEL'] = $edit['label'] . ' conditions';
@@ -66,7 +74,6 @@ class QuoteTest extends UbercartTestBase {
     //   $newconfig->save();
     //   entity_flush_caches();
     // }
-    $this->assertTrue($method->base_rate == $edit['base_rate'], 'Flatrate quote was created successfully');
     return $method;
   }
 
@@ -150,7 +157,7 @@ class QuoteTest extends UbercartTestBase {
     // Create product and quotes.
     $product = $this->createProduct();
     $quote1 = $this->createQuote();
-    $quote2 = $this->createQuote(array(), array(
+    $quote2 = $this->createQuote(['weight' => 1], array(
       'LABEL' => 'quote_conditions',
       'PLUGIN' => 'and',
       'REQUIRES' => array('rules'),
@@ -170,22 +177,23 @@ class QuoteTest extends UbercartTestBase {
     // Define strings to test for.
     $qty = mt_rand(2, 100);
     foreach ([$quote1, $quote2] as $quote) {
-      $quote->amount = uc_currency_format($quote->base_rate + $quote->product_rate * $qty);
-      $quote->option_text = $quote->label . ': ' . $quote->amount;
-      $quote->total = uc_currency_format($product->price->value * $qty + $quote->base_rate + $quote->product_rate * $qty);
+      $configuration = $quote->getPluginConfiguration();
+      $quote->amount = uc_currency_format($configuration['base_rate'] + $configuration['product_rate'] * $qty);
+      $quote->option_text = $quote->label() . ': ' . $quote->amount;
+      $quote->total = uc_currency_format($product->price->value * $qty + $configuration['base_rate'] + $configuration['product_rate'] * $qty);
     }
 
     // Add product to cart, update qty, and go to checkout page.
     $this->addToCart($product);
     $this->drupalPostForm('cart', array('items[0][qty]' => $qty), t('Checkout'));
-    $this->assertText($quote1->option_text, 'The default quote option is available');
-    $this->assertText($quote2->option_text, 'The second quote option is available');
+    $this->assertText($quote1->label(), 'The default quote option is available');
+    $this->assertText($quote2->label(), 'The second quote option is available');
     $this->assertText($quote1->total, 'Order total includes the default quote.');
 
     // Select a different quote and ensure the total updates correctly.  Currently, we have to do this
     // by examining the ajax return value directly (rather than the page contents) because drupalPostAjaxForm() can
     // only handle replacements via the 'wrapper' property, and the ajax callback may use a command with a selector.
-    $edit = array('panes[quotes][quotes][quote_option]' => 'flatrate_2---0');
+    $edit = array('panes[quotes][quotes][quote_option]' => $quote2->id() . '---0');
     $edit = $this->populateCheckoutForm($edit);
     $result = $this->ucPostAjax(NULL, $edit, $edit);
     $this->assertText($quote2->total, 'The order total includes the selected quote.');
@@ -199,7 +207,7 @@ class QuoteTest extends UbercartTestBase {
     // $this->assertText($quote1->total, 'The total includes the default quote.');
 
     // Proceed to review page and ensure the correct quote is present.
-    $edit['panes[quotes][quotes][quote_option]'] = 'flatrate_1---0';
+    $edit['panes[quotes][quotes][quote_option]'] = $quote1->id() . '---0';
     $edit = $this->populateCheckoutForm($edit);
     $this->drupalPostForm(NULL, $edit, t('Review order'));
     $this->assertRaw(t('Your order is almost complete.'));
@@ -229,7 +237,7 @@ class QuoteTest extends UbercartTestBase {
 
       // Verify shipping line item is correct on order edit form.
       $this->drupalGet('admin/store/orders/' . $order_id . '/edit');
-      $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][title]', $quote1->label, 'Found the correct shipping line item title.');
+      $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][title]', $quote1->label(), 'Found the correct shipping line item title.');
       $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][amount]', substr($quote1->amount, 1), 'Found the correct shipping line item title.');
 
       // Verify that the "get quotes" button works as expected.

@@ -15,6 +15,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_quote\Entity\ShippingQuoteMethod;
 
 /**
  * Implements hook_theme().
@@ -547,10 +548,8 @@ function uc_quote_apply_quote_to_order($form, FormStateInterface $form_state) {
       $quote_option = explode('---', $form_state->getValue(['quotes', 'quote_option']));
       $order->quote['method'] = $quote_option[0];
       $order->quote['accessorials'] = $quote_option[1];
-      $methods = uc_quote_methods();
-      $method = $methods[$quote_option[0]];
-
-      $label = $method['quote']['accessorials'][$quote_option[1]];
+      $method = ShippingQuoteMethod::load($quote_option[0]);
+      $label = $method->label();
 
       $quote_option = $form_state->getValue(['quotes', 'quote_option']);
       $order->quote['rate'] = $form_state->getValue(['quotes', $quote_option, 'rate']);
@@ -736,44 +735,6 @@ function uc_quote_order_update_rates($form, FormStateInterface $form_state) {
   $response->addCommand(new PrependCommand('#quote', drupal_render($status_messages)));
 
   return $response;
-}
-
-/**
- * Returns an array of available shipping quote methods.
- *
- * @param $all
- *   If FALSE, only enabled shipping methods are returned.
- *
- * @return array
- *   An array of available shipping quote methods.
- */
-function uc_quote_methods($all = FALSE) {
-  $quote_config = \Drupal::config('uc_quote.settings');
-  $enabled = $quote_config->get('enabled');
-  $weight = $quote_config->get('method_weight');
-
-  $methods = array();
-  foreach (\Drupal::moduleHandler()->invokeAll('uc_shipping_method') as $id => $method) {
-    // Set defaults.
-    $method += array(
-      'enabled' => FALSE,
-      'weight' => 0,
-    );
-
-    // Override defaults with store configuration, if any.
-    if (isset($enabled[$id])) {
-      $method['enabled'] = $enabled[$id];
-    }
-    if (isset($weight[$id])) {
-      $method['weight'] = $weight[$id];
-    }
-
-    if ($all || $method['enabled']) {
-      $methods[$id] = $method;
-    }
-  }
-  uasort($methods, '_uc_quote_type_sort');
-  return $methods;
 }
 
 /**

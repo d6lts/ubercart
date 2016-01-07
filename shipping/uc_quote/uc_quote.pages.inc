@@ -5,6 +5,8 @@
  * Menu callbacks for shipping quotes requested through AJAX.
  */
 
+use Drupal\uc_quote\Entity\ShippingQuoteMethod;
+
 /**
  * Pulls the get_quote_from_* triggers and assembles their returned data.
  */
@@ -28,65 +30,31 @@ function uc_quote_assemble_quotes($order) {
       $type_weight = $all_types[$type]['weight'];
     }
   }
-  $methods = uc_quote_methods();
+
+  $manager = \Drupal::service('plugin.manager.uc_quote.method');
+  $methods = ShippingQuoteMethod::loadMultiple();
+  uasort($methods, 'Drupal\uc_quote\Entity\ShippingQuoteMethod::sort');
+
+  /* @todo Implement shipping quote types
   foreach ($methods as $id => $method) {
     if (!isset($method['quote']) || ($method['quote']['type'] != 'order' && $method['quote']['type'] != $shipping_type)) {
       unset($methods[$id]);
     }
   }
+  */
 
-  $quote_data = array();
+  $quotes = [];
   foreach ($methods as $method) {
-    // $set = rules_config_load('get_quote_from_' . $method['id']);
-    // if (!$set || $set->execute($order)) {
-      $data = uc_quote_action_get_quote($order, $method);
-
-      foreach ($data as &$quote) {
-        if (isset($quote['rate'])) {
-          $quote['format'] = uc_currency_format($quote['rate']);
-        }
+    if ($method->status()) {
+      $plugin = $manager->createInstance($method->getPluginId(), $method->getPluginConfiguration());
+      foreach ($plugin->getQuotes($order) as $accessorial => $quote) {
+        $quotes[$method->id()][$accessorial] = [
+          'rate' => $quote,
+          'format' => uc_currency_format($quote),
+          'option_label' => $method->label(),
+        ];
       }
-      $quote_data[$method['id']] = $data;
-    // }
-  }
-  return $quote_data;
-}
-
-/**
- * Retrieves shipping quote.
- *
- * @param $order
- *   The order the quote is for.
- * @param $method
- *   The shipping method to generate the quote.
- *
- * @return
- *   Array of shipping quotes.
- */
-function uc_quote_action_get_quote($order, $method) {
-  $details = array();
-  $fields = array('first_name', 'last_name', 'phone', 'company', 'street1', 'street2', 'city', 'zone', 'postal_code', 'country');
-  foreach ($fields as $field) {
-    $details[$field] = $order->{'delivery_' . $field};
-  }
-  ob_start();
-  // Load include file containing quote callback, if there is one
-  if (isset($method['quote']['file'])) {
-    $inc_file = drupal_get_path('module', $method['module']) . '/' . $method['quote']['file'];
-    if (is_file($inc_file)) {
-      require_once($inc_file);
     }
   }
-
-  if (function_exists($method['quote']['callback'])) {
-    $quote_data = call_user_func($method['quote']['callback'], $order->products, $details, $method);
-  }
-  $messages = ob_get_contents();
-  ob_end_clean();
-
-  if ($messages && \Drupal::config('uc_quote.settings')->get('log_errors')) {
-    \Drupal::logger('quote')->warning('@messages', ['@messages' => $messages]);
-    \Drupal::logger('quote')->warning('<pre>@data</pre>', ['@data' => print_r($quote_data, TRUE)]);
-  }
-  return $quote_data;
+  return $quotes;
 }

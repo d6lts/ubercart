@@ -34,6 +34,7 @@ class UcPriceWidget extends WidgetBase {
     $element += array(
       '#type' => 'uc_price',
       '#default_value' => $value,
+      '#empty_zero' => FALSE,
     );
 
     return array('value' => $element);

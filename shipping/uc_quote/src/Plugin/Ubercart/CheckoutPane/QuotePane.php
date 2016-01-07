@@ -10,6 +10,7 @@ namespace Drupal\uc_quote\Plugin\Ubercart\CheckoutPane;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_quote\Entity\ShippingQuoteMethod;
 
 /**
  * Shipping quote checkout pane plugin.
@@ -104,10 +105,8 @@ class QuotePane extends CheckoutPanePluginBase {
       $quote_option = explode('---', $default_option);
       $order->quote['method'] = $quote_option[0];
       $order->quote['accessorials'] = $quote_option[1];
-      $methods = uc_quote_methods();
-      $method = $methods[$quote_option[0]];
-
-      $label = $method['quote']['accessorials'][$quote_option[1]];
+      $method = ShippingQuoteMethod::load($quote_option[0]);
+      $label = $method->label();
 
       $result = db_query("SELECT line_item_id FROM {uc_order_line_items} WHERE order_id = :id AND type = :type", [':id' => $order->id(), ':type' => 'shipping']);
       if ($lid = $result->fetchField()) {

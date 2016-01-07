@@ -1,10 +1,10 @@
-uc_quote.methods:
-  route_name: uc_quote.methods
-  base_route: uc_quote.methods
+entity.uc_quote.collection:
+  route_name: entity.uc_quote.collection
+  base_route: entity.uc_quote.collection
   title: Methods
 uc_quote.settings:
   route_name: uc_quote.settings
-  base_route: uc_quote.methods
+  base_route: entity.uc_quote.collection
   title: Settings
   weight: 1
 uc_quote.basic_settings:

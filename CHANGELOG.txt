@@ -56,6 +56,10 @@ Ubercart 4.x
     * plugin.manager.uc_cart.checkout_pane service (CheckoutPaneManager) manages the available plugins
     * hook_uc_checkout_pane() removed, hook_uc_checkout_pane_alter() is still supported
     * _uc_checkout_pane_list() and _uc_checkout_pane_data() removed
+* Shipping quote methods are plugins
+    * Shipping quote plugins use the @UbercartShippingQuote annotation and extend ShippingQuotePluginBase
+    * plugin.manager.uc_quote.method service (ShippingQuotePluginManager) manages the available plugins
+    * hook_uc_shipping_method() removed, hook_uc_quote_method_alter() is still supported
 
 
 Ubercart 3.0-rc4, 2012-1-23

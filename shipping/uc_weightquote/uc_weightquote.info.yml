@@ -1,8 +1,0 @@
-name: 'Weight Quote'
-type: module
-description: 'Assigns a shipping rate to products based on weight.'
-package: Ubercart - shipping
-core: 8.x
-dependencies:
-  - uc_quote
-configure: uc_quote.methods

@@ -44,11 +44,6 @@ class QuoteSettingsForm extends ConfigFormBase {
     $quote_config = $this->config('uc_quote.settings');
     $address = $quote_config->get('store_default_address');
 
-    $form['uc_quote_log_errors'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Log errors during checkout to watchdog'),
-      '#default_value' => $quote_config->get('log_errors'),
-    );
     $form['uc_quote_display_debug'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Display debug information to administrators.'),
@@ -69,6 +64,43 @@ class QuoteSettingsForm extends ConfigFormBase {
       '#type' => 'uc_address',
       '#default_value' => $form_state->getValues() ?: $address,
       '#required' => FALSE,
+    );
+
+    $shipping_types = uc_quote_shipping_type_options();
+    if (is_array($shipping_types)) {
+      $form['uc_quote_type_weight'] = array(
+        '#type' => 'details',
+        '#title' => t('List position'),
+        '#description' => t('Determines which shipping methods are quoted at checkout when products of different shipping types are ordered. Larger values take precedence.'),
+        '#tree' => TRUE,
+      );
+      $weight = $quote_config->get('type_weight');
+      $shipping_methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+      $method_types = array();
+      foreach ($shipping_methods as $method) {
+        // Get shipping method types from shipping methods that provide quotes
+        if (isset($method['quote'])) {
+          $method_types[$method['quote']['type']][] = $method['title'];
+        }
+      }
+      if (isset($method_types['order']) && is_array($method_types['order'])) {
+        $count = count($method_types['order']);
+        $form['uc_quote_type_weight']['#description'] .= $this->formatPlural($count, '<br />The %list method is compatible with any shipping type.', '<br />The %list methods are compatible with any shipping type.', array('%list' => implode(', ', $method_types['order'])));
+      }
+      foreach ($shipping_types as $id => $title) {
+        $form['uc_quote_type_weight'][$id] = array(
+          '#type' => 'weight',
+          '#title' => $title . (isset($method_types[$id]) && is_array($method_types[$id]) ? ' (' . implode(', ', $method_types[$id]) . ')' : ''),
+          '#delta' => 5,
+          '#default_value' => isset($weight[$id]) ? $weight[$id] : 0,
+        );
+      }
+    }
+    $form['uc_store_shipping_type'] = array(
+      '#type' => 'select',
+      '#title' => t('Default order fulfillment type for products'),
+      '#options' => $shipping_types,
+      '#default_value' => $quote_config->get('shipping_type'),
     );
 
     return parent::buildForm($form, $form_state);
@@ -93,11 +125,12 @@ class QuoteSettingsForm extends ConfigFormBase {
     $quote_config = $this->config('uc_quote.settings');
     $quote_config
       ->set('store_default_address', (array) $address)
-      ->set('log_errors', $form_state->getValue('uc_quote_log_errors'))
       ->set('display_debug', $form_state->getValue('uc_quote_display_debug'))
       ->set('require_quote', $form_state->getValue('uc_quote_require_quote'))
       ->set('pane_description', $form_state->getValue(['uc_quote_pane_description', 'text']))
       ->set('error_message', $form_state->getValue(['uc_quote_error_message', 'text']))
+      ->set('type_weight', $form_state->getValue('uc_quote_type_weight'))
+      ->set('shipping_type', $form_state->getValue('uc_store_shipping_type'))
       ->save();
 
     parent::submitForm($form, $form_state);

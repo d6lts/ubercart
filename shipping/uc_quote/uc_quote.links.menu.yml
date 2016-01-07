@@ -1,5 +1,5 @@
-uc_quote.admin.store.config.quotes:
+entity.uc_quote.collection:
   title: 'Shipping quotes'
   description: 'Configure shipping quotes.'
-  route_name: uc_quote.methods
+  route_name: entity.uc_quote.collection
   parent: uc_store.admin.store.config
