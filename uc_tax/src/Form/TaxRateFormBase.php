@@ -10,6 +10,7 @@ namespace Drupal\uc_tax\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 /**
  * Defines the tax rate add/edit form.
