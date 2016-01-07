@@ -70,7 +70,7 @@ class EcReviewForm extends FormBase {
     }
 
     if (empty($form)) {
-      drupal_goto('cart/echeckout/submit');
+      $this->redirect('uc_cart.ec_submit');
     }
 
     $form['actions'] = array('#type' => 'actions');
@@ -136,6 +136,7 @@ class EcReviewForm extends FormBase {
 
     $order->save();
 
-    $form_state['redirect'] = 'cart/echeckout/submit';
+    $form_state->setRedirect('uc_paypal.ec_submit');
   }
+
 }

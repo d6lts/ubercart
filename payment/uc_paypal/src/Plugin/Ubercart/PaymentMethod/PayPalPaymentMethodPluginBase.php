@@ -48,7 +48,7 @@ abstract class PayPalPaymentMethodPluginBase extends PaymentMethodPluginBase {
       '#type' => 'select',
       '#title' => $this->t('Currency code'),
       '#description' => $this->t('Transactions can only be processed in one of the listed currencies.'),
-      '#options' => _uc_paypal_currency_array(),
+      '#options' => $this->currencies(),
       '#default_value' => $this->configuration['wpp_currency'],
     );
     $form['wpp_server'] = array(
@@ -97,4 +97,16 @@ abstract class PayPalPaymentMethodPluginBase extends PaymentMethodPluginBase {
     $this->configuration['api']['api_signature'] = $form_state->getValue(['settings', 'api', 'api_signature']);
   }
 
+
+  /**
+   * Returns an array of possible currency codes.
+   */
+  protected function currencies() {
+    $currencies = array(
+      'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP',
+      'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD',
+      'PHP', 'PLN', 'SEK', 'SGD', 'THB', 'TWD', 'USD'
+     );
+    return array_combine($currencies, $currencies);
+  }
 }

@@ -23,7 +23,7 @@ class WpsController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect to the cart or checkout complete page.
    */
-  function wpsComplete(OrderInterface $order) {
+  public function wpsComplete(OrderInterface $order) {
     // If the order ID specified in the return URL is not the same as the one in
     // the user's session, we need to assume this is either a spoof or that the
     // user tried to adjust the order on this side while at PayPal. If it was a

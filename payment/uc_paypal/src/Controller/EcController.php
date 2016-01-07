@@ -27,7 +27,7 @@ class EcController extends ControllerBase {
       unset($_SESSION['cart_order']);
       unset($_SESSION['have_details']);
       unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
-      drupal_set_message(t('An error has occurred in your PayPal payment. Please review your cart and try again.'));
+      drupal_set_message($this->t('An error has occurred in your PayPal payment. Please review your cart and try again.'));
       $this->redirect('uc_cart.cart');
     }
 
@@ -100,9 +100,11 @@ class EcController extends ControllerBase {
       $_SESSION['have_details'][$order->id()] = TRUE;
     }
 
-    $build['instructions'] = array('#markup' => $this->t("Your order is almost complete!  Please fill in the following details and click 'Continue checkout' to finalize the purchase."));
+    $build['instructions'] = array(
+      '#markup' => $this->t("Your order is almost complete!  Please fill in the following details and click 'Continue checkout' to finalize the purchase."),
+    );
 
-    $build['form'] = $this->formBuilder()->getForm('uc_paypal_ec_review_form', $order);
+    $build['form'] = $this->formBuilder()->getForm('\Drupal\uc_paypal\Form\ecReviewForm', $order);
 
     return $build;
   }
@@ -113,11 +115,11 @@ class EcController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
    *   A redirect to the cart or a build array.
    */
-  function ecSubmit() {
+  public function ecSubmit() {
     if (!isset($_SESSION['TOKEN']) || !($order = Order::load($_SESSION['cart_order']))) {
       unset($_SESSION['cart_order'], $_SESSION['have_details']);
       unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
-      drupal_set_message(t('An error has occurred in your PayPal payment. Please review your cart and try again.'));
+      drupal_set_message($this->t('An error has occurred in your PayPal payment. Please review your cart and try again.'));
       $this->redirect('uc_cart.cart');
     }
 
@@ -131,9 +133,13 @@ class EcController extends ControllerBase {
 
     $build['line_items'] = uc_order_pane_line_items('customer', $order);
 
-    $build['instructions'] = array('#markup' => '<p>' . t("Your order is not complete until you click the 'Submit order' button below. Your PayPal account will be charged for the amount shown above once your order is placed. You will receive confirmation once your payment is complete.") . '</p>');
+    $build['instructions'] = array(
+      '#prefix' => '<p>',
+      '#markup' => $this->t("Your order is not complete until you click the 'Submit order' button below. Your PayPal account will be charged for the amount shown above once your order is placed. You will receive confirmation once your payment is complete."), 
+      '#suffix' => '</p>',
+    );
 
-    $build['submit_form'] = \Drupal::formBuilder()->getForm('\Drupal\uc_paypal\Form\EcSubmitForm');
+    $build['submit_form'] = $this->formBuilder()->getForm('\Drupal\uc_paypal\Form\EcSubmitForm');
 
     return $build;
   }

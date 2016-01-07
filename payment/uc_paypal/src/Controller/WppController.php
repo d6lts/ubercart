@@ -20,6 +20,7 @@ class WppController extends ControllerBase {
 
   public function wppCharge($order_id, $amount, $data) {
     $order = Order::load($order_id);
+    $paypal_config = $this->config('uc_paypal.settings');
 
     if ($data['txn_type'] == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
       $nvp_request = array(

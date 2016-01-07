@@ -55,7 +55,7 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase {
       '#type' => 'select',
       '#title' => $this->t('Currency code'),
       '#description' => $this->t('Transactions can only be processed in one of the listed currencies.'),
-      '#options' => _uc_paypal_currency_array(),
+      '#options' => $this->currencies(),
       '#default_value' => $this->configuration['wps_currency'],
     );
     $languages = array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US');

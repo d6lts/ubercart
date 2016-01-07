@@ -15,6 +15,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements hook_help().
@@ -45,6 +46,7 @@ function uc_paypal_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_form().
  */
 function uc_paypal_form_uc_cart_checkout_form_alter(&$form, &$form_state, $form_id) {
+  $paypal_config = \Drupal::config('uc_paypal.settings');
   if ($paypal_config->get('uc_payment_method_paypal_ec_checkout')) {
     $form['#submit'][] = 'uc_paypal_ec_checkout';
   }
@@ -110,13 +112,16 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
     return;
   }
 
+  $paypal_config = \Drupal::config('uc_paypal.settings');
   $order_id = intval($_SESSION['cart_order']);
 
   $order = Order::load($order_id);
   if (!$order || $order->getStateId() != 'in_checkout') {
     $_SESSION['cart_order'] = NULL;
     unset($_SESSION['cart_order']);
-    drupal_goto('cart');
+    // @todo: when this goes into a controller or form, use $this ...
+    // $this->redirect('uc_cart.cart');
+    return new RedirectResponse(Url::fromRoute('uc_cart.cart')->toString());
   }
 
   list($desc, $subtotal) = _uc_paypal_product_details($order->products);
@@ -154,84 +159,13 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
 
   if ($nvp_response['ACK'] != 'Success') {
     drupal_set_message(t('Error message from PayPal:<br />@message', ['@message' => $nvp_response['L_LONGMESSAGE0']]), 'error');
-    drupal_goto('cart/checkout');
+    // @todo: when this goes into a controller or form, use $this ...
+    // $this->redirect('uc_cart.checkout');
+    return new RedirectResponse(Url::fromRoute('uc_cart.checkout')->toString());
   }
 
   $_SESSION['TOKEN'] = $nvp_response['TOKEN'];
 
-  if (strpos($paypal_config->get('wpp_server'), 'sandbox') > 0) {
-    $sandbox = 'sandbox.';
-  }
-
-  header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $_SESSION['TOKEN']);
-  exit();
-}
-
-/**
- * Returns the form for Express Checkout Shortcut Flow.
- *
- * @see uc_paypal_ec_form_submit()
- */
-function uc_paypal_ec_form($form, &$form_state) {
-  $form['uc_paypal'] = array(
-    '#type' => 'image_button',
-    '#button_type' => 'checkout',
-    '#src' => 'https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif',
-    '#title' => t('Checkout with PayPal.'),
-    '#submit' => array('uc_cart_view_form_submit', 'uc_paypal_ec_form_submit'),
-    '#value' => 'PayPal Express Checkout',
-  );
-
-  return $form;
-}
-
-/**
- * Submit handler for uc_paypal_ec_form().
- *
- * @see uc_paypal_ec_form()
- */
-function uc_paypal_ec_form_submit($form, &$form_state) {
-  $items = \Drupal::service('uc_cart.manager')->get()->getContents();
-
-  if (empty($items)) {
-    drupal_set_message(t('You do not have any items in your shopping cart.'));
-    return;
-  }
-
-  list($desc, $subtotal) = _uc_paypal_product_details($items);
-
-  $order = \Drupal\uc_order\Entity\Order::create(['uid' => \Drupal::currentUser()->id()]);
-  $order->save();
-
-  $nvp_request = array(
-    'METHOD' => 'SetExpressCheckout',
-    'RETURNURL' => Url::fromRoute('uc_paypal.ec_review', [], ['absolute' => TRUE])->toString(),
-    'CANCELURL' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
-    'AMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
-    'CURRENCYCODE' => $paypal_config->get('wpp_currency'),
-    'PAYMENTACTION' => $paypal_config->get('uc_pg_paypal_wpp_cc_txn_type') == 'authorize' ? 'Authorization' : 'Sale',
-    'DESC' => substr($desc, 0, 127),
-    'INVNUM' => $order->id() . '-' . REQUEST_TIME,
-    'REQCONFIRMSHIPPING' => $paypal_config->get('ec_rqconfirmed_addr'),
-    'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
-    'LANDINGPAGE' => $paypal_config->get('ec_landingpage_style'),
-  );
-
-  $order->products = $items;
-  $order->save();
-
-  $nvp_response = uc_paypal_api_request($nvp_request, $paypal_config->get('wpp_server'));
-
-  if ($nvp_response['ACK'] != 'Success') {
-    drupal_set_message(t('PayPal reported an error: @code: @message', ['@code' => $nvp_response['L_ERRORCODE0'], '@message' => $nvp_response['L_LONGMESSAGE0']]), 'error');
-    return;
-  }
-
-  $_SESSION['cart_order'] = $order->id();
-  $_SESSION['TOKEN'] = $nvp_response['TOKEN'];
-
-  $sandbox = '';
   if (strpos($paypal_config->get('wpp_server'), 'sandbox') > 0) {
     $sandbox = 'sandbox.';
   }
@@ -246,6 +180,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
  * @see uc_cart_checkout_review_form()
  */
 function uc_paypal_ec_submit_form_submit($form, &$form_state) {
+  $paypal_config = \Drupal::config('uc_paypal.settings');
   $order = Order::load($_SESSION['cart_order']);
 
   list($desc, $subtotal) = _uc_paypal_product_details($order->products);
@@ -296,6 +231,7 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
  * Sends a request to PayPal and returns a response array.
  */
 function uc_paypal_api_request($params, $server) {
+  $paypal_config = \Drupal::config('uc_paypal.settings');
   // We use $params += to add API credentials so that if a key already exists
   // it will not be overridden.
   $params += array(
@@ -366,12 +302,4 @@ function _uc_paypal_nvp_to_array($nvpstr) {
   }
 
   return $nvp_array;
-}
-
-/**
- * Returns an array of possible currency codes.
- */
-function _uc_paypal_currency_array() {
-  $currencies = array('AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'SEK', 'SGD', 'THB', 'TWD', 'USD');
-  return array_combine($currencies, $currencies);
 }

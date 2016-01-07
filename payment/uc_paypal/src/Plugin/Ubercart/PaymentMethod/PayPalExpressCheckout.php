@@ -18,7 +18,7 @@ use Drupal\uc_order\OrderInterface;
  * @UbercartPaymentMethod(
  *   id = "paypal_ec",
  *   name = @Translation("PayPal Express Checkout"),
- *   express = "\Drupal\uc_paypal\Form\EcForm"
+ *   express = "\Drupal\uc_paypal\Form\EcCartButtonForm"
  * )
  */
 class PayPalExpressCheckout extends PayPalPaymentMethodPluginBase {

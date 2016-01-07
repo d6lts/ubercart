@@ -31,6 +31,8 @@ class WpsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
+    $paypal_config = $this->config('uc_paypal.settings');
+
     $shipping = 0;
     foreach ($order->line_items as $item) {
       if ($item['type'] == 'shipping') {
