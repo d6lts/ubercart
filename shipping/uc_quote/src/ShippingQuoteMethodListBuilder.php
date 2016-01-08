@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_quote\Plugin\ShippingQuotePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -91,10 +92,70 @@ class ShippingQuoteMethodListBuilder extends DraggableListBuilder implements For
   /**
    * {@inheritdoc}
    */
-  public function render() {
-    $build = parent::render();
-    $build['table']['#empty'] = $this->t('No shipping methods have been configured yet.');
-    return $build;
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $options = array_map(function ($definition) {
+      return $definition['admin_label'];
+    }, $this->shippingQuotePluginManager->getDefinitions());
+    uasort($options, 'strnatcasecmp');
+
+    $form['add'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('Add shipping method'),
+      '#open' => TRUE,
+      '#attributes' => array(
+        'class' => array('container-inline'),
+      ),
+    );
+    $form['add']['plugin'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Type'),
+      '#empty_option' => $this->t('- Choose -'),
+      '#options' => $options,
+    );
+    $form['add']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => $this->t('Add shipping method'),
+      '#validate' => array('::validateAddMethod'),
+      '#submit' => array('::submitAddMethod'),
+      '#limit_validation_errors' => array(array('plugin')),
+    );
+
+    $form = parent::buildForm($form, $form_state);
+    $form[$this->entitiesKey]['#empty'] = $this->t('No shipping methods have been configured yet.');
+
+    $form['actions']['#type'] = 'actions';
+    $form['actions']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => $this->t('Save configuration'),
+      '#button_type' => 'primary',
+    );
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
+    drupal_set_message($this->t('The configuration options have been saved.'));
+  }
+
+  /**
+   * Form validation handler for adding a new method.
+   */
+  public function validateAddMethod(array &$form, FormStateInterface $form_state) {
+    if ($form_state->isValueEmpty('plugin')) {
+      $form_state->setErrorByName('plugin', $this->t('You must select the new shipping method.'));
+    }
+  }
+
+  /**
+   * Form submission handler for adding a new method.
+   */
+  public function submitAddMethod(array &$form, FormStateInterface $form_state) {
+    $form_state->setRedirect('entity.uc_quote.add_form', ['plugin_id' => $form_state->getValue('plugin')]);
   }
 
 }
