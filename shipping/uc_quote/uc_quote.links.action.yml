@@ -13,3 +13,11 @@ uc_weightquote_add:
   title: 'Add weight quote'
   appears_on:
     - entity.uc_quote.collection
+
+uc_percentagerate_add:
+  route_name: entity.uc_quote.add_form
+  route_parameters:
+    plugin_id: percentage_rate
+  title: 'Add percentage rate quote'
+  appears_on:
+    - entity.uc_quote.collection
