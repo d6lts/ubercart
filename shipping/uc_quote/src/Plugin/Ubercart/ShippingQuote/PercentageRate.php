@@ -103,7 +103,7 @@ class PercentageRate extends ShippingQuotePluginBase {
         $product_rate = $this->configuration['product_rate'] * $product->qty->value;
       }
 
-      $rate += $product->sell_price->value * floatval($product_rate) / 100;
+      $rate += $product->price->value * floatval($product_rate) / 100;
     }
 
 
