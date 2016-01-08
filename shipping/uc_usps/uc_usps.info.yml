@@ -4,5 +4,6 @@ description: 'Integrates USPS Rate Calculator and Mail Service Standards Web Too
 package: Ubercart - shipping
 core: 8.x
 dependencies:
+  - not_yet_ported
   - uc_quote
 configure: uc_usps.settings

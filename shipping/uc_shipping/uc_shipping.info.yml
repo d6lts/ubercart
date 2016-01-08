@@ -4,4 +4,5 @@ description: 'Gets products ready for physical shipment.'
 package: Ubercart - core (optional)
 core: 8.x
 dependencies:
+  - not_yet_ported
   - uc_quote
