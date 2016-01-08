@@ -10,7 +10,7 @@ namespace Drupal\uc_quote\Plugin\Ubercart\ShippingQuote;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\uc_order\OrderInterface;
-use Drupal\uc_quote\Plugin\ShippingQuotePluginBase;
+use Drupal\uc_quote\ShippingQuotePluginBase;
 
 /**
  * Assigns a shipping rate to products based on weight.

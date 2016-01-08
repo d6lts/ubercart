@@ -7,10 +7,11 @@
 
 namespace Drupal\uc_quote\Plugin;
 
-use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\uc_quote\Annotation\UbercartShippingQuote;
+use Drupal\uc_quote\ShippingQuotePluginInterface;
 
 /**
  * Provides the shipping quote plugin manager.

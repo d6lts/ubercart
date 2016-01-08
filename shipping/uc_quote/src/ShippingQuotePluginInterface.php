@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_quote\Plugin\ShippingQuotePluginInterface.
+ * Contains \Drupal\uc_quote\ShippingQuotePluginInterface.
  */
 
-namespace Drupal\uc_quote\Plugin;
+namespace Drupal\uc_quote;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;

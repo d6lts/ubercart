@@ -2,20 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\uc_quote\Plugin\ShippingQuotePluginBase.
+ * Contains \Drupal\uc_quote\ShippingQuotePluginBase.
  */
 
-namespace Drupal\uc_quote\Plugin;
+namespace Drupal\uc_quote;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Base class for shipping quote plugins.
  */
 abstract class ShippingQuotePluginBase extends PluginBase implements ShippingQuotePluginInterface {
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

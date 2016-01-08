@@ -20,7 +20,7 @@ class ShippingQuoteMethodForm extends EntityForm {
   /**
    * The shipping quote plugin.
    *
-   * @var \Drupal\uc_quote\Plugin\ShippingQuotePluginInterface
+   * @var \Drupal\uc_quote\ShippingQuotePluginInterface
    */
   protected $plugin;
 
