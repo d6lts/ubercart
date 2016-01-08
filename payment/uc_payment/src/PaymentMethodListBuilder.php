@@ -121,7 +121,7 @@ class PaymentMethodListBuilder extends DraggableListBuilder implements FormInter
 
       $form['add'] = array(
         '#type' => 'details',
-        '#title' => 'Add payment method',
+        '#title' => $this->t('Add payment method'),
         '#open' => TRUE,
         '#attributes' => array(
           'class' => array('container-inline'),
