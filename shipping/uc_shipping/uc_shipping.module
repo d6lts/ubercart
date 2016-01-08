@@ -773,47 +773,6 @@ function uc_shipping_address_form($form, FormStateInterface $form_state, $addres
 }
 
 /**
- * Implements hook_date_views_tables().
- */
-function uc_shipping_date_views_tables() {
-  return array('uc_shipments');
-}
-
-/**
- * Implements hook_date_views_fields().
- *
- * All modules that create custom fields that use the
- * 'views_handler_field_date' handler can provide
- * additional information here about the type of
- * date they create so the date can be used by
- * the Date API views date argument and date filter.
- */
-function uc_shipping_date_views_fields($field) {
-  $values = array(
-    // The type of date: DATE_UNIX, DATE_ISO, DATE_DATETIME.
-    'sql_type' => DATE_UNIX,
-    // Timezone handling options: 'none', 'site', 'date', 'utc' .
-    'tz_handling' => 'site',
-    // Needed only for dates that use 'date' tz_handling.
-    'timezone_field' => '',
-    // Needed only for dates that use 'date' tz_handling.
-    'offset_field' => '',
-    // Array of "table.field" values for related fields that should be
-    // loaded automatically in the Views SQL.
-    'related_fields' => array(),
-    // Granularity of this date field's db data.
-    'granularity' => array('year', 'month', 'day', 'hour', 'minute', 'second'),
-  );
-
-  switch ($field) {
-    case 'uc_shipments.ship_date':
-    case 'uc_shipments.expected_delivery':
-    case 'uc_shipments.changed':
-      return $values;
-  }
-}
-
-/**
  * Implements hook_uc_order_can_delete().
  *
  * Prevent users from deleting orders with a shipment or package that has
