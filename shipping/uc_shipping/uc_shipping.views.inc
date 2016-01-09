@@ -239,7 +239,7 @@ function uc_shipping_views_data() {
       $data['uc_shipments'][$prefix . '_' . $field] = array(
         'group' => $group,
         'title' => $label,
-        'help' => t('The !field of the !address of the shipment.', array('!field' => Unicode::strtolower($label), '!address' => Unicode::strtolower($address))),
+        'help' => t('The @field of the @address of the shipment.', ['@field' => Unicode::strtolower($label), '@address' => Unicode::strtolower($address)]),
         'field' => array(
           'id' => 'standard',
           'click sortable' => TRUE,
@@ -256,7 +256,7 @@ function uc_shipping_views_data() {
     $data['uc_shipments'][$prefix . '_full_name'] = array(
       'group' => $group,
       'title' => t('Full name'),
-      'help' => t('The !field of the !address of the shipment.', array('!field' => t('full name'), '!address' => Unicode::strtolower($address))),
+      'help' => t('The @field of the @address of the shipment.', ['@field' => t('full name'), '@address' => Unicode::strtolower($address)]),
       'field' => array(
         'additional fields' => array(
           $prefix . '_first_name',
@@ -275,7 +275,7 @@ function uc_shipping_views_data() {
     );
     $data['uc_shipments_' . $prefix . '_countries']['country_id'] = array(
       'title' => t('ISO country code (numeric)'),
-      'help' => t('The !field of the !address of the shipment.', array('!field' => t('numeric ISO country code'), '!address' => Unicode::strtolower($address))),
+      'help' => t('The @field of the @address of the shipment.', ['@field' => t('numeric ISO country code'), '@address' => Unicode::strtolower($address)]),
       'argument' => array(
         'id' => 'numeric',
         'name field' => 'country_iso_code_2',
@@ -288,7 +288,7 @@ function uc_shipping_views_data() {
     );
     $data['uc_shipments_' . $prefix . '_countries']['country_name'] = array(
       'title' => t('Country'),
-      'help' => t('The !field of the !address of the shipment.', array('!field' => t('country name'), '!address' => Unicode::strtolower($address))),
+      'help' => t('The @field of the @address of the shipment.', ['@field' => t('country name'), '@address' => Unicode::strtolower($address)]),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -302,7 +302,7 @@ function uc_shipping_views_data() {
     );
     $data['uc_shipments_' . $prefix . '_countries']['country_iso_code_2'] = array(
       'title' => t('ISO country code (2 characters)'),
-      'help' => t('The !field of the !address of the shipment.', array('!field' => t('ISO country code'), '!address' => Unicode::strtolower($address))),
+      'help' => t('The @field of the @address of the shipment.', ['@field' => t('ISO country code'), '@address' => Unicode::strtolower($address)]),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -316,7 +316,7 @@ function uc_shipping_views_data() {
     );
     $data['uc_shipments_' . $prefix . '_countries']['country_iso_code_3'] = array(
       'title' => t('ISO country code (3 characters)'),
-      'help' => t('The !field of the !address of the shipment.', array('!field' => t('ISO country code'), '!address' => Unicode::strtolower($address))),
+      'help' => t('The @field of the @address of the shipment.', ['@field' => t('ISO country code'), '@address' => Unicode::strtolower($address)]),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -337,7 +337,7 @@ function uc_shipping_views_data() {
     );
     $data['uc_shipments_' . $prefix . '_zones']['zone_name'] = array(
       'title' => t('State/Province'),
-      'help' => t('The !field of the !address of the shipment.', array('!field' => t('state or province'), '!address' => Unicode::strtolower($address))),
+      'help' => t('The @field of the @address of the shipment.', ['@field' => t('state or province'), '@address' => Unicode::strtolower($address)]),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -351,7 +351,7 @@ function uc_shipping_views_data() {
     );
     $data['uc_shipments_' . $prefix . '_zones']['zone_code'] = array(
       'title' => t('State/Province code'),
-      'help' => t('The !field of the !address of the shipment.', array('!field' => t('state or province code'), '!address' => Unicode::strtolower($address))),
+      'help' => t('The @field of the @address of the shipment.', ['@field' => t('state or province code'), '@address' => Unicode::strtolower($address)]),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,

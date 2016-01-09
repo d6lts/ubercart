@@ -20,14 +20,14 @@ function uc_shipping_order_packages($order) {
   $shipping_type_options = uc_quote_shipping_type_options();
   $header = array(t('Package ID'), t('Products'), t('Shipping type'), t('Package type'), t('Shipment ID'), t('Tracking number'), t('Labels'), array('data' => t('Actions'), 'colspan' => 4));
   $rows = array();
-  $result = db_query("SELECT * FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->id()));
+  $result = db_query("SELECT * FROM {uc_packages} WHERE order_id = :id", [':id' => $order->id()]);
   foreach ($result as $package) {
     $row = array();
 
     $row[] = $package->package_id;
 
     $product_list = array();
-    $result2 = db_query("SELECT op.order_product_id, pp.qty, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id", array(':id' => $package->package_id));
+    $result2 = db_query("SELECT op.order_product_id, pp.qty, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id", [':id' => $package->package_id]);
     foreach ($result2 as $product) {
       $product_list[] = $product->qty . ' x ' . SafeMarkup::checkPlain($product->model);
     }
@@ -46,7 +46,7 @@ function uc_shipping_order_packages($order) {
     }
 
     if (isset($package->sid) && isset($package->label_image)) {
-      $method = db_query("SELECT shipping_method FROM {uc_shipments} WHERE sid = :sid", array(':sid' => $package->sid))->fetchField();
+      $method = db_query("SELECT shipping_method FROM {uc_shipments} WHERE sid = :sid", [':sid' => $package->sid])->fetchField();
       $row[] = Link::fromTextAndUrl(
         theme('image_style', array(
           'style_name' => 'uc_thumbnail',
@@ -110,7 +110,7 @@ function uc_shipping_new_package($form, FormStateInterface $form_state, $order) 
   $quote_config = \Drupal::config('uc_quote.settings');
   $shipping_type_weights = $quote_config->get('type_weight');
 
-  $result = db_query("SELECT op.order_product_id, SUM(pp.qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE p.order_id = :id GROUP BY op.order_product_id", array(':id' => $order->id()));
+  $result = db_query("SELECT op.order_product_id, SUM(pp.qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE p.order_id = :id GROUP BY op.order_product_id", [':id' => $order->id()]);
   $packaged_products = $result->fetchAllKeyed();
 
   $form['shipping_types'] = array();
@@ -326,7 +326,7 @@ function uc_shipping_package_edit($form, FormStateInterface $form_state, $order,
     }
   }
 
-  $result = db_query("SELECT order_product_id, SUM(qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id WHERE p.order_id = :id GROUP BY order_product_id", array(':id' => $order->id()));
+  $result = db_query("SELECT order_product_id, SUM(qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id WHERE p.order_id = :id GROUP BY order_product_id", [':id' => $order->id()]);
   foreach ($result as $packaged_product) {
     // Make already packaged products unavailable, except those in this package.
     $products[$packaged_product->order_product_id]->qty -= $packaged_product->quantity;
@@ -504,7 +504,7 @@ function uc_shipping_package_delete_confirm_submit($form, FormStateInterface $fo
  *   The order object.
  */
 function uc_shipping_order_shipments($order) {
-  $result = db_query("SELECT * FROM {uc_shipments} WHERE order_id = :id", array(':id' => $order->id()));
+  $result = db_query("SELECT * FROM {uc_shipments} WHERE order_id = :id", [':id' => $order->id()]);
   $header = array(t('Shipment ID'), t('Name'), t('Company'), t('Destination'), t('Ship date'), t('Estimated delivery'), t('Tracking number'), array('data' => t('Actions'), 'colspan' => 5));
   $rows = array();
 
@@ -526,7 +526,7 @@ function uc_shipping_order_shipments($order) {
   }
 
   if (empty($rows)) {
-    if (!db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->id()))->fetchField()) {
+    if (!db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id", [':id' => $order->id()])->fetchField()) {
       drupal_set_message(t("This order's products have not been organized into packages."));
       drupal_goto('admin/store/orders/' . $order->id() . '/packages/new');
     }
@@ -560,11 +560,11 @@ function uc_shipping_new_shipment($form, FormStateInterface $form_state, $order)
 
   $packages_by_type = array();
   $units = \Drupal::config('uc_store.settings')->get('weight.units');
-  $result = db_query("SELECT * FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", array(':id' => $order->id()));
+  $result = db_query("SELECT * FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", [':id' => $order->id()]);
   foreach ($result as $package) {
     $products = array();
     $weight = 0;
-    $result2 = db_query("SELECT pp.order_product_id, pp.qty, pp.qty * op.weight AS weight, op.weight_units, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id", array(':id' => $package->package_id));
+    $result2 = db_query("SELECT pp.order_product_id, pp.qty, pp.qty * op.weight AS weight, op.weight_units, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id", [':id' => $package->package_id]);
     foreach ($result2 as $product) {
       $units_conversion = uc_weight_conversion($product->weight_units, $units);
       $weight += $product->weight * $units_conversion;
@@ -795,9 +795,9 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
   }
   $addresses = array();
   $form['packages'] = array(
-    '#type'        => 'fieldset',
-    '#title'       => t('Packages'),
-    '#tree'        => TRUE,
+    '#type' => 'fieldset',
+    '#title' => t('Packages'),
+    '#tree' => TRUE,
   );
   if (isset($shipment->o_street1)) {
     $o_address = new stdClass();
@@ -825,7 +825,7 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
     }
     $pkg_form = array(
       '#type'  => 'fieldset',
-      '#title' => t('Package @id', array('@id' => $id)),
+      '#title' => t('Package @id', ['@id' => $id]),
     );
     $pkg_form['products'] = array(
       '#theme' => 'item_list',
@@ -944,7 +944,7 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
       $services = $methods[$method]['quote']['accessorials'];
       $method   = $services[$order->quote['accessorials']];
     }
-    $message = t('Customer selected "@method" as the shipping method and paid @rate', array('@method' => $method, '@rate' => uc_currency_format($order->quote['rate'])));
+    $message = t('Customer selected "@method" as the shipping method and paid @rate', ['@method' => $method, '@rate' => uc_currency_format($order->quote['rate'])]);
   }
   else {
     // No quotes for this order.
@@ -998,8 +998,8 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
     $exp_delivery = getdate();
   }
   $form['shipment']['ship_date'] = array(
-    '#type'          => 'date',
-    '#title'         => t('Ship date'),
+    '#type' => 'date',
+    '#title' => t('Ship date'),
     '#default_value' => array(
       'year'  => $ship_date['year'],
       'month' => $ship_date['mon'],
@@ -1043,7 +1043,7 @@ function uc_shipping_shipment_edit_validate($form, FormStateInterface $form_stat
   foreach ($form_state->getValue('packages') as $key => $package) {
     foreach (array('length', 'width', 'height') as $property) {
       if (!empty($package['dimensions'][$property]) && (!is_numeric($package['dimensions'][$property]) || $package['dimensions'][$property] < 0)) {
-        $form_state->setErrorByName('packages][' . $key . '][dimensions][' . $property, t('@property must be a positive number. No commas and only one decimal point.', array('@property' => Unicode::ucfirst($property))));
+        $form_state->setErrorByName('packages][' . $key . '][dimensions][' . $property, t('@property must be a positive number. No commas and only one decimal point.', ['@property' => Unicode::ucfirst($property)]));
       }
     }
   }
@@ -1174,7 +1174,7 @@ function uc_shipping_shipment_delete_confirm_submit($form, FormStateInterface $f
       uc_shipping_shipment_delete($form_state->getValue('sid'));
     }
     else {
-      drupal_set_message(t('The shipment %tracking could not be canceled with %carrier. To delete it anyway, remove the tracking number and try again.', array('%tracking' => $shipment->tracking_number, '%carrier' => $shipment->carrier)));
+      drupal_set_message(t('The shipment %tracking could not be canceled with %carrier. To delete it anyway, remove the tracking number and try again.', ['%tracking' => $shipment->tracking_number, '%carrier' => $shipment->carrier]));
     }
   }
   else {

@@ -176,7 +176,7 @@ function uc_shipping_order_access($order) {
  * Access callback for the new shipment page.
  */
 function uc_shipping_new_shipment_access($order) {
-  return uc_shipping_order_access($order) && db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", array(':id' => $order->id()))->fetchField();
+  return uc_shipping_order_access($order) && db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", [':id' => $order->id()])->fetchField();
 }
 
 /**
@@ -314,14 +314,14 @@ function uc_shipping_uc_order_actions($order) {
   $actions = array();
   $account = \Drupal::currentUser();
   if ($account->hasPermission('fulfill orders')) {
-    $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", array(':id' => $order->id(), ':data' => '%s:9:\"shippable\";s:1:\"1\";%'));
+    $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", [':id' => $order->id(), ':data' => '%s:9:\"shippable\";s:1:\"1\";%']);
     if ($result->fetchField()) {
       $actions['package'] = array(
         'title' => t('Package'),
         'url' => Url::fromRoute('admin/store/orders/{uc_order}/packages', ['uc_order' => $order->id()])->toString(),
         'weight' => 12,
       );
-      $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", array(':id' => $order->id()));
+      $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", [':id' => $order->id()]);
       if ($result->fetchField()) {
         $actions['ship'] = array(
           'title' => t('Ship'),
@@ -346,7 +346,7 @@ function uc_shipping_package_view($package) {
   $rows = array();
 
   $build['title'] = array(
-    '#markup' => t('Package %id:', array('%id' => $package->package_id)),
+    '#markup' => t('Package %id:', ['%id' => $package->package_id]),
     '#prefix' => '<div class="order-pane-title">',
     '#suffix' => '</div>',
   );
@@ -396,14 +396,14 @@ function uc_shipping_package_load($package_id) {
   static $packages = array();
 
   if (!isset($packages[$package_id])) {
-    $result = db_query("SELECT * FROM {uc_packages} WHERE package_id = :id", array(':id' => $package_id));
+    $result = db_query("SELECT * FROM {uc_packages} WHERE package_id = :id", [':id' => $package_id]);
     if ($package = $result->fetchObject()) {
       $products = array();
       $description = '';
       $weight = 0;
       $units = \Drupal::config('uc_store.settings')->get('weight.units');
       $addresses = array();
-      $result = db_query("SELECT op.order_product_id, pp.qty, pp.qty * op.weight AS weight, op.weight_units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id", array(':id' => $package_id));
+      $result = db_query("SELECT op.order_product_id, pp.qty, pp.qty * op.weight AS weight, op.weight_units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id", [':id' => $package_id]);
       foreach ($result as $product) {
         $address = uc_quote_get_default_shipping_address($product->nid);
         // TODO: Lodge complaint that array_unique() compares as strings.
@@ -462,7 +462,7 @@ function uc_shipping_package_save($package) {
           'qty' => $product->qty,
         ));
 
-      $result = db_query("SELECT data FROM {uc_order_products} WHERE order_product_id = :id", array(':id' => $id));
+      $result = db_query("SELECT data FROM {uc_order_products} WHERE order_product_id = :id", [':id' => $id]);
       if ($order_product = $result->fetchObject()) {
         $order_product->data = unserialize($order_product->data);
         $order_product->data['package_id'] = intval($package->package_id);
@@ -533,16 +533,16 @@ function uc_shipping_package_delete($package_id) {
     file_delete($package->label_image);
   }
 
-  drupal_set_message(t('Package @id has been deleted.', array('@id' => $package_id)));
+  drupal_set_message(t('Package @id has been deleted.', ['@id' => $package_id]));
 }
 
 /**
  * Loads a shipment and its packages.
  */
 function uc_shipping_shipment_load($shipment_id) {
-  $shipment = db_query("SELECT * FROM {uc_shipments} WHERE sid = :sid", array(':sid' => $shipment_id))->fetchObject();
+  $shipment = db_query("SELECT * FROM {uc_shipments} WHERE sid = :sid", [':sid' => $shipment_id])->fetchObject();
   if ($shipment) {
-    $result = db_query("SELECT package_id FROM {uc_packages} WHERE sid = :sid", array(':sid' => $shipment_id));
+    $result = db_query("SELECT package_id FROM {uc_packages} WHERE sid = :sid", [':sid' => $shipment_id]);
     $packages = array();
     foreach ($result as $package) {
       $packages[$package->package_id] = uc_shipping_package_load($package->package_id);
@@ -648,7 +648,7 @@ function uc_shipping_order_pane_packages($op, $order) {
     case 'view':
     case 'customer':
       $tracking = array();
-      $result = db_query("SELECT sid FROM {uc_shipments} WHERE order_id = :id", array(':id' => $order->id()));
+      $result = db_query("SELECT sid FROM {uc_shipments} WHERE order_id = :id", [':id' => $order->id()]);
       foreach ($result as $shipment) {
         $shipment = uc_shipping_shipment_load($shipment->sid);
         if ($shipment->tracking_number) {
