@@ -45,10 +45,10 @@ class PaymentMethodController extends ControllerBase {
     $uc_payment_method->$op()->save();
 
     if ($op == 'enable') {
-      drupal_set_message($this->t('The %label payment method has been enabled.', array('%label' => $uc_payment_method->label())));
+      drupal_set_message($this->t('The %label payment method has been enabled.', ['%label' => $uc_payment_method->label()]));
     }
     elseif ($op == 'disable') {
-      drupal_set_message($this->t('The %label payment method has been disabled.', array('%label' => $uc_payment_method->label())));
+      drupal_set_message($this->t('The %label payment method has been disabled.', ['%label' => $uc_payment_method->label()]));
     }
 
     $url = $uc_payment_method->toUrl('collection');

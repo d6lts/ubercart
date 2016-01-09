@@ -70,8 +70,8 @@ class QuoteSettingsForm extends ConfigFormBase {
     if (is_array($shipping_types)) {
       $form['uc_quote_type_weight'] = array(
         '#type' => 'details',
-        '#title' => t('List position'),
-        '#description' => t('Determines which shipping methods are quoted at checkout when products of different shipping types are ordered. Larger values take precedence.'),
+        '#title' => $this->t('List position'),
+        '#description' => $this->t('Determines which shipping methods are quoted at checkout when products of different shipping types are ordered. Larger values take precedence.'),
         '#tree' => TRUE,
       );
       $weight = $quote_config->get('type_weight');
@@ -85,7 +85,7 @@ class QuoteSettingsForm extends ConfigFormBase {
       }
       if (isset($method_types['order']) && is_array($method_types['order'])) {
         $count = count($method_types['order']);
-        $form['uc_quote_type_weight']['#description'] .= $this->formatPlural($count, '<br />The %list method is compatible with any shipping type.', '<br />The %list methods are compatible with any shipping type.', array('%list' => implode(', ', $method_types['order'])));
+        $form['uc_quote_type_weight']['#description'] .= $this->formatPlural($count, '<br />The %list method is compatible with any shipping type.', '<br />The %list methods are compatible with any shipping type.', ['%list' => implode(', ', $method_types['order'])]);
       }
       foreach ($shipping_types as $id => $title) {
         $form['uc_quote_type_weight'][$id] = array(
@@ -98,7 +98,7 @@ class QuoteSettingsForm extends ConfigFormBase {
     }
     $form['uc_store_shipping_type'] = array(
       '#type' => 'select',
-      '#title' => t('Default order fulfillment type for products'),
+      '#title' => $this->t('Default order fulfillment type for products'),
       '#options' => $shipping_types,
       '#default_value' => $quote_config->get('shipping_type'),
     );
