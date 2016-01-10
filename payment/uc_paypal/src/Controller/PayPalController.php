@@ -85,30 +85,40 @@ class PayPalController extends ControllerBase {
       return new Response();
     }
 
+    // POST IPN data back to PayPal to validate IPN.
     $req = '';
-
     foreach ($request->request->all() as $key => $value) {
       $value = urlencode(stripslashes($value));
       $req .= $key . '=' . $value . '&';
     }
-
+    // Append key/value to identify this as a validation.
     $req .= 'cmd=_notify-validate';
 
+    // Determine server.
     if ($paypal_config->get('wpp_server') == 'https://api-3t.paypal.com/nvp') {
       $host = 'https://www.paypal.com/cgi-bin/webscr';
     }
     else {
       $host = $paypal_config->get('wps_server');
     }
+    // Send POST.
     $response = \Drupal::httpClient()
       ->post($host, NULL, $req)
       ->send();
-
+// @todo: Make sure these are set
+// curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+// curl_setopt($ch, CURLOPT_POST, 1);
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+// curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+// curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+// curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
     if ($response->isError()) {
-      \Drupal::logger('uc_paypal')->error('IPN failed with HTTP error @error, code @code.', ['@error' => $response->getReasonPhrase(), '@code' => $response->getStatusCode()]);
+      \Drupal::logger('uc_paypal')->error('IPN validation failed with HTTP error @error, code @code.', ['@error' => $response->getReasonPhrase(), '@code' => $response->getStatusCode()]);
       return new Response();
     }
 
+    // Check IPN validation response to determine if the IPN was valid..
     if (strcmp($response->getBody(TRUE), 'VERIFIED') == 0) {
       \Drupal::logger('uc_paypal')->notice('IPN transaction verified.');
 
@@ -199,23 +209,27 @@ class PayPalController extends ControllerBase {
   protected function pendingMessage($reason) {
     switch ($reason) {
       case 'address':
-        return t('Customer did not include a confirmed shipping address per your address settings.');
+        return t('The payment is pending because your customer did not include a confirmed shipping address and your Payment Receiving Preferences is set to allow you to manually accept or deny each of these payments.');
       case 'authorization':
-        return t('Waiting on you to capture the funds per your authorization settings.');
+        return t('The payment is pending because you set the payment action to Authorization and have not yet captured funds.');
       case 'echeck':
-        return t('eCheck has not yet cleared.');
+        return t('The payment is pending because it was made by an eCheck that has not yet cleared.');
       case 'intl':
-        return t('You must manually accept or deny this international payment from your Account Overview.');
-      case 'multi-currency':
+        return t('The payment is pending because you hold a non-U.S. account and do not have a withdrawal mechanism. You must manually accept or deny this international payment from your Account Overview.');
       case 'multi_currency':
-        return t('You must manually accept or deny a payment of this currency from your Account Overview.');
+        return t('The payment is pending because you do not have a balance in the currency sent, and you do not have your Payment Receiving Preferences set to automatically convert and accept this payment. You must manually accept or deny a payment of this currency from your Account Overview.');
+      case 'order':
+        return t('The payment is pending because you set the payment action to Order and have not yet captured funds.');
+      case 'paymentreview':
+        return t('The payment is pending while it is being reviewed by PayPal for risk.');
       case 'unilateral':
-        return t('Your e-mail address is not yet registered or confirmed.');
+        return t('The payment is pending because it was made to an e-mail address that is not yet registered or confirmed.');
       case 'upgrade':
-        return t('You must upgrade your account to Business or Premier status to receive credit card payments.');
+        return t('The payment is pending because it was either made via credit card and you do not have a Business or Premier account or you have reached the monthly limit for transactions on your account.');
       case 'verify':
-        return t('You must verify your account before you can accept this payment.');
+        return t('The payment is pending because you are not yet a verified PayPal member. Please verify your account.');
       case 'other':
+        return t('The payment is pending for a reason other than those listed above. For more information, contact PayPal Customer Service.');
       default:
         return t('Reason "@reason" unknown; contact PayPal Customer Service for more information.', ['@reason' => $reason]);
     }

@@ -258,7 +258,7 @@ class WppController extends ControllerBase {
       case 'N':
         return t('Nothing matched; transaction declined');
       case 'D':
-        case 'F':
+      case 'F':
       case 'X':
       case 'Y':
         return t('Address and postal code matched');

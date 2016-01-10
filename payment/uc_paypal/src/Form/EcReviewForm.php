@@ -102,10 +102,11 @@ class EcReviewForm extends FormBase {
       $quote_option = explode('---', $form_state->getValue(['quotes', 'quote_option']));
       $order->quote['method'] = $quote_option[0];
       $order->quote['accessorials'] = $quote_option[1];
-      $methods = uc_quote_methods();
-      $method = $methods[$quote_option[0]];
+      $method = ShippingQuoteMethod::load($quote_option[0]);
+
 
       $label = $method['quote']['accessorials'][$quote_option[1]];
+//      $label = $method->label();
 
       $quote_option = $form_state->getValue(['quotes', 'quote_option']);
       $order->quote['rate'] = $form_state->getValue(['quotes', $quote_option, 'rate']);
