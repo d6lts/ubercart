@@ -13,9 +13,10 @@ use Drupal\uc_order\Entity\Order;
  */
 function uc_cybersource_page_alter(&$page) {
   $block = block_load('system', 'main');
+  $session = \Drupal::service('session');
   // Add to the review page hidden form fields with data to post to
   // CyberSource HOP.
-  if (isset($page[$block->region]['system_main']['#theme']) && $page[$block->region]['system_main']['#theme'] == 'uc_cart_checkout_review' && ($order_id = intval($_SESSION['cart_order'])) > 0) {
+  if (isset($page[$block->region]['system_main']['#theme']) && $page[$block->region]['system_main']['#theme'] == 'uc_cart_checkout_review' && ($order_id = intval($session->get('cart_order'))) > 0) {
     $order = Order::load($order_id);
 
     if ($order->getPaymentMethodId() == 'cybersource_hop') {

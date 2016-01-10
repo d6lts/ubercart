@@ -151,18 +151,18 @@ class TwoCheckout extends PaymentMethodPluginBase {
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $build = array();
-
+    $session = \Drupal::service('session');
     if ($this->configuration['check']) {
       $build['pay_method'] = array(
         '#type' => 'select',
         '#title' => $this->t('Select your payment type:'),
-        '#default_value' => $_SESSION['pay_method'] == 'CK' ? 'CK' : 'CC',
+        '#default_value' => $session->get('pay_method') == 'CK' ? 'CK' : 'CC',
         '#options' => array(
           'CC' => $this->t('Credit card'),
           'CK' => $this->t('Online check'),
         ),
       );
-      unset($_SESSION['pay_method']);
+      $session->remove('pay_method');
     }
 
     return $build;
@@ -172,12 +172,9 @@ class TwoCheckout extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
-//    if ($this->configuration['pay_method']) {
-//      $order->payment_details = $form_state->getValue(['panes', 'payment', 'details']);
-//    }
-
+    $session = \Drupal::service('session');
     if (NULL != $form_state->getValue(['panes', 'payment', 'details', 'pay_method'])) {
-      $_SESSION['pay_method'] = $form_state->getValue(['panes', 'payment', 'details', 'pay_method']);
+      $session->set('pay_method', $form_state->getValue(['panes', 'payment', 'details', 'pay_method']));
     }
     return TRUE;
   }

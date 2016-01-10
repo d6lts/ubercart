@@ -103,12 +103,19 @@ class HOPController extends ControllerBase {
     // user tried to adjust the order on this side while at PayPal. If it was a
     // legitimate checkout, the CyberSource POST will still register, so the
     // gets processed correctly. We'll leave an ambiguous message just in case.
-    if (intval($_SESSION['cart_order']) != $uc_order->id()) {
+    $session = \Drupal::service('session');
+    if (intval($session->get('cart_order')) != $uc_order->id()) {
       drupal_set_message($this->t('Thank you for your order! We will be notified by CyberSource that we have received your payment.'));
       $this->redirect('uc_cart.cart');
     }
+    $complete = array();
+    if ($session->has('uc_checkout')) {
+      $complete = $session->get('uc_checkout');
+    }
     // This lets us know it's a legitimate access of the complete page.
-    $_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_complete'] = TRUE;
+    $complete[$session->get('cart_order')]['do_complete'] = TRUE;
+    $session->set('uc_checkout', $complete);
+
     $this->redirect('uc_cart.checkout_complete');
   }
 }

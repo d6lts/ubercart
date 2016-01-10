@@ -469,7 +469,8 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     // set or even extended ASCII characters that may be present.
     // base64_encode() converts everything to a subset of ASCII, ensuring that
     // the encryption algorithm does not mangle names.
-    $_SESSION['sescrd'] = $crypt->encrypt($key, base64_encode(serialize($order->payment_details)));
+    $session = \Drupal::service('session');
+    $session->set('sescrd', $crypt->encrypt($key, base64_encode(serialize($order->payment_details))));
 
     // Log any errors to the watchdog.
     uc_store_encryption_errors($crypt, 'uc_credit');
@@ -477,7 +478,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     // If we're going to the review screen, set a variable that lets us know
     // we're paying by CC.
     if ($return) {
-      $_SESSION['cc_pay'] = TRUE;
+      $session->set('cc_pay', TRUE);
     }
 
     return $return;
