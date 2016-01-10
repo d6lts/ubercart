@@ -27,16 +27,16 @@ function uc_paypal_help($route_name, RouteMatchInterface $route_match) {
     if ($route_match->getRawParameter('plugin_id') == 'paypal_ec') {
       return '<p>' . t('PayPal Express Checkout settings help.') . '</p>';
     }
-    else if ($route_match->getRawParameter('plugin_id') == 'paypal_wps') {
+    elseif ($route_match->getRawParameter('plugin_id') == 'paypal_wps') {
       return '<p>' . t('PayPal Website Payments Standard settings help.') . '</p>';
     }
   }
   // Provide information and instructions on the payment method edit form.
-  else if ($route_name == 'entity.uc_payment_method.edit_form') {
+  elseif ($route_name == 'entity.uc_payment_method.edit_form') {
     if ($route_match->getParameter('uc_payment_method')->getPlugin()->getPluginId() == 'paypal_ec') {
       return '<p>' . t('PayPal Express Checkout settings help.') . '</p>';
     }
-    else if ($route_match->getParameter('uc_payment_method')->getPlugin()->getPluginId() == 'paypal_wps') {
+    elseif ($route_match->getParameter('uc_payment_method')->getPlugin()->getPluginId() == 'paypal_wps') {
       return '<p>' . t('PayPal Website Payments Standard settings help.') . '</p>';
     }
   }

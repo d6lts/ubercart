@@ -16,8 +16,8 @@ function uc_2checkout_help($route_name, RouteMatchInterface $route_match) {
       $route_match->getRawParameter('plugin_id') == '2checkout') {
     return '<p>' . t('To accept PayPal payments in 2Checkout, please ensure that demo mode is disabled and your store currency is one of USD, AUD, CAD, EUR or GBP.') . '</p>';
   }
-  else if ($route_name == 'entity.uc_payment_method.edit_form' &&
-           $route_match->getParameter('uc_payment_method')->getPlugin()->getPluginId() == '2checkout') {
+  elseif ($route_name == 'entity.uc_payment_method.edit_form' &&
+          $route_match->getParameter('uc_payment_method')->getPlugin()->getPluginId() == '2checkout') {
     return '<p>' . t('To accept PayPal payments in 2Checkout, please ensure that demo mode is disabled and your store currency is one of USD, AUD, CAD, EUR or GBP.') . '</p>';
   }
 }

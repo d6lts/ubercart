@@ -93,7 +93,7 @@ class CartLinksSettingsForm extends ConfigFormBase {
         // Each line must be one or more numeric characters for the key followed
         // by "|" followed by one or more characters for the value. Both the key
         // and the value may have leading and/or trailing whitespace.
-        else if (!preg_match('/^\s*[1-9][0-9]*\s*\|\s*\S+.*$/', $message)) {
+        elseif (!preg_match('/^\s*[1-9][0-9]*\s*\|\s*\S+.*$/', $message)) {
            $form_state->setErrorByName('uc_cart_links_messages', $this->t('Invalid Cart Links message "%message". Messages must be a numeric key followed by "|" followed by a value.', ['%message' => $message]));
            break;
         }
