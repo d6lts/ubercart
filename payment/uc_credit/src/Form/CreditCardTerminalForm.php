@@ -47,10 +47,10 @@ class CreditCardTerminalForm extends FormBase {
     $balance = uc_payment_balance($this->order);
 
     $form['order_total'] = array(
-      '#markup' => '<div><strong>' . $this->t('Order total: @total', array('@total' => uc_currency_format($this->order->getTotal()))) . '</strong></div>',
+      '#markup' => '<div><strong>' . $this->t('Order total: @total', ['@total' => uc_currency_format($this->order->getTotal())]) . '</strong></div>',
     );
     $form['balance'] = array(
-      '#markup' => '<div><strong>' . $this->t('Balance: @balance', array('@balance' => uc_currency_format($balance))) . '</strong></div>',
+      '#markup' => '<div><strong>' . $this->t('Balance: @balance', ['@balance' => uc_currency_format($balance)]) . '</strong></div>',
     );
 
     // Let the administrator set the amount to charge.
@@ -114,7 +114,7 @@ class CreditCardTerminalForm extends FormBase {
     if (isset($this->order->data->cc_txns['authorizations'])) {
       foreach ($this->order->data->cc_txns['authorizations'] as $auth_id => $data) {
         if (empty($data['captured'])) {
-          $options[$auth_id] = $this->t('@auth_id - @date - @amount authorized', array('@auth_id' => strtoupper($auth_id), '@date' => \Drupal::service('date.formatter')->format($data['authorized'], 'short'), '@amount' => uc_currency_format($data['amount'])));
+          $options[$auth_id] = $this->t('@auth_id - @date - @amount authorized', ['@auth_id' => strtoupper($auth_id), '@date' => \Drupal::service('date.formatter')->format($data['authorized'], 'short'), '@amount' => uc_currency_format($data['amount'])]);
         }
       }
     }
@@ -166,7 +166,7 @@ class CreditCardTerminalForm extends FormBase {
 
     if (isset($this->order->data->cc_txns['references'])) {
       foreach ($this->order->data->cc_txns['references'] as $ref_id => $data) {
-        $options[$ref_id] = $this->t('@ref_id - @date - (Last 4) @card', array('@ref_id' => strtoupper($ref_id), '@date' => \Drupal::service('date.formatter')->format($data['created'], 'short'), '@card' => $data['card']));
+        $options[$ref_id] = $this->t('@ref_id - @date - (Last 4) @card', ['@ref_id' => strtoupper($ref_id), '@date' => \Drupal::service('date.formatter')->format($data['created'], 'short'), '@card' => $data['card']]);
       }
     }
 

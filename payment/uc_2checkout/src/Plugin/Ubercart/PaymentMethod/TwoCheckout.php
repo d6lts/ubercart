@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_2checkout\Plugin\Ubercart\PaymentMethod;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
