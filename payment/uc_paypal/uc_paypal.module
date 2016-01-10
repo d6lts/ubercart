@@ -56,7 +56,8 @@ function uc_paypal_form_uc_cart_checkout_form_alter(&$form, &$form_state, $form_
  * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_review_form().
  */
 function uc_paypal_form_uc_cart_checkout_review_form_alter(&$form, &$form_state, $form_id) {
-  if (!empty($_SESSION['TOKEN'])) {
+  $session = \Drupal::service('session');
+  if ($session->has('TOKEN')) {
     $form['#submit'][] = 'uc_paypal_ec_submit_form_submit';
   }
 }
@@ -113,12 +114,13 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
   }
 
   $paypal_config = \Drupal::config('uc_paypal.settings');
-  $order_id = intval($_SESSION['cart_order']);
+
+  $session = \Drupal::service('session');
+  $order_id = intval($session->get('cart_order'));
 
   $order = Order::load($order_id);
   if (!$order || $order->getStateId() != 'in_checkout') {
-    $_SESSION['cart_order'] = NULL;
-    unset($_SESSION['cart_order']);
+    $session->remove('cart_order');
     // @todo: when this goes into a controller or form, use $this ...
     // $this->redirect('uc_cart.cart');
     return new RedirectResponse(Url::fromRoute('uc_cart.cart')->toString());
@@ -164,13 +166,13 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
     return new RedirectResponse(Url::fromRoute('uc_cart.checkout')->toString());
   }
 
-  $_SESSION['TOKEN'] = $nvp_response['TOKEN'];
+  $session->set('TOKEN', $nvp_response['TOKEN']);
 
   if (strpos($paypal_config->get('wpp_server'), 'sandbox') > 0) {
     $sandbox = 'sandbox.';
   }
 
-  header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $_SESSION['TOKEN']);
+  header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $session->get('TOKEN'));
   exit();
 }
 
@@ -181,7 +183,8 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
  */
 function uc_paypal_ec_submit_form_submit($form, &$form_state) {
   $paypal_config = \Drupal::config('uc_paypal.settings');
-  $order = Order::load($_SESSION['cart_order']);
+  $session = \Drupal::service('session');
+  $order = Order::load($session->get('cart_order'));
 
   list($desc, $subtotal) = _uc_paypal_product_details($order->products);
 
@@ -205,9 +208,9 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
 
   $nvp_request = array(
     'METHOD' => 'DoExpressCheckoutPayment',
-    'TOKEN' => $_SESSION['TOKEN'],
+    'TOKEN' => $session->get('TOKEN'),
     'PAYMENTACTION' => $paypal_config->get('uc_pg_paypal_wpp_cc_txn_type') == 'authorize' ? 'Authorization' : 'Sale',
-    'PAYERID' => $_SESSION['PAYERID'],
+    'PAYERID' => $session->get('PAYERID'),
     'AMT' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
     'DESC' => substr($desc, 0, 127),
     'INVNUM' => $order->id() . '-' . REQUEST_TIME,
@@ -221,8 +224,14 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
 
   $nvp_response = uc_paypal_api_request($nvp_request, $paypal_config->get('wpp_server'));
 
-  unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
-  $_SESSION['uc_checkout'][$_SESSION['cart_order']]['do_complete'] = TRUE;
+  $session->remove('TOKEN');
+  $session->remove('PAYERID');
+  $complete = array();
+  if ($session->has('uc_checkout')) {
+    $complete = $session->get('uc_checkout');
+  }
+  $complete[$session->get('cart_order')]['do_complete'] = TRUE;
+  $session->set('uc_checkout', $complete);
 
   $form_state->setRedirect('uc_cart.checkout_complete');
 }

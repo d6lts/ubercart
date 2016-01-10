@@ -23,22 +23,24 @@ class EcController extends ControllerBase {
    */
   public function ecReviewRedirect() {
     $paypal_config = $this->config('uc_paypal.settings');
-    if (!isset($_SESSION['TOKEN']) || !($order = Order::load($_SESSION['cart_order']))) {
-      unset($_SESSION['cart_order']);
-      unset($_SESSION['have_details']);
-      unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
+    $session = \Drupal::service('session');
+    if (!$session->has('TOKEN') || !($order = Order::load($session->get('cart_order')))) {
+      $session->remove('cart_order');
+      $session->remove('have_details');
+      $session->remove('TOKEN');
+      $session->remove('PAYERID');
       drupal_set_message($this->t('An error has occurred in your PayPal payment. Please review your cart and try again.'));
       $this->redirect('uc_cart.cart');
     }
 
     $nvp_request = array(
       'METHOD' => 'GetExpressCheckoutDetails',
-      'TOKEN' => $_SESSION['TOKEN'],
+      'TOKEN' => $session->get('TOKEN'),
     );
 
     $nvp_response = uc_paypal_api_request($nvp_request, $paypal_config->get('wpp_server'));
 
-    $_SESSION['PAYERID'] = $nvp_response['PAYERID'];
+    $session->set('PAYERID', $nvp_response['PAYERID']);
 
     $this->redirect('uc_cart.checkout_review');
   }
@@ -51,23 +53,29 @@ class EcController extends ControllerBase {
    */
   public function ecReview() {
     $paypal_config = $this->config('uc_paypal.settings');
-    if (!isset($_SESSION['TOKEN']) || !($order = Order::load($_SESSION['cart_order']))) {
-      unset($_SESSION['cart_order']);
-      unset($_SESSION['have_details']);
-      unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
+    $session = \Drupal::service('session');
+    if (!$session->has('TOKEN') || !($order = Order::load($session->get('cart_order')))) {
+      $session->remove('cart_order');
+      $session->remove('have_details');
+      $session->remove('TOKEN');
+      $session->remove('PAYERID');
       drupal_set_message($this->t('An error has occurred in your PayPal payment. Please review your cart and try again.'));
       return $this->redirect('uc_cart.cart');
     }
 
-    if (!isset($_SESSION['have_details'][$order->id()])) {
+    $details = array();
+    if ($session->has('have_details')) {
+      $details = $session->get('have_details');
+    }
+    if (!isset($details[$order->id()])) {
       $nvp_request = array(
         'METHOD' => 'GetExpressCheckoutDetails',
-        'TOKEN' => $_SESSION['TOKEN'],
+        'TOKEN' => $session->get('TOKEN'),
       );
 
       $nvp_response = uc_paypal_api_request($nvp_request, $paypal_config->get('uc_paypal_wpp_server'));
 
-      $_SESSION['PAYERID'] = $nvp_response['PAYERID'];
+      $session->set('PAYERID', $nvp_response['PAYERID']);
 
       $shipname = SafeMarkup::checkPlain($nvp_response['SHIPTONAME']);
       if (strpos($shipname, ' ') > 0) {
@@ -97,7 +105,8 @@ class EcController extends ControllerBase {
 
       $order->save();
 
-      $_SESSION['have_details'][$order->id()] = TRUE;
+      $details[$order->id()] = TRUE;
+      $session->set('have_details', $details);
     }
 
     $build['instructions'] = array(
@@ -116,9 +125,11 @@ class EcController extends ControllerBase {
    *   A redirect to the cart or a build array.
    */
   public function ecSubmit() {
-    if (!isset($_SESSION['TOKEN']) || !($order = Order::load($_SESSION['cart_order']))) {
-      unset($_SESSION['cart_order'], $_SESSION['have_details']);
-      unset($_SESSION['TOKEN'], $_SESSION['PAYERID']);
+    if (!$session->has('TOKEN') || !($order = Order::load($session->get('cart_order')))) {
+      $session->remove('cart_order');
+      $session->remove('have_details');
+      $session->remove('TOKEN');
+      $session->remove('PAYERID');
       drupal_set_message($this->t('An error has occurred in your PayPal payment. Please review your cart and try again.'));
       $this->redirect('uc_cart.cart');
     }

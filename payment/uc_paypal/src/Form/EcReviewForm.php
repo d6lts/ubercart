@@ -96,7 +96,8 @@ class EcReviewForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $paypal_config = $this->config('uc_paypal.settings');
-    $order = Order::load($_SESSION['cart_order']);
+    $session = \Drupal::service('session');
+    $order = Order::load($session->get('cart_order'));
 
     if (!$form_state->isValueEmpty('shippable')) {
       $quote_option = explode('---', $form_state->getValue(['quotes', 'quote_option']));

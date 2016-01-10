@@ -81,15 +81,16 @@ class EcCartButtonForm extends FormBase {
       return;
     }
 
-    $_SESSION['cart_order'] = $order->id();
-    $_SESSION['TOKEN'] = $nvp_response['TOKEN'];
+    $session = \Drupal::service('session');
+    $session->set('cart_order', $order->id());
+    $session->set('TOKEN', $nvp_response['TOKEN']);
 
     $sandbox = '';
     if (strpos($paypal_config->get('wpp_server'), 'sandbox') > 0) {
       $sandbox = 'sandbox.';
     }
 
-    header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $_SESSION['TOKEN']);
+    header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $session->get('TOKEN'));
     exit();
   }
 

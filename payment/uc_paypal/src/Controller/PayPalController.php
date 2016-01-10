@@ -33,6 +33,7 @@ class PayPalController extends ControllerBase {
       return new Response();
     }
     $paypal_config = $this->config('uc_paypal.settings');
+    $session = \Drupal::service('session');
 
     if (strpos($request->request->get('invoice'), '-') > 0) {
       list($order_id, $cart_id) = explode('-', $request->request->get('invoice'));
@@ -43,7 +44,7 @@ class PayPalController extends ControllerBase {
 
       if (!empty($cart_id)) {
         // Needed later by uc_complete_sale to empty the correct cart
-        $_SESSION['uc_cart_id'] = $cart_id;
+        $session->set('uc_cart_id', $cart_id);
       }
     }
     else {
