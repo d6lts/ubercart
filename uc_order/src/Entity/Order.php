@@ -460,28 +460,25 @@ class Order extends ContentEntityBase implements OrderInterface {
   /**
    * {@inheritdoc}
    */
-  public function logChanges($changes) {
+  public function logChanges(array $changes) {
 
     if (!empty($changes)) {
       foreach ($changes as $key => $value) {
         if (is_array($value)) {
-          $items[] = t('@key changed from %old to %new.', ['@key' => $key, '%old' => $value['old'], '%new' => $value['new']]);
+          $entry = t('@key changed from %old to %new.', ['@key' => $key, '%old' => $value['old'], '%new' => $value['new']]);
         }
         else {
-          $items[] = (string) $value;
+          $entry = (string) $value;
         }
       }
 
-      $item_list = array(
-        '#theme' => 'item_list',
-        '#items' => $items,
-      );
+      $markup = array('#markup' => $entry);
 
       db_insert('uc_order_log')
         ->fields(array(
           'order_id' => $this->id(),
           'uid' => \Drupal::currentUser()->id(),
-          'changes' => \Drupal::service('renderer')->renderPlain($item_list),
+          'changes' => \Drupal::service('renderer')->renderPlain($markup),
           'created' => REQUEST_TIME,
         ))
         ->execute();

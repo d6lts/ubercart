@@ -201,7 +201,7 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface,
   /**
    * Logs changes made to an order.
    *
-   * @param $changes
+   * @param array $changes
    *   An array of changes. Two formats are allowed:
    *   - keys: Keys being the name of the field changed and the values being
    *     associative arrays with the keys 'old' and 'new' to represent the old
@@ -213,6 +213,6 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface,
    * @return \Drupal\uc_order\OrderInterface
    *   The called owner entity.
    */
-  public function logChanges($changes);
+  public function logChanges(array $changes);
 
 }

@@ -59,13 +59,13 @@ class OrderController extends ControllerBase {
   public function log(OrderInterface $uc_order) {
     $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", [':id' => $uc_order->id()]);
 
-    $header = array(t('Time'), t('User'), t('Changes'));
+    $header = array($this->t('Time'), $this->t('User'), $this->t('Changes'));
     $rows = array();
     foreach ($result as $change) {
       $rows[] = array(
         \Drupal::service('date.formatter')->format($change->created, 'short'),
-        array('#theme' => 'uc_uid',  '#uid' => $change->uid),
-        $change->changes,
+        array('data' => array('#theme' => 'uc_uid',  '#uid' => $change->uid)),
+        array('data' => array('#markup' => $change->changes)),
       );
     }
 
@@ -73,7 +73,7 @@ class OrderController extends ControllerBase {
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => t('No changes have been logged for this order.'),
+      '#empty' => $this->t('No changes have been logged for this order.'),
     );
 
     return $build;
