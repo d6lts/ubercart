@@ -103,10 +103,3 @@ img.uc-2checkout-logo {
 [dir="rtl"] #uc-payment-by-order-form .form-type-item {
   float: right;
 }
-
-#uc-payment-by-order-form table {
-  clear: left; /* LTR */
-}
-[dir="rtl"] #uc-payment-by-order-form table {
-  clear: right;
-}
