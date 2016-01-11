@@ -21,7 +21,7 @@ class ProductController extends ControllerBase {
    * Displays a list of product classes.
    */
   public function classOverview() {
-    $classes = \Drupal::entityTypeManager()->getStorage('node_type')->loadByProperties(array(
+    $classes = $this->entityTypeManager()->getStorage('node_type')->loadByProperties(array(
       'third_party_settings.uc_product.product' => TRUE,
     ));
     $header = array($this->t('Class ID'), $this->t('Name'), $this->t('Description'), $this->t('Operations'));
@@ -45,9 +45,9 @@ class ProductController extends ControllerBase {
         );
       }
       $rows[] = array(
-        SafeMarkup::checkPlain($class->id()),
-        SafeMarkup::checkPlain($class->label()),
-        Xss::filterAdmin($class->getDescription()),
+        $class->id(),
+        $class->label(),
+        array('data' => array('#markup' => $class->getDescription())),
         array(
           'data' => array(
             '#type' => 'operations',
