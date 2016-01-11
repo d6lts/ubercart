@@ -4,5 +4,6 @@ description: 'Adds e-commerce tracking to the Google Analytics module.'
 package: Ubercart - extra
 core: 8.x
 dependencies:
+  - not_yet_ported
   - googleanalytics
   - uc_cart
