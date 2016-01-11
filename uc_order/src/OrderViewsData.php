@@ -23,17 +23,17 @@ class OrderViewsData extends EntityViewsData {
 
     $data['uc_orders']['order_status']['filter']['id'] = 'uc_order_status';
 
-    $data['uc_orders']['uid']['help'] = t('The user ID that the order belongs to.');
+    $data['uc_orders']['uid']['help'] = $this->t('The user ID that the order belongs to.');
     $data['uc_orders']['uid']['filter']['id'] = 'user_name';
-    $data['uc_orders']['uid']['relationship']['title'] = t('Customer');
-    $data['uc_orders']['uid']['relationship']['help'] = t('Relate an order to the user who placed it.');
-    $data['uc_orders']['uid']['relationship']['label'] = t('customer');
+    $data['uc_orders']['uid']['relationship']['title'] = $this->t('Customer');
+    $data['uc_orders']['uid']['relationship']['help'] = $this->t('Relate an order to the user who placed it.');
+    $data['uc_orders']['uid']['relationship']['label'] = $this->t('customer');
 
     $data['uc_orders']['order_total']['field']['id'] = 'uc_price';
 
     $data['uc_orders']['actions'] = array(
-      'title' => t('Actions'),
-      'help' => t('Clickable links to actions a user may perform on an order.'),
+      'title' => $this->t('Actions'),
+      'help' => $this->t('Clickable links to actions a user may perform on an order.'),
       'field' => array(
         'id' => 'uc_order_actions',
         'real field' => 'order_id',
@@ -47,8 +47,8 @@ class OrderViewsData extends EntityViewsData {
     $data['uc_orders']['delivery_country']['filter']['options callback'] = 'Drupal\uc_country\Controller\CountryController::countryOptionsCallback';
 
     $data['uc_orders']['billing_country_name'] = array(
-      'title' => t('Billing country name'),
-      'help' =>  t('The country name where the bill will be sent.'),
+      'title' => $this->t('Billing country name'),
+      'help' =>  $this->t('The country name where the bill will be sent.'),
       'field' => array(
         'id' => 'uc_country',
         'real field' => 'billing_country',
@@ -56,8 +56,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_orders']['delivery_country_name'] = array(
-      'title' => t('Delivery country name'),
-      'help' =>  t('The country name of the delivery location.'),
+      'title' => $this->t('Delivery country name'),
+      'help' =>  $this->t('The country name of the delivery location.'),
       'field' => array(
         'id' => 'uc_country',
         'real field' => 'delivery_country',
@@ -70,8 +70,8 @@ class OrderViewsData extends EntityViewsData {
     $data['uc_orders']['delivery_zone']['filter']['options callback'] = 'Drupal\uc_country\Controller\CountryController::zoneOptionsCallback';
 
     $data['uc_orders']['billing_zone_name'] = array(
-      'title' => t('Billing state/province name'),
-      'help' =>  t('The state/zone/province ID where the bill will be sent.'),
+      'title' => $this->t('Billing state/province name'),
+      'help' =>  $this->t('The state/zone/province ID where the bill will be sent.'),
       'field' => array(
         'id' => 'uc_zone',
         'real field' => 'billing_zone',
@@ -84,8 +84,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_orders']['delivery_zone_name'] = array(
-      'title' => t('Delivery state/province name'),
-      'help' =>  t('The state/zone/province ID of the delivery location.'),
+      'title' => $this->t('Delivery state/province name'),
+      'help' =>  $this->t('The state/zone/province ID of the delivery location.'),
       'field' => array(
         'id' => 'uc_zone',
         'real field' => 'delivery_zone',
@@ -98,8 +98,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_orders']['billing_full_name'] = array(
-      'title' => t('Billing full name'),
-      'help' => t('The full name of the person paying for the order.'),
+      'title' => $this->t('Billing full name'),
+      'help' => $this->t('The full name of the person paying for the order.'),
       'field' => array(
         'id' => 'uc_order_full_name',
         'real field' => 'billing_first_name',
@@ -112,8 +112,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_orders']['delivery_full_name'] = array(
-      'title' => t('Delivery full name'),
-      'help' => t('The full name of the person receiving shipment.'),
+      'title' => $this->t('Delivery full name'),
+      'help' => $this->t('The full name of the person receiving shipment.'),
       'field' => array(
         'id' => 'uc_order_full_name',
         'real field' => 'delivery_first_name',
@@ -126,8 +126,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_orders']['total_weight'] = array(
-      'title' => t('Total weight'),
-      'help' => t('The physical weight of all the products (weight * quantity) in the order.'),
+      'title' => $this->t('Total weight'),
+      'help' => $this->t('The physical weight of all the products (weight * quantity) in the order.'),
       'real field' => 'weight',
       'field' => array(
         'handler' => 'uc_order_handler_field_order_weight_total',
@@ -139,11 +139,11 @@ class OrderViewsData extends EntityViewsData {
 
     // Expose the uid as a relationship to users.
     $data['users_field_data']['uc_orders'] = array(
-      'title' => t('Orders'),
-      'help' => t('Relate a user to the orders they have placed. This relationship will create one record for each order placed by the user.'),
+      'title' => $this->t('Orders'),
+      'help' => $this->t('Relate a user to the orders they have placed. This relationship will create one record for each order placed by the user.'),
       'relationship' => array(
-        'title' => t('Order'),
-        'label' => t('Order'),
+        'title' => $this->t('Order'),
+        'label' => $this->t('Order'),
         'base' => 'uc_orders',
         'base field' => 'uid',
         'relationship field' => 'uid',
@@ -161,39 +161,39 @@ class OrderViewsData extends EntityViewsData {
     //   }
     // }
     // // Fix incomplete fields
-    // $data['uc_order_products']['weight_units']['title'] = t('Weight units');
+    // $data['uc_order_products']['weight_units']['title'] = $this->t('Weight units');
 
-    $data['uc_order_products']['table']['group'] = t('Ordered product');
+    $data['uc_order_products']['table']['group'] = $this->t('Ordered product');
     $data['uc_order_products']['table']['base'] = array(
       'field' => 'order_product_id',
-      'title' => t('Ordered products'),
-      'help' => t('Products that have been ordered in your Ubercart store.'),
+      'title' => $this->t('Ordered products'),
+      'help' => $this->t('Products that have been ordered in your Ubercart store.'),
     );
 
     // Expose products to their orders as a relationship.
     $data['uc_orders']['products'] = array(
       'relationship' => array(
-        'title' => t('Products'),
-        'help' => t('Relate products to an order. This relationship will create one record for each product ordered.'),
+        'title' => $this->t('Products'),
+        'help' => $this->t('Relate products to an order. This relationship will create one record for each product ordered.'),
         'id' => 'standard',
         'base' => 'uc_order_products',
         'base field' => 'order_id',
         'relationship field' => 'order_id',
-        'label' => t('products'),
+        'label' => $this->t('products'),
       ),
     );
 
     // Expose nodes to ordered products as a relationship.
     $data['uc_order_products']['nid'] = array(
-      'title' => t('Nid'),
-      'help' => t('The nid of the ordered product. If you need more fields than the nid: Node relationship'),
+      'title' => $this->t('Nid'),
+      'help' => $this->t('The nid of the ordered product. If you need more fields than the nid: Node relationship'),
       'relationship' => array(
-        'title' => t('Node'),
-        'help' => t('Relate product to node.'),
+        'title' => $this->t('Node'),
+        'help' => $this->t('Relate product to node.'),
         'id' => 'standard',
         'base' => 'node',
         'field' => 'nid',
-        'label' => t('node'),
+        'label' => $this->t('node'),
       ),
       'filter' => array(
         'id' => 'numeric',
@@ -208,15 +208,15 @@ class OrderViewsData extends EntityViewsData {
 
     // Expose orders to ordered products as a relationship.
     $data['uc_order_products']['order_id'] = array(
-      'title' => t('Order ID'),
-      'help' => t('The order ID of the ordered product. If you need more fields than the order ID: Order relationship'),
+      'title' => $this->t('Order ID'),
+      'help' => $this->t('The order ID of the ordered product. If you need more fields than the order ID: Order relationship'),
       'relationship' => array(
-        'title' => t('Order'),
-        'help' => t('Relate product to order.'),
+        'title' => $this->t('Order'),
+        'help' => $this->t('Relate product to order.'),
         'id' => 'standard',
         'base' => 'uc_orders',
         'field' => 'order_id',
-        'label' => t('order'),
+        'label' => $this->t('order'),
       ),
       'filter' => array(
         'id' => 'numeric',
@@ -230,8 +230,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['model'] = array(
-      'title' => t('SKU'),
-      'help' => t('The product model/SKU.'),
+      'title' => $this->t('SKU'),
+      'help' => $this->t('The product model/SKU.'),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -248,8 +248,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['qty'] = array(
-      'title' => t('Quantity'),
-      'help' => t('The quantity ordered.'),
+      'title' => $this->t('Quantity'),
+      'help' => $this->t('The quantity ordered.'),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -263,8 +263,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['price'] = array(
-      'title' => t('Price'),
-      'help' => t('The price paid for one product.'),
+      'title' => $this->t('Price'),
+      'help' => $this->t('The price paid for one product.'),
       'field' => array(
         'id' => 'uc_price',
         'click sortable' => TRUE,
@@ -278,8 +278,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['total_price'] = array(
-      'title' => t('Total price'),
-      'help' => t('The price paid for all the products (price * quantity).'),
+      'title' => $this->t('Total price'),
+      'help' => $this->t('The price paid for all the products (price * quantity).'),
       'real field' => 'price',
       'field' => array(
         'handler' => 'uc_order_handler_field_money_total',
@@ -294,8 +294,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['cost'] = array(
-      'title' => t('Cost'),
-      'help' => t('The cost to the store for one product.'),
+      'title' => $this->t('Cost'),
+      'help' => $this->t('The cost to the store for one product.'),
       'field' => array(
         'id' => 'uc_price',
         'click sortable' => TRUE,
@@ -309,8 +309,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['total_cost'] = array(
-      'title' => t('Total cost'),
-      'help' => t('The cost to the store for all the products (cost * quantity).'),
+      'title' => $this->t('Total cost'),
+      'help' => $this->t('The cost to the store for all the products (cost * quantity).'),
       'real field' => 'cost',
       'field' => array(
         'handler' => 'uc_order_handler_field_money_total',
@@ -325,8 +325,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['weight'] = array(
-      'title' => t('Weight'),
-      'help' => t('The physical weight of one product.'),
+      'title' => $this->t('Weight'),
+      'help' => $this->t('The physical weight of one product.'),
       'field' => array(
         'additional fields' => array(
           'weight_units' => array(
@@ -338,8 +338,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['total_weight'] = array(
-      'title' => t('Total weight'),
-      'help' => t('The physical weight of all the products (weight * quantity).'),
+      'title' => $this->t('Total weight'),
+      'help' => $this->t('The physical weight of all the products (weight * quantity).'),
       'real field' => 'weight',
       'field' => array(
         'additional fields' => array(
@@ -352,8 +352,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_products']['title'] = array(
-      'title' => t('Title'),
-      'help' => t('The title of the product.'),
+      'title' => $this->t('Title'),
+      'help' => $this->t('The title of the product.'),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -371,7 +371,7 @@ class OrderViewsData extends EntityViewsData {
 
     // Order comments table.
     // TODO: refactor this into a groupwise max relationship.
-    $data['uc_order_comments']['table']['group'] = t('Order comments');
+    $data['uc_order_comments']['table']['group'] = $this->t('Order comments');
     $data['uc_order_comments']['table']['join'] = array(
       'uc_orders' => array(
         'left_field' => 'order_id',
@@ -385,8 +385,8 @@ class OrderViewsData extends EntityViewsData {
     );
 
     $data['uc_order_comments']['message'] = array(
-      'title' => t('Comment'),
-      'help' => t('The comment body.'),
+      'title' => $this->t('Comment'),
+      'help' => $this->t('The comment body.'),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -419,10 +419,10 @@ class OrderViewsData extends EntityViewsData {
       $data['uc_order_line_items_' . $line_item_id]['table']['join']['uc_order_products'] = $data['uc_order_line_items_' . $line_item_id]['table']['join']['uc_orders'];
       $data['uc_order_line_items_' . $line_item_id]['table']['join']['uc_order_products']['left_table'] = 'uc_orders';
 
-      $data['uc_order_line_items_' . $line_item_id]['table']['group'] = t('Order: Line item');
+      $data['uc_order_line_items_' . $line_item_id]['table']['group'] = $this->t('Order: Line item');
       $data['uc_order_line_items_' . $line_item_id]['title'] = array(
-        'title' => t('@line_item title', ['@line_item' => $line_item_desc]),
-        'help' => t('@line_item order line item', ['@line_item' => $line_item_desc]),
+        'title' => $this->t('@line_item title', ['@line_item' => $line_item_desc]),
+        'help' => $this->t('@line_item order line item', ['@line_item' => $line_item_desc]),
         'field' => array(
           'id' => 'standard',
           'click sortable' => TRUE,
@@ -433,8 +433,8 @@ class OrderViewsData extends EntityViewsData {
       );
 
       $data['uc_order_line_items_' . $line_item_id]['amount'] = array(
-        'title' => t('@line_item amount', ['@line_item' => $line_item_desc]),
-        'help' => t('@line_item order line item', ['@line_item' => $line_item_desc]),
+        'title' => $this->t('@line_item amount', ['@line_item' => $line_item_desc]),
+        'help' => $this->t('@line_item order line item', ['@line_item' => $line_item_desc]),
         'field' => array(
           'id' => 'uc_price',
           'click sortable' => TRUE,

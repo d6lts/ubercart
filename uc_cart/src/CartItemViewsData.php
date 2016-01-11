@@ -21,27 +21,27 @@ class CartItemViewsData extends EntityViewsData {
     $data = parent::getViewsData();
 
     // Cart items table.
-    $data['uc_cart_products']['table']['group'] = t('Cart item');
+    $data['uc_cart_products']['table']['group'] = $this->t('Cart item');
     $data['uc_cart_products']['table']['base'] = array(
       'field' => 'cart_item_id',
-      'title' => t('Cart items'),
-      'help' => t('Products in customer carts.'),
+      'title' => $this->t('Cart items'),
+      'help' => $this->t('Products in customer carts.'),
     );
 
     $data['uc_cart_products']['nid'] = array(
-      'title' => t('Nid'),
-      'help' => t('The node ID of a product in the cart.'),
+      'title' => $this->t('Nid'),
+      'help' => $this->t('The node ID of a product in the cart.'),
       'field' => array(
         'id' => 'node',
         'click sortable' => TRUE,
       ),
       'relationship' => array(
-        'title' => t('Node'),
-        'help' => t('Relate cart item to node.'),
+        'title' => $this->t('Node'),
+        'help' => $this->t('Relate cart item to node.'),
         'id' => 'standard',
         'base' => 'node',
         'field' => 'nid',
-        'label' => t('node'),
+        'label' => $this->t('node'),
       ),
       'argument' => array(
         'id' => 'node_nid',
@@ -56,8 +56,8 @@ class CartItemViewsData extends EntityViewsData {
     );
 
     $data['uc_cart_products']['cart_id'] = array(
-      'title' => t('Cart ID'),
-      'help' => t('The ID of the cart (user ID for authenticated users, session ID for anonymous users).'),
+      'title' => $this->t('Cart ID'),
+      'help' => $this->t('The ID of the cart (user ID for authenticated users, session ID for anonymous users).'),
       'field' => array(
         'id' => 'standard',
         'click sortable' => TRUE,
@@ -75,8 +75,8 @@ class CartItemViewsData extends EntityViewsData {
     );
 
     $data['uc_cart_products']['qty'] = array(
-      'title' => t('Quantity'),
-      'help' => t('The quantity to be ordered.'),
+      'title' => $this->t('Quantity'),
+      'help' => $this->t('The quantity to be ordered.'),
       'field' => array(
         'id' => 'numeric',
         'click sortable' => TRUE,
