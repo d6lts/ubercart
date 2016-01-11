@@ -50,7 +50,7 @@ uc_payments.order_payments:
   path: '/admin/store/orders/{uc_order}/payments'
   defaults:
     _form: '\Drupal\uc_payment\Form\OrderPaymentsForm'
-    _title: 'Payments'
+    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _permission: 'view payments'
 
