@@ -7,6 +7,8 @@ dependencies:
     - uc_country
     - uc_order
     - user
+_core:
+  default_config_hash: HAwamdeCV8Zx6PdJukFKP5YrVBkf7q7F2aKs3ohpi0Q
 id: uc_customers
 label: Customers
 module: views
@@ -131,7 +133,7 @@ display:
               empty_column: false
               responsive: ''
           default: order_id
-          empty_table: false
+          empty_table: true
       row:
         type: fields
       fields:
@@ -679,7 +681,20 @@ display:
           plugin_id: numeric
       sorts: {  }
       title: Customers
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content:
+            value: 'You don''t have any customers yet.'
+            format: basic_html
+          plugin_id: text
       arguments: {  }
       relationships:
         uc_orders:
