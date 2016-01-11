@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_payment\Entity\PaymentMethod;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -138,11 +139,17 @@ class OrderPaymentsForm extends FormBase {
       $form['payments']['new']['user'] = array(
         '#markup' => '-',
       );
+
+      $options = array();
+      foreach (PaymentMethod::loadMultiple() as $method) {
+        $options[$method->id()] = $method->label();
+      }
       $form['payments']['new']['method'] = array(
         '#type' => 'select',
         '#title' => $this->t('Method'),
         '#title_display' => 'invisible',
-        '#options' => $this->paymentMethodManager->listOptions(),
+        '#options' => $options,
+        '#default_value' => $this->order->getPaymentMethodId(),
       );
       $form['payments']['new']['amount'] = array(
         '#type' => 'textfield',
