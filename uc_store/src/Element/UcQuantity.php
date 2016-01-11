@@ -48,7 +48,7 @@ class UcQuantity extends Element\FormElement {
    */
   public static function validateQuantity(&$element, FormStateInterface $form_state, &$complete_form) {
     if (!preg_match('/^\d+$/', $element['#value'])) {
-      $form_state->setError($element, t('The quantity must be a number.'));
+      $form_state->setError($element, t('The quantity must be an integer.'));
     }
     elseif (empty($element['#allow_zero']) && !$element['#value']) {
       $form_state->setError($element, t('The quantity cannot be zero.'));

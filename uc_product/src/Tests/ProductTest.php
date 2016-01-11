@@ -215,10 +215,10 @@ class ProductTest extends UbercartTestBase {
 
     // Check invalid quantity messages.
     $this->addToCart($this->product, array('qty' => 'x'));
-    $this->assertText('The quantity must be a number.');
+    $this->assertText('The quantity must be an integer.');
 
     $this->addToCart($this->product, array('qty' => '1a'));
-    $this->assertText('The quantity must be a number.');
+    $this->assertText('The quantity must be an integer.');
 
     // Check cart add message.
     $this->addToCart($this->product, array('qty' => 1));
