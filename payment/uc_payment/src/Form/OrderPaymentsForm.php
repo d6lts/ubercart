@@ -10,8 +10,9 @@ namespace Drupal\uc_payment\Form;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_payment\Entity\PaymentMethod;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -82,15 +83,15 @@ class OrderPaymentsForm extends FormBase {
       '#weight' => 10,
     );
 
-    $account = \Drupal::currentUser();
+    $account = $this->currentUser();
     if ($payments !== FALSE) {
       foreach ($payments as $payment) {
         $form['payments'][$payment->receipt_id]['received'] = array(
           '#markup' => \Drupal::service('date.formatter')->format($payment->received, 'short'),
         );
-        $markup = array('#theme' => 'uc_uid', '#uid' => $payment->uid);
         $form['payments'][$payment->receipt_id]['user'] = array(
-          '#markup' => drupal_render($markup),
+          '#theme' => 'uc_uid',
+          '#uid' => $payment->uid,
         );
         $form['payments'][$payment->receipt_id]['method'] = array(
           '#markup' => ($payment->method == '') ? $this->t('Unknown') : $payment->method,
@@ -107,15 +108,23 @@ class OrderPaymentsForm extends FormBase {
         $form['payments'][$payment->receipt_id]['comment'] = array(
           '#markup' => ($payment->comment == '') ? '-' : Xss::filterAdmin($payment->comment),
         );
+
         if ($account->hasPermission('delete payments')) {
-          $action_value = Link::createFromRoute($this->t('Delete'), 'uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id])->toString();
+          $form['payments'][$payment->receipt_id]['action'] = array(
+            '#type' => 'operations',
+            '#links' => array(
+              'delete' => array(
+                'title' => $this->t('Delete'),
+                'url' => Url::fromRoute('uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $payment->receipt_id]),
+              ),
+            ),
+          );
         }
         else {
-          $action_value = '-';
+          $form['payments'][$payment->receipt_id]['action'] = array(
+            '#markup' => '',
+          );
         }
-        $form['payments'][$payment->receipt_id]['action'] = array(
-          '#markup' => $action_value,
-        );
       }
     }
 
@@ -138,11 +147,17 @@ class OrderPaymentsForm extends FormBase {
       $form['payments']['new']['user'] = array(
         '#markup' => '-',
       );
+
+      $options = array();
+      foreach (PaymentMethod::loadMultiple() as $method) {
+        $options[$method->id()] = $method->label();
+      }
       $form['payments']['new']['method'] = array(
         '#type' => 'select',
         '#title' => $this->t('Method'),
         '#title_display' => 'invisible',
-        '#options' => $this->paymentMethodManager->listOptions(),
+        '#options' => $options,
+        '#default_value' => $this->order->getPaymentMethodId(),
       );
       $form['payments']['new']['amount'] = array(
         '#type' => 'textfield',
