@@ -44,7 +44,7 @@ class CheckoutPaneManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Ubercart/CheckoutPane', $namespaces, $module_handler, CheckoutPanePluginInterface::class, CheckoutPane::class);
-    $this->alterInfo('payment_method');
+    $this->alterInfo('uc_checkout_pane');
     $this->setCacheBackend($cache_backend, 'uc_checkout_panes');
 
     $this->paneConfig = \Drupal::config('uc_cart.settings')->get('panes');
