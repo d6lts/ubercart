@@ -1,12 +1,12 @@
-entity.uc_quote.collection:
+entity.uc_quote_method.collection:
   path: '/admin/store/config/quotes'
   defaults:
-    _entity_list: 'uc_quote'
+    _entity_list: 'uc_quote_method'
     _title: 'Shipping quotes'
   requirements:
     _permission: 'configure quotes'
 
-entity.uc_quote.add_form:
+entity.uc_quote_method.add_form:
   path: '/admin/store/config/quotes/add/{plugin_id}'
   defaults:
     _controller: '\Drupal\uc_quote\Controller\ShippingQuoteMethodController::addForm'
@@ -14,34 +14,34 @@ entity.uc_quote.add_form:
   requirements:
     _permission: 'configure quotes'
 
-entity.uc_quote.edit_form:
-  path: '/admin/store/config/quotes/{uc_quote}'
+entity.uc_quote_method.edit_form:
+  path: '/admin/store/config/quotes/{uc_quote_method}'
   defaults:
-    _entity_form: 'uc_quote.default'
+    _entity_form: 'uc_quote_method.default'
     _title: 'Edit shipping method'
   requirements:
     _permission: 'configure quotes'
 
-entity.uc_quote.enable:
-  path: '/admin/store/config/quotes/{uc_quote}/enable'
+entity.uc_quote_method.enable:
+  path: '/admin/store/config/quotes/{uc_quote_method}/enable'
   defaults:
     _controller: '\Drupal\uc_quote\Controller\ShippingQuoteMethodController::performOperation'
     op: 'enable'
   requirements:
     _permission: 'configure quotes'
 
-entity.uc_quote.disable:
-  path: '/admin/store/config/quotes/{uc_quote}/disable'
+entity.uc_quote_method.disable:
+  path: '/admin/store/config/quotes/{uc_quote_method}/disable'
   defaults:
     _controller: '\Drupal\uc_quote\Controller\ShippingQuoteMethodController::performOperation'
     op: 'disable'
   requirements:
     _permission: 'configure quotes'
 
-entity.uc_quote.delete_form:
-  path: '/admin/store/config/quotes/{uc_quote}/delete'
+entity.uc_quote_method.delete_form:
+  path: '/admin/store/config/quotes/{uc_quote_method}/delete'
   defaults:
-    _entity_form: 'uc_quote.delete'
+    _entity_form: 'uc_quote_method.delete'
     _title: 'Delete shipping method'
   requirements:
     _permission: 'configure quotes'

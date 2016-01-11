@@ -14,7 +14,7 @@ use Drupal\uc_quote\ShippingQuoteMethodInterface;
  * Defines the shipping quote method configuration entity.
  *
  * @ConfigEntityType(
- *   id = "uc_quote",
+ *   id = "uc_quote_method",
  *   label = @Translation("Shipping quote"),
  *   handlers = {
  *     "list_builder" = "Drupal\uc_quote\ShippingQuoteMethodListBuilder",
@@ -39,10 +39,10 @@ use Drupal\uc_quote\ShippingQuoteMethodInterface;
  *     "settings",
  *   },
  *   links = {
- *     "edit-form" = "/admin/store/config/quotes/{uc_quote}",
- *     "enable" = "/admin/store/config/quotes/{uc_quote}/enable",
- *     "disable" = "/admin/store/config/quotes/{uc_quote}/disable",
- *     "delete-form" = "/admin/store/config/quotes/{uc_quote}/delete",
+ *     "edit-form" = "/admin/store/config/quotes/{uc_quote_method}",
+ *     "enable" = "/admin/store/config/quotes/{uc_quote_method}/enable",
+ *     "disable" = "/admin/store/config/quotes/{uc_quote_method}/disable",
+ *     "delete-form" = "/admin/store/config/quotes/{uc_quote_method}/delete",
  *     "collection" = "/admin/store/config/quotes"
  *   }
  * )

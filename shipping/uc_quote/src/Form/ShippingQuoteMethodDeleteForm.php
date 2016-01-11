@@ -27,7 +27,7 @@ class ShippingQuoteMethodDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.uc_quote.collection');
+    return new Url('entity.uc_quote_method.collection');
   }
 
   /**

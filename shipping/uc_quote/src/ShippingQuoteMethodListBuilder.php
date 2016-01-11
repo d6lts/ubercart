@@ -155,7 +155,7 @@ class ShippingQuoteMethodListBuilder extends DraggableListBuilder implements For
    * Form submission handler for adding a new method.
    */
   public function submitAddMethod(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('entity.uc_quote.add_form', ['plugin_id' => $form_state->getValue('plugin')]);
+    $form_state->setRedirect('entity.uc_quote_method.add_form', ['plugin_id' => $form_state->getValue('plugin')]);
   }
 
 }
