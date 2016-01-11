@@ -281,7 +281,7 @@ class UPSSettingsForm extends ConfigFormBase {
     $form['actions']['cancel'] = array(
       '#type' => 'link',
       '#title' => $this->t('Cancel'),
-      '#url' => Url::fromRoute('entity.uc_quote.collection'),
+      '#url' => Url::fromRoute('entity.uc_quote_method.collection'),
     );
 
     if (!empty($_POST) && $form_state->getErrors()) {
