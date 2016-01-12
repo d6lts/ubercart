@@ -254,7 +254,7 @@ function _uc_catalog_navigation($branch) {
   if (\Drupal::config('uc_catalog.settings')->get('block_nodecount')) {
     $num_text = ' (' . $num . ')';
   }
-  $link = Link::fromTextAndUrl($branch->getName() . $num_text, Url::fromUri('base:/' . $branch_path));
+  $link = Link::fromTextAndUrl($branch->getName() . $num_text, Url::fromUri('base:/' . $branch_path))->toString();
 
   $output = theme_uc_catalog_item(array(
     'here' => $here,
