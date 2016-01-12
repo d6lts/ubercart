@@ -286,7 +286,7 @@ function uc_report_form_uc_store_settings_form_alter(&$form, &$form_state) {
 function uc_report_order_statuses() {
   $statuses = array();
   foreach (OrderStatus::loadMultiple() as $status) {
-    $statuses[$status->id()] = $status->label();
+    $statuses[] = $status->id();
   }
   return $statuses;
 }
