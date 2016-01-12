@@ -11,6 +11,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 use Drupal\user\UserInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller routines for order routes.
@@ -19,6 +20,9 @@ class OrderController extends ControllerBase {
 
   /**
    * Creates an order for the specified user, and redirects to the edit page.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   The user to create the order for.
    */
   public function createForUser(UserInterface $user) {
     $order = Order::create([
@@ -34,26 +38,44 @@ class OrderController extends ControllerBase {
 
   /**
    * Displays an order invoice.
+   *
+   * @param \Drupal\uc_order\OrderInterface $uc_order
+   *   The order entity.
+   * @param bool $print
+   *   Whether to generate a printable version.
+   *
+   * @return array|string
+   *   A render array or HTML markup in a form suitable for printing.
    */
   public function invoice(OrderInterface $uc_order, $print = FALSE) {
-    $build = array(
+    $invoice = array(
       '#theme' => 'uc_order_invoice',
       '#order' => $uc_order,
       '#op' => $print ? 'print' : 'view',
     );
 
     if ($print) {
-      //@todo fix this
-      //drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-      //print drupal_render(array('#theme' => 'uc_order_invoice_page', 'content' => $build));
-      exit();
+      $build = array(
+        '#theme' => 'uc_order_invoice_page',
+        '#content' => $invoice,
+      );
+      $markup = \Drupal::service('renderer')->renderPlain($build);
+      $response = new Response($markup);
+      $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+      return $response;
     }
 
-    return $build;
+    return $invoice;
   }
 
   /**
    * Displays a log of changes made to an order.
+   *
+   * @param \Drupal\uc_order\OrderInterface $uc_order
+   *   The order entity.
+   *
+   * @return array
+   *   A render array.
    */
   public function log(OrderInterface $uc_order) {
     $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", [':id' => $uc_order->id()]);

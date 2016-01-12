@@ -599,12 +599,13 @@ function template_preprocess_uc_order_invoice(&$variables) {
  * @see uc_order-invoice-page.tpl.php
  */
 function template_preprocess_uc_order_invoice_page(&$variables) {
-  $language_interface = \Drupal::languageManager()->getLanguage();
+  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   // HTML element attributes.
-  $variables['html_attributes'] = new Attribute;
-  $variables['html_attributes']['lang'] = $language_interface->langcode;
-  $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
+  $attributes = array();
+  $attributes['lang'] = $language_interface->getId();
+  $attributes['dir'] = $language_interface->getDirection();
+  $variables['html_attributes'] = new Attribute($attributes);
 
   $site_config = \Drupal::config('system.site');
   $head_title = array('name' => $site_config->get('name'));
@@ -616,13 +617,13 @@ function template_preprocess_uc_order_invoice_page(&$variables) {
   if (theme_get_setting('features.favicon')) {
     $favicon = theme_get_setting('favicon.url');
     $type = theme_get_setting('favicon.mimetype');
-    _drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols($favicon), 'type' => $type));
+    $build['#attached']['html_head_link'][][] = array(
+      'rel' => 'shortcut icon',
+      'href' => \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols($favicon),
+      'type' => $type,
+    );
+    \Drupal::service('renderer')->render($build);
   }
-  $variables['head'] = drupal_get_html_head();
-
-  // Set the default language if necessary.
-  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : \Drupal::languageManager()->getDefaultLanguage();
-
   $variables['head_title'] = implode(' | ', $head_title);
 }
 
