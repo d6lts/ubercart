@@ -470,18 +470,18 @@ class Order extends ContentEntityBase implements OrderInterface {
         else {
           $entry = (string) $value;
         }
+
+        $markup = array('#markup' => $entry);
+
+        db_insert('uc_order_log')
+          ->fields(array(
+            'order_id' => $this->id(),
+            'uid' => \Drupal::currentUser()->id(),
+            'changes' => \Drupal::service('renderer')->renderPlain($markup),
+            'created' => REQUEST_TIME,
+          ))
+          ->execute();
       }
-
-      $markup = array('#markup' => $entry);
-
-      db_insert('uc_order_log')
-        ->fields(array(
-          'order_id' => $this->id(),
-          'uid' => \Drupal::currentUser()->id(),
-          'changes' => \Drupal::service('renderer')->renderPlain($markup),
-          'created' => REQUEST_TIME,
-        ))
-        ->execute();
     }
 
     return $this;
