@@ -11,6 +11,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The maximum number of records.
@@ -947,7 +948,7 @@ class Reports extends ControllerBase {
       throw new NotFoundHttpException();
     }
     else {
-      ob_end_clean();
+      $response = new Response($csv_data->data);
       $http_headers = array(
         'Pragma' => 'private',
         'Expires' => '0',
@@ -959,11 +960,9 @@ class Reports extends ControllerBase {
       );
       foreach ($http_headers as $header => $value) {
         $value = preg_replace('/\r?\n(?!\t| )/', '', $value);
-        _drupal_add_http_header($header, $value);
+        $response->headers->set($header, $value);
       }
-
-      print $csv_data->data;
-      exit();
+      return $response;
     }
   }
 
