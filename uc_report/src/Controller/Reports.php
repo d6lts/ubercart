@@ -209,9 +209,9 @@ class Reports extends ControllerBase {
         'data' => array(
           $row_cell,
           $product_cell,
-          "<strong>$sold_cell</strong>",
-          "<strong>$revenue_cell</strong>",
-          "<strong>$gross_cell</strong>",
+          array('data' => array('#prefix' => '<strong>', '#markup' => $sold_cell, '#suffix' => '</strong>')),
+          array('data' => array('#prefix' => '<strong>', '#markup' => $revenue_cell, '#suffix' => '</strong>')),
+          array('data' => array('#prefix' => '<strong>', '#markup' => $gross_cell, '#suffix' => '</strong>')),
         ),
         'primary' => TRUE,
       );
@@ -234,7 +234,7 @@ class Reports extends ControllerBase {
           $sold = db_query("SELECT SUM(qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", [':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']])->fetchField();
           $revenue = db_query("SELECT SUM(p.price * p.qty) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", [':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']])->fetchField();
           $gross = db_query("SELECT (SUM(p.price * p.qty) - SUM(p.cost * p.qty)) FROM {uc_order_products} p LEFT JOIN {uc_orders} o ON p.order_id = o.order_id WHERE o.order_status IN (:statuses[]) AND p.model = :model AND p.nid = :nid", [':statuses[]' => $order_statuses, ':model' => $model, ':nid' => $product['nid']])->fetchField();
-          $breakdown_product = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$model";
+          $breakdown_product = array('#markup' => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$model");
           $product_csv = "     $model";
 
           $sold_csv = !empty($sold) ? $sold : 0;
@@ -249,10 +249,10 @@ class Reports extends ControllerBase {
           $row = array(
             'data' => array(
               '',
-              $breakdown_product,
+              array('data' => $breakdown_product),
               $breakdown_sold,
-              $breakdown_revenue,
-              $breakdown_gross,
+              array('data' => $breakdown_revenue),
+              array('data' => $breakdown_gross),
             ),
           );
           $csv_row = array('', $product_csv, $sold_csv, $revenue_csv, $gross_csv);
