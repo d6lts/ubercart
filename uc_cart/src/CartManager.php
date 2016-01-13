@@ -121,7 +121,7 @@ class CartManager implements CartManagerInterface {
 
     return array(
       '#theme' => 'uc_cart_complete_sale',
-      '#message' => Xss::filterAdmin($message),
+      '#message' => array('#markup' => $message),
       '#order' => $order,
     );
   }
