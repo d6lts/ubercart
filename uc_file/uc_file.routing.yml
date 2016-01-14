@@ -1,7 +1,7 @@
 uc_file.downloads:
   path: '/admin/store/products/files'
   defaults:
-    _form: '\Drupal\uc_file\Form\AdministerFiles'
+    _controller: '\Drupal\uc_file\Controller\FileController::show'
     _title: 'View file downloads'
   requirements:
     _permission: 'administer products'
