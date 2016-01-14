@@ -25,10 +25,10 @@ class RoleTest extends UbercartTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalPostForm('node/' . $this->product->id() . '/edit/features', array('feature' => 'role'), t('Add'));
     $edit = array(
-      'uc_role_role' => $rid,
+      'role' => $rid,
       'end_override' => TRUE,
-      'uc_role_expire_relative_duration' => 1,
-      'uc_role_expire_relative_granularity' => 'day',
+      'expire_relative_duration' => 1,
+      'expire_relative_granularity' => 'day',
     );
     $this->drupalPostForm(NULL, $edit, t('Save feature'));
 

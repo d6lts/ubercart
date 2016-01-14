@@ -49,6 +49,7 @@ class FeatureSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Files path'),
       '#description' => $this->t('The absolute path (or relative to Drupal root) where files used for file downloads are located. For security reasons, it is recommended to choose a path outside the web root.'),
       '#default_value' => $file_config->get('base_dir'),
+      '#required' => TRUE,
     );
     $form['duplicate_warning'] = array(
       '#type' => 'checkbox',

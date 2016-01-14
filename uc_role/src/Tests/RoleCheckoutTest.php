@@ -46,7 +46,7 @@ class RoleCheckoutTest extends UbercartTestBase {
     $rid = $this->drupalCreateRole(array('access content'));
     $this->drupalLogin($this->adminUser);
     $this->drupalPostForm('node/' . $this->product->id() . '/edit/features', array('feature' => 'role'), t('Add'));
-    $this->drupalPostForm(NULL, array('uc_role_role' => $rid), t('Save feature'));
+    $this->drupalPostForm(NULL, array('role' => $rid), t('Save feature'));
 
     // Process an anonymous, shippable order.
     $order = $this->createOrder([
