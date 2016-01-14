@@ -20,7 +20,7 @@ class ActionForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'uc_file_admin_files_action_form';
+    return 'uc_file_admin_files_form_action';
   }
 
   /**
@@ -36,7 +36,7 @@ class ActionForm extends FormBase {
 
     switch ($form_state->getValue(['uc_file_action', 'action'])) {
       case 'uc_file_delete':
-        $affected_list = _uc_file_build_js_file_display($file_ids);
+        $affected_list = $this->buildJsFileDisplay($file_ids);
 
         $has_directory = FALSE;
         foreach ($file_ids as $file_id) {
@@ -274,7 +274,7 @@ class ActionForm extends FormBase {
   /**
    * TODO: Replace with == operator?
    */
-  function _uc_file_display_arrays_equivalent($recur, $no_recur) {
+  protected function displayArraysEquivalent($recur, $no_recur) {
 
     // Different sizes.
     if (count($recur) != count($no_recur)) {
@@ -294,7 +294,7 @@ class ActionForm extends FormBase {
   /**
    * Shows all possible files in selectable list.
    */
-  function _uc_file_build_js_file_display($file_ids) {
+  protected function buildJsFileDisplay($file_ids) {
 
     // Gather the files if recursion IS selected.
     // Get 'em all ready to be punched into the file list.
@@ -313,7 +313,7 @@ class ActionForm extends FormBase {
     }
 
     // We'll disable the recursion checkbox if they're equal.
-    $equivalent = _uc_file_display_arrays_equivalent($recursion_file_ids, $no_recursion_file_ids);
+    $equivalent = $this->displayArraysEquivalent($recursion_file_ids, $no_recursion_file_ids);
 
     // The list to show if the recursion checkbox is $key.
     $result[TRUE] = $equivalent ? FALSE : $recursion;
