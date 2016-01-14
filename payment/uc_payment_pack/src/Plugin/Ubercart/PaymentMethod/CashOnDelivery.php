@@ -8,6 +8,7 @@
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
@@ -43,12 +44,14 @@ class CashOnDelivery extends PaymentMethodPluginBase {
       '#default_value' => $this->configuration['policy'],
       '#description' => $this->t('Help message shown at checkout.'),
     );
+
     $form['max_order'] = array(
-      '#type' => 'textfield',
+      '#type' => 'uc_price',
       '#title' => $this->t('Maximum order total eligible for COD'),
       '#default_value' => $this->configuration['max_order'],
       '#description' => $this->t('Set to 0 for no maximum order limit.'),
     );
+
     $form['delivery_date'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Let customers enter a desired delivery date.'),
@@ -71,12 +74,16 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $build['policy'] = array(
-      '#markup' => '<p>' . Html::escape($this->configuration['policy']) . '</p>'
+      '#prefix' => '<p>',
+      '#markup' => Html::escape($this->configuration['policy']),
+      '#suffix' => '</p>',
     );
 
     if (($max = $this->configuration['max_order']) > 0 && is_numeric($max)) {
       $build['eligibility'] = array(
-        '#markup' => '<p>' . $this->t('Orders totalling more than @amount are <b>not eligible</b> for COD.', ['@amount' => uc_currency_format($max)]) . '</p>'
+        '#prefix' => '<p>',
+        '#markup' => $this->t('Orders totalling more than @amount are <b>not eligible</b> for COD.', ['@amount' => uc_currency_format($max)]),
+        '#suffix' => '</p>',
       );
     }
 
@@ -93,6 +100,9 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   public function cartProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
     if ($this->configuration['delivery_date']) {
       $order->payment_details = $form_state->getValue(['panes', 'payment', 'details']);
+      if (isset($order->payment_details['delivery_date'])) {
+        $order->payment_details['delivery_date'] = $order->payment_details['delivery_date']->getTimestamp();
+      }
     }
 
     return TRUE;
@@ -104,12 +114,10 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   public function cartReview(OrderInterface $order) {
     $review = array();
 
-    if ($this->configuration['delivery_date']) {
-      $date = uc_date_format(
-        $order->payment_details['delivery_month'],
-        $order->payment_details['delivery_day'],
-        $order->payment_details['delivery_year']
-      );
+    if ($this->configuration['delivery_date'] &&
+        isset($order->payment_details['delivery_date'])) {
+      $date = \Drupal::service('date.formatter')->format($order->payment_details['delivery_date'], 'uc_store');
+
       $review[] = array('title' => $this->t('Delivery date'), 'data' => $date);
     }
 
@@ -123,15 +131,8 @@ class CashOnDelivery extends PaymentMethodPluginBase {
     $build = array();
 
     if ($this->configuration['delivery_date'] &&
-      isset($order->payment_details['delivery_month']) &&
-      isset($order->payment_details['delivery_day']) &&
-      isset($order->payment_details['delivery_year'])) {
-      $build['#markup'] = $this->t('Desired delivery date:') . '<br />' .
-        uc_date_format(
-          $order->payment_details['delivery_month'],
-          $order->payment_details['delivery_day'],
-          $order->payment_details['delivery_year']
-        );
+        isset($order->payment_details['delivery_date'])) {
+      $build['#markup'] = $this->t('Desired delivery date:') . '<br />' .  \Drupal::service('date.formatter')->format($order->payment_details['delivery_date'], 'uc_store');
     }
 
     return $build;
@@ -153,14 +154,25 @@ class CashOnDelivery extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function orderEditProcess(OrderInterface $order, array $form, FormStateInterface $form_state) {
+    if ($this->configuration['delivery_date']) {
+      $payment_details = $form_state->getValue('payment_details');
+      if (isset($payment_details)) {
+        $payment_details['delivery_date'] = $payment_details['delivery_date']->getTimestamp();
+        return $payment_details;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function orderLoad(OrderInterface $order) {
     $result = db_query('SELECT * FROM {uc_payment_cod} WHERE order_id = :id', [':id' => $order->id()]);
     if ($row = $result->fetchObject()) {
-      $order->payment_details = array(
-        'delivery_month' => $row->delivery_month,
-        'delivery_day'   => $row->delivery_day,
-        'delivery_year'  => $row->delivery_year,
-      );
+      $order->payment_details['delivery_date'] = $row->delivery_date;
     }
   }
 
@@ -168,15 +180,11 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderSave(OrderInterface $order) {
-    if (isset($order->payment_details['delivery_month']) &&
-        isset($order->payment_details['delivery_day']) &&
-        isset($order->payment_details['delivery_year'])) {
+    if (isset($order->payment_details['delivery_date'])) {
       db_merge('uc_payment_cod')
         ->key(array('order_id' => $order->id()))
         ->fields(array(
-          'delivery_month' => $order->payment_details['delivery_month'],
-          'delivery_day'   => $order->payment_details['delivery_day'],
-          'delivery_year'  => $order->payment_details['delivery_year'],
+          'delivery_date' => $order->payment_details['delivery_date'],
         ))
         ->execute();
     }
@@ -210,16 +218,19 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * Collect additional information for the "Cash on Delivery" payment method.
    */
   protected function deliveryDateForm($order) {
-    $month = !empty($order->payment_details['delivery_month']) ? $order->payment_details['delivery_month'] : \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'n');
-    $day   = !empty($order->payment_details['delivery_day'])   ? $order->payment_details['delivery_day']   : \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'j');
-    $year  = !empty($order->payment_details['delivery_year'])  ? $order->payment_details['delivery_year']  : \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y');
+    $delivery_date = empty($order->payment_details['delivery_date']) ?
+                     DrupalDateTime::createFromTimestamp(REQUEST_TIME) :
+                     DrupalDateTime::createFromTimestamp($order->payment_details['delivery_date']);
 
-    $form['description'] = array(
-      '#markup' => '<div>' . $this->t('Enter a desired delivery date:') . '</div>',
+    $form['delivery_date'] = array(
+      '#type' => 'datetime',
+      '#title' => $this->t('Enter a desired delivery date:'),
+      '#date_date_element' => 'date',
+      '#date_time_element' => 'none',
+      '#prefix' => '<div>',
+      '#suffix' => '</div>',
+      '#default_value' => $delivery_date,
     );
-    $form['delivery_month'] = uc_select_month(NULL, $month);
-    $form['delivery_day']   = uc_select_day(NULL, $day);
-    $form['delivery_year']  = uc_select_year(NULL, $year, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y'), \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y') + 1);
 
     return $form;
   }

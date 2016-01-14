@@ -57,26 +57,9 @@ function uc_payment_pack_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'delivery_month' => array(
-        'description' => 'The month of delivery. 1 => January, 2 => February, etc.',
+      'delivery_date' => array(
+        'description' => 'The Unix timestamp indicating the desired delivery date for the order.',
         'type' => 'int',
-        'size' => 'small',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'delivery_day' => array(
-        'description' => 'The day of the month of delivery.',
-        'type' => 'int',
-        'size' => 'small',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'delivery_year' => array(
-        'description' => 'The year of delivery.',
-        'type' => 'int',
-        'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
