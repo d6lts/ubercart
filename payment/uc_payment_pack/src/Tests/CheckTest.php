@@ -78,32 +78,33 @@ class CheckTest extends PaymentPackTestBase {
     $this->assertRaw((string) $address, 'Properly formatted check mailing address found.');
     $this->drupalPostForm(NULL, array(), 'Submit order');
 
-    // Test user order view
+    // Test user order view.
     $order = Order::load(1);
     $this->assertEqual($order->getPaymentMethodId(), $edit['id'], 'Order has check payment method.');
 
     $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
     $this->assertText('Method: Check', 'Check payment method displayed.');
 
-    // Test admin order view - receive check
+    // Test admin order view - receive check.
     $this->drupalGet('admin/store/orders/' . $order->id());
     $this->assertText('Method: Check', 'Check payment method displayed.');
     $this->assertLink('Receive Check');
     $this->clickLink('Receive Check');
     $this->assertFieldByName('amount', number_format($order->getTotal(), 2, '.', ''), 'Amount field defaults to order total.');
 
+    // Random receive date between tomorrow and 1 year from now.
+    $receive_date = strtotime('now +' . mt_rand(1, 365) . ' days');
+    $formatted = \Drupal::service('date.formatter')->format($receive_date, 'uc_store');
+
     $edit = array(
       'comment' => $this->randomString(),
-      'clear_month' => mt_rand(1, 12),
-      'clear_day' => mt_rand(1, 28),
-      'clear_year' => date('Y') + mt_rand(0, 1),
+      'clear_date[date]' => date('Y-m-d', $receive_date),
     );
-    $formatted = sprintf('%02d-%02d-%d', $edit['clear_month'], $edit['clear_day'], $edit['clear_year']);
     $this->drupalPostForm(NULL, $edit, 'Receive check');
     $this->assertNoLink('Receive Check');
     $this->assertText('Clear Date: ' . $formatted, 'Check clear date found.');
 
-    // Test that user order view shows check received
+    // Test that user order view shows check received.
     $this->drupalGet('user/' . $order->getOwnerId() . '/orders/' . $order->id());
     $this->assertText('Check received');
     $this->assertText('Expected clear date:');

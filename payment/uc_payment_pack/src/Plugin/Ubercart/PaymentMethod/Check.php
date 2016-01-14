@@ -87,13 +87,15 @@ class Check extends PaymentMethodPluginBase {
     $address->postal_code = $this->configuration['address']['postal_code'];
     $address->country = $this->configuration['address']['country'];
     $build['address'] = array(
-      '#markup' => (string) $address,
       '#prefix' => '<p>',
+      '#markup' => (string) $address,
       '#suffix' => '</p>',
     );
 
     $build['policy'] = array(
-      '#markup' => '<p>' . Html::escape($this->configuration['policy']) . '</p>'
+      '#prefix' => '<p>',
+      '#markup' => Html::escape($this->configuration['policy']),
+      '#suffix' => '</p>',
     );
 
     return $build;

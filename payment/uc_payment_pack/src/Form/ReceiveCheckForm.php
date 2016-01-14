@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_payment_pack\Form;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
@@ -38,7 +39,7 @@ class ReceiveCheckForm extends FormBase {
     );
     $form['amount'] = array(
       '#type' => 'uc_price',
-      '#title' => $this->t('Amount'),
+      '#title' => $this->t('Check amount'),
       '#default_value' => $balance,
     );
     $form['comment'] = array(
@@ -48,14 +49,13 @@ class ReceiveCheckForm extends FormBase {
       '#size' => 64,
       '#maxlength' => 256,
     );
-    $form['clear'] = array(
-      '#type' => 'fieldset',
+    $form['clear_date'] = array(
+      '#type' => 'datetime',
       '#title' => $this->t('Expected clear date'),
-      '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
+      '#date_date_element' => 'date',
+      '#date_time_element' => 'none',
+      '#default_value' => DrupalDateTime::createFromTimestamp(REQUEST_TIME),
     );
-    $form['clear']['clear_month'] = uc_select_month(NULL, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'n'));
-    $form['clear']['clear_day'] = uc_select_day(NULL, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'j'));
-    $form['clear']['clear_year'] = uc_select_year(NULL, \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y'), \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y'), \Drupal::service('date.formatter')->format(REQUEST_TIME, 'custom', 'Y') + 1);
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
@@ -72,14 +72,15 @@ class ReceiveCheckForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     uc_payment_enter($form_state->getValue('order_id'), 'check', $form_state->getValue('amount'), $this->currentUser()->id(), '', $form_state->getValue('comment'));
 
+    $clear_date = $form_state->getValue('clear_date')->getTimestamp();
     db_insert('uc_payment_check')
       ->fields(array(
         'order_id' => $form_state->getValue('order_id'),
-        'clear_date' => mktime(12, 0, 0, $form_state->getValue('clear_month'), $form_state->getValue('clear_day'), $form_state->getValue('clear_year')),
+        'clear_date' => $clear_date,
       ))
       ->execute();
+    drupal_set_message($this->t('Check received, expected clear date of @date.', ['@date' => \Drupal::service('date.formatter')->format($clear_date, 'uc_store')]));
 
-    drupal_set_message($this->t('Check received, expected clear date of @date.', ['@date' => uc_date_format($form_state->getValue('clear_month'), $form_state->getValue('clear_day'), $form_state->getValue('clear_year'))]));
 
     $form_state->setRedirect('entity.uc_order.canonical', ['uc_order' => $form_state->getValue('order_id')]);
   }

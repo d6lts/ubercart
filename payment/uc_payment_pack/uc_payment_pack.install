@@ -30,6 +30,7 @@ function uc_payment_pack_schema() {
       'clear_date' => array(
         'description' => 'The Unix timestamp indicating the expected clear date for the check.',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
