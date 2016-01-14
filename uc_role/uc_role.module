@@ -407,7 +407,7 @@ function uc_role_uc_store_status() {
  * @param $rid
  *   The Drupal role id number.
  *
- * @return
+ * @return string|false
  *   A string containing the name of the role, returns FALSE if rid is invalid.
  */
 function _uc_role_get_name($rid) {
@@ -418,10 +418,10 @@ function _uc_role_get_name($rid) {
 /**
  * Gets available roles for granting on product purchase.
  *
- * @param $exclude
+ * @param array $exclude
  *   A list of role ids to exclude from the list.
  *
- * @return
+ * @return array
  *   An assoc array with key = rid and value = role name.
  */
 function _uc_role_get_choices($exclude = array()) {
@@ -471,7 +471,7 @@ function uc_role_feature_delete($pfid) {
  *   A Drupal user object.
  * @param $rid
  *   A Drupal role ID.
- * @param $silent
+ * @param bool $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_role_delete($account, $rid = NULL, $silent = FALSE) {
@@ -516,7 +516,7 @@ function uc_role_delete($account, $rid = NULL, $silent = FALSE) {
  *   A Drupal user object.
  * @param $rid
  *   A Drupal role ID.
- * @param $silent
+ * @param bool $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_role_revoke(&$account, $rid, $silent = FALSE) {
@@ -562,12 +562,12 @@ function uc_role_revoke(&$account, $rid, $silent = FALSE) {
  *   A Drupal user object.
  * @param $rid
  *   A Drupal role ID.
- * @param $timestamp
+ * @param int $timestamp
  *   When this role will expire.
- * @param $save_user
+ * @param bool $save_user
  *   Optimization to prevent unnecessary user saving when calling from
  *   uc_role_user_presave().
- * @param $silent
+ * @param bool $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_role_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent = FALSE) {
@@ -636,9 +636,9 @@ function uc_role_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent =
  *   A Drupal user object.
  * @param $rid
  *   A Drupal role ID.
- * @param $timestamp
+ * @param int $timestamp
  *   When this role will expire.
- * @param $silent
+ * @param bool $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
 function uc_role_renew($account, $rid, $timestamp, $silent = FALSE) {
@@ -704,10 +704,10 @@ function _uc_role_flush_menu_cache($account) {
  *
  * @param $role_product
  *   The role product object whose expiration times to calculate.
- * @param $quantity
+ * @param int $quantity
  *   Used to multiply any relative expiration time, if the $role_product
  *   says to.
- * @param $time
+ * @param int $time
  *   The current time to use as a starting point for relative expiration
  *   calculation.
  *
@@ -749,15 +749,15 @@ function _uc_role_product_get_expiration($role_product, $quantity, $time) {
 /**
  * Returns an expiration time stamp given a period of time.
  *
- * @param $duration
+ * @param int $duration
  *   The amount of time until expiration.
- * @param $granularity
+ * @param string $granularity
  *   A string representing the granularity's name (e.g. "day", "month", etc.).
- * @param $start_time
+ * @param int $start_time
  *   (optional) The starting date for when the role will last. Defaults to
  *   the current time.
  *
- * @return
+ * @return int|null
  *   A UNIX timestamp representing the second that expiration takes place,
  *   or NULL if the expiration should never occur.
  */

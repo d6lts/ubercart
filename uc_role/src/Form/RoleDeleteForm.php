@@ -31,7 +31,6 @@ class RoleDeleteForm extends ConfirmFormBase {
       '#theme' => 'username',
       '#account' => $account,
       '#name' => SafeMarkup::checkPlain($account->getUsername()),
-      '#link_path' => 'user/' . $account->id(),
     );
     return $this->t('Delete expiration of %role_name role for the user @user?', array(
       '@user' => drupal_render($username),
