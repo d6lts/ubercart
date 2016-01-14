@@ -11,7 +11,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -110,23 +109,34 @@ class FileController extends ControllerBase {
     $query->setCountQuery($count_query);
     $result = $query->execute();
 
-drupal_set_message("query result=".var_export($result, TRUE));
-$i=1;
     $options = array();
     foreach ($result as $file) {
-drupal_set_message("file #".$i++."=".var_export($file, TRUE));
-// Files which are not attached to products are show here, which errors out when creating Link because there's no nid.
-      $options[$file->fid] = array(
-        'filename' => array(
-          'data' => array('#plain_text' => $file->filename),
-          'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
-        ),
-        //'title' => Link::createFromRoute($file->title, 'entity.node.canonical', ['node' => $file->nid])->toString(),
-        'title' => "nid bug",
-        'model' => array('#plain_text' => $file->model),
-      );
+      // All files are shown here, including files which are not attached to products.
+      if (isset($file->nid)) {
+        $options[$file->fid] = array(
+          'filename' => array(
+            'data' => array('#plain_text' => $file->filename),
+            'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
+          ),
+          'title' => array(
+            '#type' => 'link',
+            '#title' => $file->title,
+            '#url' => Url::fromRoute('entity.node.canonical', ['node' => $file->nid]),
+          ),
+          'model' => array('#plain_text' => $file->model),
+        );
+      }
+      else {
+        $options[$file->fid] = array(
+          'filename' => array(
+            'data' => array('#plain_text' => $file->filename),
+            'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
+          ),
+          'title' => '',
+          'model' => '',
+        );
+      }
     }
-drupal_set_message("options=".var_export($options, TRUE));
 
     // Create checkboxes for each file.
     $build['file_select'] = array(

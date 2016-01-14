@@ -37,10 +37,7 @@ class FileActionForm extends FormBase {
     $module_handler = \Drupal::moduleHandler();
 //    $module_handler->loadInclude('uc_file', 'inc', 'uc_file.admin');
     //if ($form_state->get('step') == UC_FILE_FORM_ACTION) {
-    //    return array(
-    //      '#validate' => array('uc_file_admin_files_form_action_validate'),
-    //      '#submit'   => array('uc_file_admin_files_form_action_submit'),
-    //    ) + $form + uc_file_admin_files_form_action($form, $form_state);
+    //  return $form + \Drupal::formBuilder()->buildForm('Drupal\uc_file\Form\ActionForm', $form, $form_state);
     //}
     //else {
       // Refresh our file list before display.
@@ -48,11 +45,7 @@ class FileActionForm extends FormBase {
 
     // Render everything.
 
-    //  return array(
-    //    '#theme'  => 'uc_file_admin_files_form_show',
-    //    '#validate' => array('uc_file_admin_files_form_show_validate'),
-    //    '#submit' => array('uc_file_admin_files_form_show_submit'),
-    //  ) + $form + uc_file_admin_files_form_show_files($form, $form_state);
+    //  return $form + \Drupal::formBuilder()->buildForm('Drupal\uc_file\Form\ShowForm', $form, $form_state);
     //}
     $form['#attached']['library'][] = 'uc_file/uc_file.styles';
 
@@ -89,16 +82,16 @@ class FileActionForm extends FormBase {
     $form['uc_file_action']['action'] = array(
       '#type' => 'select',
       '#title' => $this->t('Action'),
-      '#options' => $file_actions,
       '#prefix' => '<div class="duration">',
+      '#options' => $file_actions,
       '#suffix' => '</div>',
     );
 
     $form['uc_file_actions']['actions'] = array('#type' => 'actions');
     $form['uc_file_action']['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->t('Perform action'),
       '#prefix' => '<div class="duration">',
+      '#value' => $this->t('Perform action'),
       '#suffix' => '</div>',
     );
 
