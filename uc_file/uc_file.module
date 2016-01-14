@@ -17,6 +17,7 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +26,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * The maximum amount of rows shown in tables of file downloads.
  */
 define('UC_FILE_PAGER_SIZE', 50);
-
 define('UC_FILE_LIMIT_SENTINEL', -1);
 
 /**
@@ -40,6 +40,19 @@ function uc_file_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+}
+
+/**
+ * Implements hook_help().
+ */
+function uc_file_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'uc_product.feature_add':
+      if ($route_match->getRawParameter('fid') == 'file') {
+        return '<p>' . t('Attach a file download to your product by selecting the specific product SKU and overriding the default download limits, if desired.') . '</p>';
+      }
+      break;
+  }
 }
 
 /**
