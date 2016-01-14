@@ -34,7 +34,7 @@ class ProductFeaturesController extends ControllerBase {
       );
       $rows[] = array(
         array('data' => uc_product_feature_data($feature->fid, 'title')),
-        array('data' => $feature->description),
+        array('data' => array('#markup' => $feature->description)),
         array('data' => array(
           '#type' => 'operations',
           '#links' => $operations,
