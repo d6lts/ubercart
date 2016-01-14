@@ -25,10 +25,16 @@ uc_file.action:
 uc_file.download_file:
   path: '/download/{file}'
   defaults:
-    _controller: '\Drupal\uc_file\Controller\DownloadController'
+    _controller: '\Drupal\uc_file\Controller\DownloadController::download'
     _title: 'Download file'
   requirements:
     _permission: 'download file'
-#    'page callback' => '_uc_file_download',
-#    'type' => MENU_CALLBACK,
-#    'file' => 'uc_file.pages.inc',
+
+uc_file.user_downloads:
+  path: '/user/{user}/purchased-files'
+  defaults:
+    _controller: '\Drupal\uc_file\Controller\DownloadController'
+    _title: 'Files'
+#   _description: 'View your purchased files'
+  requirements:
+    _custom_access: '\Drupal\uc_file\Controller\DownloadController::accessUserDownloads'

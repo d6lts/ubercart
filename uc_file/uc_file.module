@@ -39,25 +39,7 @@ function uc_file_menu() {
     'access arguments' => array('administer product features'),
     'type' => MENU_CALLBACK,
   );
-  $items['user/%user/purchased-files'] = array(
-    'title' => 'Files',
-    'description' => 'View your purchased files.',
-    'page callback' => 'uc_file_user_downloads',
-    'page arguments' => array(1),
-    'access callback' => 'uc_file_user_access',
-    'access arguments' => array(1),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_file.pages.inc',
-  );
   return $items;
-}
-
-/**
- * Access callback for a user's list of purchased file downloads.
- */
-function uc_file_user_access($account) {
-  $user = \Drupal::currentUser();
-  return $user->id() && ($user->hasPermission('view all downloads') || $user->id() == $account->id());
 }
 
 /**
@@ -82,7 +64,6 @@ function uc_file_theme() {
     ),
     'uc_file_user_downloads' => array(
       'variables' => array('header' => NULL, 'files' => NULL),
-      'file' => 'uc_file.pages.inc',
       'function' => 'theme_uc_file_user_downloads',
     ),
   );
@@ -1602,4 +1583,61 @@ function uc_file_get_time_limit($file) {
       'time_quantity'    => $file->time_quantity,
     );
   }
+}
+
+/**
+ * Themes user file downloads page.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - header: Table header array, in format required by theme_table().
+ *   - files: Associative array of downloadable files, containing:
+ *     - granted: Timestamp of file grant.
+ *     - link: URL of file.
+ *     - description: File name, as it should appear to user after downloading.
+ *     - accessed: Integer number of times file has been downloaded.
+ *     - download_limit: Integer limit on downloads.
+ *     - addresses: Integer number of IP addresses used.
+ *     - address_limit: Integer limit on IP addresses.
+ *
+ * @return string
+ *   Formatted HTML.
+ *
+ * @see theme_table()
+ * @ingroup themeable
+ */
+function theme_uc_file_user_downloads(array $variables) {
+  $header = $variables['header'];
+  $files = $variables['files'];
+
+  $rows = array();
+  $row = 0;
+  foreach ($files as $file) {
+    $rows[] = array(
+      array('data' => \Drupal::service('date.formatter')->format($file['granted'], 'uc_store'), 'class' => array('date-row'), 'id' => 'date-' . $row),
+      array('data' => $file['link'], 'class' => array('filename-row'), 'id' => 'filename-' . $row),
+      array('data' => $file['description'], 'class' => array('description-row'), 'id' => 'description-' . $row),
+      array('data' => $file['accessed'] . '/' . ($file['download_limit'] ? $file['download_limit'] : t('Unlimited')), 'class' => array('download-row'), 'id' => 'download-' . $row),
+      array('data' => count(unserialize($file['addresses'])) . '/' . ($file['address_limit'] ? $file['address_limit'] : t('Unlimited')), 'class' => array('addresses-row'), 'id' => 'addresses-' . $row),
+    );
+    $row++;
+  }
+
+  $build = array();
+  $build['downloads'] = array(
+    '#type' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#empty' => t('No downloads found'),
+  );
+  $build['pager'] = array(
+    '#theme' => 'pager',
+    '#element' => 0,
+    '#weight' => 5,
+  );
+  $build['instructons'] = array(
+    '#markup' => '<div class="form-item"><p class="description">' . t('Once your download is finished, you must refresh the page to download again. (Provided you have permission)') . '<br />' . t('Downloads will not be counted until the file is finished transferring, even though the number may increment when you click.') . '<br /><b>' . t('Do not use any download acceleration feature to download the file, or you may lock yourself out of the download.') . '</b>' . '</p></div>',
+  );
+
+  return $build;
 }
