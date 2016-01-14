@@ -1,21 +1,13 @@
-uc_role.settings:
-  path: 'admin/store/config/roles'
-  defaults:
-    _form: '\Drupal\uc_role\Form\RoleSettingsForm'
-    _title: 'Role settings'
-  requirements:
-    _permission: 'administer users'
-
-uc_role.assignments:
-  path: '/admin/store/products/roles'
-  defaults:
-    _form: '\Drupal\uc_role\Form\AdministerRoles'
-    _title: 'View role assignments'
-  requirements:
-    _permission: 'administer products'
+#uc_role.assignments:
+#  path: '/admin/store/products/roles'
+#  defaults:
+#    _form: '\Drupal\uc_role\Form\AdministerRoles'
+#    _title: 'View role assignments'
+#  requirements:
+#    _permission: 'administer products'
 
 uc_role.expiration:
-  path: 'admin/people/expiration'
+  path: '/admin/people/expiration'
   defaults:
     _form: '\Drupal\uc_role\Form\RoleExpirationForm'
     _title: 'Role expiration'
@@ -25,7 +17,7 @@ uc_role.expiration:
     _permission: 'administer users'
 
 uc_role.delete:
-  path: 'admin/people/expiration/delete/{user}/{role}'
+  path: '/admin/people/expiration/delete/{user}/{role}'
   defaults:
     _form: '\Drupal\uc_role\Form\RoleDeleteForm'
     _title: 'Delete role expiration'

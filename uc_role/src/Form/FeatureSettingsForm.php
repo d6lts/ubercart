@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_role\Form\RoleSettingsForm.
+ * Contains \Drupal\uc_role\Form\FeatureSettingsForm.
  */
 
 namespace Drupal\uc_role\Form;
@@ -21,7 +21,7 @@ use Drupal\Core\Url;
  * be notified of the roles they are granted and when the roles will
  * expire/need to be renewed/etc.
  */
-class RoleSettingsForm extends ConfigFormBase {
+class FeatureSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -57,14 +57,14 @@ class RoleSettingsForm extends ConfigFormBase {
       return $form;
     }
 
-    $form['uc_role_default_role'] = array(
+    $form['default_role'] = array(
       '#type' => 'select',
       '#title' => $this->t('Default role'),
       '#default_value' => $roles_config->get('default_role'),
       '#description' => $this->t('The default role Ubercart grants on specified products.'),
       '#options' => _uc_role_get_choices(),
     );
-    $form['uc_role_default_role_choices'] = array(
+    $form['default_role_choices'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('Product roles'),
       '#default_value' => $roles_config->get('default_role_choices'),
@@ -78,7 +78,7 @@ class RoleSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Default role expiration'),
     );
 
-    $form['role_lifetime']['uc_role_default_end_expiration'] = array(
+    $form['role_lifetime']['default_end_expiration'] = array(
       '#type' => 'select',
       '#title' => $this->t('Expiration type'),
       '#options' => array(
@@ -87,7 +87,7 @@ class RoleSettingsForm extends ConfigFormBase {
       ),
       '#default_value' => $roles_config->get('default_end_expiration'),
     );
-    $form['role_lifetime']['uc_role_default_length'] = array(
+    $form['role_lifetime']['default_length'] = array(
       '#type' => 'textfield',
       '#default_value' => ($roles_config->get('default_granularity') == 'never') ? NULL : $roles_config->get('default_length'),
       '#size' => 4,
@@ -95,11 +95,11 @@ class RoleSettingsForm extends ConfigFormBase {
       '#prefix' => '<div class="expiration">',
       '#suffix' => '</div>',
       '#states' => array(
-        'visible' => array('select[name="uc_role_default_end_expiration"]' => array('value' => 'rel')),
-        'invisible' => array('select[name="uc_role_default_granularity"]' => array('value' => 'never')),
+        'visible' => array('select[name="default_end_expiration"]' => array('value' => 'rel')),
+        'invisible' => array('select[name="default_granularity"]' => array('value' => 'never')),
       ),
     );
-    $form['role_lifetime']['uc_role_default_granularity'] = array(
+    $form['role_lifetime']['default_granularity'] = array(
       '#type' => 'select',
       '#default_value' => $roles_config->get('default_granularity'),
       '#options' => array(
@@ -113,32 +113,32 @@ class RoleSettingsForm extends ConfigFormBase {
       '#prefix' => '<div class="expiration">',
       '#suffix' => '</div>',
       '#states' => array(
-        'visible' => array('select[name="uc_role_default_end_expiration"]' => array('value' => 'rel')),
+        'visible' => array('select[name="default_end_expiration"]' => array('value' => 'rel')),
       ),
     );
     $form['role_lifetime']['absolute'] = array(
       '#type' => 'container',
       '#states' => array(
-        'visible' => array('select[name="uc_role_default_end_expiration"]' => array('value' => 'abs')),
+        'visible' => array('select[name="default_end_expiration"]' => array('value' => 'abs')),
       ),
     );
-    $date = $roles_config->get('default_end_time');
+    $date = (int) $roles_config->get('default_end_time');
     $date = !empty($date) ? DrupalDateTime::createFromTimestamp($date) : DrupalDateTime::createFromTimestamp(REQUEST_TIME);
-    $form['role_lifetime']['absolute']['uc_role_default_end_time'] = array(
+    $form['role_lifetime']['absolute']['default_end_time'] = array(
       '#type' => 'datetime',
       '#description' => $this->t('Expire the role at the beginning of this day.'),
-      '#description' => $this->t('Enter a datetime.'),
+      //'#description' => $this->t('Enter a datetime.'),
       '#date_date_element' => 'date',
       '#date_time_element' => 'none',
       '#default_value' => $date,
     );
-    $form['role_lifetime']['uc_role_default_by_quantity'] = array(
+    $form['role_lifetime']['default_by_quantity'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Multiply by quantity'),
       '#description' => $this->t('Check if the role duration should be multiplied by the quantity purchased.'),
       '#default_value' => $roles_config->get('default_by_quantity'),
     );
-    $form['reminder']['uc_role_reminder_length'] = array(
+    $form['reminder']['reminder_length'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Time before reminder'),
       '#default_value' => ($roles_config->get('reminder_granularity') == 'never') ? NULL : $roles_config->get('reminder_length'),
@@ -147,10 +147,10 @@ class RoleSettingsForm extends ConfigFormBase {
       '#prefix' => '<div class="expiration">',
       '#suffix' => '</div>',
       '#states' => array(
-        'disabled' => array('select[name="uc_role_reminder_granularity"]' => array('value' => 'never')),
+        'disabled' => array('select[name="reminder_granularity"]' => array('value' => 'never')),
       ),
     );
-    $form['reminder']['uc_role_reminder_granularity'] = array(
+    $form['reminder']['reminder_granularity'] = array(
       '#type' => 'select',
       '#default_value' => $roles_config->get('reminder_granularity'),
       '#options' => array(
@@ -164,13 +164,28 @@ class RoleSettingsForm extends ConfigFormBase {
       '#prefix' => '<div class="expiration">',
       '#suffix' => '</div>',
     );
-    $form['uc_role_default_show_expiration'] = array(
+    $form['default_show_expiration'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Show expirations on user page'),
       '#default_value' => $roles_config->get('default_show_expiration'),
       '#description' => $this->t('If users have any role expirations they will be displayed on their account page.'),
     );
+
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    // If the user selected a granularity, let's make sure they
+    // also selected a duration.
+    if ($form_state->getValue('reminder_granularity') != 'never' &&
+        $form_state->getValue('reminder_length') < 1) {
+      $form_state->setErrorByName('reminder_length', $this->t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', ['%gran' => $form_state->getValue('reminder_granularity') . '(s)']));
+    }
+
+    return parent::validateForm($form, $form_state);
   }
 
   /**
@@ -179,19 +194,19 @@ class RoleSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $roles_config = $this->config('uc_role.settings');
     $roles_config
-      ->set('default_role', $form_state->getValue('uc_role_default_role'))
-      ->set('default_role_choices', $form_state->getValue('uc_role_default_role_choices'))
-      ->set('default_end_expiration', $form_state->getValue('uc_role_default_end_expiration'))
-      ->set('default_length', $form_state->getValue('uc_role_default_length'))
-      ->set('default_granularity', $form_state->getValue('uc_role_default_granularity'))
-      ->set('default_end_time', $form_state->getValue('uc_role_default_end_time')->getTimestamp())
-      ->set('default_by_quantity', $form_state->getValue('uc_role_default_by_quantity'))
-      ->set('reminder_length', $form_state->getValue('uc_role_reminder_length'))
-      ->set('reminder_granularity', $form_state->getValue('uc_role_reminder_granularity'))
-      ->set('default_show_expiration', $form_state->getValue('uc_role_default_show_expiration'))
-      ->set('default_expiration_header', $form_state->getValue('uc_role_default_expiration_header'))
-      ->set('default_expiration_title', $form_state->getValue('uc_role_default_expiration_title'))
-      ->set('default_expiration_message', $form_state->getValue('uc_role_default_expiration_message'))
+      ->set('default_role', $form_state->getValue('default_role'))
+      ->set('default_role_choices', $form_state->getValue('default_role_choices'))
+      ->set('default_end_expiration', $form_state->getValue('default_end_expiration'))
+      ->set('default_length', $form_state->getValue('default_length'))
+      ->set('default_granularity', $form_state->getValue('default_granularity'))
+      ->set('default_end_time', $form_state->getValue('default_end_time')->getTimestamp())
+      ->set('default_by_quantity', $form_state->getValue('default_by_quantity'))
+      ->set('reminder_length', $form_state->getValue('reminder_length'))
+      ->set('reminder_granularity', $form_state->getValue('reminder_granularity'))
+      ->set('default_show_expiration', $form_state->getValue('default_show_expiration'))
+      ->set('default_expiration_header', $form_state->getValue('default_expiration_header'))
+      ->set('default_expiration_title', $form_state->getValue('default_expiration_title'))
+      ->set('default_expiration_message', $form_state->getValue('default_expiration_message'))
       ->save();
 
     parent::submitForm($form, $form_state);
