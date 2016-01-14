@@ -36,6 +36,7 @@ class ShowForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#tree'] = TRUE;
+    $form['#attached']['library'][] = 'uc_file/uc_file.styles';
 
     $header = array(
       'filename' => array('data' => $this->t('File'), 'field' => 'f.filename', 'sort' => 'asc'),
@@ -67,14 +68,31 @@ class ShowForm extends FormBase {
 
     $options = array();
     foreach ($result as $file) {
-      $options[$file->fid] = array(
-        'filename' => array(
-          'data' => SafeMarkup::checkPlain($file->filename),
-          'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
-        ),
-        'title' => Link::createFromRoute($file->title, 'entity.node.canonical', ['node' => $file->nid])->toString(),
-        'model' => SafeMarkup::checkPlain($file->model),
-      );
+      // All files are shown here, including files which are not attached to products.
+      if (isset($file->nid)) {
+        $options[$file->fid] = array(
+          'filename' => array(
+            'data' => SafeMarkup::checkPlain($file->filename),
+            'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
+          ),
+          'title' => array(
+            '#type' => 'link',
+            '#title' => $file->title,
+            '#url' => Url::fromRoute('entity.node.canonical', ['node' => $file->nid]),
+          ),
+          'model' => SafeMarkup::checkPlain($file->model),
+        );
+      }
+      else {
+        $options[$file->fid] = array(
+          'filename' => array(
+            'data' => SafeMarkup::checkPlain($file->filename),
+            'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
+          ),
+          'title' => '',
+          'model' => '',
+        );
+      }
     }
 
     // Create checkboxes for each file.
@@ -86,8 +104,9 @@ class ShowForm extends FormBase {
     );
 
     $form['uc_file_action'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('File options'),
+      '#open' => TRUE,
     );
 
     // Set our default actions.
@@ -113,16 +132,16 @@ class ShowForm extends FormBase {
     $form['uc_file_action']['action'] = array(
       '#type' => 'select',
       '#title' => $this->t('Action'),
-      '#options' => $file_actions,
       '#prefix' => '<div class="duration">',
+      '#options' => $file_actions,
       '#suffix' => '</div>',
     );
 
     $form['uc_file_actions']['actions'] = array('#type' => 'actions');
     $form['uc_file_action']['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->t('Perform action'),
       '#prefix' => '<div class="duration">',
+      '#value' => $this->t('Perform action'),
       '#suffix' => '</div>',
     );
 
@@ -157,29 +176,6 @@ class ShowForm extends FormBase {
     // Increment the form step.
     $form_state->set('step', UC_FILE_FORM_ACTION);
     $form_state->setRebuild();
-  }
-
-  /**
-   * Returns HTML for uc_file_admin_files_form_show().
-   *
-   * @param array $variables
-   *   An associative array containing:
-   *   - form: A render element representing the form.
-   *
-   * @see uc_file_admin_files_form_show_files()
-   * @ingroup themeable
-   */
-  function theme_uc_file_admin_files_form_show(array $variables) {
-    $form = $variables['form'];
-
-    // Render everything.
-    $output = '<p>' . $this->t('File downloads can be attached to any Ubercart product as a product feature. For security reasons the <a href=":download_url">file downloads directory</a> is separated from the Drupal <a href=":file_url">file system</a>. Below is the list of files (and their associated Ubercart products, if any) that can be used for file downloads.', [':download_url' => Url::fromRoute('uc_product.admin', [], ['query' => ['destination' => 'admin/store/products/files']])->toString(), ':file_url' => Url::fromRoute('system.file_system_settings')->toString()]) . '</p>';
-    $output .= drupal_render($form['uc_file_action']);
-    $output .= drupal_render($form['file_select']);
-    $output .= theme('pager');
-    $output .= drupal_render_children($form);
-
-    return $output;
   }
 
 }
