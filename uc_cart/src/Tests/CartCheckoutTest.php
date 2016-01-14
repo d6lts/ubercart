@@ -414,7 +414,7 @@ class CartCheckoutTest extends UbercartTestBase {
     $output = $this->cartManager->completeSale($order);
 
     // Check that a new account was created.
-    $this->assertTrue(strpos($output['#message'], 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
+    $this->assertTrue(strpos($output['#message']['#markup'], 'new account has been created') !== FALSE, 'Checkout message mentions new account.');
 
     // 3 e-mails: new account, customer invoice, admin invoice
     $this->assertMailString('subject', 'Account details', 3, 'New account email was sent');
@@ -453,7 +453,7 @@ class CartCheckoutTest extends UbercartTestBase {
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // Check that no new account was created.
-    $this->assertTrue(strpos($output['#message'], 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
+    $this->assertTrue(strpos($output['#message']['#markup'], 'order has been attached to the account') !== FALSE, 'Checkout message mentions existing account.');
 
     // 2 e-mails: customer invoice, admin invoice
     $this->assertNoMailString('subject', 'Account details', 3, 'New account email was sent');
