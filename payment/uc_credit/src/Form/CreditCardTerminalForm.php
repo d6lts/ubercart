@@ -47,10 +47,14 @@ class CreditCardTerminalForm extends FormBase {
     $balance = uc_payment_balance($this->order);
 
     $form['order_total'] = array(
-      '#markup' => '<div><strong>' . $this->t('Order total: @total', ['@total' => uc_currency_format($this->order->getTotal())]) . '</strong></div>',
+      '#prefix' => '<div><strong>',
+      '#markup' => $this->t('Order total: @total', ['@total' => uc_currency_format($this->order->getTotal())]),
+      '#suffix' => '</div></strong>',
     );
     $form['balance'] = array(
-      '#markup' => '<div><strong>' . $this->t('Balance: @balance', ['@balance' => uc_currency_format($balance)]) . '</strong></div>',
+      '#prefix' => '<div><strong>',
+      '#markup' => $this->t('Balance: @balance', ['@balance' => uc_currency_format($balance)]),
+      '#suffix' => '</div></strong>',
     );
 
     // Let the administrator set the amount to charge.
@@ -62,9 +66,10 @@ class CreditCardTerminalForm extends FormBase {
 
     // Build a credit card form.
     $form['specify_card'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('Credit card details'),
       '#description' => $this->t('Use the available buttons in this fieldset to process with the specified card details.'),
+      '#open' => TRUE,
     );
     $form['specify_card']['cc_data'] = array(
       '#tree' => TRUE,
@@ -123,9 +128,10 @@ class CreditCardTerminalForm extends FormBase {
     if (!empty($options)) {
       // Display a fieldset with the authorizations and available action buttons.
       $form['authorizations'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => $this->t('Prior authorizations'),
         '#description' => $this->t('Use the available buttons in this fieldset to select and act on a prior authorization. The charge amount specified above will be captured against the authorization listed below.  Only one capture is possible per authorization, and a capture for more than the amount of the authorization may result in additional fees to you.'),
+        '#open' => TRUE,
       );
 
       $form['authorizations']['select_auth'] = array(
@@ -154,7 +160,7 @@ class CreditCardTerminalForm extends FormBase {
 
       // Collapse this fieldset if no actions are available.
       if (!isset($form['authorizations']['actions']['auth_capture']) && !isset($form['authorizations']['actions']['auth_void'])) {
-        $form['authorizations']['#type'] = 'details';
+        $form['authorizations']['#open'] = FALSE;
       }
     }
 
@@ -174,9 +180,10 @@ class CreditCardTerminalForm extends FormBase {
     if (!empty($options)) {
       // Display a fieldset with the authorizations and available action buttons.
       $form['references'] = array(
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => $this->t('Customer references'),
         '#description' => $this->t('Use the available buttons in this fieldset to select and act on a customer reference.'),
+        '#open' => TRUE,
       );
 
       $form['references']['select_ref'] = array(
@@ -213,7 +220,7 @@ class CreditCardTerminalForm extends FormBase {
 
       // Collapse this fieldset if no actions are available.
       if (!isset($form['references']['actions']['ref_capture']) && !isset($form['references']['actions']['ref_remove']) && !isset($form['references']['actions']['ref_credit'])) {
-        $form['references']['#type'] = 'details';
+        $form['references']['#open'] = FALSE;
       }
     }
 

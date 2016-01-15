@@ -15,8 +15,8 @@ use Drupal\uc_store\Tests\UbercartTestBase;
  *
  * This class is intended to be subclassed for use in testing other credit
  * card gateways. Subclasses which test other gateways need to:
- * - Override setUp(), if necessary, to enable the other gateway and any other
- *   needed modules.
+ * - Override public static $modules, if necessary to enable the module
+ *   providing the gateway and any other needed modules.
  * - Override configureGateway() to implement gateway-specific configuration.
  * No other overrides are necessary, although a subclass may want to add
  * additional test functions to cover cases not included in this base class.
