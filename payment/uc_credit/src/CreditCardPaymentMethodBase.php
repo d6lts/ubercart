@@ -124,13 +124,15 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $order->payment_details = array();
     }
 
-    $form['cc_policy'] = array(
-      '#markup' => '<p>' . $this->t('Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.') . '</p>'
+    $build['cc_policy'] = array(
+      '#prefix' => '<p>',
+      '#markup' => $this->t('Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.'),
+      '#suffix' => '</p>',
     );
 
     $fields = $this->getEnabledFields();
     if (!empty($fields['type'])) {
-      $form['cc_type'] = array(
+      $build['cc_type'] = array(
         '#type' => 'select',
         '#title' => $this->t('Card type'),
         '#options' => $this->getEnabledTypes(),
@@ -139,7 +141,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
 
     if (!empty($fields['owner'])) {
-      $form['cc_owner'] = array(
+      $build['cc_owner'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Card owner'),
         '#default_value' => isset($order->payment_details['cc_owner']) ? $order->payment_details['cc_owner'] : '',
@@ -162,7 +164,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $default_num = $this->t('(Last 4) ') . substr($order->payment_details['cc_number'], -4);
     }
 
-    $form['cc_number'] = array(
+    $build['cc_number'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Card number'),
       '#default_value' => $default_num,
@@ -174,15 +176,56 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     if (!empty($fields['start'])) {
       $month = isset($order->payment_details['cc_start_month']) ? $order->payment_details['cc_start_month'] : NULL;
       $year = isset($order->payment_details['cc_start_year']) ? $order->payment_details['cc_start_year'] : NULL;
-      $form['cc_start_month'] = uc_select_month($this->t('Start date'), $month, TRUE);
-      $form['cc_start_year'] = uc_select_year($this->t('Start year'), $year, date('Y') - 10, date('Y'), TRUE);
-      $form['cc_start_year']['#field_suffix'] = $this->t('(if present)');
+      $year_range = range(date('Y') - 10, date('Y'));
+      $build['cc_start_month'] = array(
+        '#type' => 'number',
+        '#title' => $this->t('Start date'),
+        '#options' => array(
+          1 => t('01 - January'), 2 => t('02 - February'),
+          3 => t('03 - March'), 4 => t('04 - April'),
+          5 => t('05 - May'), 6 => t('06 - June'),
+          7 => t('07 - July'), 8 => t('08 - August'),
+          9 => t('09 - September'), 10 => t('10 - October'),
+          11 => t('11 - November'), 12 => t('12 - December'),
+        ),
+        '#default_value' => $month,
+        '#required' => TRUE,
+      );
+      $build['cc_start_year'] = array(
+        '#type' => 'select',
+        '#title' => $this->t('Start year'),
+        '#options' => array_combine($year_range, $year_range),
+        '#default_value' => $year,
+        '#field_suffix' => $this->t('(if present)'),
+        '#required' => TRUE,
+      );
     }
 
     $month = isset($order->payment_details['cc_exp_month']) ? $order->payment_details['cc_exp_month'] : 1;
     $year = isset($order->payment_details['cc_exp_year']) ? $order->payment_details['cc_exp_year'] : date('Y');
-    $form['cc_exp_month'] = uc_select_month($this->t('Expiration date'), $month);
-    $form['cc_exp_year'] = uc_select_year($this->t('Expiration year'), $year);
+    $year_range = range(date('Y'), date('Y') + 20);
+    $build['cc_exp_month'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Expiration month'),
+      '#options' => array(
+        1 => t('01 - January'), 2 => t('02 - February'),
+        3 => t('03 - March'), 4 => t('04 - April'),
+        5 => t('05 - May'), 6 => t('06 - June'),
+        7 => t('07 - July'), 8 => t('08 - August'),
+        9 => t('09 - September'), 10 => t('10 - October'),
+        11 => t('11 - November'), 12 => t('12 - December'),
+      ),
+      '#default_value' => $month,
+      '#required' => TRUE,
+    );
+    $build['cc_exp_year'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Expiration year'),
+      '#options' => array_combine($year_range, $year_range),
+      '#default_value' => $year,
+      '#field_suffix' => $this->t('(if present)'),
+      '#required' => TRUE,
+    );
 
     if (!empty($fields['issue'])) {
       // Set up the default Issue Number on the credit card form.
@@ -199,7 +242,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
         $default_card_issue = str_repeat('-', strlen($order->payment_details['cc_issue']));
       }
 
-      $form['cc_issue'] = array(
+      $build['cc_issue'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Issue number'),
         '#default_value' => $default_card_issue,
@@ -224,7 +267,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
         $default_cvv = str_repeat('-', strlen($order->payment_details['cc_cvv']));
       }
 
-      $form['cc_cvv'] = array(
+      $build['cc_cvv'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('CVV'),
         '#default_value' => $default_cvv,
@@ -236,7 +279,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
 
     if (!empty($fields['bank'])) {
-      $form['cc_bank'] = array(
+      $build['cc_bank'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Issuing bank'),
         '#default_value' => isset($order->payment_details['cc_bank']) ? $order->payment_details['cc_bank'] : '',
@@ -248,7 +291,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
     $session->remove('clear_cc');
 
-    return $form;
+    return $build;
   }
 
   /**
