@@ -405,63 +405,6 @@ function uc_address_field_enabled($field = NULL) {
 }
 
 /**
- * Creates a day select box for a form.
- */
-function uc_select_day($title = NULL, $default = NULL, $allow_empty = FALSE) {
-  $options = $allow_empty ? array('' => '') : array();
-  $days = range(1, 31);
-  $select = array(
-    '#type' => 'select',
-    '#title' => (is_null($title) ? t('Day') : $title),
-    '#options' => $options + array_combine($days, $days),
-    '#default_value' => (is_null($default) ? 0 : $default),
-  );
-
-  return $select;
-}
-
-/**
- * Creates a month select box for a form.
- */
-function uc_select_month($title = NULL, $default = NULL, $allow_empty = FALSE) {
-  $options = $allow_empty ? array('' => '') : array();
-
-  $select = array(
-    '#type' => 'select',
-    '#title' => (is_null($title) ? t('Month') : $title),
-    '#options' => $options +
-                  array(1 => t('01 - January'), 2 => t('02 - February'),
-                        3 => t('03 - March'), 4 => t('04 - April'),
-                        5 => t('05 - May'), 6 => t('06 - June'),
-                        7 => t('07 - July'), 8 => t('08 - August'),
-                        9 => t('09 - September'), 10 => t('10 - October'),
-                        11 => t('11 - November'), 12 => t('12 - December')
-                  ),
-    '#default_value' => (is_null($default) ? 0 : $default),
-  );
-
-  return $select;
-}
-
-/**
- * Creates a year select box for a form.
- */
-function uc_select_year($title = NULL, $default = NULL, $min = NULL, $max = NULL, $allow_empty = FALSE) {
-  $min = is_null($min) ? intval(date('Y')) : $min;
-  $max = is_null($max) ? intval(date('Y')) + 20 : $max;
-  $options = $allow_empty ? array('' => '') : array();
-  $years = range($min, $max);
-  $select = array(
-    '#type' => 'select',
-    '#title' => (is_null($title) ? t('Year') : $title),
-    '#options' => $options + array_combine($years, $years),
-    '#default_value' => (is_null($default) ? 0 : $default),
-  );
-
-  return $select;
-}
-
-/**
  * Creates an address select box based on a user's previous orders.
  *
  * @param $uid
