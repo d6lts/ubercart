@@ -85,7 +85,9 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
     $form_state->setUserInput($input);
 
     $options = array();
-    foreach (PaymentMethod::loadMultiple() as $method) {
+    $methods = PaymentMethod::loadMultiple();
+    uasort($methods, 'Drupal\uc_payment\Entity\PaymentMethod::sort');
+    foreach ($methods as $method) {
       // $set = rules_config_load('uc_payment_method_' . $method['id']);
       // if ($set && !$set->execute($order)) {
       //   continue;

@@ -67,7 +67,9 @@ function uc_order_pane_payment($op, $order, &$form = NULL, FormStateInterface $f
 
     case 'edit-form':
       $options = array();
-      foreach (PaymentMethod::loadMultiple() as $method) {
+      $methods = PaymentMethod::loadMultiple();
+      uasort($methods, 'Drupal\uc_payment\Entity\PaymentMethod::sort');
+      foreach ($methods as $method) {
         $options[$method->id()] = $method->label();
       }
 
