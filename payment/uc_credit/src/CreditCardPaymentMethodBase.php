@@ -207,7 +207,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     $year_range = range(date('Y'), date('Y') + 20);
     $build['cc_exp_month'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Expiration month'),
+      '#title' => $this->t('Expiration date'),
       '#options' => array(
         1 => t('01 - January'), 2 => t('02 - February'),
         3 => t('03 - March'), 4 => t('04 - April'),
