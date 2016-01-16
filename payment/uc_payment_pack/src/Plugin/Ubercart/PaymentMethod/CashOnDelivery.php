@@ -73,6 +73,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
+    $build['#attached']['library'][] = 'uc_payment_pack/cod.styles';
     $build['policy'] = array(
       '#prefix' => '<p>',
       '#markup' => Html::escape($this->configuration['policy']),

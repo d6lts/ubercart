@@ -1,0 +1,4 @@
+uc_paypal.styles:
+  css:
+    theme:
+      css/uc_paypal.css: {}
