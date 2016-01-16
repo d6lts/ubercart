@@ -44,12 +44,11 @@ class RoleFeatureForm extends FormBase {
       $default_shippable = $product_role->shippable;
       $default_by_quantity = $product_role->by_quantity;
       if ($product_role->end_time) {
-        $end_time = DrupalDateTime::createFromTimestamp($product_role->end_time);
+        $end_time = $product_role->end_time;
         $default_end_type = 'abs';
       }
       else {
-        $temp = _uc_role_get_expiration($default_qty, $default_granularity);
-        $end_time = DrupalDateTime::createFromTimestamp($temp);
+        $end_time = _uc_role_get_expiration($default_qty, $default_granularity);
         $default_end_type = 'rel';
       }
 
@@ -173,7 +172,7 @@ class RoleFeatureForm extends FormBase {
       ),
     );
 
-    $date = empty($end_time) ? DrupalDateTime::createFromTimestamp(REQUEST_TIME) : $end_time;
+    $date = empty($end_time) ? DrupalDateTime::createFromTimestamp(REQUEST_TIME) : DrupalDateTime::createFromTimestamp($end_time);
     $form['role_lifetime']['absolute']['expire_absolute'] = array(
       '#type' => 'datetime',
       '#description' => $this->t('Expire the role at the beginning of this day.'),
