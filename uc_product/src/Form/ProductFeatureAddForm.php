@@ -32,19 +32,26 @@ class ProductFeatureAddForm extends FormBase {
     foreach (\Drupal::moduleHandler()->invokeAll('uc_product_feature') as $feature) {
       $options[$feature['id']] = $feature['title'];
     }
-    ksort($options);
+    if (isset($options)) {
+      ksort($options);
 
-    $form['feature'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Add a new feature'),
-      '#options' => $options,
-    );
+      $form['feature'] = array(
+        '#type' => 'select',
+        '#title' => $this->t('Add a new feature'),
+        '#options' => $options,
+      );
 
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => $this->t('Add'),
-    );
+      $form['actions'] = array('#type' => 'actions');
+      $form['actions']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => $this->t('Add'),
+      );
+    }
+    else {
+      $form['feature'] = array(
+        '#markup' => $this->t('There are no product features are available to add. To add a feature you must first enable the module that provides that feature.'),
+      );
+    }
 
     return $form;
   }
