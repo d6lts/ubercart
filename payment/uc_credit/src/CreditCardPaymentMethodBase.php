@@ -124,6 +124,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $order->payment_details = array();
     }
 
+    $build['#attached']['library'][] = 'uc_credit/uc_credit.styles';
     $build['cc_policy'] = array(
       '#prefix' => '<p>',
       '#markup' => $this->t('Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.'),

@@ -224,7 +224,7 @@ class CreditCardTerminalForm extends FormBase {
       }
     }
 
-    $form['#attached']['library'][] = 'uc_payment/uc_payment.styles';
+    $form['#attached']['library'][] = 'uc_credit/uc_credit.styles';
 
     return $form;
   }

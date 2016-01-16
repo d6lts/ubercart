@@ -36,6 +36,7 @@ class CreditSettingsForm extends ConfigFormBase {
       '#attached' => array(
         'library' => array(
           'uc_credit/uc_credit.scripts',
+          'uc_credit/uc_credit.styles',
         ),
       ),
     );

@@ -1,0 +1,48 @@
+/**
+ * @file
+ * Styles for uc_credit module.
+ */
+
+.uc-credit-cctype {
+  vertical-align: middle;
+  margin-bottom: 3px;
+}
+
+.payment-details-credit label {
+  clear: left; /* LTR */
+  float: left; /* LTR */
+  margin: 2px 0;
+  padding-top: 5px;
+  width: 10em;
+}
+[dir="rtl"] .payment-details-credit label {
+  clear: right;
+  float: right;
+}
+
+.payment-details-credit input,
+.payment-details-credit select {
+  float: left; /* LTR */
+  margin: 2px;
+}
+[dir="rtl"] .payment-details-credit input,
+[dir="rtl"] .payment-details-credit select {
+  float: right;
+}
+
+.form-item-panes-payment-details-cc-start-year label,
+.form-item-panes-payment-details-cc-exp-year label,
+.form-item-cc-data-cc-start-year label,
+.form-item-cc-data-cc-exp-year label {
+  display: none;
+}
+
+.payment-details-credit .field-suffix {
+  float: left; /* LTR */
+  margin: 2px;
+  padding-top: 5px;
+}
+[dir="rtl"] .payment-details-credit .field-suffix {
+  float: right;
+}
+

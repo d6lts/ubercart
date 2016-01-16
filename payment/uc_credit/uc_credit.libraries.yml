@@ -1,3 +1,8 @@
+uc_credit.styles:
+  css:
+    theme:
+      css/uc_credit.css: {}
+
 uc_credit.scripts:
   js:
     js/uc_credit.admin.js: {}
