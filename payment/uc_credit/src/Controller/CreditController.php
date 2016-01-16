@@ -7,65 +7,99 @@
 
 namespace Drupal\uc_credit\Controller;
 
+use Drupal\Core\Render\BareHtmlPageRenderer;
+use Drupal\Core\Controller\ControllerBase;
+use Symfony\Component\HttpFoundation\Response;
+
 /**
- * Provides instructions on how to create Cart Links.
- *
- * @return
- *   Form API array with help text.
+ * Utility functions for credit card payment methods.
  */
-class CreditController {
+class CreditController extends ControllerBase {
 
   /**
-   * Prints the contents of the CVV information popup window.
+   * Displays the contents of the CVV information popup window.
+   *
+   * @return string
+   *   HTML markup for a page.
    */
-  public static function cvvInfo() {
-    //$build = array(
-    //  '#prefix' => '<p>',
-    //  '#suffix' => '</p>',
-    //);
-    //$build['introduction'] = array(
-    //  '#prefix' => '<p>',
-    //  '#markup' => $this->t("Cart Links allow you to craft links that add products to customer shopping carts and redirect customers to any page on the site. A store owner might use a Cart Link as a 'Buy it now' link in an e-mail, in a blog post, or on any page, either on or off site. These links may be identified with a unique ID, and clicks on these links may be reported to the administrator in order to track the effectiveness of each unique ID. You may track affiliate sales, see basic reports, and make sure malicious users don't create unapproved links."),
-    //  '#suffix' => '</p>',
-    $output = "<!DOCTYPE html>\n";
-    $output .= '<html><head><meta charset="utf-8" /></head><body>';
+  public function cvvInfo() {
 
-    $output .= '<b>' . $this->t('What is the CVV?') . '</b><p>' . $this->t('CVV stands for Card Verification Value. This number is used as a security feature to protect you from credit card fraud.  Finding the number on your card is a very simple process.  Just follow the directions below.') . '</p>';
+    $build['#attached']['library'][] = 'uc_credit/uc_credit.styles';
+    // @todo: Move the embedded CSS below into uc_credit.css.
+    $build['title'] = array(
+      '#prefix' => '<strong>',
+      '#markup' => $this->t('What is the CVV?'),
+      '#suffix' => '</strong>',
+    );
+    $build['definition'] = array(
+      '#prefix' => '<p>',
+      '#markup' => $this->t('CVV stands for "Card Verification Value". This number is used as a security feature to protect you from credit card fraud. Finding the number on your card is a very simple process. Just follow the directions below.'),
+      '#suffix' => '</p>',
+    );
+
+    $credit_config = $this->config('uc_credit.settings');
     $cc_types = array(
       'visa' => $this->t('Visa'),
       'mastercard' => $this->t('MasterCard'),
-      'discover' => $this->t('Discover')
+      'discover' => $this->t('Discover'),
     );
-    foreach ($cc_types as $id => $type) {
-      if (variable_get('uc_credit_' . $id, TRUE)) {
-        $valid_types[] = $type;
+    foreach ($cc_types as $type => $label) {
+      if ($credit_config->get($type)) {
+        $valid_types[] = $label;
       }
     }
     if (count($valid_types) > 0) {
-      $output .= '<br /><b>' . implode(', ', $valid_types) . ':</b><p>';
-      //$output .= theme('image', array(
-      //  'uri' => drupal_get_path('module', 'uc_credit') . '/images/visa_cvv.jpg',
-      //  'attributes' => array('align' => 'left'),
-      //));
-      $output .= $this->t('The CVV for these cards is found on the back side of the card.  It is only the last three digits on the far right of the signature panel box.');
-      $output .= '</p>';
+      $build['types'] = array(
+        '#prefix' => '<br /><strong>',
+        '#markup' => implode(', ', $valid_types),
+        '#suffix' => ':</strong>',
+      );
+      $build['image'] = array(
+        '#theme' => 'image',
+        '#uri' => drupal_get_path('module', 'uc_credit') . '/images/visa_cvv.jpg',
+        '#alt' => 'MasterCard/Visa/Discover CVV location',
+        '#attributes' => array('align' => 'left'),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+      );
+      $build['where'] = array(
+        '#prefix' => '<p>',
+        '#markup' => $this->t('The CVV for these cards is found on the back side of the card. It is only the last three digits on the far right of the signature panel box.'),
+        '#suffix' => '</p>',
+      );
     }
 
-    if (variable_get('uc_credit_amex', TRUE)) {
-      $output .= '<br /><p><b>' . $this->t('American Express') . ':</b><p>';
-      //$output .= theme('image', array(
-      //  'uri' => drupal_get_path('module', 'uc_credit') . '/images/amex_cvv.jpg',
-      //  'attributes' => array('align' => 'left'),
-      //));
-      $output .= $this->t('The CVV on American Express cards is found on the front of the card.  It is a four digit number printed in smaller text on the right side above the credit card number.');
-      $output .= '</p>';
+    if ($credit_config->get('amex')) {
+      $build['types-amex'] = array(
+        '#prefix' => '<br /><strong>',
+        '#markup' => $this->t('American Express'),
+        '#suffix' => ':</strong>',
+      );
+      $build['image-amex'] = array(
+        '#theme' => 'image',
+        '#uri' => drupal_get_path('module', 'uc_credit') . '/images/amex_cvv.jpg',
+        '#alt' => 'Amex CVV location',
+        '#attributes' => array('align' => 'left'),
+        '#prefix' => '<p>',
+        '#suffix' => '</p>',
+      );
+      $build['where-amex'] = array(
+        '#prefix' => '<p>',
+        '#markup' => $this->t('The CVV on American Express cards is found on the front of the card. It is a four digit number printed in smaller text on the right side above the credit card number.'),
+        '#suffix' => '</p>',
+      );
     }
 
-    $output .= '<p align="right"><input type="button" onclick="self.close();" value="' . $this->t('Close this window') . '" /></p>';
+    $build['close'] = array(
+      '#type' => 'button',
+      '#prefix' => '<p align="right">',
+      '#value' => $this->t('Close this window'),
+      '#attributes' => array('onclick' => 'self.close();'),
+      '#suffix' => '</p>',
+    );
 
-    $output .= '</body></html>';
-
-    print $output;
-//  exit();
+    $renderer = \Drupal::service('bare_html_page_renderer');
+    // @todo: Make our own theme function to use instead of 'page'?
+    return $renderer->renderBarePage($build, $this->t('CVV Info'), 'page');
   }
 }
