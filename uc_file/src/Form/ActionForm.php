@@ -214,7 +214,7 @@ class ActionForm extends FormBase {
           drupal_set_message($this->t('The selected file(s) have been deleted.'));
         }
         else {
-          drupal_set_message($this->t('One or more files could not be deleted.'));
+          drupal_set_message($this->t('One or more files could not be deleted.'), 'warning');
         }
 
         break;
@@ -245,11 +245,11 @@ class ActionForm extends FormBase {
             drupal_set_message($this->t('The file %file has been uploaded to %dir', ['%file' => $file_object->filename, '%dir' => $dir]));
           }
           else {
-            drupal_set_message($this->t('An error occurred while copying the file to %dir', ['%dir' => $dir]));
+            drupal_set_message($this->t('An error occurred while copying the file to %dir', ['%dir' => $dir]), 'error');
           }
         }
         else {
-          drupal_set_message($this->t('Can not move file to %dir', ['%dir' => $dir]));
+          drupal_set_message($this->t('Can not move file to %dir', ['%dir' => $dir]), 'error');
         }
 
         break;

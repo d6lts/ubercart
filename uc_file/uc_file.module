@@ -167,7 +167,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
             '%download_limit' => $file_user['download_limit'] ? $file_user['download_limit'] : t('unlimited'),
             '%address_limit'  => $file_user['address_limit' ] ? $file_user['address_limit' ] : t('unlimited'),
             '%expiration'     => $file_user['expiration'    ] ? \Drupal::service('date.formatter')->format($file_user['expiration'], 'small') : t('never'),
-          )));
+          )), 'warning');
       }
       else {
         return array(array(
@@ -533,12 +533,12 @@ function uc_file_remove_by_id($fid, $recur) {
           $remove_fields = TRUE;
         }
         else {
-          drupal_set_message(t('The directory %dir could not be deleted.', ['%dir' => $filename]));
+          drupal_set_message(t('The directory %dir could not be deleted.', ['%dir' => $filename]), 'warning');
           $result = FALSE;
         }
       }
       else {
-        drupal_set_message(t('The directory %dir could not be deleted because it is not empty.', ['%dir' => $filename]));
+        drupal_set_message(t('The directory %dir could not be deleted because it is not empty.', ['%dir' => $filename]), 'warning');
         $result = FALSE;
       }
     }
@@ -549,7 +549,7 @@ function uc_file_remove_by_id($fid, $recur) {
         drupal_set_message(t('The file %dir was deleted.', ['%dir' => $filename]));
       }
       else {
-        drupal_set_message(t('The file %dir could not be deleted.', ['%dir' => $filename]));
+        drupal_set_message(t('The file %dir could not be deleted.', ['%dir' => $filename]), 'error');
         $result = FALSE;
       }
     }

@@ -31,7 +31,7 @@ class FileFeatureForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, NodeInterface $node = NULL, $feature = NULL) {
     $file_config = $this->config('uc_file.settings');
     if (!is_dir($file_config->get('base_dir'))) {
-      drupal_set_message($this->t('A file directory needs to be configured in <a href=":url">product settings</a> under the file download settings tab before a file can be selected.', [':url' => Url::fromRoute('uc_product.settings')->toString()]), 'error');
+      drupal_set_message($this->t('A file directory needs to be configured in <a href=":url">product settings</a> under the file download settings tab before a file can be selected.', [':url' => Url::fromRoute('uc_product.settings')->toString()]), 'warning');
 
       unset($form['buttons']);
       return $form;
