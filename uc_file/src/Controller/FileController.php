@@ -119,11 +119,15 @@ class FileController extends ControllerBase {
             'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
           ),
           'title' => array(
-            '#type' => 'link',
-            '#title' => $file->title,
-            '#url' => Url::fromRoute('entity.node.canonical', ['node' => $file->nid]),
+            'data' => array(
+              '#type' => 'link',
+              '#title' => $file->title,
+              '#url' => Url::fromRoute('entity.node.canonical', ['node' => $file->nid]),
+            ),
           ),
-          'model' => array('#plain_text' => $file->model),
+          'model' => array(
+            'data' => array('#plain_text' => $file->model),
+          ),
         );
       }
       else {
