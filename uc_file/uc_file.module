@@ -79,7 +79,7 @@ function uc_file_user_view(array &$build, UserInterface $account, EntityViewDisp
 
   // If user has files and permission to view them, put a link
   // on the user's profile.
-  $existing_download = db_query("SELECT fid FROM {uc_file_users} WHERE uid = :uid", array(':uid' => $account->id()))->fetchField();
+  $existing_download = db_query("SELECT fid FROM {uc_file_users} WHERE uid = :uid", [':uid' => $account->id()])->fetchField();
   if ($view_mode != 'full' || !$existing_download || (!$user->hasPermission('view all downloads') && $user->id() != $account->id())) {
     return;
   }
@@ -87,7 +87,7 @@ function uc_file_user_view(array &$build, UserInterface $account, EntityViewDisp
   $build['uc_file_download'] = array(
     '#type' => 'item',
     '#title' => t('File downloads'),
-    '#markup' => Link::fromTextAndUrl(t('Click here to view your file downloads.'), Url::fromUri('base:user/' . $account->id() . '/purchased-files'))->toString(),
+    '#markup' => Link::fromTextAndUrl(t('Click here to view your file downloads.'), Url::fromRoute('uc_file.user_downloads', ['user' => $account->id()]))->toString(),
   );
 }
 
@@ -130,7 +130,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
   $product_features = db_query("SELECT * FROM {uc_product_features} upf " .
     "INNER JOIN {uc_file_products} ufp ON upf.pfid = ufp.pfid " .
     "INNER JOIN {uc_files} uf ON ufp.fid = uf.fid " .
-    "WHERE upf.nid = :nid", array(':nid' => $nid));
+    "WHERE upf.nid = :nid", [':nid' => $nid]);
 
   foreach ($product_features as $product_feature) {
 
@@ -187,7 +187,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
  */
 function uc_file_uc_order_product_can_ship($item) {
   // Check if this model is shippable as well as a file.
-  $files = db_query("SELECT shippable, model FROM {uc_file_products} fp INNER JOIN {uc_product_features} pf ON pf.pfid = fp.pfid WHERE nid = :nid", array(':nid' => $item->nid));
+  $files = db_query("SELECT shippable, model FROM {uc_file_products} fp INNER JOIN {uc_product_features} pf ON pf.pfid = fp.pfid WHERE nid = :nid", [':nid' => $item->nid]);
   foreach ($files as $file) {
 
     // If the model is 'any' then return.
@@ -832,7 +832,7 @@ function &uc_file_get_by_key($key) {
   if (!isset($cache[$key])) {
     $cache[$key] = db_query("SELECT * FROM {uc_file_users} ufu " .
       "LEFT JOIN {uc_files} uf ON uf.fid = ufu.fid " .
-      "WHERE ufu.file_key = :key", array(':key' => $key))->fetchObject();
+      "WHERE ufu.file_key = :key", [':key' => $key])->fetchObject();
     $cache[$key]->addresses = unserialize($cache[$key]->addresses);
   }
 

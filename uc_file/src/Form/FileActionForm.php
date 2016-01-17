@@ -56,11 +56,11 @@ class FileActionForm extends FormBase {
 
     // Set our default actions.
     $file_actions = array(
-      'uc_file_upload' => $this->t('Upload file'),
+      'uc_file_upload' => $this->t('Upload file(s)'),
       'uc_file_delete' => $this->t('Delete file(s)'),
     );
 
-    // Check if any hook_uc_file_action('info', $args) are implemented
+    // Check if any hook_uc_file_action('info', $args) are implemented.
     foreach ($module_handler->getImplementations('uc_file_action') as $module) {
       $name = $module . '_uc_file_action';
       $result = $name('info', NULL);
@@ -110,6 +110,12 @@ class FileActionForm extends FormBase {
           $form_state->setErrorByName('', $this->t('You must select at least one file to delete.'));
         }
         break;
+      case 'uc_file_upload':
+        // Nothing to do in this case.
+        break;
+      default:
+        // @todo: Deal with validating hook-provided actions.
+        break;
     }
   }
 
@@ -123,6 +129,9 @@ class FileActionForm extends FormBase {
         break;
       case 'uc_file_upload':
         $form_state->setRedirect('uc_file.upload');
+        break;
+      default:
+        // @todo: Deal with submitting hook-provided actions.
         break;
     }
   }
