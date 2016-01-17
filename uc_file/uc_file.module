@@ -908,7 +908,7 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
     $file_user = _uc_file_user_get($user, $fid);
 
     // Doesn't exist yet?
-    $key = array();
+    $key = NULL;
     if (!$file_user) {
       $file_user = array(
         'granted' => REQUEST_TIME,
@@ -919,8 +919,8 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
       $force_overwrite = TRUE;
     }
     else {
-      $file_user = (array)$file_user;
-      $key = 'fuid';
+      $file_user = (array) $file_user;
+      $key = $file_user['fuid'];
     }
 
     // Add file data in as well.
@@ -938,8 +938,11 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
     // Calculate hash.
     $file_user['file_key'] = isset($file_user['file_key']) && $file_user['file_key'] ? $file_user['file_key'] : \Drupal::csrfToken()->get(serialize($file_user));
 
-    // Write and queue the file_user object.
-    drupal_write_record('uc_file_users', $file_user, $key);
+    // Insert or update (if $key is already in table) uc_file_users table.
+    db_merge('uc_file_users')
+      ->key(['fuid' => $key])
+      ->fields($file_user)
+      ->execute();
 
     if ($key) {
       \Drupal::logger('uc_file')->notice('%user has had download privileges of %file renewed.', ['%user' => $user->getUsername(), '%file' => $file_user['filename']]);
@@ -948,8 +951,9 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
       \Drupal::logger('uc_file')->notice('%user has been allowed to download %file.', ['%user' => $user->getUsername(), '%file' => $file_user['filename']]);
     }
 
-    $result[] = (object)$file_user;
+    $result[] = (object) $file_user;
   }
+
   return $result;
 }
 

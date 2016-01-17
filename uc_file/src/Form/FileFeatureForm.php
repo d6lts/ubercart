@@ -282,17 +282,19 @@ class FileFeatureForm extends FormBase {
     );
 
     uc_product_feature_save($data);
-
     $file_product['pfid'] = $data['pfid'];
+    unset($file_product['filename']);
 
-    // Insert or update uc_file_product table.
-    $key = array();
+    $key = NULL;
     if ($fpid = _uc_file_get_fpid($file_product['pfid'])) {
-      $key = 'fpid';
-      $file_product['fpid'] = $fpid;
+      $key = $fpid;
     }
 
-    drupal_write_record('uc_file_products', $file_product, $key);
+    // Insert or update (if $key is already in table) uc_file_products table.
+    db_merge('uc_file_products')
+      ->key(['fpid' => $key])
+      ->fields($file_product)
+      ->execute();
 
     $form_state->setRedirect('uc_product.features', ['node' => $data['nid']]);
   }

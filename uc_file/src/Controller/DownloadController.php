@@ -472,7 +472,16 @@ class DownloadController extends ControllerBase {
     // Calculate hash
     $file_user->file_key = \Drupal::csrfToken()->get(serialize($file_user));
 
-    drupal_write_record('uc_file_users', $file_user, 'fuid');
+    $key = NULL;
+    if (isset($file_user['fuid'])) {
+      $key = $file_user['fuid'];
+    }
+
+    // Insert or update (if $key is already in table) uc_file_users table.
+    db_merge('uc_file_users')
+      ->key(['fuid' => $key])
+      ->fields($file_user)
+      ->execute();
   }
 
   /**
