@@ -113,7 +113,7 @@ class FileFeatureForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('File download'),
       '#default_value' => $default_filename,
-      '#autocomplete_path' => '_autocomplete_file',
+      '#autocomplete_route_name' => 'uc_file.autocomplete_filename',
       '#description' => $this->t('The file that can be downloaded when product is purchased (enter a path relative to the %dir directory).', ['%dir' => $file_config->get('base_dir')]),
       '#maxlength' => 255,
       '#required' => TRUE,

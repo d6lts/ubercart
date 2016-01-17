@@ -20,27 +20,12 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * The maximum amount of rows shown in tables of file downloads.
  */
 define('UC_FILE_PAGER_SIZE', 50);
 define('UC_FILE_LIMIT_SENTINEL', -1);
-
-/**
- * Implements hook_menu().
- */
-function uc_file_menu() {
-  $items = array();
-
-  $items['_autocomplete_file'] = array(
-    'page callback' => '_uc_file_autocomplete_filename',
-    'access arguments' => array('administer product features'),
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-}
 
 /**
  * Implements hook_help().
@@ -358,25 +343,6 @@ function _uc_file_accumulate_limits(&$file_user, $file_limits, $force_overwrite)
 
   // Accumulate time.
   _uc_file_time_accumulate_equation($file_user['expiration'], $file_limits['expiration'], $force_overwrite);
-}
-
-/**
- * Implements Drupal autocomplete textfield.
- *
- * @return
- *   Sends string containing javascript array of matched files.
- */
-function _uc_file_autocomplete_filename() {
-  $matches = [];
-
-  // Catch "/" characters that drupal autocomplete doesn't escape.
-  $url = explode('_autocomplete_file/', \Drupal::request()->getRequestUri());
-  $files = db_query("SELECT filename FROM {uc_files} WHERE filename LIKE :name ORDER BY filename ASC", [':name' => '%' . db_like($url[1]) . '%']);
-  while ($filename = $files->fetchField()) {
-    $matches[$filename] = $filename;
-  }
-
-  return new JsonResponse($matches);
 }
 
 /**

@@ -38,3 +38,10 @@ uc_file.user_downloads:
 #   _description: 'View your purchased files'
   requirements:
     _custom_access: '\Drupal\uc_file\Controller\DownloadController::accessUserDownloads'
+
+uc_file.autocomplete_filename:
+  path: '/file/autocomplete'
+  defaults:
+    _controller: '\Drupal\uc_file\Controller\FileAutocompleteController::autocompleteFilename'
+  requirements:
+    _permission: 'administer product features'
