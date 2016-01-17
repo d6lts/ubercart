@@ -22,6 +22,22 @@ uc_file.action:
   requirements:
     _permission: 'administer products'
 
+uc_file.delete:
+  path: '/admin/store/products/files/delete'
+  defaults:
+    _form: '\Drupal\uc_file\Form\FileDeleteForm'
+    _title: 'Delete file(s)'
+  requirements:
+    _permission: 'administer products'
+
+uc_file.upload:
+  path: '/admin/store/products/files/upload'
+  defaults:
+    _form: '\Drupal\uc_file\Form\FileUploadForm'
+    _title: 'Upload file(s)'
+  requirements:
+    _permission: 'administer products'
+
 uc_file.download_file:
   path: '/download/{file}'
   defaults:

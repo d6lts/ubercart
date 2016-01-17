@@ -12,12 +12,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Form step values.
- */
-define('UC_FILE_FORM_ACTION', 1   );
-
-
-/**
  * Form builder for file products admin.
  */
 class FileActionForm extends FormBase {
@@ -102,7 +96,7 @@ class FileActionForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    switch ($form_state->getValue(['uc_file_action', 'action'])) {
+    switch ($form_state->getValue('action')) {
       case 'uc_file_delete':
         $file_ids = array();
         if (is_array($form_state->getValue('file_select'))) {
@@ -123,9 +117,14 @@ class FileActionForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Increment the form step.
-    $form_state->set('step', UC_FILE_FORM_ACTION);
-    $form_state->setRebuild();
+    switch ($form_state->getValue('action')) {
+      case 'uc_file_delete':
+        $form_state->setRedirect('uc_file.delete');
+        break;
+      case 'uc_file_upload':
+        $form_state->setRedirect('uc_file.upload');
+        break;
+    }
   }
 
 }
