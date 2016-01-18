@@ -7,13 +7,15 @@
 
 namespace Drupal\uc_credit\Plugin\Ubercart\PaymentMethod;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_credit\CreditCardPaymentMethodBase;
 
 /**
  * Defines the test gateway payment method.
  *
  * This is a dummy payment gateway to use for testing or as an example. All
- * payments using this test gateway will succeed, except when:
+ * payments using this test gateway will succeed, except when one of the
+ * following is TRUE:
  * - Credit card number equals '0000000000000000'. (Note that ANY card number
  *   that fails the Luhn algorithm check performed by uc_credit will not even be
  *   submitted to this gateway).
@@ -29,6 +31,38 @@ use Drupal\uc_credit\CreditCardPaymentMethodBase;
  * )
  */
 class TestGateway extends CreditCardPaymentMethodBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return parent::defaultConfiguration() + [
+      'debug' => FALSE,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
+    $form['debug'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Debug'),
+      '#description' => $this->t('Log debug payment information to dblog when card is "charged" by this gateway.'),
+      '#default_value' => $this->configuration['debug'],
+    );
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->configuration['debug'] = $form_state->getValue('debug');
+    return parent::submitConfigurationForm($form, $form_state);
+  }
 
   /**
    * {@inheritdoc}
@@ -61,9 +95,10 @@ class TestGateway extends CreditCardPaymentMethodBase {
       $success = TRUE;
     }
 
-    // Uncomment this line to see the order object.  The information for the
-    // payment is in the $order->payment_details array.
-     drupal_set_message('<pre>' . print_r($order->payment_details, TRUE) . '</pre>');
+    // The information for the payment is in the $order->payment_details array.
+    if ($this->configuration['debug']) {
+      \Drupal::logger('uc_credit')->notice('Test gateway payment details @details.', ['@details' => print_r($order->payment_details)]);
+    }
 
     if ($success) {
       $message = $this->t('Credit card charged: @amount', ['@amount' => uc_currency_format($amount)]);
