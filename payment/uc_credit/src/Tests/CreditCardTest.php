@@ -55,7 +55,7 @@ class CreditCardTest extends UbercartTestBase {
 
   protected $paymentMethod;
 
-  public static $modules = array('uc_payment', 'uc_credit', 'test_gateway');
+  public static $modules = array('uc_payment', 'uc_credit');
   public static $adminPermissions = array('administer credit cards', 'process credit cards');
 
   /**

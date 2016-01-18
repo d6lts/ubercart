@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\test_gateway\Plugin\Ubercart\PaymentMethod\TestGateway.
+ * Contains \Drupal\uc_credit\Plugin\Ubercart\PaymentMethod\TestGateway.
  */
 
-namespace Drupal\test_gateway\Plugin\Ubercart\PaymentMethod;
+namespace Drupal\uc_credit\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\uc_credit\CreditCardPaymentMethodBase;
 
