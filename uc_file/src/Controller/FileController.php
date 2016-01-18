@@ -12,7 +12,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\SafeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -28,13 +27,6 @@ class FileController extends ControllerBase {
   protected $database;
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * The form builder service.
    *
    * @var \Drupal\Core\Form\FormBuilderInterface
@@ -47,7 +39,6 @@ class FileController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('database'),
-      $container->get('module_handler'),
       $container->get('form_builder')
     );
   }
@@ -57,14 +48,11 @@ class FileController extends ControllerBase {
    *
    * @param \Drupal\Core\Database\Connection $database
    *   A database connection.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   A module handler.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder service.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, FormBuilderInterface $form_builder) {
+  public function __construct(Connection $database, FormBuilderInterface $form_builder) {
     $this->database = $database;
-    $this->moduleHandler = $module_handler;
     $this->formBuilder = $form_builder;
   }
 
