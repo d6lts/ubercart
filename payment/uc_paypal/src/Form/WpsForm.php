@@ -90,7 +90,7 @@ class WpsForm extends FormBase {
       'cancel_return' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
       'no_note' => 1,
       'no_shipping' => $paypal_config->get('wps_no_shipping'),
-      'return' => Url::fromRoute('uc_paypal/wps/complete/', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
+      'return' => Url::fromRoute('uc_paypal.wps_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
       'rm' => 1,
 
       // Transaction information.

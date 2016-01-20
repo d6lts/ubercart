@@ -33,6 +33,7 @@ uc_paypal.ec_submit:
     _permission: 'access content'
 
 # Callback functions for Website Payments Standard.
+uc_paypal.wps_complete:
   path: '/uc_paypal/wps/complete/{uc_order}'
   defaults:
     _controller: '\Drupal\uc_paypal\Controller\WpsController::wpsComplete'

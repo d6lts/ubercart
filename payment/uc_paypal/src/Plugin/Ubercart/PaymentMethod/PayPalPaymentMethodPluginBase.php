@@ -62,9 +62,10 @@ abstract class PayPalPaymentMethodPluginBase extends PaymentMethodPluginBase {
       '#default_value' => $this->configuration['wpp_server'],
     );
     $form['api'] = array(
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#title' => $this->t('API credentials'),
       '#description' => $this->t('@link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://developer.paypal.com/docs/classic/api/apiCredentials/'))->toString()]),
+      '#open' => TRUE,
     );
     $form['api']['api_username'] = array(
       '#type' => 'textfield',
