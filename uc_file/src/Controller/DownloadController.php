@@ -156,7 +156,7 @@ class DownloadController extends ControllerBase {
 
       // Expiration set to 'never'
       if ($file->expiration == FALSE) {
-        $file_link = Link::fromTextAndUrl(\Drupal::service('file_system')->basename($file->filename), 'download/' . $file->fid, $onclick)->toString();
+        $file_link = Link::createFromRoute(\Drupal::service('file_system')->basename($file->filename), 'uc_file.download_file', ['file' => $file->fid], $onclick)->toString();
       }
 
       // Expired.
@@ -166,7 +166,7 @@ class DownloadController extends ControllerBase {
 
       // Able to be downloaded.
       else {
-        $file_link = Link::fromTextAndUrl(\Drupal::service('file_system')->basename($file->filename), 'download/' . $file->fid, $onclick)->toString() . ' (' . $this->t('expires on @date', ['@date' => \Drupal::service('date.formatter')->format($file->expiration, 'uc_store')]) . ')';
+        $file_link = Link::createFromRoute(\Drupal::service('file_system')->basename($file->filename), 'uc_file.download_file', ['file' => $file->fid], $onclick)->toString() . ' (' . $this->t('expires on @date', ['@date' => \Drupal::service('date.formatter')->format($file->expiration, 'uc_store')]) . ')';
       }
 
       $files[] = array(

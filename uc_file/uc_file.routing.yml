@@ -45,6 +45,7 @@ uc_file.download_file:
     _title: 'Download file'
   requirements:
     _permission: 'download file'
+    _csrf_token: 'TRUE'
 
 uc_file.user_downloads:
   path: '/user/{user}/purchased-files'

@@ -87,7 +87,7 @@ function uc_file_user_view(array &$build, UserInterface $account, EntityViewDisp
   $build['uc_file_download'] = array(
     '#type' => 'item',
     '#title' => t('File downloads'),
-    '#markup' => Link::fromTextAndUrl(t('Click here to view your file downloads.'), Url::fromRoute('uc_file.user_downloads', ['user' => $account->id()]))->toString(),
+    '#markup' => Link::createFromRoute(t('Click here to view your file downloads.'), 'uc_file.user_downloads', ['user' => $account->id()])->toString(),
   );
 }
 
@@ -162,7 +162,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
         // But still show the message if it does.
         drupal_set_message(t('You already have privileges to <a href=":url">download %file</a>. If you complete the purchase of this item, your new download limit will be %download_limit, your access location limit will be %address_limit, and your new expiration time will be %expiration.',
           array(
-            ':url' => $user->id() ? Url::fromRoute('user/' . $user->id() . '/purchased-files')->toString() : Url::fromRoute('user.login')->toString(),
+            ':url' => $user->id() ? Url::fromRoute('uc_file.user_downloads', ['user' => $user->id()])->toString() : Url::fromRoute('user.login')->toString(),
             '%file' => $product_feature->filename,
             '%download_limit' => $file_user['download_limit'] ? $file_user['download_limit'] : t('unlimited'),
             '%address_limit'  => $file_user['address_limit' ] ? $file_user['address_limit' ] : t('unlimited'),
@@ -173,7 +173,7 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
         return array(array(
           'success' => FALSE,
           'message' => t('You already have privileges to <a href=":url">download %file</a>.', array(
-            ':url' => $user->id() ? Url::fromRoute('user/' . $user->id() . '/purchased-files')->toString() : Url::fromRoute('user.login')->toString(),
+            ':url' => $user->id() ? Url::fromRoute('uc_file.user_downloads', ['user' => $user->id()])->toString() : Url::fromRoute('user.login')->toString(),
             '%file' => $product_feature->filename,
           )),
         ));
