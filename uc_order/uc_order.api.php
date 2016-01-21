@@ -458,13 +458,13 @@ function hook_uc_order_product_delete(object $order_product) {
 /**
  * Allow modules to specify whether a product is shippable.
  *
- * @param $product
- *   The product to check.  May be a cart item or an order product.
- * @return
+ * @param \Drupal\uc_order\OrderProductInterface|\Drupal\uc_cart\CartItemInterface $product
+ *   The product to check. May be a cart item or an order product.
+ * @return bool
  *   TRUE to specify that this product is shippable.
  */
 function hook_uc_order_product_can_ship($product) {
-  $roles = db_query("SELECT * FROM {uc_roles_products} WHERE nid = :nid", array(':nid' => $item->nid));
+  $roles = db_query('SELECT * FROM {uc_roles_products} WHERE nid = :nid', [':nid' => $product->nid->target_id]);
   foreach ($roles as $role) {
     // If the model is empty, keep looking. (Everyone needs a role model...)
     if (empty($role->model)) {
@@ -472,7 +472,7 @@ function hook_uc_order_product_can_ship($product) {
     }
 
     // If there's an adjusted SKU, use it... otherwise use the node SKU.
-    $sku = (empty($item->data['model'])) ? $item->model : $item->data['model'];
+    $sku = (empty($product->data['model'])) ? $product->model->value : $product->data['model'];
 
     // Keep looking if it doesn't match.
     if ($sku != $role->model) {

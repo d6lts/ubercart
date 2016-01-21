@@ -185,9 +185,9 @@ function uc_file_uc_add_to_cart($nid, $qty, $data) {
 /**
  * Implements hook_uc_order_product_can_ship().
  */
-function uc_file_uc_order_product_can_ship($item) {
+function uc_file_uc_order_product_can_ship($product) {
   // Check if this model is shippable as well as a file.
-  $files = db_query("SELECT shippable, model FROM {uc_file_products} fp INNER JOIN {uc_product_features} pf ON pf.pfid = fp.pfid WHERE nid = :nid", [':nid' => $item->nid]);
+  $files = db_query('SELECT shippable, model FROM {uc_file_products} fp INNER JOIN {uc_product_features} pf ON pf.pfid = fp.pfid WHERE nid = :nid', [':nid' => $product->nid->target_id]);
   foreach ($files as $file) {
 
     // If the model is 'any' then return.
@@ -196,7 +196,7 @@ function uc_file_uc_order_product_can_ship($item) {
     }
     else {
       // Use the adjusted SKU, or node SKU if there's none.
-      $sku = empty($item->data['model']) ? $item->model : $item->data['model'];
+      $sku = empty($product->data['model']) ? $product->model->value : $product->data['model'];
       if ($sku == $file->model) {
         return $file->shippable;
       }
