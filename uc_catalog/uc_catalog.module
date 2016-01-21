@@ -273,7 +273,7 @@ function _uc_catalog_navigation($branch) {
  * Creates paths to the catalog from taxonomy term.
  */
 function uc_catalog_path($term) {
-  return Url::fromRoute('view.uc_catalog.page_1')->toString() . '/' . $term->getTid();
+  return Url::fromRoute('view.uc_catalog.page_1', ['term_node_tid_depth' => $term->getTid()])->toString();
 }
 
 /**
