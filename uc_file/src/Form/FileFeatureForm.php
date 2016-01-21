@@ -33,9 +33,13 @@ class FileFeatureForm extends FormBase {
     if (!is_dir($file_config->get('base_dir'))) {
       drupal_set_message($this->t('A file directory needs to be configured in <a href=":url">product settings</a> under the file download settings tab before a file can be selected.', [':url' => Url::fromRoute('uc_product.settings')->toString()]), 'warning');
 
-      unset($form['buttons']);
       return $form;
     }
+
+    // Rescan the file directory to populate {uc_files} with the current list
+    // because files uploaded via any method other than the Upload button
+    // (e.g. by FTP) won'b be in {uc_files} yet.
+    uc_file_refresh();
 
     if (!db_query_range('SELECT 1 FROM {uc_files}', 0, 1)->fetchField()) {
       $form['file']['file_message'] = array(
@@ -43,12 +47,8 @@ class FileFeatureForm extends FormBase {
         ),
       );
 
-      unset($form['buttons']);
       return $form;
     }
-
-    // Make sure we have an up-to-date list for the autocompletion.
-    uc_file_refresh();
 
     // Grab all the models on this product.
     $models = uc_product_get_models($node->id());
