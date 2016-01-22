@@ -8,8 +8,8 @@
 namespace Drupal\uc_role\Tests;
 
 use Drupal\uc_order\Entity\Order;
-use Drupal\user\Entity\User;
 use Drupal\uc_store\Tests\UbercartTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests role assignment upon checkout.
@@ -44,7 +44,6 @@ class RoleCheckoutTest extends UbercartTestBase {
 
     // Add role assignment to the test product.
     $rid = $this->drupalCreateRole(array('access content'));
-    $this->drupalLogin($this->adminUser);
     $this->drupalPostForm('node/' . $this->product->id() . '/edit/features', array('feature' => 'role'), t('Add'));
     $this->drupalPostForm(NULL, array('role' => $rid), t('Save feature'));
 
