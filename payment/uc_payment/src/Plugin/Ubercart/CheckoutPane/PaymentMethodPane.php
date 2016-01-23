@@ -129,15 +129,18 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
       ),
     );
 
-    $contents['details'] = array(
-      '#prefix' => '<div id="payment-details" class="clearfix payment-details-' . $order->getPaymentMethodId() . '">',
-      '#markup' => $this->t('Continue with checkout to complete payment.'),
-      '#suffix' => '</div>',
-    );
-
+    // If there are no payment methods available, this will be ''.
     if ($order->getPaymentMethodId()) {
+      $plugin = $this->paymentMethodManager->createFromOrder($order);
+      $definition = $plugin->getPluginDefinition();
+      $contents['details'] = array(
+        '#prefix' => '<div id="payment-details" class="clearfix ' . Html::cleanCssIdentifier('payment-details-' . $definition['id']) . '">',
+        '#markup' => $this->t('Continue with checkout to complete payment.'),
+        '#suffix' => '</div>',
+      );
+
       try {
-        $details = $this->paymentMethodManager->createFromOrder($order)->cartDetails($order, $form, $form_state);
+        $details = $plugin->cartDetails($order, $form, $form_state);
         if ($details) {
           unset($contents['details']['#markup']);
           $contents['details'] += $details;
