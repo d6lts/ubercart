@@ -9,4 +9,3 @@ uc_product.scripts:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/drupalSettings
