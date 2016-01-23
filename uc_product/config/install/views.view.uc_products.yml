@@ -1,3 +1,4 @@
+uuid: be3a023b-e626-4f6c-8d07-7f3b96961740
 langcode: en
 status: true
 dependencies:
@@ -9,10 +10,12 @@ dependencies:
     - node
     - uc_product
     - user
+_core:
+  default_config_hash: jjB70BGc_-TpY27jvzPQtswSibJUs9Mq4Kiy_2PrHt0
 id: uc_products
 label: Products
 module: views
-description: ''
+description: 'Find and manage Ubercart products.'
 tag: Ubercart
 base_table: node_field_data
 base_field: nid

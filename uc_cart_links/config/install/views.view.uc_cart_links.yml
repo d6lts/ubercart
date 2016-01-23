@@ -1,8 +1,11 @@
+uuid: ea9f9532-1233-4498-9e00-ea422704989e
 langcode: en
 status: true
 dependencies:
   module:
     - user
+_core:
+  default_config_hash: iufZ1ivzKgeIJx1eyB83vAYU4S40yReIm94xSeiXE74
 id: uc_cart_links
 label: 'Cart Links'
 module: views
@@ -291,7 +294,11 @@ display:
     cache_metadata:
       contexts:
         - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   report:
     display_plugin: page
     id: report
@@ -304,4 +311,8 @@ display:
     cache_metadata:
       contexts:
         - 'languages:language_interface'
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }

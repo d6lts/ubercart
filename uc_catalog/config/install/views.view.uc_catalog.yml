@@ -1,3 +1,4 @@
+uuid: cca828ce-a583-4c41-a61b-27ca33b1a537
 langcode: en
 status: true
 dependencies:
@@ -11,6 +12,8 @@ dependencies:
     - taxonomy
     - uc_product
     - user
+_core:
+  default_config_hash: s3BhvfaZUUvZ34Sw9f6QfTas5pTcvJX1Skrwn1cGvNg
 id: uc_catalog
 label: Catalog
 module: views
@@ -458,8 +461,13 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false
+      max-age: -1
+      tags:
+        - 'config:field.storage.node.uc_product_image'
   page_1:
     display_plugin: page
     id: page_1
@@ -469,3 +477,14 @@ display:
       path: catalog
       display_extenders: {  }
       display_description: ''
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.uc_product_image'

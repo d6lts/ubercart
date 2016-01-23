@@ -1,3 +1,4 @@
+uuid: e4cc94a0-977e-443c-bd04-4fc2134520c4
 langcode: en
 status: true
 dependencies:
@@ -5,6 +6,8 @@ dependencies:
     - uc_order
     - uc_store
     - user
+_core:
+  default_config_hash: 4p04UeZer9n6NxFYVhp5hud3WnYtmAj2EizYWKmh5LQ
 id: uc_order_history
 label: 'Order history'
 module: uc_order
@@ -498,9 +501,14 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   page_1:
     display_plugin: page
     id: page_1
@@ -518,6 +526,11 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }

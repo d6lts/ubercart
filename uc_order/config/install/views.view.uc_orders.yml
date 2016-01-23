@@ -1,3 +1,4 @@
+uuid: 3cc6def6-7ef0-471b-b500-c35066134636
 langcode: und
 status: true
 dependencies:
@@ -7,6 +8,8 @@ dependencies:
     - uc_order
     - uc_store
     - user
+_core:
+  default_config_hash: Guk8S4z5488LDvu4cElo5XMmVpLaKgp3O9yaFT--aU0
 id: uc_orders
 label: Orders
 module: uc_order
@@ -513,13 +516,14 @@ display:
           plugin_id: text
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   admin_page:
     display_plugin: page
     id: admin_page
@@ -539,13 +543,14 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   by_customer:
     display_plugin: page
     id: by_customer
@@ -645,13 +650,14 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   search:
     display_plugin: page
     id: search
@@ -940,10 +946,11 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }

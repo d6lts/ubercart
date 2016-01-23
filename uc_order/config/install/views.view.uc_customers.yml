@@ -1,3 +1,4 @@
+uuid: 30809bd9-7b6a-49eb-9e00-c0097564e432
 langcode: en
 status: true
 dependencies:
@@ -8,7 +9,7 @@ dependencies:
     - uc_order
     - user
 _core:
-  default_config_hash: HAwamdeCV8Zx6PdJukFKP5YrVBkf7q7F2aKs3ohpi0Q
+  default_config_hash: 3gzukS3dFlEf-MQoCnJqxtxv8fem_UkPIxD4_fWAySw
 id: uc_customers
 label: Customers
 module: views

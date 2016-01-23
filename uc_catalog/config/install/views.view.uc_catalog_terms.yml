@@ -1,15 +1,19 @@
+uuid: e9f07d51-3d33-4169-a700-c49a1df81014
 langcode: en
 status: true
 dependencies:
   config:
-    - taxonomy.vocabulary.catalog
+    - field.storage.taxonomy_term.uc_catalog_image
   module:
+    - image
     - taxonomy
     - user
+_core:
+  default_config_hash: DGn4Mspn405DsYKYYAy62vkPW64fH7n3V7W4_P1gk3U
 id: uc_catalog_terms
 label: 'Catalog categories'
 module: views
-description: ''
+description: 'Display categories in header of uc_catalog View.'
 tag: Ubercart
 base_table: taxonomy_term_field_data
 base_field: tid
@@ -337,3 +341,6 @@ display:
         - url
         - user.permissions
       cacheable: false
+      max-age: -1
+      tags:
+        - 'config:field.storage.taxonomy_term.uc_catalog_image'
