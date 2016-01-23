@@ -97,7 +97,7 @@ class TestGateway extends CreditCardPaymentMethodBase {
 
     // The information for the payment is in the $order->payment_details array.
     if ($this->configuration['debug']) {
-      \Drupal::logger('uc_credit')->notice('Test gateway payment details @details.', ['@details' => print_r($order->payment_details)]);
+      \Drupal::logger('uc_credit')->notice('Test gateway payment details @details.', ['@details' => print_r($order->payment_details, TRUE)]);
     }
 
     if ($success) {
