@@ -76,7 +76,7 @@ class OrderCreateForm extends FormBase {
       );
       // Customer e-mail address.
       $form['customer']['email'] = array(
-        '#type' => 'textfield',
+        '#type' => 'email',
         '#title' => $this->t('E-mail'),
         '#size' => 24,
         '#maxlength' => 96,
