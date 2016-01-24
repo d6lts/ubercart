@@ -37,3 +37,21 @@ uc_order.settings:
           type: string
           label: 'Order state label'
 
+action.configuration.uc_order_delete_action:
+  type: action_configuration_default
+  label: 'Delete order configuration'
+
+action.configuration.uc_order_print_action:
+  type: action_configuration_default
+  label: 'Print order configuration'
+
+action.configuration.uc_order_set_order_status_action:
+  type: action_configuration_default
+  label: 'Set order status configuration'
+  mapping:
+    status:
+      type: label
+      label: 'Order status'
+    notify:
+      type: boolean
+      label: 'Whether to send status change notification E-mail'
