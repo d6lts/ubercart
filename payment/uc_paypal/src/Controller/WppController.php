@@ -125,7 +125,7 @@ class WppController extends ControllerBase {
           array(
             '@paypal_message' => $this->buildErrorMessages($nvp_response),
             '@type' => $types[$data['txn_type']],
-            'link' => Link::fromTextAndUrl(t('view order'), Url::fromRoute('entity.uc_order.canonical', ['uc_order' => $order_id]))->toString(),
+            'link' => Link::createFromRoute(t('view order'), 'entity.uc_order.canonical', ['uc_order' => $order_id])->toString(),
           )
         );
         // Fall through.
