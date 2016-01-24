@@ -192,13 +192,13 @@ class OrderTest extends UbercartTestBase {
 
     $this->drupalLogin($this->adminUser);
     $edit = array(
-      'bill_to[first_name]' => $this->randomMachineName(8),
-      'bill_to[last_name]' => $this->randomMachineName(15),
+      'billing[first_name]' => $this->randomMachineName(8),
+      'billing[last_name]' => $this->randomMachineName(15),
     );
     $this->drupalPostForm('admin/store/orders/' . $order->id() . '/edit', $edit, t('Save changes'));
     $this->assertText(t('Order changes saved.'));
-    $this->assertFieldByName('bill_to[first_name]', $edit['bill_to[first_name]'], 'Billing first name changed.');
-    $this->assertFieldByName('bill_to[last_name]', $edit['bill_to[last_name]'], 'Billing last name changed.');
+    $this->assertFieldByName('billing[first_name]', $edit['billing[first_name]'], 'Billing first name changed.');
+    $this->assertFieldByName('billing[last_name]', $edit['billing[last_name]'], 'Billing last name changed.');
   }
 
   public function testOrderState() {

@@ -14,13 +14,13 @@ use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
 
-require_once dirname(__FILE__) . '/uc_order.order_pane.inc';
 require_once dirname(__FILE__) . '/uc_order.line_item.inc';
 
 
@@ -118,14 +118,8 @@ function uc_order_theme($existing, $type, $theme, $path) {
       'variables' => array('content' => NULL),
       'template' => 'uc-order-invoice-page',
     ),
-    'uc_order_edit_form' => array(
-      'render element' => 'form',
-      'file' => 'uc_order.admin.inc',
-      'function' => 'theme_uc_order_edit_form',
-    ),
     'uc_order_pane_line_items' => array(
       'render element' => 'form',
-      'file' => 'uc_order.order_pane.inc',
       'function' => 'theme_uc_order_pane_line_items',
     ),
   );
@@ -153,23 +147,20 @@ function uc_order_entity_bundle_info() {
  * Implements hook_entity_extra_field_info().
  */
 function uc_order_entity_extra_field_info() {
-  $panes = \Drupal::moduleHandler()->invokeAll('uc_order_pane');
+  $panes = \Drupal::service('plugin.manager.uc_order.order_pane')->getDefinitions();
   $extra = array();
 
   foreach ($panes as $id => $pane) {
     $extra_field = array(
       'label' => $pane['title'],
-      'description' => $pane['desc'],
       'weight' => $pane['weight'],
     );
 
-    if (in_array('edit', $pane['show'])) {
+    if (in_array('Drupal\uc_order\EditableOrderPanePluginInterface', class_implements($pane['class']))) {
       $extra['uc_order']['uc_order']['form'][$id] = $extra_field;
     }
 
-    if (in_array('view', $pane['show']) || in_array('customer', $pane['show'])) {
-      $extra['uc_order']['uc_order']['display'][$id] = $extra_field;
-    }
+    $extra['uc_order']['uc_order']['display'][$id] = $extra_field;
   }
 
   return $extra;
@@ -253,88 +244,6 @@ function uc_order_form_views_exposed_form_submit($form, FormStateInterface $form
     $form_state->setRedirect('entity.uc_order.canonical', ['uc_order' => $form_state->getValue('order_id')]);
     $form_state->disableRedirect(FALSE);
   }
-}
-
-/**
- * Implements hook_uc_order_pane().
- */
-function uc_order_uc_order_pane() {
-  $panes['print_button'] = array(
-    'callback' => 'uc_order_pane_print_button',
-    'title' => t('Print button'),
-    'display title' => '',
-    'desc' => t("Button to open a printable invoice."),
-    'class' => 'abs-left',
-    'weight' => -10,
-    'show' => array('customer'),
-  );
-  $panes['ship_to'] = array(
-    'callback' => 'uc_order_pane_ship_to',
-    'title' => t('Ship to'),
-    'desc' => t("Manage the order's shipping address and contact information."),
-    'class' => 'pos-left',
-    'weight' => 1,
-    'show' => array('view', 'edit', 'customer'),
-  );
-  $panes['bill_to'] = array(
-    'callback' => 'uc_order_pane_bill_to',
-    'title' => t('Bill to'),
-    'desc' => t("Manage the order's billing address and contact information."),
-    'class' => 'pos-left',
-    'weight' => 2,
-    'show' => array('view', 'edit', 'customer'),
-  );
-  $panes['customer'] = array(
-    'callback' => 'uc_order_pane_customer',
-    'title' => t('Customer info'),
-    'desc' => t("Manage the information for the customer's user account."),
-    'class' => 'pos-left',
-    'weight' => 3,
-    'show' => array('view', 'edit'),
-  );
-  $panes['products'] = array(
-    'callback' => 'uc_order_pane_products',
-    'title' => t('Products'),
-    'desc' => t('Manage the products an order contains.'),
-    'class' => 'abs-left',
-    'weight' => 5,
-    'show' => array('view', 'edit', 'customer'),
-  );
-  $panes['line_items'] = array(
-    'callback' => 'uc_order_pane_line_items',
-    'title' => t('Line items'),
-    'display title' => '',
-    'desc' => t("View and modify an order's line items."),
-    'class' => 'abs-left',
-    'weight' => 6,
-    'show' => array('view', 'edit', 'customer'),
-  );
-  $panes['order_comments'] = array(
-    'callback' => 'uc_order_pane_order_comments',
-    'title' => t('Order comments'),
-    'desc' => t('View the order comments, used for communicating with customers.'),
-    'class' => 'abs-left',
-    'weight' => 8,
-    'show' => array('view', 'customer'),
-  );
-  $panes['admin_comments'] = array(
-    'callback' => 'uc_order_pane_admin_comments',
-    'title' => t('Admin comments'),
-    'desc' => t('View the admin comments, used for administrative notes and instructions.'),
-    'class' => 'abs-left',
-    'weight' => 9,
-    'show' => array('view', 'edit'),
-  );
-  $panes['update'] = array(
-    'callback' => 'uc_order_pane_update',
-    'title' => t('Update order'),
-    'desc' => t("Update an order's status or add comments to an order."),
-    'class' => 'abs-left',
-    'weight' => 10,
-    'show' => array('view'),
-  );
-
-  return $panes;
 }
 
 /**
@@ -739,4 +648,27 @@ function uc_order_actions($order, $icon_html = FALSE) {
     '#type' => 'operations',
     '#links' => $actions,
   );
+}
+
+/**
+ * @ingroup themeable
+ */
+function theme_uc_order_pane_line_items(array $variables) {
+  $form = $variables['form'];
+
+  $output = '<table class="line-item-table">';
+  foreach (Element::children($form) as $field) {
+    $form[$field]['title']['#title'] = '';
+    $form[$field]['amount']['#title'] = '';
+    $output .= '<tr><td class="li-title">'
+      . drupal_render($form[$field]['li_id'])
+      . drupal_render($form[$field]['remove'])
+      . drupal_render($form[$field]['title'])
+      . ':</td><td class="li-amount">'
+      . drupal_render($form[$field]['amount'])
+      . '</td></tr>';
+  }
+  $output .= '</table>' . drupal_render_children($form);
+
+  return $output;
 }

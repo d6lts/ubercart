@@ -265,38 +265,6 @@ function uc_order_select_customer_form($form, FormStateInterface $form_state, $o
 }
 
 /**
- * Formats the uc_order_edit_form().
- *
- * @see uc_order_edit_form()
- * @see uc_order_edit_form_validate()
- * @see uc_order_edit_form_submit()
- * @ingroup themeable
- */
-function theme_uc_order_edit_form(array $variables) {
-  $form = $variables['form'];
-  $output = '';
-
-  $panes = _uc_order_pane_list();
-  foreach ($panes as $id => $pane) {
-    if (in_array('edit', $pane['show'])) {
-      $func = $pane['callback'];
-      if (function_exists($func) && ($contents = $func('edit-theme', $form['#order'], $form)) != NULL) {
-        $output .= '<div class="order-pane ' . $pane['class'] . '" id="order-pane-' . $id . '">';
-        $title = isset($pane['display title']) ? $pane['display title'] : $pane['title'];
-        if ($title) {
-          $output .= '<div class="order-pane-title">' . $title . ':' . '</div>';
-        }
-        $output .= $contents . '</div>';
-      }
-    }
-  }
-
-  $output .= drupal_render_children($form);
-
-  return $output;
-}
-
-/**
  * Form to add a line item to an order.
  *
  * @see uc_order_add_line_item_form_validate()

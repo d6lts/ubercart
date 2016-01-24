@@ -20,8 +20,6 @@ use Drupal\uc_payment\Entity\PaymentMethod;
 use Drupal\user\Entity\User;
 use Drupal\uc_order\OrderInterface;
 
-require_once dirname(__FILE__) . '/uc_payment_order_pane.inc';
-
 
 /**
  * Implements hook_help().
@@ -105,22 +103,6 @@ function uc_payment_uc_order($op, $order) {
     case 'submit':
       return \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSubmit($order);
   }
-}
-
-/**
- * Implements hook_uc_order_pane().
- */
-function uc_payment_uc_order_pane() {
-  $panes['payment'] = array(
-    'callback' => 'uc_order_pane_payment',
-    'title' => t('Payment'),
-    'desc' => t('Specify and collect payment for an order.'),
-    'class' => 'pos-left',
-    'weight' => 4,
-    'show' => array('view', 'edit', 'customer'),
-  );
-
-  return $panes;
 }
 
 /**

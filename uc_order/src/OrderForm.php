@@ -8,7 +8,10 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_order\Plugin\OrderPaneManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the Ubercart order form.
@@ -16,25 +19,61 @@ use Drupal\Core\Form\FormStateInterface;
 class OrderForm extends ContentEntityForm {
 
   /**
+   * The order pane plugin manager.
+   *
+   * @var \Drupal\uc_order\Plugin\OrderPaneManager
+   */
+  protected $orderPaneManager;
+
+  /**
+   * Constructs the order edit form.
+   *
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager.
+   * @param \Drupal\uc_order\Plugin\OrderPaneManager $order_pane_manager
+   *   The order pane plugin manager.
+   */
+  public function __construct(EntityManagerInterface $entity_manager, OrderPaneManager $order_pane_manager) {
+    parent::__construct($entity_manager);
+    $this->orderPaneManager = $order_pane_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.manager'),
+      $container->get('plugin.manager.uc_order.order_pane')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+    /** @var OrderInterface $order */
     $order = $this->entity;
 
     $form['#order'] = $order;
-    $form['order_id'] = array('#type' => 'hidden', '#value' => $order->id());
-    $form['order_uid'] = array('#type' => 'hidden', '#value' => $order->getOwnerId());
 
-    $modified = $form_state->getValue('order_modified') ?: $order->getChangedTime();
-    $form['order_modified'] = array('#type' => 'hidden', '#value' => $modified);
+    $form['order_modified'] = array(
+      '#type' => 'value',
+      '#value' => $form_state->getValue('order_modified') ?: $order->getChangedTime(),
+    );
 
-    $panes = _uc_order_pane_list('edit');
-    foreach ($panes as $pane) {
-      if (in_array('edit', $pane['show'])) {
-        $func = $pane['callback'];
-        if (function_exists($func)) {
-          $func('edit-form', $order, $form, $form_state);
+    $panes = $this->orderPaneManager->getPanes();
+    $components = $this->getFormDisplay($form_state)->getComponents();
+    foreach ($panes as $id => $pane) {
+      if ($pane instanceof EditableOrderPanePluginInterface) {
+        $form[$id] = $pane->buildForm($order, array(), $form_state);
+
+        $form[$id]['#prefix'] = '<div class="order-pane ' . $pane->getClasses() . '" id="order-pane-' . $id . '">';
+        if ($title = $pane->getTitle()) {
+          $form[$id]['#prefix'] .= '<div class="order-pane-title">' . $title . ':' . '</div>';
         }
+        $form[$id]['#suffix'] = '</div>';
+        $form[$id]['#weight'] = $components[$id]['weight'];
       }
     }
 
@@ -75,14 +114,15 @@ class OrderForm extends ContentEntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
+    /** @var OrderInterface $order */
     $order = $this->entity;
     $original = clone $order;
 
     // Build list of changes to be applied.
-    $panes = _uc_order_pane_list();
+    $panes = $this->orderPaneManager->getPanes();
     foreach ($panes as $pane) {
-      if (in_array('edit', $pane['show'])) {
-        $pane['callback']('edit-process', $order, $form, $form_state);
+      if ($pane instanceof EditableOrderPanePluginInterface) {
+        $pane->submitForm($order, $form, $form_state);
       }
     }
 

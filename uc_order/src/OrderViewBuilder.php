@@ -8,12 +8,44 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\uc_order\Plugin\OrderPaneManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * View builder for orders.
  */
 class OrderViewBuilder extends EntityViewBuilder {
+
+  /**
+   * The order pane manager.
+   *
+   * @var \Drupal\uc_order\Plugin\OrderPaneManager
+   */
+  protected $orderPaneManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(EntityTypeInterface $entity_type, EntityManagerInterface $entity_manager, LanguageManagerInterface $language_manager, OrderPaneManager $order_pane_manager) {
+    parent::__construct($entity_type, $entity_manager, $language_manager);
+    $this->orderPaneManager = $order_pane_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    return new static(
+      $entity_type,
+      $container->get('entity.manager'),
+      $container->get('language_manager'),
+      $container->get('plugin.manager.uc_order.order_pane')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -31,32 +63,30 @@ class OrderViewBuilder extends EntityViewBuilder {
   public function buildComponents(array &$build, array $entities, array $displays, $view_mode) {
     parent::buildComponents($build, $entities, $displays, $view_mode);
 
+    $panes = $this->orderPaneManager->getPanes();
+    $components = $displays['uc_order']->getComponents();
     foreach ($entities as $id => $order) {
-      $panes = _uc_order_pane_list($view_mode);
-      foreach ($panes as $pane) {
-        if (in_array($view_mode, $pane['show'])) {
-          $func = $pane['callback'];
-          if (function_exists($func) && ($contents = $func($view_mode, $order)) != NULL) {
-            $title = isset($pane['display title']) ? $pane['display title'] : $pane['title'];
-            if ($title) {
-              $title = array(
-                '#markup' => $pane['title'] . ':',
-                '#prefix' => '<div class="order-pane-title">',
-                '#suffix' => '</div>',
-              );
-            }
-            else {
-              $title = array();
-            }
+      foreach ($panes as $pane_id => $pane) {
+        // Skip panes that are hidden in "Manage display".
+        if (!isset($components[$pane_id])) {
+          continue;
+        }
 
-            $build[$id][$pane['id']] = array(
-              '#prefix' => '<div class="order-pane ' . $pane['class'] . '" id="order-pane-' . $pane['id'] . '">',
+        if ($contents = $pane->view($order, $view_mode)) {
+          $build[$id][$pane_id] = array(
+            '#prefix' => '<div class="order-pane ' . $pane->getClasses() . '" id="order-pane-' . $pane_id . '">',
+            '#suffix' => '</div>',
+          );
+
+          if ($title = $pane->getTitle()) {
+            $build[$id][$pane_id]['title'] = array(
+              '#prefix' => '<div class="order-pane-title">',
+              '#markup' => $title . ':',
               '#suffix' => '</div>',
             );
-
-            $build[$id][$pane['id']]['title'] = $title;
-            $build[$id][$pane['id']]['pane'] = $contents;
           }
+
+          $build[$id][$pane_id]['pane'] = $contents;
         }
       }
     }
