@@ -8,6 +8,9 @@
 namespace Drupal\uc_order\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -21,7 +24,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *   type = "uc_order"
  * )
  */
-class PrintInvoiceAction extends ActionBase {
+class PrintInvoiceAction extends ActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The event dispatcher service.
@@ -53,6 +56,14 @@ class PrintInvoiceAction extends ActionBase {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static($configuration, $plugin_id, $plugin_definition, $container->get('event_dispatcher'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    /** @var \Drupal\uc_order\OrderInterface $object */
+    return $object->access('view', $account, $return_as_object);
   }
 
   /**
