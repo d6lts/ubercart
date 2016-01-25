@@ -38,19 +38,25 @@ abstract class AddressPaneBase extends EditableOrderPanePluginBase {
   public function buildForm(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $pane = $this->pluginDefinition['id'];
 
-    $output = '<div class="order-pane-icons">';
-    $output .= ' <img src="' . base_path() . drupal_get_path('module', 'uc_store')
-      . '/images/address_book.gif" alt="' . t('Select from address book.') . '" '
-      . 'title="' . t('Select from address book.') . '" onclick="load_address_select(' . $order->getOwnerId() . ', \'#' . $pane .'_address_select\', \'' . $pane . '\');" />';
-    $output .= ' <img src="' . base_path() . drupal_get_path('module', 'uc_store')
-      . '/images/copy.gif" alt="' . t('Copy billing information.') . '" title="'
-      . t('Copy billing information.') . '" onclick="uc_order_copy_billing_to_shipping();" />';
-    $output .= '</div>';
-    $output .= '<div id="' . $pane . '_address_select"></div>';
+    $form['address-book-image'] = array(
+      '#theme' => 'image',
+      '#uri' => base_path() . drupal_get_path('module', 'uc_store') . '/images/address_book.gif',
+      '#title' => $this->t('Select from address book.'),
+      '#alt' => $this->t('Select from address book.'),
+      '#attributes' => array('id' => 'las', 'onclick' => '"load_address_select(' . $order->getOwnerId() . ', \'#' . $pane . '_address_select\', \'' . $pane . '\');"'),
+      '#prefix' => '<div class="order-pane-icons">',
+    );
+
+    $form['copy-address-image'] = array(
+      '#theme' => 'image',
+      '#uri' => base_path() . drupal_get_path('module', 'uc_store') . '/images/copy.gif',
+      // Need to set #title, #alt, and #attributes in derived class.
+      '#suffix' => '</div>',
+    );
 
     $form['icons'] = array(
       '#type' => 'markup',
-      '#markup' => $output,
+      '#markup' => '<div id="' . $pane . '_address_select"></div>',
     );
 
     $form['address'] = array(
@@ -59,6 +65,7 @@ abstract class AddressPaneBase extends EditableOrderPanePluginBase {
       '#default_value' => $order->getAddress($pane),
       '#required' => FALSE,
     );
+
     return $form;
   }
 
