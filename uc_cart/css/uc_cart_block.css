@@ -27,7 +27,7 @@
 }
 [dir="rtl"] .cart-block-arrow {
   padding-left: 14px;
-  padding-right: auto;
+  padding-right: inherit;
 }
 
 .cart-block-arrow.collapsed {
@@ -126,5 +126,5 @@
 [dir="rtl"] .cart-block-summary-links li:last-child {
   border-left: none;
   padding-left: 0;
-  padding-right: auto;
+  padding-right: inherit;
 }

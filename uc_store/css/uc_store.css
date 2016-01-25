@@ -47,7 +47,7 @@
 }
 [dir="rtl"] .uc-store-address-field .form-item label {
   float: right;
-  padding-right: auto;
+  padding-right: inherit;
   padding-left: 0.75em;
   text-align: left;
 }

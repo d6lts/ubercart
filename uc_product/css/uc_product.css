@@ -30,7 +30,7 @@
 [dir="rtl"] .display-price {
   clear: left;
   float: left;
-  padding-left: auto;
+  padding-left: inherit;
   padding-right: 4px;
 }
 
