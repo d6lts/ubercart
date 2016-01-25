@@ -38,7 +38,7 @@ class CustomerInfo extends EditableOrderPanePluginBase {
       if ($order->getOwnerId()) {
         $build['uid'] = array(
           '#type' => 'link',
-          '#prefix' => t('Customer number') . ': ',
+          '#prefix' => $this->t('Customer number') . ': ',
           '#suffix' => '<br />',
           '#title' => $order->getOwnerId(),
           '#url' => Url::fromRoute('entity.user.canonical', ['user' => $order->getOwnerId()]),
@@ -46,7 +46,7 @@ class CustomerInfo extends EditableOrderPanePluginBase {
       }
       $build['primary_email'] = array(
         '#type' => 'link',
-        '#prefix' => t('E-mail address') . ': ',
+        '#prefix' => $this->t('E-mail address') . ': ',
         '#title' => $order->getEmail(),
         '#url' => Url::fromUri('mailto:' . $order->getEmail()),
       );
@@ -89,15 +89,16 @@ class CustomerInfo extends EditableOrderPanePluginBase {
 
     $form['uid_text'] = array(
       '#type' => 'textfield',
-      '#title' => t('Customer number'),
+      '#title' => $this->t('Customer number'),
       '#default_value' => $order->getOwnerId(),
       '#maxlength' => 10,
       '#size' => 10,
       '#disabled' => TRUE,
     );
+
     $form['primary_email'] = array(
       '#type' => 'email',
-      '#title' => t('E-mail address'),
+      '#title' => $this->t('E-mail address'),
       '#default_value' => $order->getEmail(),
       '#maxlength' => 64,
       '#size' => 32,

@@ -31,11 +31,11 @@ class OrderComments extends OrderPanePluginBase {
     if ($view_mode == 'customer') {
       $comments = uc_order_comments_load($order->id());
       $statuses = OrderStatus::loadMultiple();
-      $header = array(t('Date'), t('Status'), t('Message'));
+      $header = array($this->t('Date'), $this->t('Status'), $this->t('Message'));
       $rows[] = array(
         array('data' => \Drupal::service('date.formatter')->format($order->created->value, 'uc_store'), 'class' => array('date')),
         array('data' => '-', 'class' => array('status')),
-        array('data' => t('Order created.'), 'class' => array('message')),
+        array('data' => $this->t('Order created.'), 'class' => array('message')),
       );
       if (count($comments) > 0) {
         foreach ($comments as $comment) {
@@ -57,15 +57,15 @@ class OrderComments extends OrderPanePluginBase {
       $build = array(
         '#theme' => 'table',
         '#header' => array(
-          array('data' => t('Date'), 'class' => array('date')),
-          array('data' => t('User'), 'class' => array('user')),
-          array('data' => t('Notified'), 'class' => array('notified')),
-          array('data' => t('Status'), 'class' => array('status')),
-          array('data' => t('Comment'), 'class' => array('message')),
+          array('data' => $this->t('Date'), 'class' => array('date')),
+          array('data' => $this->t('User'), 'class' => array('user')),
+          array('data' => $this->t('Notified'), 'class' => array('notified')),
+          array('data' => $this->t('Status'), 'class' => array('status')),
+          array('data' => $this->t('Comment'), 'class' => array('message')),
         ),
         '#rows' => array(),
         '#attributes' => array('class' => array('order-pane-table uc-order-comments')),
-        '#empty' => t('This order has no comments associated with it.'),
+        '#empty' => $this->t('This order has no comments associated with it.'),
       );
       $comments = uc_order_comments_load($order->id());
       $statuses = OrderStatus::loadMultiple();

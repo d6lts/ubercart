@@ -36,31 +36,31 @@ class Products extends EditableOrderPanePluginBase {
       '#attributes' => array('class' => array('order-pane-table')),
       '#header' => array(
         'qty' => array(
-          'data' => t('Quantity'),
+          'data' => $this->t('Quantity'),
           'class' => array('qty'),
         ),
         'product' => array(
-          'data' => t('Product'),
+          'data' => $this->t('Product'),
           'class' => array('product'),
         ),
         'model' => array(
-          'data' => t('SKU'),
+          'data' => $this->t('SKU'),
           'class' => array('sku'),
         ),
         'cost' => array(
-          'data' => t('Cost'),
+          'data' => $this->t('Cost'),
           'class' => array('cost'),
         ),
         'price' => array(
-          'data' => t('Price'),
+          'data' => $this->t('Price'),
           'class' => array('price'),
         ),
         'total' => array(
-          'data' => t('Total'),
+          'data' => $this->t('Total'),
           'class' => array('price'),
         ),
       ),
-      '#empty' => t('This order contains no products.'),
+      '#empty' => $this->t('This order contains no products.'),
     );
 
     $account = \Drupal::currentUser();
@@ -121,7 +121,7 @@ class Products extends EditableOrderPanePluginBase {
   public function buildForm(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $form['add_product_button'] = array(
       '#type' => 'submit',
-      '#value' => t('Add product'),
+      '#value' => $this->t('Add product'),
       '#submit' => array(array($this, 'productSelectSearch')),
       '#ajax' => array(
         'callback' => array($this, 'ajaxCallback'),
@@ -130,7 +130,7 @@ class Products extends EditableOrderPanePluginBase {
     );
     $form['add_blank_line_button'] = array(
       '#type' => 'submit',
-      '#value' => t('Add blank line'),
+      '#value' => $this->t('Add blank line'),
       '#submit' => array(array($this, 'addBlank')),
       '#ajax' => array(
         'callback' => array($this, 'ajaxCallback'),
@@ -215,19 +215,19 @@ class Products extends EditableOrderPanePluginBase {
           'event' => 'dblclick',
           'trigger_as' => array(
             'name' => 'op',
-            'value' => t('Select'),
+            'value' => $this->t('Select'),
           ),
         ),
     );
     $form['product_search'] = array(
       '#type' => 'textfield',
-      '#title' => t('Search by name or model/SKU (* is the wildcard)'),
+      '#title' => $this->t('Search by name or model/SKU (* is the wildcard)'),
     );
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['select'] = array(
       '#type' => 'submit',
-      '#value' => t('Select'),
+      '#value' => $this->t('Select'),
       '#validate' => array(array($this, 'productSelectValidate')),
       '#submit' => array(array($this, 'productSelectSubmit')),
       '#ajax' => $ajax,
@@ -235,14 +235,14 @@ class Products extends EditableOrderPanePluginBase {
     );
     $form['actions']['search'] = array(
       '#type' => 'submit',
-      '#value' => t('Search'),
+      '#value' => $this->t('Search'),
       '#submit' => array(array($this, 'productSelectSearch')),
       '#ajax' => $ajax,
       '#weight' => 1,
     );
     $form['actions']['close'] = array(
       '#type' => 'submit',
-      '#value' => t('Close'),
+      '#value' => $this->t('Close'),
       '#submit' => array(array($this, 'productSelectClose')),
       '#ajax' => $ajax,
       '#weight' => 2,
@@ -256,7 +256,7 @@ class Products extends EditableOrderPanePluginBase {
    */
   public function productSelectValidate($form, FormStateInterface $form_state) {
     if ($form_state->isValueEmpty(['product_controls', 'nid'])) {
-      $form_state->setErrorByName('product_controls][nid', t('Please select a product.'));
+      $form_state->setErrorByName('product_controls][nid', $this->t('Please select a product.'));
     }
   }
 
@@ -281,13 +281,13 @@ class Products extends EditableOrderPanePluginBase {
     );
     $form['qty'] = array(
       '#type' => 'uc_quantity',
-      '#title' => t('Quantity'),
+      '#title' => $this->t('Quantity'),
       '#default_value' => 1,
     );
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Add to order'),
+      '#value' => $this->t('Add to order'),
       '#submit' => array(array($this, 'addProductSubmit')),
       '#ajax' =>  array(
         'callback' => array($this, 'ajaxCallback'),
@@ -296,7 +296,7 @@ class Products extends EditableOrderPanePluginBase {
     );
     $form['actions']['cancel'] = array(
       '#type' => 'submit',
-      '#value' => t('Cancel'),
+      '#value' => $this->t('Cancel'),
       '#submit' => array(array($this, 'productSelectSearch')),
       '#ajax' =>  array(
         'callback' => array($this, 'ajaxCallback'),
@@ -321,9 +321,9 @@ class Products extends EditableOrderPanePluginBase {
     $form['products'] = array(
       '#type' => 'table',
       '#tree' => TRUE,
-      '#header' => array(t('Remove'), t('Quantity'), t('Name'), t('SKU'), t('Weight'), t('Units'), t('Cost'), t('Price')),
+      '#header' => array($this->t('Remove'), $this->t('Quantity'), $this->t('Name'), $this->t('SKU'), $this->t('Weight'), $this->t('Units'), $this->t('Cost'), $this->t('Price')),
       '#attributes' => array('id' => 'order-edit-products', 'class' => array('order-pane-table')),
-      '#empty' => t('This order contains no products.'),
+      '#empty' => $this->t('This order contains no products.'),
     );
     $form['data'] = array(
       '#tree' => TRUE,
@@ -332,7 +332,7 @@ class Products extends EditableOrderPanePluginBase {
     foreach ($products as $i => $product) {
       $form['products'][$i]['remove'] = array(
         '#type' => 'image_button',
-        '#title' => t('Remove this product.'),
+        '#title' => $this->t('Remove this product.'),
         '#name' => "products[$i][remove]",
         '#src' => drupal_get_path('module', 'uc_store') . '/images/error.gif',
         '#button_type' => 'remove',
@@ -349,55 +349,54 @@ class Products extends EditableOrderPanePluginBase {
       );
       $form['products'][$i]['qty'] = array(
         '#type' => 'uc_quantity',
-        '#title' => t('Quantity'),
+        '#title' => $this->t('Quantity'),
         '#title_display' => 'invisible',
         '#default_value' => $product->qty->value,
       );
       $form['products'][$i]['title'] = array(
         '#type' => 'textfield',
-        '#title' => t('Title'),
+        '#title' => $this->t('Title'),
         '#title_display' => 'invisible',
         '#default_value' => $product->title->value,
-        '#size' => 30,
         '#maxlength' => 255,
       );
       $form['products'][$i]['model'] = array(
         '#type' => 'textfield',
-        '#title' => t('SKU'),
+        '#title' => $this->t('SKU'),
         '#title_display' => 'invisible',
         '#default_value' => $product->model->value,
         '#size' => 6,
       );
       $form['products'][$i]['weight'] = array(
         '#type' => 'textfield',
-        '#title' => t('Weight'),
+        '#title' => $this->t('Weight'),
         '#title_display' => 'invisible',
         '#default_value' => $product->weight->value,
         '#size' => 3,
       );
       $units = array(
-        'lb' => t('Pounds'),
-        'kg' => t('Kilograms'),
-        'oz' => t('Ounces'),
-        'g'  => t('Grams'),
+        'lb' => $this->t('Pounds'),
+        'kg' => $this->t('Kilograms'),
+        'oz' => $this->t('Ounces'),
+        'g'  => $this->t('Grams'),
       );
       $form['products'][$i]['weight_units'] = array(
         '#type' => 'select',
-        '#title' => t('Units'),
+        '#title' => $this->t('Units'),
         '#title_display' => 'invisible',
         '#default_value' => $product->weight->units,
         '#options' => $units,
       );
       $form['products'][$i]['cost'] = array(
         '#type' => 'uc_price',
-        '#title' => t('Cost'),
+        '#title' => $this->t('Cost'),
         '#title_display' => 'invisible',
         '#default_value' => $product->cost->value,
         '#size' => 5,
       );
       $form['products'][$i]['price'] = array(
         '#type' => 'uc_price',
-        '#title' => t('Price'),
+        '#title' => $this->t('Price'),
         '#title_display' => 'invisible',
         '#default_value' => $product->price->value,
         '#size' => 5,
@@ -439,7 +438,7 @@ class Products extends EditableOrderPanePluginBase {
     }
 
     if (count($options) == 0) {
-      $options[0] = t('No products found.');
+      $options[0] = $this->t('No products found.');
     }
 
     $form_state->set('products_action', 'select');
@@ -484,7 +483,7 @@ class Products extends EditableOrderPanePluginBase {
     $product->save();
 
     $order->products[] = $product;
-    $order->logChanges(array('add' => t('Added new product line to order.')));
+    $order->logChanges(array('add' => $this->t('Added new product line to order.')));
   }
 
   /**
@@ -507,7 +506,7 @@ class Products extends EditableOrderPanePluginBase {
     $product->save();
 
     $order->products[] = $product;
-    $order->logChanges([t('Added (@qty) @title to order.', array('@qty' => $product->qty->value, '@title' => $product->title->value))]);
+    $order->logChanges([$this->t('Added (@qty) @title to order.', ['@qty' => $product->qty->value, '@title' => $product->title->value])]);
 
     // Decrement stock.
     if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
@@ -541,7 +540,7 @@ class Products extends EditableOrderPanePluginBase {
 
     $product->delete();
     unset($order->products[$order_product_id]);
-    $order->logChanges([t('Removed @title from order.', array('@title' => $product->title->value))]);
+    $order->logChanges([$this->t('Removed @title from order.', ['@title' => $product->title->value])]);
   }
 
   /**

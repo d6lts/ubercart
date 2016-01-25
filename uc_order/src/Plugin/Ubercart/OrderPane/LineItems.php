@@ -116,12 +116,12 @@ class LineItems extends EditableOrderPanePluginBase {
 
     $form['add_line_item']['li_type_select'] = array(
       '#type' => 'select',
-      '#title' => t('Add a line item'),
+      '#title' => $this->t('Add a line item'),
       '#options' => $options,
     );
     $form['add_line_item']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Add line'),
+      '#value' => $this->t('Add line'),
       '#submit' => array(array($this, 'submitForm'), array($this, 'addLineItem')),
       '#ajax' => array(
         'callback' => array($this, 'ajaxCallback'),
@@ -142,7 +142,7 @@ class LineItems extends EditableOrderPanePluginBase {
       if (isset($item['type']) && _uc_line_item_data($item['type'], 'stored') == TRUE) {
         $form['line_items'][$item['line_item_id']]['remove'] = array(
           '#type' => 'image_button',
-          '#title' => t('Remove line item.'),
+          '#title' => $this->t('Remove line item.'),
           '#src' => drupal_get_path('module', 'uc_store') . '/images/error.gif',
           '#button_type' => 'remove',
           '#submit' => array(array($this, 'submitForm'), array($this, 'removeLineItem')),
@@ -153,14 +153,14 @@ class LineItems extends EditableOrderPanePluginBase {
         );
         $form['line_items'][$item['line_item_id']]['title'] = array(
           '#type' => 'textfield',
-          '#title' => t('Title'),
+          '#title' => $this->t('Title'),
           '#default_value' => $item['title'],
           '#size' => 40,
           '#maxlength' => 128,
         );
         $form['line_items'][$item['line_item_id']]['amount'] = array(
           '#type' => 'uc_price',
-          '#title' => t('Amount'),
+          '#title' => $this->t('Amount'),
           '#default_value' => $item['amount'],
           '#size' => 6,
           '#allow_negative' => TRUE,

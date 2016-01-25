@@ -31,13 +31,13 @@ class AdminComments extends EditableOrderPanePluginBase {
       $build = array(
         '#theme' => 'table',
         '#header' => array(
-          array('data' => t('Date'), 'class' => array('date')),
-          array('data' => t('User'), 'class' => array('user')),
-          array('data' => t('Comment'), 'class' => array('message')),
+          array('data' => $this->t('Date'), 'class' => array('date')),
+          array('data' => $this->t('User'), 'class' => array('user')),
+          array('data' => $this->t('Comment'), 'class' => array('message')),
         ),
         '#rows' => array(),
         '#attributes' => array('class' => array('order-pane-table uc-order-comments')),
-        '#empty' => t('This order has no admin comments associated with it.'),
+        '#empty' => $this->t('This order has no admin comments associated with it.'),
       );
       $comments = uc_order_comments_load($order->id(), TRUE);
       foreach ($comments as $comment) {
@@ -73,16 +73,16 @@ class AdminComments extends EditableOrderPanePluginBase {
     $form['comments'] = array(
       '#theme' => 'item_list',
       '#items' => $items,
-      '#empty' => t('No admin comments have been entered for this order.'),
+      '#empty' => $this->t('No admin comments have been entered for this order.'),
     );
 
     $form['admin_comment_field'] = array(
       '#type' => 'details',
-      '#title' => t('Add an admin comment'),
+      '#title' => $this->t('Add an admin comment'),
     );
     $form['admin_comment_field']['admin_comment'] = array(
       '#type' => 'textarea',
-      '#description' => t('Admin comments are only seen by store administrators.'),
+      '#description' => $this->t('Admin comments are only seen by store administrators.'),
     );
 
     return $form;
