@@ -168,6 +168,31 @@ class Products extends EditableOrderPanePluginBase {
    * {@inheritdoc}
    */
   public function submitForm(OrderInterface $order, array &$form, FormStateInterface $form_state) {
+    // @todo Decouple stock related code into uc_stock
+    if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
+      $qtys = array();
+      foreach ($order->products as $product) {
+        $qtys[$product->order_product_id] = $product->qty;
+      }
+    }
+
+    if (is_array($form_state->getValue('products'))) {
+      foreach ($form_state->getValue('products') as $product) {
+        if (isset($order->products[$product['order_product_id']])) {
+          foreach (array('qty', 'title', 'model', 'weight', 'weight_units', 'cost', 'price') as $field) {
+            $order->products[$product['order_product_id']]->$field = $product[$field];
+          }
+
+          if (\Drupal::moduleHandler()->moduleExists('uc_stock')) {
+            $product = (object)$product;
+            $temp = $product->qty;
+            $product->qty = $product->qty - $qtys[$product->order_product_id];
+            uc_stock_adjust_product_stock($product, 0, $order);
+            $product->qty = $temp;
+          }
+        }
+      }
+    }
   }
 
   /**
