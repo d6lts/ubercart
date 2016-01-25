@@ -45,11 +45,11 @@ class Products extends EditableOrderPanePluginBase {
         ),
         'model' => array(
           'data' => $this->t('SKU'),
-          'class' => array('sku'),
+          'class' => array('sku', RESPONSIVE_PRIORITY_LOW),
         ),
         'cost' => array(
           'data' => $this->t('Cost'),
-          'class' => array('cost'),
+          'class' => array('cost', RESPONSIVE_PRIORITY_LOW),
         ),
         'price' => array(
           'data' => $this->t('Price'),
