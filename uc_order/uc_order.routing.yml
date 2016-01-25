@@ -67,7 +67,7 @@ uc_order.admin_invoice_print:
 uc_order.admin_invoice_mail:
   path: '/admin/store/orders/{uc_order}/invoice/mail'
   defaults:
-    _form: '\Drupal\uc_order\Form\OrderMailInvoiceForm'
+    _form: '\Drupal\uc_order\Form\MailInvoiceForm'
     _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _permission: 'view all orders'
@@ -96,3 +96,28 @@ uc_order.user_invoice_print:
     print: TRUE
   requirements:
     _entity_access: 'uc_order.invoice'
+
+uc_order.address_book:
+  path: '/admin/store/orders/address_book'
+  defaults:
+    _controller: '\Drupal\uc_order\Controller\OrderAdminController::addressBook'
+    _title: 'Select address'
+  requirements:
+    _permission: 'edit orders'
+
+uc_order.select_customer:
+  path: '/admin/store/orders/customer/{operation}'
+  defaults:
+    _controller: '\Drupal\uc_order\Controller\OrderAdminController::selectCustomer'
+    _title: 'Select customer'
+    operation: ''
+  requirements:
+    _permission: 'edit orders'
+
+uc_order.add_line_item:
+  path: '/admin/store/orders/{uc_order}/add_line_item/{item}'
+  defaults:
+    _controller: '\Drupal\uc_order\Form\AddLineItemForm'
+    _title: 'Add a line item'
+  requirements:
+    _permission: 'edit orders'

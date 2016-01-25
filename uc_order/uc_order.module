@@ -39,36 +39,6 @@ function uc_order_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_menu().
- */
-function uc_order_menu() {
-  $items['admin/store/orders/address_book'] = array(
-    'title' => 'Select address',
-    'page callback' => 'uc_order_address_book',
-    'access arguments' => array('edit orders'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_order.admin.inc',
-  );
-  $items['admin/store/orders/customer'] = array(
-    'title' => 'Select customer',
-    'page callback' => 'uc_order_select_customer',
-    'page arguments' => array(NULL),
-    'access arguments' => array('edit orders'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_order.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/add_line_item/%'] = array(
-    'title' => 'Add a line item',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_order_add_line_item_form', 3, 5),
-    'access arguments' => array('edit orders'),
-    'type' => MENU_CALLBACK,
-    'file' => 'uc_order.admin.inc',
-  );
-  return $items;
-}
-
-/**
  * Implements hook_menu_alter().
  */
 function uc_order_menu_alter(&$items) {

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_order\Form\OrderMailInvoiceForm.
+ * Contains \Drupal\uc_order\Form\MailInvoiceForm.
  */
 
 namespace Drupal\uc_order\Form;
@@ -14,7 +14,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Defines a form to set the recipient of an invoice, then mails it.
  */
-class OrderMailInvoiceForm extends FormBase {
+class MailInvoiceForm extends FormBase {
 
   /**
    * The order to be emailed.
