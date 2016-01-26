@@ -3,12 +3,19 @@ uc_cart.styles:
     theme:
       css/uc_cart.css: {}
 
-uc_cart_block.styles:
+uc_cart.block.styles:
   css:
     theme:
       css/uc_cart_block.css: {}
 
-uc_cart.scripts:
+uc_cart.block.scripts:
+  js:
+    js/uc_cart_block.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+
+uc_cart.review.scripts:
   js:
     js/uc_cart.js: {}
   dependencies:
@@ -18,13 +25,6 @@ uc_cart.scripts:
 uc_cart.admin.scripts:
   js:
     js/uc_cart.admin.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-
-uc_cart_block.scripts:
-  js:
-    js/uc_cart_block.js: {}
   dependencies:
     - core/jquery
     - core/drupal

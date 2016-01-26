@@ -209,9 +209,8 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       '#form' => $this->formBuilder()->getForm('Drupal\uc_cart\Form\CheckoutReviewForm', $order),
     );
 
-    $build['#attached']['library'][] = 'system/drupal.system';
     $build['#attached']['library'][] = 'uc_cart/uc_cart.styles';
-    $build['#attached']['library'][] = 'uc_cart/uc_cart.scripts';
+    $build['#attached']['library'][] = 'uc_cart/uc_cart.review.scripts';
 
     return $build;
   }

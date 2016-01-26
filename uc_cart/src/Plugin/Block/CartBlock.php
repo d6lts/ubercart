@@ -145,12 +145,11 @@ class CartBlock extends BlockBase {
       );
 
       // Add the cart block CSS.
-      $build['#attached']['library'][] = 'uc_cart/uc_cart_block.styles';
+      $build['#attached']['library'][] = 'uc_cart/uc_cart.block.styles';
 
       // If the block is collapsible, add the appropriate JS.
       if ($this->configuration['collapsible']) {
-        $build['#attached']['library'][] = 'system/drupal.system';
-        $build['#attached']['library'][] = 'uc_cart/uc_cart_block.scripts';
+        $build['#attached']['library'][] = 'uc_cart/uc_cart.block.scripts';
       }
 
       return $build;
