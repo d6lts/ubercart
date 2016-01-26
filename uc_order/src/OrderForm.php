@@ -102,7 +102,7 @@ class OrderForm extends ContentEntityForm {
     $order = $this->buildEntity($form, $form_state);
 
     if ($form_state->getValue('order_modified') != $order->getChangedTime()) {
-      $form_state->setErrorByName('order_modified', t('This order has been modified by another user, changes cannot be saved.'));
+      $form_state->setErrorByName('order_modified', $this->t('This order has been modified by another user, changes cannot be saved.'));
     }
 
     parent::validate($form, $form_state);
@@ -143,7 +143,7 @@ class OrderForm extends ContentEntityForm {
 
     $order->save();
 
-    drupal_set_message(t('Order changes saved.'));
+    drupal_set_message($this->t('Order changes saved.'));
   }
 
 }

@@ -26,7 +26,7 @@ class SelectCustomerForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $operation = NULL, $options = NULL) {
-    if (is_null($operation)) {
+    if ($operation == '' && is_null($options)) {
       $form['desc'] = array(
         '#prefix' => '<div>',
         '#markup' => $this->t('Search for a customer based on these fields.') . '<br />' .
@@ -85,7 +85,7 @@ class SelectCustomerForm extends FormBase {
       $form['actions']['search'] = array(
         '#type' => 'submit',
         '#value' => $this->t('Search'),
-        '#attributes' => array('onclick' => 'return load_customer_search_results();'),
+        '#attributes' => array('id' => 'load-customer-search-results'),
       );
     }
     elseif ($operation == 'search') {
@@ -93,13 +93,13 @@ class SelectCustomerForm extends FormBase {
         $form['actions']['select'] = array(
           '#type' => 'submit',
           '#value' => $this->t('Select'),
-          '#attributes' => array('onclick' => 'return select_customer_search();'),
+          '#attributes' => array('id' => 'select-customer-search'),
         );
       }
       $form['actions']['back'] = array(
         '#type' => 'submit',
         '#value' => $this->t('Back'),
-        '#attributes' => array('onclick' => 'return load_customer_search();'),
+        '#attributes' => array('id' => 'load-customer-search'),
       );
     }
     elseif ($operation == 'new') {
@@ -110,14 +110,14 @@ class SelectCustomerForm extends FormBase {
       $form['actions']['submit'] = array(
         '#type' => 'submit',
         '#value' => $this->t('Submit'),
-        '#attributes' => array('onclick' => 'return check_new_customer_address();'),
+        '#attributes' => array('id' => 'check-new-customer-address'),
       );
     }
 
     $form['actions']['close'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Close'),
-      '#attributes' => array('onclick' => 'return close_customer_select();'),
+      '#attributes' => array('id' => 'close-customer-select'),
     );
 
     return $form;
