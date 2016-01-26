@@ -58,9 +58,9 @@ class OrderComments extends OrderPanePluginBase {
         '#theme' => 'table',
         '#header' => array(
           array('data' => $this->t('Date'), 'class' => array('date')),
-          array('data' => $this->t('User'), 'class' => array('user')),
+          array('data' => $this->t('User'), 'class' => array('user', RESPONSIVE_PRIORITY_LOW)),
           array('data' => $this->t('Notified'), 'class' => array('notified')),
-          array('data' => $this->t('Status'), 'class' => array('status')),
+          array('data' => $this->t('Status'), 'class' => array('status', RESPONSIVE_PRIORITY_LOW)),
           array('data' => $this->t('Comment'), 'class' => array('message')),
         ),
         '#rows' => array(),
