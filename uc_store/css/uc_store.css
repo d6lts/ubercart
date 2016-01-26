@@ -7,6 +7,13 @@
   white-space: nowrap;
 }
 
+input.form-uc-price {
+  width: 8em;
+}
+input.form-uc-quantity {
+  width: 4em;
+}
+
 .uc-inline-form .form-item {
   float: left; /* LTR */
   margin-right: 1em; /* LTR */
