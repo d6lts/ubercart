@@ -16,9 +16,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Xss;
 use Drupal\uc_order\Entity\Order;
+use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Entity\PaymentMethod;
 use Drupal\user\Entity\User;
-use Drupal\uc_order\OrderInterface;
 
 
 /**
@@ -149,7 +149,9 @@ function uc_payment_uc_payment_method_checkout_alter(array &$methods, OrderInter
  *   A unique ID identifying the payment.
  */
 function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $comment = '', $received = REQUEST_TIME) {
-  $order = uc_order_load($order_id, TRUE);
+  // Reset uc_order entity cache then load order.
+  \Drupal::entityManager()->getStorage('uc_order')->resetCache([$order_id]);
+  $order = Order::load($order_id);
   $account = User::load($uid);
 
   $method_entity = PaymentMethod::load($method);

@@ -22,7 +22,9 @@ class StoredTaxTest extends UbercartTestBase {
   public static $adminPermissions = [/*'administer rules', */'administer taxes'];
 
   protected function loadTaxLine($order_id) {
-    $order = uc_order_load($order_id, TRUE);
+    // Reset uc_order entity cache then load order.
+    \Drupal::entityManager()->getStorage('uc_order')->resetCache([$order_id]);
+    $order = Order::load($order_id);
     foreach ($order->line_items as $line) {
       if ($line['type'] == 'tax') {
         return $line;

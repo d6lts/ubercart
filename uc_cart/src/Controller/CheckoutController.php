@@ -81,7 +81,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     // Load an order from the session, if available.
     $session = \Drupal::service('session');
     if ($session->has('cart_order')) {
-      $order = uc_order_load($session->get('cart_order'), TRUE);
+      $order = $this->loadOrder();
       if ($order) {
         // Don't use an existing order if it has changed status or owner, or if
         // there has been no activity for 10 minutes (to prevent identity theft).
@@ -177,7 +177,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       return $this->redirect('uc_cart.checkout');
     }
 
-    $order = uc_order_load($session->get('cart_order'), TRUE);
+    $order = $this->loadOrder();
 
     if (!$order || $order->getStateId() != 'in_checkout') {
       unset($_SESSION['uc_checkout'][$order->id()]['do_review']);
@@ -224,7 +224,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       return $this->redirect('uc_cart.cart');
     }
 
-    $order = uc_order_load($session->get('cart_order'), TRUE);
+    $order = $this->loadOrder();
 
     if (empty($order)) {
       // Display messages to customers and the administrator if the order was lost.
@@ -242,6 +242,20 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     uc_order_comment_save($order->id(), 0, $this->t('Order created through website.'), 'admin');
 
     return $build;
+  }
+
+  /**
+   * Loads the order that is being processed for checkout from the session.
+   *
+   * @return \Drupal\uc_order\Entity\Order
+   *   The order object.
+   */
+  protected function loadOrder() {
+    $id = \Drupal::service('session')->get('cart_order');
+    // Reset uc_order entity cache then load order.
+    $storage = \Drupal::entityTypeManager()->getStorage('uc_order');
+    $storage->resetCache([$id]);
+    return $storage->load($id);
   }
 
 }
