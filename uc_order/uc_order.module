@@ -88,10 +88,6 @@ function uc_order_theme($existing, $type, $theme, $path) {
       'variables' => array('content' => NULL),
       'template' => 'uc-order-invoice-page',
     ),
-    'uc_order_pane_line_items' => array(
-      'render element' => 'form',
-      'function' => 'theme_uc_order_pane_line_items',
-    ),
   );
 
   $theme_hooks += array(
@@ -600,27 +596,4 @@ function uc_order_actions($order, $icon_html = FALSE) {
     '#type' => 'operations',
     '#links' => $actions,
   );
-}
-
-/**
- * @ingroup themeable
- */
-function theme_uc_order_pane_line_items(array $variables) {
-  $form = $variables['form'];
-
-  $output = '<table class="line-item-table">';
-  foreach (Element::children($form) as $field) {
-    $form[$field]['title']['#title'] = '';
-    $form[$field]['amount']['#title'] = '';
-    $output .= '<tr><td class="li-title">'
-      . drupal_render($form[$field]['li_id'])
-      . drupal_render($form[$field]['remove'])
-      . drupal_render($form[$field]['title'])
-      . ':</td><td class="li-amount">'
-      . drupal_render($form[$field]['amount'])
-      . '</td></tr>';
-  }
-  $output .= '</table>' . drupal_render_children($form);
-
-  return $output;
 }

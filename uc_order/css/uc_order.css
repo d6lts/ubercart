@@ -108,6 +108,7 @@
 }
 
 .order-pane .line-item-table {
+  float: right;
   width: auto;
 }
 

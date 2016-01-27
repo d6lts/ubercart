@@ -128,8 +128,9 @@ class LineItems extends EditableOrderPanePluginBase {
       ),
     );
     $form['line_items'] = array(
+      '#type' => 'table',
       '#tree' => TRUE,
-      '#theme' => 'uc_order_pane_line_items',
+      '#attributes' => array('class' => array('line-item-table')),
       '#prefix' => '<div id="order-line-items">',
       '#suffix' => '</div>',
     );
@@ -154,6 +155,7 @@ class LineItems extends EditableOrderPanePluginBase {
         $form['line_items'][$item['line_item_id']]['title'] = array(
           '#type' => 'textfield',
           '#title' => $this->t('Title'),
+          '#title_display' => 'invisible',
           '#default_value' => $item['title'],
           '#size' => 40,
           '#maxlength' => 128,
@@ -161,18 +163,24 @@ class LineItems extends EditableOrderPanePluginBase {
         $form['line_items'][$item['line_item_id']]['amount'] = array(
           '#type' => 'uc_price',
           '#title' => $this->t('Amount'),
+          '#title_display' => 'invisible',
           '#default_value' => $item['amount'],
           '#size' => 6,
           '#allow_negative' => TRUE,
+          '#wrapper_attributes' => array('class' => array('li-amount')),
         );
       }
       else {
+        $form['line_items'][$item['line_item_id']]['remove'] = array(
+          '#markup' => '',
+        );
         $form['line_items'][$item['line_item_id']]['title'] = array(
-          '#markup' => $item['title'],
+          '#plain_text' => $item['title'],
         );
         $form['line_items'][$item['line_item_id']]['amount'] = array(
           '#theme' => 'uc_price',
           '#price' => $item['amount'],
+          '#wrapper_attributes' => array('class' => array('li-amount')),
         );
       }
     }
