@@ -26,7 +26,7 @@ class OrderAdminController extends ControllerBase {
     $func = $request->request->get('func');
 
     $form = \Drupal::formBuilder()->getForm('\Drupal\uc_order\Form\AddressBookForm', $uid, $type, $func);
-    return $form;
+    return new Response(drupal_render($form));
   }
 
   /**
@@ -100,11 +100,15 @@ class OrderAdminController extends ControllerBase {
         $build['email'] = array('#markup' => '');
         $result = db_query("SELECT uid, mail FROM {users_field_data} WHERE mail = :mail", [':mail' => $email]);
         if ($user_field_data = $result->fetchObject()) {
+
+          $build['#attached']['drupalSettings'] = array(
+            'userId' => $user_field_data->uid,
+            'userEmail' => $user_field_data->mail,
+          );
           $build['email']['#markup'] .= $this->t('An account already exists for that e-mail.') . '<br /><br />';
           $build['email']['#markup'] .= '<b>' . $this->t('Use this account now?') . '</b><br />'
             . $this->t('User @uid - @mail', ['@uid' => $user_field_data->uid, '@mail' => $user_field_data->mail])
-            . ' <input type="button" onclick="select_existing_customer(' . $user_field_data->uid . ', \''
-            . $user_field_data->mail . '\');" value="' . $this->t('Apply') . '" /><br /><br /><hr /><br/>';
+            . ' <input type="button" id="select-existing-customer" value="' . $this->t('Apply') . '" /><br /><br /><hr /><br/>';
         }
         else {
           $name = uc_store_email_to_username($email);
@@ -129,11 +133,13 @@ class OrderAdminController extends ControllerBase {
             $build['email']['#markup'] .= $this->t('Account details sent to e-mail provided.<br /><br /><strong>Username:</strong> @username<br /><strong>Password:</strong> @password', array('@username' => $fields['name'], '@password' => $fields['pass'])) . '<br /><br />';
           }
 
+          $build['#attached']['drupalSettings'] = array(
+            'userId' => $account->id(),
+            'userEmail' => $account->getEmail(),
+          );
           $build['result'] = array(
             '#markup' => '<strong>' . $this->t('Use this account now?') . '</strong><br />'
-              . $this->t('User @uid - @mail', array('@uid' => $account->id(), '@mail' => $account->getEmail())) . ' <input type="button" '
-              . 'onclick="select_existing_customer(' . $account->id() . ', \''
-              . $account->getEmail() . '\');" value="' . $this->t('Apply') . '" /><br /><br /><hr /><br/>',
+              . $this->t('User @uid - @mail', array('@uid' => $account->id(), '@mail' => $account->getEmail())) . ' <input type="button" ' . 'id="select-existing-customer" value="' . $this->t('Apply') . '" /><br /><br /><hr /><br/>',
           );
         }
 }

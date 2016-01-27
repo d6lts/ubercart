@@ -26,7 +26,7 @@ class BillTo extends AddressPaneBase {
    */
   public function buildForm(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($order, $form, $form_state);
-    $form['copy-address-image']['#attributes'] = array('id' => ('copy-shipping-to-billing'));
+    $form['copy-address-image']['#attributes'] = array('id' => 'copy-shipping-to-billing');
     $form['copy-address-image']['#title'] = $this->t('Copy shipping information.');
     $form['copy-address-image']['#alt'] = $this->t('Copy shipping information.');
 

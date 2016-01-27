@@ -38,12 +38,18 @@ abstract class AddressPaneBase extends EditableOrderPanePluginBase {
   public function buildForm(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $pane = $this->pluginDefinition['id'];
 
+    // Need to pass along uid, address pane selector, and pane id for use in the JavaScript.
+    $form['#attached']['drupalSettings'] = array(
+      'uid' => $order->getOwnerId(),
+      'paneId' => '#' . $pane . '-address-select',
+      'addressType' => $pane,
+    );
     $form['address-book-image'] = array(
       '#theme' => 'image',
       '#uri' => base_path() . drupal_get_path('module', 'uc_store') . '/images/address_book.gif',
       '#title' => $this->t('Select from address book.'),
       '#alt' => $this->t('Select from address book.'),
-      '#attributes' => array('id' => 'las', 'onclick' => '"load_address_select(' . $order->getOwnerId() . ', \'#' . $pane . '_address_select\', \'' . $pane . '\');"'),
+      '#attributes' => array('class' => 'load-address-select'),
       '#prefix' => '<div class="order-pane-icons">',
     );
 
@@ -54,9 +60,11 @@ abstract class AddressPaneBase extends EditableOrderPanePluginBase {
       '#suffix' => '</div>',
     );
 
+    // An empty <div> to put our address book select into.
+    // @todo: This can be done with core Ajax.
     $form['icons'] = array(
       '#type' => 'markup',
-      '#markup' => '<div id="' . $pane . '_address_select"></div>',
+      '#markup' => '<div id="' . $pane . '-address-select"></div>',
     );
 
     $form['address'] = array(

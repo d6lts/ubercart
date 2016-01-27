@@ -35,7 +35,7 @@ class ShipTo extends AddressPaneBase {
    */
   public function buildForm(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($order, $form, $form_state);
-    $form['copy-address-image']['#attributes'] = array('id' => ('copy-billing-to-shipping'));
+    $form['copy-address-image']['#attributes'] = array('id' => 'copy-billing-to-shipping');
     $form['copy-address-image']['#title'] = $this->t('Copy billing information.');
     $form['copy-address-image']['#alt'] = $this->t('Copy billing information.');
 

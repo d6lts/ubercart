@@ -31,8 +31,8 @@
     attach: function (context, settings) {
       $('#uc-order-edit-form:not(.ucOrderSubmit-processed)', context).addClass('ucOrderSubmit-processed').submit(function () {
         $('#products-selector').empty().removeClass();
-        $('#delivery_address_select').empty().removeClass();
-        $('#billing_address_select').empty().removeClass();
+        $('#delivery-address-select').empty().removeClass();
+        $('#billing-address-select').empty().removeClass();
         $('#customer-select').empty().removeClass();
       });
     }
@@ -83,6 +83,16 @@
   };
 
   /**
+   * Closes the address book div.
+   *
+   * @todo: Replace with core Ajax.
+   */
+  function close_address_select(div) {
+    $(div).empty().removeClass('address-select-box');
+    return false;
+  }
+
+  /**
    * Loads the address book div on the order edit screen.
    *
    * @todo: Replace with core Ajax.
@@ -90,56 +100,59 @@
    * @type {Drupal~behavior}
    */
   Drupal.behaviors.ucOrderLoadAddressSelect = {
-    attach: function (uid, div, address_type) {
-      $('#las').click(function () {
+    attach: function (context, settings) {
+      $('.load-address-select').click(function (context, setttings) {
 
         // If it's already open, close it.
-        //if (customer_select === 'search' && $('#customer-select #edit-back').val() == null) {
-        //  return close_address_select(div);
-        //}
-        /**
-         * Applies the selected address to the appropriate fields in the order edit form.
-         */
-        function apply_address(type, address_str) {
-          eval('var address = ' + address_str + ';');
-          $('#edit-' + type + '-first-name').val(address['first_name']);
-          $('#edit-' + type + '-last-name').val(address['last_name']);
-          $('#edit-' + type + '-phone').val(address['phone']);
-          $('#edit-' + type + '-company').val(address['company']);
-          $('#edit-' + type + '-street1').val(address['street1']);
-          $('#edit-' + type + '-street2').val(address['street2']);
-          $('#edit-' + type + '-city').val(address['city']);
-          $('#edit-' + type + '-postal-code').val(address['postal_code']);
-
-          if ($('#edit-' + type + '-country').val() !== address['country']) {
-            $('#edit-' + type + '-country').val(address['country']);
-          }
-
-          $('#edit-' + type + '-zone').val(address['zone']);
-        }
+        // if ($('#edit-back').val() !== null) {
+        //   return close_address_select(drupalSettings.paneId);
+        // }
 
         var options = {
-          uid: uid,
-          type: address_type,
-          func: "apply_address('" + address_type + "', this.value);"
+          uid: drupalSettings.uid,
+          type: drupalSettings.addressType,
+          func: "Drupal.behaviors.ucOrderLoadAddressSelect.apply_address('" + drupalSettings.addressType + "', this.value);"
         };
 
         $.post(drupalSettings.ucURL.adminOrders + '/address_book', options,
           function (contents) {
-            $(div).empty().addClass('address-select-box').append(contents);
+            $(drupalSettings.paneId).empty().addClass('address-select-box').append(contents);
           }
         );
       });
+    },
+
+    /**
+     * Applies the selected address to the appropriate fields in the order edit form.
+     */
+    apply_address: function (type, address_str) {
+   //   if ($('#edit-delivery-zone').html() !== $('#edit-billing-zone').html()) {
+   //     $('#edit-billing-zone').empty().append($('#edit-delivery-zone').children().clone());
+   //   }
+
+    //  $('#uc-order-edit-form input, select, textarea').each(function () {
+    //    if (this.id.substring(0, 13) === 'edit-delivery') {
+    //      $('#edit-billing' + this.id.substring(13)).val($(this).val());
+    //    }
+    //  });
+
+      (1, eval)('var address = ' + address_str + ';');
+      $('#edit-' + type + '-first-name').val(address['first_name']);
+      $('#edit-' + type + '-last-name').val(address['last_name']);
+      $('#edit-' + type + '-phone').val(address['phone']);
+      $('#edit-' + type + '-company').val(address['company']);
+      $('#edit-' + type + '-street1').val(address['street1']);
+      $('#edit-' + type + '-street2').val(address['street2']);
+      $('#edit-' + type + '-city').val(address['city']);
+      $('#edit-' + type + '-postal-code').val(address['postal_code']);
+
+      if ($('#edit-' + type + '-country').val() !== address['country']) {
+        $('#edit-' + type + '-country').val(address['country']);
+      }
+
+      $('#edit-' + type + '-zone').val(address['zone']);
     }
   };
-
-  /**
-   * Closes the address book div.
-   */
-  function close_address_select(div) {
-    $(div).empty().removeClass('address-select-box');
-    return false;
-  }
 
   /**
    * Hides the customer selection form.
@@ -158,9 +171,7 @@
   Drupal.behaviors.ucCloseCustomerSelect = {
     attach: function (context, settings) {
       $('#close-customer-select').click(function () {
-        $('#customer-select').empty().removeClass('customer-select-box');
-        customer_select = '';
-        return false;
+        return close_customer_select();
       });
     }
   };
@@ -241,7 +252,6 @@
             customer_select = 'new';
           }
         );
-        Drupal.behaviors.ucCheckNewCustomerAddress(context);
         return false;
       });
     }
@@ -273,17 +283,36 @@
 
   /**
    * Sets customer values from search selection.
+   *
+   * @type {Drupal~behavior}
    */
-  function select_customer_search() {
-    var data = $('#edit-cust-select').val();
-    var i = data.indexOf(':');
+  Drupal.behaviors.ucSelectCustomerSearch = {
+    attach: function (context) {
+      $('#select-customer-search').click(function () {
+        var data = $('#edit-cust-select').val();
+        var i = data.indexOf(':');
+        drupalSettings.userId = data.substr(0, i);
+        drupalSettings.userEmail = data.substr(i + 1);
+        return Drupal.behaviors.ucSelectExistingCustomer.search();
+      });
+    }
+  };
 
-    /**
-     * Loads existing customer as new order's customer.
-     */
-    function select_existing_customer(uid, email) {
-      $('input[name=uid], #edit-uid-text').val(uid);
-      $('input[name=primary_email], #edit-primary-email-text').val(email);
+  /**
+   * Loads existing customer as new order's customer.
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.ucSelectExistingCustomer = {
+    attach: function (context) {
+      $('#select-existing-customer').click(function () {
+        return Drupal.behaviors.ucSelectExistingCustomer.search();
+      });
+    },
+
+    search: function () {
+      $('input[name=uid], #edit-uid-text').val(drupalSettings.userId);
+      $('input[name=primary_email], #edit-primary-email-text').val(drupalSettings.userEmail);
       try {
         $('#edit-submit-changes').click();
       }
@@ -291,8 +320,6 @@
       }
       return close_customer_select();
     }
-
-    return select_existing_customer(data.substr(0, i), data.substr(i + 1));
-  }
+  };
 
 }(jQuery, Drupal, drupalSettings, window));
