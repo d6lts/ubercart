@@ -73,7 +73,7 @@ class CreditCardTerminalForm extends FormBase {
     );
     $form['specify_card']['cc_data'] = array(
       '#tree' => TRUE,
-      '#prefix' => '<div class="payment-details-credit clearfix">',
+      '#prefix' => '<div class="clearfix">',
       '#suffix' => '</div>',
     );
     $form['specify_card']['cc_data'] += $this->paymentMethod->getPlugin()->cartDetails($this->order, array(), $form_state);

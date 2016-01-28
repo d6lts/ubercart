@@ -124,6 +124,10 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $order->payment_details = array();
     }
 
+    $build = array(
+      '#type' => 'container',
+      '#attributes' => array('class' => 'uc-credit-form')
+    );
     $build['#attached']['library'][] = 'uc_credit/uc_credit.styles';
     $build['cc_policy'] = array(
       '#prefix' => '<p>',
@@ -195,6 +199,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $build['cc_start_year'] = array(
         '#type' => 'select',
         '#title' => $this->t('Start year'),
+        '#title_display' => 'invisible',
         '#options' => array_combine($year_range, $year_range),
         '#default_value' => $year,
         '#field_suffix' => $this->t('(if present)'),
@@ -222,6 +227,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     $build['cc_exp_year'] = array(
       '#type' => 'select',
       '#title' => $this->t('Expiration year'),
+      '#title_display' => 'invisible',
       '#options' => array_combine($year_range, $year_range),
       '#default_value' => $year,
       '#field_suffix' => $this->t('(if present)'),

@@ -8,41 +8,34 @@
   margin-bottom: 3px;
 }
 
-.payment-details-credit label {
+.uc-credit-form label {
   clear: left; /* LTR */
   float: left; /* LTR */
   margin: 2px 0;
   padding-top: 5px;
   width: 10em;
 }
-[dir="rtl"] .payment-details-credit label {
+[dir="rtl"] .uc-credit-form label {
   clear: right;
   float: right;
 }
 
-.payment-details-credit input,
-.payment-details-credit select {
+.uc-credit-form input,
+.uc-credit-form select {
   float: left; /* LTR */
   margin: 2px;
 }
-[dir="rtl"] .payment-details-credit input,
-[dir="rtl"] .payment-details-credit select {
+[dir="rtl"] .uc-credit-form input,
+[dir="rtl"] .uc-credit-form select {
   float: right;
 }
 
-.form-item-panes-payment-details-cc-start-year label,
-.form-item-panes-payment-details-cc-exp-year label,
-.form-item-cc-data-cc-start-year label,
-.form-item-cc-data-cc-exp-year label {
-  display: none;
-}
-
-.payment-details-credit .field-suffix {
+.uc-credit-form .field-suffix {
   float: left; /* LTR */
   margin: 2px;
   padding-top: 5px;
 }
-[dir="rtl"] .payment-details-credit .field-suffix {
+[dir="rtl"] .uc-credit-form .field-suffix {
   float: right;
 }
 
