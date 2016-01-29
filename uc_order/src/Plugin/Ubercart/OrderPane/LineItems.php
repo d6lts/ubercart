@@ -147,7 +147,7 @@ class LineItems extends EditableOrderPanePluginBase {
           '#button_type' => 'remove',
           '#submit' => array(array($this, 'submitForm'), array($this, 'removeLineItem')),
           '#ajax' => array(
-            'callback' => 'uc_order_pane_line_items_update',
+            'callback' => array($this, 'ajaxCallback'),
           ),
           '#return_value' => $item['line_item_id'],
         );
