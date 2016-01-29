@@ -10,7 +10,6 @@ namespace Drupal\uc_fulfillment\Plugin\views\field;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
-use Drupal\views\ResultRow;
 
 /**
  * Field handler: simple renderer that links to the shipment page.

@@ -8,7 +8,6 @@
 namespace Drupal\uc_file\Tests;
 
 use Drupal\uc_order\Entity\Order;
-use Drupal\uc_file\Tests\FileTestBase;
 use Drupal\user\Entity\User;
 
 /**

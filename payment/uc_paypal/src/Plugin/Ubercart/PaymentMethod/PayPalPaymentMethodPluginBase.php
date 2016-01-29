@@ -10,7 +10,6 @@ namespace Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\PaymentMethodPluginBase;
 
 /**

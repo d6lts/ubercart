@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_paypal\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\OrderInterface;
 

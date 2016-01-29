@@ -7,9 +7,7 @@
 
 namespace Drupal\uc_credit\Controller;
 
-use Drupal\Core\Render\BareHtmlPageRenderer;
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Utility functions for credit card payment methods.

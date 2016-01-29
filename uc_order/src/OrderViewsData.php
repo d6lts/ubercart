@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_order;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\views\EntityViewsData;
 
 /**
