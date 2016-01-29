@@ -94,7 +94,7 @@ class PaymentMethodPane extends CheckoutPanePluginBase implements ContainerFacto
       // }
 
       if ($method->status()) {
-        $options[$method->id()] = Html::escape($method->label());
+        $options[$method->id()] = $method->getDisplayLabel();
       }
     }
 

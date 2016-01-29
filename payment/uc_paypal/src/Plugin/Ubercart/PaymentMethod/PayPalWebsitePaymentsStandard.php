@@ -23,6 +23,59 @@ use Drupal\uc_order\OrderInterface;
 class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase {
 
   /**
+   * Returns the set of card types which are used by this payment method.
+   *
+   * @return array
+   *   An array with keys as needed by the chargeCard() method and values
+   *   that can be displayed to the customer.
+   */
+  protected function getEnabledTypes() {
+    return [
+      'visa' => $this->t('Visa'),
+      'mastercard' => $this->t('MasterCard'),
+      'discover' => $this->t('Discover'),
+      'amex' => $this->t('American Express'),
+      'echeck' => $this->t('eCheck'),
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayLabel($label) {
+    $build['#attached']['library'][] = 'uc_paypal/uc_paypal.styles';
+    $build['paypal-mark'] = array(
+      '#theme' => 'image',
+      '#uri' => 'https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif',
+      '#alt' => $this->t('PayPal'),
+      '#attributes' => array('class' => array('uc-credit-cctype', 'uc-credit-cctype-paypal')),
+    );
+    $build['label'] = array(
+      '#prefix' => ' ',
+      '#markup' => $this->t('PayPal - pay without sharing your financial information.'),
+      '#suffix' => '<br /> ',
+    );
+    $build['includes'] = array(
+      '#prefix' => '<span id="paypal-includes">',
+      '#markup' => $this->t('Includes:'),
+    );
+    $path = base_path() . drupal_get_path('module', 'uc_credit');
+    $cc_types = $this->getEnabledTypes();
+    foreach ($cc_types as $type => $description) {
+      $build['image'][$type] = array(
+        '#theme' => 'image',
+        '#uri' => drupal_get_path('module', 'uc_credit') . '/images/' . $type . '.gif',
+        '#alt' => $description,
+        '#attributes' => array('class' => array('uc-credit-cctype', 'uc-credit-cctype-' . $type)),
+      );
+    }
+    $build['image']['paypal'] = $build['paypal-mark'];
+    $build['image']['paypal']['#suffix'] = '</span> ';
+
+    return $build;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {

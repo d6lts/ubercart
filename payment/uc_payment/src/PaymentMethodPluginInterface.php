@@ -19,6 +19,17 @@ use Drupal\uc_order\OrderInterface;
 interface PaymentMethodPluginInterface extends PluginInspectionInterface, PluginFormInterface, ConfigurablePluginInterface {
 
   /**
+   * Returns the payment method label with logo.
+   *
+   * @param string $label
+   *   The payment method label to be styled.
+   *
+   * @return array
+   *   A render array containing the formatted payment method label.
+   */
+  public function getDisplayLabel($label);
+
+  /**
    * Returns the form or render array to be displayed at checkout.
    *
    * @param \Drupal\uc_order\OrderInterface $order

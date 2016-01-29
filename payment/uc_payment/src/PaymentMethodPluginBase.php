@@ -28,6 +28,13 @@ abstract class PaymentMethodPluginBase extends PluginBase implements PaymentMeth
   /**
    * {@inheritdoc}
    */
+  public function getDisplayLabel($label) {
+    return ['#plain_text' => $label];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function defaultConfiguration() {
     return array();
   }

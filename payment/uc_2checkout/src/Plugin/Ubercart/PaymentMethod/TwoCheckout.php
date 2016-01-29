@@ -23,13 +23,24 @@ use Drupal\uc_payment\PaymentMethodPluginBase;
  */
 class TwoCheckout extends PaymentMethodPluginBase {
 
-// *   redirect => "\Drupal\uc_2checkout\Form\TwoCheckoutForm",
-//  $module_config = \Drupal::config('uc_2checkout.settings');
-//  $title = $module_config->get('method_title');
-//  $title .= '<br />' . theme('image', array(
-//    'uri' => drupal_get_path('module', 'uc_2checkout') . '/images/2co_logo.jpg',
-//    'attributes' => array('class' => array('uc-2checkout-logo')),
-//  ));
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayLabel($label) {
+    $build['#attached']['library'][] = 'uc_2checkout/2checkout.styles';
+    $build['label'] = array(
+      '#plain_text' => $label,
+      '#suffix' => '<br />',
+    );
+    $build['image'] = array(
+      '#theme' => 'image',
+      '#uri' => drupal_get_path('module', 'uc_2checkout') . '/images/2co_logo.jpg',
+      '#alt' => $this->t('2Checkout'),
+      '#attributes' => array('class' => array('uc-2checkout-logo')),
+    );
+
+    return $build;
+  }
 
   /**
    * {@inheritdoc}

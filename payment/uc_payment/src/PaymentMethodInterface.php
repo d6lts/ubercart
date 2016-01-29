@@ -30,4 +30,12 @@ interface PaymentMethodInterface extends ConfigEntityInterface {
    */
   public function getPlugin();
 
+  /**
+   * Returns the payment method label with logo.
+   *
+   * @return string
+   *   A string containing the HTML rendered label.
+   */
+  public function getDisplayLabel();
+
 }

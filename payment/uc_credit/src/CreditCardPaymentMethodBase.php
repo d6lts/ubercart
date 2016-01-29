@@ -68,6 +68,26 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function getDisplayLabel($label) {
+    $build['#attached']['library'][] = 'uc_credit/uc_credit.styles';
+    $build['label'] = array(
+      '#plain_text' => $label,
+    );
+    $cc_types = $this->getEnabledTypes();
+    foreach ($cc_types as $type => $description) {
+      $build['image'][$type] = array(
+        '#theme' => 'image',
+        '#uri' => drupal_get_path('module', 'uc_credit') . '/images/' . $type . '.gif',
+        '#alt' => $description,
+        '#attributes' => array('class' => array('uc-credit-cctype', 'uc-credit-cctype-' . $type)),
+      );
+    }
+    return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function defaultConfiguration() {
     return [
       'txn_type' => UC_CREDIT_AUTH_CAPTURE,

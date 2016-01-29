@@ -116,6 +116,14 @@ class PaymentMethod extends ConfigEntityBase implements PaymentMethodInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getDisplayLabel() {
+    $build = $this->getPlugin()->getDisplayLabel($this->label());
+    return \Drupal::service('renderer')->renderPlain($build);
+  }
+
+  /**
    * Returns the payment method entity for a specific order.
    *
    * @param \Drupal\uc_order\OrderInterface $order
