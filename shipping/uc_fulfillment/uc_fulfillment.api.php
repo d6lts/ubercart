@@ -22,7 +22,7 @@ use Drupal\Component\Utility\SafeMarkup;
  *
  * The members of the shipment object are the fields in the corresponding
  * record of the uc_shipments table, plus $shipment->packages, an array
- * of package objects as returned by uc_shipping_package_load().
+ * of package objects as returned by uc_fulfillment_package_load().
  *
  * @param $op
  *   The action being taken on the shipment. One of the following values:

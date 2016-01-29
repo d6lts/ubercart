@@ -1,6 +1,6 @@
-name: Shipping
+name: Fulfillment
 type: module
-description: 'Gets products ready for physical shipment.'
+description: 'Handles order fulfillment.'
 package: Ubercart - core (optional)
 core: 8.x
 dependencies:

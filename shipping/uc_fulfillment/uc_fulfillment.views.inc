@@ -10,7 +10,7 @@ use Drupal\Component\Utility\Unicode;
 /**
  * Implements hook_views_data().
  */
-function uc_shipping_views_data() {
+function uc_fulfillment_views_data() {
   $data['uc_shipments']['table']['group'] = t('Shipment');
 
   // Allow base tables of shipments.
@@ -64,7 +64,7 @@ function uc_shipping_views_data() {
     'title' => t('Shipment ID'),
     'help' => t('The shipment ID.'),
     'field' => array(
-      'handler' => 'uc_shipping_handler_field_shipment_id',
+      'handler' => 'uc_fulfillment_handler_field_shipment_id',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -456,7 +456,7 @@ function uc_shipping_views_data() {
     'title' => t('Shipment ID'),
     'help' => t('The shipment ID.'),
     'field' => array(
-      'handler' => 'uc_shipping_handler_field_shipment_id',
+      'handler' => 'uc_fulfillment_handler_field_shipment_id',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -627,7 +627,7 @@ function uc_shipping_views_data() {
       'additional fields' => array(
         'package_id',
       ),
-      'handler' => 'uc_shipping_handler_field_package_weight',
+      'handler' => 'uc_fulfillment_handler_field_package_weight',
       'click sortable' => FALSE,
     ),
   );

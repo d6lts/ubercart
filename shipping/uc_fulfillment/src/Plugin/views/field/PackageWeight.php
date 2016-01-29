@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_shipping\Plugin\views\field\PackageWeight.
+ * Contains \Drupal\uc_fulfillment\Plugin\views\field\PackageWeight.
  */
 
-namespace Drupal\uc_shipping\Plugin\views\field;
+namespace Drupal\uc_fulfillment\Plugin\views\field;
 
 use Drupal\uc_store\Plugin\views\field\Weight;
 use Drupal\views\ResultRow;
@@ -18,7 +18,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @ViewsField("uc_shipping_package_weight")
+ * @ViewsField("uc_fulfillment_package_weight")
  */
 class PackageWeight extends Weight {
 
@@ -43,7 +43,7 @@ class PackageWeight extends Weight {
    * Overrides uc_product_handler_field_weight::render().
    */
   public function render($values) {
-    $package = uc_shipping_package_load($values->{$this->aliases['package_id']});
+    $package = uc_fulfillment_package_load($values->{$this->aliases['package_id']});
 
     if ($this->options['format'] == 'numeric') {
       return $package->weight;

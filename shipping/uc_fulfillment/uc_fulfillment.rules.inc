@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Rules hooks for uc_shipping.module.
+ * Rules hooks for uc_fulfillment.module.
  */
 
 use Drupal\uc_store\Address;
@@ -10,7 +10,7 @@ use Drupal\uc_store\Address;
 /**
  * Implements hook_rules_data_info().
  */
-function uc_shipping_rules_data_info() {
+function uc_fulfillment_rules_data_info() {
   $address_info = uc_address_property_info();
 
   $entities['uc_shipment'] = array(
@@ -30,8 +30,8 @@ function uc_shipping_rules_data_info() {
         'type' => 'struct',
         'label' => t('Origin address'),
         'description' => t('The origin location for the shipment.'),
-        'getter callback' => 'uc_shipping_address_property_get',
-        'setter callback' => 'uc_shipping_address_property_set',
+        'getter callback' => 'uc_fulfillment_address_property_get',
+        'setter callback' => 'uc_fulfillment_address_property_set',
         'setter permission' => 'fulfill orders',
         'property info' => $address_info,
       ),
@@ -39,8 +39,8 @@ function uc_shipping_rules_data_info() {
         'type' => 'struct',
         'label' => t('Destination address'),
         'description' => t('The destination location for the shipment.'),
-        'getter callback' => 'uc_shipping_address_property_get',
-        'setter callback' => 'uc_shipping_address_property_set',
+        'getter callback' => 'uc_fulfillment_address_property_get',
+        'setter callback' => 'uc_fulfillment_address_property_set',
         'setter permission' => 'fulfill orders',
         'property info' => $address_info,
       ),
@@ -159,7 +159,7 @@ function uc_shipping_rules_data_info() {
 /**
  * Entity metadata callback to get origin or destination address of an shipment.
  */
-function uc_shipping_address_property_get($shipment, array $options, $name, $entity_type) {
+function uc_fulfillment_address_property_get($shipment, array $options, $name, $entity_type) {
   switch ($name) {
     case 'origin':
       $type = 'o_';
@@ -185,7 +185,7 @@ function uc_shipping_address_property_get($shipment, array $options, $name, $ent
 /**
  * Entity metadata callback to set origin or destination address of an order.
  */
-function uc_shipping_address_property_set($shipment, $name, $address) {
+function uc_fulfillment_address_property_set($shipment, $name, $address) {
   switch ($name) {
     case 'origin':
       $type = 'o_';
@@ -207,7 +207,7 @@ function uc_shipping_address_property_set($shipment, $name, $address) {
 /**
  * Implements hook_rules_event_info().
  */
-function uc_shipping_rules_event_info() {
+function uc_fulfillment_rules_event_info() {
   $events['uc_shipment_save'] = array(
     'label' => t('A shipment is saved'),
     'group' => t('Fulfillment'),

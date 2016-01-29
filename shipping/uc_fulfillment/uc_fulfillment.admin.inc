@@ -16,8 +16,8 @@ use Drupal\Core\Url;
 /**
  * Displays a list of an order's packaged products.
  */
-function uc_shipping_order_packages($order) {
-  $shipping_type_options = uc_quote_shipping_type_options();
+function uc_fulfillment_order_packages($order) {
+  $shipping_type_options = uc_quote_fulfillment_type_options();
   $header = array(t('Package ID'), t('Products'), t('Shipping type'), t('Package type'), t('Shipment ID'), t('Tracking number'), t('Labels'), array('data' => t('Actions'), 'colspan' => 4));
   $rows = array();
   $result = db_query("SELECT * FROM {uc_packages} WHERE order_id = :id", [':id' => $order->id()]);
@@ -92,12 +92,12 @@ function uc_shipping_order_packages($order) {
 /**
  * Puts ordered products into a package.
  *
- * @see uc_shipping_new_package_validate()
- * @see uc_shipping_new_package_submit()
- * @see theme_uc_shipping_new_package_fieldset()
+ * @see uc_fulfillment_new_package_validate()
+ * @see uc_fulfillment_new_package_submit()
+ * @see theme_uc_fulfillment_new_package_fieldset()
  * @ingroup forms
  */
-function uc_shipping_new_package($form, FormStateInterface $form_state, $order) {
+function uc_fulfillment_new_package($form, FormStateInterface $form_state, $order) {
   $form['#tree'] = TRUE;
   $shipping_types_products = array();
   foreach ($order->products as $product) {
@@ -114,7 +114,7 @@ function uc_shipping_new_package($form, FormStateInterface $form_state, $order) 
   $packaged_products = $result->fetchAllKeyed();
 
   $form['shipping_types'] = array();
-  $shipping_type_options = uc_quote_shipping_type_options();
+  $shipping_type_options = uc_quote_fulfillment_type_options();
   foreach ($shipping_types_products as $shipping_type => $products) {
     $form['shipping_types'][$shipping_type] = array(
       '#type'        => 'fieldset',
@@ -166,7 +166,7 @@ function uc_shipping_new_package($form, FormStateInterface $form_state, $order) 
       }
     }
 
-    $form['shipping_types'][$shipping_type]['#theme'] = 'uc_shipping_new_package_fieldset';
+    $form['shipping_types'][$shipping_type]['#theme'] = 'uc_fulfillment_new_package_fieldset';
   }
 
   $form['order_id'] = array(
@@ -195,10 +195,10 @@ function uc_shipping_new_package($form, FormStateInterface $form_state, $order) 
 /**
  * Formats and displays the products in a shipping type fieldset.
  *
- * @see uc_shipping_new_package()
+ * @see uc_fulfillment_new_package()
  * @ingroup themeable
  */
-function theme_uc_shipping_new_package_fieldset(array $variables) {
+function theme_uc_fulfillment_new_package_fieldset(array $variables) {
   $fieldset = $variables['fieldset'];
   drupal_add_js('misc/tableselect.js');
 
@@ -227,14 +227,14 @@ function theme_uc_shipping_new_package_fieldset(array $variables) {
 }
 
 /**
- * Validation handler for uc_shipping_new_package().
+ * Validation handler for uc_fulfillment_new_package().
  *
  * Do not allow empty packages.
  *
- * @see uc_shipping_new_package()
- * @see uc_shipping_new_package_submit()
+ * @see uc_fulfillment_new_package()
+ * @see uc_fulfillment_new_package_submit()
  */
-function uc_shipping_new_package_validate($form, FormStateInterface $form_state) {
+function uc_fulfillment_new_package_validate($form, FormStateInterface $form_state) {
   if ($form_state->getValue('op') != t('Cancel')) {
     $empty = TRUE;
 
@@ -254,12 +254,12 @@ function uc_shipping_new_package_validate($form, FormStateInterface $form_state)
 }
 
 /**
- * Submit handler for uc_shipping_new_package().
+ * Submit handler for uc_fulfillment_new_package().
  *
- * @see uc_shipping_new_package()
- * @see uc_shipping_new_package_validate()
+ * @see uc_fulfillment_new_package()
+ * @see uc_fulfillment_new_package_validate()
  */
-function uc_shipping_new_package_submit($form, FormStateInterface $form_state) {
+function uc_fulfillment_new_package_submit($form, FormStateInterface $form_state) {
   if ($form_state->getValue('op') != t('Cancel')) {
     $packages = array(0 => array());
 
@@ -301,7 +301,7 @@ function uc_shipping_new_package_submit($form, FormStateInterface $form_state) {
 
     foreach ($packages as $package) {
       $package['order_id'] = $form_state->getValue('order_id');
-      uc_shipping_package_save($package);
+      uc_fulfillment_package_save($package);
     }
   }
 
@@ -311,16 +311,16 @@ function uc_shipping_new_package_submit($form, FormStateInterface $form_state) {
 /**
  * Rearranges the products in or out of a package.
  *
- * @see uc_shipping_package_edit_submit()
- * @see theme_uc_shipping_edit_package_fieldset()
+ * @see uc_fulfillment_package_edit_submit()
+ * @see theme_uc_fulfillment_edit_package_fieldset()
  * @ingroup forms
  */
-function uc_shipping_package_edit($form, FormStateInterface $form_state, $order, $package) {
+function uc_fulfillment_package_edit($form, FormStateInterface $form_state, $order, $package) {
   $products = array();
   $shipping_types_products = array();
   foreach ($order->products as $product) {
     if ($product->data['shippable']) {
-      $product->shipping_type = uc_product_get_shipping_type($product);
+      $product->shipping_type = uc_product_get_fulfillment_type($product);
       $shipping_types_products[$product->shipping_type][$product->order_product_id] = $product;
       $products[$product->order_product_id] = $product;
     }
@@ -354,9 +354,9 @@ function uc_shipping_package_edit($form, FormStateInterface $form_state, $order,
       $form['products'][$product->order_product_id] = $product_row;
     }
   }
-  $form['products']['#theme'] = 'uc_shipping_edit_package_fieldset';
+  $form['products']['#theme'] = 'uc_fulfillment_edit_package_fieldset';
   $options = array();
-  $shipping_type_options = uc_quote_shipping_type_options();
+  $shipping_type_options = uc_quote_fulfillment_type_options();
   foreach (array_keys($shipping_types_products) as $type) {
     $options[$type] = isset($shipping_type_options[$type]) ? $shipping_type_options[$type] : ucwords(str_replace('_', ' ', $type));
   }
@@ -380,7 +380,7 @@ function uc_shipping_package_edit($form, FormStateInterface $form_state, $order,
  *
  * @ingroup themeable
  */
-function theme_uc_shipping_edit_package_fieldset(array $variables) {
+function theme_uc_fulfillment_edit_package_fieldset(array $variables) {
   $fieldset = $variables['fieldset'];
   drupal_add_js('misc/tableselect.js');
 
@@ -402,12 +402,12 @@ function theme_uc_shipping_edit_package_fieldset(array $variables) {
 }
 
 /**
- * Submit handler for uc_shipping_package_edit().
+ * Submit handler for uc_fulfillment_package_edit().
  *
- * @see uc_shipping_package_edit()
+ * @see uc_fulfillment_package_edit()
  */
-function uc_shipping_package_edit_submit($form, FormStateInterface $form_state) {
-  $package = uc_shipping_package_load($form_state->getValue('package_id'));
+function uc_fulfillment_package_edit_submit($form, FormStateInterface $form_state) {
+  $package = uc_fulfillment_package_load($form_state->getValue('package_id'));
   foreach ($form_state->getValue('products') as $id => $product) {
     if ($product['checked']) {
       $package->products[$id] = (object)$product;
@@ -417,7 +417,7 @@ function uc_shipping_package_edit_submit($form, FormStateInterface $form_state) 
     }
   }
   $package->shipping_type = $form_state->getValue('shipping_type');
-  uc_shipping_package_save($package);
+  uc_fulfillment_package_save($package);
 
   $form_state['redirect'] = 'admin/store/orders/' . $package->order_id . '/packages';
 }
@@ -425,10 +425,10 @@ function uc_shipping_package_edit_submit($form, FormStateInterface $form_state) 
 /**
  * Confirms cancellation of a package's shipment.
  *
- * @see uc_shipping_package_cancel_confirm_submit()
+ * @see uc_fulfillment_package_cancel_confirm_submit()
  * @ingroup forms
  */
-function uc_shipping_package_cancel_confirm($form, FormStateInterface $form_state, $order, $package) {
+function uc_fulfillment_package_cancel_confirm($form, FormStateInterface $form_state, $order, $package) {
   $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
   $form['package_id'] = array('#type' => 'value', '#value' => $package->package_id);
   $output = confirm_form($form, t('Are you sure you want to cancel the shipment of this package?'), 'admin/store/orders/' . $order->id() . '/packages',
@@ -437,14 +437,14 @@ function uc_shipping_package_cancel_confirm($form, FormStateInterface $form_stat
 }
 
 /**
- * Form submission handler for uc_shipping_package_cancel_confirm().
+ * Form submission handler for uc_fulfillment_package_cancel_confirm().
  *
- * @see uc_shipping_package_cancel_confirm()
+ * @see uc_fulfillment_package_cancel_confirm()
  */
-function uc_shipping_package_cancel_confirm_submit($form, FormStateInterface $form_state) {
-  $package = uc_shipping_package_load($form_state->getValue('package_id'));
-  $shipment = uc_shipping_shipment_load($package->sid);
-  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+function uc_fulfillment_package_cancel_confirm_submit($form, FormStateInterface $form_state) {
+  $package = uc_fulfillment_package_load($form_state->getValue('package_id'));
+  $shipment = uc_fulfillment_shipment_load($package->sid);
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
   if (isset($methods[$shipment->shipping_method]['cancel']) &&
       function_exists($methods[$shipment->shipping_method]['cancel'])) {
     $result = call_user_func($methods[$shipment->shipping_method]['cancel'], $shipment->tracking_number, array($package->tracking_number));
@@ -459,14 +459,14 @@ function uc_shipping_package_cancel_confirm_submit($form, FormStateInterface $fo
         ->execute();
 
       if (isset($package->label_image)) {
-        file_usage_delete($package->label_image, 'uc_shipping', 'package', $package->package_id);
+        file_usage_delete($package->label_image, 'uc_fulfillment', 'package', $package->package_id);
         file_delete($package->label_image);
         unset($package->label_image);
       }
 
       unset($shipment->packages[$package->package_id]);
       if (!count($shipment->packages)) {
-        uc_shipping_shipment_delete($shipment->sid);
+        uc_fulfillment_shipment_delete($shipment->sid);
       }
     }
   }
@@ -476,10 +476,10 @@ function uc_shipping_package_cancel_confirm_submit($form, FormStateInterface $fo
 /**
  * Decides to unpackage products.
  *
- * @see uc_shipping_package_delete_confirm_submit()
+ * @see uc_fulfillment_package_delete_confirm_submit()
  * @ingroup forms
  */
-function uc_shipping_package_delete_confirm($form, FormStateInterface $form_state, $order, $package) {
+function uc_fulfillment_package_delete_confirm($form, FormStateInterface $form_state, $order, $package) {
   $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
   $form['package_id'] = array('#type' => 'value', '#value' => $package->package_id);
   $output = confirm_form($form, t('Are you sure you want to delete this package?'), 'admin/store/orders/' . $order->id() . '/packages',
@@ -488,12 +488,12 @@ function uc_shipping_package_delete_confirm($form, FormStateInterface $form_stat
 }
 
 /**
- * Submit handler for uc_shipping_package_delete_confirm().
+ * Submit handler for uc_fulfillment_package_delete_confirm().
  *
- * @see uc_shipping_package_delete_confirm()
+ * @see uc_fulfillment_package_delete_confirm()
  */
-function uc_shipping_package_delete_confirm_submit($form, FormStateInterface $form_state) {
-  uc_shipping_package_delete($form_state->getValue('package_id'));
+function uc_fulfillment_package_delete_confirm_submit($form, FormStateInterface $form_state) {
+  uc_fulfillment_package_delete($form_state->getValue('package_id'));
   $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/packages';
 }
 
@@ -503,7 +503,7 @@ function uc_shipping_package_delete_confirm_submit($form, FormStateInterface $fo
  * @param $order
  *   The order object.
  */
-function uc_shipping_order_shipments($order) {
+function uc_fulfillment_order_shipments($order) {
   $result = db_query("SELECT * FROM {uc_shipments} WHERE order_id = :id", [':id' => $order->id()]);
   $header = array(t('Shipment ID'), t('Name'), t('Company'), t('Destination'), t('Ship date'), t('Estimated delivery'), t('Tracking number'), array('data' => t('Actions'), 'colspan' => 5));
   $rows = array();
@@ -548,11 +548,11 @@ function uc_shipping_order_shipments($order) {
 /**
  * Sets up a new shipment with the chosen packages.
  *
- * @see uc_shipping_new_shipment_submit()
- * @see theme_uc_shipping_new_shipment()
+ * @see uc_fulfillment_new_shipment_submit()
+ * @see theme_uc_fulfillment_new_shipment()
  * @ingroup forms
  */
-function uc_shipping_new_shipment($form, FormStateInterface $form_state, $order) {
+function uc_fulfillment_new_shipment($form, FormStateInterface $form_state, $order) {
   $checked_pkgs = isset($_GET['pkgs']) ? $_GET['pkgs'] : array();
 
   $form['#tree'] = TRUE;
@@ -575,8 +575,8 @@ function uc_shipping_new_shipment($form, FormStateInterface $form_state, $order)
     $packages_by_type[$package->shipping_type][$package->package_id] = $package;
   }
   $option_methods = array();
-  $shipping_types = uc_quote_get_shipping_types();
-  $shipping_methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+  $shipping_types = uc_quote_get_fulfillment_types();
+  $shipping_methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
   $shipping_methods_by_type = array();
   foreach ($shipping_methods as $method) {
     if (isset($method['ship'])) {
@@ -630,10 +630,10 @@ function uc_shipping_new_shipment($form, FormStateInterface $form_state, $order)
 /**
  * Formats and displays the new shipment form.
  *
- * @see uc_shipping_new_shipment()
+ * @see uc_fulfillment_new_shipment()
  * @ingroup themeable
  */
-function theme_uc_shipping_new_shipment(array $variables) {
+function theme_uc_fulfillment_new_shipment(array $variables) {
   $form = $variables['form'];
   drupal_add_js('misc/tableselect.js');
 
@@ -664,13 +664,13 @@ function theme_uc_shipping_new_shipment(array $variables) {
 }
 
 /**
- * Submit handler for uc_shipping_new_shipment().
+ * Submit handler for uc_fulfillment_new_shipment().
  *
  * Sends package information to the chosen method.
  *
- * @see uc_shipping_new_shipment()
+ * @see uc_fulfillment_new_shipment()
  */
-function uc_shipping_new_shipment_submit($form, FormStateInterface $form_state) {
+function uc_fulfillment_new_shipment_submit($form, FormStateInterface $form_state) {
   $packages = array();
   foreach ($form_state->getValue('shipping_types') as $shipping_type) {
     if (is_array($shipping_type['packages'])) {
@@ -687,7 +687,7 @@ function uc_shipping_new_shipment_submit($form, FormStateInterface $form_state) 
 /**
  * Displays shipment details.
  */
-function uc_shipping_shipment_view($order, $shipment) {
+function uc_fulfillment_shipment_view($order, $shipment) {
   $build = array();
 
   $origin = uc_shipment_address($shipment, 'o');
@@ -719,7 +719,7 @@ function uc_shipping_shipment_view($order, $shipment) {
     $rows[] = array(t('Tracking number:'), SafeMarkup::checkPlain($shipment->tracking_number));
   }
 
-  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
 
   if (isset($methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials])) {
     $rows[] = array(t('Services:'), $methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials]);
@@ -739,7 +739,7 @@ function uc_shipping_shipment_view($order, $shipment) {
   );
 
   foreach ($shipment->packages as $package) {
-    $build['packages'][] = uc_shipping_package_view($package);
+    $build['packages'][] = uc_fulfillment_package_view($package);
   }
 
   return $build;
@@ -780,15 +780,15 @@ function uc_shipment_address($order, $type) {
 /**
  * Creates or edits a shipment.
  *
- * @see uc_shipping_shipment_edit_validate()
- * @see uc_shipping_shipment_edit_submit()
+ * @see uc_fulfillment_shipment_edit_validate()
+ * @see uc_fulfillment_shipment_edit_submit()
  * @ingroup forms
  */
-function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order, $shipment) {
+function uc_fulfillment_shipment_edit($form, FormStateInterface $form_state, $order, $shipment) {
   $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
   if (isset($shipment->sid)) {
     $form['sid'] = array('#type' => 'value', '#value' => $shipment->sid);
-    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
     if (isset($methods[$shipment->shipping_method])) {
       $method = $methods[$shipment->shipping_method];
     }
@@ -926,7 +926,7 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
       }
     }
   }
-  $form = uc_shipping_address_form($form, $form_state, $addresses, $order);
+  $form = uc_fulfillment_address_form($form, $form_state, $addresses, $order);
 
   $form['shipment'] = array(
     '#type'        => 'fieldset',
@@ -938,7 +938,7 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
   if (isset($order->quote['method'])) {
     // Order has a quote attached.
     $method  = $order->quote['method'];
-    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
     if (isset($methods[$method])) {
       // Quote is from a currently-active shipping method.
       $services = $methods[$method]['quote']['accessorials'];
@@ -1036,10 +1036,10 @@ function uc_shipping_shipment_edit($form, FormStateInterface $form_state, $order
 /**
  * Ensures the package dimensions are positive numbers.
  *
- * @see uc_shipping_shipment_edit()
- * @see uc_shipping_shipment_submit()
+ * @see uc_fulfillment_shipment_edit()
+ * @see uc_fulfillment_shipment_submit()
  */
-function uc_shipping_shipment_edit_validate($form, FormStateInterface $form_state) {
+function uc_fulfillment_shipment_edit_validate($form, FormStateInterface $form_state) {
   foreach ($form_state->getValue('packages') as $key => $package) {
     foreach (array('length', 'width', 'height') as $property) {
       if (!empty($package['dimensions'][$property]) && (!is_numeric($package['dimensions'][$property]) || $package['dimensions'][$property] < 0)) {
@@ -1050,12 +1050,12 @@ function uc_shipping_shipment_edit_validate($form, FormStateInterface $form_stat
 }
 
 /**
- * Submit handler for uc_shipping_shipment_edit().
+ * Submit handler for uc_fulfillment_shipment_edit().
  *
- * @see uc_shipping_shipment_edit()
- * @see uc_shipping_shipment_validate()
+ * @see uc_fulfillment_shipment_edit()
+ * @see uc_fulfillment_shipment_validate()
  */
-function uc_shipping_shipment_edit_submit($form, FormStateInterface $form_state) {
+function uc_fulfillment_shipment_edit_submit($form, FormStateInterface $form_state) {
   $shipment = new stdClass();
   $shipment->order_id = $form_state->getValue('order_id');
   if ($form_state->hasValue('sid')) {
@@ -1071,7 +1071,7 @@ function uc_shipping_shipment_edit_submit($form, FormStateInterface $form_state)
   }
   $shipment->packages = array();
   foreach ($form_state->getValue('packages') as $id => $pkg_form) {
-    $package = uc_shipping_package_load($id);
+    $package = uc_fulfillment_package_load($id);
     $package->pkg_type = $pkg_form['pkg_type'];
     $package->value = $pkg_form['declared_value'];
     $package->length = $pkg_form['dimensions']['length'];
@@ -1092,7 +1092,7 @@ function uc_shipping_shipment_edit_submit($form, FormStateInterface $form_state)
   $shipment->expected_delivery = gmmktime(12, 0, 0, $form_state->getValue(['expected_delivery', 'month']), $form_state->getValue(['expected_delivery', 'day']), $form_state->getValue(['expected_delivery', 'year']));
   $shipment->cost = $form_state->getValue('cost');
 
-  uc_shipping_shipment_save($shipment);
+  uc_fulfillment_shipment_save($shipment);
 
   $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/shipments';
 }
@@ -1100,9 +1100,9 @@ function uc_shipping_shipment_edit_submit($form, FormStateInterface $form_state)
 /**
  * Shows a printer-friendly version of a shipment.
  */
-function uc_shipping_shipment_print($order, $shipment, $labels = TRUE) {
+function uc_fulfillment_shipment_print($order, $shipment, $labels = TRUE) {
   $build = array(
-    '#theme' => 'uc_shipping_shipment_print',
+    '#theme' => 'uc_fulfillment_shipment_print',
     '#order' => $order,
     '#shipment' => $shipment,
     '#labels' => $labels,
@@ -1118,7 +1118,7 @@ function uc_shipping_shipment_print($order, $shipment, $labels = TRUE) {
  *
  * @ingroup themeable
  */
-function theme_uc_shipping_shipment_print(array $variables) {
+function theme_uc_fulfillment_shipment_print(array $variables) {
   $order = $variables['order'];
   $shipment = $variables['shipment'];
   $labels = $variables['labels'];
@@ -1147,10 +1147,10 @@ function theme_uc_shipping_shipment_print(array $variables) {
 /**
  * Decides to release packages to be put on another shipment.
  *
- * @see uc_shipping_shipment_delete_confirm_submit()
+ * @see uc_fulfillment_shipment_delete_confirm_submit()
  * @ingroup forms
  */
-function uc_shipping_shipment_delete_confirm($form, FormStateInterface $form_state, $order, $shipment) {
+function uc_fulfillment_shipment_delete_confirm($form, FormStateInterface $form_state, $order, $shipment) {
   $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
   $form['sid'] = array('#type' => 'value', '#value' => $shipment->sid);
   $output = confirm_form($form, t('Are you sure you want to delete this shipment?'), 'admin/store/orders/' . $order->id() . '/shipments',
@@ -1159,26 +1159,26 @@ function uc_shipping_shipment_delete_confirm($form, FormStateInterface $form_sta
 }
 
 /**
- * Submit handler for uc_shipping_shipment_delete_confirm().
+ * Submit handler for uc_fulfillment_shipment_delete_confirm().
  *
- * @see uc_shipping_shipment_delete_confirm()
+ * @see uc_fulfillment_shipment_delete_confirm()
  */
-function uc_shipping_shipment_delete_confirm_submit($form, FormStateInterface $form_state) {
-  $shipment = uc_shipping_shipment_load($form_state->getValue('sid'));
-  $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+function uc_fulfillment_shipment_delete_confirm_submit($form, FormStateInterface $form_state) {
+  $shipment = uc_fulfillment_shipment_load($form_state->getValue('sid'));
+  $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
   if ($shipment->tracking_number &&
       isset($methods[$shipment->shipping_method]['cancel']) &&
       function_exists($methods[$shipment->shipping_method]['cancel'])) {
     $result = call_user_func($methods[$shipment->shipping_method]['cancel'], $shipment->tracking_number);
     if ($result) {
-      uc_shipping_shipment_delete($form_state->getValue('sid'));
+      uc_fulfillment_shipment_delete($form_state->getValue('sid'));
     }
     else {
       drupal_set_message(t('The shipment %tracking could not be canceled with %carrier. To delete it anyway, remove the tracking number and try again.', ['%tracking' => $shipment->tracking_number, '%carrier' => $shipment->carrier]));
     }
   }
   else {
-    uc_shipping_shipment_delete($form_state->getValue('sid'));
+    uc_fulfillment_shipment_delete($form_state->getValue('sid'));
   }
 
   $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/shipments';
@@ -1187,7 +1187,7 @@ function uc_shipping_shipment_delete_confirm_submit($form, FormStateInterface $f
 /**
  * Default method to send packages on a shipment.
  */
-function uc_shipping_make_shipment($order) {
+function uc_fulfillment_make_shipment($order) {
   $args = func_get_args();
   if (count($args) > 2) {
     $breadcrumb = drupal_get_breadcrumb();
@@ -1197,7 +1197,7 @@ function uc_shipping_make_shipment($order) {
     $order = array_shift($args);
     $method_id = array_shift($args);
     $package_ids = $args;
-    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
     if (isset($methods[$method_id])) {
       $method = $methods[$method_id];
       if (isset($method['ship']['file'])) {
@@ -1213,10 +1213,10 @@ function uc_shipping_make_shipment($order) {
       $shipment->order_id = $order->id();
       $shipment->packages = array();
       foreach ($package_ids as $id) {
-        $package = uc_shipping_package_load($id);
+        $package = uc_fulfillment_package_load($id);
         $shipment->packages[$id] = $package;
       }
-      return \Drupal::formBuilder()->getForm('uc_shipping_shipment_edit', $order, $shipment);
+      return \Drupal::formBuilder()->getForm('uc_fulfillment_shipment_edit', $order, $shipment);
     }
   }
   else {

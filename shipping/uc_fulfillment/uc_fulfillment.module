@@ -21,7 +21,7 @@ use Drupal\uc_order\OrderInterface;
 /**
  * Implements hook_help().
  */
-function uc_shipping_help($route_name, RouteMatchInterface $route_match) {
+function uc_fulfillment_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'admin/store/orders/%/packages/new':
       return '<p>' . t('Organize products into packages. Package numbers in multiple shipping types are of the first shipping type they appear in. All packages are given a unique ID when they are saved. Choose the default package "Sep." to automatically create a package for each of the selected quantity of products in that row.') . '</p>';
@@ -32,126 +32,126 @@ function uc_shipping_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_menu().
  */
-function uc_shipping_menu() {
+function uc_fulfillment_menu() {
   $items['admin/store/orders/%uc_order/packages'] = array(
     'title' => 'Packages',
-    'page callback' => 'uc_shipping_order_packages',
+    'page callback' => 'uc_fulfillment_order_packages',
     'page arguments' => array(3),
-    'access callback' => 'uc_shipping_order_access',
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
     'weight' => 6,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
   $items['admin/store/orders/%uc_order/packages/new'] = array(
     'title' => 'Create packages',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_shipping_new_package', 3),
-    'access callback' => 'uc_shipping_order_access',
+    'page arguments' => array('uc_fulfillment_new_package', 3),
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/packages/%uc_shipping_package/edit'] = array(
+  $items['admin/store/orders/%uc_order/packages/%uc_fulfillment_package/edit'] = array(
     'title' => 'Edit package',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_shipping_package_edit', 3, 5),
-    'access callback' => 'uc_shipping_order_access',
+    'page arguments' => array('uc_fulfillment_package_edit', 3, 5),
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/packages/%uc_shipping_package/cancel'] = array(
+  $items['admin/store/orders/%uc_order/packages/%uc_fulfillment_package/cancel'] = array(
     'title' => 'Cancel package shipment',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_shipping_package_cancel_confirm', 3, 5),
-    'access callback' => 'uc_shipping_order_access',
+    'page arguments' => array('uc_fulfillment_package_cancel_confirm', 3, 5),
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/packages/%uc_shipping_package/delete'] = array(
+  $items['admin/store/orders/%uc_order/packages/%uc_fulfillment_package/delete'] = array(
     'title' => 'Delete package',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_shipping_package_delete_confirm', 3, 5),
-    'access callback' => 'uc_shipping_order_access',
+    'page arguments' => array('uc_fulfillment_package_delete_confirm', 3, 5),
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
   $items['admin/store/orders/%uc_order/shipments'] = array(
     'title' => 'Shipments',
-    'page callback' => 'uc_shipping_order_shipments',
+    'page callback' => 'uc_fulfillment_order_shipments',
     'page arguments' => array(3),
-    'access callback' => 'uc_shipping_order_access',
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
     'weight' => 7,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
   $items['admin/store/orders/%uc_order/shipments/new'] = array(
     'title' => 'New shipment',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_shipping_new_shipment', 3),
-    'access callback' => 'uc_shipping_new_shipment_access',
+    'page arguments' => array('uc_fulfillment_new_shipment', 3),
+    'access callback' => 'uc_fulfillment_new_shipment_access',
     'access arguments' => array(3),
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/shipments/%uc_shipping_shipment'] = array(
-    'title callback' => 'uc_shipping_shipment_page_title',
+  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment'] = array(
+    'title callback' => 'uc_fulfillment_shipment_page_title',
     'title arguments' => array(5),
-    'page callback' => 'uc_shipping_shipment_view',
+    'page callback' => 'uc_fulfillment_shipment_view',
     'page arguments' => array(3, 5),
-    'access callback' => 'uc_shipping_order_access',
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/shipments/%uc_shipping_shipment/view'] = array(
+  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/view'] = array(
     'title' => 'View',
     'weight' => -5,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/store/orders/%uc_order/shipments/%uc_shipping_shipment/edit'] = array(
+  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_shipping_shipment_edit', 3, 5),
-    'access callback' => 'uc_shipping_order_access',
+    'page arguments' => array('uc_fulfillment_shipment_edit', 3, 5),
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
     'weight' => -1,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/shipments/%uc_shipping_shipment/print'] = array(
+  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/print'] = array(
     'title' => 'Print',
-    'page callback' => 'uc_shipping_shipment_print',
+    'page callback' => 'uc_fulfillment_shipment_print',
     'page arguments' => array(3, 5),
-    'access callback' => 'uc_shipping_order_access',
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/shipments/%uc_shipping_shipment/packing_slip'] = array(
+  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/packing_slip'] = array(
     'title' => 'Packing slip',
-    'page callback' => 'uc_shipping_shipment_print',
+    'page callback' => 'uc_fulfillment_shipment_print',
     'page arguments' => array(3, 5, FALSE),
-    'access callback' => 'uc_shipping_order_access',
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
-  $items['admin/store/orders/%uc_order/shipments/%uc_shipping_shipment/delete'] = array(
+  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/delete'] = array(
     'title' => 'Delete shipment',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_shipping_shipment_delete_confirm', 3, 5),
-    'access callback' => 'uc_shipping_order_access',
+    'page arguments' => array('uc_fulfillment_shipment_delete_confirm', 3, 5),
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
   $items['admin/store/orders/%uc_order/ship'] = array(
     'title' => 'Ship packages',
-    'page callback' => 'uc_shipping_make_shipment',
+    'page callback' => 'uc_fulfillment_make_shipment',
     'page arguments' => array(3),
-    'access callback' => 'uc_shipping_order_access',
+    'access callback' => 'uc_fulfillment_order_access',
     'access arguments' => array(3),
-    'file' => 'uc_shipping.admin.inc',
+    'file' => 'uc_fulfillment.admin.inc',
   );
 
   return $items;
@@ -160,14 +160,14 @@ function uc_shipping_menu() {
 /**
  * Title callback for admin/store/orders/%/shipments/%.
  */
-function uc_shipping_shipment_page_title($shipment) {
+function uc_fulfillment_shipment_page_title($shipment) {
   return t('Shipment @id', ['@id' => $shipment->sid]);
 }
 
 /**
  * Ensures access to the Shipments tab.
  */
-function uc_shipping_order_access($order) {
+function uc_fulfillment_order_access($order) {
   $account = \Drupal::currentUser();
   return $account->hasPermission('fulfill orders') && $order->isShippable();
 }
@@ -175,14 +175,14 @@ function uc_shipping_order_access($order) {
 /**
  * Access callback for the new shipment page.
  */
-function uc_shipping_new_shipment_access($order) {
-  return uc_shipping_order_access($order) && db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", [':id' => $order->id()])->fetchField();
+function uc_fulfillment_new_shipment_access($order) {
+  return uc_fulfillment_order_access($order) && db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", [':id' => $order->id()])->fetchField();
 }
 
 /**
  * Implements hook_menu_local_tasks_alter().
  */
-function uc_shipping_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+function uc_fulfillment_menu_local_tasks_alter(&$data, $router_item, $root_path) {
   if ($root_path == 'admin/store/orders/%/shipments') {
     $order = $router_item['page_arguments'][0];
     $item = menu_get_item('admin/store/orders/' . $order->id() . '/packages/new');
@@ -198,7 +198,7 @@ function uc_shipping_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 /**
  * Implements hook_admin_paths().
  */
-function uc_shipping_admin_paths() {
+function uc_fulfillment_admin_paths() {
   return array(
     // Don't show packing slips with the admin theme, overlay, etc.
     'admin/store/orders/*/shipments/*/print' => FALSE,
@@ -209,27 +209,27 @@ function uc_shipping_admin_paths() {
 /**
  * Implements hook_theme().
  */
-function uc_shipping_theme() {
+function uc_fulfillment_theme() {
   return array(
-    'uc_shipping_new_package_fieldset' => array(
+    'uc_fulfillment_new_package_fieldset' => array(
       'render element' => 'fieldset',
-      'file' => 'uc_shipping.admin.inc',
-      'function' => 'theme_uc_shipping_new_package_fieldset',
+      'file' => 'uc_fulfillment.admin.inc',
+      'function' => 'theme_uc_fulfillment_new_package_fieldset',
     ),
-    'uc_shipping_edit_package_fieldset' => array(
+    'uc_fulfillment_edit_package_fieldset' => array(
       'render element' => 'fieldset',
-      'file' => 'uc_shipping.admin.inc',
-      'function' => 'theme_uc_shipping_edit_package_fieldset',
+      'file' => 'uc_fulfillment.admin.inc',
+      'function' => 'theme_uc_fulfillment_edit_package_fieldset',
     ),
-    'uc_shipping_new_shipment' => array(
+    'uc_fulfillment_new_shipment' => array(
       'render element' => 'form',
-      'file' => 'uc_shipping.admin.inc',
-      'function' => 'theme_uc_shipping_new_shipment',
+      'file' => 'uc_fulfillment.admin.inc',
+      'function' => 'theme_uc_fulfillment_new_shipment',
     ),
-    'uc_shipping_shipment_print' => array(
+    'uc_fulfillment_shipment_print' => array(
       'variables' => array('order' => NULL, 'shipment' => NULL, 'labels' => TRUE),
-      'file' => 'uc_shipping.admin.inc',
-      'function' => 'theme_uc_shipping_shipment_print',
+      'file' => 'uc_fulfillment.admin.inc',
+      'function' => 'theme_uc_fulfillment_shipment_print',
     ),
     'uc_packing_slip' => array(
       'variables' => array('order' => NULL, 'shipment' => NULL),
@@ -294,9 +294,9 @@ function template_preprocess_uc_packing_slip_page(&$variables) {
 /**
  * Implements hook_uc_order_pane().
  */
-function uc_shipping_uc_order_pane() {
+function uc_fulfillment_uc_order_pane() {
   $panes['packages'] = array(
-    'callback' => 'uc_shipping_order_pane_packages',
+    'callback' => 'uc_fulfillment_order_pane_packages',
     'title' => t('Tracking numbers'),
     'desc' => t('Display tracking numbers of shipped packages.'),
     'class' => 'pos-left',
@@ -310,7 +310,7 @@ function uc_shipping_uc_order_pane() {
 /**
  * Implements hook_uc_order_actions().
  */
-function uc_shipping_uc_order_actions($order) {
+function uc_fulfillment_uc_order_actions($order) {
   $actions = array();
   $account = \Drupal::currentUser();
   if ($account->hasPermission('fulfill orders')) {
@@ -337,8 +337,8 @@ function uc_shipping_uc_order_actions($order) {
 /**
  * Displays the details of a package.
  */
-function uc_shipping_package_view($package) {
-  $shipment = uc_shipping_shipment_load($package->sid);
+function uc_fulfillment_package_view($package) {
+  $shipment = uc_fulfillment_shipment_load($package->sid);
   $build = array(
     '#prefix' => '<div class="order-pane pos-left">',
     '#suffix' => '</div>',
@@ -354,7 +354,7 @@ function uc_shipping_package_view($package) {
   $rows[] = array(t('Contents:'), Xss::filterAdmin($package->description));
 
   if ($shipment) {
-    $methods = \Drupal::moduleHandler()->invokeAll('uc_shipping_method');
+    $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
     if (isset($methods[$shipment->shipping_method])) {
       $pkg_type = $methods[$shipment->shipping_method]['ship']['pkg_types'][$package->pkg_type];
     }
@@ -392,7 +392,7 @@ function uc_shipping_package_view($package) {
 /**
  * Loads a package and its products.
  */
-function uc_shipping_package_load($package_id) {
+function uc_fulfillment_package_load($package_id) {
   static $packages = array();
 
   if (!isset($packages[$package_id])) {
@@ -405,7 +405,7 @@ function uc_shipping_package_load($package_id) {
       $addresses = array();
       $result = db_query("SELECT op.order_product_id, pp.qty, pp.qty * op.weight AS weight, op.weight_units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id", [':id' => $package_id]);
       foreach ($result as $product) {
-        $address = uc_quote_get_default_shipping_address($product->nid);
+        $address = uc_quote_get_default_fulfillment_address($product->nid);
         // TODO: Lodge complaint that array_unique() compares as strings.
         if (!in_array($address, $addresses)) {
           $addresses[] = $address;
@@ -442,7 +442,7 @@ function uc_shipping_package_load($package_id) {
 /**
  * Saves a package.
  */
-function uc_shipping_package_save($package) {
+function uc_fulfillment_package_save($package) {
   $package = (object)$package;
 
   if (!isset($package->package_id)) {
@@ -517,9 +517,9 @@ function uc_shipping_package_save($package) {
 /**
  * Deletes a package.
  */
-function uc_shipping_package_delete($package_id) {
+function uc_fulfillment_package_delete($package_id) {
   // @todo: Make these delete functions take the actual object.
-  $package = uc_shipping_package_load($package_id);
+  $package = uc_fulfillment_package_load($package_id);
 
   db_delete('uc_packages')
     ->condition('package_id', $package_id)
@@ -529,7 +529,7 @@ function uc_shipping_package_delete($package_id) {
     ->execute();
 
   if (isset($package->label_image)) {
-    file_usage_delete($package->label_image, 'uc_shipping', 'package', $package_id);
+    file_usage_delete($package->label_image, 'uc_fulfillment', 'package', $package_id);
     file_delete($package->label_image);
   }
 
@@ -539,13 +539,13 @@ function uc_shipping_package_delete($package_id) {
 /**
  * Loads a shipment and its packages.
  */
-function uc_shipping_shipment_load($shipment_id) {
+function uc_fulfillment_shipment_load($shipment_id) {
   $shipment = db_query("SELECT * FROM {uc_shipments} WHERE sid = :sid", [':sid' => $shipment_id])->fetchObject();
   if ($shipment) {
     $result = db_query("SELECT package_id FROM {uc_packages} WHERE sid = :sid", [':sid' => $shipment_id]);
     $packages = array();
     foreach ($result as $package) {
-      $packages[$package->package_id] = uc_shipping_package_load($package->package_id);
+      $packages[$package->package_id] = uc_fulfillment_package_load($package->package_id);
     }
     $shipment->packages = $packages;
 
@@ -563,7 +563,7 @@ function uc_shipping_shipment_load($shipment_id) {
 /**
  * Saves a shipment.
  */
-function uc_shipping_shipment_save($shipment) {
+function uc_fulfillment_shipment_save($shipment) {
   if (isset($shipment->origin)) {
     foreach ($shipment->origin as $field => $value) {
       $field = 'o_' . $field;
@@ -597,7 +597,7 @@ function uc_shipping_shipment_save($shipment) {
       // that they are not deleted and re-inserted.
       $products = $package->products;
       unset($package->products);
-      uc_shipping_package_save($package);
+      uc_fulfillment_package_save($package);
       // But they're still necessary for hook_uc_shipment(), so they're added
       // back in.
       $package->products = $products;
@@ -612,8 +612,8 @@ function uc_shipping_shipment_save($shipment) {
 /**
  * Deletes a shipment.
  */
-function uc_shipping_shipment_delete($shipment_id) {
-  $shipment = uc_shipping_shipment_load($shipment_id);
+function uc_fulfillment_shipment_delete($shipment_id) {
+  $shipment = uc_fulfillment_shipment_load($shipment_id);
 
   db_update('uc_packages')
     ->fields(array(
@@ -641,16 +641,16 @@ function uc_shipping_shipment_delete($shipment_id) {
 /**
  * Shipping order pane callback.
  *
- * @see uc_shipping_uc_order_pane()
+ * @see uc_fulfillment_uc_order_pane()
  */
-function uc_shipping_order_pane_packages($op, $order) {
+function uc_fulfillment_order_pane_packages($op, $order) {
   switch ($op) {
     case 'view':
     case 'customer':
       $tracking = array();
       $result = db_query("SELECT sid FROM {uc_shipments} WHERE order_id = :id", [':id' => $order->id()]);
       foreach ($result as $shipment) {
-        $shipment = uc_shipping_shipment_load($shipment->sid);
+        $shipment = uc_fulfillment_shipment_load($shipment->sid);
         if ($shipment->tracking_number) {
           $tracking[$shipment->carrier]['data'] = $shipment->carrier;
           $tracking[$shipment->carrier]['children'][] = SafeMarkup::checkPlain($shipment->tracking_number);
@@ -681,7 +681,7 @@ function uc_shipping_order_pane_packages($op, $order) {
 /**
  * Chooses an address to fill out a form.
  */
-function uc_shipping_select_address($addresses, $onchange = '', $title = NULL) {
+function uc_fulfillment_select_address($addresses, $onchange = '', $title = NULL) {
   if (!is_array($addresses) || count($addresses) == 0) {
     $addresses = array();
   }
@@ -724,15 +724,15 @@ function uc_shipping_select_address($addresses, $onchange = '', $title = NULL) {
  *
  * @ingroup forms
  */
-function uc_shipping_address_form($form, FormStateInterface $form_state, $addresses, $order) {
-  drupal_add_js(drupal_get_path('module', 'uc_shipping') . '/js/uc_shipping.js');
+function uc_fulfillment_address_form($form, FormStateInterface $form_state, $addresses, $order) {
+  drupal_add_js(drupal_get_path('module', 'uc_fulfillment') . '/js/uc_fulfillment.js');
 
   $form['origin'] = array(
     '#type' => 'fieldset',
     '#title' => t('Origin address'),
     '#weight' => -2,
   );
-  $form['origin']['pickup_address_select'] = uc_shipping_select_address($addresses, 'apply_address(\'pickup\', this.value);', t('Saved Addresses'));
+  $form['origin']['pickup_address_select'] = uc_fulfillment_select_address($addresses, 'apply_address(\'pickup\', this.value);', t('Saved Addresses'));
   $form['origin']['pickup_address_select']['#weight'] = -2;
   $form['origin']['pickup_email'] = array(
     '#type' => 'email',
@@ -779,7 +779,7 @@ function uc_shipping_address_form($form, FormStateInterface $form_state, $addres
  * a tracking number, unless the user has administrative privileges or the
  * "Unconditionally delete orders" permission.
  */
-function uc_shipping_uc_order_can_delete(OrderInterface $order) {
+function uc_fulfillment_uc_order_can_delete(OrderInterface $order) {
   // Find and check the shipments for tracking numbers.
   // {uc_shipments}.tracking_number is NOT NULL.
   $shipment_count = db_select('uc_shipments')
@@ -808,7 +808,7 @@ function uc_shipping_uc_order_can_delete(OrderInterface $order) {
 /**
  * Implements hook_uc_order_delete().
  */
-function uc_shipping_uc_order_delete(OrderInterface $order) {
+function uc_fulfillment_uc_order_delete(OrderInterface $order) {
   // Find and delete the shipments.
   $shipment_ids = db_select('uc_shipments')
     ->fields(NULL, array('sid'))
@@ -816,7 +816,7 @@ function uc_shipping_uc_order_delete(OrderInterface $order) {
     ->execute()
     ->fetchCol();
   foreach ($shipment_ids as $sid) {
-    uc_shipping_shipment_delete($sid);
+    uc_fulfillment_shipment_delete($sid);
   }
 
   // Find and delete the packages.
@@ -826,6 +826,6 @@ function uc_shipping_uc_order_delete(OrderInterface $order) {
     ->execute()
     ->fetchCol();
   foreach ($package_ids as $pid) {
-    uc_shipping_package_delete($pid);
+    uc_fulfillment_package_delete($pid);
   }
 }

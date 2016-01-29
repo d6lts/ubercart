@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\uc_shipping\Plugin\views\field\ShipmentId.
+ * Contains \Drupal\uc_fulfillment\Plugin\views\field\ShipmentId.
  */
 
-namespace Drupal\uc_shipping\Plugin\views\field;
+namespace Drupal\uc_fulfillment\Plugin\views\field;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
@@ -17,7 +17,7 @@ use Drupal\views\ResultRow;
  *
  * @ingroup views_field_handlers
  *
- * @ViewsField("uc_shipping_shipment_id")
+ * @ViewsField("uc_fulfillment_shipment_id")
  */
 class ShipmentId extends FieldPluginBase {
 

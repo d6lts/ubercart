@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the uc_shipping module.
+ * Install, update and uninstall functions for the uc_fulfillment module.
  */
 
 /**
  * Implements hook_schema().
  */
-function uc_shipping_schema() {
+function uc_fulfillment_schema() {
   $schema = array();
 
   $schema['uc_shipments'] = array(

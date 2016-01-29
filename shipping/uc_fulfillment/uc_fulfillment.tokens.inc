@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Token hooks for the uc_shipping module.
+ * Token hooks for the uc_fulfillment module.
  */
 
 use Drupal\Core\Render\BubbleableMetadata;
@@ -10,7 +10,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 /**
  * Implements hook_token_info().
  */
-function uc_shipping_token_info() {
+function uc_fulfillment_token_info() {
   $tokens = array();
 
   $tokens['tracking-number'] = array(
@@ -26,7 +26,7 @@ function uc_shipping_token_info() {
 /**
  * Implements hook_tokens().
  */
-function uc_shipping_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+function uc_fulfillment_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = array();
 
   if ($type == 'uc_order' && !empty($data['uc_order'])) {
