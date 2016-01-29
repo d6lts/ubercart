@@ -540,7 +540,7 @@ class Products extends EditableOrderPanePluginBase {
 
     $product->delete();
     unset($order->products[$order_product_id]);
-    $order->logChanges([$this->t('Removed @title from order.', ['@title' => $product->title->value])]);
+    $order->logChanges([$this->t('Removed %title from order.', ['%title' => $product->title->value])]);
   }
 
   /**

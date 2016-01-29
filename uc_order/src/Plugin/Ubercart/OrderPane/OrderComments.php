@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_order\Plugin\Ubercart\OrderPane;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\uc_order\Entity\OrderStatus;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_order\OrderPanePluginBase;
@@ -41,8 +40,8 @@ class OrderComments extends OrderPanePluginBase {
         foreach ($comments as $comment) {
           $rows[] = array(
             array('data' => \Drupal::service('date.formatter')->format($comment->created, 'uc_store'), 'class' => array('date')),
-            array('data' => SafeMarkup::checkPlain($statuses[$comment->order_status]->getName()), 'class' => array('status')),
-            array('data' => SafeMarkup::checkPlain($comment->message), 'class' => array('message')),
+            array('data' => array('#plain_text' => $statuses[$comment->order_status]->getName()), 'class' => array('status')),
+            array('data' => array('#markup' => $comment->message), 'class' => array('message')),
           );
         }
       }
@@ -75,8 +74,8 @@ class OrderComments extends OrderPanePluginBase {
           array('data' => \Drupal::service('date.formatter')->format($comment->created, 'short'), 'class' => array('date')),
           array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
           array('data' => array('#theme' => 'image', '#uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon), 'class' => array('notified')),
-          array('data' => SafeMarkup::checkPlain($statuses[$comment->order_status]->getName()), 'class' => array('status')),
-          array('data' => SafeMarkup::checkPlain($comment->message), 'class' => array('message')),
+          array('data' => array('#plain_text' => $statuses[$comment->order_status]->getName()), 'class' => array('status')),
+          array('data' => array('#markup' => $comment->message), 'class' => array('message')),
         );
       }
     }
