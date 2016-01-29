@@ -73,7 +73,7 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $for
   foreach ($definitions as $key => $definition) {
     if (!empty($definition['express'])) {
       $express = \Drupal::formBuilder()->getForm($definition['express']);
-      $form['actions']['checkout'][] = drupal_render($express);
+      $form['actions']['checkout'][] = \Drupal::service('renderer')->renderPlain($express);
     }
   }
 }
@@ -91,7 +91,7 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInt
   if (!empty($definition['redirect'])) {
     unset($form['actions']['submit']);
     $suffix = \Drupal::formBuilder()->getForm($definition['redirect'], $order);
-    $form['#suffix'] = drupal_render($suffix);
+    $form['#suffix'] = \Drupal::service('renderer')->renderPlain($suffix);
   }
 }
 

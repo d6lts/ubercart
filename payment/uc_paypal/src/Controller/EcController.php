@@ -146,7 +146,7 @@ class EcController extends ControllerBase {
 
     $build['instructions'] = array(
       '#prefix' => '<p>',
-      '#markup' => $this->t("Your order is not complete until you click the 'Submit order' button below. Your PayPal account will be charged for the amount shown above once your order is placed. You will receive confirmation once your payment is complete."), 
+      '#markup' => $this->t("Your order is not complete until you click the 'Submit order' button below. Your PayPal account will be charged for the amount shown above once your order is placed. You will receive confirmation once your payment is complete."),
       '#suffix' => '</p>',
     );
 

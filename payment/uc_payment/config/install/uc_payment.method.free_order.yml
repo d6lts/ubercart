@@ -5,5 +5,5 @@ id: free_order
 label: 'No payment required'
 weight: 10
 plugin: free_order
-settings: {  }
 locked: true
+settings: {  }

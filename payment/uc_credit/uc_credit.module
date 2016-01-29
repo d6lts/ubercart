@@ -195,7 +195,7 @@ function temp_uc_credit_uc_payment_method() {
         '#alt' => $label,
         '#attributes' => array('class' => array('uc-credit-cctype', 'uc-credit-cctype-' . $type)),
       );
-      $title .= ' ' . drupal_render($image);
+      $title .= ' ' . \Drupal::service('renderer')->renderPlain($image);
     }
   }
   $methods['credit'] = array(

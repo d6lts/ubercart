@@ -167,9 +167,10 @@ function uc_cybersource_settings_form($form, &$form_state) {
     '#default_value' => variable_get('uc_cybersource_soap_tax_calculate', FALSE),
   );
   $form['soap']['ship_from'] = array(
-    '#type' => 'fieldset',
+    '#type' => 'details',
     '#title' => t('Tax calculation "Ship from" address'),
     '#description' => t('This address will be used when calculating taxes with CyberSource tax service.'),
+    '#open' => TRUE,
   );
   $form['soap']['ship_from']['cs_ship_from_first_name'] = array(
     '#type' => 'textfield',

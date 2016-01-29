@@ -52,8 +52,8 @@ class TwoCheckout extends PaymentMethodPluginBase {
       'currency_code' => '',
       'demo' => TRUE,
       'language' => 'en',
-      'notification_url' => '',
       'method_title' => 'Credit card on a secure server:',
+      'notification_url' => '',
       'secret_word' => 'tango',
       'server_url' => 'https://www.2checkout.com/checkout/purchase',
       'sid' => '',
@@ -93,7 +93,7 @@ class TwoCheckout extends PaymentMethodPluginBase {
       ),
       '#default_value' => $this->configuration['language'],
     );
-    $form['uc_2checkout_currency_code'] = array(
+    $form['currency_code'] = array(
       '#type' => 'select',
       '#title' => $this->t('Currency for the sale'),
       '#options' => array(
