@@ -8,7 +8,6 @@
 namespace Drupal\uc_payment_pack\Tests;
 
 use Drupal\uc_order\Entity\Order;
-use Drupal\uc_payment_pack\Tests\PaymentPackTestBase;
 
 /**
  * Tests the payment method pack Other payment method.

@@ -7,8 +7,6 @@
 
 namespace Drupal\uc_product\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 

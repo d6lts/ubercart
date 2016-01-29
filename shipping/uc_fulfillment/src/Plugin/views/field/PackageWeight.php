@@ -8,7 +8,6 @@
 namespace Drupal\uc_fulfillment\Plugin\views\field;
 
 use Drupal\uc_store\Plugin\views\field\Weight;
-use Drupal\views\ResultRow;
 
 /**
  * Field handler to provide the weight of the package.

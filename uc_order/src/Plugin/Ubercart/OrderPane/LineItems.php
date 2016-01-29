@@ -12,7 +12,6 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\uc_order\EditableOrderPanePluginBase;
 use Drupal\uc_order\OrderInterface;
 

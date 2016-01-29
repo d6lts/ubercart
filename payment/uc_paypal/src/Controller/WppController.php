@@ -11,7 +11,6 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\uc_order\OrderInterface;
 
 /**
  * Processes a credit card payment through Website Payments Pro.

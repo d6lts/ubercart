@@ -7,12 +7,10 @@
 
 namespace Drupal\uc_2checkout\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 
 /**

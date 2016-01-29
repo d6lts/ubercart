@@ -7,10 +7,8 @@
 
 namespace Drupal\uc_file\Form;
 
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 
 /**
  * Grants roles upon accepted payment of products.

@@ -7,8 +7,6 @@
 
 namespace Drupal\uc_file\Tests;
 
-use Drupal\uc_file\Tests\FileTestBase;
-
 /**
  * Tests the file purchase functionality.
  *

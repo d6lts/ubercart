@@ -9,8 +9,6 @@ namespace Drupal\uc_paypal\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_order\Entity\Order;
-use Drupal\uc_order\OrderInterface;
 
 /**
  * Settings for Website Payments Pro on the credit card gateways form.

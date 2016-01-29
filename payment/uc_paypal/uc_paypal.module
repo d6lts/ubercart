@@ -9,10 +9,8 @@
  * https://drupal.org/node/1311198 for further information.
  */
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
 use Symfony\Component\HttpFoundation\RedirectResponse;

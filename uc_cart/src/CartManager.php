@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_cart;
 
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
