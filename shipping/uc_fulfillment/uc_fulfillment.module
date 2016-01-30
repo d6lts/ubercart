@@ -292,22 +292,6 @@ function template_preprocess_uc_packing_slip_page(&$variables) {
 }
 
 /**
- * Implements hook_uc_order_pane().
- */
-function uc_fulfillment_uc_order_pane() {
-  $panes['packages'] = array(
-    'callback' => 'uc_fulfillment_order_pane_packages',
-    'title' => t('Tracking numbers'),
-    'desc' => t('Display tracking numbers of shipped packages.'),
-    'class' => 'pos-left',
-    'weight' => 7,
-    'show' => array('view', 'invoice', 'customer'),
-  );
-
-  return $panes;
-}
-
-/**
  * Implements hook_uc_order_actions().
  */
 function uc_fulfillment_uc_order_actions($order) {
@@ -636,46 +620,6 @@ function uc_fulfillment_shipment_delete($shipment_id) {
   }
 
   \Drupal::moduleHandler()->invokeAll('uc_shipment', array('delete', $shipment));
-}
-
-/**
- * Shipping order pane callback.
- *
- * @see uc_fulfillment_uc_order_pane()
- */
-function uc_fulfillment_order_pane_packages($op, $order) {
-  switch ($op) {
-    case 'view':
-    case 'customer':
-      $tracking = array();
-      $result = db_query("SELECT sid FROM {uc_shipments} WHERE order_id = :id", [':id' => $order->id()]);
-      foreach ($result as $shipment) {
-        $shipment = uc_fulfillment_shipment_load($shipment->sid);
-        if ($shipment->tracking_number) {
-          $tracking[$shipment->carrier]['data'] = $shipment->carrier;
-          $tracking[$shipment->carrier]['children'][] = SafeMarkup::checkPlain($shipment->tracking_number);
-        }
-        else {
-          foreach ($shipment->packages as $package) {
-            if ($package->tracking_number) {
-              $tracking[$shipment->carrier]['data'] = $shipment->carrier;
-              $tracking[$shipment->carrier]['children'][] = SafeMarkup::checkPlain($package->tracking_number);
-            }
-          }
-        }
-      }
-
-      // Do not show an empty pane to customers.
-      if ($op == 'view' || !empty($tracking)) {
-        $build['tracking'] = array(
-          '#theme' => 'item_list',
-          '#items' => $tracking,
-        );
-
-        return $build;
-      }
-      break;
-  }
 }
 
 /**
