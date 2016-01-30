@@ -1,0 +1,4 @@
+services:
+  plugin.manager.uc_fulfillment.method:
+    class: Drupal\uc_fulfillment\Plugin\FulfillmentMethodPluginManager
+    parent: default_plugin_manager
