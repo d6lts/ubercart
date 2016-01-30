@@ -7,6 +7,9 @@
 
 namespace Drupal\uc_quote\Plugin\Ubercart\OrderPane;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\EditableOrderPanePluginBase;
 use Drupal\uc_order\OrderInterface;
@@ -44,7 +47,7 @@ class Quotes extends EditableOrderPanePluginBase {
       '#value' => t('Get shipping quotes'),
       '#submit' => array(array($this, 'retrieveQuotes')),
       '#ajax' => array(
-        'callback' => 'uc_quote_replace_order_quotes',
+        'callback' => array($this, 'replaceOrderQuotes'),
         'wrapper' => 'quote',
         'effect' => 'slide',
         'progress' => array(
@@ -76,7 +79,7 @@ class Quotes extends EditableOrderPanePluginBase {
         '#value' => t('Apply to order'),
         '#submit' => array(array($this, 'applyQuote')),
         '#ajax' => array(
-          'callback' => 'uc_quote_order_update_rates',
+          'callback' => array($this, 'updateOrderRates'),
           'effect' => 'fade',
           'progress' => array(
             'type' => 'throbber',
@@ -87,7 +90,7 @@ class Quotes extends EditableOrderPanePluginBase {
     }
 
     $form_state->set(['uc_ajax', 'uc_quote', 'delivery][delivery_country'], array(
-      'quote' => 'uc_quote_replace_order_quotes',
+      'quote' => array($this, 'replaceOrderQuotes'),
     ));
 
     return $form;
@@ -155,6 +158,35 @@ class Quotes extends EditableOrderPanePluginBase {
         $form_state->set('quote_requested', FALSE);
       }
     }
+  }
+
+  /**
+   * Ajax callback to update the quotes on the order edit form.
+   */
+  public function replaceOrderQuotes($form, FormStateInterface $form_state) {
+    return $form['quotes']['quotes'];
+  }
+
+  /**
+   * Ajax callback for applying shipping rates.
+   */
+  public function updateOrderRates($form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+
+    // Update shipping line item.
+    if ($form_state->has('uc_quote')) {
+      $lid = $form_state->get(['uc_quote', 'lid']);
+      $form['line_items'][$lid]['title']['#value'] = $form_state->get(['uc_quote', 'title']);
+      $form['line_items'][$lid]['amount']['#value'] = $form_state->get(['uc_quote', 'amount']);
+    }
+    $response->addCommand(new ReplaceCommand('#order-line-items', trim(drupal_render($form['line_items']))));
+
+    // Reset shipping form.
+    $response->addCommand(new ReplaceCommand('#quote', trim(drupal_render($form['quotes']['quotes']))));
+    $status_messages = array('#type' => 'status_messages');
+    $response->addCommand(new PrependCommand('#quote', drupal_render($status_messages)));
+
+    return $response;
   }
 
 }

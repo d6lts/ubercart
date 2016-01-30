@@ -40,7 +40,7 @@ class ShippingQuoteMethodListBuilder extends DraggableListBuilder implements For
    */
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ShippingQuotePluginManager $shipping_quote_plugin_manager) {
     parent::__construct($entity_type, $storage);
-    $this->shippingQuotePluginManager= $shipping_quote_plugin_manager;
+    $this->shippingQuotePluginManager = $shipping_quote_plugin_manager;
   }
 
   /**
@@ -66,7 +66,7 @@ class ShippingQuoteMethodListBuilder extends DraggableListBuilder implements For
    */
   public function buildHeader() {
     $header['label'] = array(
-      'data' => $this->t('Shipping method'),
+      'data' => $this->t('Shipping quote method'),
     );
     $header['description'] = array(
       'data' => $this->t('Description'),
