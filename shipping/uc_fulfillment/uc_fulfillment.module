@@ -23,160 +23,10 @@ use Drupal\uc_order\OrderInterface;
  */
 function uc_fulfillment_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    case 'admin/store/orders/%/packages/new':
+    case 'uc_fulfillment.new_package':
       return '<p>' . t('Organize products into packages. Package numbers in multiple shipping types are of the first shipping type they appear in. All packages are given a unique ID when they are saved. Choose the default package "Sep." to automatically create a package for each of the selected quantity of products in that row.') . '</p>';
       break;
   }
-}
-
-/**
- * Implements hook_menu().
- */
-function uc_fulfillment_menu() {
-  $items['admin/store/orders/%uc_order/packages'] = array(
-    'title' => 'Packages',
-    'page callback' => 'uc_fulfillment_order_packages',
-    'page arguments' => array(3),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'weight' => 6,
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/packages/new'] = array(
-    'title' => 'Create packages',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_fulfillment_new_package', 3),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/packages/%uc_fulfillment_package/edit'] = array(
-    'title' => 'Edit package',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_fulfillment_package_edit', 3, 5),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/packages/%uc_fulfillment_package/cancel'] = array(
-    'title' => 'Cancel package shipment',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_fulfillment_package_cancel_confirm', 3, 5),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/packages/%uc_fulfillment_package/delete'] = array(
-    'title' => 'Delete package',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_fulfillment_package_delete_confirm', 3, 5),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/shipments'] = array(
-    'title' => 'Shipments',
-    'page callback' => 'uc_fulfillment_order_shipments',
-    'page arguments' => array(3),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'weight' => 7,
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/shipments/new'] = array(
-    'title' => 'New shipment',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_fulfillment_new_shipment', 3),
-    'access callback' => 'uc_fulfillment_new_shipment_access',
-    'access arguments' => array(3),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment'] = array(
-    'title callback' => 'uc_fulfillment_shipment_page_title',
-    'title arguments' => array(5),
-    'page callback' => 'uc_fulfillment_shipment_view',
-    'page arguments' => array(3, 5),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/view'] = array(
-    'title' => 'View',
-    'weight' => -5,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/edit'] = array(
-    'title' => 'Edit',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_fulfillment_shipment_edit', 3, 5),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'weight' => -1,
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/print'] = array(
-    'title' => 'Print',
-    'page callback' => 'uc_fulfillment_shipment_print',
-    'page arguments' => array(3, 5),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/packing_slip'] = array(
-    'title' => 'Packing slip',
-    'page callback' => 'uc_fulfillment_shipment_print',
-    'page arguments' => array(3, 5, FALSE),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/shipments/%uc_fulfillment_shipment/delete'] = array(
-    'title' => 'Delete shipment',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('uc_fulfillment_shipment_delete_confirm', 3, 5),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-  $items['admin/store/orders/%uc_order/ship'] = array(
-    'title' => 'Ship packages',
-    'page callback' => 'uc_fulfillment_make_shipment',
-    'page arguments' => array(3),
-    'access callback' => 'uc_fulfillment_order_access',
-    'access arguments' => array(3),
-    'file' => 'uc_fulfillment.admin.inc',
-  );
-
-  return $items;
-}
-
-/**
- * Title callback for admin/store/orders/%/shipments/%.
- */
-function uc_fulfillment_shipment_page_title($shipment) {
-  return t('Shipment @id', ['@id' => $shipment->sid]);
-}
-
-/**
- * Ensures access to the Shipments tab.
- */
-function uc_fulfillment_order_access($order) {
-  $account = \Drupal::currentUser();
-  return $account->hasPermission('fulfill orders') && $order->isShippable();
-}
-
-/**
- * Access callback for the new shipment page.
- */
-function uc_fulfillment_new_shipment_access($order) {
-  return uc_fulfillment_order_access($order) && db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL", [':id' => $order->id()])->fetchField();
 }
 
 /**
@@ -196,39 +46,24 @@ function uc_fulfillment_menu_local_tasks_alter(&$data, $router_item, $root_path)
 }
 
 /**
- * Implements hook_admin_paths().
- */
-function uc_fulfillment_admin_paths() {
-  return array(
-    // Don't show packing slips with the admin theme, overlay, etc.
-    'admin/store/orders/*/shipments/*/print' => FALSE,
-    'admin/store/orders/*/shipments/*/packing_slip' => FALSE,
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function uc_fulfillment_theme() {
   return array(
     'uc_fulfillment_new_package_fieldset' => array(
       'render element' => 'fieldset',
-      'file' => 'uc_fulfillment.admin.inc',
       'function' => 'theme_uc_fulfillment_new_package_fieldset',
     ),
     'uc_fulfillment_edit_package_fieldset' => array(
       'render element' => 'fieldset',
-      'file' => 'uc_fulfillment.admin.inc',
       'function' => 'theme_uc_fulfillment_edit_package_fieldset',
     ),
     'uc_fulfillment_new_shipment' => array(
       'render element' => 'form',
-      'file' => 'uc_fulfillment.admin.inc',
       'function' => 'theme_uc_fulfillment_new_shipment',
     ),
     'uc_fulfillment_shipment_print' => array(
       'variables' => array('order' => NULL, 'shipment' => NULL, 'labels' => TRUE),
-      'file' => 'uc_fulfillment.admin.inc',
       'function' => 'theme_uc_fulfillment_shipment_print',
     ),
     'uc_packing_slip' => array(
@@ -316,61 +151,6 @@ function uc_fulfillment_uc_order_actions($order) {
     }
   }
   return $actions;
-}
-
-/**
- * Displays the details of a package.
- */
-function uc_fulfillment_package_view($package) {
-  $shipment = uc_fulfillment_shipment_load($package->sid);
-  $build = array(
-    '#prefix' => '<div class="order-pane pos-left">',
-    '#suffix' => '</div>',
-  );
-  $rows = array();
-
-  $build['title'] = array(
-    '#markup' => t('Package %id:', ['%id' => $package->package_id]),
-    '#prefix' => '<div class="order-pane-title">',
-    '#suffix' => '</div>',
-  );
-
-  $rows[] = array(t('Contents:'), Xss::filterAdmin($package->description));
-
-  if ($shipment) {
-    $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
-    if (isset($methods[$shipment->shipping_method])) {
-      $pkg_type = $methods[$shipment->shipping_method]['ship']['pkg_types'][$package->pkg_type];
-    }
-  }
-
-  $rows[] = array(t('Package type:'), isset($pkg_type) ? $pkg_type : SafeMarkup::checkPlain($package->pkg_type));
-
-  if ($package->length && $package->width && $package->height) {
-    $rows[] = array(t('Dimensions:'), t('@l x @w x @h', ['@l' => uc_length_format($package->length), '@w' => uc_length_format($package->width), '@h' => uc_length_format($package->height)]));
-  }
-
-  $rows[] = array(t('Insured value:'), array('data' => array('#theme' => 'uc_price', '#price' => $package->value)));
-
-  if ($package->tracking_number) {
-    $rows[] = array(t('Tracking number:'), SafeMarkup::checkPlain($package->tracking_number));
-  }
-
-  if ($shipment && isset($package->label_image) &&
-      file_exists($package->label_image->uri)) {
-    $rows[] = array(t('Label:'), Link::fromTextAndUrl(t('Click to view.'), Url::fromUri('admin/store/orders/' . $package->order_id . '/shipments/labels/' . $shipment->shipping_method . '/' . $package->label_image->uri))->toString());
-  }
-  else {
-    $rows[] = array(t('Label:'), t('n/a'));
-  }
-
-  $build['package'] = array(
-    '#theme' => 'table',
-    '#rows' => $rows,
-    'attributes' => array('style' => 'width:auto;'),
-  );
-
-  return $build;
 }
 
 /**
@@ -773,3 +553,130 @@ function uc_fulfillment_uc_order_delete(OrderInterface $order) {
     uc_fulfillment_package_delete($pid);
   }
 }
+
+/**
+ * Displays the packing slip and shipping labels for printing.
+ *
+ * @ingroup themeable
+ */
+function theme_uc_fulfillment_shipment_print(array $variables) {
+  $order = $variables['order'];
+  $shipment = $variables['shipment'];
+  $labels = $variables['labels'];
+
+  $output = theme('uc_packing_slip', array('order' => $order, 'shipment' => $shipment));
+
+  if ($labels) {
+    foreach ($shipment->packages as $id => $package) {
+      if (isset($package->label_image) &&
+          file_exists($package->label_image->uri)) {
+        // TODO: Find a way to store these magic numbers specifically for UPS.
+        list($width, $height) = array(672, 392);
+        $output .= '<br class="page-break" />' . "\n";
+        $output .= theme('image', array(
+          'uri' => $package->label_image->uri,
+          'attributes' => array('width' => $width, 'height' => $height),
+          'getsize' => FALSE,
+        )) . "\n";
+      }
+    }
+  }
+
+  return $output;
+}
+
+  /**
+   * Displays a formatted shipping type fieldset.
+   *
+   * @ingroup themeable
+   */
+  function theme_uc_fulfillment_edit_package_fieldset(array $variables) {
+    $fieldset = $variables['fieldset'];
+    drupal_add_js('misc/tableselect.js');
+
+    $output = '';
+    $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), t('Quantity'));
+    $rows = array();
+    foreach (Element::children($fieldset) as $op_id) {
+      $row = array();
+      $row[] = drupal_render($fieldset[$op_id]['checked']);
+      $row[] = drupal_render($fieldset[$op_id]['model']);
+      $row[] = drupal_render($fieldset[$op_id]['name']);
+      $row[] = drupal_render($fieldset[$op_id]['qty']);
+      $rows[] = $row;
+    }
+    $output .= theme('table', array('header' => $header, 'rows' => $rows));
+    $output .= drupal_render_children($fieldset);
+
+    return $output;
+  }
+
+  /**
+   * Formats and displays the new shipment form.
+   *
+   * @see uc_fulfillment_new_shipment()
+   * @ingroup themeable
+   */
+  function theme_uc_fulfillment_new_shipment(array $variables) {
+    $form = $variables['form'];
+    drupal_add_js('misc/tableselect.js');
+
+    $output = '';
+    $header = array(array('class' => array('select-all')), $this->t('Package'), $this->t('Products'), $this->t('Weight'));
+    foreach (Element::children($form['shipping_types']) as $shipping_type) {
+      $rows = array();
+      foreach (Element::children($form['shipping_types'][$shipping_type]['packages']) as $package_id) {
+        $row = array();
+        $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['checked']);
+        $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['package_id']);
+        $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['products']);
+        $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['weight']);
+        $rows[] = $row;
+      }
+      if (count($rows)) {
+        $form['shipping_types'][$shipping_type]['packages']['table'] = array(
+          '#theme' => 'table',
+          '#header' => $header,
+          '#rows' => $rows,
+        );
+      }
+    }
+
+    $output .= drupal_render_children($form);
+
+    return $output;
+  }
+
+  /**
+   * Formats and displays the products in a shipping type fieldset.
+   *
+   * @see uc_fulfillment_new_package()
+   * @ingroup themeable
+   */
+  function theme_uc_fulfillment_new_package_fieldset(array $variables) {
+    $fieldset = $variables['fieldset'];
+    drupal_add_js('misc/tableselect.js');
+
+    $output = '';
+    $header = array(array('class' => array('select-all')), $this->t('SKU'), $this->t('Title'), $this->t('Quantity'), $this->t('Package'));
+
+    $rows = array();
+    foreach (Element::children($fieldset) as $op_id) {
+      $row = array();
+      $row[] = drupal_render($fieldset[$op_id]['checked']);
+      $row[] = drupal_render($fieldset[$op_id]['model']);
+      $row[] = drupal_render($fieldset[$op_id]['name']);
+      $row[] = drupal_render($fieldset[$op_id]['qty']);
+      $row[] = drupal_render($fieldset[$op_id]['package']);
+      $rows[] = $row;
+    }
+
+    $output .= theme('table', array(
+      'header' => $header,
+      'rows' => $rows,
+      'empty' => $this->t('There are no products available for this type of package.'),
+    ));
+    $output .= drupal_render_children($fieldset);
+
+    return $output;
+  }
