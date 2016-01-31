@@ -53,8 +53,6 @@ uc_fulfillment.packages:
     _title: 'Packages'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
-#    'weight' => 6,
-#    'type' => MENU_LOCAL_TASK,
 
 uc_fulfillment.new_package:
   path: '/admin/store/orders/{uc_order}/packages/new'
@@ -63,7 +61,6 @@ uc_fulfillment.new_package:
     _title: 'Create packages'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
-#    'type' => MENU_LOCAL_ACTION,
 
 uc_fulfillment.edit_package:
   path: '/admin/store/orders/{uc_order}/packages/{uc_fulfillment_package}/edit'
@@ -96,17 +93,14 @@ uc_fulfillment.shipments:
     _title: 'Shipments'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
-#    'weight' => 7,
-#    'type' => MENU_LOCAL_TASK,
 
 uc_fulfillment.new_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/new'
   defaults:
-    _form: 'uc_fulfillment_new_shipment'
+    _form: '\Drupal\uc_fulfillment\Form\NewShipmentForm'
     _title: 'New shipment'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessNewShipment'
-#    'type' => MENU_LOCAL_ACTION,
 
 uc_fulfillment.view_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/{uc_fulfillment_shipment}'
@@ -130,19 +124,6 @@ uc_fulfillment.edit_shipment:
     _title: 'Edit'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
-#    'weight' => -1,
-#    'type' => MENU_LOCAL_TASK,
-
-uc_fulfillment.print_shipment:
-  path: '/admin/store/orders/{uc_order}/shipments/{uc_fulfillment_shipment}/print'
-  defaults:
-    _controller: '\Drupal\uc_fulfillment\Controller\ShipmentController::printShipment'
-    _title: 'Print'
-  options:
-    _admin_route: FALSE
-  requirements:
-    _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
-#    'type' => MENU_LOCAL_TASK,
 
 uc_fulfillment.packing_slip:
   path: '/admin/store/orders/{uc_order}/shipments/{uc_fulfillment_shipment}/packing_slip'
@@ -153,7 +134,17 @@ uc_fulfillment.packing_slip:
     _admin_route: FALSE
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
-#    'type' => MENU_LOCAL_TASK,
+
+uc_fulfillment.print_shipment:
+  path: '/admin/store/orders/{uc_order}/shipments/{uc_fulfillment_shipment}/print'
+  defaults:
+    _controller: '\Drupal\uc_fulfillment\Controller\ShipmentController::printShipment'
+    _title: 'Print'
+  options:
+    _admin_route: FALSE
+  requirements:
+    _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
+
 
 uc_fulfillment.delete_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/{uc_fulfillment_shipment}/delete'
@@ -163,7 +154,7 @@ uc_fulfillment.delete_shipment:
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
 
-uc_fulfillment.new_shipment:
+uc_fulfillment.make_shipment:
   path: '/admin/store/orders/{uc_order}/ship'
   defaults:
     _controller: '\Drupal\uc_fulfillment\Controller\ShipmentController::makeShipment'

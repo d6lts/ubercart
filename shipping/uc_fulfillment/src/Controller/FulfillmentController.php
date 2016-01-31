@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_fulfillment\Controller;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\OrderInterface;
 
@@ -20,10 +21,16 @@ class FulfillmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $order
    *   The Order to check access for.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function accessOrder(OrderInterface $uc_order) {
     $account = \Drupal::currentUser();
-    return $account->hasPermission('fulfill orders') && $uc_order->isShippable();
+    return AccessResult::allowedIf(
+      $account->hasPermission('fulfill orders') &&
+      $uc_order->isShippable()
+    );
   }
 
   /**
@@ -31,9 +38,15 @@ class FulfillmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $order
    *   The Order to check access for.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function accessNewShipment(OrderInterface $uc_order) {
-    return $this->accessOrder($uc_order) && db_query('SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL', [':id' => $uc_order->id()])->fetchField();
+    return AccessResult::allowedIf(
+      $this->accessOrder($uc_order) &&
+      db_query('SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL', [':id' => $uc_order->id()])->fetchField()
+    );
   }
 
 }
