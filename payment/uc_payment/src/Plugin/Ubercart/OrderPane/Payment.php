@@ -39,14 +39,14 @@ class Payment extends EditableOrderPanePluginBase {
    */
   public function view(OrderInterface $order, $view_mode) {
     if ($view_mode != 'customer') {
-      $build['balance'] = array('#markup' => t('Balance: @balance', ['@balance' => uc_currency_format(uc_payment_balance($order))]));
+      $build['balance'] = array('#markup' => $this->t('Balance: @balance', ['@balance' => uc_currency_format(uc_payment_balance($order))]));
 
       $account = \Drupal::currentUser();
       if ($account->hasPermission('view payments')) {
         $build['view_payments'] = array(
           '#type' => 'link',
           '#prefix' => ' (',
-          '#title' => t('View'),
+          '#title' => $this->t('View'),
           '#url' => Url::fromRoute('uc_payments.order_payments', ['uc_order' => $order->id()]),
           '#suffix' => ')',
         );
@@ -54,7 +54,7 @@ class Payment extends EditableOrderPanePluginBase {
 
       $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
       $build['method'] = array(
-        '#markup' => t('Method: @payment_method', ['@payment_method' => $method->cartReviewTitle()]),
+        '#markup' => $this->t('Method: @payment_method', ['@payment_method' => $method->cartReviewTitle()]),
         '#prefix' => '<br />',
       );
 
@@ -67,7 +67,7 @@ class Payment extends EditableOrderPanePluginBase {
     }
     else {
       $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
-      $build['method'] = array('#markup' => t('Method: @payment_method', ['@payment_method' => $method->cartReviewTitle()]));
+      $build['method'] = array('#markup' => $this->t('Method: @payment_method', ['@payment_method' => $method->cartReviewTitle()]));
 
       $method_output = $method->customerView($order);
       if (!empty($method_output)) {
@@ -94,7 +94,7 @@ class Payment extends EditableOrderPanePluginBase {
 
     $form['payment_method'] = array(
       '#type' => 'select',
-      '#title' => t('Payment method'),
+      '#title' => $this->t('Payment method'),
       '#default_value' => $order->getPaymentMethodId(),
       '#options' => $options,
       '#ajax' => array(

@@ -106,7 +106,7 @@ class OrderPaymentsForm extends FormBase {
           '#price' => $total,
         );
         $form['payments'][$payment->receipt_id]['comment'] = array(
-          '#markup' => ($payment->comment == '') ? '-' : Xss::filterAdmin($payment->comment),
+          '#markup' => ($payment->comment == '') ? '-' : $payment->comment,
         );
 
         if ($account->hasPermission('delete payments')) {
