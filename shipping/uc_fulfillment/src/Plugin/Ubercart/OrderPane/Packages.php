@@ -53,7 +53,7 @@ class Packages extends OrderPanePluginBase {
       }
 
       // Do not show an empty pane to customers.
-      if ($op == 'view' || !empty($tracking)) {
+      if ($view_mode == 'view' || !empty($tracking)) {
         $build['tracking'] = array(
           '#theme' => 'item_list',
           '#items' => $tracking,  // @todo #plain_text ?
@@ -61,7 +61,6 @@ class Packages extends OrderPanePluginBase {
 
         return $build;
       }
-      break;
     }
   }
 
