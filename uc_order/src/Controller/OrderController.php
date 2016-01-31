@@ -78,7 +78,7 @@ class OrderController extends ControllerBase {
    *   A render array.
    */
   public function log(OrderInterface $uc_order) {
-    $result = db_query("SELECT * FROM {uc_order_log} WHERE order_id = :id ORDER BY created, order_log_id", [':id' => $uc_order->id()]);
+    $result = db_query('SELECT order_log_id, uid, changes, created FROM {uc_order_log} WHERE order_id = :id ORDER BY order_log_id DESC', [':id' => $uc_order->id()]);
 
     $header = array($this->t('Time'), $this->t('User'), $this->t('Changes'));
     $rows = array();
