@@ -30,6 +30,7 @@ class NewPackageForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL) {
     $form['#tree'] = TRUE;
+    $form['#attached']['library'][] = 'uc_fulfillment/uc_fulfillment.scripts';
     $shipping_types_products = array();
     foreach ($uc_order->products as $product) {
       if (uc_order_product_is_shippable($product)) {
@@ -41,68 +42,83 @@ class NewPackageForm extends FormBase {
     $quote_config = \Drupal::config('uc_quote.settings');
     $shipping_type_weights = $quote_config->get('type_weight');
 
-    $result = db_query("SELECT op.order_product_id, SUM(pp.qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE p.order_id = :id GROUP BY op.order_product_id", [':id' => $order->id()]);
+    $result = db_query('SELECT op.order_product_id, SUM(pp.qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE p.order_id = :id GROUP BY op.order_product_id', [':id' => $uc_order->id()]);
     $packaged_products = $result->fetchAllKeyed();
 
     $form['shipping_types'] = array();
-    $shipping_type_options = uc_quote_fulfillment_type_options();
+    $header = array(
+      // Fake out the tableselect JavaScript.
+      array('data' => '', 'class' => array('select-all')),
+      'model' => $this->t('SKU'),
+      'name' => $this->t('Title'),
+      'qty' => $this->t('Quantity'),
+      'package' => $this->t('Package')
+    );
+
+    $shipping_type_options = uc_quote_shipping_type_options();
     foreach ($shipping_types_products as $shipping_type => $products) {
       $form['shipping_types'][$shipping_type] = array(
-        '#type'   => 'fieldset',
-        '#title'  => isset($shipping_type_options[$shipping_type]) ?
-                           $shipping_type_options[$shipping_type]        :
-                           ucwords(str_replace('_', ' ', $shipping_type)),
+        '#type' => 'fieldset',
+        '#title' => isset($shipping_type_options[$shipping_type]) ?
+                          $shipping_type_options[$shipping_type]        :
+                          Unicode::ucwords(str_replace('_', ' ', $shipping_type)),
         '#weight' => isset($shipping_type_weights[$shipping_type]) ? $shipping_type_weights[$shipping_type] : 0,
       );
 
+      $rows = array();
+      $form['shipping_types'][$shipping_type]['table'] = array(
+        '#type' => 'table',
+        '#header' => $header,
+        '#empty' => $this->t('There are no products available for this type of package.'),
+      );
+
       foreach ($products as $product) {
-        $unboxed_qty = $product->qty;
-        if (isset($packaged_products[$product->order_product_id])) {
-          $unboxed_qty -= $packaged_products[$product->order_product_id];
+        $unboxed_qty = $product->qty->value;
+        if (isset($packaged_products[$product->order_product_id->value])) {
+          $unboxed_qty -= $packaged_products[$product->order_product_id->value];
         }
 
         if ($unboxed_qty > 0) {
-          $product_row = array();
-          $product_row['checked'] = array(
-            '#type'          => 'checkbox',
+          $row = array();
+          $row['checked'] = array(
+            '#type' => 'checkbox',
             '#default_value' => 0,
           );
-          $product_row['model'] = array(
-            '#markup' => $product->model->value
+          $row['model'] = array(
+            '#plain_text' => $product->model->value,
           );
-          $product_row['name'] = array(
-            '#markup' => Xss::filterAdmin($product->title->value)
+          $row['name'] = array(
+            '#markup' => $product->title->value,
           );
           $range = range(1, $unboxed_qty);
-          $product_row['qty'] = array(
-            '#type'          => 'select',
-            '#title'         => $this->t('Quantity'),
+          $row['qty'] = array(
+            '#type' => 'select',
+            '#title' => $this->t('Quantity'),
             '#title_display' => 'invisible',
-            '#options'       => array_combine($range, $range),
+            '#options' => array_combine($range, $range),
             '#default_value' => $unboxed_qty,
           );
 
           $range = range(0, count($uc_order->products));
           $options = array_combine($range, $range);
           $options[0] = $this->t('Sep.');
-          $product_row['package'] = array(
+          $row['package'] = array(
             '#type' => 'select',
             '#title' => $this->t('Package'),
             '#title_display' => 'invisible',
             '#options' => $options,
             '#default_value' => 0,
           );
-
-          $form['shipping_types'][$shipping_type][$product->order_product_id] = $product_row;
+          //$rows[$product->order_product_id->value] = $row;
+          $form['shipping_types'][$shipping_type]['table'][$product->order_product_id->value] = $row;
         }
       }
-
-      $form['shipping_types'][$shipping_type]['#theme'] = 'uc_fulfillment_new_package_fieldset';
+      //$form['shipping_types'][$shipping_type]['table']['children'] = $rows;
     }
 
     $form['order_id'] = array(
       '#type'  => 'hidden',
-      '#value' => $order->id(),
+      '#value' => $uc_order->id(),
     );
     $form['actions'] = array(
       '#type'  => 'actions',
@@ -127,21 +143,18 @@ class NewPackageForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state->getValue('op') != $this->t('Cancel')) {
-      $empty = TRUE;
-
+    if ($this->t('Cancel') != (string) $form_state->getValue('op')) {
+      // See if any products have been checked.
       foreach ($form_state->getValue('shipping_types') as $shipping_type => $products) {
-        foreach ($products as $product) {
-          if ($product['checked'] != 0) {
-            $empty = FALSE;
-            break 2;
+        foreach ($products['table'] as $id => $product) {
+          if ($product['checked']) {
+            // At least one has been checked, that's all we need.
+            return;
           }
         }
       }
-
-      if ($empty) {
-        $form_state->setErrorByName($shipping_type, $this->t('Packages should have at least one product in them.'));
-      }
+      // If nothing is checked, set error.
+      $form_state->setErrorByName($shipping_type, $this->t('Packages must contain at least one product.'));
     }
   }
 
@@ -149,38 +162,41 @@ class NewPackageForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state->getValue('op') != $this->t('Cancel')) {
+    if ($this->t('Cancel') != (string) $form_state->getValue('op')) {
       $packages = array(0 => array());
 
       foreach ($form_state->getValue('shipping_types') as $shipping_type => $products) {
-        foreach ($products as $id => $product) {
+        foreach ($products['table'] as $id => $product) {
           if ($product['checked']) {
-            if ($form_state->getValue('op') == $this->t('Create one package')) {
+            if ($this->t('Create one package') == (string) $form_state->getValue('op')) {
               $product['package'] = 1;
             }
 
             if ($product['package'] != 0) {
-              $packages[$product['package']]['products'][$id] = (object)$product;
+              $packages[$product['package']]['products'][$id] = (object) $product;
 
               if (!isset($packages[$product['package']]['shipping_type'])) {
                 $packages[$product['package']]['shipping_type'] = $shipping_type;
               }
             }
             else {
-              $packages[0][$shipping_type][$id] = (object)$product;
+              $packages[0][$shipping_type][$id] = (object) $product;
             }
           }
         }
         if (isset($packages[0][$shipping_type])) {
+          // We reach here if some packages were checked and marked "Separate".
+          // That can only happen when "Make packages" button was pushed.
           foreach ($packages[0][$shipping_type] as $id => $product) {
             $qty = $product->qty;
             $product->qty = 1;
+            // Create a package for each product.
             for ($i = 0; $i < $qty; $i++) {
               $packages[] = array('products' => array($id => $product), 'shipping_type' => $shipping_type);
             }
           }
         }
-
+        // "Separate" packaging is now finished.
         unset($packages[0][$shipping_type]);
       }
 
@@ -192,9 +208,13 @@ class NewPackageForm extends FormBase {
         $package['order_id'] = $form_state->getValue('order_id');
         uc_fulfillment_package_save($package);
       }
-    }
 
-    $form_state->setRedirect('uc_fulfillment.packages', ['uc_order' => $form_state->getValue('order_id')]);
+      $form_state->setRedirect('uc_fulfillment.packages', ['uc_order' => $form_state->getValue('order_id')]);
+    }
+    else {
+      // Fall through, if user chose "Cancel".
+      $form_state->setRedirect('entity.uc_order.canonical', ['uc_order' => $form_state->getValue('order_id')]);
+    }
   }
 
 }

@@ -104,7 +104,7 @@ class ShipmentDeleteForm extends ConfirmFormBase {
         uc_fulfillment_shipment_delete($form_state->getValue('sid'));
       }
       else {
-        drupal_set_message($this->t('The shipment %tracking could not be canceled with %carrier. To delete it anyway, remove the tracking number and try again.', ['%tracking' => $shipment->tracking_number, '%carrier' => $shipment->carrier]));
+        drupal_set_message($this->t('The shipment %tracking could not be canceled with %carrier. To delete it anyway, remove the tracking number and try again.', ['%tracking' => $shipment->tracking_number, '%carrier' => $shipment->carrier]), 'warning');
       }
     }
     else {

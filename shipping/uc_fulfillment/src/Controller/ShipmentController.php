@@ -75,7 +75,7 @@ class ShipmentController extends ControllerBase {
       }
     }
     else {
-      drupal_set_message($this->t('There is no sense in making a shipment with no packages on it, right?'));
+      drupal_set_message($this->t('There is no sense in making a shipment with no packages on it, right?'), 'warning');
       return $this->redirect('uc_fulfillment.new_shipment', ['uc_order' => $args[0]->order_id]);
     }
   }
@@ -110,33 +110,53 @@ class ShipmentController extends ControllerBase {
    */
   public function listOrderShipments(OrderInterface $uc_order) {
     $result = db_query('SELECT * FROM {uc_shipments} WHERE order_id = :id', [':id' => $uc_order->id()]);
-    $header = array($this->t('Shipment ID'), $this->t('Name'), $this->t('Company'), $this->t('Destination'), $this->t('Ship date'), $this->t('Estimated delivery'), $this->t('Tracking number'), array('data' => $this->t('Actions'), 'colspan' => 5));
-    $rows = array();
+    $header = array($this->t('Shipment ID'), $this->t('Name'), $this->t('Company'), $this->t('Destination'), $this->t('Ship date'), $this->t('Estimated delivery'), $this->t('Tracking number'), $this->t('Actions'));
 
+    $rows = array();
     foreach ($result as $shipment) {
       $row = array();
       $row[] = $shipment->sid;
-      $row[] = SafeMarkup::checkPlain($shipment->d_first_name) . ' ' . SafeMarkup::checkPlain($shipment->d_last_name);
-      $row[] = SafeMarkup::checkPlain($shipment->d_company);
-      $row[] = SafeMarkup::checkPlain($shipment->d_city) . ', ' . $shipment->d_zone . ' ' . SafeMarkup::checkPlain($shipment->d_postal_code);
+      $row[] = array('#plain_text' => $shipment->d_first_name . ' ' . $shipment->d_last_name);
+      $row[] = array('#plain_text' => $shipment->d_company);
+      $row[] = array('#plain_text' => $shipment->d_city . ', ' . $shipment->d_zone . ' ' . $shipment->d_postal_code);
       $row[] = \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store');
       $row[] = \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store');
-      $row[] = is_null($shipment->tracking_number) ? $this->t('n/a') : SafeMarkup::checkPlain($shipment->tracking_number);
-      $row[] = Link::createFromRoute($this->t('view'), 'uc_fulfillment.view_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
-      $row[] = Link::createFromRoute($this->t('edit'), 'uc_fulfillment.edit_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
-      $row[] = Link::createFromRoute($this->t('print'), 'uc_fulfillment.print_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
-      $row[] = Link::createFromRoute($this->t('packing slip'), 'uc_fulfillment.packing_slip', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
-      $row[] = Link::createFromRoute($this->t('delete'), 'uc_fulfillment.delete_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
+      $row[] = is_null($shipment->tracking_number) ? $this->t('n/a') : array('#plain_text' => $shipment->tracking_number);
+      $row[] = array(
+        '#type' => 'operations',
+        '#links' => array(
+          'view' => array(
+            'title' => $this->t('View'),
+            'url' => Url::fromRoute('uc_fulfillment.view_shipment', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+          ),
+          'edit' => array(
+            'title' => $this->t('Edit'),
+            'url' => Url::fromRoute('uc_fulfillment.edit_shipment', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+          ),
+          'print' => array(
+            'title' => $this->t('Print'),
+            'url' => Url::fromRoute('uc_fulfillment.print_shipment', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+          ),
+          'packing_slip' => array(
+            'title' => $this->t('Packing slip'),
+            'url' => Url::fromRoute('uc_fulfillment.packing_slip', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+          ),
+          'delete' => array(
+            'title' => $this->t('Delete'),
+            'url' => Url::fromRoute('uc_fulfillment.delete_shipment', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+          ),
+        ),
+      );
       $rows[] = $row;
     }
 
     if (empty($rows)) {
       if (!db_query('SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id', [':id' => $uc_order->id()])->fetchField()) {
-        drupal_set_message($this->t("This order's products have not been organized into packages."));
+        drupal_set_message($this->t("This order's products have not been organized into packages."), 'warning');
         return $this->redirect('uc_fulfillment.new_package', ['uc_order' => $uc_order->id()]);
       }
       else {
-        drupal_set_message($this->t('No shipments have been made for this order.'));
+        drupal_set_message($this->t('No shipments have been made for this order.'), 'warning');
         return $this->redirect('uc_fulfillment.new_shipment', ['uc_order' => $uc_order->id()]);
       }
     }
