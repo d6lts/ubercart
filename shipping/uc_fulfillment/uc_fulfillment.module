@@ -9,7 +9,6 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -50,17 +49,9 @@ function uc_fulfillment_menu_local_tasks_alter(&$data, $router_item, $root_path)
  */
 function uc_fulfillment_theme() {
   return array(
-    'uc_fulfillment_new_package_fieldset' => array(
-      'render element' => 'fieldset',
-      'function' => 'theme_uc_fulfillment_new_package_fieldset',
-    ),
     'uc_fulfillment_edit_package_fieldset' => array(
       'render element' => 'fieldset',
       'function' => 'theme_uc_fulfillment_edit_package_fieldset',
-    ),
-    'uc_fulfillment_new_shipment' => array(
-      'render element' => 'form',
-      'function' => 'theme_uc_fulfillment_new_shipment',
     ),
     'uc_fulfillment_shipment_print' => array(
       'variables' => array('order' => NULL, 'shipment' => NULL, 'labels' => TRUE),
@@ -133,18 +124,18 @@ function uc_fulfillment_uc_order_actions($order) {
   $actions = array();
   $account = \Drupal::currentUser();
   if ($account->hasPermission('fulfill orders')) {
-    $result = db_query("SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data", [':id' => $order->id(), ':data' => '%s:9:\"shippable\";s:1:\"1\";%']);
+    $result = db_query('SELECT COUNT(nid) FROM {uc_order_products} WHERE order_id = :id AND data LIKE :data', [':id' => $order->id(), ':data' => '%s:9:\"shippable\";s:1:\"1\";%']);
     if ($result->fetchField()) {
       $actions['package'] = array(
         'title' => t('Package'),
-        'url' => Url::fromRoute('admin/store/orders/{uc_order}/packages', ['uc_order' => $order->id()])->toString(),
+        'url' => Url::fromRoute('uc_fulfillment.packages', ['uc_order' => $order->id()])->toString(),
         'weight' => 12,
       );
-      $result = db_query("SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id", [':id' => $order->id()]);
+      $result = db_query('SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id', [':id' => $order->id()]);
       if ($result->fetchField()) {
         $actions['ship'] = array(
           'title' => t('Ship'),
-          'url' => Url::fromRoute('admin/store/orders/{uc_order}/shipments', ['uc_order' => $order->id()])->toString(),
+          'url' => Url::fromRoute('uc_fulfillment.shipments', ['uc_order' => $order->id()])->toString(),
           'weight' => 13,
         );
       }
@@ -160,21 +151,21 @@ function uc_fulfillment_package_load($package_id) {
   static $packages = array();
 
   if (!isset($packages[$package_id])) {
-    $result = db_query("SELECT * FROM {uc_packages} WHERE package_id = :id", [':id' => $package_id]);
+    $result = db_query('SELECT * FROM {uc_packages} WHERE package_id = :id', [':id' => $package_id]);
     if ($package = $result->fetchObject()) {
       $products = array();
       $description = '';
       $weight = 0;
       $units = \Drupal::config('uc_store.settings')->get('weight.units');
       $addresses = array();
-      $result = db_query("SELECT op.order_product_id, pp.qty, pp.qty * op.weight AS weight, op.weight_units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id", [':id' => $package_id]);
+      $result = db_query('SELECT op.order_product_id, pp.qty, pp.qty * op.weight AS weight, op.weight_units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id', [':id' => $package_id]);
       foreach ($result as $product) {
         $address = uc_quote_get_default_fulfillment_address($product->nid);
         // TODO: Lodge complaint that array_unique() compares as strings.
         if (!in_array($address, $addresses)) {
           $addresses[] = $address;
         }
-        $description .= ', ' . $product->qty . ' x ' . $product->model;
+        $description .= ', ' . $product->qty->value . ' x ' . $product->model->value;
         // Normalize all weights to default units.
         $weight += $product->weight * uc_weight_conversion($product->weight_units, $units);
         $product->data = unserialize($product->data);
@@ -226,7 +217,7 @@ function uc_fulfillment_package_save($package) {
           'qty' => $product->qty,
         ));
 
-      $result = db_query("SELECT data FROM {uc_order_products} WHERE order_product_id = :id", [':id' => $id]);
+      $result = db_query('SELECT data FROM {uc_order_products} WHERE order_product_id = :id', [':id' => $id]);
       if ($order_product = $result->fetchObject()) {
         $order_product->data = unserialize($order_product->data);
         $order_product->data['package_id'] = intval($package->package_id);
@@ -304,9 +295,9 @@ function uc_fulfillment_package_delete($package_id) {
  * Loads a shipment and its packages.
  */
 function uc_fulfillment_shipment_load($shipment_id) {
-  $shipment = db_query("SELECT * FROM {uc_shipments} WHERE sid = :sid", [':sid' => $shipment_id])->fetchObject();
+  $shipment = db_query('SELECT * FROM {uc_shipments} WHERE sid = :sid', [':sid' => $shipment_id])->fetchObject();
   if ($shipment) {
-    $result = db_query("SELECT package_id FROM {uc_packages} WHERE sid = :sid", [':sid' => $shipment_id]);
+    $result = db_query('SELECT package_id FROM {uc_packages} WHERE sid = :sid', [':sid' => $shipment_id]);
     $packages = array();
     foreach ($result as $package) {
       $packages[$package->package_id] = uc_fulfillment_package_load($package->package_id);
@@ -592,7 +583,7 @@ function theme_uc_fulfillment_shipment_print(array $variables) {
    */
   function theme_uc_fulfillment_edit_package_fieldset(array $variables) {
     $fieldset = $variables['fieldset'];
-    drupal_add_js('misc/tableselect.js');
+//    drupal_add_js('misc/tableselect.js');
 
     $output = '';
     $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), t('Quantity'));
@@ -619,10 +610,10 @@ function theme_uc_fulfillment_shipment_print(array $variables) {
    */
   function theme_uc_fulfillment_new_shipment(array $variables) {
     $form = $variables['form'];
-    drupal_add_js('misc/tableselect.js');
+//    drupal_add_js('misc/tableselect.js');
 
     $output = '';
-    $header = array(array('class' => array('select-all')), $this->t('Package'), $this->t('Products'), $this->t('Weight'));
+    $header = array(array('class' => array('select-all')), t('Package'), t('Products'), t('Weight'));
     foreach (Element::children($form['shipping_types']) as $shipping_type) {
       $rows = array();
       foreach (Element::children($form['shipping_types'][$shipping_type]['packages']) as $package_id) {
@@ -647,36 +638,25 @@ function theme_uc_fulfillment_shipment_print(array $variables) {
     return $output;
   }
 
-  /**
-   * Formats and displays the products in a shipping type fieldset.
-   *
-   * @see uc_fulfillment_new_package()
-   * @ingroup themeable
-   */
-  function theme_uc_fulfillment_new_package_fieldset(array $variables) {
-    $fieldset = $variables['fieldset'];
-    drupal_add_js('misc/tableselect.js');
+/**
+ * Implements hook_uc_shipping_type().
+ */
+function uc_fulfillment_uc_shipping_type() {
+  $quote_config = \Drupal::config('uc_quote.settings');
+  $weight = $quote_config->get('type_weight', array('envelope' => -1, 'small_package' => 0));
 
-    $output = '';
-    $header = array(array('class' => array('select-all')), $this->t('SKU'), $this->t('Title'), $this->t('Quantity'), $this->t('Package'));
+  $types = array(
+    'envelope' => array(
+      'id' => 'envelope',
+      'title' => t('Envelope'),
+      'weight' => isset($weight['envelope']) ? $weight['envelope'] : -1,
+    ),
+    'small_package' => array(
+      'id' => 'small_package',
+      'title' => t('Small package'),
+      'weight' => isset($weight['small_package']) ? $weight['small_package'] : 0,
+    ),
+  );
 
-    $rows = array();
-    foreach (Element::children($fieldset) as $op_id) {
-      $row = array();
-      $row[] = drupal_render($fieldset[$op_id]['checked']);
-      $row[] = drupal_render($fieldset[$op_id]['model']);
-      $row[] = drupal_render($fieldset[$op_id]['name']);
-      $row[] = drupal_render($fieldset[$op_id]['qty']);
-      $row[] = drupal_render($fieldset[$op_id]['package']);
-      $rows[] = $row;
-    }
-
-    $output .= theme('table', array(
-      'header' => $header,
-      'rows' => $rows,
-      'empty' => $this->t('There are no products available for this type of package.'),
-    ));
-    $output .= drupal_render_children($fieldset);
-
-    return $output;
-  }
+  return $types;
+}

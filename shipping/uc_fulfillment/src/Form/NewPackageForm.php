@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_fulfillment\Form;
 
+use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
@@ -26,11 +28,11 @@ class NewPackageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL) {
     $form['#tree'] = TRUE;
     $shipping_types_products = array();
-    foreach ($order->products as $product) {
-      if ($product->data['shippable']) {
+    foreach ($uc_order->products as $product) {
+      if (uc_order_product_is_shippable($product)) {
         $product->shipping_type = uc_product_get_shipping_type($product);
         $shipping_types_products[$product->shipping_type][] = $product;
       }
@@ -66,10 +68,10 @@ class NewPackageForm extends FormBase {
             '#default_value' => 0,
           );
           $product_row['model'] = array(
-            '#markup' => $product->model
+            '#markup' => $product->model->value
           );
           $product_row['name'] = array(
-            '#markup' => Xss::filterAdmin($product->title)
+            '#markup' => Xss::filterAdmin($product->title->value)
           );
           $range = range(1, $unboxed_qty);
           $product_row['qty'] = array(
@@ -80,8 +82,8 @@ class NewPackageForm extends FormBase {
             '#default_value' => $unboxed_qty,
           );
 
-          $range = range(0, count($order->products));
-          $options = array_combine($options, $options);
+          $range = range(0, count($uc_order->products));
+          $options = array_combine($range, $range);
           $options[0] = $this->t('Sep.');
           $product_row['package'] = array(
             '#type' => 'select',

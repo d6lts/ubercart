@@ -8,12 +8,13 @@
 namespace Drupal\uc_fulfillment\Controller;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_store\Address;
 
 /**
  * Controller routines for order routes.
@@ -23,7 +24,7 @@ class ShipmentController extends ControllerBase {
   /**
    * The page title callback for shipment views.
    *
-   * @param \Drupal\uc_order\OrderInterface $order
+   * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The shipment's order.
    * @param $shipment
    *   The shipment that is being viewed.
@@ -31,24 +32,24 @@ class ShipmentController extends ControllerBase {
    * @return string
    *   The page title.
    */
-  public function pageTitle(OrderInterface $order, $shipment) {
+  public function pageTitle(OrderInterface $uc_order, $shipment) {
     return $this->t('Shipment @id', ['@id' => $shipment->sid]);
   }
 
   /**
    * Default method to send packages on a shipment.
    *
-   * @param \Drupal\uc_order\OrderInterface $order
+   * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
    */
-  public function makeShipment(OrderInterface $order) {
+  public function makeShipment(OrderInterface $uc_order) {
     $args = func_get_args();
     if (count($args) > 2) {
       $breadcrumb = drupal_get_breadcrumb();
-      $breadcrumb[] = Link::fromTextAndUrl($this->t('Shipments'), Url::fromUri('base:admin/store/orders/{order_id}/shipments', ['order_id' => $order->id()]));
+      $breadcrumb[] = Link::createFromRoute($this->t('Shipments'), 'uc_fulfillment.shipments', ['uc_order' => $uc_order->id()]);
       drupal_set_breadcrumb($breadcrumb);
 
-      $order = array_shift($args);
+      $uc_order = array_shift($args);
       $method_id = array_shift($args);
       $package_ids = $args;
       $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
@@ -60,35 +61,35 @@ class ShipmentController extends ControllerBase {
             require_once($inc_file);
           }
         }
-        return \Drupal::formBuilder()->getForm($method['ship']['callback'], $order, $package_ids);
+        return \Drupal::formBuilder()->getForm($method['ship']['callback'], $uc_order, $package_ids);
       }
       else {
         $shipment = new stdClass();
-        $shipment->order_id = $order->id();
+        $shipment->order_id = $uc_order->id();
         $shipment->packages = array();
         foreach ($package_ids as $id) {
           $package = uc_fulfillment_package_load($id);
           $shipment->packages[$id] = $package;
         }
-        return \Drupal::formBuilder()->getForm('uc_fulfillment_shipment_edit', $order, $shipment);
+        return \Drupal::formBuilder()->getForm('uc_fulfillment_shipment_edit', $uc_order, $shipment);
       }
     }
     else {
       drupal_set_message($this->t('There is no sense in making a shipment with no packages on it, right?'));
-      drupal_goto('admin/store/orders/' . $args[0]->order_id . '/shipments/new');
+      return $this->redirect('uc_fulfillment.new_shipment', ['uc_order' => $args[0]->order_id]);
     }
   }
 
   /**
    * Shows a printer-friendly version of a shipment.
    *
-   * @param \Drupal\uc_order\OrderInterface $order
+   * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
    */
-  function printShipment($order, $shipment, $labels = TRUE) {
+  function printShipment(OrderInterface $uc_order, $shipment, $labels = TRUE) {
     $build = array(
       '#theme' => 'uc_fulfillment_shipment_print',
-      '#order' => $order,
+      '#order' => $uc_order,
       '#shipment' => $shipment,
       '#labels' => $labels,
     );
@@ -101,14 +102,14 @@ class ShipmentController extends ControllerBase {
   /**
    * Displays a list of shipments for an order.
    *
-   * @param \Drupal\uc_order\OrderInterface $order
+   * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
    *
    * @return array
    *   A render array.
    */
-  public function listOrderShipments(OrderInterface $order) {
-    $result = db_query("SELECT * FROM {uc_shipments} WHERE order_id = :id", [':id' => $order->id()]);
+  public function listOrderShipments(OrderInterface $uc_order) {
+    $result = db_query('SELECT * FROM {uc_shipments} WHERE order_id = :id', [':id' => $uc_order->id()]);
     $header = array($this->t('Shipment ID'), $this->t('Name'), $this->t('Company'), $this->t('Destination'), $this->t('Ship date'), $this->t('Estimated delivery'), $this->t('Tracking number'), array('data' => $this->t('Actions'), 'colspan' => 5));
     $rows = array();
 
@@ -121,22 +122,22 @@ class ShipmentController extends ControllerBase {
       $row[] = \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store');
       $row[] = \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store');
       $row[] = is_null($shipment->tracking_number) ? $this->t('n/a') : SafeMarkup::checkPlain($shipment->tracking_number);
-      $row[] = Link::fromTextAndUrl($this->t('view'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/view', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
-      $row[] = Link::fromTextAndUrl($this->t('edit'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/edit', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
-      $row[] = Link::fromTextAndUrl($this->t('print'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/print', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
-      $row[] = Link::fromTextAndUrl($this->t('packing slip'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/packing_slip', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
-      $row[] = Link::fromTextAndUrl($this->t('delete'), Url::fromUri('base:admin/store/orders/{order_id}/shipments/{shipment_id}/delete', ['order_id' => $order->id(), 'shipment_id' => $shipment->sid]));
+      $row[] = Link::createFromRoute($this->t('view'), 'uc_fulfillment.view_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
+      $row[] = Link::createFromRoute($this->t('edit'), 'uc_fulfillment.edit_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
+      $row[] = Link::createFromRoute($this->t('print'), 'uc_fulfillment.print_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
+      $row[] = Link::createFromRoute($this->t('packing slip'), 'uc_fulfillment.packing_slip', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
+      $row[] = Link::createFromRoute($this->t('delete'), 'uc_fulfillment.delete_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]);
       $rows[] = $row;
     }
 
     if (empty($rows)) {
-      if (!db_query("SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id", [':id' => $order->id()])->fetchField()) {
+      if (!db_query('SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id', [':id' => $uc_order->id()])->fetchField()) {
         drupal_set_message($this->t("This order's products have not been organized into packages."));
-        drupal_goto('admin/store/orders/' . $order->id() . '/packages/new');
+        return $this->redirect('uc_fulfillment.new_package', ['uc_order' => $uc_order->id()]);
       }
       else {
         drupal_set_message($this->t('No shipments have been made for this order.'));
-        drupal_goto('admin/store/orders/' . $order->id() . '/shipments/new');
+        return $this->redirect('uc_fulfillment.new_shipment', ['uc_order' => $uc_order->id()]);
       }
     }
 
@@ -153,13 +154,13 @@ class ShipmentController extends ControllerBase {
   /**
    * Displays shipment details.
    *
-   * @param \Drupal\uc_order\OrderInterface $order
+   * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
    *
    * @return array
    *   A render array.
    */
-function viewShipment(OrderInterface $order, $shipment) {
+function viewShipment(OrderInterface $uc_order, $shipment) {
     $build = array();
 
     $origin = $this->getAddress($shipment, 'o');
@@ -242,9 +243,6 @@ function viewShipment(OrderInterface $order, $shipment) {
     $address->country = $order->{$type . '_country'};
 
     $output = (string) $address;
-    if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
-      $output = Unicode::strtoupper($output);
-    }
 
     return $output;
   }

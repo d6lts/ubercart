@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_fulfillment\Form;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
@@ -62,8 +63,8 @@ class ShipmentEditForm extends FormBase {
       $product_list = array();
       $declared_value = 0;
       foreach ($package->products as $product) {
-        $product_list[]  = $product->qty . ' x ' . SafeMarkup::checkPlain($product->model);
-        $declared_value += $product->qty * $product->price;
+        $product_list[]  = $product->qty->value . ' x ' . SafeMarkup::checkPlain($product->model->value);
+        $declared_value += $product->qty->value * $product->price;
       }
       $pkg_form = array(
         '#type'  => 'fieldset',

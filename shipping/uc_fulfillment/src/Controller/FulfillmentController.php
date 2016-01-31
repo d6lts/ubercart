@@ -21,9 +21,9 @@ class FulfillmentController extends ControllerBase {
    * @param \Drupal\uc_order\OrderInterface $order
    *   The Order to check access for.
    */
-  public function accessOrder(OrderInterface $order) {
+  public function accessOrder(OrderInterface $uc_order) {
     $account = \Drupal::currentUser();
-    return $account->hasPermission('fulfill orders') && $order->isShippable();
+    return $account->hasPermission('fulfill orders') && $uc_order->isShippable();
   }
 
   /**
@@ -32,8 +32,8 @@ class FulfillmentController extends ControllerBase {
    * @param \Drupal\uc_order\OrderInterface $order
    *   The Order to check access for.
    */
-  public function accessNewShipment(OrderInterface $order) {
-    return $this->accessOrder($order) && db_query('SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL', [':id' => $order->id()])->fetchField();
+  public function accessNewShipment(OrderInterface $uc_order) {
+    return $this->accessOrder($uc_order) && db_query('SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL', [':id' => $uc_order->id()])->fetchField();
   }
 
 }
