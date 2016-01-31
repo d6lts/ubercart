@@ -120,7 +120,7 @@ function template_preprocess_uc_packing_slip_page(&$variables) {
 /**
  * Implements hook_uc_order_actions().
  */
-function uc_fulfillment_uc_order_actions($order) {
+function uc_fulfillment_uc_order_actions(OrderInterface $order) {
   $actions = array();
   $account = \Drupal::currentUser();
   if ($account->hasPermission('fulfill orders')) {
@@ -128,19 +128,20 @@ function uc_fulfillment_uc_order_actions($order) {
     if ($result->fetchField()) {
       $actions['package'] = array(
         'title' => t('Package'),
-        'url' => Url::fromRoute('uc_fulfillment.packages', ['uc_order' => $order->id()])->toString(),
+        'url' => Url::fromRoute('uc_fulfillment.packages', ['uc_order' => $order->id()]),
         'weight' => 12,
       );
       $result = db_query('SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id', [':id' => $order->id()]);
       if ($result->fetchField()) {
         $actions['ship'] = array(
           'title' => t('Ship'),
-          'url' => Url::fromRoute('uc_fulfillment.shipments', ['uc_order' => $order->id()])->toString(),
+          'url' => Url::fromRoute('uc_fulfillment.shipments', ['uc_order' => $order->id()]),
           'weight' => 13,
         );
       }
     }
   }
+
   return $actions;
 }
 
