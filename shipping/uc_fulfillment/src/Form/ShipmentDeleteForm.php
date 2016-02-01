@@ -10,6 +10,7 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Decides to release packages to be put on another shipment.
@@ -75,16 +76,16 @@ class ShipmentDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $order = NULL, $package = NULL) {
-    $this->order_id = $order->id();
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $shipment_id = NULL) {
+    $this->order_id = $uc_order->id();
 
     $form['order_id'] = array(
       '#type' => 'value',
-      '#value' => $order->id(),
+      '#value' => $uc_order->id(),
     );
-    $form['package_id'] = array(
+    $form['sid'] = array(
       '#type' => 'value',
-      '#value' => $package->package_id,
+      '#value' => $shipment_id,
     );
 
     return parent::buildForm($form, $form_state);

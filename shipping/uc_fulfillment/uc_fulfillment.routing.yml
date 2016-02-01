@@ -46,6 +46,8 @@ entity.uc_fulfillment_method.delete_form:
   requirements:
     _permission: 'fulfill orders'
 
+# Packages.
+
 uc_fulfillment.packages:
   path: '/admin/store/orders/{uc_order}/packages'
   defaults:
@@ -85,6 +87,8 @@ uc_fulfillment.delete_package:
     _title: 'Delete package'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
+
+# Shipments.
 
 uc_fulfillment.shipments:
   path: '/admin/store/orders/{uc_order}/shipments'
@@ -144,7 +148,6 @@ uc_fulfillment.print_shipment:
     _admin_route: FALSE
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
-
 
 uc_fulfillment.delete_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/{shipment_id}/delete'
