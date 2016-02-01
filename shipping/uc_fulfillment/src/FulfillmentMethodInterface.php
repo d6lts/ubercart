@@ -38,4 +38,13 @@ interface FulfillmentMethodInterface extends ConfigEntityInterface {
    */
   public function getPluginConfiguration();
 
+  /**
+   * Returns the supported package type for this fulfillment method.
+   * @todo package type should be a configuration entity.
+   *
+   * @return string
+   *   The package type.
+   */
+  public function getPackageType();
+
 }

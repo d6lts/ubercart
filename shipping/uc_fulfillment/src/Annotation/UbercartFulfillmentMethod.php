@@ -32,4 +32,11 @@ class UbercartFulfillmentMethod extends Plugin {
    */
   public $admin_label = '';
 
+  /**
+   * If TRUE, the plugin will be hidden from the UI.
+   *
+   * @var bool
+   */
+  public $no_ui = FALSE;
+
 }

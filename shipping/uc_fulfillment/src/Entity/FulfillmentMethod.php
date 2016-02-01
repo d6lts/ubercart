@@ -20,7 +20,7 @@ use Drupal\uc_fulfillment\FulfillmentMethodInterface;
  *     "list_builder" = "Drupal\uc_fulfillment\FulfillmentMethodListBuilder",
  *     "form" = {
  *       "default" = "Drupal\uc_fulfillment\Form\FulfillmentMethodForm",
- *       "delete" = "Drupal\uc_fulfillment\Form\FulfillmentMethodDeleteForm",
+ *       "delete" = "Drupal\uc_fulfillment\Form\FulfillmentMethodDeleteForm"
  *     }
  *   },
  *   config_prefix = "method",
@@ -36,14 +36,15 @@ use Drupal\uc_fulfillment\FulfillmentMethodInterface;
  *     "label",
  *     "weight",
  *     "plugin",
- *     "settings",
+ *     "locked",
+ *     "settings"
  *   },
  *   links = {
  *     "edit-form" = "/admin/store/config/fulfillment/method/{uc_fulfillment_method}",
  *     "enable" = "/admin/store/config/fulfillment/method/{uc_fulfillment_method}/enable",
  *     "disable" = "/admin/store/config/fulfillment/method/{uc_fulfillment_method}/disable",
  *     "delete-form" = "/admin/store/config/fulfillment/method/{uc_fulfillment_method}/delete",
- *     "collection" = "/admin/store/config/fulfillment",
+ *     "collection" = "/admin/store/config/fulfillment"
  *   }
  * )
  */
@@ -71,6 +72,13 @@ class FulfillmentMethod extends ConfigEntityBase implements FulfillmentMethodInt
   protected $weight = 0;
 
   /**
+   * The locked status of this payment method.
+   *
+   * @var bool
+   */
+  protected $locked = FALSE;
+
+  /**
    * The fulfillment method plugin ID.
    *
    * @var string
@@ -85,10 +93,24 @@ class FulfillmentMethod extends ConfigEntityBase implements FulfillmentMethodInt
   protected $settings = array();
 
   /**
+   * The package type supported by this plugin.
+   *
+   * @var string
+   */
+  protected $package_type = 'small_package';
+
+  /**
    * {@inheritdoc}
    */
   public function getWeight() {
     return $this->weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return $this->locked;
   }
 
   /**
@@ -103,6 +125,13 @@ class FulfillmentMethod extends ConfigEntityBase implements FulfillmentMethodInt
    */
   public function getPluginConfiguration() {
     return $this->settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPackageType() {
+    return $this->package_type;
   }
 
 }

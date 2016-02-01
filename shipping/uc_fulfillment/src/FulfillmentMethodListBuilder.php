@@ -92,10 +92,26 @@ class FulfillmentMethodListBuilder extends DraggableListBuilder implements FormI
   /**
    * {@inheritdoc}
    */
+  public function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+
+    // Locked payment methods may not be deleted.
+    if (isset($operations['delete']) && $entity->isLocked()) {
+      unset($operations['delete']);
+    }
+
+    return $operations;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $options = array_map(function ($definition) {
       return $definition['admin_label'];
-    }, $this->fulfillmentMethodPluginManager->getDefinitions());
+    }, array_filter($this->fulfillmentMethodPluginManager->getDefinitions(), function ($definition) {
+      return !$definition['no_ui'];
+    }));
     uasort($options, 'strnatcasecmp');
 
     $form['add'] = array(
