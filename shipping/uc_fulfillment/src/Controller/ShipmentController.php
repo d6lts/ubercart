@@ -15,6 +15,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Address;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller routines for order routes.
@@ -71,7 +72,7 @@ class ShipmentController extends ControllerBase {
           $package = uc_fulfillment_package_load($id);
           $shipment->packages[$id] = $package;
         }
-        return \Drupal::formBuilder()->getForm('uc_fulfillment_shipment_edit', $uc_order, $shipment);
+        return \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\ShipmentEditForm', $uc_order, $shipment);
       }
     }
     else {
@@ -94,9 +95,12 @@ class ShipmentController extends ControllerBase {
       '#labels' => $labels,
     );
 
-    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-    print theme('uc_packing_slip_page', array('content' => drupal_render($build)));
-    exit();
+    $markup = \Drupal::service('renderer')->renderPlain($build);
+    $response = new Response($markup);
+    $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+// @todo: Fix so this uses the template.
+//    print theme('uc_packing_slip_page', array('content' => drupal_render($build)));
+    return $response;
   }
 
   /**
@@ -110,43 +114,68 @@ class ShipmentController extends ControllerBase {
    */
   public function listOrderShipments(OrderInterface $uc_order) {
     $result = db_query('SELECT * FROM {uc_shipments} WHERE order_id = :id', [':id' => $uc_order->id()]);
-    $header = array($this->t('Shipment ID'), $this->t('Name'), $this->t('Company'), $this->t('Destination'), $this->t('Ship date'), $this->t('Estimated delivery'), $this->t('Tracking number'), $this->t('Actions'));
+    $header = array(
+      $this->t('Shipment ID'),
+      $this->t('Name'),
+      $this->t('Company'),
+      $this->t('Destination'),
+      $this->t('Ship date'),
+      $this->t('Estimated delivery'),
+      $this->t('Tracking number'),
+      $this->t('Actions')
+    );
 
     $rows = array();
     foreach ($result as $shipment) {
       $row = array();
-      $row[] = $shipment->sid;
-      $row[] = array('#plain_text' => $shipment->d_first_name . ' ' . $shipment->d_last_name);
-      $row[] = array('#plain_text' => $shipment->d_company);
-      $row[] = array('#plain_text' => $shipment->d_city . ', ' . $shipment->d_zone . ' ' . $shipment->d_postal_code);
+      // Shipment ID.
+      $row[] = array('data' => array('#plain_text' => $shipment->sid));
+
+      // Name.
+      $row[] = array('data' => array('#plain_text' => $shipment->d_first_name . ' ' . $shipment->d_last_name));
+
+      // Company.
+      $row[] = array('data' => array('#plain_text' => $shipment->d_company));
+
+      // Destination.
+      $row[] = array('data' => array('#plain_text' => $shipment->d_city . ', ' . $shipment->d_zone . ' ' . $shipment->d_postal_code));
+
+      // Ship date.
       $row[] = \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store');
+
+      // Estimated delivery.
       $row[] = \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store');
-      $row[] = is_null($shipment->tracking_number) ? $this->t('n/a') : array('#plain_text' => $shipment->tracking_number);
-      $row[] = array(
+
+      // Tracking number.
+      $row[] = is_null($shipment->tracking_number) ? $this->t('n/a') : array('data' => array('#plain_text' => $shipment->tracking_number));
+
+      // Actions.
+      $ops[] = array(
         '#type' => 'operations',
         '#links' => array(
           'view' => array(
             'title' => $this->t('View'),
-            'url' => Url::fromRoute('uc_fulfillment.view_shipment', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+            'url' => Url::fromRoute('uc_fulfillment.view_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]),
           ),
           'edit' => array(
             'title' => $this->t('Edit'),
-            'url' => Url::fromRoute('uc_fulfillment.edit_shipment', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+            'url' => Url::fromRoute('uc_fulfillment.edit_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]),
           ),
           'print' => array(
             'title' => $this->t('Print'),
-            'url' => Url::fromRoute('uc_fulfillment.print_shipment', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+            'url' => Url::fromRoute('uc_fulfillment.print_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]),
           ),
           'packing_slip' => array(
             'title' => $this->t('Packing slip'),
-            'url' => Url::fromRoute('uc_fulfillment.packing_slip', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+            'url' => Url::fromRoute('uc_fulfillment.packing_slip', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]),
           ),
           'delete' => array(
             'title' => $this->t('Delete'),
-            'url' => Url::fromRoute('uc_fulfillment.delete_shipment', ['uc_order' => $uc_order->order->id(), 'shipment_id' => $shipment->sid]),
+            'url' => Url::fromRoute('uc_fulfillment.delete_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $shipment->sid]),
           ),
         ),
       );
+      $row[] = array('data' => $ops);
       $rows[] = $row;
     }
 
@@ -186,8 +215,12 @@ function viewShipment(OrderInterface $uc_order, $shipment) {
     $origin = $this->getAddress($shipment, 'o');
     $destination = $this->getAddress($shipment, 'd');
 
-    $build['pickup_address'] = array('#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . $this->t('Pickup Address:') . '</div>' . $origin . '</div>');
-    $build['delivery_address'] = array('#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . $this->t('Delivery Address:') . '</div>' . $destination . '</div>');
+    $build['pickup_address'] = array(
+      '#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . $this->t('Pickup Address:') . '</div>' . $origin . '</div>'
+    );
+    $build['delivery_address'] = array(
+      '#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . $this->t('Delivery Address:') . '</div>' . $destination . '</div>'
+    );
 
     $rows = array();
     $rows[] = array($this->t('Ship date:'), \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store'));

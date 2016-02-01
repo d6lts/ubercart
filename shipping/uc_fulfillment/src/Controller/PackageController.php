@@ -29,27 +29,43 @@ class PackageController extends ControllerBase {
    */
   public function listOrderPackages(OrderInterface $uc_order) {
     $shipping_type_options = uc_quote_shipping_type_options();
-    $header = array($this->t('Package ID'), $this->t('Products'), $this->t('Shipping type'), $this->t('Package type'), $this->t('Shipment ID'), $this->t('Tracking number'), $this->t('Labels'), $this->t('Actions'));
+    $header = array(
+      $this->t('Package ID'),
+      $this->t('Products'),
+      $this->t('Shipping type'),
+      $this->t('Package type'),
+      $this->t('Shipment ID'),
+      $this->t('Tracking number'),
+      $this->t('Labels'),
+      $this->t('Actions')
+    );
     $rows = array();
     $result = db_query('SELECT * FROM {uc_packages} WHERE order_id = :id', [':id' => $uc_order->id()]);
     foreach ($result as $package) {
-      $row = array();
 
-      $row[] = $package->package_id;
+      $row = array();
+      // Package ID.
+      $row[] = array('data' => array('#plain_text' => $package->package_id));
 
       $product_list = array();
       $result2 = db_query('SELECT op.order_product_id, pp.qty, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id', [':id' => $package->package_id]);
       foreach ($result2 as $product) {
-        $product_list[] = $product->qty->value . ' x ' . $product->model->value;
+        $product_list[] = $product->qty . ' x ' . $product->model;
       }
+      // Products.
+      $row[] = array('data' => array('#theme' => 'item_list', '#items' => $product_list));
 
-// @todo: use #type item_list - need array_values ?
-      //$row[] = '<ul><li>' . implode('</li><li>', $product_list) . '</li></ul>';
-      $row[] = array('#theme' => 'item_list', '#items' => $product_list);
+      // Shipping type.
       $row[] = isset($shipping_type_options[$package->shipping_type]) ? $shipping_type_options[$package->shipping_type] : strtr($package->shipping_type, '_', ' ');
-      $row[] = array('#plain_text' => $package->pkg_type);
-      $row[] = isset($package->sid) ? Link::createFromRoute($package->sid, 'uc_fulfillment.view_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $package->sid]) : '';
-      $row[] = isset($package->tracking_number) ? array('#plain_text' => $package->tracking_number) : '';
+
+      // Package type.
+      $row[] = array('data' => array('#plain_text' => $package->pkg_type));
+
+      // Shipment ID.
+      $row[] = isset($package->sid) ? Link::createFromRoute($package->sid, 'uc_fulfillment.view_shipment', ['uc_order' => $uc_order->id(), 'shipment_id' => $package->sid])->toString() : '';
+
+      // Tracking number.
+      $row[] = isset($package->tracking_number) ? array('data' => array('#plain_text' => $package->tracking_number)) : '';
 
       if ($package->label_image && $image = file_load($package->label_image)) {
         $package->label_image = $image;
@@ -58,6 +74,7 @@ class PackageController extends ControllerBase {
         unset($package->label_image);
       }
 
+      // Shipping label.
       if (isset($package->sid) && isset($package->label_image)) {
         $method = db_query('SELECT shipping_method FROM {uc_shipments} WHERE sid = :sid', [':sid' => $package->sid])->fetchField();
         $row[] = Link::fromTextAndUrl("image goes here",
@@ -67,37 +84,38 @@ class PackageController extends ControllerBase {
      //       'alt' => $this->t('Shipping label'),
      //       'title' => $this->t('Shipping label'),
      //     )),
-          Url::fromUri('base:admin/store/orders/{order_id}/shipments/labels/{method}/{image_uri}', ['uc_order' => $uc_order->id(), 'method' => $method, 'image_uri' => $package->label_image->uri])
-        );
+          Url::fromUri('base:admin/store/orders/' . $uc_order->id() . '/shipments/labels/' . $method . '/' . $package->label_image->uri, ['uc_order' => $uc_order->id(), 'method' => $method, 'image_uri' => $package->label_image->uri])
+        )->toString();
       }
       else {
         $row[] = '';
       }
 
-      $row['ops'] = array(
+      // Operations.
+      $ops = array(
         '#type' => 'operations',
         '#links' => array(
           'edit' => array(
             'title' => $this->t('Edit'),
-            'url' => Url::fromRoute('uc_fulfillment.edit_package', ['uc_order' => $uc_order->order->id(), 'package_id' => $package->package_id]),
+            'url' => Url::fromRoute('uc_fulfillment.edit_package', ['uc_order' => $uc_order->id(), 'package_id' => $package->package_id]),
           ),
           'ship' => array(
             'title' => $this->t('Ship'),
-            'url' => Url::fromRoute('uc_fulfillment.new_shipment', ['uc_order' => $uc_order->order->id(), 'package_id' => $package->package_id]),
+            'url' => Url::fromRoute('uc_fulfillment.new_shipment', ['uc_order' => $uc_order->id(), 'package_id' => $package->package_id]),
           ),
           'delete' => array(
             'title' => $this->t('Delete'),
-            'url' => Url::fromRoute('uc_fulfillment.delete_package', ['uc_order' => $uc_order->order->id(), 'package_id' => $package->package_id]),
+            'url' => Url::fromRoute('uc_fulfillment.delete_package', ['uc_order' => $uc_order->id(), 'package_id' => $package->package_id]),
           ),
         ),
       );
       if ($package->sid) {
-        $row['ops']['#links']['cancel'] = array(
+        $ops['#links']['cancel'] = array(
           'title' => $this->t('Cancel'),
-          'url' => Url::fromRoute('uc_fulfillment.cancel_package', ['uc_order' => $uc_order->order->id(), 'package_id' => $package->package_id]),
+          'url' => Url::fromRoute('uc_fulfillment.cancel_package', ['uc_order' => $uc_order->id(), 'package_id' => $package->package_id]),
         );
       }
-
+      $row[] = array('data' => $ops);
       $rows[] = $row;
     }
 
