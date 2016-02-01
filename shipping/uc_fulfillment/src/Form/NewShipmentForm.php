@@ -9,6 +9,7 @@ namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_fulfillment\Entity\FulfillmentMethod;
 use Drupal\uc_order\OrderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -36,7 +37,7 @@ class NewShipmentForm extends FormBase {
     $result = db_query('SELECT * FROM {uc_packages} WHERE order_id = :id AND sid IS NULL', [':id' => $uc_order->id()]);
 
     $header = array(
-      // Fake out the tableselect JavaScript.
+      // Fake out tableselect JavaScript into operating on our table.
       array('data' => '', 'class' => array('select-all')),
       'package' => $this->t('Package'),
       'product' => $this->t('Products'),
@@ -57,16 +58,19 @@ class NewShipmentForm extends FormBase {
       $package->products = $products;
       $packages_by_type[$package->shipping_type][$package->package_id] = $package;
     }
+
+    // Find FulfillmentMethod plugins.
+    $methods = FulfillmentMethod::loadMultiple();
+    uasort($methods, 'Drupal\uc_fulfillment\Entity\FulfillmentMethod::sort');
+    foreach ($methods as $method) {
+      // Available fulfillment methods indexed by package type.
+      $shipping_methods_by_type[$method->getPackageType()][] = $method;
+    }
+
+    $pkgs_exist = FALSE;
     $option_methods = array();
     $shipping_types = uc_quote_get_shipping_types();
-    $shipping_methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
-    $shipping_methods_by_type = array();
-    foreach ($shipping_methods as $method) {
-      if (isset($method['ship'])) {
-        $shipping_methods_by_type[$method['ship']['type']][] = $method;
-      }
-    }
-    $pkgs_exist = FALSE;
+
     foreach ($packages_by_type as $shipping_type => $packages) {
       $form['shipping_types'][$shipping_type] = array(
         '#type' => 'fieldset',
@@ -98,20 +102,18 @@ class NewShipmentForm extends FormBase {
           $product_list[] = $product->qty . ' x ' . $product->model;
         }
         $row['products'] = array(
-          //'#markup' => '<ul><li>' . implode('</li><li>', $product_list) . '</li></ul>'
           '#theme' => 'item_list',
           '#items' => $product_list,
         );
         $row['weight'] = array(
           '#markup' => uc_weight_format($package->weight, $units),
         );
-      //  $form['shipping_types'][$shipping_type]['packages'][$package->package_id] = $row;
         $form['shipping_types'][$shipping_type]['table'][$package->package_id] = $row;
       }
 
       if (isset($shipping_methods_by_type[$shipping_type])) {
         foreach ($shipping_methods_by_type[$shipping_type] as $method) {
-          $option_methods += array($method['id'] => $method['title']);
+          $option_methods += array($method->id() => $method->label());
         }
       }
     }
@@ -122,12 +124,12 @@ class NewShipmentForm extends FormBase {
     );
 
     if ($pkgs_exist) {
-      $option_methods = array('all' => $this->t('Ship Manually')) + $option_methods;
+      // uc_fulfillment has a default plugin to provide the "Manual" method.
       $form['method'] = array(
         '#type' => 'select',
         '#title' => $this->t('Shipping method'),
         '#options' => $option_methods,
-        '#default_value' => 'all',
+        '#default_value' => 'manual',
       );
       $form['actions'] = array('#type' => 'actions');
       $form['actions']['ship'] = array(

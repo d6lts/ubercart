@@ -47,7 +47,7 @@ class NewPackageForm extends FormBase {
 
     $form['shipping_types'] = array();
     $header = array(
-      // Fake out the tableselect JavaScript.
+      // Fake out tableselect JavaScript into operating on our table.
       array('data' => '', 'class' => array('select-all')),
       'model' => $this->t('SKU'),
       'name' => $this->t('Title'),
@@ -109,11 +109,9 @@ class NewPackageForm extends FormBase {
             '#options' => $options,
             '#default_value' => 0,
           );
-          //$rows[$product->order_product_id->value] = $row;
           $form['shipping_types'][$shipping_type]['table'][$product->order_product_id->value] = $row;
         }
       }
-      //$form['shipping_types'][$shipping_type]['table']['children'] = $rows;
     }
 
     $form['order_id'] = array(
