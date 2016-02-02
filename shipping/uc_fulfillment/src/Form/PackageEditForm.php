@@ -110,7 +110,7 @@ class PackageEditForm extends FormBase {
     $package->shipping_type = $form_state->getValue('shipping_type');
     uc_fulfillment_package_save($package);
 
-    $form_state['redirect'] = 'admin/store/orders/' . $package->order_id . '/packages';
+    $form_state->setRedirect('uc_fulfillment.packages', ['uc_order' => $package->order_id]);
   }
 
 }

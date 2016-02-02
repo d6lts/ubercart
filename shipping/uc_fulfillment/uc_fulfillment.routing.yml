@@ -52,7 +52,7 @@ uc_fulfillment.packages:
   path: '/admin/store/orders/{uc_order}/packages'
   defaults:
     _controller: '\Drupal\uc_fulfillment\Controller\PackageController::listOrderPackages'
-    _title: 'Packages'
+    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
 
@@ -94,7 +94,7 @@ uc_fulfillment.shipments:
   path: '/admin/store/orders/{uc_order}/shipments'
   defaults:
     _controller: '\Drupal\uc_fulfillment\Controller\ShipmentController::listOrderShipments'
-    _title: 'Shipments'
+    _title_callback: '\Drupal\uc_order\Controller\OrderController::pageTitle'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
 

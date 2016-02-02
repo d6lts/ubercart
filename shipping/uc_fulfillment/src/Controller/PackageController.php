@@ -101,7 +101,7 @@ class PackageController extends ControllerBase {
           ),
           'ship' => array(
             'title' => $this->t('Ship'),
-            'url' => Url::fromRoute('uc_fulfillment.new_shipment', ['uc_order' => $uc_order->id(), 'package_id' => $package->package_id]),
+            'url' => Url::fromRoute('uc_fulfillment.new_shipment', ['uc_order' => $uc_order->id()], ['query' => ['pkgs' => $package->package_id]]),
           ),
           'delete' => array(
             'title' => $this->t('Delete'),

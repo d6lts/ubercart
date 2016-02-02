@@ -146,16 +146,19 @@ class NewShipmentForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $packages = array();
+    $i = 1;
     foreach ($form_state->getValue('shipping_types') as $shipping_type) {
-      if (is_array($shipping_type['table']['packages'])) {
-        foreach ($shipping_type['table']['packages'] as $id => $input) {
+      if (is_array($shipping_type['table'])) {
+        foreach ($shipping_type['table'] as $id => $input) {
           if ($input['checked']) {
-            $packages[] = $id;
+            $packages[$i++] = $id;
           }
         }
       }
     }
-    $form_state->setRedirect('uc_fulfillment.make_shipment', ['uc_order' => $form_state->getValue('order_id')]);
+
+    $form_state->setRedirect('uc_fulfillment.make_shipment', ['uc_order' => $form_state->getValue('order_id')],
+                       ['query' => array_merge(['method_id' => $form_state->getValue('method')], $packages)]);
     //$form_state['redirect'] = 'admin/store/orders/{uc_order}/ship/' . $form_state->getValue('method') . '/' . implode('/', $packages);
   }
 

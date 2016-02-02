@@ -27,10 +27,17 @@ class ShipmentEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL, $shipment = NULL) {
-    $form['order_id'] = array('#type' => 'value', '#value' => $order->id());
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $shipment = NULL) {
+    $form['order_id'] = array(
+      '#type' => 'value',
+      '#value' => $uc_order->id(),
+    );
     if (isset($shipment->sid)) {
-      $form['sid'] = array('#type' => 'value', '#value' => $shipment->sid);
+      $form['sid'] = array(
+        '#type' => 'value',
+        '#value' => $shipment->sid,
+      );
+      $shipment = uc_fulfillment_shipment_load($shipment->sid);
       $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
       if (isset($methods[$shipment->shipping_method])) {
         $method = $methods[$shipment->shipping_method];
@@ -328,7 +335,7 @@ class ShipmentEditForm extends FormBase {
 
     uc_fulfillment_shipment_save($shipment);
 
-    $form_state['redirect'] = 'admin/store/orders/' . $form_state->getValue('order_id') . '/shipments';
+    $form_state->setRedirect('uc_fulfillment.shipments', ['uc_order' => $form_state->getValue('order_id')]);
   }
 
 }
