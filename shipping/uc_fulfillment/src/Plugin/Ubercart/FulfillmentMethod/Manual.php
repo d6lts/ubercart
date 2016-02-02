@@ -83,26 +83,22 @@ class Manual extends FulfillmentMethodPluginBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('@base_rate + @product_rate per item', ['@base_rate' => uc_currency_format($this->configuration['base_rate']), '@product_rate' => uc_currency_format($this->configuration['product_rate'])]);
+    return $this->t('No specific carrier, no pre-paid shipping labels');
   }
 
   /**
    * {@inheritdoc}
    */
   public function fulfillOrder(OrderInterface $order, array $package_ids) {
-    $rate = $this->configuration['base_rate'];
-    $field = $this->configuration['field'];
-
-    foreach ($order->products as $product) {
-      if (isset($product->nid->entity->$field->value)) {
-        $rate += $product->nid->entity->$field->value * $product->qty->value;
-      }
-      else {
-        $rate += $this->configuration['product_rate'] * $product->qty->value;
-      }
+    $shipment = new \stdClass();
+    $shipment->order_id = $order->id();
+    $shipment->packages = array();
+    foreach ($package_ids as $id) {
+      $package = uc_fulfillment_package_load($id);
+      $shipment->packages[$id] = $package;
     }
 
-    return [$rate];
+    return \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\ShipmentEditForm', $order, $shipment);
   }
 
 }

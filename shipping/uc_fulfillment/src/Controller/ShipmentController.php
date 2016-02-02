@@ -29,57 +29,53 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The shipment's order.
-   * @param $shipment
-   *   The shipment that is being viewed.
+   * @param $shipment_id
+   *   The ID of shipment that is being viewed.
    *
    * @return string
    *   The page title.
    */
-  public function pageTitle(OrderInterface $uc_order, $shipment) {
-    return $this->t('Shipment @id', ['@id' => $shipment->sid]);
+  public function pageTitle(OrderInterface $uc_order, $shipment_id) {
+    return $this->t('Shipment @id', ['@id' => $shipment_id]);
   }
 
   /**
-   * Default method to send packages on a shipment.
+   * Default method to create a shipment from packages.
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+   *   A render array, or a redirect response if there are selected packages.
    */
-  public function makeShipment(OrderInterface $uc_order) {
-    $args = func_get_args();
-    if (count($args) > 2) {
-      $breadcrumb = drupal_get_breadcrumb();
-      $breadcrumb[] = Link::createFromRoute($this->t('Shipments'), 'uc_fulfillment.shipments', ['uc_order' => $uc_order->id()]);
-      drupal_set_breadcrumb($breadcrumb);
+  public function makeShipment(OrderInterface $uc_order, Request $request) {
+    $method_id = $request->query->get('method_id');
+    $request->query->remove('method_id');
+    $package_ids = $request->query->all();
+    if (count($package_ids) > 0) {
+//      $breadcrumb = drupal_get_breadcrumb();
+//      $breadcrumb[] = Link::createFromRoute($this->t('Shipments'), 'uc_fulfillment.shipments', ['uc_order' => $uc_order->id()]);
+//      drupal_set_breadcrumb($breadcrumb);
 
-      $uc_order = array_shift($args);
-      $method_id = array_shift($args);
-      $package_ids = $args;
-      $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
+      // Find FulfillmentMethod plugins.
+      $manager = \Drupal::service('plugin.manager.uc_fulfillment.method');
+      $methods = FulfillmentMethod::loadMultiple();
+
       if (isset($methods[$method_id])) {
         $method = $methods[$method_id];
-        if (isset($method['ship']['file'])) {
-          $inc_file = drupal_get_path('module', $method['module']) . '/' . $method['ship']['file'];
-          if (is_file($inc_file)) {
-            require_once($inc_file);
-          }
-        }
-        return \Drupal::formBuilder()->getForm($method['ship']['callback'], $uc_order, $package_ids);
       }
       else {
-        $shipment = new stdClass();
-        $shipment->order_id = $uc_order->id();
-        $shipment->packages = array();
-        foreach ($package_ids as $id) {
-          $package = uc_fulfillment_package_load($id);
-          $shipment->packages[$id] = $package;
-        }
-        return \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\ShipmentEditForm', $uc_order, $shipment);
+        // The selected fulfullment isn't available, so use built-in "Manual" shipping.
+        $method = $methods['manual'];
       }
+      $plugin = $manager->createInstance($method->getPluginId(), $method->getPluginConfiguration());
+      return $plugin->fulfillOrder($uc_order, $package_ids);
     }
     else {
       drupal_set_message($this->t('There is no sense in making a shipment with no packages on it, right?'), 'warning');
-      return $this->redirect('uc_fulfillment.new_shipment', ['uc_order' => $args[0]->order_id]);
+      return $this->redirect('uc_fulfillment.new_shipment', ['uc_order' => $uc_order->id()]);
     }
   }
 
