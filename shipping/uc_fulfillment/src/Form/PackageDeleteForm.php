@@ -79,10 +79,6 @@ class PackageDeleteForm extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $package_id = NULL) {
     $this->order_id = $uc_order->id();
 
-    $form['order_id'] = array(
-      '#type' => 'value',
-      '#value' => $uc_order->id(),
-    );
     $form['package_id'] = array(
       '#type' => 'value',
       '#value' => $package_id,

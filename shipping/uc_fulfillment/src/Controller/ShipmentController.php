@@ -13,12 +13,14 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\uc_fulfillment\Entity\FulfillmentMethod;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Address;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Controller routines for order routes.
+ * Controller routines for shipments.
  */
 class ShipmentController extends ControllerBase {
 
@@ -86,12 +88,17 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
+   * @param $shipment_id
+   *   The ID of shipment.
+   *
+   * @return array
+   *   HTML for the shipment.
    */
-  function printShipment(OrderInterface $uc_order, $shipment, $labels = TRUE) {
+  public function printShipment(OrderInterface $uc_order, $shipment_id, $labels = TRUE) {
     $build = array(
       '#theme' => 'uc_fulfillment_shipment_print',
       '#order' => $uc_order,
-      '#shipment' => $shipment,
+      '#shipment' => $shipment_id,
       '#labels' => $labels,
     );
 
@@ -109,8 +116,8 @@ class ShipmentController extends ControllerBase {
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
    *
-   * @return array
-   *   A render array.
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+   *   A render array, or redirect response if there are no shipments.
    */
   public function listOrderShipments(OrderInterface $uc_order) {
     $result = db_query('SELECT * FROM {uc_shipments} WHERE order_id = :id', [':id' => $uc_order->id()]);
@@ -205,11 +212,13 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
+   * @param \stdClass $shipment
+   *   The shipment object.
    *
    * @return array
    *   A render array.
    */
-function viewShipment(OrderInterface $uc_order, $shipment) {
+  public function viewShipment(OrderInterface $uc_order, $shipment) {
     $build = array();
 
     $origin = $this->getAddress($shipment, 'o');

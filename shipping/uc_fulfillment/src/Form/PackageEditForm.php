@@ -75,14 +75,20 @@ class PackageEditForm extends FormBase {
     }
     $form['shipping_type'] = array(
       '#type' => 'select',
-      '#title' => t('Shipping type'),
+      '#title' => $this->t('Shipping type'),
       '#options' => $options,
       '#default_value' => $package->shipping_type,
     );
+
+    $form['package_id'] = array(
+      '#type' => 'hidden',
+      '#value' => $package_id,
+    );
+
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save'),
+      '#value' => $this->t('Save'),
     );
 
     return $form;

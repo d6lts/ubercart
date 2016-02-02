@@ -79,10 +79,6 @@ class ShipmentDeleteForm extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $shipment_id = NULL) {
     $this->order_id = $uc_order->id();
 
-    $form['order_id'] = array(
-      '#type' => 'value',
-      '#value' => $uc_order->id(),
-    );
     $form['sid'] = array(
       '#type' => 'value',
       '#value' => $shipment_id,

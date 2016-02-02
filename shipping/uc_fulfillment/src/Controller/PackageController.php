@@ -14,7 +14,7 @@ use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 
 /**
- * Controller routines for order routes.
+ * Controller routines for packaging.
  */
 class PackageController extends ControllerBase {
 
@@ -24,8 +24,8 @@ class PackageController extends ControllerBase {
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order.
    *
-   * @return array
-   *   A render array.
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+   *   A render array, or a redirect response if there are no packaged products.
    */
   public function listOrderPackages(OrderInterface $uc_order) {
     $shipping_type_options = uc_quote_shipping_type_options();

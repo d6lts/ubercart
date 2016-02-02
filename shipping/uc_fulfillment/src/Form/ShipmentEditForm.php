@@ -43,18 +43,18 @@ class ShipmentEditForm extends FormBase {
       '#tree' => TRUE,
     );
     if (isset($shipment->o_street1)) {
-      $o_address = new stdClass();
+      $o_address = new \stdClass();
       foreach ($shipment as $field => $value) {
         if (substr($field, 0, 2) == 'o_') {
           $o_address->{substr($field, 2)} = $value;
         }
       }
-      $addresses[] = $o_address;
+      $addresses[] = (object) $o_address;
     }
     foreach ($shipment->packages as $id => $package) {
       foreach ($package->addresses as $address) {
         if (!in_array($address, $addresses)) {
-          $addresses[] = $address;
+          $addresses[] = (object) $address;
         }
       }
 
@@ -63,8 +63,8 @@ class ShipmentEditForm extends FormBase {
       $product_list = array();
       $declared_value = 0;
       foreach ($package->products as $product) {
-        $product_list[]  = $product->qty->value . ' x ' . SafeMarkup::checkPlain($product->model->value);
-        $declared_value += $product->qty->value * $product->price;
+        $product_list[]  = $product->qty . ' x ' . $product->model;
+        $declared_value += $product->qty * $product->price;
       }
       $pkg_form = array(
         '#type'  => 'fieldset',
@@ -196,7 +196,6 @@ class ShipmentEditForm extends FormBase {
 
     // Inform administrator of customer's shipping choice.
     $form['shipment']['shipping_choice'] = array(
-      '#type'   => 'markup',
       '#prefix' => '<div>',
       '#markup' => $message,
       '#suffix' => '</div>',
@@ -264,9 +263,7 @@ class ShipmentEditForm extends FormBase {
       '#default_value' => isset($shipment->cost) ? $shipment->cost : 0,
     );
 
-    $form['actions'] = array(
-      '#type' => 'actions'
-    );
+    $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Save shipment'),
@@ -293,13 +290,13 @@ class ShipmentEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $shipment = new stdClass();
+    $shipment = new \stdClass();
     $shipment->order_id = $form_state->getValue('order_id');
     if ($form_state->hasValue('sid')) {
       $shipment->sid = $form_state->getValue('sid');
     }
     $shipment->origin = (object) $form_state->getValue('pickup_address');
-    $shipment->destination = new stdClass();
+    $shipment->destination = new \stdClass();
     foreach ($form_state->getValues() as $key => $value) {
       if (substr($key, 0, 9) == 'delivery_') {
         $field = substr($key, 9);

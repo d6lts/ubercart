@@ -52,7 +52,7 @@ class NewPackageForm extends FormBase {
       'model' => $this->t('SKU'),
       'name' => $this->t('Title'),
       'qty' => $this->t('Quantity'),
-      'package' => $this->t('Package')
+      'package' => $this->t('Package'),
     );
 
     $shipping_type_options = uc_quote_shipping_type_options();
@@ -65,7 +65,6 @@ class NewPackageForm extends FormBase {
         '#weight' => isset($shipping_type_weights[$shipping_type]) ? $shipping_type_weights[$shipping_type] : 0,
       );
 
-      $rows = array();
       $form['shipping_types'][$shipping_type]['table'] = array(
         '#type' => 'table',
         '#header' => $header,
@@ -118,9 +117,8 @@ class NewPackageForm extends FormBase {
       '#type'  => 'hidden',
       '#value' => $uc_order->id(),
     );
-    $form['actions'] = array(
-      '#type'  => 'actions',
-    );
+
+    $form['actions'] = array('#type'  => 'actions');
     $form['actions']['create'] = array(
       '#type'  => 'submit',
       '#value' => $this->t('Make packages'),

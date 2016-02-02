@@ -17,7 +17,7 @@ use Drupal\uc_order\OrderInterface;
 class FulfillmentController extends ControllerBase {
 
   /**
-   * Checks access to the Shipments tab for this order.
+   * Checks access to fulfill this order.
    *
    * @param \Drupal\uc_order\OrderInterface $order
    *   The Order to check access for.
@@ -37,7 +37,7 @@ class FulfillmentController extends ControllerBase {
    * Checks access to the Shipments tab for this order.
    *
    * @param \Drupal\uc_order\OrderInterface $order
-   *   The Order to check access for.
+   *   The order to check access for.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
@@ -50,4 +50,3 @@ class FulfillmentController extends ControllerBase {
   }
 
 }
-
