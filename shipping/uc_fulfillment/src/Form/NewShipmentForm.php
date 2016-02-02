@@ -84,7 +84,6 @@ class NewShipmentForm extends FormBase {
         '#empty' => $this->t('There are no products available for this type of package.'),
       );
 
-      $form['shipping_types'][$shipping_type]['packages'] = array();
       foreach ($packages as $package) {
         $pkgs_exist = TRUE;
 

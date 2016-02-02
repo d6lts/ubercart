@@ -172,29 +172,29 @@ class ShipmentEditForm extends FormBase {
     if (!empty($shipment->d_street1)) {
       foreach ($shipment as $field => $value) {
         if (substr($field, 0, 2) == 'd_') {
-          $order->{'delivery_' . substr($field, 2)} = $value;
+          $uc_order->{'delivery_' . substr($field, 2)} = $value;
         }
       }
     }
-    $form = uc_fulfillment_address_form($form, $form_state, $addresses, $order);
+    $form = \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\AddressForm', $addresses, $uc_order);
 
     $form['shipment'] = array(
-      '#type'        => 'fieldset',
-      '#title'       => $this->t('Shipment data'),
+      '#type' => 'fieldset',
+      '#title' => $this->t('Shipment data'),
     );
 
     // Determine shipping option chosen by the customer.
     $message = '';
-    if (isset($order->quote['method'])) {
+    if (isset($uc_order->quote['method'])) {
       // Order has a quote attached.
-      $method  = $order->quote['method'];
+      $method  = $uc_order->quote['method'];
       $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
       if (isset($methods[$method])) {
         // Quote is from a currently-active shipping method.
         $services = $methods[$method]['quote']['accessorials'];
-        $method   = $services[$order->quote['accessorials']];
+        $method = $services[$uc_order->quote['accessorials']];
       }
-      $message = $this->t('Customer selected "@method" as the shipping method and paid @rate', ['@method' => $method, '@rate' => uc_currency_format($order->quote['rate'])]);
+      $message = $this->t('Customer selected "@method" as the shipping method and paid @rate', ['@method' => $method, '@rate' => uc_currency_format($uc_order->quote['rate'])]);
     }
     else {
       // No quotes for this order.
