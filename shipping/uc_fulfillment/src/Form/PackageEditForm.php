@@ -8,7 +8,6 @@
 namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
@@ -28,46 +27,69 @@ class PackageEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL, $package = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $package_id = NULL) {
+    $package = uc_fulfillment_package_load($package_id);
+
+    $form['#tree'] = TRUE;
+    $form['#attached']['library'][] = 'uc_fulfillment/uc_fulfillment.scripts';
     $products = array();
     $shipping_types_products = array();
-    foreach ($order->products as $product) {
-      if ($product->data['shippable']) {
+    foreach ($uc_order->products as $product) {
+      if (uc_order_product_is_shippable($product)) {
         $product->shipping_type = uc_product_get_shipping_type($product);
         $shipping_types_products[$product->shipping_type][$product->order_product_id->value] = $product;
         $products[$product->order_product_id->value] = $product;
       }
     }
 
-    $result = db_query('SELECT order_product_id, SUM(qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id WHERE p.order_id = :id GROUP BY order_product_id', [':id' => $order->id()]);
+    $header = array(
+      // Fake out tableselect JavaScript into operating on our table.
+      array('data' => '', 'class' => array('select-all')),
+      'model' => $this->t('SKU'),
+      'name' => $this->t('Title'),
+      'qty' => $this->t('Quantity'),
+    );
+
+    $result = db_query('SELECT order_product_id, SUM(qty) AS quantity FROM {uc_packaged_products} pp LEFT JOIN {uc_packages} p ON pp.package_id = p.package_id WHERE p.order_id = :id GROUP BY order_product_id', [':id' => $uc_order->id()]);
     foreach ($result as $packaged_product) {
       // Make already packaged products unavailable, except those in this package.
-      $products[$packaged_product->order_product_id->value]->qty->value -= $packaged_product->quantity;
-      if (isset($package->products[$packaged_product->order_product_id->value])) {
-        $products[$packaged_product->order_product_id->value]->qty->value += $package->products[$packaged_product->order_product_id->value]->qty->value;
+      $products[$packaged_product->order_product_id]->qty->value -= $packaged_product->quantity;
+      if (isset($package->products[$packaged_product->order_product_id])) {
+        $products[$packaged_product->order_product_id]->qty->value += $package->products[$packaged_product->order_product_id]->qty;
       }
     }
 
-    $form['#tree'] = TRUE;
-    $form['package_id'] = array('#type' => 'hidden', '#value' => $package->package_id);
-    $form['products'] = array();
+    $form['products'] = array(
+      '#type' => 'table',
+      '#header' => $header,
+      '#empty' => $this->t('There are no products available for this type of package.'),
+    );
+
     foreach ($products as $product) {
       if ($product->qty->value > 0) {
-        $product_row = array();
-        $product_row['checked'] = array('#type' => 'checkbox', '#default_value' => isset($package->products[$product->order_product_id->value]));
-        $product_row['model'] = array('#markup' => $product->model->value);
-        $product_row['name'] = array('#markup' => Xss::filterAdmin($product->title->value));
-        $range = range(1, $product->qty->value);
-        $product_row['qty'] = array(
-          '#type' => 'select',
-          '#options' => array_combine($range, $range),
-          '#default_value' => isset($package->products[$product->order_product_id->value]) ? $package->products[$product->order_product_id->value]->qty->value : 1,
+        $row = array();
+        $row['checked'] = array(
+          '#type' => 'checkbox',
+          '#default_value' => isset($package->products[$product->order_product_id->value]),
+        );
+        $row['model'] = array(
+          '#markup' => $product->model->value,
+        );
+        $row['name'] = array(
+          '#markup' => $product->title->value,
         );
 
-        $form['products'][$product->order_product_id->value] = $product_row;
+        $range = range(1, $product->qty->value);
+        $row['qty'] = array(
+          '#type' => 'select',
+          '#options' => array_combine($range, $range),
+          '#default_value' => isset($package->products[$product->order_product_id->value]) ? $package->products[$product->order_product_id->value]->qty : 1,
+        );
+
+        $form['products'][$product->order_product_id->value] = $row;
       }
     }
-    $form['products']['#theme'] = 'uc_fulfillment_edit_package_fieldset';
+
     $options = array();
     $shipping_type_options = uc_quote_shipping_type_options();
     foreach (array_keys($shipping_types_products) as $type) {

@@ -7,8 +7,6 @@
  * and tracking numbers.
  */
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -52,10 +50,6 @@ function uc_fulfillment_menu_local_tasks_alter(&$data, $router_item, $root_path)
  */
 function uc_fulfillment_theme() {
   return array(
-    'uc_fulfillment_edit_package_fieldset' => array(
-      'render element' => 'fieldset',
-      'function' => 'theme_uc_fulfillment_edit_package_fieldset',
-    ),
     'uc_fulfillment_shipment_print' => array(
       'variables' => array('order' => NULL, 'shipment' => NULL, 'labels' => TRUE),
       'function' => 'theme_uc_fulfillment_shipment_print',
@@ -482,68 +476,6 @@ function theme_uc_fulfillment_shipment_print(array $variables) {
 
   return $output;
 }
-
-  /**
-   * Displays a formatted shipping type fieldset.
-   *
-   * @ingroup themeable
-   */
-  function theme_uc_fulfillment_edit_package_fieldset(array $variables) {
-    $fieldset = $variables['fieldset'];
-//    drupal_add_js('misc/tableselect.js');
-
-    $output = '';
-    $header = array(array('class' => array('select-all')), t('SKU'), t('Title'), t('Quantity'));
-    $rows = array();
-    foreach (Element::children($fieldset) as $op_id) {
-      $row = array();
-      $row[] = drupal_render($fieldset[$op_id]['checked']);
-      $row[] = drupal_render($fieldset[$op_id]['model']);
-      $row[] = drupal_render($fieldset[$op_id]['name']);
-      $row[] = drupal_render($fieldset[$op_id]['qty']);
-      $rows[] = $row;
-    }
-    $output .= theme('table', array('header' => $header, 'rows' => $rows));
-    $output .= drupal_render_children($fieldset);
-
-    return $output;
-  }
-
-  /**
-   * Formats and displays the new shipment form.
-   *
-   * @see uc_fulfillment_new_shipment()
-   * @ingroup themeable
-   */
-  function theme_uc_fulfillment_new_shipment(array $variables) {
-    $form = $variables['form'];
-//    drupal_add_js('misc/tableselect.js');
-
-    $output = '';
-    $header = array(array('class' => array('select-all')), t('Package'), t('Products'), t('Weight'));
-    foreach (Element::children($form['shipping_types']) as $shipping_type) {
-      $rows = array();
-      foreach (Element::children($form['shipping_types'][$shipping_type]['packages']) as $package_id) {
-        $row = array();
-        $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['checked']);
-        $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['package_id']);
-        $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['products']);
-        $row[] = drupal_render($form['shipping_types'][$shipping_type]['packages'][$package_id]['weight']);
-        $rows[] = $row;
-      }
-      if (count($rows)) {
-        $form['shipping_types'][$shipping_type]['packages']['table'] = array(
-          '#theme' => 'table',
-          '#header' => $header,
-          '#rows' => $rows,
-        );
-      }
-    }
-
-    $output .= drupal_render_children($form);
-
-    return $output;
-  }
 
 /**
  * Implements hook_uc_shipping_type().
