@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_cart\CheckoutPanePluginBase;
@@ -144,7 +143,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
               $form_state->setErrorByName('panes][customer][new_account][name', $message);
             }
             elseif ($name_taken) {
-              $form_state->setErrorByName('panes][customer][new_account][name', $this->t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', array('%name' => $pane['new_account']['name'])));
+              $form_state->setErrorByName('panes][customer][new_account][name', $this->t('The username %name is already taken. Please enter a different name or leave the field blank for your username to be your e-mail address.', ['%name' => $pane['new_account']['name']]));
             }
             else {
               $order->data->new_user_name = $pane['new_account']['name'];
@@ -171,7 +170,7 @@ class CustomerInfoPane extends CheckoutPanePluginBase {
    * {@inheritdoc}
    */
   public function review(OrderInterface $order) {
-    $review[] = array('title' => $this->t('E-mail'), 'data' => SafeMarkup::checkPlain($order->getEmail()));
+    $review[] = array('title' => $this->t('E-mail'), 'data' => array('#plain_text' => $order->getEmail()));
     return $review;
   }
 

@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\OrderInterface;
@@ -30,7 +29,7 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
     $build['#description'] = $this->t('Use this area for special instructions or questions regarding your order.');
 
     if ($order->id()) {
-      $default = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()))->fetchField();
+      $default = db_query('SELECT message FROM {uc_order_comments} WHERE order_id = :id', [':id' => $order->id()])->fetchField();
     }
     else {
       $default = NULL;
@@ -64,9 +63,9 @@ class OrderCommentsPane extends CheckoutPanePluginBase {
    */
   public function review(OrderInterface $order) {
     $review = NULL;
-    $result = db_query("SELECT message FROM {uc_order_comments} WHERE order_id = :id", array(':id' => $order->id()));
+    $result = db_query('SELECT message FROM {uc_order_comments} WHERE order_id = :id', [':id' => $order->id()]);
     if ($comment = $result->fetchObject()) {
-      $review[] = array('title' => $this->t('Comment'), 'data' => SafeMarkup::checkPlain($comment->message));
+      $review[] = array('title' => $this->t('Comment'), 'data' => array('#markup' => $comment->message));
     }
     return $review;
   }

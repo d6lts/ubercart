@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\OrderInterface;
@@ -159,9 +158,9 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
   public function review(OrderInterface $order) {
     $pane = $this->pluginDefinition['id'];
     $address = $order->getAddress($pane);
-    $review[] = array('title' => $this->t('Address'), 'data' => $address);
+    $review[] = array('title' => $this->t('Address'), 'data' => array('#markup' => $address));
     if (uc_address_field_enabled('phone') && !empty($address->phone)) {
-      $review[] = array('title' => $this->t('Phone'), 'data' => SafeMarkup::checkPlain($address->phone));
+      $review[] = array('title' => $this->t('Phone'), 'data' => array('#plain_text' => $address->phone));
     }
     return $review;
   }
