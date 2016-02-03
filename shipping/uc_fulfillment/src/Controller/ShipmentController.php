@@ -29,8 +29,8 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The shipment's order.
-   * @param $shipment_id
-   *   The ID of shipment that is being viewed.
+   * @param int $shipment_id
+   *   The ID of shipment.
    *
    * @return string
    *   The page title.
@@ -84,7 +84,7 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
-   * @param $shipment_id
+   * @param int $shipment_id
    *   The ID of shipment.
    *
    * @return array
@@ -208,29 +208,55 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
-   * @param \stdClass $shipment
-   *   The shipment object.
+   * @param int $shipment_id
+   *   The ID of shipment.
    *
    * @return array
    *   A render array.
    */
-  public function viewShipment(OrderInterface $uc_order, $shipment) {
-    $build = array();
+  public function viewShipment(OrderInterface $uc_order, $shipment_id) {
+    $shipment = uc_fulfillment_shipment_load($shipment_id);
 
-    $origin = $this->getAddress($shipment, 'o');
-    $destination = $this->getAddress($shipment, 'd');
-
+    // Origin address.
     $build['pickup_address'] = array(
-      '#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . $this->t('Pickup Address:') . '</div>' . $origin . '</div>'
+      '#type' => 'container',
+      '#attributes' => array('class' => array('order-pane', 'pos-left')),
     );
+    $build['pickup_address']['title'] = array(
+      '#type' => 'container',
+      '#markup' => $this->t('Pickup Address:'),
+      '#attributes' => array('class' => array('order-pane-title')),
+    );
+    $build['pickup_address']['address'] = array(
+      '#type' => 'container',
+      '#markup' => $this->getAddress($shipment, 'o'),
+    );
+
+    // Destination address.
     $build['delivery_address'] = array(
-      '#markup' => '<div class="order-pane pos-left"><div class="order-pane-title">' . $this->t('Delivery Address:') . '</div>' . $destination . '</div>'
+      '#type' => 'container',
+      '#attributes' => array('class' => array('order-pane', 'pos-left')),
+    );
+    $build['delivery_address']['title'] = array(
+      '#type' => 'container',
+      '#markup' => $this->t('Delivery Address:'),
+      '#attributes' => array('class' => array('order-pane-title')),
+    );
+    $build['delivery_address']['address'] = array(
+      '#type' => 'container',
+      '#markup' => $this->getAddress($shipment, 'd'),
     );
 
+    // Fulfillment schedule.
     $rows = array();
-    $rows[] = array($this->t('Ship date:'), \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store'));
-    $rows[] = array($this->t('Expected delivery:'), \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store'));
-
+    $rows[] = array(
+      $this->t('Ship date:'),
+      \Drupal::service('date.formatter')->format($shipment->ship_date, 'uc_store')
+    );
+    $rows[] = array(
+      $this->t('Expected delivery:'),
+      \Drupal::service('date.formatter')->format($shipment->expected_delivery, 'uc_store')
+    );
     $build['schedule'] = array(
       '#theme' => 'table',
       '#rows' => $rows,
@@ -239,36 +265,55 @@ class ShipmentController extends ControllerBase {
       '#suffix' => '</div>',
     );
 
+    // Shipment details.
     $rows = array();
-    $rows[] = array($this->t('Carrier:'), SafeMarkup::checkPlain($shipment->carrier));
-
+    $rows[] = array(
+      $this->t('Carrier:'),
+      array('data' => array('#plain_text' => $shipment->carrier)),
+    );
     if ($shipment->transaction_id) {
-      $rows[] = array($this->t('Transaction ID:'), SafeMarkup::checkPlain($shipment->transaction_id));
+      $rows[] = array(
+        $this->t('Transaction ID:'),
+        array('data' => array('#plain_text' => $shipment->transaction_id)),
+      );
     }
-
     if ($shipment->tracking_number) {
-      $rows[] = array($this->t('Tracking number:'), SafeMarkup::checkPlain($shipment->tracking_number));
+      $rows[] = array(
+        $this->t('Tracking number:'),
+        array('data' => array('#plain_text' => $shipment->tracking_number)),
+      );
     }
-
     $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
-
     if (isset($methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials])) {
-      $rows[] = array($this->t('Services:'), $methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials]);
+      $rows[] = array($this->t('Services:'),
+        $methods[$shipment->shipping_method]['quote']['accessorials'][$shipment->accessorials],
+      );
     }
     else {
-      $rows[] = array($this->t('Services:'), $shipment->accessorials);
+      $rows[] = array($this->t('Services:'),
+        $shipment->accessorials,
+      );
     }
-
-    $rows[] = array($this->t('Cost:'), array('data' => array('#theme' => 'uc_price', '#price' => $shipment->cost)));
-
+    $rows[] = array(
+      $this->t('Cost:'),
+      array('data' => array('#theme' => 'uc_price', '#price' => $shipment->cost)),
+    );
     $build['details'] = array(
+      '#type' => 'container',
+      '#attributes' => array('class' => array('order-pane', 'abs-left')),
+    );
+    $build['details']['title'] = array(
+      '#type' => 'container',
+      '#markup' => $this->t('Shipment Details:'),
+      '#attributes' => array('class' => array('order-pane-title')),
+    );
+    $build['details']['table'] = array(
       '#theme' => 'table',
       '#rows' => $rows,
       '#attributes' => array('style' => 'width:auto'),
-      '#prefix' => '<div class="order-pane abs-left"><div class="order-pane-title">' . $this->t('Shipment Details:') . '</div>',
-      '#suffix' => '</div>',
     );
 
+    // Packages.
     foreach ($shipment->packages as $package) {
       $build['packages'][] = $this->viewPackage($package);
     }
@@ -287,7 +332,7 @@ class ShipmentController extends ControllerBase {
    * @return string
    *   An address object.
    */
-  protected function getAddress(OrderInterface $order, $type) {
+  protected function getAddress($order, $type) {
     $name = $order->{$type . '_first_name'} . ' ' . $order->{$type . '_last_name'};
     $address = new Address();
     $address->first_name = $order->{$type . '_first_name'};
@@ -317,17 +362,16 @@ class ShipmentController extends ControllerBase {
   public function viewPackage($package) {
     $shipment = uc_fulfillment_shipment_load($package->sid);
     $build = array(
-      '#prefix' => '<div class="order-pane pos-left">',
-      '#suffix' => '</div>',
+      '#type' => 'container',
+      '#attributes' => array('class' => array('order-pane', 'pos-left')),
     );
-    $rows = array();
-
     $build['title'] = array(
-      '#prefix' => '<div class="order-pane-title">',
+      '#type' => 'container',
       '#markup' => $this->t('Package %id:', ['%id' => $package->package_id]),
-      '#suffix' => '</div>',
+      '#attributes' => array('class' => array('order-pane-title')),
     );
 
+    $rows = array();
     $rows[] = array($this->t('Contents:'), Xss::filterAdmin($package->description));
 
     if ($shipment) {
