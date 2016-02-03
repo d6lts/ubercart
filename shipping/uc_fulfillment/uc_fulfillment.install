@@ -71,11 +71,9 @@ function uc_fulfillment_schema() {
       ),
       'o_zone' => array(
         'description' => 'Origin address: State/province, from {uc_countries_zones}.zone_id.',
-        'type' => 'int',
-        'size' => 'medium',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
+        'type' => 'varchar',
+        'size' => '32',
+        'default' => '',
       ),
       'o_postal_code' => array(
         'description' => 'Origin address: Postal code.',
@@ -86,11 +84,9 @@ function uc_fulfillment_schema() {
       ),
       'o_country' => array(
         'description' => 'Origin address: Country, from {uc_countries}.country_id.',
-        'type' => 'int',
-        'size' => 'medium',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
+        'type' => 'varchar',
+        'size' => '2',
+        'default' => '',
       ),
       'd_first_name' => array(
         'description' => 'Destination address: First name.',
@@ -136,11 +132,9 @@ function uc_fulfillment_schema() {
       ),
       'd_zone' => array(
         'description' => 'Destination address: State/province, from {uc_countries_zones}.zone_id.',
-        'type' => 'int',
-        'size' => 'medium',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
+        'type' => 'varchar',
+        'size' => '32',
+        'default' => '',
       ),
       'd_postal_code' => array(
         'description' => 'Destination address: Postal code.',
@@ -151,11 +145,9 @@ function uc_fulfillment_schema() {
       ),
       'd_country' => array(
         'description' => 'Destination address: Country, from {uc_countries}.country_id.',
-        'type' => 'int',
-        'size' => 'medium',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
+        'type' => 'varchar',
+        'size' => '2',
+        'default' => '',
       ),
       'shipping_method' => array(
         'description' => 'The shipping method.',
