@@ -8,6 +8,7 @@
 namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
@@ -28,11 +29,12 @@ class ShipmentEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $shipment = NULL) {
-    $form['order_id'] = array(
-      '#type' => 'value',
-      '#value' => $uc_order->id(),
-    );
-    if (isset($shipment->sid)) {
+    // Sometimes $shipment is an ID, sometimes it's an object. FIX THIS! @todo
+    if (!is_object($shipment)) {
+      // Then $shipment is an ID.
+      $shipment = uc_fulfillment_shipment_load($shipment);
+    }
+    elseif (isset($shipment->sid)) {
       $form['sid'] = array(
         '#type' => 'value',
         '#value' => $shipment->sid,
@@ -43,6 +45,10 @@ class ShipmentEditForm extends FormBase {
         $method = $methods[$shipment->shipping_method];
       }
     }
+    $form['order_id'] = array(
+      '#type' => 'value',
+      '#value' => $uc_order->id(),
+    );
     $addresses = array();
     $form['packages'] = array(
       '#type' => 'fieldset',
@@ -74,7 +80,7 @@ class ShipmentEditForm extends FormBase {
         $declared_value += $product->qty * $product->price;
       }
       $pkg_form = array(
-        '#type'  => 'fieldset',
+        '#type' => 'fieldset',
         '#title' => $this->t('Package @id', ['@id' => $id]),
       );
       $pkg_form['products'] = array(
@@ -82,41 +88,43 @@ class ShipmentEditForm extends FormBase {
         '#items' => $product_list,
       );
       $pkg_form['package_id'] = array(
-        '#type'  => 'hidden',
+        '#type' => 'hidden',
         '#value' => $id,
       );
       $pkg_form['pkg_type'] = array(
-        '#type'          => 'textfield',
-        '#title'         => $this->t('Package type'),
+        '#type' => 'textfield',
+        '#title' => $this->t('Package type'),
         '#default_value' => $package->pkg_type,
-        '#description'   => $this->t('For example: Box, pallet, tube, envelope, etc.'),
+        '#description' => $this->t('For example: Box, pallet, tube, envelope, etc.'),
       );
       if (isset($method) && is_array($method['ship']['pkg_types'])) {
-        $pkg_form['pkg_type']['#type']        = 'select';
-        $pkg_form['pkg_type']['#options']     = $method['ship']['pkg_types'];
+        $pkg_form['pkg_type']['#type'] = 'select';
+        $pkg_form['pkg_type']['#options'] = $method['ship']['pkg_types'];
         $pkg_form['pkg_type']['#description'] = '';
       }
       $pkg_form['declared_value'] = array(
-        '#type'          => 'uc_price',
-        '#title'         => $this->t('Declared value'),
+        '#type' => 'uc_price',
+        '#title' => $this->t('Declared value'),
         '#default_value' => isset($package->value) ? $package->value : $declared_value,
       );
       $pkg_form['weight'] = array(
-        '#type'        => 'container',
-        '#attributes'  => array('class' => array('uc-inline-form', 'clearfix')),
+        '#type' => 'container',
+        '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
         '#description' => $this->t('Weight of the package. Default value is sum of product weights in the package.'),
-        '#weight'      => 15,
+        '#weight' => 15,
       );
       $pkg_form['weight']['weight'] = array(
-        '#type'          => 'textfield',
-        '#title'         => $this->t('Weight'),
+        '#type' => 'number',
+        '#title' => $this->t('Weight'),
+        '#min' => 0,
+        '#step' => 'any',
         '#default_value' => isset($package->weight) ? $package->weight : 0,
-        '#size'          => 10,
+        '#size' => 10,
       );
       $pkg_form['weight']['units'] = array(
-        '#type'          => 'select',
-        '#title'         => $this->t('Units'),
-        '#options'       => array(
+        '#type' => 'select',
+        '#title' => $this->t('Units'),
+        '#options' => array(
           'lb' => $this->t('Pounds'),
           'kg' => $this->t('Kilograms'),
           'oz' => $this->t('Ounces'),
@@ -125,33 +133,39 @@ class ShipmentEditForm extends FormBase {
         '#default_value' => isset($package->weight_units) ? $package->weight_units : \Drupal::config('uc_store.settings')->get('weight.units'),
       );
       $pkg_form['dimensions'] = array(
-        '#type'        => 'container',
-        '#attributes'  => array('class' => array('uc-inline-form', 'clearfix')),
-        '#title'       => $this->t('Dimensions'),
+        '#type' => 'container',
+        '#attributes' => array('class' => array('uc-inline-form', 'clearfix')),
+        '#title' => $this->t('Dimensions'),
         '#description' => $this->t('Physical dimensions of the packaged product.'),
-        '#weight'      => 20,
+        '#weight' => 20,
       );
       $pkg_form['dimensions']['length'] = array(
-        '#type'          => 'textfield',
-        '#title'         => $this->t('Length'),
+        '#type' => 'number',
+        '#title' => $this->t('Length'),
+        '#min' => 0,
+        '#step' => 'any',
         '#default_value' => isset($package->length) ? $package->length : 1,
-        '#size'          => 8,
+        '#size' => 8,
       );
       $pkg_form['dimensions']['width'] = array(
-        '#type'          => 'textfield',
-        '#title'         => $this->t('Width'),
+        '#type' => 'number',
+        '#title' => $this->t('Width'),
+        '#min' => 0,
+        '#step' => 'any',
         '#default_value' => isset($package->width) ? $package->width : 1,
-        '#size'          => 8,
+        '#size' => 8,
       );
       $pkg_form['dimensions']['height'] = array(
-        '#type' => 'textfield',
+        '#type' => 'number',
         '#title' => $this->t('Height'),
+        '#min' => 0,
+        '#step' => 'any',
         '#default_value' => isset($package->height) ? $package->height : 1,
         '#size' => 8,
       );
       $pkg_form['dimensions']['units'] = array(
-        '#type'    => 'select',
-        '#title'   => $this->t('Units of measurement'),
+        '#type' => 'select',
+        '#title' => $this->t('Units of measurement'),
         '#options' => array(
           'in' => $this->t('Inches'),
           'ft' => $this->t('Feet'),
@@ -161,8 +175,8 @@ class ShipmentEditForm extends FormBase {
         '#default_value' => isset($package->length_units) ? $package->length_units : \Drupal::config('uc_store.settings')->get('length.units'),
       );
       $pkg_form['tracking_number'] = array(
-        '#type'          => 'textfield',
-        '#title'         => $this->t('Tracking number'),
+        '#type' => 'textfield',
+        '#title' => $this->t('Tracking number'),
         '#default_value' => isset($package->tracking_number) ? $package->tracking_number : '',
       );
 
@@ -176,7 +190,7 @@ class ShipmentEditForm extends FormBase {
         }
       }
     }
-    $form = \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\AddressForm', $addresses, $uc_order);
+    $form += \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\AddressForm', $addresses, $uc_order);
 
     $form['shipment'] = array(
       '#type' => 'fieldset',
@@ -203,9 +217,8 @@ class ShipmentEditForm extends FormBase {
 
     // Inform administrator of customer's shipping choice.
     $form['shipment']['shipping_choice'] = array(
-      '#prefix' => '<div>',
+      '#type' => 'container',
       '#markup' => $message,
-      '#suffix' => '</div>',
     );
 
     $form['shipment']['shipping_method'] = array(
@@ -213,60 +226,52 @@ class ShipmentEditForm extends FormBase {
       '#value' => isset($shipment->shipping_method) ? $shipment->shipping_method : 'manual',
     );
     $form['shipment']['carrier'] = array(
-      '#type'          => 'textfield',
-      '#title'         => $this->t('Carrier'),
+      '#type' => 'textfield',
+      '#title' => $this->t('Carrier'),
       '#default_value' => isset($shipment->carrier) ? $shipment->carrier : '',
     );
     $form['shipment']['accessorials'] = array(
-      '#type'          => 'textfield',
-      '#title'         => $this->t('Shipment options'),
+      '#type' => 'textfield',
+      '#title' => $this->t('Shipment options'),
       '#default_value' => isset($shipment->accessorials) ? $shipment->accessorials : '',
-      '#description'   => $this->t('Short notes about the shipment, e.g. residential, overnight, etc.'),
+      '#description' => $this->t('Short notes about the shipment, e.g. residential, overnight, etc.'),
     );
     $form['shipment']['transaction_id'] = array(
-      '#type'          => 'textfield',
-      '#title'         => $this->t('Transaction ID'),
+      '#type' => 'textfield',
+      '#title' => $this->t('Transaction ID'),
       '#default_value' => isset($shipment->transaction_id) ? $shipment->transaction_id : '',
     );
     $form['shipment']['tracking_number'] = array(
-      '#type'          => 'textfield',
-      '#title'         => $this->t('Tracking number'),
+      '#type' => 'textfield',
+      '#title' => $this->t('Tracking number'),
       '#default_value' => isset($shipment->tracking_number) ? $shipment->tracking_number : '',
     );
 
+    $ship_date = REQUEST_TIME;
     if (isset($shipment->ship_date)) {
-      $ship_date = getdate($shipment->ship_date);
+      $ship_date = $shipment->ship_date;
     }
-    else {
-      $ship_date = getdate();
-    }
+    $exp_delivery = REQUEST_TIME;
     if (isset($shipment->expected_delivery)) {
-      $exp_delivery = getdate($shipment->expected_delivery);
-    }
-    else {
-      $exp_delivery = getdate();
+      $exp_delivery = $shipment->expected_delivery;
     }
     $form['shipment']['ship_date'] = array(
-      '#type' => 'date',
+      '#type' => 'datetime',
       '#title' => $this->t('Ship date'),
-      '#default_value' => array(
-        'year'  => $ship_date['year'],
-        'month' => $ship_date['mon'],
-        'day'   => $ship_date['mday']
-      ),
+      '#date_date_element' => 'date',
+      '#date_time_element' => 'none',
+      '#default_value' => DrupalDateTime::createFromTimestamp($ship_date),
     );
     $form['shipment']['expected_delivery'] = array(
-      '#type'          => 'date',
-      '#title'         => $this->t('Expected delivery'),
-      '#default_value' => array(
-        'year'  => $exp_delivery['year'],
-        'month' => $exp_delivery['mon'],
-        'day'   => $exp_delivery['mday']
-      ),
+      '#type' => 'datetime',
+      '#title' => $this->t('Expected delivery'),
+      '#date_date_element' => 'date',
+      '#date_time_element' => 'none',
+      '#default_value' => DrupalDateTime::createFromTimestamp($exp_delivery),
     );
     $form['shipment']['cost'] = array(
-      '#type'          => 'uc_price',
-      '#title'         => $this->t('Shipping cost'),
+      '#type' => 'uc_price',
+      '#title' => $this->t('Shipping cost'),
       '#default_value' => isset($shipment->cost) ? $shipment->cost : 0,
     );
 
@@ -278,19 +283,6 @@ class ShipmentEditForm extends FormBase {
     );
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state->getValue('packages') as $key => $package) {
-      foreach (array('length', 'width', 'height') as $property) {
-        if (!empty($package['dimensions'][$property]) && (!is_numeric($package['dimensions'][$property]) || $package['dimensions'][$property] < 0)) {
-          $form_state->setErrorByName('packages][' . $key . '][dimensions][' . $property, $this->t('@property must be a positive number. No commas and only one decimal point.', ['@property' => Unicode::ucfirst($property)]));
-        }
-      }
-    }
   }
 
   /**
@@ -329,8 +321,8 @@ class ShipmentEditForm extends FormBase {
     $shipment->carrier = $form_state->getValue('carrier');
     $shipment->transaction_id = $form_state->getValue('transaction_id');
     $shipment->tracking_number = $form_state->getValue('tracking_number');
-    $shipment->ship_date = gmmktime(12, 0, 0, $form_state->getValue(['ship_date', 'month']), $form_state->getValue(['ship_date', 'day']), $form_state->getValue(['ship_date', 'year']));
-    $shipment->expected_delivery = gmmktime(12, 0, 0, $form_state->getValue(['expected_delivery', 'month']), $form_state->getValue(['expected_delivery', 'day']), $form_state->getValue(['expected_delivery', 'year']));
+    $shipment->ship_date = $form_state->getValue('ship_date')->getTimestamp();
+    $shipment->expected_delivery = $form_state->getValue('expected_delivery')->getTimestamp();
     $shipment->cost = $form_state->getValue('cost');
 
     uc_fulfillment_shipment_save($shipment);
