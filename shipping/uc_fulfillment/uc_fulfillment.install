@@ -72,7 +72,7 @@ function uc_fulfillment_schema() {
       'o_zone' => array(
         'description' => 'Origin address: State/province, from {uc_countries_zones}.zone_id.',
         'type' => 'varchar',
-        'size' => '32',
+        'length' => '32',
         'default' => '',
       ),
       'o_postal_code' => array(
@@ -85,7 +85,7 @@ function uc_fulfillment_schema() {
       'o_country' => array(
         'description' => 'Origin address: Country, from {uc_countries}.country_id.',
         'type' => 'varchar',
-        'size' => '2',
+        'length' => '2',
         'default' => '',
       ),
       'd_first_name' => array(
@@ -133,7 +133,7 @@ function uc_fulfillment_schema() {
       'd_zone' => array(
         'description' => 'Destination address: State/province, from {uc_countries_zones}.zone_id.',
         'type' => 'varchar',
-        'size' => '32',
+        'length' => '32',
         'default' => '',
       ),
       'd_postal_code' => array(
@@ -146,7 +146,7 @@ function uc_fulfillment_schema() {
       'd_country' => array(
         'description' => 'Destination address: Country, from {uc_countries}.country_id.',
         'type' => 'varchar',
-        'size' => '2',
+        'length' => '2',
         'default' => '',
       ),
       'shipping_method' => array(
