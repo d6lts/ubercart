@@ -43,3 +43,111 @@ uc_paypal.settings:
     wpp_cc_txn_type:
       type: string
       label: 'Payment action'
+
+payment_method.settings.paypal_ec:
+  type: mapping
+  label: 'PayPal Express Checkout settings'
+  mapping:
+    wps_email:
+      type: string
+      label: 'PayPal e-mail address'
+    wpp_currency:
+      type: string
+      label: 'Currency code'
+    wpp_server:
+      type: uri
+      label: 'API server'
+    api:
+      type: mapping
+      label: 'API settings'
+      mapping:
+        api_username:
+          type: string
+          label: 'API username'
+        api_password:
+          type: string
+          label: 'API password'
+        api_signature:
+          type: string
+          label: 'Signature'
+    ec_landingpage_style:
+      type: string
+      label: 'Default PayPal landing page'
+    ec_rqconfirmed_addr:
+      type: boolean
+      label: 'Require Express Checkout users to use a PayPal confirmed shipping address'
+    ec_review_shipping:
+      type: boolean
+      label: 'Enable the shipping select form on the Review payment page'
+    ec_review_company:
+      type: boolean
+      label: 'Enable the company name box on the Review payment page'
+    ec_review_phone:
+      type: boolean
+      label: 'Enable the contact phone number box on the Review payment page'
+    ec_review_comment:
+      type: boolean
+      label: 'Enable the comment text box on the Review payment page'
+    wpp_cc_txn_type:
+      type: string
+      label: 'Payment action'
+
+payment_method.settings.paypal_wps:
+  type: mapping
+  label: 'PayPal Website Payments Standard settings'
+  mapping:
+    wps_email:
+      type: string
+      label: 'PayPal e-mail address'
+    wpp_currency:
+      type: string
+      label: 'Currency code'
+    wpp_server:
+      type: uri
+      label: 'API server'
+    api:
+      type: mapping
+      label: 'API settings'
+      mapping:
+        api_username:
+          type: string
+          label: 'API username'
+        api_password:
+          type: string
+          label: 'API password'
+        api_signature:
+          type: string
+          label: 'API signature'
+    wps_email:
+      type: email
+      label: 'PayPal e-mail address'
+    wps_currency:
+      type: string
+      label: 'Currency code'
+    wps_language:
+      type: string
+      label: 'Language'
+    wps_server:
+      type: uri
+      label: 'API server'
+    wps_payment_action:
+      type: string
+      label: 'Payment action'
+    wps_cancel_return_url:
+      type: string
+      label: 'Return URL'
+    wps_submit_method:
+      type: string
+      label: 'Submit method'
+    wps_no_shipping:
+      type: boolean
+      label: 'Shipping not included flag'
+    wps_address_override:
+      type: boolean
+      label: 'Override PayPal address flag'
+    wps_address_selection:
+      type: string
+      label: 'Select address'
+    wps_debug_ipn:
+      type: boolean
+      label: 'IPN debug flag'

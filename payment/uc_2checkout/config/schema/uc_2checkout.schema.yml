@@ -6,7 +6,42 @@ uc_2checkout.settings:
   mapping:
     check:
       type: boolean
+      label: 'Allow e-checks'
+    checkout_type:
+      type: string
+      label: 'Use direct or dynamic checkout'
+    currency_code:
+      type: string
+      label: 'Currency to use for transaction'
+    demo:
+      type: boolean
+      label: 'Flag to indicate demo mode for gateway - no actual money will be transfered if TRUE'
+    language:
+      type: string
+      label: 'Language code'
+    method_title:
+      type: label
+      label: 'Default title for this payment method'
+    notification_url:
+      type: uri
+      label: 'Notification callback URL'
+    secret_word:
+      type: string
       label: ''
+    server_url:
+      type: uri
+      label: '2Checkout server for POSTing transaction'
+    sid:
+      type: string
+      label: ''
+
+payment_method.settings.2checkout:
+  type: mapping
+  label: '2Checkout payment method configuration settings'
+  mapping:
+    check:
+      type: boolean
+      label: 'Allow e-checks'
     checkout_type:
       type: string
       label: 'Use direct or dynamic checkout'

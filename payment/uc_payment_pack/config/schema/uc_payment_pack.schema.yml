@@ -1,13 +1,32 @@
-uc_payment_pack.check.settings:
-  type: config_object
-  label: 'Check payment method settings'
+# Schema for the configuration files of the uc_payment_pack module.
+
+payment_method.settings.cod:
+  type: mapping
+  label: 'COD payment method configuration settings'
   mapping:
     policy:
       type: text
-      label: 'Check payment policy message'
-    mailing_address:
+      label: 'COD payment policy message'
+    max_order:
+      type: float
+      label: 'Maximum currency amount for COD'
+    delivery_date:
+      type: boolean
+      label: 'Whether to ask customer for desired delivery date'
+
+payment_method.settings.check:
+  type: mapping
+  label: 'Check payment method configuration settings'
+  mapping:
+    policy:
+      type: text
+      label: 'Payment policy message'
+    name:
+      type: string
+      label: 'Payee name'
+    address:
       type: mapping
-      label: 'Where to mail the check'
+      label: 'Accounts receivable address'
       mapping:
         name:
           type: string
@@ -34,16 +53,7 @@ uc_payment_pack.check.settings:
           type: string
           label: 'Country ID'
 
-uc_payment_pack.cod.settings:
-  type: config_object
-  label: 'COD payment method settings'
+payment_method.settings.other:
+  type: mapping
+  label: 'Other method configuration settings'
   mapping:
-    policy:
-      type: text
-      label: 'COD payment policy message'
-    max_order:
-      type: float
-      label: 'Maximum currency amount for COD'
-    delivery_date:
-      type: boolean
-      label: 'Whether to ask customer for desired delivery date'
