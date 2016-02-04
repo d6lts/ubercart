@@ -10,6 +10,7 @@ namespace Drupal\uc_paypal\Controller;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
+use Drupal\uc_order\Entity\Order;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PayPalController extends ControllerBase {
 
   /**
-   * Processes Instant Payment Notifiations from PayPal.
+   * Processes Instant Payment Notifications from PayPal.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request of the page.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_2checkout\Form\WpsForm.
+ * Contains \Drupal\uc_paypal\Form\WpsForm.
  */
 
 namespace Drupal\uc_paypal\Form;
@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_payment\PaymentMethodPluginInterface;
 
 /**
  * Form to build the submission to PayPal.
@@ -27,8 +28,8 @@ class WpsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
-    $paypal_config = $this->config('uc_paypal.settings');
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL, PaymentMethodPluginInterface $plugin = NULL) {
+    $configuration = $plugin->getConfiguration();
 
     $shipping = 0;
     foreach ($order->line_items as $item) {
@@ -44,13 +45,13 @@ class WpsForm extends FormBase {
       }
     }
 
-    $address = $paypal_config->get('wps_address_selection');
+    $address = $order->getAddress($configuration['wps_address_selection']);
 
-    $country = $order->{$address . '_country'};
+    $country = $address->country;
     $phone = '';
-    for ($i = 0; $i < strlen($order->{$address . '_phone'}); $i++) {
-      if (is_numeric($order->{$address . '_phone'}[$i])) {
-        $phone .= $order->{$address . '_phone'}[$i];
+    for ($i = 0; $i < strlen($address->phone); $i++) {
+      if (is_numeric($address->phone[$i])) {
+        $phone .= $address->phone[$i];
       }
     }
 
@@ -86,47 +87,47 @@ class WpsForm extends FormBase {
       // Display information.
       'cancel_return' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
       'no_note' => 1,
-      'no_shipping' => $paypal_config->get('wps_no_shipping'),
+      'no_shipping' => $configuration['wps_no_shipping'],
       'return' => Url::fromRoute('uc_paypal.wps_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
       'rm' => 1,
 
       // Transaction information.
-      'currency_code' => $paypal_config->get('wps_currency'),
+      'currency_code' => $configuration['wps_currency'],
       'handling_cart' => uc_currency_format($shipping, FALSE, FALSE, '.'),
-      'invoice' => $order->id() . '-' . uc_cart_get_id(),
+      'invoice' => $order->id() . '-' .  \Drupal::service('uc_cart.manager')->get()->getId(),
       'tax_cart' => uc_currency_format($tax, FALSE, FALSE, '.'),
 
       // Shopping cart specific variables.
-      'business' => trim($paypal_config->get('wps_email')),
+      'business' => trim($configuration['wps_email']),
       'upload' => 1,
 
-      'lc' => $paypal_config->get('wps_language'),
+      'lc' => $configuration['wps_language'],
 
       // Prepopulating forms/address overriding.
-      'address1' => substr($order->{$address . '_street1'}, 0, 100),
-      'address2' => substr($order->{$address . '_street2'}, 0, 100),
-      'city' => substr($order->{$address . '_city'}, 0, 40),
+      'address1' => substr($address->street1, 0, 100),
+      'address2' => substr($address->street2, 0, 100),
+      'city' => substr($address->city, 0, 40),
       'country' => $country,
       'email' => $order->getEmail(),
-      'first_name' => substr($order->{$address . '_first_name'}, 0, 32),
-      'last_name' => substr($order->{$address . '_last_name'}, 0, 64),
-      'state' => $order->{$address . '_zone'},
-      'zip' => $order->{$address . '_postal_code'},
+      'first_name' => substr($address->first_name, 0, 32),
+      'last_name' => substr($address->last_name, 0, 64),
+      'state' => $address->zone,
+      'zip' => $address->postal_code,
       'night_phone_a' => $phone_a,
       'night_phone_b' => $phone_b,
       'night_phone_c' => $phone_c,
     );
 
-    if ($paypal_config->get('wps_address_override')) {
+    if ($configuration['wps_address_override']) {
       $data['address_override'] = 1;
     }
 
     // Account for stores that just want to authorize funds instead of capture.
-    if ($paypal_config->get('wps_payment_action') == 'Authorization') {
+    if ($configuration['wps_payment_action'] == 'Authorization') {
       $data['paymentaction'] = 'authorization';
     }
 
-    if ($paypal_config->get('wps_submit_method') == 'itemized') {
+    if ($configuration['wps_submit_method'] == 'itemized') {
       // List individual items.
       $i = 0;
       foreach ($order->products as $item) {
@@ -170,7 +171,7 @@ class WpsForm extends FormBase {
       $data['os0_1'] = count($order->products);
     }
 
-    $form['#action'] = $paypal_config->get('wps_server');
+    $form['#action'] = $configuration['wps_server'];
 
     foreach ($data as $name => $value) {
       if (!empty($value)) {
@@ -184,6 +185,8 @@ class WpsForm extends FormBase {
       '#value' => $this->t('Submit order'),
     );
 
+    $form_state->disableCache();
+
     return $form;
   }
 
@@ -191,7 +194,6 @@ class WpsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
   }
 
 }
