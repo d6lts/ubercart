@@ -81,7 +81,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
   public function defaultConfiguration() {
     return [
       'wps_email' => '',
-      'wps_currency' => 'USD',
       'wps_language' => 'US',
       'wps_server' => 'https://www.sandbox.paypal.com/cgi-bin/webscr',
       'wps_payment_action' => 'Sale',
@@ -103,13 +102,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       '#title' => $this->t('PayPal e-mail address'),
       '#description' => $this->t('The e-mail address you use for the PayPal account you want to receive payments.'),
       '#default_value' => $this->configuration['wps_email'],
-    );
-    $form['wps_currency'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Currency code'),
-      '#description' => $this->t('Transactions can only be processed in one of the listed currencies.'),
-      '#options' => $this->currencies(),
-      '#default_value' => $this->configuration['wps_currency'],
     );
     $languages = array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US');
     $form['wps_language'] = array(
@@ -194,7 +186,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['wps_email'] = $form_state->getValue('wps_email');
-    $this->configuration['wps_currency'] = $form_state->getValue('wps_currency');
     $this->configuration['wps_language'] = $form_state->getValue('wps_language');
     $this->configuration['wps_server'] = $form_state->getValue('wps_server');
     $this->configuration['wps_submit_method'] = $form_state->getValue('wps_submit_method');
@@ -282,7 +273,7 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       'rm' => 1,
 
       // Transaction information.
-      'currency_code' => $this->configuration['wps_currency'],
+      'currency_code' => $order->getCurrency(),
       'handling_cart' => uc_currency_format($shipping, FALSE, FALSE, '.'),
       'invoice' => $order->id() . '-' .  \Drupal::service('uc_cart.manager')->get()->getId(),
       'tax_cart' => uc_currency_format($tax, FALSE, FALSE, '.'),
