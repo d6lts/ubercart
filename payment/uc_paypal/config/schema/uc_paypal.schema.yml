@@ -140,7 +140,7 @@ payment_method.settings.paypal_wps:
       type: string
       label: 'Submit method'
     wps_no_shipping:
-      type: boolean
+      type: string
       label: 'Shipping not included flag'
     wps_address_override:
       type: boolean

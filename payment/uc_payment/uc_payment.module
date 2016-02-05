@@ -74,7 +74,7 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $for
   foreach ($definitions as $key => $definition) {
     if (!empty($definition['express'])) {
       $express = \Drupal::formBuilder()->getForm($definition['express']);
-      $form['actions']['checkout'][] = \Drupal::service('renderer')->renderPlain($express);
+//      $form['actions']['checkout'][] = \Drupal::service('renderer')->renderPlain($express);
     }
   }
 }
@@ -87,11 +87,13 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $for
  */
 function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
   $order = $form_state->get('uc_order');
-  $definition = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->getPluginDefinition();
+  /** @var \Drupal\uc_payment\PaymentMethodPluginInterface $plugin */
+  $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+  $definition = $plugin->getPluginDefinition();
 
   if (!empty($definition['redirect'])) {
     unset($form['actions']['submit']);
-    $suffix = \Drupal::formBuilder()->getForm($definition['redirect'], $order);
+    $suffix = \Drupal::formBuilder()->getForm($definition['redirect'], $order, $plugin);
     $form['#suffix'] = \Drupal::service('renderer')->renderPlain($suffix);
   }
 }
