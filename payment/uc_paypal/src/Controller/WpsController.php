@@ -41,7 +41,8 @@ class WpsController extends ControllerBase {
     }
 
     // This lets us know it's a legitimate access of the complete page.
-    $_SESSION['uc_checkout'][$uc_order->id()]['do_complete'] = TRUE;
+    $session = \Drupal::service('session');
+    $session->set('uc_checkout_complete_' . $uc_order->id(), TRUE);
 
     return $this->redirect('uc_cart.checkout_complete');
   }

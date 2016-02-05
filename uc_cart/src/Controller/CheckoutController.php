@@ -173,14 +173,14 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
    */
   public function review() {
     $session = \Drupal::service('session');
-    if (!$session->has('cart_order') || empty($_SESSION['uc_checkout'][$session->get('cart_order')]['do_review'])) {
+    if (!$session->has('cart_order') || !$session->has('uc_checkout_review_' . $session->get('cart_order'))) {
       return $this->redirect('uc_cart.checkout');
     }
 
     $order = $this->loadOrder();
 
     if (!$order || $order->getStateId() != 'in_checkout') {
-      unset($_SESSION['uc_checkout'][$order->id()]['do_review']);
+      $session->remove('uc_checkout_complete_' . $session->get('cart_order'));
       return $this->redirect('uc_cart.checkout');
     }
     elseif (!uc_order_product_revive($order->products)) {
@@ -220,7 +220,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
    */
   public function complete() {
     $session = \Drupal::service('session');
-    if (!$session->has('cart_order') || empty($_SESSION['uc_checkout'][$session->get('cart_order')]['do_complete'])) {
+    if (!$session->has('cart_order') || !$session->has('uc_checkout_complete_' . $session->get('cart_order'))) {
       return $this->redirect('uc_cart.cart');
     }
 
@@ -235,8 +235,9 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
 
     $cart_config = $this->config('uc_cart.settings');
     $build = $this->cartManager->completeSale($order, $cart_config->get('new_customer_login'));
+
+    $session->remove('uc_checkout_complete_' . $session->get('cart_order'));
     $session->remove('cart_order');
-    unset($_SESSION['uc_checkout'][$order->id()]);
 
     // Add a comment to let sales team know this came in through the site.
     uc_order_comment_save($order->id(), 0, $this->t('Order created through website.'), 'admin');

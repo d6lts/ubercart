@@ -82,8 +82,9 @@ class CheckoutReviewForm extends FormBase {
       $form_state->setRedirect('uc_cart.checkout_review');
     }
     else {
-      unset($_SESSION['uc_checkout'][$order->id()]['do_review']);
-      $_SESSION['uc_checkout'][$order->id()]['do_complete'] = TRUE;
+      $session = \Drupal::service('session');
+      $session->remove('uc_checkout_review_' . $order->id());
+      $session->set('uc_checkout_complete_' . $order->id(), TRUE);
       $form_state->setRedirect('uc_cart.checkout_complete');
     }
   }

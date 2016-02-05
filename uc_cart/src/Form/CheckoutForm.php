@@ -121,7 +121,9 @@ class CheckoutForm extends FormBase {
     $form_state->loadInclude('uc_store', 'inc', 'includes/uc_ajax_attach');
     $form['#process'][] = 'uc_ajax_process_form';
 
-    unset($_SESSION['uc_checkout'][$order->id()]);
+    $session = \Drupal::service('session');
+    $session->remove('uc_checkout_review_' . $order->id());
+    $session->remove('uc_checkout_complete_' . $order->id());
 
     return $form;
   }
@@ -158,7 +160,8 @@ class CheckoutForm extends FormBase {
     }
     else {
       $form_state->setRedirect('uc_cart.checkout_review');
-      $_SESSION['uc_checkout'][$form_state->get('order')->id()]['do_review'] = TRUE;
+      $session = \Drupal::service('session');
+      $session->set('uc_checkout_review_' . $form_state->get('order')->id(), TRUE);
     }
 
     $form_state->set('checkout_valid', NULL);
@@ -175,7 +178,10 @@ class CheckoutForm extends FormBase {
       $session->remove('cart_order');
     }
 
-    unset($_SESSION['uc_checkout'][$order->id()]);
+    $session = \Drupal::service('session');
+    $session->remove('uc_checkout_review_' . $order->id());
+    $session->remove('uc_checkout_complete_' . $order->id());
+
     $form_state->setRedirect('uc_cart.cart');
   }
 
