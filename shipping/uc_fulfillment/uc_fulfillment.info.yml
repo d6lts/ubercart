@@ -4,5 +4,4 @@ description: 'Handles order fulfillment.'
 package: Ubercart - core (optional)
 core: 8.x
 dependencies:
-  - not_yet_ported
   - uc_quote
