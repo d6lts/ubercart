@@ -195,17 +195,13 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
   /**
    * {@inheritdoc}
    */
-  public function cartReview(OrderInterface $order) {
-    $review = array();
-
+  public function cartReviewTitle() {
     if ($this->configuration['check']) {
-      $review[] = array('title' => $this->t('Credit card/eCheck'), 'data' => NULL);
+      return $this->t('Credit card/eCheck');
     }
     else {
-      $review[] = array('title' => $this->t('Credit card'), 'data' => NULL);
+      return $this->t('Credit card');
     }
-
-    return $review;
   }
 
   /**
@@ -243,7 +239,6 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
     }
 
     $i = 0;
-    $order->products = \Drupal::entityTypeManager()->getStorage('uc_order_product')->loadByProperties(['order_id' => $order->id()]);
     foreach ($order->products as $product) {
       $i++;
       $data['li_' . $i . '_type'] = 'product';
