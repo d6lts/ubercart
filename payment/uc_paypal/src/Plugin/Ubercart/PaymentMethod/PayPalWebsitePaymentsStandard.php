@@ -57,7 +57,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
     $build['includes'] = array(
       '#markup' => $this->t('Includes:') . ' ',
     );
-    $path = base_path() . drupal_get_path('module', 'uc_credit');
     $cc_types = $this->getEnabledTypes();
     foreach ($cc_types as $type => $description) {
       $build['image'][$type] = array(
