@@ -43,7 +43,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
    * {@inheritdoc}
    */
   public function getDisplayLabel($label) {
-    $build['#attached']['library'][] = 'uc_paypal/uc_paypal.styles';
     $build['paypal-mark'] = array(
       '#theme' => 'image',
       '#uri' => 'https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif',
@@ -56,8 +55,7 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       '#suffix' => '<br /> ',
     );
     $build['includes'] = array(
-      '#prefix' => '<span id="paypal-includes">',
-      '#markup' => $this->t('Includes:'),
+      '#markup' => $this->t('Includes:') . ' ',
     );
     $path = base_path() . drupal_get_path('module', 'uc_credit');
     $cc_types = $this->getEnabledTypes();
@@ -70,7 +68,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       );
     }
     $build['image']['paypal'] = $build['paypal-mark'];
-    $build['image']['paypal']['#suffix'] = '</span> ';
 
     return $build;
   }
