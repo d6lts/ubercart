@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_fulfillment\Plugin\Ubercart\OrderPane\Packages.
+ * Contains \Drupal\uc_fulfillment\Plugin\Ubercart\OrderPane\Tracking.
  */
 
 namespace Drupal\uc_fulfillment\Plugin\Ubercart\OrderPane;
@@ -15,12 +15,12 @@ use Drupal\uc_order\OrderInterface;
  * Display tracking numbers of shipped packages.
  *
  * @UbercartOrderPane(
- *   id = "packages",
+ *   id = "tracking",
  *   title = @Translation("Tracking numbers"),
  *   weight = 7,
  * )
  */
-class Packages extends OrderPanePluginBase {
+class Tracking extends OrderPanePluginBase {
 
   /**
    * {@inheritdoc}
