@@ -18,6 +18,8 @@ use Drupal\Component\Utility\Xss;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Entity\PaymentMethod;
+use Drupal\uc_payment\Form\OffsitePaymentMethodForm;
+use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
 use Drupal\user\Entity\User;
 
 
@@ -89,11 +91,11 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInt
   $order = $form_state->get('uc_order');
   /** @var \Drupal\uc_payment\PaymentMethodPluginInterface $plugin */
   $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
-  $definition = $plugin->getPluginDefinition();
 
-  if (!empty($definition['redirect'])) {
+  if ($plugin instanceof OffsitePaymentMethodPluginInterface) {
     unset($form['actions']['submit']);
-    $suffix = \Drupal::formBuilder()->getForm($definition['redirect'], $order, $plugin);
+    $offsite_form = new OffsitePaymentMethodForm($plugin);
+    $suffix = \Drupal::formBuilder()->getForm($offsite_form, $order);
     $form['#suffix'] = \Drupal::service('renderer')->renderPlain($suffix);
   }
 }
