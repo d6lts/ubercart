@@ -15,6 +15,7 @@ use Drupal\uc_cart\CartManagerInterface;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
 use Drupal\uc_order\Entity\Order;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Controller routines for the checkout.
@@ -36,16 +37,26 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
   protected $cartManager;
 
   /**
+   * The session.
+   *
+   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+   */
+  protected $session;
+
+  /**
    * Constructs a CheckoutController.
    *
    * @param \Drupal\uc_cart\Plugin\CheckoutPaneManager $checkout_pane_manager
    *   The checkout pane plugin manager.
    * @param \Drupal\uc_cart\CartManagerInterface $cart_manager
    *   The cart manager.
+   * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+   *   The session.
    */
-  public function __construct(CheckoutPaneManager $checkout_pane_manager, CartManagerInterface $cart_manager) {
+  public function __construct(CheckoutPaneManager $checkout_pane_manager, CartManagerInterface $cart_manager, SessionInterface $session) {
     $this->checkoutPaneManager = $checkout_pane_manager;
     $this->cartManager = $cart_manager;
+    $this->session = $session;
   }
 
   /**
@@ -54,7 +65,8 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.uc_cart.checkout_pane'),
-      $container->get('uc_cart.manager')
+      $container->get('uc_cart.manager'),
+      $container->get('session')
     );
   }
 
@@ -79,8 +91,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     }
 
     // Load an order from the session, if available.
-    $session = \Drupal::service('session');
-    if ($session->has('cart_order')) {
+    if ($this->session->has('cart_order')) {
       $order = $this->loadOrder();
       if ($order) {
         // Don't use an existing order if it has changed status or owner, or if
@@ -97,7 +108,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       }
       else {
         // Ghost session.
-        $session->remove('cart_order');
+        $this->session->remove('cart_order');
         drupal_set_message($this->t('Your session has expired or is no longer valid.  Please review your order and try again.'));
         return $this->redirect('uc_cart.cart');
       }
@@ -110,7 +121,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
         drupal_set_message($this->t('Your session has expired or is no longer valid.  Please review your order and try again.'));
         return $this->redirect('uc_cart.cart');
       }
-      elseif ($session->has('uc_cart_order_rebuild')) {
+      elseif ($this->session->has('uc_cart_order_rebuild')) {
         drupal_set_message($this->t('Your shopping cart contents have changed. Please review your order and try again.'));
         return $this->redirect('uc_cart.cart');
       }
@@ -124,10 +135,10 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
           'uid' => $this->currentUser()->id(),
         ));
         $order->save();
-        $session->set('cart_order', $order->id());
+        $this->session->set('cart_order', $order->id());
         $rebuild = TRUE;
       }
-      elseif ($session->has('uc_cart_order_rebuild')) {
+      elseif ($this->session->has('uc_cart_order_rebuild')) {
         // Or, if the cart has changed, then remove old products and line items.
         $result = \Drupal::entityQuery('uc_order_product')
           ->condition('order_id', $order->id())
@@ -147,7 +158,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
         foreach ($items as $item) {
           $order->products[] = $item->toOrderProduct();
         }
-        $session->remove('uc_cart_order_rebuild');
+        $this->session->remove('uc_cart_order_rebuild');
       }
       elseif (!uc_order_product_revive($order->products)) {
         drupal_set_message($this->t('Some of the products in this order are no longer available.'), 'error');
@@ -172,15 +183,14 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
    * Allows a customer to review their order before finally submitting it.
    */
   public function review() {
-    $session = \Drupal::service('session');
-    if (!$session->has('cart_order') || !$session->has('uc_checkout_review_' . $session->get('cart_order'))) {
+    if (!$this->session->has('cart_order') || !$this->session->has('uc_checkout_review_' . $this->session->get('cart_order'))) {
       return $this->redirect('uc_cart.checkout');
     }
 
     $order = $this->loadOrder();
 
     if (!$order || $order->getStateId() != 'in_checkout') {
-      $session->remove('uc_checkout_complete_' . $session->get('cart_order'));
+      $this->session->remove('uc_checkout_complete_' . $this->session->get('cart_order'));
       return $this->redirect('uc_cart.checkout');
     }
     elseif (!uc_order_product_revive($order->products)) {
@@ -219,8 +229,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
    * Completes the sale and finishes checkout.
    */
   public function complete() {
-    $session = \Drupal::service('session');
-    if (!$session->has('cart_order') || !$session->has('uc_checkout_complete_' . $session->get('cart_order'))) {
+    if (!$this->session->has('cart_order') || !$this->session->has('uc_checkout_complete_' . $this->session->get('cart_order'))) {
       return $this->redirect('uc_cart.cart');
     }
 
@@ -229,15 +238,15 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     if (empty($order)) {
       // Display messages to customers and the administrator if the order was lost.
       drupal_set_message($this->t("We're sorry.  An error occurred while processing your order that prevents us from completing it at this time. Please contact us and we will resolve the issue as soon as possible."), 'error');
-      $this->logger('uc_cart')->error('An empty order made it to checkout! Cart order ID: @cart_order', ['@cart_order' => $session->get('cart_order')]);
+      $this->logger('uc_cart')->error('An empty order made it to checkout! Cart order ID: @cart_order', ['@cart_order' => $this->session->get('cart_order')]);
       return $this->redirect('uc_cart.cart');
     }
 
     $cart_config = $this->config('uc_cart.settings');
     $build = $this->cartManager->completeSale($order, $cart_config->get('new_customer_login'));
 
-    $session->remove('uc_checkout_complete_' . $session->get('cart_order'));
-    $session->remove('cart_order');
+    $this->session->remove('uc_checkout_complete_' . $this->session->get('cart_order'));
+    $this->session->remove('cart_order');
 
     // Add a comment to let sales team know this came in through the site.
     uc_order_comment_save($order->id(), 0, $this->t('Order created through website.'), 'admin');
@@ -252,7 +261,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
    *   The order object.
    */
   protected function loadOrder() {
-    $id = \Drupal::service('session')->get('cart_order');
+    $id = $this->session->get('cart_order');
     // Reset uc_order entity cache then load order.
     $storage = \Drupal::entityTypeManager()->getStorage('uc_order');
     $storage->resetCache([$id]);
