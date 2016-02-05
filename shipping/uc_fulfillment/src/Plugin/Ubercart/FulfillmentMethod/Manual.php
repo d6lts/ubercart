@@ -10,6 +10,7 @@ namespace Drupal\uc_fulfillment\Plugin\Ubercart\FulfillmentMethod;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_fulfillment\Package;
 use Drupal\uc_fulfillment\FulfillmentMethodPluginBase;
 
 /**
@@ -94,7 +95,7 @@ class Manual extends FulfillmentMethodPluginBase {
     $shipment->order_id = $order->id();
     $shipment->packages = array();
     foreach ($package_ids as $id) {
-      $package = uc_fulfillment_package_load($id);
+      $package = Package::load($id);
       $shipment->packages[$id] = $package;
     }
 

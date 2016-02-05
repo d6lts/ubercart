@@ -197,7 +197,7 @@ class FulfillmentTest extends UbercartTestBase {
 
     // Check View, Edit, Delete, Print, and Packing Slip actions and tabs.
 
-    // Check for "Tracking numbers:" order pane after this order has
+    // Check for "Tracking" order pane after this order has
     // been shipped and a tracking number entered.
     $this->drupalGet('admin/store/orders/' . $order->id());
     $this->assertText(

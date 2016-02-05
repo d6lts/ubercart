@@ -42,7 +42,7 @@ class PackageWeight extends Weight {
    * Overrides uc_product_handler_field_weight::render().
    */
   public function render($values) {
-    $package = uc_fulfillment_package_load($values->{$this->aliases['package_id']});
+    $package = Package::load($values->{$this->aliases['package_id']});
 
     if ($this->options['format'] == 'numeric') {
       return $package->weight;

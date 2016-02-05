@@ -11,6 +11,7 @@ namespace Drupal\uc_fulfillment\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\uc_fulfillment\Package;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -40,8 +41,9 @@ class PackageController extends ControllerBase {
       $this->t('Actions')
     );
     $rows = array();
-    $result = db_query('SELECT * FROM {uc_packages} WHERE order_id = :id', [':id' => $uc_order->id()]);
-    foreach ($result as $package) {
+    $result = db_query('SELECT package_id FROM {uc_packages} WHERE order_id = :id', [':id' => $uc_order->id()]);
+    while ($package_id = $result->fetchField()) {
+      $package = Package::load($package_id);
 
       $row = array();
       // Package ID.

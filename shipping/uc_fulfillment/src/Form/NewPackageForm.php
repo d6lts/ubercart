@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_fulfillment\Package;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -159,6 +160,7 @@ class NewPackageForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($this->t('Cancel') != (string) $form_state->getValue('op')) {
+      // Package 0 is a temporary array, all other elements are Package objects.
       $packages = array(0 => array());
 
       foreach ($form_state->getValue('shipping_types') as $shipping_type => $products) {
@@ -169,10 +171,13 @@ class NewPackageForm extends FormBase {
             }
 
             if ($product['package'] != 0) {
-              $packages[$product['package']]['products'][$id] = (object) $product;
+              if (empty($packages[$product['package']])) {
+                $packages[$product['package']] = Package::create();
+              }
+              $packages[$product['package']]->products[$id] = (object) $product;
 
-              if (!isset($packages[$product['package']]['shipping_type'])) {
-                $packages[$product['package']]['shipping_type'] = $shipping_type;
+              if (!isset($packages[$product['package']]->shipping_type)) {
+                $packages[$product['package']]->shipping_type = $shipping_type;
               }
             }
             else {
@@ -188,7 +193,7 @@ class NewPackageForm extends FormBase {
             $product->qty = 1;
             // Create a package for each product.
             for ($i = 0; $i < $qty; $i++) {
-              $packages[] = array('products' => array($id => $product), 'shipping_type' => $shipping_type);
+              $packages[] = Package::create(['products' => [$id => $product], 'shipping_type' => $shipping_type]);
             }
           }
         }
@@ -197,12 +202,13 @@ class NewPackageForm extends FormBase {
       }
 
       if (empty($packages[0])) {
+        // This should always be true?
         unset($packages[0]);
       }
 
       foreach ($packages as $package) {
-        $package['order_id'] = $form_state->getValue('order_id');
-        uc_fulfillment_package_save($package);
+        $package->order_id = $form_state->getValue('order_id');
+        $package->save();
       }
 
       $form_state->setRedirect('uc_fulfillment.packages', ['uc_order' => $form_state->getValue('order_id')]);

@@ -10,12 +10,20 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\uc_fulfillment\Package;
 use Drupal\uc_order\OrderInterface;
 
 /**
  * Decides to unpackage products.
  */
 class PackageDeleteForm extends ConfirmFormBase {
+
+  /**
+   * The package.
+   *
+   * @var \Drupal\uc_fulfillment\Package
+   */
+  protected $package;
 
   /**
    * The order id.
@@ -79,12 +87,8 @@ class PackageDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $package_id = NULL) {
+    $this->package = Package::load($package_id);
     $this->order_id = $uc_order->id();
-
-    $form['package_id'] = array(
-      '#type' => 'value',
-      '#value' => $package_id,
-    );
 
     return parent::buildForm($form, $form_state);
   }
@@ -93,7 +97,7 @@ class PackageDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    uc_fulfillment_package_delete($form_state->getValue('package_id'));
+    $this->package->delete();
 
     $form_state->setRedirectUrl($this->getCancelUrl());
   }

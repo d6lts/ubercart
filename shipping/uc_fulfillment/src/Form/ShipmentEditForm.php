@@ -11,6 +11,8 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_fulfillment\Package;
+use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -32,14 +34,14 @@ class ShipmentEditForm extends FormBase {
     // Sometimes $shipment is an ID, sometimes it's an object. FIX THIS! @todo
     if (!is_object($shipment)) {
       // Then $shipment is an ID.
-      $shipment = uc_fulfillment_shipment_load($shipment);
+      $shipment = Shipment::load($shipment);
     }
     elseif (isset($shipment->sid)) {
       $form['sid'] = array(
         '#type' => 'value',
         '#value' => $shipment->sid,
       );
-      $shipment = uc_fulfillment_shipment_load($shipment->sid);
+      $shipment = Shipment::load($shipment->sid);
       $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
       if (isset($methods[$shipment->shipping_method])) {
         $method = $methods[$shipment->shipping_method];
@@ -86,10 +88,6 @@ class ShipmentEditForm extends FormBase {
       $pkg_form['products'] = array(
         '#theme' => 'item_list',
         '#items' => $product_list,
-      );
-      $pkg_form['package_id'] = array(
-        '#type' => 'hidden',
-        '#value' => $id,
       );
       $pkg_form['pkg_type'] = array(
         '#type' => 'textfield',
@@ -304,7 +302,7 @@ class ShipmentEditForm extends FormBase {
     }
     $shipment->packages = array();
     foreach ($form_state->getValue('packages') as $id => $pkg_form) {
-      $package = uc_fulfillment_package_load($id);
+      $package = Package::load($id);
       $package->pkg_type = $pkg_form['pkg_type'];
       $package->value = $pkg_form['declared_value'];
       $package->length = $pkg_form['dimensions']['length'];
@@ -325,7 +323,7 @@ class ShipmentEditForm extends FormBase {
     $shipment->expected_delivery = $form_state->getValue('expected_delivery')->getTimestamp();
     $shipment->cost = $form_state->getValue('cost');
 
-    uc_fulfillment_shipment_save($shipment);
+    $shipment->save();
 
     $form_state->setRedirect('uc_fulfillment.shipments', ['uc_order' => $form_state->getValue('order_id')]);
   }

@@ -14,6 +14,7 @@ use Drupal\Core\Url;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_fulfillment\Entity\FulfillmentMethod;
+use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Address;
 use Symfony\Component\HttpFoundation\Request;
@@ -215,7 +216,7 @@ class ShipmentController extends ControllerBase {
    *   A render array.
    */
   public function viewShipment(OrderInterface $uc_order, $shipment_id) {
-    $shipment = uc_fulfillment_shipment_load($shipment_id);
+    $shipment = Shipment::load($shipment_id);
 
     // Origin address.
     $build['pickup_address'] = array(
@@ -360,7 +361,7 @@ class ShipmentController extends ControllerBase {
    *   A render array.
    */
   public function viewPackage($package) {
-    $shipment = uc_fulfillment_shipment_load($package->sid);
+    $shipment = Shipment::load($package->sid);
     $build = array(
       '#type' => 'container',
       '#attributes' => array('class' => array('order-pane', 'pos-left')),

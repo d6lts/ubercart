@@ -10,12 +10,20 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_fulfillment\Package;
 use Drupal\uc_order\OrderInterface;
 
 /**
  * Rearranges the products in or out of a package.
  */
 class PackageEditForm extends FormBase {
+
+  /**
+   * The package.
+   *
+   * @var \Drupal\uc_fulfillment\Package
+   */
+  protected $package;
 
   /**
    * {@inheritdoc}
@@ -28,7 +36,7 @@ class PackageEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $package_id = NULL) {
-    $package = uc_fulfillment_package_load($package_id);
+    $this->package = Package::load($package_id);
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'uc_fulfillment/uc_fulfillment.scripts';
@@ -54,8 +62,8 @@ class PackageEditForm extends FormBase {
     foreach ($result as $packaged_product) {
       // Make already packaged products unavailable, except those in this package.
       $products[$packaged_product->order_product_id]->qty->value -= $packaged_product->quantity;
-      if (isset($package->products[$packaged_product->order_product_id])) {
-        $products[$packaged_product->order_product_id]->qty->value += $package->products[$packaged_product->order_product_id]->qty;
+      if (isset($this->package->products[$packaged_product->order_product_id])) {
+        $products[$packaged_product->order_product_id]->qty->value += $this->package->products[$packaged_product->order_product_id]->qty;
       }
     }
 
@@ -70,7 +78,7 @@ class PackageEditForm extends FormBase {
         $row = array();
         $row['checked'] = array(
           '#type' => 'checkbox',
-          '#default_value' => isset($package->products[$product->order_product_id->value]),
+          '#default_value' => isset($this->package->products[$product->order_product_id->value]),
         );
         $row['model'] = array(
           '#markup' => $product->model->value,
@@ -83,7 +91,7 @@ class PackageEditForm extends FormBase {
         $row['qty'] = array(
           '#type' => 'select',
           '#options' => array_combine($range, $range),
-          '#default_value' => isset($package->products[$product->order_product_id->value]) ? $package->products[$product->order_product_id->value]->qty : 1,
+          '#default_value' => isset($this->package->products[$product->order_product_id->value]) ? $this->package->products[$product->order_product_id->value]->qty : 1,
         );
 
         $form['products'][$product->order_product_id->value] = $row;
@@ -99,12 +107,7 @@ class PackageEditForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Shipping type'),
       '#options' => $options,
-      '#default_value' => $package->shipping_type,
-    );
-
-    $form['package_id'] = array(
-      '#type' => 'hidden',
-      '#value' => $package_id,
+      '#default_value' => isset($this->package->shipping_type) ? $this->package->shipping_type : 'small_package',
     );
 
     $form['actions'] = array('#type' => 'actions');
@@ -120,19 +123,18 @@ class PackageEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $package = uc_fulfillment_package_load($form_state->getValue('package_id'));
     foreach ($form_state->getValue('products') as $id => $product) {
       if ($product['checked']) {
-        $package->products[$id] = (object)$product;
+        $this->package->products[$id] = (object)$product;
       }
       else {
-        unset($package->products[$id]);
+        unset($this->package->products[$id]);
       }
     }
-    $package->shipping_type = $form_state->getValue('shipping_type');
-    uc_fulfillment_package_save($package);
+    $this->package->shipping_type = $form_state->getValue('shipping_type');
+    $this->package->save();
 
-    $form_state->setRedirect('uc_fulfillment.packages', ['uc_order' => $package->order_id]);
+    $form_state->setRedirect('uc_fulfillment.packages', ['uc_order' => $this->package->order_id]);
   }
 
 }

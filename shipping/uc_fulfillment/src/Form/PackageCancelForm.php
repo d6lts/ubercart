@@ -10,6 +10,8 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\uc_fulfillment\Package;
+use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -93,8 +95,8 @@ class PackageCancelForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $package = uc_fulfillment_package_load($form_state->getValue('package_id'));
-    $shipment = uc_fulfillment_shipment_load($package->sid);
+    $package = Package::load($form_state->getValue('package_id'));
+    $shipment = Shipment::load($package->sid);
     $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
     if (isset($methods[$shipment->shipping_method]['cancel']) &&
         function_exists($methods[$shipment->shipping_method]['cancel'])) {
@@ -117,7 +119,7 @@ class PackageCancelForm extends ConfirmFormBase {
 
         unset($shipment->packages[$package->package_id]);
         if (!count($shipment->packages)) {
-          uc_fulfillment_shipment_delete($shipment->sid);
+          $shipment->delete();
         }
       }
     }

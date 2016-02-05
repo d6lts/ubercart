@@ -9,6 +9,7 @@ namespace Drupal\uc_fulfillment\Plugin\Ubercart\OrderPane;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderPanePluginBase;
+use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -37,7 +38,7 @@ class Tracking extends OrderPanePluginBase {
       $tracking = array();
       $result = db_query('SELECT sid FROM {uc_shipments} WHERE order_id = :id', [':id' => $order->id()]);
       foreach ($result as $shipment) {
-        $shipment = uc_fulfillment_shipment_load($shipment->sid);
+        $shipment = Shipment::load($shipment->sid);
         if ($shipment->tracking_number) {
           $tracking[$shipment->carrier]['data'] = $shipment->carrier;
           $tracking[$shipment->carrier]['children'][] = $shipment->tracking_number;
