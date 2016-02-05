@@ -29,7 +29,7 @@ class NewShipmentForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, Request $request = NULL) {
-    $checked_pkgs = $request->query->has('pkgs') ? $request->query->get('pkgs') : array();
+    $checked_pkgs = $request->query->has('pkgs') ? (array) $request->query->get('pkgs') : array();
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'uc_fulfillment/uc_fulfillment.scripts';
 

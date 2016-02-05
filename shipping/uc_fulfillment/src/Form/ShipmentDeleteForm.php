@@ -19,6 +19,8 @@ class ShipmentDeleteForm extends ConfirmFormBase {
 
   /**
    * The order id.
+   *
+   * @var \Drupal\uc_order\OrderInterface
    */
   protected $order_id;
 
