@@ -40,11 +40,3 @@ uc_paypal.wps_complete:
     _title: 'PayPal payment complete'
   requirements:
     _permission: 'access content'
-
-uc_paypal.wps_cancel:
-  path: '/uc_paypal/wps/cancel'
-  defaults:
-    _controller: '\Drupal\uc_paypal\Controller\WpsController::wpsCancel'
-    _title: 'PayPal payment canceled'
-  requirements:
-    _permission: 'access content'

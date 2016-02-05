@@ -47,21 +47,4 @@ class WpsController extends ControllerBase {
     return $this->redirect('uc_cart.checkout_complete');
   }
 
-  /**
-   * Handles a canceled Website Payments Standard sale.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   A redirect to the WPS cancel page.
-   */
-  public function wpsCancel() {
-    $paypal_config = $this->config('uc_paypal.settings');
-    $session = \Drupal::service('session');
-
-    $session->remove('cart_order');
-
-    drupal_set_message($this->t('Your PayPal payment was canceled. Please feel free to continue shopping or contact us for assistance.'));
-
-    $this->redirect($paypal_config->get('wps_cancel_return_url'));
-  }
-
 }

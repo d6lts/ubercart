@@ -84,7 +84,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       'wps_language' => 'US',
       'wps_server' => 'https://www.sandbox.paypal.com/cgi-bin/webscr',
       'wps_payment_action' => 'Sale',
-      'wps_cancel_return_url' => 'cart',
       'wps_submit_method' => 'single',
       'wps_no_shipping' => '1',
       'wps_address_override' => TRUE,
@@ -129,14 +128,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
         'Authorization' => $this->t('Authorization'),
       ),
       '#default_value' => $this->configuration['wps_payment_action'],
-    );
-    $form['wps_cancel_return_url'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Cancel return URL'),
-      '#description' => $this->t('Specify the path customers who cancel their PayPal WPS payment will be directed to when they return to your site.'),
-      '#default_value' => $this->configuration['wps_cancel_return_url'],
-      '#size' => 32,
-      '#field_prefix' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
     );
     $form['wps_submit_method'] = array(
       '#type' => 'radios',
@@ -266,7 +257,7 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       'notify_url' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
 
       // Display information.
-      'cancel_return' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
+      'cancel_return' => Url::fromRoute('uc_cart.checkout_review', [], ['absolute' => TRUE])->toString(),
       'no_note' => 1,
       'no_shipping' => $this->configuration['wps_no_shipping'],
       'return' => Url::fromRoute('uc_paypal.wps_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),

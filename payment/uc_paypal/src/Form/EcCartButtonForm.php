@@ -59,7 +59,7 @@ class EcCartButtonForm extends FormBase {
     $nvp_request = array(
       'METHOD' => 'SetExpressCheckout',
       'RETURNURL' => Url::fromRoute('uc_paypal.ec_review', [], ['absolute' => TRUE])->toString(),
-      'CANCELURL' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
+      'CANCELURL' => Url::fromRoute('uc_cart.cart', [], ['absolute' => TRUE])->toString(),
       'AMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
       'CURRENCYCODE' => $paypal_config->get('wpp_currency'),
       'PAYMENTACTION' => $paypal_config->get('wpp_cc_txn_type') == 'authorize' ? 'Authorization' : 'Sale',
