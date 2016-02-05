@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * The checkout form built up from the enabled checkout panes.
@@ -27,13 +28,23 @@ class CheckoutForm extends FormBase {
   protected $checkoutPaneManager;
 
   /**
+   * The session.
+   *
+   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+   */
+  protected $session;
+
+  /**
    * Constructs a CheckoutController.
    *
    * @param \Drupal\uc_cart\Plugin\CheckoutPaneManager $checkout_pane_manager
    *   The checkout pane plugin manager.
+   * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+   *   The session.
    */
-  public function __construct(CheckoutPaneManager $checkout_pane_manager) {
+  public function __construct(CheckoutPaneManager $checkout_pane_manager, SessionInterface $session) {
     $this->checkoutPaneManager = $checkout_pane_manager;
+    $this->session = $session;
   }
 
   /**
@@ -41,7 +52,8 @@ class CheckoutForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.uc_cart.checkout_pane')
+      $container->get('plugin.manager.uc_cart.checkout_pane'),
+      $container->get('session')
     );
   }
 
@@ -121,9 +133,8 @@ class CheckoutForm extends FormBase {
     $form_state->loadInclude('uc_store', 'inc', 'includes/uc_ajax_attach');
     $form['#process'][] = 'uc_ajax_process_form';
 
-    $session = \Drupal::service('session');
-    $session->remove('uc_checkout_review_' . $order->id());
-    $session->remove('uc_checkout_complete_' . $order->id());
+    $this->session->remove('uc_checkout_review_' . $order->id());
+    $this->session->remove('uc_checkout_complete_' . $order->id());
 
     return $form;
   }
@@ -160,8 +171,7 @@ class CheckoutForm extends FormBase {
     }
     else {
       $form_state->setRedirect('uc_cart.checkout_review');
-      $session = \Drupal::service('session');
-      $session->set('uc_checkout_review_' . $form_state->get('order')->id(), TRUE);
+      $this->session->set('uc_checkout_review_' . $form_state->get('order')->id(), TRUE);
     }
 
     $form_state->set('checkout_valid', NULL);
@@ -172,15 +182,13 @@ class CheckoutForm extends FormBase {
    */
   public function cancel(array &$form, FormStateInterface $form_state) {
     $order = $form_state->get('order');
-    $session = \Drupal::service('session');
-    if ($session->has('cart_order') && $session->get('cart_order') == $order->id()) {
-      uc_order_comment_save($session->get('cart_order'), 0, $this->t('Customer canceled this order from the checkout form.'));
-      $session->remove('cart_order');
+    if ($this->session->get('cart_order') == $order->id()) {
+      uc_order_comment_save($order->id(), 0, $this->t('Customer canceled this order from the checkout form.'));
+      $this->session->remove('cart_order');
     }
 
-    $session = \Drupal::service('session');
-    $session->remove('uc_checkout_review_' . $order->id());
-    $session->remove('uc_checkout_complete_' . $order->id());
+    $this->session->remove('uc_checkout_review_' . $order->id());
+    $this->session->remove('uc_checkout_complete_' . $order->id());
 
     $form_state->setRedirect('uc_cart.cart');
   }
