@@ -51,7 +51,6 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
     return [
       'check' => FALSE,
       'checkout_type' => 'dynamic',
-      'currency_code' => '',
       'demo' => TRUE,
       'language' => 'en',
       'method_title' => 'Credit card on a secure server:',
@@ -94,17 +93,6 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
         'sp' => $this->t('Spanish'),
       ),
       '#default_value' => $this->configuration['language'],
-    );
-    $form['currency_code'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Currency for the sale'),
-      '#options' => array(
-        '' => $this->t('Auto detected by 2Checkout'),
-        'USD', 'EUR', 'ARS', 'AUD', 'BRL', 'GBP', 'CAD', 'DKK', 'HKD', 'INR',
-        'ILS', 'JPY', 'LTL', 'MYR', 'MXN', 'NZD', 'NOK', 'PHP', 'RON', 'RUB',
-        'SGD', 'ZAR', 'SEK', 'CHF', 'TRY', 'AED',
-      ),
-      '#default_value' => $this->configuration['currency_code'],
     );
     $form['check'] = array(
       '#type' => 'checkbox',
@@ -149,7 +137,6 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['check'] = $form_state->getValue('check');
     $this->configuration['checkout_type'] = $form_state->getValue('checkout_type');
-    $this->configuration['currency_code'] = $form_state->getValue('currency_code');
     $this->configuration['demo'] = $form_state->getValue('demo');
     $this->configuration['language'] = $form_state->getValue('language');
     $this->configuration['notification_url'] = $form_state->getValue('notification_url');
@@ -231,12 +218,9 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
       'x_receipt_link_url' => Url::fromRoute('uc_2checkout.complete', ['cart_id' => \Drupal::service('uc_cart.manager')->get()->getId()], ['absolute' => TRUE])->toString(),
 
       'total' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
+      'currency_code' => $order->getCurrency(),
       'cart_order_id' => $order->id(),
     );
-
-    if ($currency_code = $this->configuration['currency_code']) {
-      $data['currency_code'] = $currency_code;
-    }
 
     $i = 0;
     foreach ($order->products as $product) {
