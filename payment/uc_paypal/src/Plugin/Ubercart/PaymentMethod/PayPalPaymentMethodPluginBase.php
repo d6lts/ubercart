@@ -23,7 +23,6 @@ abstract class PayPalPaymentMethodPluginBase extends PaymentMethodPluginBase {
   public function defaultConfiguration() {
     return [
       'wps_email' => '',
-      'wpp_currency' => 'USD',
       'wpp_server' => 'https://api-3t.sandbox.paypal.com/nvp',
       'api' => [
         'api_username' => '',
@@ -42,13 +41,6 @@ abstract class PayPalPaymentMethodPluginBase extends PaymentMethodPluginBase {
       '#title' => $this->t('PayPal e-mail address'),
       '#description' => $this->t('The e-mail address you use for the PayPal account you want to receive payments.'),
       '#default_value' => $this->configuration['wps_email'],
-    );
-    $form['wpp_currency'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Currency code'),
-      '#description' => $this->t('Transactions can only be processed in one of the listed currencies.'),
-      '#options' => $this->currencies(),
-      '#default_value' => $this->configuration['wpp_currency'],
     );
     $form['wpp_server'] = array(
       '#type' => 'select',
@@ -90,23 +82,10 @@ abstract class PayPalPaymentMethodPluginBase extends PaymentMethodPluginBase {
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['wps_email'] = trim($form_state->getValue('wps_email'));
-    $this->configuration['wpp_currency'] = $form_state->getValue('wpp_currency');
     $this->configuration['wpp_server'] = $form_state->getValue('wpp_server');
     $this->configuration['api']['api_username'] = $form_state->getValue(['settings', 'api', 'api_username']);
     $this->configuration['api']['api_password'] = $form_state->getValue(['settings', 'api', 'api_password']);
     $this->configuration['api']['api_signature'] = $form_state->getValue(['settings', 'api', 'api_signature']);
   }
 
-
-  /**
-   * Returns an array of possible currency codes.
-   */
-  protected function currencies() {
-    $currencies = array(
-      'AUD', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP',
-      'HKD', 'HUF', 'ILS', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD',
-      'PHP', 'PLN', 'SEK', 'SGD', 'THB', 'TWD', 'USD'
-     );
-    return array_combine($currencies, $currencies);
-  }
 }

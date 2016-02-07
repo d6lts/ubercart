@@ -26,7 +26,7 @@ class WppController extends ControllerBase {
         'METHOD' => 'DoCapture',
         'AUTHORIZATIONID' => $data['auth_id'],
         'AMT' => uc_currency_format($amount, FALSE, FALSE, '.'),
-        'CURRENCYCODE' => $paypal_config->get('wpp_currency'),
+        'CURRENCYCODE' => $order->getCurrency(),
         'COMPLETETYPE' => 'Complete',
       );
     }
@@ -88,7 +88,7 @@ class WppController extends ControllerBase {
         'STATE' => $order->billing_zone,
         'ZIP' => $order->billing_postal_code,
         'COUNTRYCODE' => $order->billing_country,
-        'CURRENCYCODE' => $paypal_config->get('wpp_currency'),
+        'CURRENCYCODE' => $order->getCurrency(),
         'DESC' => substr($desc, 0, 127),
         'INVNUM' => $order_id . '-' . REQUEST_TIME,
         'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',

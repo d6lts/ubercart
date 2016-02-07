@@ -131,7 +131,7 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
     'RETURNURL' => Url::fromRoute('cart/echeckout/selected', [], ['absolute' => TRUE])->toString(),
     'CANCELURL' => Url::fromRoute('uc_cart.checkout_review', [], ['absolute' => TRUE])->toString(),
     'AMT' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
-    'CURRENCYCODE' => $paypal_config->get('wpp_currency'),
+    'CURRENCYCODE' => $order->getCurrency(),
     'PAYMENTACTION' => $paypal_config->get('uc_pg_paypal_wpp_cc_txn_type') == 'authorize' ? 'Authorization' : 'Sale',
     'DESC' => substr($desc, 0, 127),
     'INVNUM' => $order->id() . '-' . REQUEST_TIME,
@@ -217,7 +217,7 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
     'ITEMAMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
     'SHIPPINGAMT' => uc_currency_format($shipping, FALSE, FALSE, '.'),
     'TAXAMT' => uc_currency_format($tax, FALSE, FALSE, '.'),
-    'CURRENCYCODE' => $paypal_config->get('wpp_currency'),
+    'CURRENCYCODE' => $order->getCurrency(),
   );
 
   $nvp_response = uc_paypal_api_request($nvp_request, $paypal_config->get('wpp_server'));

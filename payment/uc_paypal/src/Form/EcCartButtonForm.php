@@ -61,7 +61,7 @@ class EcCartButtonForm extends FormBase {
       'RETURNURL' => Url::fromRoute('uc_paypal.ec_review', [], ['absolute' => TRUE])->toString(),
       'CANCELURL' => Url::fromRoute('uc_cart.cart', [], ['absolute' => TRUE])->toString(),
       'AMT' => uc_currency_format($subtotal, FALSE, FALSE, '.'),
-      'CURRENCYCODE' => $paypal_config->get('wpp_currency'),
+      'CURRENCYCODE' => $order->getCurrency(),
       'PAYMENTACTION' => $paypal_config->get('wpp_cc_txn_type') == 'authorize' ? 'Authorization' : 'Sale',
       'DESC' => substr($desc, 0, 127),
       'INVNUM' => $order->id() . '-' . REQUEST_TIME,

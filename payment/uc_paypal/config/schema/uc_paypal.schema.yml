@@ -7,9 +7,6 @@ uc_paypal.settings:
     wps_email:
       type: email
       label: 'PayPal e-mail address'
-    wpp_currency:
-      type: string
-      label: 'Currency code'
     wpp_server:
       type: string
       label: 'API server'
@@ -51,9 +48,6 @@ payment_method.settings.paypal_ec:
     wps_email:
       type: string
       label: 'PayPal e-mail address'
-    wpp_currency:
-      type: string
-      label: 'Currency code'
     wpp_server:
       type: uri
       label: 'API server'
@@ -99,9 +93,6 @@ payment_method.settings.paypal_wps:
     wps_email:
       type: string
       label: 'PayPal e-mail address'
-    wpp_currency:
-      type: string
-      label: 'Currency code'
     wpp_server:
       type: uri
       label: 'API server'
