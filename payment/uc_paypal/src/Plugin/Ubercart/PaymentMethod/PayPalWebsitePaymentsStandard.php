@@ -172,7 +172,7 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['wps_email'] = $form_state->getValue('wps_email');
+    $this->configuration['wps_email'] = trim($form_state->getValue('wps_email'));
     $this->configuration['wps_language'] = $form_state->getValue('wps_language');
     $this->configuration['wps_server'] = $form_state->getValue('wps_server');
     $this->configuration['wps_submit_method'] = $form_state->getValue('wps_submit_method');
@@ -266,7 +266,7 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       'tax_cart' => uc_currency_format($tax, FALSE, FALSE, '.'),
 
       // Shopping cart specific variables.
-      'business' => trim($this->configuration['wps_email']),
+      'business' => $this->configuration['wps_email'],
       'upload' => 1,
 
       'lc' => $this->configuration['wps_language'],
@@ -335,8 +335,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       // List the whole cart as a single item to account for fees/discounts.
       $data['amount_1'] = uc_currency_format($order->getTotal() - $shipping - $tax, FALSE, FALSE, '.');
       $data['item_name_1'] = $this->t('Order @order_id at @store', ['@order_id' => $order->id(), '@store' => uc_store_name()]);
-      $data['on0_1'] = $this->t('Product count');
-      $data['os0_1'] = count($order->products);
     }
 
     $form['#action'] = $this->configuration['wps_server'];

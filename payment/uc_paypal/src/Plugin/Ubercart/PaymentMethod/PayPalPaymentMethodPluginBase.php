@@ -89,7 +89,7 @@ abstract class PayPalPaymentMethodPluginBase extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['wps_email'] = $form_state->getValue('wps_email');
+    $this->configuration['wps_email'] = trim($form_state->getValue('wps_email'));
     $this->configuration['wpp_currency'] = $form_state->getValue('wpp_currency');
     $this->configuration['wpp_server'] = $form_state->getValue('wpp_server');
     $this->configuration['api']['api_username'] = $form_state->getValue(['settings', 'api', 'api_username']);
