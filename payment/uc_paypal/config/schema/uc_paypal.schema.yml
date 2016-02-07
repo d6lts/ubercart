@@ -121,9 +121,6 @@ payment_method.settings.paypal_wps:
     wps_email:
       type: email
       label: 'PayPal e-mail address'
-    wps_currency:
-      type: string
-      label: 'Currency code'
     wps_language:
       type: string
       label: 'Language'
@@ -133,9 +130,6 @@ payment_method.settings.paypal_wps:
     wps_payment_action:
       type: string
       label: 'Payment action'
-    wps_cancel_return_url:
-      type: string
-      label: 'Return URL'
     wps_submit_method:
       type: string
       label: 'Submit method'

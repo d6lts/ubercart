@@ -43,7 +43,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
    * {@inheritdoc}
    */
   public function getDisplayLabel($label) {
-    $build['#attached']['library'][] = 'uc_paypal/uc_paypal.styles';
     $build['paypal-mark'] = array(
       '#theme' => 'image',
       '#uri' => 'https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif',
@@ -56,10 +55,8 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       '#suffix' => '<br /> ',
     );
     $build['includes'] = array(
-      '#prefix' => '<span id="paypal-includes">',
-      '#markup' => $this->t('Includes:'),
+      '#markup' => $this->t('Includes:') . ' ',
     );
-    $path = base_path() . drupal_get_path('module', 'uc_credit');
     $cc_types = $this->getEnabledTypes();
     foreach ($cc_types as $type => $description) {
       $build['image'][$type] = array(
@@ -70,7 +67,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       );
     }
     $build['image']['paypal'] = $build['paypal-mark'];
-    $build['image']['paypal']['#suffix'] = '</span> ';
 
     return $build;
   }
@@ -81,11 +77,9 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
   public function defaultConfiguration() {
     return [
       'wps_email' => '',
-      'wps_currency' => 'USD',
       'wps_language' => 'US',
       'wps_server' => 'https://www.sandbox.paypal.com/cgi-bin/webscr',
       'wps_payment_action' => 'Sale',
-      'wps_cancel_return_url' => 'cart',
       'wps_submit_method' => 'single',
       'wps_no_shipping' => '1',
       'wps_address_override' => TRUE,
@@ -103,13 +97,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       '#title' => $this->t('PayPal e-mail address'),
       '#description' => $this->t('The e-mail address you use for the PayPal account you want to receive payments.'),
       '#default_value' => $this->configuration['wps_email'],
-    );
-    $form['wps_currency'] = array(
-      '#type' => 'select',
-      '#title' => $this->t('Currency code'),
-      '#description' => $this->t('Transactions can only be processed in one of the listed currencies.'),
-      '#options' => $this->currencies(),
-      '#default_value' => $this->configuration['wps_currency'],
     );
     $languages = array('AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'US');
     $form['wps_language'] = array(
@@ -137,14 +124,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
         'Authorization' => $this->t('Authorization'),
       ),
       '#default_value' => $this->configuration['wps_payment_action'],
-    );
-    $form['wps_cancel_return_url'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Cancel return URL'),
-      '#description' => $this->t('Specify the path customers who cancel their PayPal WPS payment will be directed to when they return to your site.'),
-      '#default_value' => $this->configuration['wps_cancel_return_url'],
-      '#size' => 32,
-      '#field_prefix' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
     );
     $form['wps_submit_method'] = array(
       '#type' => 'radios',
@@ -194,7 +173,6 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['wps_email'] = $form_state->getValue('wps_email');
-    $this->configuration['wps_currency'] = $form_state->getValue('wps_currency');
     $this->configuration['wps_language'] = $form_state->getValue('wps_language');
     $this->configuration['wps_server'] = $form_state->getValue('wps_server');
     $this->configuration['wps_submit_method'] = $form_state->getValue('wps_submit_method');
@@ -275,14 +253,14 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       'notify_url' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
 
       // Display information.
-      'cancel_return' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
+      'cancel_return' => Url::fromRoute('uc_cart.checkout_review', [], ['absolute' => TRUE])->toString(),
       'no_note' => 1,
       'no_shipping' => $this->configuration['wps_no_shipping'],
       'return' => Url::fromRoute('uc_paypal.wps_complete', ['uc_order' => $order->id()], ['absolute' => TRUE])->toString(),
       'rm' => 1,
 
       // Transaction information.
-      'currency_code' => $this->configuration['wps_currency'],
+      'currency_code' => $order->getCurrency(),
       'handling_cart' => uc_currency_format($shipping, FALSE, FALSE, '.'),
       'invoice' => $order->id() . '-' .  \Drupal::service('uc_cart.manager')->get()->getId(),
       'tax_cart' => uc_currency_format($tax, FALSE, FALSE, '.'),

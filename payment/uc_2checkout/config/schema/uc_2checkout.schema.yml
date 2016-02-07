@@ -10,9 +10,6 @@ uc_2checkout.settings:
     checkout_type:
       type: string
       label: 'Use direct or dynamic checkout'
-    currency_code:
-      type: string
-      label: 'Currency to use for transaction'
     demo:
       type: boolean
       label: 'Flag to indicate demo mode for gateway - no actual money will be transfered if TRUE'
@@ -45,9 +42,6 @@ payment_method.settings.2checkout:
     checkout_type:
       type: string
       label: 'Use direct or dynamic checkout'
-    currency_code:
-      type: string
-      label: 'Currency to use for transaction'
     demo:
       type: boolean
       label: 'Flag to indicate demo mode for gateway - no actual money will be transfered if TRUE'

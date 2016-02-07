@@ -129,7 +129,7 @@ function uc_paypal_ec_checkout($form, FormStateInterface $form_state) {
   $nvp_request = array(
     'METHOD' => 'SetExpressCheckout',
     'RETURNURL' => Url::fromRoute('cart/echeckout/selected', [], ['absolute' => TRUE])->toString(),
-    'CANCELURL' => Url::fromRoute('uc_paypal.wps_cancel', [], ['absolute' => TRUE])->toString(),
+    'CANCELURL' => Url::fromRoute('uc_cart.checkout_review', [], ['absolute' => TRUE])->toString(),
     'AMT' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
     'CURRENCYCODE' => $paypal_config->get('wpp_currency'),
     'PAYMENTACTION' => $paypal_config->get('uc_pg_paypal_wpp_cc_txn_type') == 'authorize' ? 'Authorization' : 'Sale',
