@@ -10,45 +10,15 @@ namespace Drupal\uc_store;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\uc_store\AddressInterface;
+use Drupal\uc_store\AddressTrait;
 
 /**
  * Defines an object to hold Ubercart mailing address information.
  */
-class Address {
+class Address implements AddressInterface {
+  use AddressTrait;
   use StringTranslationTrait;
-
-  /** Given name. */
-  public $first_name = '';
-
-  /** Surname. */
-  public $last_name = '';
-
-  /** Company or organization. */
-  public $company = '';
-
-  /** First line of street address. */
-  public $street1 = '';
-
-  /** Second line of street address. */
-  public $street2 = '';
-
-  /** City name. */
-  public $city = '';
-
-  /** State, provence, or region id. */
-  public $zone = '';
-
-  /** ISO 3166-1 2-character numeric country code. */
-  public $country = '';
-
-  /** Postal code. */
-  public $postal_code = '';
-
-  /** Telephone number. */
-  public $phone = '';
-
-  /** Email address. */
-  public $email = '';
 
   /** Store default country code. */
   protected $default_country;
@@ -64,20 +34,30 @@ class Address {
   }
 
   /**
-   * Compares two Address objects to determine if they represent the same
-   * physical address.
+   * Creates an Address.
    *
-   * Address properties such as first_name, phone, and email aren't considered
-   * in this comparison because they don't contain information about the
-   * physical location.
+   * @param array $values
+   *   (optional) Array of initialization values.
    *
-   * @param \Drupal\uc_store\Address $address
-   *   An object of type Address.
-   *
-   * @return bool
-   *   TRUE if the two addresses are the same physical location, else FALSE.
+   * @return \Drupal\uc_store\AddressInterface
+   *   An Address object.
    */
-  public function isSamePhysicalLocation(Address $address) {
+  public static function create(array $values = NULL) {
+    $address = new Address();
+    if (isset($values)) {
+      foreach ($values as $key => $value) {
+        if (property_exists($address, $key)) {
+          $address->$key = $value;
+        }
+      }
+    }
+    return $address;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSamePhysicalLocation(AddressInterface $address) {
     $physicalProperty = array(
       'street1', 'street2', 'city', 'zone', 'country', 'postal_code'
     );
@@ -93,19 +73,7 @@ class Address {
   }
 
   /**
-   * Utility function to simplify comparison of address properties.
-   *
-   * For the purpose of this function, the canonical form is stripped of all
-   * whitespace and has been converted to all upper case. This ensures that we
-   * don't get false inequalities when comparing address properties that a
-   * human would consider identical, but may be capitalized differently or
-   * have different whitespace.
-   *
-   * @param string $string
-   *   String to make canonical.
-   *
-   * @return string
-   *   Canonical form of input string.
+   * {@inheritdoc}
    */
   public static function makeCanonical($string = '') {
     // Remove all whitespace.
@@ -117,10 +85,7 @@ class Address {
   }
 
   /**
-   * Formats the address for display based on the country's address format.
-   *
-   * @return string
-   *   An HTML formatted string containing the address.
+   * {@inheritdoc}
    */
   public function __toString() {
     $variables = array(

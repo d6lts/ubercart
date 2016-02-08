@@ -537,19 +537,17 @@ function uc_store_name() {
 
 /**
  * Returns the user-defined store address.
+ *
+ * @return \Drupal\uc_store\AddressInterface
+ *   An Address object.
  */
 function uc_store_address() {
   $config = \Drupal::config('uc_store.settings');
-  $address = new Address();
-  $address->company = $config->get('name');
-  $address->street1 = $config->get('address.street1');
-  $address->street1 = $config->get('address.street2');
-  $address->city = $config->get('address.city');
-  $address->zone = $config->get('address.zone');
-  $address->postal_code = $config->get('address.postal_code');
-  $address->country = $config->get('address.country');
 
-  return (string) $address;
+  $address = Address::create($config->get('address'));
+  $address->setCompany($config->get('name'));
+
+  return $address;
 }
 
 /**

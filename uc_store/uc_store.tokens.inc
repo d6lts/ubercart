@@ -123,7 +123,8 @@ function uc_store_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'address':
-          $replacements[$original] = uc_store_address();
+          // Cast Address object to string to get country-specific formatting.
+          $replacements[$original] = (string) uc_store_address();
           break;
 
         case 'help-url':

@@ -46,8 +46,8 @@ class AddressTest extends UbercartTestBase {
   }
 
   public function testAddressFormat() {
-    $address = new Address();
-    $address->country = NULL;
+    $address = Address::create();
+    $address->setCountry(NULL);
     $formatted = (string) $address;
     $expected = '';
     $this->assertEqual($formatted, $expected, 'Formatted empty address is an empty string.');
@@ -133,27 +133,35 @@ class AddressTest extends UbercartTestBase {
       'Court',
     ));
 
-    // Populate object with defaults.
-    $address = new Address();
-    $address->first_name  = $this->randomMachineName(6);
-    $address->last_name   = $this->randomMachineName(12);
-    $address->company     = $this->randomMachineName(10) . ', Inc.';
-    $address->street1     = mt_rand(100, 1000) . ' ' .
-                            $this->randomMachineName(10) . ' ' .
-                            array_rand($street);
-    $address->street2     = 'Suite ' . mt_rand(100, 999);
-    $address->city        = $this->randomMachineName(10);
-    $address->zone        = 'IL';
-    $address->country     = 'US';
-    $address->postal_code = mt_rand(10000, 99999);
-    $address->phone       = '(' . mt_rand(100, 999) . ') ' .
-                            mt_rand(100, 999) . '-' . mt_rand(0, 9999);
-    $address->email       = $this->randomMachineName(6) . '@' .
-                            $this->randomMachineName(8) . '.com';
+    // Populate any fields that weren't passed in $settings.
+    $values = $settings + array(
+      'first_name'  => $this->randomMachineName(6),
+      'last_name'   => $this->randomMachineName(12),
+      'company'     => $this->randomMachineName(10) . ', Inc.',
+      'street1'     => mt_rand(10, 1000) . ' ' .
+                       $this->randomMachineName(10) . ' ' .
+                       array_rand($street),
+      'street2'     => 'Suite ' . mt_rand(100, 999),
+      'city'        => $this->randomMachineName(10),
+      'postal_code' => mt_rand(10000, 99999),
+      'phone'       => '(' . mt_rand(100, 999) . ') ' .
+                       mt_rand(100, 999) . '-' . mt_rand(0, 9999),
+      'email'       => $this->randomMachineName(6) . '@' .
+                       $this->randomMachineName(8) . '.com',
+    );
 
-    foreach ($settings as $property => $value) {
-      $address->$property = $value;
+    // Set the country if it isn't set already.
+    $country_id = array_rand(\Drupal::service('country_manager')->getEnabledList());
+    $values += array('country' => $country_id);
+
+    // Don't try to set the zone unless the country has zones!
+    $zone_list = \Drupal::service('country_manager')->getZoneList($values['country']);
+    if (!empty($zone_list)) {
+      $values += array('zone' => array_rand($zone_list));
     }
+
+    // Create object.
+    $address = Address::create($values);
 
     return $address;
   }
