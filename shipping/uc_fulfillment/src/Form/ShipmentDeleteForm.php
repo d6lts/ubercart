@@ -10,7 +10,7 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\uc_fulfillment\Shipment;
+use Drupal\uc_fulfillment\ShipmentInterface;
 use Drupal\uc_order\OrderInterface;
 
 /**

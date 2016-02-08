@@ -2,32 +2,341 @@
 
 /**
  * @file
- * Contains \Drupal\uc_fulfillment\FulfillmentMethodInterface.
+ * Contains \Drupal\uc_fulfillment\Shipment.
  */
 
 namespace Drupal\uc_fulfillment;
 
+use \Drupal\uc_order\Entity\Order;
+use \Drupal\uc_store\Address;
+use \Drupal\uc_store\AddressInterface;
+
 /**
- * Provides an interface for defining fulfillment method entities.
+ * Defines the Shipment class.
  */
-class Shipment {
+class Shipment implements ShipmentInterface {
 
-  /** These variables map to DB columns */
-  public $order_id;
-  public $shipping_method;
-  public $accessorials;
-  public $carrier;
-  public $transaction_id;
-  public $tracking_number;
-  public $ship_date;
-  public $expected_delivery;
-  public $cost;
-  public $changed;
+  /**
+   * Shipment ID.
+   *
+   * @var int
+   */
+  protected $sid;
 
-  /** These variables don't map to DB columns */
-  public $packages;
-  public $origin;
-  public $destination;
+  /**
+   * Order ID of this shipment.
+   *
+   * @var int
+   */
+  protected $order_id;
+
+  /**
+   * Name of the shipping method.
+   *
+   * @var string
+   */
+  protected $shipping_method = '';
+
+  /**
+   * Shipping quote accessorials.
+   *
+   * @var array
+   */
+  protected $accessorials = '';
+
+  /**
+   * Name of the common carrier.
+   *
+   * @var string
+   */
+  protected $carrier = '';
+
+  /**
+   * Shipment transaction ID.
+   *
+   * @var string
+   */
+  protected $transaction_id = '';
+
+  /**
+   * Shipment tracking number,
+   *
+   * @var string
+   */
+  protected $tracking_number = '';
+
+  /**
+   * Ship date timestamp.
+   *
+   * @var int
+   */
+  protected $ship_date = 0;
+
+  /**
+   * Expected delivery timestamp.
+   *
+   * @var int
+   */
+  protected $expected_delivery = 0;
+
+  /**
+   * Name of the status.
+   *
+   * @var float
+   */
+  protected $cost = 0;
+
+  /**
+   * Currency code.
+   *
+   * @var string
+   */
+  protected $currency = '';
+
+  /**
+   * Last modified timestamp.
+   *
+   * @var int
+   */
+  protected $changed = 0;
+
+  /**
+   * Packages contained in this shipment.
+   *
+   * @var \Drupal\uc_fulfillment\Package[]
+   */
+  protected $packages = array();
+
+  /**
+   * Shipment origin address.
+   *
+   * @var \Drupal\uc_store\Address
+   */
+  protected $origin;
+
+  /**
+   * Shipment destination address.
+   *
+   * @var \Drupal\uc_store\Address
+   */
+  protected $destination;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    return $this->sid;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOrderId($order_id) {
+    $this->order_id = $order_id;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOrderId() {
+    return $this->order_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setShippingMethod($shipping_method) {
+    $this->shipping_method = $shipping_method;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getShippingMethod() {
+    return $this->shipping_method;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAccessorials($accessorials) {
+    $this->accessorials = $accessorials;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAccessorials() {
+    return $this->accessorials;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCarrier($carrier) {
+    $this->carrier = $carrier;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCarrier() {
+    return $this->carrier;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTransactionId($transaction_id) {
+    $this->transaction_id = $transaction_id;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTransactionId() {
+    return $this->transaction_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTrackingNumber($tracking_number) {
+    $this->tracking_number = $tracking_number;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTrackingNumber() {
+    return $this->tracking_number;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setShipDate($ship_date) {
+    $this->ship_date = $ship_date;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getShipDate() {
+    return $this->ship_date;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setExpectedDelivery($expected_delivery) {
+    $this->expected_delivery = $expected_delivery;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExpectedDelivery() {
+    return $this->expected_delivery;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCost($cost) {
+    $this->cost = $cost;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCost() {
+    return $this->cost;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCurrency($currency) {
+    $this->currency = $currency;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCurrency() {
+    return $this->currency;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setChanged($changed) {
+    $this->changed = $changed;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChanged() {
+    return $this->changed;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPackages(array $packages) {
+    $this->packages = $packages;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPackages() {
+    return $this->packages;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOrigin(AddressInterface $origin) {
+    $this->origin = $origin;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOrigin() {
+    return $this->origin;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDestination(AddressInterface $destination) {
+    $this->destination = $destination;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDestination() {
+    return $this->destination;
+  }
 
   /**
    * Constructor.
@@ -145,7 +454,6 @@ class Shipment {
         // that they are not deleted and re-inserted.
         $products = $package->products;
         unset($package->products);
-drupal_set_message("here".print_r($fields, true));
         $package->save();
         // But they're still necessary for hook_uc_shipment(), so they're added
         // back in.
