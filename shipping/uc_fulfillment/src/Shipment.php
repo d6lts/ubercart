@@ -495,11 +495,11 @@ class Shipment implements ShipmentInterface {
         'tracking_number' => NULL,
         'label_image' => NULL,
       ))
-      ->condition('sid', $shipment_id)
+      ->condition('sid', $this->sid)
       ->execute();
 
     db_delete('uc_shipments')
-      ->condition('sid', $shipment_id)
+      ->condition('sid', $this->sid)
       ->execute();
 
     foreach ($this->packages as $package) {
