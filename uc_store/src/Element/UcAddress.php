@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_store\Element;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -32,7 +33,6 @@ class UcAddress extends Element\FormElement {
       ),
       '#attributes' => array('class' => array('uc-store-address-field')),
       '#theme_wrappers' => array('container'),
-      '#key_prefix' => '',
       '#hidden' => FALSE,
     );
   }
@@ -67,48 +67,23 @@ class UcAddress extends Element\FormElement {
     );
 
     $element['#tree'] = TRUE;
-    $prefix = $element['#key_prefix'] ? ($element['#key_prefix'] . '_') : '';
     $config = \Drupal::config('uc_store.settings')->get('address_fields');
-
-    if ($form_state->has('uc_address')) {
-      // Use submitted Ajax values.
-      $value = $form_state->get('uc_address');
-    }
-    elseif (is_array($element['#value']) || is_object($element['#value'])) {
-      // Use provided default value.
-      $value = $element['#value'];
-    }
-    else {
-      $value = array();
-    }
-
+    $value = $element['#value'];
+    $wrapper = Html::getClass('uc-address-' . $element['#name'] . '-zone-wrapper');
     $country_names = \Drupal::service('country_manager')->getEnabledList();
 
     // Force the selected country to a valid one, so the zone dropdown matches.
     if ($country_keys = array_keys($country_names)) {
-      if (is_object($value)) {
-        if (isset($value->{$prefix . 'country'}) && !isset($country_names[$value->{$prefix . 'country'}])) {
-          $value->{$prefix . 'country'} = $country_keys[0];
-        }
-      }
-      else {
-        if (isset($value[$prefix . 'country']) && !isset($country_names[$value[$prefix . 'country']])) {
-          $value[$prefix . 'country'] = $country_keys[0];
-        }
+      if (isset($value->country) && !isset($country_names[$value->country])) {
+        $value->country = $country_keys[0];
       }
     }
 
     // Iterating on the Address object excludes non-public properties, which
     // is exactly what we want to do.
-    $address = new Address();
-    foreach ($address as $base_field => $field_value) {
-      $field = $prefix . $base_field;
-      if (is_object($value) ? !property_exists($value, $field) : !isset($value[$field])) {
-        // if (!isset($value[$field])) {
-        continue;
-      }
-
-      switch ($base_field) {
+    $address = Address::create();
+    foreach ($address as $field => $field_value) {
+      switch ($field) {
         case 'country':
           if ($country_names) {
             $subelement = array(
@@ -116,15 +91,11 @@ class UcAddress extends Element\FormElement {
               '#options' => $country_names,
               '#ajax' => array(
                 'callback' => array(get_class(), 'updateZone'),
-                'wrapper' => 'uc-store-address-' . str_replace('_', '-', $prefix) . 'zone-wrapper',
+                'wrapper' => $wrapper,
                 'progress' => array(
                   'type' => 'throbber',
                 ),
               ),
-              '#element_validate' => array(
-                array(get_class(), 'validateCountry'),
-              ),
-              '#key_prefix' => $element['#key_prefix'],
             );
           }
           else {
@@ -137,24 +108,24 @@ class UcAddress extends Element\FormElement {
 
         case 'zone':
           $subelement = array(
-            '#prefix' => '<div id="uc-store-address-' . str_replace('_', '-', $prefix) . 'zone-wrapper">',
+            '#prefix' => '<div id="' . $wrapper . '">',
             '#suffix' => '</div>',
           );
 
-          $country_id = is_object($value) ? $value->{$prefix . 'country'} : $value[$prefix . 'country'];
-          $zones = $country_id ? \Drupal::service('country_manager')->getZoneList($country_id) : [];
-          if (!empty($zones)) {
+          $zones = $value->country ? \Drupal::service('country_manager')->getZoneList($value->country) : [];
+          if ($zones) {
             natcasesort($zones);
             $subelement += array(
               '#type' => 'select',
               '#options' => $zones,
-              '#empty_value' => 0,
+              '#empty_value' => '',
+              '#after_build' => [[get_class(), 'resetZone']],
             );
           }
           else {
             $subelement += array(
               '#type' => 'hidden',
-              '#value' => 0,
+              '#value' => '',
               '#required' => FALSE,
             );
           }
@@ -190,24 +161,33 @@ class UcAddress extends Element\FormElement {
 
       // Set common values for all address fields.
       $element[$field] = $subelement + array(
-        '#title' => $labels[$base_field],
-        '#default_value' => is_object($value) ? $value->$field : $value[$field],
-        '#access' => !$element['#hidden'] && !empty($config[$base_field]['status']),
-        '#required' => $element['#required'] && !empty($config[$base_field]['required']),
-        '#weight' => isset($config[$base_field]['weight']) ? $config[$base_field]['weight'] : 0,
+        '#title' => $labels[$field],
+        '#default_value' => $value->$field,
+        '#access' => !$element['#hidden'] && !empty($config[$field]['status']),
+        '#required' => $element['#required'] && !empty($config[$field]['required']),
+        '#weight' => isset($config[$field]['weight']) ? $config[$field]['weight'] : 0,
       );
     }
     return $element;
   }
 
   /**
-   * Element validation callback for country field.
-   *
-   * Store the current address for use when rebuilding the form.
+   * {@inheritdoc}
    */
-  public static function validateCountry($element, FormStateInterface $form_state) {
-    $address = NestedArray::getValue($form_state->getValues(), array_slice($element['#parents'], 0, -1));
-    $form_state->set('uc_address', $form_state->has('uc_address') ? array_merge($form_state->get('uc_address'), $address) : $address);
+  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+    if ($input !== FALSE) {
+      return Address::create($input);
+    }
+    elseif ($element['#default_value'] instanceof Address) {
+      return $element['#default_value'];
+    }
+    elseif (is_array($element['#default_value'])) {
+      // @todo Remove when all callers supply objects.
+      return Address::create($element['#default_value']);
+    }
+    else {
+      return Address::create();
+    }
   }
 
   /**
@@ -219,8 +199,17 @@ class UcAddress extends Element\FormElement {
     foreach (array_slice($triggering_element['#array_parents'], 0, -1) as $field) {
       $element = &$element[$field];
     }
-    $prefix = empty($element['#key_prefix']) ? '' : ($element['#key_prefix'] . '_');
-    return $element[$prefix . 'zone'];
+    return $element['zone'];
+  }
+
+  /**
+   * Resets the zone dropdown when the country is changed.
+   */
+  public static function resetZone($element, FormStateInterface $form_state) {
+    if (!isset($element['#options'][$element['#default_value']])) {
+      $element['#value'] = $element['#empty_value'];
+    }
+    return $element;
   }
 
 }
