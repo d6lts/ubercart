@@ -28,7 +28,7 @@ class ShipmentTest extends UbercartTestBase {
     // Process an anonymous, shippable order.
     $order = Order::create([
       'uid' => 0,
-      'primary_email' => $this->randomString() . '@example.org',
+      'primary_email' => $this->randomMachineName() . '@example.org',
       'payment_method' => $method['id'],
     ]);
 
@@ -116,6 +116,8 @@ class ShipmentTest extends UbercartTestBase {
 
     // Test reaching this through the shipments tab too ...
 
+
+    // Check View, Edit, Delete, Print, and Packing Slip actions and tabs.
 
   }
 
