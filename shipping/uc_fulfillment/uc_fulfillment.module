@@ -50,12 +50,14 @@ function uc_fulfillment_menu_local_tasks_alter(&$data, $router_item, $root_path)
  */
 function uc_fulfillment_theme() {
   return array(
-    'uc_fulfillment_shipment_print' => array(
-      'variables' => array('order' => NULL, 'shipment' => NULL, 'labels' => TRUE),
-      'function' => 'theme_uc_fulfillment_shipment_print',
-    ),
     'uc_packing_slip' => array(
-      'variables' => array('order' => NULL, 'shipment' => NULL),
+      'variables' => array(
+        'order' => NULL,
+        'shipment' => NULL,
+        'labels' => TRUE,
+        'print' => FALSE,
+        'business_header' => FALSE,
+      ),
       'template' => 'uc-packing-slip',
     ),
     'uc_packing_slip_page' => array(
@@ -68,7 +70,7 @@ function uc_fulfillment_theme() {
 /**
  * Preprocess function to make tokens available in the packing slip template.
  *
- * @see uc-packing-slip.tpl.php
+ * @see uc-packing-slip.html.twig
  */
 function template_preprocess_uc_packing_slip(&$variables) {
   $token_service = \Drupal::token();
@@ -98,20 +100,9 @@ function template_preprocess_uc_packing_slip(&$variables) {
   }
 
   $shipment = $variables['shipment'];
-  $variables['carrier'] = $shipment->carrier;
-  $variables['tracking_number'] = $shipment->tracking_number;
-  $variables['packages'] = $shipment->packages;
-}
-
-/**
- * Preprocesses a printable packing slip page.
- *
- * @see uc-packing-slip-page.tpl.php
- */
-function template_preprocess_uc_packing_slip_page(&$variables) {
-  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : \Drupal::languageManager()->getDefaultLanguage();
-  $variables['language'] = $language;
-  $variables['language']->dir = $language->direction ? 'rtl' : 'ltr';
+  $variables['carrier'] = $shipment->getCarrier();
+  $variables['tracking_number'] = $shipment->getTrackingNumber();
+  $variables['packages'] = $shipment->getPackages();
 }
 
 /**
