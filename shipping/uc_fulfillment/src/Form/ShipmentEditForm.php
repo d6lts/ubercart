@@ -12,28 +12,13 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_fulfillment\Package;
-use Drupal\uc_fulfillment\ShipmentInterface;
+use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_order\OrderInterface;
-use Drupal\uc_store\Address;
 
 /**
  * Creates or edits a shipment.
  */
 class ShipmentEditForm extends FormBase {
-
-  /**
-   * The order id.
-   *
-   * @var \Drupal\uc_order\OrderInterface
-   */
-  protected $order_id;
-
-  /**
-   * The shipment.
-   *
-   * @var \Drupal\uc_fulfillment\Shipment
-   */
-  protected $shipment;
 
   /**
    * {@inheritdoc}
@@ -45,28 +30,52 @@ class ShipmentEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, ShipmentInterface $uc_shipment = NULL) {
-    $this->order_id = $uc_order->id();
-    $this->shipment = $uc_shipment;
-
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $shipment = NULL) {
+    // Sometimes $shipment is an ID, sometimes it's an object. FIX THIS! @todo
+    if (!is_object($shipment)) {
+      // Then $shipment is an ID.
+      $shipment = Shipment::load($shipment);
+    }
+    elseif (isset($shipment->sid)) {
+      $form['sid'] = array(
+        '#type' => 'value',
+        '#value' => $shipment->sid,
+      );
+      $shipment = Shipment::load($shipment->sid);
+      $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
+      if (isset($methods[$shipment->shipping_method])) {
+        $method = $methods[$shipment->shipping_method];
+      }
+    }
+    $form['order_id'] = array(
+      '#type' => 'value',
+      '#value' => $uc_order->id(),
+    );
     $addresses = array();
     $form['packages'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Packages'),
       '#tree' => TRUE,
     );
-    if (NULL != $this->shipment->getOrigin()) {
-      $addresses[] = $this->shipment->getOrigin();
+    if (isset($shipment->o_street1)) {
+      $o_address = new \stdClass();
+      foreach ($shipment as $field => $value) {
+        if (substr($field, 0, 2) == 'o_') {
+          $o_address->{substr($field, 2)} = $value;
+        }
+      }
+      $addresses[] = (object) $o_address;
     }
-    foreach ($this->shipment->getPackages() as $id => $package) {
+    foreach ($shipment->packages as $id => $package) {
       foreach ($package->addresses as $address) {
         if (!in_array($address, $addresses)) {
-          $addresses[] = $address;
+          $addresses[] = (object) $address;
         }
       }
 
       // Create list of products and get a representative product (last one in
       // the loop) to use for some default values
+      $product_list = array();
       $declared_value = 0;
       foreach ($package->products as $product) {
         $product_list[]  = $product->qty . ' x ' . $product->model;
@@ -172,8 +181,8 @@ class ShipmentEditForm extends FormBase {
       $form['packages'][$id] = $pkg_form;
     }
 
-    if (!empty($this->shipment->d_street1)) {
-      foreach ($this->shipment as $field => $value) {
+    if (!empty($shipment->d_street1)) {
+      foreach ($shipment as $field => $value) {
         if (substr($field, 0, 2) == 'd_') {
           $uc_order->{'delivery_' . substr($field, 2)} = $value;
         }
@@ -212,37 +221,37 @@ class ShipmentEditForm extends FormBase {
 
     $form['shipment']['shipping_method'] = array(
       '#type'  => 'hidden',
-      '#value' => $this->shipment->getShippingMethod(),
+      '#value' => isset($shipment->shipping_method) ? $shipment->shipping_method : 'manual',
     );
     $form['shipment']['carrier'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Carrier'),
-      '#default_value' => $this->shipment->getCarrier(),
+      '#default_value' => isset($shipment->carrier) ? $shipment->carrier : '',
     );
     $form['shipment']['accessorials'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Shipment options'),
-      '#default_value' => $this->shipment->getAccessorials(),
+      '#default_value' => isset($shipment->accessorials) ? $shipment->accessorials : '',
       '#description' => $this->t('Short notes about the shipment, e.g. residential, overnight, etc.'),
     );
     $form['shipment']['transaction_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Transaction ID'),
-      '#default_value' => $this->shipment->getTransactionId(),
+      '#default_value' => isset($shipment->transaction_id) ? $shipment->transaction_id : '',
     );
     $form['shipment']['tracking_number'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Tracking number'),
-      '#default_value' => $this->shipment->getTrackingNumber(),
+      '#default_value' => isset($shipment->tracking_number) ? $shipment->tracking_number : '',
     );
 
     $ship_date = REQUEST_TIME;
-    if (isset($this->shipment->ship_date)) {
-      $ship_date = $this->shipment->ship_date;
+    if (isset($shipment->ship_date)) {
+      $ship_date = $shipment->ship_date;
     }
     $exp_delivery = REQUEST_TIME;
-    if (isset($this->shipment->expected_delivery)) {
-      $exp_delivery = $this->shipment->expected_delivery;
+    if (isset($shipment->expected_delivery)) {
+      $exp_delivery = $shipment->expected_delivery;
     }
     $form['shipment']['ship_date'] = array(
       '#type' => 'datetime',
@@ -261,7 +270,7 @@ class ShipmentEditForm extends FormBase {
     $form['shipment']['cost'] = array(
       '#type' => 'uc_price',
       '#title' => $this->t('Shipping cost'),
-      '#default_value' => $this->shipment->getCost(),
+      '#default_value' => isset($shipment->cost) ? $shipment->cost : 0,
     );
 
     $form['actions'] = array('#type' => 'actions');
@@ -278,12 +287,20 @@ class ShipmentEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->shipment->setOrderId($this->order_id);
-    // The pickup_address and delivery_address form elements are defined in AddressForm.
-    $this->shipment->setOrigin(Address::create($form_state->getValue('pickup_address')));
-    $this->shipment->setDestination(Address::create($form_state->getValue('delivery_address')));
-
-    $packages = array();
+    $shipment = new \stdClass();
+    $shipment->order_id = $form_state->getValue('order_id');
+    if ($form_state->hasValue('sid')) {
+      $shipment->sid = $form_state->getValue('sid');
+    }
+    $shipment->origin = (object) $form_state->getValue('pickup_address');
+    $shipment->destination = new \stdClass();
+    foreach ($form_state->getValues() as $key => $value) {
+      if (substr($key, 0, 9) == 'delivery_') {
+        $field = substr($key, 9);
+        $shipment->destination->$field = $value;
+      }
+    }
+    $shipment->packages = array();
     foreach ($form_state->getValue('packages') as $id => $pkg_form) {
       $package = Package::load($id);
       $package->pkg_type = $pkg_form['pkg_type'];
@@ -294,22 +311,21 @@ class ShipmentEditForm extends FormBase {
       $package->length_units = $pkg_form['dimensions']['units'];
       $package->tracking_number = $pkg_form['tracking_number'];
       $package->qty = 1;
-      $packages[$id] = $package;
+      $shipment->packages[$id] = $package;
     }
-    $this->shipment->setPackages($packages);
 
-    $this->shipment->setShippingMethod($form_state->getValue('shipping_method'));
-    $this->shipment->setAccessorials($form_state->getValue('accessorials'));
-    $this->shipment->setCarrier($form_state->getValue('carrier'));
-    $this->shipment->setTransactionId($form_state->getValue('transaction_id'));
-    $this->shipment->setTrackingNumber($form_state->getValue('tracking_number'));
-    $this->shipment->setShipDate($form_state->getValue('ship_date')->getTimestamp());
-    $this->shipment->setExpectedDelivery($form_state->getValue('expected_delivery')->getTimestamp());
-    $this->shipment->setCost($form_state->getValue('cost'));
+    $shipment->shipping_method = $form_state->getValue('shipping_method');
+    $shipment->accessorials = $form_state->getValue('accessorials');
+    $shipment->carrier = $form_state->getValue('carrier');
+    $shipment->transaction_id = $form_state->getValue('transaction_id');
+    $shipment->tracking_number = $form_state->getValue('tracking_number');
+    $shipment->ship_date = $form_state->getValue('ship_date')->getTimestamp();
+    $shipment->expected_delivery = $form_state->getValue('expected_delivery')->getTimestamp();
+    $shipment->cost = $form_state->getValue('cost');
 
-    $this->shipment->save();
+    $shipment->save();
 
-    $form_state->setRedirect('uc_fulfillment.shipments', ['uc_order' => $this->order_id]);
+    $form_state->setRedirect('uc_fulfillment.shipments', ['uc_order' => $form_state->getValue('order_id')]);
   }
 
 }
