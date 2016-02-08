@@ -49,6 +49,8 @@ class OrderPaymentsForm extends FormBase {
 
   /**
    * The order that is being viewed.
+   *
+   * @var \Drupal\uc_order\OrderInterface
    */
   protected $order;
 

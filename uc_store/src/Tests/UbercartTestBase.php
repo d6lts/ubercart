@@ -295,7 +295,7 @@ abstract class UbercartTestBase extends WebTestBase {
 
     $order = Order::create($edit);
 
-    if (!isset($fields['products'])) {
+    if (!isset($edit['products'])) {
       $order->products[] = OrderProduct::create(array(
         'nid' => $this->product->nid->target_id,
         'title' => $this->product->title->value,

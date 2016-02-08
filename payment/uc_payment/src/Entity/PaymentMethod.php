@@ -46,7 +46,7 @@ use Drupal\uc_payment\PaymentMethodInterface;
  *     "enable" = "/admin/store/config/payment/method/{uc_payment_method}/enable",
  *     "disable" = "/admin/store/config/payment/method/{uc_payment_method}/disable",
  *     "delete-form" = "/admin/store/config/payment/method/{uc_payment_method}/delete",
- *     "collection" = "/admin/store/config/payment",
+ *     "collection" = "/admin/store/config/payment"
  *   }
  * )
  */
