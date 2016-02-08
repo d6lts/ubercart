@@ -86,37 +86,26 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
-   * @param \Drupal\uc_fulfillment\ShipmentInterface $uc_shipment
+   * @param int $shipment_id
    *   The ID of shipment.
-   * @param bool $print
-   *   Whether to generate a printable version.
-   * @param bool $labels
-   *   Whether to include mailing labels.
    *
-   * @return array|string
-   *   A render array or HTML markup in a form suitable for printing.
+   * @return array
+   *   HTML for the shipment.
    */
-  public function printShipment(OrderInterface $uc_order, ShipmentInterface $uc_shipment, $print = FALSE, $labels = TRUE) {
-    $packing_slip = array(
-      '#theme' => 'uc_packing_slip',
+  public function printShipment(OrderInterface $uc_order, $shipment_id, $labels = TRUE) {
+    $build = array(
+      '#theme' => 'uc_fulfillment_shipment_print',
       '#order' => $uc_order,
-      '#shipment' => $uc_shipment,
+      '#shipment' => $shipment_id,
       '#labels' => $labels,
-      '#op' => $print ? 'print' : 'view',
     );
 
-    if ($print) {
-      $build = array(
-        '#theme' => 'uc_packing_slip_page',
-        '#content' => $packing_slip,
-      );
-      $markup = \Drupal::service('renderer')->renderPlain($build);
-      $response = new Response($markup);
-      $response->headers->set('Content-Type', 'text/html; charset=utf-8');
-      return $response;
-    }
-
-    return $packing_slip;
+    $markup = \Drupal::service('renderer')->renderPlain($build);
+    $response = new Response($markup);
+    $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+// @todo: Fix so this uses the template.
+//    print theme('uc_packing_slip_page', array('content' => drupal_render($build)));
+    return $response;
   }
 
   /**
