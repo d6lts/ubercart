@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_store\Address;
 
 /**
  * Helper function for addresses in forms.
@@ -37,14 +38,14 @@ class AddressForm extends FormBase {
     );
     $form['origin']['pickup_address_select'] = $this->selectAddress($addresses);
     $form['origin']['pickup_address_select']['#weight'] = -2;
+
     $form['origin']['pickup_email'] = array(
       '#type' => 'email',
       '#title' => t('E-mail'),
       '#default_value' => uc_store_email(),
       '#weight' => -1,
     );
-    $form['origin']['pickup_email']['#weight'] = -1;
-    $form['origin']['pickup_address']['#tree'] = TRUE;
+
     $form['origin']['pickup_address']['pickup_address'] = array(
       '#type' => 'uc_address',
       '#default_value' => reset($addresses),
@@ -85,28 +86,29 @@ class AddressForm extends FormBase {
    * Chooses an address to fill out a form.
    */
   protected function selectAddress(array $addresses = []) {
-    $quote_config = \Drupal::config('uc_quote.settings');
-    $store_address = $quote_config->get('store_default_address');
-$store_address = new \Drupal\uc_store\Address();
+    $quote_config = \Drupal::config('uc_store.settings');
+    $store_address = $quote_config->get('address');
+    $store_address = Address::create($store_address);
     if (!in_array($store_address, $addresses)) {
       $addresses[] = $store_address;
     }
 
-    $blank = array(
+    $blank = Address::create(array(
       'first_name' => '',
       'last_name' => '',
-      'phone' => '',
       'company' => '',
       'street1' => '',
       'street2' => '',
       'city' => '',
       'postal_code' => '',
-      'country' => 0,
-      'zone' => 0,
-    );
+      'country' => '',
+      'zone' => '',
+      'phone' => '',
+    ));
+
     $options = array(Json::encode($blank) => t('- Reset fields -'));
     foreach ($addresses as $address) {
-      $options[Json::encode($address)] = $address->company . ' ' . $address->street1 . ' ' . $address->city;
+      $options[Json::encode($address)] = $address->getCompany() . ' ' . $address->getStreet1() . ' ' . $address->getCity();
     }
 
     $select = array(
