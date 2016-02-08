@@ -588,13 +588,3 @@ function uc_credit_log_reference($order_id, $ref_id, $cc_number) {
 
   return $data;
 }
-
-/**
- * Temporary shim for removed variable_get().
- * @TODO: Remove!
- */
-if (!function_exists('variable_get')) {
-  function variable_get($name, $default = NULL) {
-    return $default;
-  }
-}
