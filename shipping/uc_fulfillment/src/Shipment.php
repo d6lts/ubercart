@@ -448,7 +448,6 @@ class Shipment implements ShipmentInterface {
       'ship_date' => $this->ship_date,
       'expected_delivery' => $this->expected_delivery,
       'cost' => $this->cost,
-      'currency' => $this->currency,
       'changed' => $this->changed,
     );
     if (!isset($this->sid)) {

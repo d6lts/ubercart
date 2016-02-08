@@ -88,20 +88,6 @@ function uc_fulfillment_schema() {
         'length' => '2',
         'default' => '',
       ),
-      'o_phone' => array(
-        'description' => 'Origin address: Telephone number.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => FALSE,
-        'default' => '',
-      ),
-      'o_email' => array(
-        'description' => 'Origin address: E-mail address.',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-        'default' => '',
-      ),
       'd_first_name' => array(
         'description' => 'Destination address: First name.',
         'type' => 'varchar',
@@ -163,20 +149,6 @@ function uc_fulfillment_schema() {
         'length' => '2',
         'default' => '',
       ),
-      'd_phone' => array(
-        'description' => 'Destination address: Telephone number.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => FALSE,
-        'default' => '',
-      ),
-      'd_email' => array(
-        'description' => 'Destination address: E-mail address.',
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => FALSE,
-        'default' => '',
-      ),
       'shipping_method' => array(
         'description' => 'The shipping method.',
         'type' => 'varchar',
@@ -231,13 +203,6 @@ function uc_fulfillment_schema() {
         'scale' => 5,
         'not null' => TRUE,
         'default' => 0.0,
-      ),
-      'currency' => array(
-        'description' => 'The currency code for the currency used.',
-        'type' => 'varchar',
-        'length' => 3,
-        'not null' => TRUE,
-        'default' => '',
       ),
       'changed' => array(
         'description' => 'The Unix timestamp indicating the last time the shipment was modified.',
