@@ -31,14 +31,14 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The shipment's order.
-   * @param int $shipment_id
+   * @param \Drupal\uc_fulfillment\ShipmentInterface $uc_shipment
    *   The ID of shipment.
    *
    * @return string
    *   The page title.
    */
-  public function pageTitle(OrderInterface $uc_order, $shipment_id) {
-    return $this->t('Shipment @id', ['@id' => $shipment_id]);
+  public function pageTitle(OrderInterface $uc_order, ShipmentInterface $uc_shipment) {
+    return $this->t('Shipment @id', ['@id' => $uc_shipment->id()]);
   }
 
   /**
@@ -213,14 +213,13 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_order\OrderInterface $uc_order
    *   The order object.
-   * @param int $shipment_id
-   *   The ID of shipment.
+   * @param \Drupal\uc_fulfillment\ShipmentInterface $uc_shipment
+   *   The shipment.
    *
    * @return array
    *   A render array.
    */
-  public function viewShipment(OrderInterface $uc_order, $shipment_id) {
-    $shipment = Shipment::load($shipment_id);
+  public function viewShipment(OrderInterface $uc_order, ShipmentInterface $uc_shipment) {
 
     // Origin address.
     $build['pickup_address'] = array(
