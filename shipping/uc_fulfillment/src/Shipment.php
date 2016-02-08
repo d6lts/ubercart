@@ -364,6 +364,25 @@ class Shipment implements ShipmentInterface {
   }
 
   /**
+   * Loads a shipment and its packages for a given order.
+   *
+   * @param array $order_id
+   *   An order ID.
+   *
+   * @return \Drupal\uc_fulfillment\Shipment[]
+   *   Array of shipment object for the given order.
+   */
+  public static function loadByOrder($order_id) {
+    $shipments = array();
+    $result = db_query('SELECT sid FROM {uc_shipments} WHERE order_id = :id', [':id' => $order_id]);
+    while ($shipment_id = $result->fetchField()) {
+      $shipments[] = Shipment::load($shipment_id);
+    }
+
+    return $shipments;
+  }
+
+  /**
    * Loads a shipment and its packages.
    *
    * @param int $shipment_id
