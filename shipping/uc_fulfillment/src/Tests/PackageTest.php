@@ -28,7 +28,7 @@ class PackageTest extends UbercartTestBase {
     // Process an anonymous, shippable order.
     $order = Order::create([
       'uid' => 0,
-      'primary_email' => $this->randomMachineName() . '@example.org',
+      'primary_email' => $this->randomString() . '@example.org',
       'payment_method' => $method['id'],
     ]);
 
