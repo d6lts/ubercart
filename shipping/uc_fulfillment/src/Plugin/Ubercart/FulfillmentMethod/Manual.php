@@ -11,11 +11,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_fulfillment\Package;
-use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_fulfillment\FulfillmentMethodPluginBase;
 
 /**
- * Provides a manual fulfillment plugin.
+ * Provides a flat rate shipping quote plugin.
  *
  * @UbercartFulfillmentMethod(
  *   id = "manual",
