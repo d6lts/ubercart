@@ -91,14 +91,13 @@ class Manual extends FulfillmentMethodPluginBase {
    * {@inheritdoc}
    */
   public function fulfillOrder(OrderInterface $order, array $package_ids) {
-    $shipment = Shipment::create();
-    $shipment->setOrderId($order->id());
-    $packages = array();
+    $shipment = new \stdClass();
+    $shipment->order_id = $order->id();
+    $shipment->packages = array();
     foreach ($package_ids as $id) {
       $package = Package::load($id);
-      $packages[$id] = $package;
+      $shipment->packages[$id] = $package;
     }
-    $shipment->setPackages($packages);
 
     return \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\ShipmentEditForm', $order, $shipment);
   }
