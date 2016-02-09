@@ -21,105 +21,105 @@ class Shipment implements ShipmentInterface {
    *
    * @var int
    */
-  public $sid;
+  protected $sid;
 
   /**
    * Order ID of this shipment.
    *
    * @var int
    */
-  public $order_id;
+  protected $order_id;
 
   /**
    * Name of the shipping method.
    *
    * @var string
    */
-  public $shipping_method = '';
+  protected $shipping_method = '';
 
   /**
    * Shipping quote accessorials.
    *
    * @var array
    */
-  public $accessorials = '';
+  protected $accessorials = '';
 
   /**
    * Name of the common carrier.
    *
    * @var string
    */
-  public $carrier = '';
+  protected $carrier = '';
 
   /**
    * Shipment transaction ID.
    *
    * @var string
    */
-  public $transaction_id = '';
+  protected $transaction_id = '';
 
   /**
    * Shipment tracking number,
    *
    * @var string
    */
-  public $tracking_number = '';
+  protected $tracking_number = '';
 
   /**
    * Ship date timestamp.
    *
    * @var int
    */
-  public $ship_date = 0;
+  protected $ship_date = 0;
 
   /**
    * Expected delivery timestamp.
    *
    * @var int
    */
-  public $expected_delivery = 0;
+  protected $expected_delivery = 0;
 
   /**
    * Name of the status.
    *
    * @var float
    */
-  public $cost = 0;
+  protected $cost = 0;
 
   /**
    * Currency code.
    *
    * @var string
    */
-  public $currency = '';
+  protected $currency = '';
 
   /**
    * Last modified timestamp.
    *
    * @var int
    */
-  public $changed = 0;
+  protected $changed = 0;
 
   /**
    * Packages contained in this shipment.
    *
    * @var \Drupal\uc_fulfillment\Package[]
    */
-  public $packages = array();
+  protected $packages = array();
 
   /**
    * Shipment origin address.
    *
    * @var \Drupal\uc_store\Address
    */
-  public $origin;
+  protected $origin;
 
   /**
    * Shipment destination address.
    *
    * @var \Drupal\uc_store\Address
    */
-  public $destination;
+  protected $destination;
 
   /**
    * {@inheritdoc}
