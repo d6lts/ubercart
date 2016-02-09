@@ -202,7 +202,7 @@ class FulfillmentTest extends UbercartTestBase {
     $this->drupalGet('admin/store/orders/' . $order->id());
     $this->assertText(
       t('Tracking numbers:'),
-      'Fulfillment order pane found.'
+      'Tracking order pane found.'
     );
     //$this->assertText(
     //  '1234567890ABCD',

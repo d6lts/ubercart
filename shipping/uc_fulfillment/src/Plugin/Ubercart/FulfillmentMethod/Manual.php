@@ -11,10 +11,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_fulfillment\Package;
+use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_fulfillment\FulfillmentMethodPluginBase;
 
 /**
- * Provides a flat rate shipping quote plugin.
+ * Provides a manual fulfillment plugin.
  *
  * @UbercartFulfillmentMethod(
  *   id = "manual",
@@ -91,13 +92,14 @@ class Manual extends FulfillmentMethodPluginBase {
    * {@inheritdoc}
    */
   public function fulfillOrder(OrderInterface $order, array $package_ids) {
-    $shipment = new \stdClass();
-    $shipment->order_id = $order->id();
-    $shipment->packages = array();
+    $shipment = Shipment::create();
+    $shipment->setOrderId($order->id());
+    $packages = array();
     foreach ($package_ids as $id) {
       $package = Package::load($id);
-      $shipment->packages[$id] = $package;
+      $packages[$id] = $package;
     }
+    $shipment->setPackages($packages);
 
     return \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\ShipmentEditForm', $order, $shipment);
   }

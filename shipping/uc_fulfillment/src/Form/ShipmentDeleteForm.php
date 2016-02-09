@@ -10,7 +10,7 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\uc_fulfillment\Shipment;
+use Drupal\uc_fulfillment\ShipmentInterface;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -24,6 +24,13 @@ class ShipmentDeleteForm extends ConfirmFormBase {
    * @var \Drupal\uc_order\OrderInterface
    */
   protected $order_id;
+
+  /**
+   * The shipment.
+   *
+   * @var \Drupal\uc_fulfillment\Shipment
+   */
+  protected $shipment;
 
   /**
    * {@inheritdoc}
@@ -79,13 +86,9 @@ class ShipmentDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $shipment_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, ShipmentInterface $uc_shipment = NULL) {
     $this->order_id = $uc_order->id();
-
-    $form['sid'] = array(
-      '#type' => 'value',
-      '#value' => $shipment_id,
-    );
+    $this->shipment = $uc_shipment;
 
     return parent::buildForm($form, $form_state);
   }
@@ -94,21 +97,20 @@ class ShipmentDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $shipment = Shipment::load($form_state->getValue('sid'));
     $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
-    if ($shipment->tracking_number &&
-        isset($methods[$shipment->shipping_method]['cancel']) &&
-        function_exists($methods[$shipment->shipping_method]['cancel'])) {
-      $result = call_user_func($methods[$shipment->shipping_method]['cancel'], $shipment->tracking_number);
+    if ($this->shipment->getTrackingNumber() &&
+        isset($methods[$this->shipment->getShippingMethod()]['cancel']) &&
+        function_exists($methods[$this->shipment->getShippingMethod()]['cancel'])) {
+      $result = call_user_func($methods[$this->shipment->getShippingMethod()]['cancel'], $this->shipment->getTrackingNumber());
       if ($result) {
-        $shipment->delete();
+        $this->shipment->delete();
       }
       else {
-        drupal_set_message($this->t('The shipment %tracking could not be canceled with %carrier. To delete it anyway, remove the tracking number and try again.', ['%tracking' => $shipment->tracking_number, '%carrier' => $shipment->carrier]), 'warning');
+        drupal_set_message($this->t('The shipment %tracking could not be canceled with %carrier. To delete it anyway, remove the tracking number and try again.', ['%tracking' => $this->shipment->getTrackingNumber(), '%carrier' => $this->shipment->getCarrier()]), 'warning');
       }
     }
     else {
-      $shipment->delete();
+      $this->shipment->delete();
     }
 
     $form_state->setRedirectUrl($this->getCancelUrl());

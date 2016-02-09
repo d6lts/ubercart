@@ -396,9 +396,25 @@ class Shipment implements ShipmentInterface {
     $result = db_query('SELECT * FROM {uc_shipments} WHERE sid = :sid', [':sid' => $shipment_id]);
     if ($assoc = $result->fetchAssoc()) {
       $shipment = new Shipment();
+      $origin_fields = array();
+      $destination_fields = array();
+
       foreach ($assoc as $key => $value) {
-        $shipment->$key = $value;
+        $subkey = substr($key, 0, 2);
+        if ($subkey == 'o_') {
+          $origin_fields[substr($key, 2)] = $value;
+        }
+        elseif ($subkey == 'd_') {
+          $destination_fields[substr($key, 2)] = $value;
+        }
+        else {
+          $shipment->$key = $value;
+        }
       }
+      // Reconstitute Address objects from individual fields.
+      $shipment->origin = Address::create($origin_fields);
+      $shipment->destination = Address::create($destination_fields);
+
       $result2 = db_query('SELECT package_id FROM {uc_packages} WHERE sid = :sid', [':sid' => $shipment_id]);
       $packages = array();
       foreach ($result2 as $package) {
@@ -423,6 +439,7 @@ class Shipment implements ShipmentInterface {
   public function save() {
     $this->changed = time();
 
+    // Break Address objects into individual fields for saving.
     $fields = array();
     if (isset($this->origin)) {
       foreach ($this->origin as $field => $value) {
