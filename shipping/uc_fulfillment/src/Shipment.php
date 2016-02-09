@@ -491,7 +491,6 @@ class Shipment implements ShipmentInterface {
         // that they are not deleted and re-inserted.
         $products = $package->products;
         unset($package->products);
-drupal_set_message("here".print_r($fields, true));
         $package->save();
         // But they're still necessary for hook_uc_shipment(), so they're added
         // back in.

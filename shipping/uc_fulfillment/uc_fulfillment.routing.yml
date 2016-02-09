@@ -129,7 +129,7 @@ uc_fulfillment.edit_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/{uc_shipment}/edit'
   defaults:
     _form: '\Drupal\uc_fulfillment\Form\ShipmentEditForm'
-    _title: 'Edit'
+    _title_callback: '\Drupal\uc_fulfillment\Controller\ShipmentController::pageTitle'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
   options:
@@ -141,7 +141,7 @@ uc_fulfillment.packing_slip:
   path: '/admin/store/orders/{uc_order}/shipments/{uc_shipment}/packing_slip'
   defaults:
     _controller: '\Drupal\uc_fulfillment\Controller\ShipmentController::printShipment'
-    _title: 'Packing slip'
+    _title_callback: '\Drupal\uc_fulfillment\Controller\ShipmentController::pageTitle'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
   options:
@@ -153,7 +153,7 @@ uc_fulfillment.print_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/{uc_shipment}/print'
   defaults:
     _controller: '\Drupal\uc_fulfillment\Controller\ShipmentController::printShipment'
-    _title: 'Print'
+    _title_callback: '\Drupal\uc_fulfillment\Controller\ShipmentController::pageTitle'
     print: TRUE
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
@@ -166,7 +166,7 @@ uc_fulfillment.delete_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/{uc_shipment}/delete'
   defaults:
     _form: '\Drupal\uc_fulfillment\Form\ShipmentDeleteForm'
-    _title: 'Delete shipment'
+    _title_callback: '\Drupal\uc_fulfillment\Controller\ShipmentController::pageTitle'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
   options:
