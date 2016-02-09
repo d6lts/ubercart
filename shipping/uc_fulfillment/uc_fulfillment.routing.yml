@@ -137,17 +137,22 @@ uc_fulfillment.packing_slip:
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
   options:
-    _admin_route: FALSE
+    parameters:
+      uc_shipment:
+        type: uc_shipment
 
 uc_fulfillment.print_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/{shipment_id}/print'
   defaults:
     _controller: '\Drupal\uc_fulfillment\Controller\ShipmentController::printShipment'
     _title: 'Print'
+    print: TRUE
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
   options:
-    _admin_route: FALSE
+    parameters:
+      uc_shipment:
+        type: uc_shipment
 
 uc_fulfillment.delete_shipment:
   path: '/admin/store/orders/{uc_order}/shipments/{shipment_id}/delete'
