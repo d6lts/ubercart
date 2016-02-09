@@ -273,11 +273,18 @@ class ShipmentController extends ControllerBase {
       \Drupal::service('date.formatter')->format($uc_shipment->getExpectedDelivery(), 'uc_store')
     );
     $build['schedule'] = array(
+      '#type' => 'container',
+      '#attributes' => array('class' => array('order-pane', 'abs-left')),
+    );
+    $build['schedule']['title'] = array(
+      '#type' => 'container',
+      '#markup' => $this->t('Schedule:'),
+      '#attributes' => array('class' => array('order-pane-title')),
+    );
+    $build['schedule']['table'] = array(
       '#theme' => 'table',
       '#rows' => $rows,
       '#attributes' => array('style' => 'width: auto'),
-      '#prefix' => '<div class="order-pane abs-left"><div class="order-pane-title">' . $this->t('Schedule:') . '</div>',
-      '#suffix' => '</div>',
     );
 
     // Shipment details.
