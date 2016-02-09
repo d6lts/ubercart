@@ -33,6 +33,7 @@ class FulfillmentTest extends UbercartTestBase {
     $order = $this->createOrder([
       'uid' => 0,
       'payment_method' => $method['id'],
+      'primary_email' => $this->randomMachineName() . '@example.org',
     ]);
     $order->products[1]->data->shippable = 1;
     $order->save();
@@ -146,56 +147,90 @@ class FulfillmentTest extends UbercartTestBase {
       'Shipment data pane found.'
     );
 
+    $street = array_flip(array(
+      'Street',
+      'Avenue',
+      'Place',
+      'Way',
+      'Road',
+      'Boulevard',
+      'Court',
+    ));
+
     // Fill in the details and make the shipment.
     // If we filled the addresses in when we created the order,
-    // those values should already be set here.
-//    $this->drupalPostForm(
-//      NULL,
-//      array(
-//        'pickup_address[pickup_address][first_name]' =>
-//        'pickup_address[pickup_address][last_name]' =>
-//        'pickup_address[pickup_address][company]' =>
-//        'pickup_address[pickup_address][street1]' =>
-//        'pickup_address[pickup_address][street2]' =>
-//        'pickup_address[pickup_address][city]' =>
-//        'pickup_address[pickup_address][zone]' =>
-//        'pickup_address[pickup_address][country]' =>
-//        'pickup_address[pickup_address][postal_code]' =>
-//        'delivery_address[pickup_address][first_name]' =>
-//        'delivery_address[pickup_address][last_name]' =>
-//        'delivery_address[pickup_address][company]' =>
-//        'delivery_address[pickup_address][street1]' =>
-//        'delivery_address[pickup_address][street2]' =>
-//        'delivery_address[pickup_address][city]' =>
-//        'delivery_address[pickup_address][zone]' =>
-//        'delivery_address[pickup_address][country]' =>
-//        'delivery_address[pickup_address][postal_code]' =>
-//        'packages[1][pkg_type]' =>
-//        'packages[1][declared_value]' =>
-//        'packages[1][tracking_number]' =>
-//        'packages[1][weight][weight]' =>
-//        'packages[1][weight][units]' =>
-//        'packages[1][dimensions][length]' =>
-//        'packages[1][dimensions][width]' =>
-//        'packages[1][dimensions][height]' =>
-//        'carrier' => 'FedEx',
-//        'accessorials' => 'Standard Overnight',
-//        'transaction_id' =>
-//        'tracking_number' => '1234567890ABCD',
-//        'ship_date[date]' => '1985-10-26',
-//        'expected_deliver[date]' => '2015-10-21',
-//        'cost' => '12.34',
-//      ),
-//      t('Save shipment')
-//    );
-    // Check that we're now on the ? page
-    //$this->assertUrl('admin/store/orders/' . $order->id() . '/ship?method_id=manual&0=1');
-    //$this->assertText(
-    //  'Shipment data',
-    //  'Shipment data pane found.'
-    //);
+    // those values should already be set here so we wouldn't
+    // have to fill them in again.
+    $form_values = array(
+      'pickup_address[first_name]' => $this->randomMachineName(6),
+      'pickup_address[last_name]' => $this->randomMachineName(12),
+      'pickup_address[company]' => $this->randomMachineName(10) . ', Inc.',
+      'pickup_address[street1]' => mt_rand(10, 1000) . ' ' .
+                                   $this->randomMachineName(10) . ' ' .
+                                   array_rand($street),
+      'pickup_address[street2]' => 'Suite ' . mt_rand(100, 999),
+      'pickup_address[city]' => $this->randomMachineName(10),
+      'pickup_address[postal_code]' => mt_rand(10000, 99999),
+      'delivery_address[first_name]' => $this->randomMachineName(6),
+      'delivery_address[last_name]' => $this->randomMachineName(12),
+      'delivery_address[company]' => $this->randomMachineName(10) . ', Inc.',
+      'delivery_address[street1]' => mt_rand(10, 1000) . ' ' .
+                                     $this->randomMachineName(10) . ' ' .
+                                     array_rand($street),
+      'delivery_address[street2]' => 'Suite ' . mt_rand(100, 999),
+      'delivery_address[city]' => $this->randomMachineName(10),
+      'delivery_address[postal_code]' => mt_rand(10000, 99999),
+      'packages[1][pkg_type]' => 'envelope',
+      'packages[1][declared_value]' => '1234.56',
+      'packages[1][tracking_number]' => '4-8-15-16-23-42',
+      'packages[1][weight][weight]' => '3',
+      'packages[1][weight][units]' => array_rand(array_flip(array('lb', 'kg', 'oz', 'g'))),
+      'packages[1][dimensions][length]' => '1',
+      'packages[1][dimensions][width]' => '1',
+      'packages[1][dimensions][height]' => '1',
+      'packages[1][dimensions][length]' => '1',
+      'packages[1][dimensions][units]' => array_rand(array_flip(array('in', 'ft', 'cm', 'mm'))),
+      'carrier' => 'FedEx',
+      'accessorials' => 'Standard Overnight',
+      'transaction_id' => 'THX1138',
+      'tracking_number' => '1234567890ABCD',
+      'ship_date[date]' => '1985-10-26',
+      'expected_delivery[date]' => '2015-10-21',
+      'cost' => '12.34',
+    );
 
-    // Check View, Edit, Delete, Print, and Packing Slip actions and tabs.
+//@todo fix ajax and uncomment settings country and zone.
+    // Find available countries for our select.
+    $country_ids = \Drupal::service('country_manager')->getEnabledList();
+    $pickup_country = array_rand($country_ids);
+//    $this->drupalPostAjaxForm(NULL, ['pickup_address[country]' => $pickup_country], 'pickup_address[country]');
+
+    // Don't try to set the zone unless the country has zones!
+    $zone_list = \Drupal::service('country_manager')->getZoneList($pickup_country);
+    if (!empty($zone_list)) {
+ //     $form_values['pickup_address[zone]'] = array_rand($zone_list);
+    }
+
+    $delivery_country = array_rand($country_ids);
+//    $this->drupalPostAjaxForm(NULL, ['delivery_address[country]' => $delivery_country], 'delivery_address[country]');
+    $zone_list = \Drupal::service('country_manager')->getZoneList($delivery_country);
+    if (!empty($zone_list)) {
+//      $form_values['delivery_address[zone]'] = array_rand($zone_list);
+    }
+
+    // Make the shipment.
+    $this->drupalPostForm(NULL, $form_values, t('Save shipment'));
+
+    // Check that we're now on the shipments overview page
+    $this->assertUrl('admin/store/orders/' . $order->id() . '/shipments');
+    $this->assertText(
+      'Shipment ID',
+      'Shipment summary found.'
+    );
+    $this->assertText(
+      '1234567890ABCD',
+      'Shipment data present.'
+    );
 
     // Check for "Tracking" order pane after this order has
     // been shipped and a tracking number entered.
@@ -204,10 +239,10 @@ class FulfillmentTest extends UbercartTestBase {
       t('Tracking numbers:'),
       'Tracking order pane found.'
     );
-    //$this->assertText(
-    //  '1234567890ABCD',
-    //  'Tracking number found.'
-    //);
+    $this->assertText(
+      '1234567890ABCD',
+      'Tracking number found.'
+    );
   }
 
 }
