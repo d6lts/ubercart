@@ -33,21 +33,18 @@ class Tracking extends OrderPanePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function view(OrderInterface $order, $view_mode) {
+  public function view(OrderInterface $uc_order, $view_mode) {
     if ($view_mode == 'customer' || $view_mode == 'view') {
       $tracking = array();
-      $result = db_query('SELECT sid FROM {uc_shipments} WHERE order_id = :id', [':id' => $order->id()]);
-      foreach ($result as $shipment) {
-        $shipment = Shipment::load($shipment->sid);
-        if ($shipment->tracking_number) {
-          $tracking[$shipment->carrier]['data'] = $shipment->carrier;
-          $tracking[$shipment->carrier]['children'][] = $shipment->tracking_number;
+      $shipments = Shipment::loadByOrder($uc_order->id());
+      foreach ($shipments as $shipment) {
+        if ($shipment->getTrackingNumber()) {
+          $tracking[$shipment->getCarrier()][] = $shipment->getTrackingNumber();
         }
         else {
-          foreach ($shipment->packages as $package) {
+          foreach ($shipment->getPackages() as $package) {
             if ($package->tracking_number) {
-              $tracking[$shipment->carrier]['data'] = $shipment->carrier;
-              $tracking[$shipment->carrier]['children'][] = $package->tracking_number;
+              $tracking[$shipment->getCarrier()][] = $package->tracking_number;
             }
           }
         }
@@ -55,10 +52,19 @@ class Tracking extends OrderPanePluginBase {
 
       // Do not show an empty pane to customers.
       if ($view_mode == 'view' || !empty($tracking)) {
-        $build['tracking'] = array(
-          '#theme' => 'item_list',
-          '#items' => $tracking,  // @todo #plain_text ?
-        );
+        $build = array();
+        foreach ($tracking as $title => $list) {
+          $build[$title] = array(
+            '#theme' => 'item_list',
+            '#title' => $title,
+            '#items' => $list,  // @todo #plain_text ?
+          );
+        }
+        if (empty($tracking)) {
+          $build = array(
+            '#markup' => $this->t('No tracking numbers have been entered.'),
+          );
+        }
 
         return $build;
       }
