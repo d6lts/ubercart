@@ -42,14 +42,13 @@ class QuoteSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $quote_config = $this->config('uc_quote.settings');
-    $address = $quote_config->get('store_default_address');
 
-    $form['uc_quote_display_debug'] = array(
+    $form['display_debug'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Display debug information to administrators.'),
       '#default_value' => $quote_config->get('display_debug'),
     );
-    $form['uc_quote_require_quote'] = array(
+    $form['require_quote'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Prevent the customer from completing an order if a shipping quote is not selected.'),
       '#default_value' => $quote_config->get('require_quote'),
@@ -61,14 +60,15 @@ class QuoteSettingsForm extends ConfigFormBase {
       '#description' => $this->t("When delivering products to customers, the original location of the product must be known in order to accurately quote the shipping cost and set up a delivery. This form provides the default location for all products in the store. If a product's individual pickup address is blank, Ubercart uses the store's default pickup address specified here."),
     );
     $form['default_address']['address'] = array(
+//      '#tree' => TRUE,
       '#type' => 'uc_address',
-      '#default_value' => $form_state->getValues() ?: $address,
+      '#default_value' => $quote_config->get('ship_from_address'),
       '#required' => FALSE,
     );
 
     $shipping_types = uc_quote_shipping_type_options();
     if (is_array($shipping_types)) {
-      $form['uc_quote_type_weight'] = array(
+      $form['type_weight'] = array(
         '#type' => 'details',
         '#title' => $this->t('List position'),
         '#description' => $this->t('Determines which shipping methods are quoted at checkout when products of different shipping types are ordered. Larger values take precedence.'),
@@ -85,10 +85,10 @@ class QuoteSettingsForm extends ConfigFormBase {
       }
       if (isset($method_types['order']) && is_array($method_types['order'])) {
         $count = count($method_types['order']);
-        $form['uc_quote_type_weight']['#description'] .= $this->formatPlural($count, '<br />The %list method is compatible with any shipping type.', '<br />The %list methods are compatible with any shipping type.', ['%list' => implode(', ', $method_types['order'])]);
+        $form['type_weight']['#description'] .= $this->formatPlural($count, '<br />The %list method is compatible with any shipping type.', '<br />The %list methods are compatible with any shipping type.', ['%list' => implode(', ', $method_types['order'])]);
       }
       foreach ($shipping_types as $id => $title) {
-        $form['uc_quote_type_weight'][$id] = array(
+        $form['type_weight'][$id] = array(
           '#type' => 'weight',
           '#title' => $title . (isset($method_types[$id]) && is_array($method_types[$id]) ? ' (' . implode(', ', $method_types[$id]) . ')' : ''),
           '#delta' => 5,
@@ -110,26 +110,12 @@ class QuoteSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $address = new Address();
-    $address->first_name = $form_state->getValue('first_name');
-    $address->last_name = $form_state->getValue('last_name');
-    $address->company = $form_state->getValue('company');
-    $address->phone = $form_state->getValue('phone');
-    $address->street1 = $form_state->getValue('street1');
-    $address->street2 = $form_state->getValue('street2');
-    $address->city = $form_state->getValue('city');
-    $address->zone = $form_state->getValue('zone');
-    $address->postal_code = $form_state->getValue('postal_code');
-    $address->country = $form_state->getValue('country');
-
     $quote_config = $this->config('uc_quote.settings');
     $quote_config
-      ->set('store_default_address', (array) $address)
-      ->set('display_debug', $form_state->getValue('uc_quote_display_debug'))
-      ->set('require_quote', $form_state->getValue('uc_quote_require_quote'))
-      ->set('pane_description', $form_state->getValue(['uc_quote_pane_description', 'text']))
-      ->set('error_message', $form_state->getValue(['uc_quote_error_message', 'text']))
-      ->set('type_weight', $form_state->getValue('uc_quote_type_weight'))
+      ->set('ship_from_address', $form_state->getValue('address'))
+      ->set('display_debug', $form_state->getValue('display_debug'))
+      ->set('require_quote', $form_state->getValue('require_quote'))
+      ->set('type_weight', $form_state->getValue('type_weight'))
       ->set('shipping_type', $form_state->getValue('uc_store_shipping_type'))
       ->save();
 

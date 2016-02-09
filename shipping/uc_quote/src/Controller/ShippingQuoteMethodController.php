@@ -34,7 +34,7 @@ class ShippingQuoteMethodController extends ControllerBase {
   /**
    * Performs an operation on the shipping quote method entity.
    *
-   * @param \Drupal\uc_quote\ShippingQuoteMethodInterface $uc_quote
+   * @param \Drupal\uc_quote\ShippingQuoteMethodInterface $uc_quote_method
    *   The shipping quote method entity.
    * @param string $op
    *   The operation to perform, usually 'enable' or 'disable'.
@@ -42,17 +42,17 @@ class ShippingQuoteMethodController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect back to the shipping quote method listing page.
    */
-  public function performOperation(ShippingQuoteMethodInterface $uc_quote, $op) {
-    $uc_quote->$op()->save();
+  public function performOperation(ShippingQuoteMethodInterface $uc_quote_method, $op) {
+    $uc_quote_method->$op()->save();
 
     if ($op == 'enable') {
-      drupal_set_message($this->t('The %label shipping method has been enabled.', ['%label' => $uc_quote->label()]));
+      drupal_set_message($this->t('The %label shipping method has been enabled.', ['%label' => $uc_quote_method->label()]));
     }
     elseif ($op == 'disable') {
-      drupal_set_message($this->t('The %label shipping method has been disabled.', ['%label' => $uc_quote->label()]));
+      drupal_set_message($this->t('The %label shipping method has been disabled.', ['%label' => $uc_quote_method->label()]));
     }
 
-    $url = $uc_quote->toUrl('collection');
+    $url = $uc_quote_method->toUrl('collection');
     return $this->redirect($url->getRouteName(), $url->getRouteParameters(), $url->getOptions());
   }
 

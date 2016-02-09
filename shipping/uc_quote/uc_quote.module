@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_store\Address;
 
 /**
  * Implements hook_help().
@@ -120,7 +121,7 @@ function uc_quote_node_load($nodes) {
       unset($nodes[$nid]->shipping_address['nid']);
     }
     else {
-      $nodes[$nid]->shipping_address = (array) $quote_config->get('store_default_address');
+      $nodes[$nid]->shipping_address = (array) $quote_config->get('ship_from_address');
     }
   }
 }
@@ -158,7 +159,7 @@ function uc_quote_form_node_form_alter(&$form, FormStateInterface $form_state) {
     // Use the store default if the product does not have an address set.
     $quote_config = \Drupal::config('uc_quote.settings');
     if (empty($address)) {
-      $address = $quote_config->get('store_default_address');
+      $address = $quote_config->get('ship_from_address');
     }
 
     // Initialize the shipping fieldset array.
@@ -345,10 +346,11 @@ function uc_quote_get_shipping_type($id_type, $id) {
   static $types = array();
 
   if (!isset($types[$id_type][$id])) {
-    $types[$id_type][$id] = db_query("SELECT shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id = :id", [':type' => $id_type, ':id' => $id])->fetchField();
+    $types[$id_type][$id] = db_query('SELECT shipping_type FROM {uc_quote_shipping_types} WHERE id_type = :type AND id = :id', [':type' => $id_type, ':id' => $id])->fetchField();
   }
-
-  return $types[$id_type][$id];
+  // @todo: shouldn't have to test here and add the small_package default -
+  // there should always be a value like there was in D7.
+  return isset($types[$id_type][$id])  ?  $types[$id_type][$id] : 'small_package';
 }
 
 /**
@@ -385,7 +387,7 @@ function uc_quote_get_default_shipping_address($nid) {
 
   if (empty($address)) {
     $quote_config = \Drupal::config('uc_quote.settings');
-    $address = $quote_config->get('store_default_address');
+    $address = Address::create($quote_config->get('ship_from_address'));
   }
 
   return $address;

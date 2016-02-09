@@ -44,7 +44,7 @@ class Quotes extends EditableOrderPanePluginBase {
   public function buildForm(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $form['quote_button'] = array(
       '#type' => 'submit',
-      '#value' => t('Get shipping quotes'),
+      '#value' => $this->t('Get shipping quotes'),
       '#submit' => array(array($this, 'retrieveQuotes')),
       '#ajax' => array(
         'callback' => array($this, 'replaceOrderQuotes'),
@@ -52,10 +52,11 @@ class Quotes extends EditableOrderPanePluginBase {
         'effect' => 'slide',
         'progress' => array(
           'type' => 'bar',
-          'message' => t('Receiving quotes...'),
+          'message' => $this->t('Receiving quotes...'),
         ),
       ),
     );
+    // @todo: replace with 'container'
     $form['quotes'] = array(
       '#tree' => TRUE,
       '#prefix' => '<div id="quote">',
@@ -76,14 +77,14 @@ class Quotes extends EditableOrderPanePluginBase {
 
       $form['quotes']['add_quote'] = array(
         '#type' => 'submit',
-        '#value' => t('Apply to order'),
+        '#value' => $this->t('Apply to order'),
         '#submit' => array(array($this, 'applyQuote')),
         '#ajax' => array(
           'callback' => array($this, 'updateOrderRates'),
           'effect' => 'fade',
           'progress' => array(
             'type' => 'throbber',
-            'message' => t('Applying quotes...'),
+            'message' => $this->t('Applying quotes...'),
           ),
         ),
       );

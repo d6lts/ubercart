@@ -20,7 +20,7 @@ uc_quote.settings:
         small_package:
           type: integer
           label: ''
-    store_default_address:
+    ship_from_address:
       type: mapping
       label: ''
       mapping:
