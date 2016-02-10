@@ -70,25 +70,27 @@ class FeatureSettingsForm extends ConfigFormBase {
     $form['download_limit']['download_limit_addresses'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('IP addresses'),
-      '#description' => $this->t("The number of unique IPs that a file can be downloaded from. Leave empty to set no limit."),
+      '#description' => $this->t('The number of unique IPs that a file can be downloaded from. Leave empty to set no limit.'),
       '#default_value' => $file_config->get('download_limit_addresses'),
       '#maxlength' => 4,
       '#size' => 4,
     );
-    $form['download_limit']['download_limit_duration_qty'] = array(
+
+    $form['download_limit']['download_limit_duration'] = array(
+      '#type' => 'container',
+      '#attributes' => array('class' => array('duration')),
+    );
+    $form['download_limit']['download_limit_duration']['duration_qty'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Time'),
-      '#default_value' => $file_config->get('download_limit_duration_qty'),
+      '#default_value' => $file_config->get('duration_qty'),
       '#size' => 4,
       '#maxlength' => 4,
-      '#prefix' => '<div class="duration">',
-      '#suffix' => '</div>',
       '#states' => array(
-        'disabled' => array('select[name="download_limit_duration_granularity"]' => array('value' => 'never')),
+        'disabled' => array('select[name="duration_granularity"]' => array('value' => 'never')),
       ),
     );
-
-    $form['download_limit']['download_limit_duration_granularity'] = array(
+    $form['download_limit']['download_limit_duration']['duration_granularity'] = array(
       '#type' => 'select',
       '#options' => array(
         'never' => $this->t('never'),
@@ -97,10 +99,8 @@ class FeatureSettingsForm extends ConfigFormBase {
         'month' => $this->t('month(s)'),
         'year' => $this->t('year(s)')
       ),
-      '#default_value' => $file_config->get('download_limit_duration_granularity'),
+      '#default_value' => $file_config->get('duration_granularity'),
       '#description' => $this->t('How long after a product has been purchased until its file download expires.'),
-      '#prefix' => '<div class="duration">',
-      '#suffix' => '</div>',
     );
 
     return parent::buildForm($form, $form_state);
@@ -117,9 +117,9 @@ class FeatureSettingsForm extends ConfigFormBase {
 
     // If the user selected a granularity, let's make sure they
     // also selected a duration.
-    if ($form_state->getValue('download_limit_duration_granularity') != 'never' &&
-        $form_state->getValue('download_limit_duration_qty') < 1) {
-      $form_state->setErrorByName('download_limit_duration_qty', $this->t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', ['%gran' => $form_state->getValue('download_limit_duration_granularity') . '(s)']));
+    if ($form_state->getValue('duration_granularity') != 'never' &&
+        $form_state->getValue('duration_qty') < 1) {
+      $form_state->setErrorByName('duration_qty', $this->t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', ['%gran' => $form_state->getValue('duration_granularity') . '(s)']));
     }
 
     // Make sure the download limit makes sense.
@@ -154,8 +154,8 @@ class FeatureSettingsForm extends ConfigFormBase {
       ->set('duplicate_warning', $form_state->getValue('duplicate_warning'))
       ->set('download_limit_number', $form_state->getValue('download_limit_number'))
       ->set('download_limit_addresses', $form_state->getValue('download_limit_addresses'))
-      ->set('download_limit_duration_qty', $form_state->getValue('download_limit_duration_qty'))
-      ->set('download_limit_duration_granularity', $form_state->getValue('download_limit_duration_granularity'))
+      ->set('duration_qty', $form_state->getValue('duration_qty'))
+      ->set('duration_granularity', $form_state->getValue('duration_granularity'))
       ->save();
 
     parent::submitForm($form, $form_state);

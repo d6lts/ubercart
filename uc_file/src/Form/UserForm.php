@@ -240,8 +240,8 @@ class UserForm extends FormBase {
 
         $download_modification['expiration'] = _uc_file_expiration_date(array(
           'time_polarity' => '+',
-          'time_quantity' => $file_config->get('download_limit_duration_qty'),
-          'time_granularity' => $file_config->get('download_limit_duration_granularity'),
+          'time_quantity' => $file_config->get('duration_qty'),
+          'time_granularity' => $file_config->get('duration_granularity'),
         ), REQUEST_TIME);
 
         // Renew. (Explicit overwrite.)

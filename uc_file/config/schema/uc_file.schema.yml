@@ -14,10 +14,10 @@ uc_file.settings:
     download_limit_addresses:
       type: integer
       label: 'Number of IP addresses allowed per user'
-    download_limit_duration_qty:
+    duration_qty:
       type: integer
       label: 'Download time limit'
-    download_limit_duration_granularity:
+    duration_granularity:
       type: string
       label: 'Unit value for download time limit'
     duplicate_warning:

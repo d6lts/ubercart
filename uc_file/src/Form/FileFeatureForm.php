@@ -177,20 +177,23 @@ class FileFeatureForm extends FormBase {
       '#title' => $this->t('Override time limit'),
       '#default_value' => $time_status,
     );
-    $form['uc_file_limits']['download_limit_duration_qty'] = array(
+
+    $form['uc_file_limits']['download_limit_duration'] = array(
+      '#type' => 'container',
+      '#attributes' => array('class' => array('duration')),
+    );
+    $form['uc_file_limits']['download_limit_duration']['duration_qty'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Time'),
       '#default_value' => $quantity_value,
       '#size' => 4,
       '#maxlength' => 4,
-      '#prefix' => '<div class="duration">',
-      '#suffix' => '</div>',
       '#states' => array(
-        'disabled' => array('select[name="download_limit_duration_granularity"]' => array('value' => 'never')),
+        'disabled' => array('select[name="duration_granularity"]' => array('value' => 'never')),
         'visible' => array('input[name="time_override"]' => array('checked' => TRUE)),
       ),
     );
-    $form['uc_file_limits']['download_limit_duration_granularity'] = array(
+    $form['uc_file_limits']['download_limit_duration']['duration_granularity'] = array(
       '#type' => 'select',
       '#default_value' => $granularity_value,
       '#options' => array(
@@ -201,8 +204,6 @@ class FileFeatureForm extends FormBase {
         'year' => $this->t('year(s)')
       ),
       '#description' => $this->t('How long after this product has been purchased until this file download expires.'),
-      '#prefix' => '<div class="duration">',
-      '#suffix' => '</div>',
       '#states' => array(
         'visible' => array('input[name="time_override"]' => array('checked' => TRUE)),
       ),
@@ -236,9 +237,9 @@ class FileFeatureForm extends FormBase {
       $form_state->setErrorByName('download_limit_addresses', $this->t('A negative IP address limit does not make sense. Please enter a positive integer, or leave empty for no limit.'));
     }
     if ($form_state->getValue('time_override') &&
-        $form_state->getValue('download_limit_duration_granularity') != 'never' &&
-        $form_state->getValue('download_limit_duration_qty') < 1) {
-      $form_state->setErrorByName('download_limit_duration_qty', $this->t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', ['%gran' => $form_state->getValue('download_limit_duration_granularity') . '(s)']));
+        $form_state->getValue('duration_granularity') != 'never' &&
+        $form_state->getValue('duration_qty') < 1) {
+      $form_state->setErrorByName('duration_qty', $this->t('You set the granularity (%gran), but you did not set how many. Please enter a positive non-zero integer.', ['%gran' => $form_state->getValue('duration_granularity') . '(s)']));
     }
   }
 
@@ -259,14 +260,14 @@ class FileFeatureForm extends FormBase {
       // Local limitations... set them if there's an override.
       'download_limit'   => $form_state->getValue('download_limit_number') ?: UC_FILE_LIMIT_SENTINEL,
       'address_limit'    => $form_state->getValue('download_limit_addresses') ?: UC_FILE_LIMIT_SENTINEL,
-      'time_granularity' => $form_state->getValue('download_limit_duration_granularity') ?: UC_FILE_LIMIT_SENTINEL,
-      'time_quantity'    => $form_state->getValue('download_limit_duration_qty') ?: UC_FILE_LIMIT_SENTINEL,
+      'time_granularity' => $form_state->getValue('duration_granularity') ?: UC_FILE_LIMIT_SENTINEL,
+      'time_quantity'    => $form_state->getValue('duration_qty') ?: UC_FILE_LIMIT_SENTINEL,
     );
 
     // Build product feature descriptions.
     $file_config = $this->config('uc_file.settings');
     $description = $this->t('<strong>SKU:</strong> @sku<br />', ['@sku' => empty($file_product['model']) ? 'Any' : $file_product['model']]);
-    if (is_dir($file_config->get('base_dir') . "/" . $file_product['filename'])) {
+    if (is_dir($file_config->get('base_dir') . '/' . $file_product['filename'])) {
       $description .= $this->t('<strong>Directory:</strong> @dir<br />', ['@dir' => $file_product['filename']]);
     }
     else {

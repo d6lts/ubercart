@@ -73,20 +73,20 @@ class FileActionForm extends FormBase {
       }
     }
 
-    $form['uc_file_action']['action'] = array(
+    $form['uc_file_action']['container'] = array(
+      '#type' => 'container',
+      '#attributes' => array('class' => array('duration')),
+    );
+    $form['uc_file_action']['container']['action'] = array(
       '#type' => 'select',
       '#title' => $this->t('Action'),
-      '#prefix' => '<div class="duration">',
       '#options' => $file_actions,
-      '#suffix' => '</div>',
     );
 
-    $form['uc_file_actions']['actions'] = array('#type' => 'actions');
-    $form['uc_file_action']['actions']['submit'] = array(
+    $form['uc_file_actions']['container']['actions'] = array('#type' => 'actions');
+    $form['uc_file_action']['container']['actions']['submit'] = array(
       '#type' => 'submit',
-      '#prefix' => '<div class="duration">',
       '#value' => $this->t('Perform action'),
-      '#suffix' => '</div>',
     );
 
     return $form;
