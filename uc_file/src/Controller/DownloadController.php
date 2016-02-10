@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_file\Controller;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -198,10 +199,16 @@ class DownloadController extends ControllerBase {
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   Run access checks for this account.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function accessUserDownloads(AccountInterface $account) {
     $user = \Drupal::currentUser();
-    return $user->id() && ($user->hasPermission('view all downloads') || $user->id() == $account->id());
+    return AccessResult::allowedIf(
+      $user->id() &&
+     ($user->hasPermission('view all downloads') || $user->id() == $account->id())
+    );
   }
 
   /**
