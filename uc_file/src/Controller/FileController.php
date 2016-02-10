@@ -63,12 +63,15 @@ class FileController extends ControllerBase {
    */
   public function show() {
     $build['#tree'] = TRUE;
+    $build['#attached']['library'][] = 'uc_file/uc_file.scripts';
 
     // Form that provides operations.
     $build['file_action_form'] = $this->formBuilder->getForm('Drupal\uc_file\Form\FileActionForm');
 
     // Table of files to operate on.
     $header = array(
+      // Fake out tableselect JavaScript into operating on our table.
+      array('data' => '', 'class' => array('select-all')),
       'filename' => array('data' => $this->t('File'), 'field' => 'f.filename', 'sort' => 'asc'),
       'title' => array('data' => $this->t('Product'), 'field' => 'n.title'),
       'model' => array('data' => $this->t('SKU'), 'field' => 'fp.model', 'class' => array(RESPONSIVE_PRIORITY_LOW)),
@@ -101,6 +104,7 @@ class FileController extends ControllerBase {
       // All files are shown here, including files which are not attached to products.
       if (isset($file->nid)) {
         $options[$file->fid] = array(
+          'checked' => array('data' => array('#type' => 'checkbox', '#default_value' => 0)),
           'filename' => array(
             'data' => array('#plain_text' => $file->filename),
             'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
@@ -119,6 +123,7 @@ class FileController extends ControllerBase {
       }
       else {
         $options[$file->fid] = array(
+          'checked' => array('data' => array('#type' => 'checkbox', '#default_value' => 0)),
           'filename' => array(
             'data' => array('#plain_text' => $file->filename),
             'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
@@ -131,9 +136,9 @@ class FileController extends ControllerBase {
 
     // Create checkboxes for each file.
     $build['file_select'] = array(
-      '#type' => 'tableselect',
+      '#type' => 'table',
       '#header' => $header,
-      '#options' => $options,
+      '#rows' => $options,
       '#empty' => $this->t('No file downloads available.'),
     );
     $build['file_select_pager'] = array('#type' => 'pager');
