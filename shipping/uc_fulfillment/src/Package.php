@@ -7,32 +7,342 @@
 
 namespace Drupal\uc_fulfillment;
 
+use \Drupal\uc_store\Address;
+
 /**
- * Provides an interface for defining fulfillment method entities.
+ * Defines the Package class.
  */
-class Package {
+class Package implements PackageInterface {
 
   /** These variables map to DB columns */
+
+  /**
+   * Package ID.
+   *
+   * @var int
+   */
   public $package_id;
+
+  /**
+   * Shipment ID.
+   *
+   * @var int
+   */
   public $sid;
+
+  /**
+   * Order ID of this shipment.
+   *
+   * @var int
+   */
   public $order_id;
+
+  /**
+   * Package shipping type.
+   *
+   * @var string
+   */
   public $shipping_type;
+
+  /**
+   * Package package type,
+   *
+   * @var string
+   */
   public $pkg_type;
+
+  /**
+   * Package length.
+   *
+   * @var string
+   */
   public $length;
+
+  /**
+   * Package width.
+   *
+   * @var string
+   */
   public $width;
+
+  /**
+   * Package height.
+   *
+   * @var string
+   */
   public $height;
+
+  /**
+   * Package length units.
+   *
+   * @var string
+   */
   public $length_units;
+
+  /**
+   * Package monetary value.
+   *
+   * @var string
+   */
   public $value;
+
+  /**
+   * Package tracking number.
+   *
+   * @var string
+   */
   public $tracking_number;
+
+  /**
+   * Package shipping label image.
+   *
+   * @var string
+   */
   public $label_image;
 
   /** These variables don't map to DB columns */
-  public $products;
-  public $address;
+
+  /**
+   * Products contained in this shipment.
+   *
+   * @var \Drupal\uc_order\OrderProductInterface[]
+   */
+  public $products = array();
+
+  /**
+   * Array of Addresses for this package.
+   * @todo: Why is this an array?
+   *
+   * @var \Drupal\uc_store\Address[]
+   */
+  public $addresses = array();
+
+  /**
+   * Package description.
+   *
+   * @var string
+   */
   public $description;
 
   /** Cache loaded packages */
   protected static $packages = array();
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    return $this->package_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSid($sid) {
+    $this->sid = $sid;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSid() {
+    return $this->sid;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOrderId($order_id) {
+    $this->order_id = $order_id;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOrderId() {
+    return $this->order_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setShippingType($shipping_type) {
+    $this->shipping_type = $shipping_type;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getShippingType() {
+    return $this->shipping_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPackageType($pkg_type) {
+    $this->pkg_type = $pkg_type;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPackageType() {
+    return $this->pkg_type;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLength($length) {
+    $this->length = $length;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLength() {
+    return $this->length;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWidth($width) {
+    $this->width = $width;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWidth() {
+    return $this->width;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setHeight($height) {
+    $this->height = $height;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHeight() {
+    return $this->height;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLengthUnits($length_units) {
+    $this->length_units = $length_units;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLengthUnits() {
+    return $this->length_units;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($value) {
+    $this->value = $value;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getValue() {
+    return $this->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTrackingNumber($tracking_number) {
+    $this->tracking_number = $tracking_number;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTrackingNumber() {
+    return $this->tracking_number;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLabelImage($label_image) {
+    $this->label_image = $label_image;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLabelImage() {
+    return $this->label_image;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setProducts(array $products) {
+    $this->products = $products;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getProducts() {
+    return $this->products;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAddresses(array $addresses) {
+    $this->addresses = $addresses;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAddresses() {
+    return $this->addresses;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDescription($description) {
+    $this->description = $description;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->description;
+  }
 
   /**
    * Constructor.
