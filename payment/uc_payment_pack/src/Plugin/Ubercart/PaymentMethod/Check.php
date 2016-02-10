@@ -77,15 +77,8 @@ class Check extends PaymentMethodPluginBase {
       '#markup' => $this->t('Checks should be made out to:')
     );
 
-    $address = new Address();
-    $address->first_name = $this->configuration['name'];
-    $address->company = $this->configuration['address']['company'];
-    $address->street1 = $this->configuration['address']['street1'];
-    $address->street2 = $this->configuration['address']['street2'];
-    $address->city = $this->configuration['address']['city'];
-    $address->zone = $this->configuration['address']['zone'];
-    $address->postal_code = $this->configuration['address']['postal_code'];
-    $address->country = $this->configuration['address']['country'];
+    $address = Address::create($this->configuration['address']);
+    $address->setFirstName($this->configuration['name']);
     $build['address'] = array(
       '#prefix' => '<p>',
       '#markup' => (string) $address,
@@ -105,16 +98,8 @@ class Check extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartReview(OrderInterface $order) {
-    $address = new Address();
-    $address->first_name = $this->configuration['name'];
-    $address->company = $this->configuration['address']['company'];
-    $address->street1 = $this->configuration['address']['street1'];
-    $address->street2 = $this->configuration['address']['street2'];
-    $address->city = $this->configuration['address']['city'];
-    $address->zone = $this->configuration['address']['zone'];
-    $address->postal_code = $this->configuration['address']['postal_code'];
-    $address->country = $this->configuration['address']['country'];
-
+    $address = Address::create($this->configuration['address']);
+    $address->setFirstName($this->configuration['name']);
     $review[] = array(
       'title' => $this->t('Mail to'),
       'data' => (string) $address,

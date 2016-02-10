@@ -289,25 +289,27 @@ class OrderTest extends UbercartTestBase {
     $country = array_rand($country_manager->getEnabledList());
     $zones = $country_manager->getZoneList($country);
 
-    $delivery_address = new Address();
-    $delivery_address->first_name = $this->randomMachineName(12);
-    $delivery_address->last_name = $this->randomMachineName(12);
-    $delivery_address->street1 = $this->randomMachineName(12);
-    $delivery_address->street2 = $this->randomMachineName(12);
-    $delivery_address->city = $this->randomMachineName(12);
-    $delivery_address->zone = array_rand($zones);
-    $delivery_address->postal_code = mt_rand(10000, 99999);
-    $delivery_address->country = $country;
+    $delivery_address = Address::create();
+    $delivery_address
+      ->setFirstName($this->randomMachineName(12))
+      ->setLastName($this->randomMachineName(12))
+      ->setStreet1($this->randomMachineName(12))
+      ->setStreet2($this->randomMachineName(12))
+      ->setCity($this->randomMachineName(12))
+      ->setZone(array_rand($zones))
+      ->setPostalCode(mt_rand(10000, 99999))
+      ->setCountry($country);
 
-    $billing_address = new Address();
-    $billing_address->first_name = $this->randomMachineName(12);
-    $billing_address->last_name = $this->randomMachineName(12);
-    $billing_address->street1 = $this->randomMachineName(12);
-    $billing_address->street2 = $this->randomMachineName(12);
-    $billing_address->city = $this->randomMachineName(12);
-    $billing_address->zone = array_rand($zones);
-    $billing_address->postal_code = mt_rand(10000, 99999);
-    $billing_address->country = $country;
+    $billing_address = Address::create();
+    $billing_address
+      ->setFirstName($this->randomMachineName(12))
+      ->setLastName($this->randomMachineName(12))
+      ->setStreet1($this->randomMachineName(12))
+      ->setStreet2($this->randomMachineName(12))
+      ->setCity($this->randomMachineName(12))
+      ->setZone(array_rand($zones))
+      ->setPostalCode(mt_rand(10000, 99999))
+      ->setCountry($country);
 
     $order->setAddress('delivery', $delivery_address)
       ->setAddress('billing', $billing_address)

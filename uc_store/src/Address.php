@@ -28,7 +28,7 @@ class Address implements AddressInterface {
    *
    * For convenience, country defaults to store country.
    */
-  public function __construct() {
+  protected function __construct() {
     $this->default_country = \Drupal::config('uc_store.settings')->get('address.country');
     $this->country = $this->default_country;
   }

@@ -356,16 +356,17 @@ class ShipmentController extends ControllerBase {
    */
   protected function getAddress(ShipmentInterface $uc_shipment, $type) {
     $name = $shipment->{$type . '_first_name'} . ' ' . $shipment->{$type . '_last_name'};
-    $address = new Address();
-    $address->first_name = $shipment->{$type . '_first_name'};
-    $address->last_name = $shipment->{$type . '_last_name'};
-    $address->company = $shipment->{$type . '_company'};
-    $address->street1 = $shipment->{$type . '_street1'};
-    $address->street1 = $shipment->{$type . '_street2'};
-    $address->city = $shipment->{$type . '_city'};
-    $address->zone = $shipment->{$type . '_zone'};
-    $address->postal_code = $shipment->{$type . '_postal_code'};
-    $address->country = $shipment->{$type . '_country'};
+    $address = Address::create();
+    $address
+      ->setFirstName($shipment->{$type . '_first_name'})
+      ->setLastName($shipment->{$type . '_last_name'})
+      ->setCompany($shipment->{$type . '_company'})
+      ->setStreet1($shipment->{$type . '_street1'})
+      ->setStreet2($shipment->{$type . '_street2'})
+      ->setCity($shipment->{$type . '_city'})
+      ->setZone($shipment->{$type . '_zone'})
+      ->setPostalCode($shipment->{$type . '_postal_code'})
+      ->setCountry($shipment->{$type . '_country'});
 
     return $address;
   }

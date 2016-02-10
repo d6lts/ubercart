@@ -32,32 +32,33 @@ class CheckTest extends PaymentPackTestBase {
     ];
 
     // Fill in and save the check address settings.
-    $address = new Address();
-    $address->first_name = $this->randomMachineName(6);
-    $address->company = $this->randomMachineName(10);
-    $address->street1 = mt_rand(100, 1000) . ' ' . $this->randomMachineName(10);
-    $address->street2 = 'Suite ' . mt_rand(100, 999);
-    $address->city = $this->randomMachineName(10);
-    $address->postal_code = mt_rand(10000, 99999);
+    $address = Address::create();
+    $address
+      ->setFirstName($this->randomMachineName(6))
+      ->setCompany($this->randomMachineName(10))
+      ->setStreet1(mt_rand(100, 1000) . ' ' . $this->randomMachineName(10))
+      ->setStreet2('Suite ' . mt_rand(100, 999))
+      ->setCity($this->randomMachineName(10))
+      ->setPostalCode(mt_rand(10000, 99999));
     $country_id = array_rand(\Drupal::service('country_manager')->getEnabledList());
-    $address->country = $country_id;
-    $this->drupalPostAjaxForm(NULL, ['settings[address][country]' => $address->country], 'settings[address][country]');
+    $address->setCountry($country_id);
+    $this->drupalPostAjaxForm(NULL, ['settings[address][country]' => $address->getCountry()], 'settings[address][country]');
 
     $edit += array(
-      'settings[name]' => $address->first_name,
-      'settings[address][company]' => $address->company,
-      'settings[address][street1]' => $address->street1,
-      'settings[address][street2]' => $address->street2,
-      'settings[address][city]' => $address->city,
-      'settings[address][country]' => $address->country,
-      'settings[address][postal_code]' => $address->postal_code,
+      'settings[name]' => $address->getFirstName(),
+      'settings[address][company]' => $address->getCompany(),
+      'settings[address][street1]' => $address->getStreet1(),
+      'settings[address][street2]' => $address->getStreet2(),
+      'settings[address][city]' => $address->getCity(),
+      'settings[address][country]' => $address->getCountry(),
+      'settings[address][postal_code]' => $address->getPostalCode(),
     );
     // Don't try to set the zone unless the country has zones!
     $zone_list = \Drupal::service('country_manager')->getZoneList($country_id);
     if (!empty($zone_list)) {
-      $address->zone = array_rand($zone_list);
+      $address->setZone(array_rand($zone_list));
       $edit += array(
-        'settings[address][zone]' => $address->zone,
+        'settings[address][zone]' => $address->getZone(),
       );
     }
 

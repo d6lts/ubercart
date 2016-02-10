@@ -413,17 +413,18 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function getAddress($type) {
-    $address = new Address();
-    $address->first_name = $this->get($type . '_first_name')->value;
-    $address->last_name = $this->get($type . '_last_name')->value;
-    $address->company = $this->get($type . '_company')->value;
-    $address->street1 = $this->get($type . '_street1')->value;
-    $address->street2 = $this->get($type . '_street2')->value;
-    $address->city = $this->get($type . '_city')->value;
-    $address->zone = $this->get($type . '_zone')->value;
-    $address->country = $this->get($type . '_country')->value;
-    $address->postal_code = $this->get($type . '_postal_code')->value;
-    $address->phone = $this->get($type . '_phone')->value;
+    $address = Address::create();
+    $address
+      ->setFirstName($this->get($type . '_first_name')->value)
+      ->setLastName($this->get($type . '_last_name')->value)
+      ->setCompany($this->get($type . '_company')->value)
+      ->setStreet1($this->get($type . '_street1')->value)
+      ->setStreet2($this->get($type . '_street2')->value)
+      ->setCity($this->get($type . '_city')->value)
+      ->setZone($this->get($type . '_zone')->value)
+      ->setCountry($this->get($type . '_country')->value)
+      ->setPostalCode($this->get($type . '_postal_code')->value)
+      ->setPhone($this->get($type . '_phone')->value);
     return $address;
   }
 
@@ -431,16 +432,16 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function setAddress($type, Address $address) {
-    $this->set($type . '_first_name', $address->first_name);
-    $this->set($type . '_last_name', $address->last_name);
-    $this->set($type . '_company', $address->company);
-    $this->set($type . '_street1', $address->street1);
-    $this->set($type . '_street2', $address->street2);
-    $this->set($type . '_city', $address->city);
-    $this->set($type . '_zone', $address->zone);
-    $this->set($type . '_country', $address->country);
-    $this->set($type . '_postal_code', $address->postal_code);
-    $this->set($type . '_phone', $address->phone);
+    $this->set($type . '_first_name', $address->getFirstName());
+    $this->set($type . '_last_name', $address->getLastName());
+    $this->set($type . '_company', $address->getCompany());
+    $this->set($type . '_street1', $address->getStreet1());
+    $this->set($type . '_street2', $address->getStreet2());
+    $this->set($type . '_city', $address->getCity());
+    $this->set($type . '_zone', $address->getZone());
+    $this->set($type . '_country', $address->getCountry());
+    $this->set($type . '_postal_code', $address->getPostalCode());
+    $this->set($type . '_phone', $address->getPhone());
     return $this;
   }
 
