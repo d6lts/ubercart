@@ -55,7 +55,7 @@ class FileFeatureForm extends FormBase {
 
     // Use the feature's values to fill the form, if they exist.
     if (!empty($feature)) {
-      $file_product        = db_query("SELECT * FROM {uc_file_products} p LEFT JOIN {uc_files} f ON p.fid = f.fid WHERE pfid = :pfid", [':pfid' => $feature['pfid']])->fetchObject();
+      $file_product        = db_query('SELECT * FROM {uc_file_products} p LEFT JOIN {uc_files} f ON p.fid = f.fid WHERE pfid = :pfid', [':pfid' => $feature['pfid']])->fetchObject();
 
       $default_feature     = $feature['pfid'];
 
@@ -147,7 +147,7 @@ class FileFeatureForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Downloads'),
       '#default_value' => $download_value,
-      '#description' => $this->t("The number of times this file can be downloaded."),
+      '#description' => $this->t('The number of times this file can be downloaded.'),
       '#maxlength' => 4,
       '#size' => 4,
       '#states' => array(
@@ -164,7 +164,7 @@ class FileFeatureForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('IP addresses'),
       '#default_value' => $address_value,
-      '#description' => $this->t("The number of unique IPs that a file can be downloaded from."),
+      '#description' => $this->t('The number of unique IPs that a file can be downloaded from.'),
       '#maxlength' => 4,
       '#size' => 4,
       '#states' => array(
@@ -222,7 +222,7 @@ class FileFeatureForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Ensure this is actually a file we control...
-    if (!db_query("SELECT fid FROM {uc_files} WHERE filename = :name", [':name' => $form_state->getValue('uc_file_filename')])->fetchField()) {
+    if (!db_query('SELECT fid FROM {uc_files} WHERE filename = :name', [':name' => $form_state->getValue('uc_file_filename')])->fetchField()) {
       $form_state->setErrorByName('uc_file_filename', $this->t('%file is not a valid file or directory inside file download directory.', ['%file' => $form_state->getValue('uc_file_filename')]));
     }
 

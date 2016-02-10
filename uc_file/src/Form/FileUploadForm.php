@@ -76,9 +76,9 @@ class FileUploadForm extends ConfirmFormBase {
     // Gather list of directories under the selected one(s).
     // '/' is always available.
     $directories = array('' => '/');
-    $files = db_query("SELECT * FROM {uc_files}");
+    $files = db_query('SELECT * FROM {uc_files}');
     foreach ($files as $file) {
-      if (is_dir($this->config('uc_file.settings')->get('base_dir') . "/" . $file->filename)) {
+      if (is_dir($this->config('uc_file.settings')->get('base_dir') . '/' . $file->filename)) {
         $directories[$file->filename] = $file->filename;
       }
     }
@@ -161,7 +161,7 @@ class FileUploadForm extends ConfirmFormBase {
       drupal_set_message($this->t('Can not move file to %dir', ['%dir' => $dir]), 'error');
     }
 
-    $form_state->setRedirect('uc_file.downloads');
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
 }

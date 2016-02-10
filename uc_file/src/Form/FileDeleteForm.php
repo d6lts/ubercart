@@ -136,7 +136,7 @@ class FileDeleteForm extends ConfirmFormBase {
       drupal_set_message($this->t('One or more files could not be deleted.'), 'warning');
     }
 
-    $form_state->setRedirect('uc_file.downloads');
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
   /**

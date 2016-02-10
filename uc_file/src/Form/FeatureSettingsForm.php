@@ -52,7 +52,7 @@ class FeatureSettingsForm extends ConfigFormBase {
     $form['duplicate_warning'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Warn about purchasing duplicate files'),
-      '#description' => $this->t("If a customer attempts to purchase a product containing a file download, warn them and notify them that the download limits will be added onto their current limits."),
+      '#description' => $this->t('If a customer attempts to purchase a product containing a file download, warn them and notify them that the download limits will be added onto their current limits.'),
       '#default_value' => $file_config->get('duplicate_warning'),
     );
     $form['download_limit'] = array(
@@ -62,7 +62,7 @@ class FeatureSettingsForm extends ConfigFormBase {
     $form['download_limit']['download_limit_number'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Downloads'),
-      '#description' => $this->t("The number of times a file can be downloaded. Leave empty to set no limit."),
+      '#description' => $this->t('The number of times a file can be downloaded. Leave empty to set no limit.'),
       '#default_value' => $file_config->get('download_limit_number'),
       '#maxlength' => 4,
       '#size' => 4,
