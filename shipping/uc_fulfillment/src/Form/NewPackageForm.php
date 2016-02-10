@@ -8,7 +8,6 @@
 namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_fulfillment\Package;

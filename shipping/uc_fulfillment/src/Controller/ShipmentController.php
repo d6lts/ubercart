@@ -7,11 +7,8 @@
 
 namespace Drupal\uc_fulfillment\Controller;
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\Xss;
-use Drupal\Core\Url;
-
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Url;
 use Drupal\uc_fulfillment\Entity\FulfillmentMethod;
 use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_fulfillment\ShipmentInterface;
@@ -393,7 +390,7 @@ class ShipmentController extends ControllerBase {
     );
 
     $rows = array();
-    $rows[] = array($this->t('Contents:'), Xss::filterAdmin($package->description));
+    $rows[] = array($this->t('Contents:'), array('data' => array('#markup' => $package->description)));
 
     if ($shipment) {
       $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
@@ -402,7 +399,7 @@ class ShipmentController extends ControllerBase {
       }
     }
 
-    $rows[] = array($this->t('Package type:'), isset($pkg_type) ? $pkg_type : SafeMarkup::checkPlain($package->pkg_type));
+    $rows[] = array($this->t('Package type:'), isset($pkg_type) ? $pkg_type : array('data' => array('#plain_text' => $package->pkg_type)));
 
     if ($package->length && $package->width && $package->height) {
       $rows[] = array($this->t('Dimensions:'), $this->t('@l x @w x @h', ['@l' => uc_length_format($package->length), '@w' => uc_length_format($package->width), '@h' => uc_length_format($package->height)]));
@@ -411,7 +408,7 @@ class ShipmentController extends ControllerBase {
     $rows[] = array($this->t('Insured value:'), array('data' => array('#theme' => 'uc_price', '#price' => $package->value)));
 
     if ($package->tracking_number) {
-      $rows[] = array($this->t('Tracking number:'), SafeMarkup::checkPlain($package->tracking_number));
+      $rows[] = array($this->t('Tracking number:'), array('data' => array('#plain_text' => $package->tracking_number)));
     }
 
     if ($shipment && isset($package->label_image) &&
