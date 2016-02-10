@@ -10,7 +10,6 @@ namespace Drupal\uc_file\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Form step values.
@@ -71,21 +70,25 @@ class ShowForm extends FormBase {
       if (isset($file->nid)) {
         $options[$file->fid] = array(
           'filename' => array(
-            'data' => SafeMarkup::checkPlain($file->filename),
+            'data' => array('#plain_text' => $file->filename),
             'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
           ),
           'title' => array(
-            '#type' => 'link',
-            '#title' => $file->title,
-            '#url' => Url::fromRoute('entity.node.canonical', ['node' => $file->nid]),
+            'data' => array(
+              '#type' => 'link',
+              '#title' => $file->title,
+              '#url' => Url::fromRoute('entity.node.canonical', ['node' => $file->nid]),
+            ),
           ),
-          'model' => SafeMarkup::checkPlain($file->model),
+          'model' => array(
+            'data' => array('#plain_text' => $file->model),
+          ),
         );
       }
       else {
         $options[$file->fid] = array(
           'filename' => array(
-            'data' => SafeMarkup::checkPlain($file->filename),
+            'data' => array('#plain_text' => $file->filename),
             'class' => is_dir(uc_file_qualify_file($file->filename)) ? array('uc-file-directory-view') : array(),
           ),
           'title' => '',
