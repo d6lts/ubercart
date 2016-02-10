@@ -9,7 +9,6 @@ namespace Drupal\uc_fulfillment\Controller;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -417,7 +416,14 @@ class ShipmentController extends ControllerBase {
 
     if ($shipment && isset($package->label_image) &&
         file_exists($package->label_image->uri)) {
-      $rows[] = array($this->t('Label:'), Link::fromTextAndUrl($this->t('Click to view.'), Url::fromUri('admin/store/orders/' . $package->order_id . '/shipments/labels/' . $shipment->getShippingMethod() . '/' . $package->label_image->uri))->toString());
+      $rows[] = array(
+        $this->t('Label:'),
+        array('data' => array(
+          '#type' => 'link',
+          '#title' => $this->t('Click to view.'),
+          '#url' => Url::fromUri('admin/store/orders/' . $package->order_id . '/shipments/labels/' . $shipment->getShippingMethod() . '/' . $package->label_image->uri),
+        )),
+      );
     }
     else {
       $rows[] = array($this->t('Label:'), $this->t('n/a'));

@@ -64,7 +64,12 @@ class PackageController extends ControllerBase {
       $row[] = array('data' => array('#plain_text' => $package->pkg_type));
 
       // Shipment ID.
-      $row[] = isset($package->sid) ? Link::createFromRoute($package->sid, 'uc_fulfillment.view_shipment', ['uc_order' => $uc_order->id(), 'uc_shipment' => $package->sid])->toString() : '';
+      $row[] = isset($package->sid) ?
+        array('data' => array(
+          '#type' => 'link',
+          '#title' => $package->sid,
+          '#url' => Url::fromRoute('uc_fulfillment.view_shipment', ['uc_order' => $uc_order->id(), 'uc_shipment' => $package->sid]),
+        )) : '';
 
       // Tracking number.
       $row[] = isset($package->tracking_number) ? array('data' => array('#plain_text' => $package->tracking_number)) : '';

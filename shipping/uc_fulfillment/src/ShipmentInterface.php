@@ -10,7 +10,7 @@ namespace Drupal\uc_fulfillment;
 use \Drupal\uc_store\AddressInterface;
 
 /**
- * Provides and interface that defines the Shipment class.
+ * Provides an interface that defines the Shipment class.
  */
 interface ShipmentInterface {
 
