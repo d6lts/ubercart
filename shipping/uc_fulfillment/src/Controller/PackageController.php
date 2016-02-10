@@ -99,7 +99,7 @@ class PackageController extends ControllerBase {
         '#links' => array(
           'edit' => array(
             'title' => $this->t('Edit'),
-            'url' => Url::fromRoute('uc_fulfillment.edit_package', ['uc_order' => $uc_order->id(), 'package_id' => $package->package_id]),
+            'url' => Url::fromRoute('uc_fulfillment.edit_package', ['uc_order' => $uc_order->id(), 'uc_package' => $package->package_id]),
           ),
           'ship' => array(
             'title' => $this->t('Ship'),
@@ -107,14 +107,14 @@ class PackageController extends ControllerBase {
           ),
           'delete' => array(
             'title' => $this->t('Delete'),
-            'url' => Url::fromRoute('uc_fulfillment.delete_package', ['uc_order' => $uc_order->id(), 'package_id' => $package->package_id]),
+            'url' => Url::fromRoute('uc_fulfillment.delete_package', ['uc_order' => $uc_order->id(), 'uc_package' => $package->package_id]),
           ),
         ),
       );
       if ($package->sid) {
         $ops['#links']['cancel'] = array(
           'title' => $this->t('Cancel'),
-          'url' => Url::fromRoute('uc_fulfillment.cancel_package', ['uc_order' => $uc_order->id(), 'package_id' => $package->package_id]),
+          'url' => Url::fromRoute('uc_fulfillment.cancel_package', ['uc_order' => $uc_order->id(), 'uc_package' => $package->package_id]),
         );
       }
       $row[] = array('data' => $ops);

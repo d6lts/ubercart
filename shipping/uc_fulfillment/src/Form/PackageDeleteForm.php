@@ -10,7 +10,7 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\uc_fulfillment\Package;
+use Drupal\uc_fulfillment\PackageInterface;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -19,18 +19,18 @@ use Drupal\uc_order\OrderInterface;
 class PackageDeleteForm extends ConfirmFormBase {
 
   /**
-   * The package.
-   *
-   * @var \Drupal\uc_fulfillment\Package
-   */
-  protected $package;
-
-  /**
    * The order id.
    *
    * @var \Drupal\uc_order\OrderInterface
    */
   protected $order_id;
+
+  /**
+   * The package.
+   *
+   * @var \Drupal\uc_fulfillment\PackageInterface
+   */
+  protected $package;
 
   /**
    * {@inheritdoc}
@@ -86,9 +86,9 @@ class PackageDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $package_id = NULL) {
-    $this->package = Package::load($package_id);
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, PackageInterface $uc_package = NULL) {
     $this->order_id = $uc_order->id();
+    $this->package = $uc_package;
 
     return parent::buildForm($form, $form_state);
   }

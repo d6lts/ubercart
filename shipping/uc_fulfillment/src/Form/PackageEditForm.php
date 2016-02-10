@@ -10,7 +10,7 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_fulfillment\Package;
+use Drupal\uc_fulfillment\PackageInterface;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -21,7 +21,7 @@ class PackageEditForm extends FormBase {
   /**
    * The package.
    *
-   * @var \Drupal\uc_fulfillment\Package
+   * @var \Drupal\uc_fulfillment\PackageInterface
    */
   protected $package;
 
@@ -35,8 +35,8 @@ class PackageEditForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $package_id = NULL) {
-    $this->package = Package::load($package_id);
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, PackageInterface $uc_package = NULL) {
+    $this->package = $uc_package;
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = 'uc_fulfillment/uc_fulfillment.scripts';
@@ -125,7 +125,7 @@ class PackageEditForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($form_state->getValue('products') as $id => $product) {
       if ($product['checked']) {
-        $this->package->products[$id] = (object)$product;
+        $this->package->products[$id] = (object) $product;
       }
       else {
         unset($this->package->products[$id]);

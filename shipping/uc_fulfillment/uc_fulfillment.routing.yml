@@ -65,28 +65,40 @@ uc_fulfillment.new_package:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
 
 uc_fulfillment.edit_package:
-  path: '/admin/store/orders/{uc_order}/packages/{package_id}/edit'
+  path: '/admin/store/orders/{uc_order}/packages/{uc_package}/edit'
   defaults:
     _form: '\Drupal\uc_fulfillment\Form\PackageEditForm'
     _title: 'Edit package'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
+  options:
+    parameters:
+      uc_package:
+        type: uc_package
 
 uc_fulfillment.cancel_package:
-  path: '/admin/store/orders/{uc_order}/packages/{package_id}/cancel'
+  path: '/admin/store/orders/{uc_order}/packages/{uc_package}/cancel'
   defaults:
     _form: '\Drupal\uc_fulfillment\Form\PackageCancelForm'
     _title: 'Cancel package shipment'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
+  options:
+    parameters:
+      uc_package:
+        type: uc_package
 
 uc_fulfillment.delete_package:
-  path: '/admin/store/orders/{uc_order}/packages/{package_id}/delete'
+  path: '/admin/store/orders/{uc_order}/packages/{uc_package}/delete'
   defaults:
     _form: '\Drupal\uc_fulfillment\Form\PackageDeleteForm'
     _title: 'Delete package'
   requirements:
     _custom_access: '\Drupal\uc_fulfillment\Controller\FulfillmentController::accessOrder'
+  options:
+    parameters:
+      uc_package:
+        type: uc_package
 
 # Shipments.
 

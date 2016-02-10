@@ -16,6 +16,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_fulfillment\Entity\FulfillmentMethod;
 use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_fulfillment\ShipmentInterface;
+use Drupal\uc_fulfillment\PackageInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Address;
 use Symfony\Component\HttpFoundation\Request;
@@ -374,13 +375,13 @@ class ShipmentController extends ControllerBase {
   /**
    * Displays the details of a package.
    *
-   * @param $package
+   * @param \Drupal\uc_fulfillment\PackageInterface $package
    *   The package object.
    *
    * @return array
    *   A render array.
    */
-  public function viewPackage($package) {
+  public function viewPackage(PackageInterface $package) {
     $shipment = Shipment::load($package->sid);
     $build = array(
       '#type' => 'container',
