@@ -43,8 +43,8 @@ class Tracking extends OrderPanePluginBase {
         }
         else {
           foreach ($shipment->getPackages() as $package) {
-            if ($package->tracking_number) {
-              $tracking[$shipment->getCarrier()][] = $package->tracking_number;
+            if ($package->getTrackingNumber()) {
+              $tracking[$shipment->getCarrier()][] = $package->getTrackingNumber();
             }
           }
         }

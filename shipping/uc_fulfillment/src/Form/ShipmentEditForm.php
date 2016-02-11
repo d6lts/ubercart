@@ -59,7 +59,7 @@ class ShipmentEditForm extends FormBase {
       $addresses[] = $this->shipment->getOrigin();
     }
     foreach ($this->shipment->getPackages() as $id => $package) {
-      foreach ($package->addresses as $address) {
+      foreach ($package->getAddresses() as $address) {
         if (!in_array($address, $addresses)) {
           $addresses[] = $address;
         }
@@ -68,7 +68,7 @@ class ShipmentEditForm extends FormBase {
       // Create list of products and get a representative product (last one in
       // the loop) to use for some default values
       $declared_value = 0;
-      foreach ($package->products as $product) {
+      foreach ($package->getProducts() as $product) {
         $product_list[]  = $product->qty . ' x ' . $product->model;
         $declared_value += $product->qty * $product->price;
       }
@@ -83,7 +83,7 @@ class ShipmentEditForm extends FormBase {
       $pkg_form['pkg_type'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Package type'),
-        '#default_value' => $package->pkg_type,
+        '#default_value' => $package->getPackageType(),
         '#description' => $this->t('For example: Box, pallet, tube, envelope, etc.'),
       );
       if (isset($method) && is_array($method['ship']['pkg_types'])) {
@@ -94,7 +94,7 @@ class ShipmentEditForm extends FormBase {
       $pkg_form['declared_value'] = array(
         '#type' => 'uc_price',
         '#title' => $this->t('Declared value'),
-        '#default_value' => isset($package->value) ? $package->value : $declared_value,
+        '#default_value' => $package->getValue() ? $package->getValue() : $declared_value,
       );
       $pkg_form['weight'] = array(
         '#type' => 'container',
@@ -107,7 +107,7 @@ class ShipmentEditForm extends FormBase {
         '#title' => $this->t('Weight'),
         '#min' => 0,
         '#step' => 'any',
-        '#default_value' => isset($package->weight) ? $package->weight : 0,
+        '#default_value' => $package->getWeight(),
         '#size' => 10,
       );
       $pkg_form['weight']['units'] = array(
@@ -119,7 +119,7 @@ class ShipmentEditForm extends FormBase {
           'oz' => $this->t('Ounces'),
           'g'  => $this->t('Grams'),
         ),
-        '#default_value' => isset($package->weight_units) ? $package->weight_units : \Drupal::config('uc_store.settings')->get('weight.units'),
+        '#default_value' => $package->getWeightUnits() ? $package->getWeightUnits() : \Drupal::config('uc_store.settings')->get('weight.units'),
       );
       $pkg_form['dimensions'] = array(
         '#type' => 'container',
@@ -133,7 +133,7 @@ class ShipmentEditForm extends FormBase {
         '#title' => $this->t('Length'),
         '#min' => 0,
         '#step' => 'any',
-        '#default_value' => isset($package->length) ? $package->length : 1,
+        '#default_value' => $package->getLength(),
         '#size' => 8,
       );
       $pkg_form['dimensions']['width'] = array(
@@ -141,7 +141,7 @@ class ShipmentEditForm extends FormBase {
         '#title' => $this->t('Width'),
         '#min' => 0,
         '#step' => 'any',
-        '#default_value' => isset($package->width) ? $package->width : 1,
+        '#default_value' => $package->getWidth(),
         '#size' => 8,
       );
       $pkg_form['dimensions']['height'] = array(
@@ -149,7 +149,7 @@ class ShipmentEditForm extends FormBase {
         '#title' => $this->t('Height'),
         '#min' => 0,
         '#step' => 'any',
-        '#default_value' => isset($package->height) ? $package->height : 1,
+        '#default_value' => $package->getHeight(),
         '#size' => 8,
       );
       $pkg_form['dimensions']['units'] = array(
@@ -161,12 +161,12 @@ class ShipmentEditForm extends FormBase {
           'cm' => $this->t('Centimeters'),
           'mm' => $this->t('Millimeters'),
         ),
-        '#default_value' => isset($package->length_units) ? $package->length_units : \Drupal::config('uc_store.settings')->get('length.units'),
+        '#default_value' => $package->getLengthUnits() ? $package->getLengthUnits() : \Drupal::config('uc_store.settings')->get('length.units'),
       );
       $pkg_form['tracking_number'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Tracking number'),
-        '#default_value' => isset($package->tracking_number) ? $package->tracking_number : '',
+        '#default_value' => $package->getTrackingNumber(),
       );
 
       $form['packages'][$id] = $pkg_form;
@@ -237,12 +237,12 @@ class ShipmentEditForm extends FormBase {
     );
 
     $ship_date = REQUEST_TIME;
-    if (isset($this->shipment->ship_date)) {
-      $ship_date = $this->shipment->ship_date;
+    if ($this->shipment->getShipDate()) {
+      $ship_date = $this->shipment->getShipDate();
     }
     $exp_delivery = REQUEST_TIME;
-    if (isset($this->shipment->expected_delivery)) {
-      $exp_delivery = $this->shipment->expected_delivery;
+    if ($this->shipment->getExpectedDelivery()) {
+      $exp_delivery = $this->shipment->getExpectedDelivery();
     }
     $form['shipment']['ship_date'] = array(
       '#type' => 'datetime',
@@ -286,21 +286,22 @@ class ShipmentEditForm extends FormBase {
     $packages = array();
     foreach ($form_state->getValue('packages') as $id => $pkg_form) {
       $package = Package::load($id);
-      $package->pkg_type = $pkg_form['pkg_type'];
-      $package->value = $pkg_form['declared_value'];
-      $package->length = $pkg_form['dimensions']['length'];
-      $package->width = $pkg_form['dimensions']['width'];
-      $package->height = $pkg_form['dimensions']['height'];
-      $package->length_units = $pkg_form['dimensions']['units'];
-      $package->tracking_number = $pkg_form['tracking_number'];
-      $package->qty = 1;
+      $package->setPackageType($pkg_form['pkg_type']);
+      $package->setValue($pkg_form['declared_value']);
+      $package->setTrackingNumber($pkg_form['tracking_number']);
+      $package->setWeight($pkg_form['weight']['weight']);
+      $package->setWeightUnits($pkg_form['weight']['units']);
+      $package->setLength($pkg_form['dimensions']['length']);
+      $package->setWidth($pkg_form['dimensions']['width']);
+      $package->setHeight($pkg_form['dimensions']['height']);
+      $package->setLengthUnits($pkg_form['dimensions']['units']);
       $packages[$id] = $package;
     }
     $this->shipment->setPackages($packages);
 
+    $this->shipment->setCarrier($form_state->getValue('carrier'));
     $this->shipment->setShippingMethod($form_state->getValue('shipping_method'));
     $this->shipment->setAccessorials($form_state->getValue('accessorials'));
-    $this->shipment->setCarrier($form_state->getValue('carrier'));
     $this->shipment->setTransactionId($form_state->getValue('transaction_id'));
     $this->shipment->setTrackingNumber($form_state->getValue('tracking_number'));
     $this->shipment->setShipDate($form_state->getValue('ship_date')->getTimestamp());

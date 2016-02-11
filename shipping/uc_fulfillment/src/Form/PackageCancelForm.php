@@ -98,11 +98,11 @@ class PackageCancelForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $shipment = Shipment::load($this->package->sid);
+    $shipment = Shipment::load($this->package->getSid());
     $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
-    if (isset($methods[$shipment->shipping_method]['cancel']) &&
-        function_exists($methods[$shipment->shipping_method]['cancel'])) {
-      $result = call_user_func($methods[$shipment->shipping_method]['cancel'], $shipment->tracking_number, array($this->package->tracking_number));
+    if (isset($methods[$shipment->getShippingMethod()]['cancel']) &&
+        function_exists($methods[$shipment->getShippingMethod()]['cancel'])) {
+      $result = call_user_func($methods[$shipment->getShippingMethod()]['cancel'], $shipment->getTrackingNumber(), array($this->package->getTrackingNumber()));
       if ($result) {
         db_update('uc_packages')
           ->fields(array(
@@ -110,17 +110,17 @@ class PackageCancelForm extends ConfirmFormBase {
             'label_image' => NULL,
             'tracking_number' => NULL,
           ))
-          ->condition('package_id', $this->package->package_id)
+          ->condition('package_id', $this->package->id())
           ->execute();
 
-        if (isset($this->package->label_image)) {
-          file_usage_delete($this->package->label_image, 'uc_fulfillment', 'package', $this->package->package_id);
-          file_delete($this->package->label_image);
-          unset($this->package->label_image);
+        if ($this->package->getLabelImage()) {
+          file_usage_delete($this->package->getLabelImage(), 'uc_fulfillment', 'package', $this->package->id());
+          file_delete($this->package->getLabelImage());
+          $this->package->setLabelImage('');
         }
 
-        unset($shipment->packages[$this->package->package_id]);
-        if (!count($shipment->packages)) {
+        unset($shipment->packages[$this->package->id()]);
+        if (!count($shipment->getPackages())) {
           $shipment->delete();
         }
       }

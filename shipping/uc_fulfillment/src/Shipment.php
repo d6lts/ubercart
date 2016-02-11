@@ -395,7 +395,7 @@ class Shipment implements ShipmentInterface {
     $shipment = NULL;
     $result = db_query('SELECT * FROM {uc_shipments} WHERE sid = :sid', [':sid' => $shipment_id]);
     if ($assoc = $result->fetchAssoc()) {
-      $shipment = new Shipment();
+      $shipment = Shipment::create();
       $origin_fields = array();
       $destination_fields = array();
 
@@ -412,15 +412,15 @@ class Shipment implements ShipmentInterface {
         }
       }
       // Reconstitute Address objects from individual fields.
-      $shipment->origin = Address::create($origin_fields);
-      $shipment->destination = Address::create($destination_fields);
+      $shipment->setOrigin(Address::create($origin_fields));
+      $shipment->setDestination(Address::create($destination_fields));
 
       $result2 = db_query('SELECT package_id FROM {uc_packages} WHERE sid = :sid', [':sid' => $shipment_id]);
       $packages = array();
       foreach ($result2 as $package) {
         $packages[$package->package_id] = Package::load($package->package_id);
       }
-      $shipment->packages = $packages;
+      $shipment->setPackages($packages);
 
       $extra = \Drupal::moduleHandler()->invokeAll('uc_shipment', array('load', $shipment));
       if (is_array($extra)) {
@@ -486,15 +486,15 @@ class Shipment implements ShipmentInterface {
 
     if (is_array($this->packages)) {
       foreach ($this->packages as $package) {
-        $package->sid = $this->sid;
+        $package->setSid($this->sid);
         // Since the products haven't changed, we take them out of the object so
         // that they are not deleted and re-inserted.
-        $products = $package->products;
-        unset($package->products);
+        $products = $package->getProducts();
+        $package->setProducts([]);
         $package->save();
         // But they're still necessary for hook_uc_shipment(), so they're added
         // back in.
-        $package->products = $products;
+        $package->setProducts($products);
       }
     }
 
@@ -521,9 +521,9 @@ class Shipment implements ShipmentInterface {
       ->execute();
 
     foreach ($this->packages as $package) {
-      if (isset($package->label_image)) {
-        file_delete($package->label_image);
-        unset($package->label_image);
+      if ($package->getLabelImage()) {
+        file_delete($package->getLabelImage());
+        $package->setLabelImage('');
       }
     }
 

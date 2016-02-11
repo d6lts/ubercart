@@ -378,47 +378,47 @@ class ShipmentController extends ControllerBase {
    *   A render array.
    */
   public function viewPackage(PackageInterface $package) {
-    $shipment = Shipment::load($package->sid);
+    $shipment = Shipment::load($package->getSid());
     $build = array(
       '#type' => 'container',
       '#attributes' => array('class' => array('order-pane', 'pos-left')),
     );
     $build['title'] = array(
       '#type' => 'container',
-      '#markup' => $this->t('Package %id:', ['%id' => $package->package_id]),
+      '#markup' => $this->t('Package %id:', ['%id' => $package->id()]),
       '#attributes' => array('class' => array('order-pane-title')),
     );
 
     $rows = array();
-    $rows[] = array($this->t('Contents:'), array('data' => array('#markup' => $package->description)));
+    $rows[] = array($this->t('Contents:'), array('data' => array('#markup' => $package->getDescription())));
 
     if ($shipment) {
       $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
       if (isset($methods[$shipment->getShippingMethod()])) {
-        $pkg_type = $methods[$shipment->getShippingMethod()]['ship']['pkg_types'][$package->pkg_type];
+        $pkg_type = $methods[$shipment->getShippingMethod()]['ship']['pkg_types'][$package->getPackageType()];
       }
     }
 
-    $rows[] = array($this->t('Package type:'), isset($pkg_type) ? $pkg_type : array('data' => array('#plain_text' => $package->pkg_type)));
+    $rows[] = array($this->t('Package type:'), isset($pkg_type) ? $pkg_type : array('data' => array('#plain_text' => $package->getPackageType())));
 
-    if ($package->length && $package->width && $package->height) {
-      $rows[] = array($this->t('Dimensions:'), $this->t('@l x @w x @h', ['@l' => uc_length_format($package->length), '@w' => uc_length_format($package->width), '@h' => uc_length_format($package->height)]));
+    if ($package->getLength() && $package->getWidth() && $package->getHeight()) {
+      $rows[] = array($this->t('Dimensions:'), $this->t('@l x @w x @h', ['@l' => uc_length_format($package->getLength()), '@w' => uc_length_format($package->getWidth()), '@h' => uc_length_format($package->getHeight())]));
     }
 
-    $rows[] = array($this->t('Insured value:'), array('data' => array('#theme' => 'uc_price', '#price' => $package->value)));
+    $rows[] = array($this->t('Insured value:'), array('data' => array('#theme' => 'uc_price', '#price' => $package->getValue())));
 
-    if ($package->tracking_number) {
-      $rows[] = array($this->t('Tracking number:'), array('data' => array('#plain_text' => $package->tracking_number)));
+    if ($package->getTrackingNumber()) {
+      $rows[] = array($this->t('Tracking number:'), array('data' => array('#plain_text' => $package->getTrackingNumber())));
     }
 
-    if ($shipment && isset($package->label_image) &&
-        file_exists($package->label_image->uri)) {
+    if ($shipment && $package->getLabelImage() &&
+        file_exists($package->getLabelImage()->uri)) {
       $rows[] = array(
         $this->t('Label:'),
         array('data' => array(
           '#type' => 'link',
           '#title' => $this->t('Click to view.'),
-          '#url' => Url::fromUri('admin/store/orders/' . $package->order_id . '/shipments/labels/' . $shipment->getShippingMethod() . '/' . $package->label_image->uri),
+          '#url' => Url::fromUri('admin/store/orders/' . $package->getOrderId() . '/shipments/labels/' . $shipment->getShippingMethod() . '/' . $package->getLabelImage()->uri),
         )),
       );
     }

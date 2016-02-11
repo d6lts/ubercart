@@ -173,10 +173,11 @@ class NewPackageForm extends FormBase {
               if (empty($packages[$product['package']])) {
                 $packages[$product['package']] = Package::create();
               }
+              // @todo: Replace this by addProduct($id, $product) and mark Package::$products as protected.
               $packages[$product['package']]->products[$id] = (object) $product;
 
-              if (!isset($packages[$product['package']]->shipping_type)) {
-                $packages[$product['package']]->shipping_type = $shipping_type;
+              if (!$packages[$product['package']]->getShippingType()) {
+                $packages[$product['package']]->setShippingType($shipping_type);
               }
             }
             else {
@@ -206,7 +207,7 @@ class NewPackageForm extends FormBase {
       }
 
       foreach ($packages as $package) {
-        $package->order_id = $form_state->getValue('order_id');
+        $package->setOrderId($form_state->getValue('order_id'));
         $package->save();
       }
 

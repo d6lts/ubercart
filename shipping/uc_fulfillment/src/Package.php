@@ -21,105 +21,105 @@ class Package implements PackageInterface {
    *
    * @var int
    */
-  public $package_id;
+  protected $package_id;
 
   /**
    * Shipment ID.
    *
    * @var int
    */
-  public $sid;
+  protected $sid;
 
   /**
    * Order ID of this shipment.
    *
    * @var int
    */
-  public $order_id;
+  protected $order_id;
 
   /**
    * Package shipping type.
    *
    * @var string
    */
-  public $shipping_type;
+  protected $shipping_type = '';
 
   /**
    * Package package type,
    *
    * @var string
    */
-  public $pkg_type;
+  protected $pkg_type = '';
 
   /**
    * Package length.
    *
-   * @var string
+   * @var float
    */
-  public $length;
+  protected $length = 1;
 
   /**
    * Package width.
    *
-   * @var string
+   * @var float
    */
-  public $width;
+  protected $width = 1;
 
   /**
    * Package height.
    *
-   * @var string
+   * @var float
    */
-  public $height;
+  protected $height = 1;
 
   /**
    * Package length units.
    *
    * @var string
    */
-  public $length_units;
+  protected $length_units = '';
 
   /**
    * Package weight.
    *
    * @var float
    */
-  public $weight = 0;
+  protected $weight = 0;
 
   /**
    * Package weight units.
    *
    * @var string
    */
-  public $weight_units;
+  protected $weight_units = '';
 
   /**
    * Package monetary value.
    *
    * @var float
    */
-  public $value;
+  protected $value = 0;
 
   /**
    * Currency code.
    *
    * @var string
    */
-  public $currency = '';
+  protected $currency = '';
 
   /**
    * Package tracking number.
    *
    * @var string
    */
-  public $tracking_number;
+  protected $tracking_number = '';
 
   /**
    * Package shipping label image.
    *
    * @var string
    */
-  public $label_image;
+  protected $label_image = '';
 
   /** These variables don't map to DB columns */
 
@@ -136,14 +136,14 @@ class Package implements PackageInterface {
    *
    * @var \Drupal\uc_store\Address[]
    */
-  public $addresses = array();
+  protected $addresses = array();
 
   /**
    * Package description.
    *
    * @var string
    */
-  public $description;
+  protected $description = '';
 
   /** Cache loaded packages */
   protected static $packages = array();
