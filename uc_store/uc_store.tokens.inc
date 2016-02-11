@@ -124,7 +124,8 @@ function uc_store_tokens($type, $tokens, array $data, array $options, Bubbleable
 
         case 'address':
           // Cast Address object to string to get country-specific formatting.
-          $replacements[$original] = (string) uc_store_address();
+          $address = array('#markup' => (string) uc_store_address());
+          $replacements[$original] = drupal_render($address);
           break;
 
         case 'help-url':
