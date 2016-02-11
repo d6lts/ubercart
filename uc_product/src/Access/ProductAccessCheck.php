@@ -7,34 +7,20 @@
 
 namespace Drupal\uc_product\Access;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\node\NodeInterface;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Access\StaticAccessCheckInterface;
 
 /**
  * Provides an access checker for products.
  */
-class ProductAccessCheck implements StaticAccessCheckInterface {
+class ProductAccessCheck implements AccessInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function appliesTo() {
-    return array('_uc_product_is_product');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function access(Route $route, Request $request) {
-    if ($request->attributes->has('node')) {
-      $entity = $request->attributes->get('node');
-      if ($entity instanceof NodeInterface && uc_product_is_product($node)) {
-        return static::ALLOW;
-      }
-    }
-    return static::DENY;
+  public function access(NodeInterface $node) {
+    return AccessResult::allowedIf(uc_product_is_product($node));
   }
 
 }

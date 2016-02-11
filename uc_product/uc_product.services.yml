@@ -1,0 +1,5 @@
+services:
+  access_check.uc_product:
+    class: Drupal\uc_product\Access\ProductAccessCheck
+    tags:
+      - { name: access_check, applies_to: _uc_product_is_product }
