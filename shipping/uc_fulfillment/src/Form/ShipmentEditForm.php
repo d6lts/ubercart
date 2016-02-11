@@ -172,12 +172,10 @@ class ShipmentEditForm extends FormBase {
       $form['packages'][$id] = $pkg_form;
     }
 
-    if (!empty($this->shipment->d_street1)) {
-      foreach ($this->shipment as $field => $value) {
-        if (substr($field, 0, 2) == 'd_') {
-          $uc_order->{'delivery_' . substr($field, 2)} = $value;
-        }
-      }
+    // If the destination address has been edited, copy it to the
+    // order's delivery address.
+    if ($this->shipment->getDestination()) {
+      $uc_order->setAddress('delivery', $this->shipment->getDestination());
     }
     $form += \Drupal::formBuilder()->getForm('\Drupal\uc_fulfillment\Form\AddressForm', $addresses, $uc_order);
 

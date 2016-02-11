@@ -45,8 +45,7 @@ class AddressForm extends FormBase {
       '#default_value' => uc_store_email(),
       '#weight' => -1,
     );
-
-    $form['origin']['pickup_address']['pickup_address'] = array(
+    $form['origin']['pickup_address'] = array(
       '#type' => 'uc_address',
       '#default_value' => reset($addresses),
       '#required' => FALSE,
@@ -66,7 +65,6 @@ class AddressForm extends FormBase {
       '#default_value' => $uc_order->getEmail(),
       '#weight' => -1,
     );
-    $form['destination']['delivery_email']['#weight'] = -1;
     $form['destination']['delivery_address'] = array(
       '#type' => 'uc_address',
       '#default_value' => $uc_order->getAddress('delivery'),
@@ -86,11 +84,10 @@ class AddressForm extends FormBase {
    * Chooses an address to fill out a form.
    */
   protected function selectAddress(array $addresses = []) {
-    $quote_config = \Drupal::config('uc_store.settings');
-    $store_address = $quote_config->get('address');
-    $store_address = Address::create($store_address);
-    if (!in_array($store_address, $addresses)) {
-      $addresses[] = $store_address;
+    $quote_config = \Drupal::config('uc_quote.settings');
+    $ship_from_address = Address::create($quote_config->get('ship_from_address'));
+    if (!in_array($ship_from_address, $addresses)) {
+      $addresses[] = $ship_from_address;
     }
 
     $blank = Address::create(array(
