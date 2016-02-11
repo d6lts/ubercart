@@ -153,6 +153,42 @@ interface PackageInterface {
   public function getLengthUnits();
 
   /**
+   * Sets the package weight.
+   *
+   * @param float $weight
+   *
+   * @return $this
+   */
+  public function setWeight($weight);
+
+  /**
+   * Returns the package weight.
+   *
+   * @param float $weight
+   *
+   * @return float
+   *   The package weight.
+   */
+  public function getWeight();
+
+  /**
+   * Sets the package units of weight.
+   *
+   * @param string $weight_units
+   *
+   * @return $this
+   */
+  public function setWeightUnits($weight_units);
+
+  /**
+   * Returns the package units of weight.
+   *
+   * @return string
+   *   The units used to measure package weight.
+   */
+  public function getWeightUnits();
+
+  /**
    * Sets the package monetary value.
    *
    * @param float $value
@@ -168,6 +204,24 @@ interface PackageInterface {
    *   The monetary value.
    */
   public function getValue();
+
+  /**
+   * Sets the currency code used for the package value.
+   *
+   * @param string $currency
+   *   The currency code for this package.
+   *
+   * @return $this
+   */
+  public function setCurrency($currency);
+
+  /**
+   * Returns the currency code used for the package value.
+   *
+   * @return string
+   *   The currency code for this package.
+   */
+  public function getCurrency();
 
   /**
    * Sets the package tracking number.

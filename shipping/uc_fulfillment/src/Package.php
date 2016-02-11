@@ -80,11 +80,32 @@ class Package implements PackageInterface {
   public $length_units;
 
   /**
-   * Package monetary value.
+   * Package weight.
+   *
+   * @var float
+   */
+  public $weight = 0;
+
+  /**
+   * Package weight units.
    *
    * @var string
    */
+  public $weight_units;
+
+  /**
+   * Package monetary value.
+   *
+   * @var float
+   */
   public $value;
+
+  /**
+   * Currency code.
+   *
+   * @var string
+   */
+  public $currency = '';
 
   /**
    * Package tracking number.
@@ -257,6 +278,36 @@ class Package implements PackageInterface {
   /**
    * {@inheritdoc}
    */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeightUnits($weight_units) {
+    $this->weight_units = $weight_units;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeightUnits() {
+    return $this->weight_units;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setValue($value) {
     $this->value = $value;
     return $this;
@@ -267,6 +318,21 @@ class Package implements PackageInterface {
    */
   public function getValue() {
     return $this->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCurrency($currency) {
+    $this->currency = $currency;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCurrency() {
+    return $this->currency;
   }
 
   /**

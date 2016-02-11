@@ -159,38 +159,38 @@ interface ShipmentInterface {
   public function getExpectedDelivery();
 
   /**
-   * Sets the total value of products in this shipment.
+   * Sets the shipping cost for this shipment.
    *
    * @param float $cost
-   *   The value of this shipment.
+   *   The shipping cost.
    *
    * @return $this
    */
   public function setCost($cost);
 
   /**
-   * Returns the total value of products in this shipment.
+   * Returns the shipping cost for this shipment.
    *
    * @return float
-   *   The value of this shipment.
+   *   The shipping cost.
    */
   public function getCost();
 
   /**
-   * Sets the currency code used for this shipment.
+   * Sets the currency code used for the shipping cost.
    *
    * @param string $currency
-   *   The currency code of this shipment.
+   *   The currency code for this shipment.
    *
    * @return $this
    */
   public function setCurrency($currency);
 
   /**
-   * Returns the currency code used.
+   * Returns the currency code used for the shipping cost.
    *
    * @return string
-   *   The currency code of this shipment.
+   *   The currency code for this shipment.
    */
   public function getCurrency();
 

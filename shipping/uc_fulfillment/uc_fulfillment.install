@@ -225,7 +225,7 @@ function uc_fulfillment_schema() {
         'default' => 0,
       ),
       'cost' => array(
-        'description' => 'The cost of the shipment.',
+        'description' => 'The shipping cost for the shipment.',
         'type' => 'numeric',
         'precision' => 16,
         'scale' => 5,
@@ -306,7 +306,18 @@ function uc_fulfillment_schema() {
       'length_units' => array(
         'description' => 'The physical units of the length, width, and height.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 4,
+        'not null' => FALSE,
+      ),
+      'weight' => array(
+        'description' => 'The package weight.',
+        'type' => 'float',
+        'not null' => FALSE,
+      ),
+      'weight_units' => array(
+        'description' => 'The physical units of the weight.',
+        'type' => 'varchar',
+        'length' => 4,
         'not null' => FALSE,
       ),
       'value' => array(
@@ -316,6 +327,13 @@ function uc_fulfillment_schema() {
         'scale' => 5,
         'not null' => FALSE,
         'default' => 0.0,
+      ),
+      'currency' => array(
+        'description' => 'The currency code for the currency used.',
+        'type' => 'varchar',
+        'length' => 3,
+        'not null' => TRUE,
+        'default' => '',
       ),
       'sid' => array(
         'description' => 'The {uc_shipments}.sid, if the package has been shipped.',
