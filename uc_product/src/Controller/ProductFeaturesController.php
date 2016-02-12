@@ -75,23 +75,4 @@ class ProductFeaturesController extends ControllerBase {
     return $this->formBuilder()->buildForm($func, $form_state);
   }
 
-  /**
-   * Checks access for the feature routes.
-   */
-  public function checkAccess(Request $request) {
-    $node = $request->get('node');
-
-    if (uc_product_is_product($node) && $node->getType() != 'product_kit') {
-      if ($this->currentUser()->hasPermission('administer product features')) {
-        return AccessInterface::ALLOW;
-      }
-
-      if ($this->currentUser()->hasPermission('administer own product features') && $this->currentUser()->id() == $node->getAuthorId()) {
-        return AccessInterface::ALLOW;
-      }
-    }
-
-    return AccessInterface::DENY;
-  }
-
 }

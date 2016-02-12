@@ -36,8 +36,8 @@ uc_product.features:
     _title: 'Product features'
   requirements:
     _uc_product_is_product: 'TRUE'
-    _permission: 'access administration pages'
-#    _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
+    _permission: 'administer product features'
+    _entity_access: 'node.update'
   options:
     _admin_route: TRUE
 
@@ -48,8 +48,8 @@ uc_product.feature_add:
     _title: 'Add feature'
   requirements:
     _uc_product_is_product: 'TRUE'
-    _permission: 'access administration pages'
-#    _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
+    _permission: 'administer product features'
+    _entity_access: 'node.update'
   options:
     _admin_route: TRUE
 
@@ -61,8 +61,8 @@ uc_product.feature_edit:
   requirements:
     pfid: \d+
     _uc_product_is_product: 'TRUE'
-    _permission: 'access administration pages'
-#    _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
+    _permission: 'administer product features'
+    _entity_access: 'node.update'
   options:
     _admin_route: TRUE
 
@@ -73,7 +73,7 @@ uc_product.feature_delete:
   requirements:
     pfid: \d+
     _uc_product_is_product: 'TRUE'
-    _permission: 'access administration pages'
-#    _custom_access: '\Drupal\uc_product\Controller\ProductFeaturesController::checkAccess'
+    _permission: 'administer product features'
+    _entity_access: 'node.update'
   options:
     _admin_route: TRUE
