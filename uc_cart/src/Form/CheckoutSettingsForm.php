@@ -258,7 +258,8 @@ class CheckoutSettingsForm extends ConfigFormBase {
 
     if (\Drupal::moduleHandler()->moduleExists('token')) {
       $form['completion_messages']['token_tree'] = array(
-        '#markup' => theme('token_tree', array('token_types' => array('uc_order', 'site', 'store'))),
+        '#theme' => 'token_tree_link',
+        '#token_types' => ['uc_order', 'site', 'store'],
       );
     }
 
