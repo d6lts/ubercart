@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\uc_fulfillment\Shipment;
 
 /**
  * Implements hook_token_info().
@@ -34,11 +35,11 @@ function uc_fulfillment_tokens($type, $tokens, array $data, array $options, Bubb
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'tracking-number':
-          $result = db_query('SELECT tracking_number FROM {uc_shipments} WHERE order_id = :order_id', array(':order_id' => $order->id()));
           $tracking_numbers = array();
-          foreach ($result as $record) {
-            if ((isset($record->tracking_number)) && (!empty($record->tracking_number))) {
-              $tracking_numbers[] = $record->tracking_number;
+          $shipments = Shipment::loadByOrder($order->id());
+          foreach ($shipments as $shipment) {
+            if ($shipment->getTrackingNumber()) {
+              $tracking_numbers[] = $shipment->getTrackingNumber();
             }
           }
           $replacements[$original] = implode(', ', $tracking_numbers);

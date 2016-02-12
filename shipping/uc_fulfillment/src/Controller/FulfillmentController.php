@@ -45,6 +45,7 @@ class FulfillmentController extends ControllerBase {
   public function accessNewShipment(OrderInterface $uc_order) {
     return AccessResult::allowedIf(
       $this->accessOrder($uc_order) &&
+      // Order has packages that are not part of a shipment.
       db_query('SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id AND sid IS NULL', [':id' => $uc_order->id()])->fetchField()
     );
   }

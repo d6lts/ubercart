@@ -14,6 +14,8 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_fulfillment\Package;
+use Drupal\uc_fulfillment\Shipment;
 
 /**
  * Implements hook_help().
@@ -117,8 +119,8 @@ function uc_fulfillment_uc_order_actions(OrderInterface $order) {
       'url' => Url::fromRoute('uc_fulfillment.packages', ['uc_order' => $order->id()]),
       'weight' => 12,
     );
-    $result = db_query('SELECT COUNT(package_id) FROM {uc_packages} WHERE order_id = :id', [':id' => $order->id()]);
-    if ($result->fetchField()) {
+    $packages = Package::loadByOrder($order->id());
+    if (count($packages) != 0) {
       $actions['ship'] = array(
         'title' => t('Ship'),
         'url' => Url::fromRoute('uc_fulfillment.shipments', ['uc_order' => $order->id()]),
@@ -168,23 +170,15 @@ function uc_fulfillment_uc_order_can_delete(OrderInterface $order) {
  */
 function uc_fulfillment_uc_order_delete(OrderInterface $order) {
   // Find and delete the shipments.
-  $shipment_ids = db_select('uc_shipments')
-    ->fields(NULL, array('sid'))
-    ->condition('order_id', $order->id())
-    ->execute()
-    ->fetchCol();
-  foreach ($shipment_ids as $sid) {
-    uc_fulfillment_shipment_delete($sid);
+  $shipments = Shipment::loadByOrder($order->id());
+  foreach ($shipments as $shipment) {
+    $shipment->delete();
   }
 
   // Find and delete the packages.
-  $package_ids = db_select('uc_packages')
-    ->fields(NULL, array('package_id'))
-    ->condition('order_id', $order->id())
-    ->execute()
-    ->fetchCol();
-  foreach ($package_ids as $pid) {
-    uc_fulfillment_package_delete($pid);
+  $packages = Package::loadByOrder($order->id());
+  foreach ($packages as $package) {
+    $package->delete();
   }
 }
 
@@ -193,7 +187,7 @@ function uc_fulfillment_uc_order_delete(OrderInterface $order) {
  *
  * @ingroup themeable
  */
-function theme_uc_fulfillment_shipment_print(array $variables) {
+function obsolete_uc_fulfillment_shipment_print(array $variables) {
   $order = $variables['order'];
   $shipment = $variables['shipment'];
   $labels = $variables['labels'];

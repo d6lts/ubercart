@@ -370,7 +370,7 @@ class Shipment implements ShipmentInterface {
    *   An order ID.
    *
    * @return \Drupal\uc_fulfillment\Shipment[]
-   *   Array of shipment object for the given order.
+   *   Array of shipment objects for the given order.
    */
   public static function loadByOrder($order_id) {
     $shipments = array();
@@ -528,6 +528,7 @@ class Shipment implements ShipmentInterface {
     }
 
     \Drupal::moduleHandler()->invokeAll('uc_shipment', array('delete', $this));
+    drupal_set_message(t('Shipment @id has been deleted.', ['@id' => $this->sid]));
   }
 
 }

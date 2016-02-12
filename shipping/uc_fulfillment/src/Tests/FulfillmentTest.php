@@ -243,6 +243,8 @@ class FulfillmentTest extends UbercartTestBase {
       '1234567890ABCD',
       'Tracking number found.'
     );
+
+    // Delete Order and check to see that all Package/Shipment data has been removed.
   }
 
 }

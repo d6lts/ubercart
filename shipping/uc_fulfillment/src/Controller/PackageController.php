@@ -41,10 +41,8 @@ class PackageController extends ControllerBase {
       $this->t('Actions')
     );
     $rows = array();
-    $result = db_query('SELECT package_id FROM {uc_packages} WHERE order_id = :id', [':id' => $uc_order->id()]);
-    while ($package_id = $result->fetchField()) {
-      $package = Package::load($package_id);
-
+    $packages = Package::loadByOrder($uc_order->id());
+    foreach ($packages as $package) {
       $row = array();
       // Package ID.
       $row[] = array('data' => array('#plain_text' => $package->id()));

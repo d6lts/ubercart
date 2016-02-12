@@ -436,6 +436,25 @@ class Package implements PackageInterface {
   }
 
   /**
+   * Loads packages for a given order.
+   *
+   * @param array $order_id
+   *   An order ID.
+   *
+   * @return \Drupal\uc_fulfillment\Package[]
+   *   Array of Package objects for the given order.
+   */
+  public static function loadByOrder($order_id) {
+    $packages = array();
+    $result = db_query('SELECT package_id FROM {uc_packages} WHERE order_id = :id', [':id' => $order_id]);
+    while ($package_id = $result->fetchField()) {
+      $packages[] = Package::load($package_id);
+    }
+
+    return $packages;
+  }
+
+  /**
    * Loads a package and its products.
    *
    * @param int $package_id

@@ -12,6 +12,7 @@ use Drupal\Core\Url;
 use Drupal\uc_fulfillment\Entity\FulfillmentMethod;
 use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_fulfillment\ShipmentInterface;
+use Drupal\uc_fulfillment\Package;
 use Drupal\uc_fulfillment\PackageInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Address;
@@ -196,7 +197,7 @@ class ShipmentController extends ControllerBase {
     }
 
     if (empty($rows)) {
-      if (!db_query('SELECT COUNT(*) FROM {uc_packages} WHERE order_id = :id', [':id' => $uc_order->id()])->fetchField()) {
+      if (count(Package::loadByOrder($uc_order->id())) == 0) {
         drupal_set_message($this->t("This order's products have not been organized into packages."), 'warning');
         return $this->redirect('uc_fulfillment.new_package', ['uc_order' => $uc_order->id()]);
       }

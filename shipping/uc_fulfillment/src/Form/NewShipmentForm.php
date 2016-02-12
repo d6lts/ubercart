@@ -10,6 +10,7 @@ namespace Drupal\uc_fulfillment\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_fulfillment\Entity\FulfillmentMethod;
+use Drupal\uc_fulfillment\Package;
 use Drupal\uc_order\OrderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -34,7 +35,6 @@ class NewShipmentForm extends FormBase {
     $form['#attached']['library'][] = 'uc_fulfillment/uc_fulfillment.scripts';
 
     $units = \Drupal::config('uc_store.settings')->get('weight.units');
-    $result = db_query('SELECT * FROM {uc_packages} WHERE order_id = :id AND sid IS NULL', [':id' => $uc_order->id()]);
 
     $header = array(
       // Fake out tableselect JavaScript into operating on our table.
@@ -45,18 +45,26 @@ class NewShipmentForm extends FormBase {
     );
 
     $packages_by_type = array();
-    foreach ($result as $package) {
+    $packages = Package::loadByOrder($uc_order->id());
+    foreach ($packages as $package) {
+      if (!empty($package->getSid())) {
+        // This package is already part of a shipment.
+        break;
+      }
+//@todo: This looks like the code in Package::load() ... should try to replace it here
+// to eliminate the SQL
       $products = array();
       $weight = 0;
-      $result2 = db_query('SELECT pp.order_product_id, pp.qty, pp.qty * op.weight__value AS weight, op.weight__units, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id', [':id' => $package->package_id]);
+      $result2 = db_query('SELECT pp.order_product_id, pp.qty, pp.qty * op.weight__value AS weight, op.weight__units, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id', [':id' => $package->id()]);
       foreach ($result2 as $product) {
+        // Normalize all weights to default units.
         $units_conversion = uc_weight_conversion($product->weight__units, $units);
         $weight += $product->weight * $units_conversion;
         $products[$product->order_product_id] = $product;
       }
-      $package->weight = $weight;
-      $package->products = $products;
-      $packages_by_type[$package->shipping_type][$package->package_id] = $package;
+      $package->setWeight($weight);
+      $package->setProducts($products);
+      $packages_by_type[$package->getShippingType()][$package->id()] = $package;
     }
 
     // Find FulfillmentMethod plugins.
@@ -90,14 +98,14 @@ class NewShipmentForm extends FormBase {
         $row = array();
         $row['checked'] = array(
           '#type' => 'checkbox',
-          '#default_value' => (in_array($package->package_id, $checked_pkgs) ? 1 : 0)
+          '#default_value' => (in_array($package->id(), $checked_pkgs) ? 1 : 0)
         );
         $row['package_id'] = array(
-          '#markup' => $package->package_id,
+          '#markup' => $package->id(),
         );
 
         $product_list = array();
-        foreach ($package->products as $product) {
+        foreach ($package->getProducts() as $product) {
           $product_list[] = $product->qty . ' x ' . $product->model;
         }
         $row['products'] = array(
@@ -105,9 +113,9 @@ class NewShipmentForm extends FormBase {
           '#items' => $product_list,
         );
         $row['weight'] = array(
-          '#markup' => uc_weight_format($package->weight, $units),
+          '#markup' => uc_weight_format($package->getWeight(), $units),
         );
-        $form['shipping_types'][$shipping_type]['table'][$package->package_id] = $row;
+        $form['shipping_types'][$shipping_type]['table'][$package->id()] = $row;
       }
 
       if (isset($shipping_methods_by_type[$shipping_type])) {
