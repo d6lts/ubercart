@@ -237,9 +237,9 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'shipping-address':
-          $address = $order->getAddress('delivery');
-          $address = str_replace(array('<br />', '<BR />'), "<br />\n", $address);
-          $replacements[$original] = $address;
+          // Cast Address object to string to get country-specific formatting.
+          $address = array('#markup' => (string) $order->getAddress('delivery'));
+          $replacements[$original] = drupal_render($address);
           break;
 
         case 'shipping-phone':
@@ -247,9 +247,9 @@ function uc_order_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'billing-address':
-          $address = $order->getAddress('billing');
-          $address = str_replace(array('<br />', '<BR />'), "<br />\n", $address);
-          $replacements[$original] = $address;
+          // Cast Address object to string to get country-specific formatting.
+          $address = array('#markup' => (string) $order->getAddress('billing'));
+          $replacements[$original] = drupal_render($address);
           break;
 
         case 'billing-phone':
