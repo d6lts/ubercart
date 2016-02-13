@@ -84,7 +84,9 @@ class AjaxTest extends UbercartTestBase {
   public function testCheckoutAjax() {
     // Enable two payment methods and set a condition on one.
     $this->createPaymentMethod('check');
-    $other = $this->createPaymentMethod('other');
+    // Use randomMachineName() as randomString() has escaping problems when
+    // sent over Ajax; see https://www.drupal.org/node/2664320
+    $other = $this->createPaymentMethod('other', ['label' => $this->randomMachineName()]);
     // $this->addPaymentZoneCondition($other['id'], 'KS');
 
     // Specify that the billing zone should update the payment pane.
