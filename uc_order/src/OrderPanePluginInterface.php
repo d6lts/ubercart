@@ -34,8 +34,8 @@ interface OrderPanePluginInterface {
    * Choose "pos-left" to float left against the previous pane or "abs-left"
    * to start a new line of panes.
    *
-   * @return string
-   *   A set of CSS classes.
+   * @return array
+   *   An array of CSS classes.
    */
   public function getClasses();
 

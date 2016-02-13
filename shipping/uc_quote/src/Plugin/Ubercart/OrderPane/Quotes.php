@@ -29,7 +29,7 @@ class Quotes extends EditableOrderPanePluginBase {
    * {@inheritdoc}
    */
   public function getClasses() {
-    return 'pos-left';
+    return array('pos-left');
   }
 
   /**

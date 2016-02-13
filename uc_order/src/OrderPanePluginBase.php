@@ -25,7 +25,7 @@ abstract class OrderPanePluginBase extends PluginBase implements OrderPanePlugin
    * {@inheritdoc}
    */
   public function getClasses() {
-    return 'abs-left';
+    return array('abs-left');
   }
 
   /**

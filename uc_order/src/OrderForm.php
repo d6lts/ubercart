@@ -68,7 +68,7 @@ class OrderForm extends ContentEntityForm {
       if ($pane instanceof EditableOrderPanePluginInterface) {
         $form[$id] = $pane->buildForm($order, array(), $form_state);
 
-        $form[$id]['#prefix'] = '<div class="order-pane ' . $pane->getClasses() . '" id="order-pane-' . $id . '">';
+        $form[$id]['#prefix'] = '<div class="order-pane ' . implode(' ', $pane->getClasses()) . '" id="order-pane-' . $id . '">';
         if ($title = $pane->getTitle()) {
           $form[$id]['#prefix'] .= '<div class="order-pane-title">' . $title . ':' . '</div>';
         }
