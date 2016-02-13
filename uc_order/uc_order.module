@@ -544,7 +544,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($user->hasPermission('view all orders')) {
     $actions['view'] = array(
       'title' => t('View'),
-      'url' => Url::fromRoute('entity.uc_order.canonical', ['uc_order' => $order->id()]),
+      'url' => $order->toUrl(),
       'weight' => 0,
     );
     $actions['print'] = array(

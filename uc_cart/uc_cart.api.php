@@ -118,28 +118,40 @@ function hook_uc_add_to_cart_data($form_values) {
  *       clicked, the customer's input is saved to the cart.
  */
 function hook_uc_cart_display($item) {
-  $node = node_load($item->nid);
+  $node = $item->nid->entity;
+
   $element = array();
   $element['nid'] = array('#type' => 'value', '#value' => $node->id());
   $element['module'] = array('#type' => 'value', '#value' => 'uc_product');
-  $element['remove'] = array('#type' => 'checkbox');
+  $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
 
-  $element['title'] = array(
-    '#markup' => $node->access('view') ? \Drupal\Core\Link::createFromRoute($item->title, 'entity.node.canonical', ['node' => $item->nid])->toString() : $item->title,
-  );
+  if ($node->access('view')) {
+    $element['title'] = array(
+      '#type' => 'link',
+      '#title' => $item->title,
+      '#url' => $node->toUrl(),
+    );
+  }
+  else {
+    $element['title'] = array(
+      '#markup' => $item->title,
+    );
+  }
 
-
-  $element['#total'] = $item->price * $item->qty;
-  $element['data'] = array('#type' => 'hidden', '#value' => serialize($item->data));
+  $element['#total'] = $item->price->value * $item->qty->value;
+  $element['#suffixes'] = array();
+  $element['data'] = array('#type' => 'hidden', '#value' => serialize($item->data->first()->toArray()));
   $element['qty'] = array(
-    '#type' => 'textfield',
-    '#default_value' => $item->qty,
-    '#size' => 5,
-    '#maxlength' => 6
+    '#type' => 'uc_quantity',
+    '#title' => t('Quantity'),
+    '#title_display' => 'invisible',
+    '#default_value' => $item->qty->value,
+    '#allow_zero' => TRUE,
   );
 
+  $element['description'] = array('#markup' => '');
   if ($description = uc_product_get_description($item)) {
-    $element['description'] = array('#markup' => $description);
+    $element['description']['#markup'] = $description;
   }
 
   return $element;

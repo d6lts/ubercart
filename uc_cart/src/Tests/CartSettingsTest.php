@@ -76,7 +76,7 @@ class CartSettingsTest extends UbercartTestBase {
     );
 
     $this->drupalPostForm('node/' . $this->product->id(), [], t('Add to cart'), ['query' => ['test' => 'querystring']]);
-    $url = Url::fromRoute('entity.node.canonical', ['node' => $this->product->id()], ['absolute' => TRUE, 'query' => ['test' => 'querystring']])->toString();
+    $url = $this->product->toUrl('canonical', ['absolute' => TRUE, 'query' => ['test' => 'querystring']])->toString();
     $this->assertTrue($this->getUrl() == $url, 'Add to cart no-redirect preserves the query string.');
   }
 
@@ -141,7 +141,7 @@ class CartSettingsTest extends UbercartTestBase {
       0,
       'Continue shopping link appears on the page.'
     );
-    $links = $this->xpath('//a[@href="' . Url::fromRoute('entity.node.canonical', ['node' => $this->product->id()])->toString() . '"]');
+    $links = $this->xpath('//a[@href="' . $this->product->toUrl()->toString() . '"]');
     $this->assertTrue(
       isset($links[0]),
       'Continue shopping link returns to the product page.'

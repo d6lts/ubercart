@@ -11,7 +11,6 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
 use Drupal\uc_order\EditableOrderPanePluginBase;
 use Drupal\uc_order\Entity\OrderProduct;
 use Drupal\uc_order\OrderInterface;
@@ -77,7 +76,7 @@ class Products extends EditableOrderPanePluginBase {
       );
 
       if ($product->nid->entity && $product->nid->entity->access('view')) {
-        $title = Link::createFromRoute($product->title->value, 'entity.node.canonical', ['node' => $product->nid->target_id])->toString();
+        $title = $product->nid->entity->toLink()->toString();
       }
       else {
         $title = $product->title->value;

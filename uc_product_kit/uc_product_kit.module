@@ -591,7 +591,7 @@ function uc_product_kit_form_node_form_alter(&$form, FormStateInterface $form_st
       $form['base']['items'][$i]['link'] = array(
         '#type' => 'link',
         '#title' => $product->label(),
-        '#url' => Url::fromRoute('entity.node.canonical', ['node' => $i]),
+        '#url' => $product->toUrl(),
       );
       $form['base']['items'][$i]['qty'] = array(
         '#type' => 'uc_quantity',
@@ -936,7 +936,7 @@ function uc_product_kit_uc_cart_display($item) {
       $element['nid'] = array('#type' => 'value', '#value' => $kit->id());
       $element['module'] = array('#type' => 'value', '#value' => 'uc_product_kit');
       $element['remove'] = array('#type' => 'submit', '#value' => t('Remove'));
-      $element['title'] = array('#type' => 'link', '#title' => $kit->label(), '#url' => Url::fromRoute('entity.node.canonical', ['node' => $kit->id()]));
+      $element['title'] = array('#type' => 'link', '#title' => $kit->label(), '#url' => $kit->toUrl());
       $element['qty'] = array(
         '#type' => 'uc_quantity',
         '#title' => t('Quantity'),

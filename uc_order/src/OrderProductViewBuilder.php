@@ -8,7 +8,6 @@
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\EntityViewBuilder;
-use Drupal\Core\Link;
 
 /**
  * View builder for ordered products.
@@ -27,8 +26,7 @@ class OrderProductViewBuilder extends EntityViewBuilder {
         '#qty' => $product->qty->value,
         '#cell_attributes' => array('class' => array('qty')),
       );
-      $node = node_load($product->nid->target_id);
-      $title = $node->access('view') ? Link::createFromRoute($product->title->value, 'entity.node.canonical', ['node' => $product->nid->target_id])->toString() : $product->title->value;
+      $title = $product->nid->entity->access('view') ? $product->nid->entity->toLink()->toString() : $product->title->value;
       $product->content['product'] = array(
         '#markup' => $title . uc_product_get_description($product),
         '#cell_attributes' => array('class' => array('product')),

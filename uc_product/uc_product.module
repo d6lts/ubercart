@@ -584,7 +584,7 @@ function uc_product_uc_store_status() {
  * Implements hook_uc_cart_display().
  */
 function uc_product_uc_cart_display($item) {
-  $node = node_load($item->nid->target_id);
+  $node = $item->nid->entity;
 
   $element = array();
   $element['nid'] = array('#type' => 'value', '#value' => $node->id());
@@ -595,7 +595,7 @@ function uc_product_uc_cart_display($item) {
     $element['title'] = array(
       '#type' => 'link',
       '#title' => $item->title,
-      '#url' => Url::fromRoute('entity.node.canonical', ['node' => $node->id()]),
+      '#url' => $node->toUrl(),
     );
   }
   else {

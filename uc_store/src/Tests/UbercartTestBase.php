@@ -55,7 +55,11 @@ abstract class UbercartTestBase extends WebTestBase {
     'unconditionally delete orders',
   );
 
-  /** Test product. */
+  /**
+   * Test product.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
   protected $product;
 
   /**
