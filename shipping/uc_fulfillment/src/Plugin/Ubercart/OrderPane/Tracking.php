@@ -27,7 +27,7 @@ class Tracking extends OrderPanePluginBase {
    * {@inheritdoc}
    */
   public function getClasses() {
-    return 'pos-left';
+    return array('pos-left');
   }
 
   /**
