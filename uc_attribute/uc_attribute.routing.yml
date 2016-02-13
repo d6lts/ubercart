@@ -68,6 +68,7 @@ uc_attribute.product_class_attributes:
     _form: '\Drupal\uc_attribute\Form\ProductClassAttributesForm'
     _title: 'Attributes'
   requirements:
+    _uc_product_node_type: 'TRUE'
     _entity_access: 'node_type.update'
     _permission: 'administer attributes'
 
@@ -77,6 +78,7 @@ uc_attribute.product_class_attributes_add:
     _form: '\Drupal\uc_attribute\Form\ProductClassAttributesAddForm'
     _title: 'Add attribute'
   requirements:
+    _uc_product_node_type: 'TRUE'
     _entity_access: 'node_type.update'
     _permission: 'administer attributes'
 
@@ -86,6 +88,7 @@ uc_attribute.product_class_options:
     _form: '\Drupal\uc_attribute\Form\ProductClassOptionsForm'
     _title: 'Options'
   requirements:
+    _uc_product_node_type: 'TRUE'
     _entity_access: 'node_type.update'
     _permission: 'administer attributes'
 

@@ -19,6 +19,7 @@ class ProductTabsTest extends UbercartTestBase {
   public static $modules = array('uc_product', 'uc_attribute', 'uc_stock');
   public static $adminPermissions = array(
     'bypass node access',
+    'administer attributes',
     'administer product attributes',
     'administer product options',
     'administer product stock',
@@ -63,6 +64,29 @@ class ProductTabsTest extends UbercartTestBase {
     $this->assertNoLink('Adjustments');
     $this->assertNoLink('Features');
     $this->assertNoLink('Stock');
+  }
+
+  public function testProductTypeTabs() {
+    $this->drupalGet('admin/structure/types/manage/product');
+
+    // Check we are on the node type page.
+    $this->assertFieldByName('name', 'Product');
+
+    // Check that each of the tabs exist.
+    $this->assertLink('Product attributes');
+    $this->assertLink('Product options');
+  }
+
+  public function testNonProductTypeTabs() {
+    $type = $this->drupalCreateContentType(['type' => 'page']);
+    $this->drupalGet('admin/structure/types/manage/' . $type->id());
+
+    // Check we are on the node type page.
+    $this->assertFieldByName('name', $type->label());
+
+    // Check that each of the tabs do not exist.
+    $this->assertNoLink('Product attributes');
+    $this->assertNoLink('Product options');
   }
 
 }
