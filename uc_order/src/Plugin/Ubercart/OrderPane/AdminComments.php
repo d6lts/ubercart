@@ -8,6 +8,7 @@
 namespace Drupal\uc_order\Plugin\Ubercart\OrderPane;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 use Drupal\uc_order\EditableOrderPanePluginBase;
 use Drupal\uc_order\OrderInterface;
 
@@ -42,7 +43,7 @@ class AdminComments extends EditableOrderPanePluginBase {
       foreach ($comments as $comment) {
         $build['#rows'][] = array(
           array('data' => \Drupal::service('date.formatter')->format($comment->created, 'short'), 'class' => array('date')),
-          array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
+          array('data' => array('#theme' => 'username', '#account' => User::load($comment->uid)), 'class' => array('user')),
           array('data' => array('#markup' => $comment->message), 'class' => array('message')),
         );
       }
@@ -59,8 +60,8 @@ class AdminComments extends EditableOrderPanePluginBase {
     foreach ($comments as $comment) {
       $items[] = [
         'username' => [
-          '#theme' => 'uc_uid',
-          '#uid' => $comment->uid,
+          '#theme' => 'username',
+          '#account' => User::load($comment->uid),
           '#prefix' => '[',
           '#suffix' => '] ',
         ],

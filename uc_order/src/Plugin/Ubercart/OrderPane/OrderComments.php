@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_order\Plugin\Ubercart\OrderPane;
 
+use Drupal\user\Entity\User;
 use Drupal\uc_order\Entity\OrderStatus;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_order\OrderPanePluginBase;
@@ -72,7 +73,7 @@ class OrderComments extends OrderPanePluginBase {
         $icon = $comment->notified ? 'true-icon.gif' : 'false-icon.gif';
         $build['#rows'][] = array(
           array('data' => \Drupal::service('date.formatter')->format($comment->created, 'short'), 'class' => array('date')),
-          array('data' => array('#theme' => 'uc_uid', '#uid' => $comment->uid), 'class' => array('user')),
+          array('data' => array('#theme' => 'username', '#account' => User::load($comment->uid)), 'class' => array('user')),
           array('data' => array('#theme' => 'image', '#uri' => drupal_get_path('module', 'uc_order') . '/images/' . $icon), 'class' => array('notified')),
           array('data' => array('#plain_text' => $statuses[$comment->order_status]->getName()), 'class' => array('status')),
           array('data' => array('#markup' => $comment->message), 'class' => array('message')),

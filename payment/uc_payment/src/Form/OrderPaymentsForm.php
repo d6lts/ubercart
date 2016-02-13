@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\Entity\PaymentMethod;
 use Drupal\uc_payment\Plugin\PaymentMethodManager;
@@ -92,8 +93,8 @@ class OrderPaymentsForm extends FormBase {
           '#markup' => \Drupal::service('date.formatter')->format($payment->received, 'short'),
         );
         $form['payments'][$payment->receipt_id]['user'] = array(
-          '#theme' => 'uc_uid',
-          '#uid' => $payment->uid,
+          '#theme' => 'username',
+          '#account' => User::load($payment->uid),
         );
         $form['payments'][$payment->receipt_id]['method'] = array(
           '#markup' => ($payment->method == '') ? $this->t('Unknown') : $payment->method,

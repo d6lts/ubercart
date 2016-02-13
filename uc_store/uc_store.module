@@ -119,11 +119,6 @@ function uc_store_theme() {
       'variables' => array('qty' => 1),
       'template' => 'uc-qty',
     ),
-    'uc_uid' => array(
-      'variables' => array('uid' => 0),
-      'file' => 'uc_store.theme.inc',
-      'function' => 'theme_uc_uid',
-    ),
   );
 }
 

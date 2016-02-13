@@ -10,6 +10,7 @@ namespace Drupal\uc_order\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -85,7 +86,7 @@ class OrderController extends ControllerBase {
     foreach ($result as $change) {
       $rows[] = array(
         \Drupal::service('date.formatter')->format($change->created, 'short'),
-        array('data' => array('#theme' => 'uc_uid',  '#uid' => $change->uid)),
+        array('data' => array('#theme' => 'username',  '#account' => User::load($change->uid))),
         array('data' => array('#markup' => $change->changes)),
       );
     }
