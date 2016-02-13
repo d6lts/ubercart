@@ -10,7 +10,6 @@ namespace Drupal\uc_role\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\user\Entity\User;
 
 /**
@@ -30,7 +29,6 @@ class RoleDeleteForm extends ConfirmFormBase {
     $username = array(
       '#theme' => 'username',
       '#account' => $account,
-      '#name' => SafeMarkup::checkPlain($account->getUsername()),
     );
     return $this->t('Delete expiration of %role_name role for the user @user?', array(
       '@user' => drupal_render($username),
@@ -45,8 +43,6 @@ class RoleDeleteForm extends ConfirmFormBase {
     $username = array(
       '#theme' => 'username',
       '#account' => $account,
-      '#name' => SafeMarkup::checkPlain($account->getUsername()),
-      '#link_path' => 'user/' . $account->id(),
     );
     return $this->t('Deleting the expiration will give @user privileges set by the %role_name role indefinitely unless manually removed.', array(
       '@user' => drupal_render($username),

@@ -491,8 +491,6 @@ function uc_role_delete($account, $rid = NULL, $silent = FALSE) {
       $username = array(
         '#theme' => 'username',
         '#account' => $account,
-        '#name' => SafeMarkup::checkPlain($account->getUsername()),
-        '#link_path' => 'user/' . $account->id(),
       );
       drupal_set_message(t('The expiration of %role_name role for the user @user has been deleted.', array(
         '@user' => drupal_render($username),
@@ -537,8 +535,6 @@ function uc_role_revoke(&$account, $rid, $silent = FALSE) {
       $username = array(
         '#theme' => 'username',
         '#account' => $account,
-        '#name' => SafeMarkup::checkPlain($account->getUsername()),
-        '#link_path' => 'user/' . $account->id(),
       );
       drupal_set_message(t('@user has had the %role role revoked.', array(
         '@user' => drupal_render($username),
@@ -606,8 +602,6 @@ function uc_role_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent =
       $username = array(
         '#theme' => 'username',
         '#account' => $account,
-        '#name' => SafeMarkup::checkPlain($account->getUsername()),
-        '#link_path' => 'user/' . $account->id(),
       );
       $message = t('@user has been granted the %role role.', array(
         '@user' => drupal_render($username),
@@ -669,8 +663,6 @@ function uc_role_renew($account, $rid, $timestamp, $silent = FALSE) {
       $username = array(
         '#theme' => 'username',
         '#account' => $account,
-        '#name' => SafeMarkup::checkPlain($account->getUsername()),
-        '#link_path' => 'user/' . $account->id(),
       );
       $message = t("@user's %role role has been renewed. It will expire on %date.", array(
         '@user' => drupal_render($username),

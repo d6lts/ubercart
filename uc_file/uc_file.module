@@ -723,13 +723,11 @@ function uc_file_remove_user($user) {
 
   // Echo the deletion only if something was actually deleted.
   if ($query->execute()) {
-    drupal_set_message(t('@user has had all of his/her downloadable files removed.', array(
-      '@user' => theme('username', array(
-        'account' => $user,
-        'name' => SafeMarkup::checkPlain($user->name),
-        'link_path' => 'user/' . $user->id(),
-      )),
-    )));
+    $userlink = array(
+      '#theme' => 'username',
+      '#account' => $user,
+    );
+    drupal_set_message(t('@user has had all of his/her downloadable files removed.', ['@user' => drupal_render($userlink)]));
   }
 }
 
@@ -749,14 +747,11 @@ function uc_file_remove_user_file_by_id($user, $fid) {
 
   // Echo the deletion only if something was actually deleted.
   if ($query->execute()) {
-    drupal_set_message(t('@user has had %file removed from his/her downloadable file list.', array(
-      '@user' => theme('username', array(
-        'account' => $user,
-        'name' => SafeMarkup::checkPlain($user->name),
-        'link_path' => 'user/' . $user->id(),
-      )),
-      '%file' => $file->filename,
-    )));
+    $userlink = array(
+      '#theme' => 'username',
+      '#account' => $user,
+    );
+    drupal_set_message(t('@user has had %file removed from his/her downloadable file list.', ['@user' => drupal_render($userlink), '%file' => $file->filename]));
   }
 }
 
