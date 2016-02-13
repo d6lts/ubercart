@@ -129,7 +129,7 @@ class OrderForm extends ContentEntityForm {
     $log = array();
 
     foreach (array_keys($order->getFieldDefinitions()) as $key) {
-      if ($original->$key->value !== $order->$key->value) {
+      if ($order->$key->value != $original->$key->value) {
         if (!is_array($order->$key->value)) {
           $log[$key] = array('old' => $original->$key->value, 'new' => $order->$key->value);
         }
