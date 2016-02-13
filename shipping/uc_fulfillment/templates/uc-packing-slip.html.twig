@@ -150,7 +150,8 @@
 
                         <table width="100%">
 
-                          {% for product in products %}
+                          {% for package in packages %}
+                          {% for product in package.products %}
                           <tr>
                             <td valign="top" nowrap="nowrap">
                               <b>{{ product.qty }} x </b>
@@ -162,6 +163,7 @@
                               {{ product.details }}
                             </td>
                           </tr>
+                          {% endfor %}
                           {% endfor %}
                         </table>
 
