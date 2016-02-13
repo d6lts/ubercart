@@ -12,7 +12,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Plugin implementation of the Ubercart weight widget.
+ * Plugin implementation of the Ubercart 'uc_weight' widget.
  *
  * @FieldWidget(
  *   id = "uc_weight",
@@ -42,7 +42,7 @@ class UcWeightWidget extends WidgetBase {
 
     $element['value'] = array(
       '#type' => 'number',
-      '#title' => t('Weight'),
+      '#title' => $this->t('Weight'),
       '#title_display' => 'invisible',
       '#default_value' => $value,
       '#size' => 6,
@@ -52,14 +52,14 @@ class UcWeightWidget extends WidgetBase {
 
     $element['units'] = array(
       '#type' => 'select',
-      '#title' => t('Units'),
+      '#title' => $this->t('Units'),
       '#title_display' => 'invisible',
       '#default_value' => $units,
       '#options' => array(
-        'lb' => t('Pounds'),
-        'kg' => t('Kilograms'),
-        'oz' => t('Ounces'),
-        'g' => t('Grams'),
+        'lb' => $this->t('Pounds'),
+        'kg' => $this->t('Kilograms'),
+        'oz' => $this->t('Ounces'),
+        'g' => $this->t('Grams'),
       ),
     );
 

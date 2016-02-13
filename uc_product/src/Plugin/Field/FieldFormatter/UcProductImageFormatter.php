@@ -35,29 +35,29 @@ class UcProductImageFormatter extends ImageFormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $image_styles = image_style_options(FALSE);
     $element['first_image_style'] = array(
-      '#title' => t('First image style'),
+      '#title' => $this->t('First image style'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('first_image_style'),
-      '#empty_option' => t('None (original image)'),
+      '#empty_option' => $this->t('None (original image)'),
       '#options' => $image_styles,
     );
     $element['other_image_style'] = array(
-      '#title' => t('Subsequent image style'),
+      '#title' => $this->t('Subsequent image style'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('other_image_style'),
-      '#empty_option' => t('None (original image)'),
+      '#empty_option' => $this->t('None (original image)'),
       '#options' => $image_styles,
     );
 
     $link_types = array(
-      'content' => t('Content'),
-      'file' => t('File'),
+      'content' => $this->t('Content'),
+      'file' => $this->t('File'),
     );
     $element['image_link'] = array(
-      '#title' => t('Link image to'),
+      '#title' => $this->t('Link image to'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('image_link'),
-      '#empty_option' => t('Nothing'),
+      '#empty_option' => $this->t('Nothing'),
       '#options' => $link_types,
     );
 
@@ -77,19 +77,19 @@ class UcProductImageFormatter extends ImageFormatterBase {
     // their styles in code.
     $image_style_setting = $this->getSetting('first_image_style');
     if (!isset($image_styles[$image_style_setting])) {
-      $image_styles[$image_style_setting] = t('Original image');
+      $image_styles[$image_style_setting] = $this->t('Original image');
     }
-    $summary[] = t('First image style: @style', ['@style' => $image_styles[$image_style_setting]]);
+    $summary[] = $this->t('First image style: @style', ['@style' => $image_styles[$image_style_setting]]);
 
     $image_style_setting = $this->getSetting('other_image_style');
     if (!isset($image_styles[$image_style_setting])) {
-      $image_styles[$image_style_setting] = t('Original image');
+      $image_styles[$image_style_setting] = $this->t('Original image');
     }
-    $summary[] = t('Subsequent image style: @style', ['@style' => $image_styles[$image_style_setting]]);
+    $summary[] = $this->t('Subsequent image style: @style', ['@style' => $image_styles[$image_style_setting]]);
 
     $link_types = array(
-      'content' => t('Linked to content'),
-      'file' => t('Linked to file'),
+      'content' => $this->t('Linked to content'),
+      'file' => $this->t('Linked to file'),
     );
     // Display this setting only if image is linked.
     $image_link_setting = $this->getSetting('image_link');

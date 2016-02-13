@@ -44,7 +44,7 @@ class UcDimensionsWidget extends WidgetBase {
 
     $element['length'] = array(
       '#type' => 'number',
-      '#title' => t('Length'),
+      '#title' => $this->t('Length'),
       '#default_value' => $length,
       '#size' => 6,
       '#min' => 0,
@@ -53,7 +53,7 @@ class UcDimensionsWidget extends WidgetBase {
 
     $element['width'] = array(
       '#type' => 'number',
-      '#title' => t('Width'),
+      '#title' => $this->t('Width'),
       '#default_value' => $width,
       '#size' => 6,
       '#min' => 0,
@@ -62,7 +62,7 @@ class UcDimensionsWidget extends WidgetBase {
 
     $element['height'] = array(
       '#type' => 'number',
-      '#title' => t('Height'),
+      '#title' => $this->t('Height'),
       '#default_value' => $height,
       '#size' => 6,
       '#min' => 0,
@@ -71,14 +71,14 @@ class UcDimensionsWidget extends WidgetBase {
 
     $element['units'] = array(
       '#type' => 'select',
-      '#title' => t('Units'),
+      '#title' => $this->t('Units'),
       '#title_display' => 'invisible',
       '#default_value' => $units,
       '#options' => array(
-        'in' => t('Inches'),
-        'ft' => t('Feet'),
-        'cm' => t('Centimeters'),
-        'mm' => t('Millimeters'),
+        'in' => $this->t('Inches'),
+        'ft' => $this->t('Feet'),
+        'cm' => $this->t('Centimeters'),
+        'mm' => $this->t('Millimeters'),
       ),
     );
 

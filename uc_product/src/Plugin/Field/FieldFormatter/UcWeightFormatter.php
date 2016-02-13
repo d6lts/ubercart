@@ -11,7 +11,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
- * Plugin implementation of the Ubercart weight formatter.
+ * Plugin implementation of the Ubercart 'uc_weight' formatter.
  *
  * @FieldFormatter(
  *   id = "uc_weight",
