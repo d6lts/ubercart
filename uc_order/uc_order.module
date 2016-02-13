@@ -20,6 +20,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_order\Entity\Order;
+use Drupal\uc_order\OrderInterface;
 
 require_once dirname(__FILE__) . '/uc_order.line_item.inc';
 
@@ -536,7 +537,7 @@ function uc_order_state_default($state_id) {
  * @return
  *   A renderable set of operation links.
  */
-function uc_order_actions($order, $icon_html = FALSE) {
+function uc_order_actions(OrderInterface $order, $icon_html = FALSE) {
   $user = \Drupal::currentUser();
 
   $actions = array();
@@ -573,7 +574,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($order->access('update')) {
     $actions['edit'] = array(
       'title' => t('Edit'),
-      'url' => Url::fromRoute('entity.uc_order.edit_form', ['uc_order' => $order->id()]),
+      'url' => $order->toUrl('edit-form'),
       'weight' => 10,
     );
   }
@@ -581,7 +582,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
   if ($order->access('delete')) {
     $actions['delete'] = array(
       'title' => t('Delete'),
-      'url' => Url::fromRoute('entity.uc_order.delete_form', ['uc_order' => $order->id()]),
+      'url' => $order->toUrl('delete-form'),
       'weight' => 20,
     );
   }

@@ -9,7 +9,6 @@ namespace Drupal\uc_paypal\Controller;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -124,7 +123,7 @@ class WppController extends ControllerBase {
           array(
             '@paypal_message' => $this->buildErrorMessages($nvp_response),
             '@type' => $types[$data['txn_type']],
-            'link' => Link::createFromRoute(t('view order'), 'entity.uc_order.canonical', ['uc_order' => $order_id])->toString(),
+            'link' => $order->toLink($this->t('view order'))->toString(),
           )
         );
         // Fall through.

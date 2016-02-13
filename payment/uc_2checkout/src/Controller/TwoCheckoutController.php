@@ -10,7 +10,6 @@ namespace Drupal\uc_2checkout\Controller;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Url;
 use Drupal\uc_cart\CartManagerInterface;
 use Drupal\uc_order\Entity\Order;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -79,7 +78,7 @@ class TwoCheckoutController extends ControllerBase {
 
     if ($request->request->get('demo') == 'Y' xor $module_config->get('demo')) {
       \Drupal::logger('uc_2checkout')->error('The 2Checkout payment for order <a href=":order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
-        ':order_url' => Url::fromRoute('entity.uc_order.canonical', ['uc_order' => $order->id()])->toString(),
+        ':order_url' => $order->toUrl()->toString(),
         '@order_id' => $order->id(),
         '%flag' => $request->request->get('demo') == 'Y' ? 'Y' : 'N',
         '%mode' => $module_config->get('demo') ? 'Y' : 'N',

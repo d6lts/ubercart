@@ -41,7 +41,7 @@ class CustomerInfo extends EditableOrderPanePluginBase {
           '#prefix' => $this->t('Customer number') . ': ',
           '#suffix' => '<br />',
           '#title' => $order->getOwnerId(),
-          '#url' => Url::fromRoute('entity.user.canonical', ['user' => $order->getOwnerId()]),
+          '#url' => $order->getOwner()->toUrl(),
         );
       }
       $build['primary_email'] = array(
