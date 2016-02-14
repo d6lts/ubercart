@@ -9,6 +9,7 @@ namespace Drupal\uc_credit\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_credit\CreditCardPaymentMethodBase;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Defines the test gateway payment method.
@@ -67,7 +68,7 @@ class TestGateway extends CreditCardPaymentMethodBase {
   /**
    * {@inheritdoc}
    */
-  protected function chargeCard($order, $amount, $txn_type, $reference = NULL) {
+  protected function chargeCard(OrderInterface $order, $amount, $txn_type, $reference = NULL) {
     $user = \Drupal::currentUser();
 
     // cc_exp_month and cc_exp_year are also validated by
