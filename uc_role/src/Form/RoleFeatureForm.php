@@ -297,14 +297,15 @@ class RoleFeatureForm extends FormBase {
     }
 
     if (!isset($product_role['rpid'])) {
+      unset($product_role['rpid']);
       $product_role['rpid'] = db_insert('uc_roles_products')
         ->fields($product_role)
         ->execute();
     }
     else {
-      db_merge('uc_roles_products')
-        ->key('rpid', $product_role['rpid'])
+      db_update('uc_roles_products')
         ->fields($product_role)
+        ->condition('rpid', $product_role['rpid'])
         ->execute();
     }
 

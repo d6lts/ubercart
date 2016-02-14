@@ -446,7 +446,7 @@ class Package implements PackageInterface {
    */
   public static function loadByOrder($order_id) {
     $packages = array();
-    $result = db_query('SELECT package_id FROM {uc_packages} WHERE order_id = :id', [':id' => $order_id]);
+    $result = db_query('SELECT package_id FROM {uc_packages} WHERE order_id = :id ORDER BY package_id', [':id' => $order_id]);
     while ($package_id = $result->fetchField()) {
       $packages[] = Package::load($package_id);
     }

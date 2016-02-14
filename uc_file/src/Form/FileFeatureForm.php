@@ -292,10 +292,17 @@ class FileFeatureForm extends FormBase {
     }
 
     // Insert or update (if $key is already in table) uc_file_products table.
-    db_merge('uc_file_products')
-      ->key(['fpid' => $key])
-      ->fields($file_product)
-      ->execute();
+    if (empty($key)) {
+      $key = db_insert('uc_file_products')
+        ->fields($file_product)
+        ->execute();
+    }
+    else {
+      db_update('uc_file_products')
+        ->fields($file_product)
+        ->condition(['fpid' => $key])
+        ->execute();
+    }
 
     $form_state->setRedirect('uc_product.features', ['node' => $data['nid']]);
   }
