@@ -19,7 +19,7 @@ class Country extends FieldPluginBase {
   /**
    * The country storage.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface.
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
   protected $countryStorage;
 

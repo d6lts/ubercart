@@ -305,11 +305,11 @@ function uc_quote_uc_shipping_type() {
  * Fulfillment modules are invoked for products that match their shipping type.
  * This function stores the shipping type of a product or a manufacturer.
  *
- * @param $id_type
+ * @param string $id_type
  *   Type can be 'product' or 'manufacturer'.
- * @param $id
+ * @param int $id
  *   Either the node id or term id of the object receiving the shipping type.
- * @param $shipping_type
+ * @param string $shipping_type
  *   The type of product that is fulfilled by various fulfillment modules.
  */
 function uc_quote_set_shipping_type($id_type, $id, $shipping_type) {
@@ -333,13 +333,13 @@ function uc_quote_set_shipping_type($id_type, $id, $shipping_type) {
 /**
  * Retrieves shipping type information from the database.
  *
- * @param $id_type
+ * @param string $id_type
  *   Type can be 'product' or 'manufacturer'.
- * @param $id
+ * @param int $id
  *   Either the node id or term id of the object that was assigned
  *   the shipping type.
  *
- * @return
+ * @return string
  *   The shipping type.
  */
 function uc_quote_get_shipping_type($id_type, $id) {
@@ -359,7 +359,7 @@ function uc_quote_get_shipping_type($id_type, $id) {
  * @param $product
  *   A product object.
  *
- * @return
+ * @return string
  *   The product's shipping type, or the store's default shipping type if
  *   the product's is not set.
  */
@@ -375,10 +375,10 @@ function uc_product_get_shipping_type($product) {
 /**
  * Gets a product's default shipping address.
  *
- * @param $nid
+ * @param int $nid
  *   A product node id.
  *
- * @return
+ * @return \Drupal\uc_store\Address
  *   An address object containing the product's default shipping address, or
  *   the store's shipping address if the product's is not set.
  */
@@ -558,10 +558,10 @@ function uc_quote_cart_returned_rates($form, $form_state) {
 /**
  * Gets the default (selected) quote option from the built form element.
  *
- * @param $quote_form
+ * @param array $quote_form
  *   The quotes form-element.
  *
- * @return
+ * @return string|false
  *   The default quote option, or FALSE if none exists.
  */
 function _uc_quote_extract_default_option($quote_form) {

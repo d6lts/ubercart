@@ -346,7 +346,7 @@ class ShipmentController extends ControllerBase {
    *
    * @param \Drupal\uc_fulfillment\ShipmentInterface $uc_shipment
    *   A Shipment object.
-   * @param $type
+   * @param string $type
    *   The key prefix to use to extract the address.
    *
    * @return \Drupal\uc_store\AddressInterface

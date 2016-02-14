@@ -22,7 +22,7 @@ interface OffsitePaymentMethodPluginInterface extends PaymentMethodPluginInterfa
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param \Drupal\uc_order\OrderInterface
+   * @param \Drupal\uc_order\OrderInterface $order
    *   The order that is being processed.
    *
    * @return array

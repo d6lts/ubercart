@@ -52,7 +52,7 @@ class OrderForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /** @var OrderInterface $order */
+    /** @var \Drupal\uc_order\OrderInterface $order */
     $order = $this->entity;
 
     $form['#order'] = $order;
@@ -114,7 +114,7 @@ class OrderForm extends ContentEntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    /** @var OrderInterface $order */
+    /** @var \Drupal\uc_order\OrderInterface $order */
     $order = $this->entity;
     $original = clone $order;
 

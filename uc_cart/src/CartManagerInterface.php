@@ -15,10 +15,10 @@ interface CartManagerInterface {
   /**
    * Loads a cart object.
    *
-   * @param string|NULL $id
+   * @param string|null $id
    *   (optional) The ID of the cart to load, or NULL to load the current cart.
    *
-   * @return CartInterface
+   * @return \Drupal\uc_cart\CartInterface
    *   An object representing the cart.
    */
   public function get($id = NULL);

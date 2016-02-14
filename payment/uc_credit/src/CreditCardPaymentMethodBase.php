@@ -593,20 +593,20 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
   /**
    * Process a payment through the credit card gateway.
    *
-   * @param $order
+   * @param \Drupal\uc_order\OrderInterface $order
    *   The order that is being processed.
-   * @param $amount
+   * @param float $amount
    *   The amount of the payment we're attempting to collect.
-   * @param $txn_type
+   * @param string $txn_type
    *   The transaction type, one of the UC_CREDIT_* constants.
-   * @param $reference
+   * @param string $reference
    *   (optional) The payment reference, where needed for specific transaction
    *   types.
    *
    * @return bool
    *   TRUE or FALSE indicating whether or not the payment was processed.
    */
-  public function processPayment($order, $amount, $txn_type, $reference = NULL) {
+  public function processPayment(OrderInterface $order, $amount, $txn_type, $reference = NULL) {
     // Ensure the cached details are loaded.
     // @todo Figure out which parts of this call are strictly necessary.
     $this->orderLoad($order);
@@ -631,14 +631,14 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
   /**
    * Called when a credit card should be processed.
    *
-   * @param $order
+   * @param \Drupal\uc_order\OrderInterface $order
    *   The order that is being processed. Credit card details supplied by the
    *   user are available in $order->payment_details[].
-   * @param $amount
+   * @param float $amount
    *   The amount that should be charged.
-   * @param $txn_type
+   * @param string $txn_type
    *   The transaction type, one of the UC_CREDIT_* constants.
-   * @param $reference
+   * @param string $reference
    *   (optional) The payment reference, where needed for specific transaction
    *   types.
    *
@@ -650,6 +650,6 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    *   - "log_payment": TRUE if the transaction should be regarded as a
    *     successful payment.
    */
-  abstract protected function chargeCard($order, $amount, $txn_type, $reference = NULL);
+  abstract protected function chargeCard(OrderInterface $order, $amount, $txn_type, $reference = NULL);
 
 }

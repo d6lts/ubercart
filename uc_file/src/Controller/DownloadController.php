@@ -214,9 +214,9 @@ class DownloadController extends ControllerBase {
   /**
    * Handles file downloading and error states.
    *
-   * @param $fid
+   * @param int $fid
    *   The fid of the file specified to download.
-   * @param $key
+   * @param string $key
    *   The hash key of a user's download.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request of the page.
@@ -278,9 +278,9 @@ class DownloadController extends ControllerBase {
    * limits then checks for any implementation of hook_uc_download_authorize().
    * Passing that, the function $this->transferDownload() is called.
    *
-   * @param $fid
+   * @param int $fid
    *   The fid of the file specified to download.
-   * @param $key
+   * @param string $key
    *   The hash key of a user's download.
    */
   protected function validateDownload($file_download, &$user, $ip) {
@@ -351,7 +351,7 @@ class DownloadController extends ControllerBase {
    *
    * @param $file_user
    *   The file_user object from the uc_file_users.
-   * @param $ip
+   * @param string $ip
    *   The string containing the IP address the download is going to.
    */
   protected function transferDownload($file_user, $ip) {
@@ -461,7 +461,7 @@ class DownloadController extends ControllerBase {
    * Processes a file download.
    *
    * @param $file_user
-   * @param $ip
+   * @param string $ip
    */
   protected function logDownload($file_user, $ip) {
 
@@ -493,7 +493,7 @@ class DownloadController extends ControllerBase {
   /**
    * Send 'em packin.
    *
-   * @param $uid
+   * @param int $uid
    */
   protected function redirectDownload($uid = NULL) {
 

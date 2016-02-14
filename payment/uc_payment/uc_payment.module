@@ -133,24 +133,24 @@ function uc_payment_uc_payment_method_checkout_alter(array &$methods, OrderInter
 /**
  * Enters a payment for an order.
  *
- * @param $order_id
+ * @param int $order_id
  *   The order ID to apply the payment to.
- * @param $method
+ * @param string $method
  *   The payment method ID.
- * @param $amount
+ * @param float $amount
  *   The amount of the payment.
- * @param $uid
+ * @param int $uid
  *   (optional) The user ID of the person logging the payment, or 0 if the
  *   payment was processed automatically.
- * @param $data
+ * @param array $data
  *   (optional) Any data that should be serialized and stored with the
  *   payment.
- * @param $comment
+ * @param string $comment
  *   (optional) The comment to enter in the payment log.
- * @param $received
+ * @param int $received
  *   (optional) The timestamp at which the payment was received.
  *
- * @return
+ * @return string
  *   A unique ID identifying the payment.
  */
 function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $comment = '', $received = REQUEST_TIME) {
@@ -312,10 +312,10 @@ function uc_payment_load($receipt_id) {
 /**
  * Loads an array of all the payments for an order.
  *
- * @param $order_id
+ * @param int $order_id
  *   The order's id.
  *
- * @return
+ * @return array|false
  *   Array of payment objects or FALSE if there are none.
  */
 function uc_payment_load_payments($order_id) {

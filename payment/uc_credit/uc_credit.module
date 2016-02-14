@@ -223,12 +223,12 @@ function uc_credit_display_number($number) {
 /**
  * Caches CC details on a pageload for use in various functions.
  *
- * @param $op
+ * @param string $op
  *   The cache operation to perform; either 'save', 'load', or 'clear'.
- * @param $data
+ * @param string $data
  *   The encrypted, serialized string containing the CC data.
  *
- * @return
+ * @return array
  *   An array of credit card details.
  */
 function uc_credit_cache($op, $data = NULL, $encrypted = TRUE) {
@@ -361,12 +361,12 @@ function _uc_credit_valid_card_number($number) {
 /**
  * Validates a start date on a card.
  *
- * @param $month
+ * @param int $month
  *   The 1 or 2-digit numeric representation of the month, i.e. 1, 6, 12.
- * @param $year
+ * @param int $year
  *   The 4-digit numeric representation of the year, i.e. 2008.
  *
- * @return
+ * @return bool
  *   TRUE for cards whose start date is blank (both month and year) or in the
  *   past, FALSE otherwise.
  */
@@ -394,12 +394,12 @@ function _uc_credit_valid_card_start($month, $year) {
 /**
  * Validates an expiration date on a card.
  *
- * @param $month
+ * @param int $month
  *   The 1 or 2-digit numeric representation of the month, i.e. 1, 6, 12.
- * @param $year
+ * @param int $year
  *   The 4-digit numeric representation of the year, i.e. 2008.
  *
- * @return
+ * @return bool
  *   TRUE for non-expired cards, FALSE for expired.
  */
 function _uc_credit_valid_card_expiration($month, $year) {
@@ -417,6 +417,8 @@ function _uc_credit_valid_card_expiration($month, $year) {
 
 /**
  * Validates an issue number on a card; returns TRUE or FALSE.
+ *
+ * @return bool
  */
 function _uc_credit_valid_card_issue($issue) {
   if (empty($issue) || (is_numeric($issue) && $issue > 0)) {
@@ -432,8 +434,8 @@ function _uc_credit_valid_card_issue($issue) {
  * Path to key file is stored in system variable 'uc_credit_encryption_path'.
  * Key file name is stored in constant UC_CREDIT_KEYFILE_NAME.
  *
- * @return
- *   FALSE if no encryption key is found.
+ * @return string|false
+ *   Key, or FALSE if no encryption key is found.
  */
 function uc_credit_encryption_key() {
   static $key = FALSE;
@@ -491,14 +493,14 @@ function uc_credit_transaction_types() {
 /**
  * Stores a credit card authorization to an order's data array.
  *
- * @param $order_id
+ * @param int $order_id
  *   The order associated with the credit card authorization.
- * @param $auth_id
+ * @param string $auth_id
  *   The payment service's ID for the authorization.
- * @param $amount
+ * @param float $amount
  *   The amount that was authorized on the card.
  *
- * @return
+ * @return array
  *   The entire updated data array for the order.
  */
 function uc_credit_log_authorization($order_id, $auth_id, $amount) {
@@ -524,12 +526,12 @@ function uc_credit_log_authorization($order_id, $auth_id, $amount) {
 /**
  * Logs the capture of a prior authorization to an order's data array.
  *
- * @param $order_id
+ * @param int $order_id
  *   The order associated with the credit card capture.
- * @param $auth_id
+ * @param string $auth_id
  *   The payment service's ID for the authorization that was captured.
  *
- * @return
+ * @return array|false
  *   The entire updated data array for the order or FALSE to indicate the
  *   specified authorization was not found.
  */
@@ -558,16 +560,16 @@ function uc_credit_log_prior_auth_capture($order_id, $auth_id) {
 /**
  * Logs a credit card reference to an order's data array.
  *
- * @param $order_id
+ * @param int $order_id
  *   The order associated with the credit card details.
- * @param $ref_id
+ * @param string $ref_id
  *   The payment service's ID for the reference that may be used to charge the
  *     same credit card at a later date.
- * @param $cc_number
+ * @param string $cc_number
  *   The credit card number associated with this reference.  Only the last 4
  *     digits will be stored.
  *
- * @return
+ * @return array
  *   The entire updated data array for the order.
  */
 function uc_credit_log_reference($order_id, $ref_id, $cc_number) {
