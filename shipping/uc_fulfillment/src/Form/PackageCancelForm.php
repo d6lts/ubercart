@@ -43,15 +43,6 @@ class PackageCancelForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames() {
-    return [
-      'uc_fulfillment.settings',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getQuestion() {
     return $this->t('Are you sure you want to cancel the shipment of this package?');
   }
