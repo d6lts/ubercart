@@ -512,13 +512,13 @@ class Package implements PackageInterface {
    * Saves this package.
    */
   public function save() {
-    if (!isset($this->package_id)) {
+    if (!$this->package_id) {
       $this->package_id = db_insert('uc_packages')
         ->fields(array('order_id' => $this->order_id))
         ->execute();
     }
 
-    if (isset($this->products) && $this->products) {
+    if ($this->products) {
       $insert = db_insert('uc_packaged_products')
         ->fields(array('package_id', 'order_product_id', 'qty'));
 
@@ -553,25 +553,25 @@ class Package implements PackageInterface {
       'shipping_type' => $this->shipping_type,
     );
 
-    if (isset($this->pkg_type)) {
+    if ($this->pkg_type) {
       $fields['pkg_type'] = $this->pkg_type;
     }
-    if (isset($this->length) && isset($this->width) && isset($this->height) && isset($this->length_units)) {
+    if ($this->length && $this->width && $this->height && $this->length_units) {
       $fields['length'] = $this->length;
       $fields['width'] = $this->width;
       $fields['height'] = $this->height;
       $fields['length_units'] = $this->length_units;
     }
-    if (isset($this->value)) {
+    if ($this->value) {
       $fields['value'] = $this->value;
     }
-    if (isset($this->sid)) {
+    if ($this->sid) {
       $fields['sid'] = $this->sid;
     }
-    if (isset($this->tracking_number)) {
+    if ($this->tracking_number) {
       $fields['tracking_number'] = $this->tracking_number;
     }
-    if (isset($this->label_image) && is_object($this->label_image)) {
+    if ($this->label_image) {
       $fields['label_image'] = $this->label_image->fid;
     }
 
@@ -592,7 +592,7 @@ class Package implements PackageInterface {
       ->condition('package_id', $this->package_id)
       ->execute();
 
-    if (isset($this->label_image)) {
+    if ($this->label_image) {
       file_usage_delete($this->label_image, 'uc_fulfillment', 'package', $this->package_id);
       file_delete($this->label_image);
     }
