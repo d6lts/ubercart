@@ -12,6 +12,7 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\uc_order\Entity\Order;
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Implements hook_enable().
@@ -51,14 +52,12 @@ function uc_googleanalytics_page_alter(&$page) {
 }
 
 /**
- * Implements hook_uc_order().
+ * Implements hook_uc_order_create().
  */
-function uc_googleanalytics_uc_order($op, $order, $arg2) {
+function uc_googleanalytics_uc_order_create(OrderInterface $order) {
   // If a new order is created during the checkout process...
-  if ($op == 'new') {
-    // Store the order ID for later use.
-    $_SESSION['ucga_order_id'] = $order->id();
-  }
+  // Store the order ID for later use.
+  $_SESSION['ucga_order_id'] = $order->id();
 }
 
 /**
