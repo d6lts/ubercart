@@ -62,8 +62,8 @@ class PackageEditForm extends FormBase {
     foreach ($result as $packaged_product) {
       // Make already packaged products unavailable, except those in this package.
       $products[$packaged_product->order_product_id]->qty->value -= $packaged_product->quantity;
-      if (isset($this->package->products[$packaged_product->order_product_id])) {
-        $products[$packaged_product->order_product_id]->qty->value += $this->package->products[$packaged_product->order_product_id]->qty;
+      if (isset($this->package->getProducts()[$packaged_product->order_product_id])) {
+        $products[$packaged_product->order_product_id]->qty->value += $this->package->getProducts()[$packaged_product->order_product_id]->qty;
       }
     }
 
@@ -78,7 +78,7 @@ class PackageEditForm extends FormBase {
         $row = array();
         $row['checked'] = array(
           '#type' => 'checkbox',
-          '#default_value' => isset($this->package->products[$product->order_product_id->value]),
+          '#default_value' => isset($this->package->getProducts()[$product->order_product_id->value]),
         );
         $row['model'] = array(
           '#markup' => $product->model->value,
@@ -91,7 +91,8 @@ class PackageEditForm extends FormBase {
         $row['qty'] = array(
           '#type' => 'select',
           '#options' => array_combine($range, $range),
-          '#default_value' => isset($this->package->products[$product->order_product_id->value]) ? $this->package->products[$product->order_product_id->value]->qty : 1,
+          '#default_value' => isset($this->package->getProducts()[$product->order_product_id->value]) ?
+                              $this->package->getProducts()[$product->order_product_id->value]->qty : 1,
         );
 
         $form['products'][$product->order_product_id->value] = $row;
@@ -107,7 +108,7 @@ class PackageEditForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Shipping type'),
       '#options' => $options,
-      '#default_value' => isset($this->package->shipping_type) ? $this->package->shipping_type : 'small_package',
+      '#default_value' => $this->package->getShippingType() ? $this->package->getShippingType() : 'small_package',
     );
 
     $form['actions'] = array('#type' => 'actions');
@@ -123,18 +124,17 @@ class PackageEditForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $products = array();
     foreach ($form_state->getValue('products') as $id => $product) {
       if ($product['checked']) {
-        $this->package->products[$id] = (object) $product;
-      }
-      else {
-        unset($this->package->products[$id]);
+        $products[$id] = (object) $product;
       }
     }
-    $this->package->shipping_type = $form_state->getValue('shipping_type');
+    $this->package->setProducts($products);
+    $this->package->setShippingType($form_state->getValue('shipping_type'));
     $this->package->save();
 
-    $form_state->setRedirect('uc_fulfillment.packages', ['uc_order' => $this->package->order_id]);
+    $form_state->setRedirect('uc_fulfillment.packages', ['uc_order' => $this->package->getOrderId()]);
   }
 
 }

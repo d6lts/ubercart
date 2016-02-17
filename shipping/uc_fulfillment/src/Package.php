@@ -129,7 +129,7 @@ class Package implements PackageInterface {
    *
    * @var \Drupal\uc_order\OrderProductInterface[]
    */
-  public $products = array();
+  protected $products = array();
 
   /**
    * Array of Addresses for this package.
@@ -364,6 +364,14 @@ class Package implements PackageInterface {
    */
   public function getLabelImage() {
     return $this->label_image;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addProducts(array $products) {
+    $this->products = array_replace($this->products, $products);
+    return $this;
   }
 
   /**

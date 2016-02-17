@@ -171,11 +171,10 @@ class NewPackageForm extends FormBase {
 
             if ($product['package'] != 0) {
               if (empty($packages[$product['package']])) {
+                // Create an empty package.
                 $packages[$product['package']] = Package::create();
               }
-              // @todo: Replace this by addProduct($id, $product) and mark Package::$products as protected.
-              $packages[$product['package']]->products[$id] = (object) $product;
-
+              $packages[$product['package']]->addProducts([$id => (object) $product]);
               if (!$packages[$product['package']]->getShippingType()) {
                 $packages[$product['package']]->setShippingType($shipping_type);
               }

@@ -258,7 +258,16 @@ interface PackageInterface {
   public function getLabelImage();
 
   /**
-   * Sets the Products in this package.
+   * Adds products to this package.
+   *
+   * @param \Drupal\uc_order\OrderProductInterface[] $products
+   *
+   * @return $this
+   */
+  public function addProducts(array $products);
+
+  /**
+   * Sets all the products in this package.
    *
    * @param \Drupal\uc_order\OrderProductInterface[] $products
    *
@@ -267,7 +276,7 @@ interface PackageInterface {
   public function setProducts(array $products);
 
   /**
-   * Returns the Products in this package.
+   * Returns all the products in this package.
    *
    * @return \Drupal\uc_order\OrderProductInterface[]
    *   The package's products.
@@ -275,7 +284,7 @@ interface PackageInterface {
   public function getProducts();
 
   /**
-   * Sets the Addresses for this package.
+   * Sets the list of ship-from addresses for this package.
    *
    * @param \Drupal\uc_store\AddressInterface[] $addresses
    *
@@ -284,7 +293,7 @@ interface PackageInterface {
   public function setAddresses(array $addresses);
 
   /**
-   * Returns the Addresses for this package.
+   * Returns the list of ship-from addresses for products in this package.
    *
    * @return \Drupal\uc_store\AddressInterface[]
    *   The package's addresses.

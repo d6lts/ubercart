@@ -45,11 +45,11 @@ class PackageWeight extends Weight {
     $package = Package::load($values->{$this->aliases['package_id']});
 
     if ($this->options['format'] == 'numeric') {
-      return $package->weight;
+      return $package->getWeight();
     }
 
     if ($this->options['format'] == 'uc_weight') {
-      return uc_weight_format($package->weight, $package->weight_units);
+      return uc_weight_format($package->getWeight(), $package->getWeightUnits());
     }
   }
 }

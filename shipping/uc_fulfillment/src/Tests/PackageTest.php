@@ -191,6 +191,9 @@ class PackageTest extends UbercartTestBase {
         'Product is available for packaging.'
       );
     }
+    // Save the package to make sure the submit handler is working.
+    $this->drupalPostForm(NULL, array(), t('Save'));
+    $this->assertLinkByHref('admin/store/orders/' . $order->id() . '/packages');
 
     // Third, "Delete".
     $this->drupalGet('admin/store/orders/' . $order->id() . '/packages');
