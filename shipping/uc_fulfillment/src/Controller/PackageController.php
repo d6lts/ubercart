@@ -12,6 +12,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\uc_fulfillment\Package;
+use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -48,8 +49,7 @@ class PackageController extends ControllerBase {
       $row[] = array('data' => array('#plain_text' => $package->id()));
 
       $product_list = array();
-      $result2 = db_query('SELECT op.order_product_id, pp.qty, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id', [':id' => $package->id()]);
-      foreach ($result2 as $product) {
+      foreach ($package->getProducts() as $product) {
         $product_list[] = $product->qty . ' x ' . $product->model;
       }
       // Products.
@@ -81,7 +81,7 @@ class PackageController extends ControllerBase {
 
       // Shipping label.
       if ($package->getSid() && $package->getLabelImage()) {
-        $method = db_query('SELECT shipping_method FROM {uc_shipments} WHERE sid = :sid', [':sid' => $package->getSid()])->fetchField();
+        $shipment = Shipment::load($package->getSid());
         $row[] = Link::fromTextAndUrl("image goes here",
      //     theme('image_style', array(
      //       'style_name' => 'uc_thumbnail',
@@ -89,7 +89,7 @@ class PackageController extends ControllerBase {
      //       'alt' => $this->t('Shipping label'),
      //       'title' => $this->t('Shipping label'),
      //     )),
-          Url::fromUri('base:admin/store/orders/' . $uc_order->id() . '/shipments/labels/' . $method . '/' . $package->getLabelImage()->uri, ['uc_order' => $uc_order->id(), 'method' => $method, 'image_uri' => $package->getLabelImage()->uri])
+          Url::fromUri('base:admin/store/orders/' . $uc_order->id() . '/shipments/labels/' . $shipment->getShippingMethod() . '/' . $package->getLabelImage()->uri, ['uc_order' => $uc_order->id(), 'method' => $shipment->getShippingMethod(), 'image_uri' => $package->getLabelImage()->uri])
         )->toString();
       }
       else {

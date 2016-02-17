@@ -7,9 +7,9 @@
 
 namespace Drupal\uc_fulfillment;
 
-use \Drupal\uc_order\Entity\Order;
-use \Drupal\uc_store\Address;
-use \Drupal\uc_store\AddressInterface;
+use Drupal\uc_order\Entity\Order;
+use Drupal\uc_store\Address;
+use Drupal\uc_store\AddressInterface;
 
 /**
  * Defines the Shipment class.
@@ -469,14 +469,12 @@ class Shipment implements ShipmentInterface {
       'changed' => $this->changed,
     );
     if (!isset($this->sid)) {
-//  drupal_write_record('uc_shipments', $shipment);
       $this->sid = db_insert('uc_shipments')
         ->fields($fields)
         ->execute();
       $this->is_new = TRUE;
     }
     else {
-//  drupal_write_record('uc_shipments', $shipment, 'sid');
       db_update('uc_shipments')
         ->fields($fields)
         ->condition('sid', $this->sid, '=')

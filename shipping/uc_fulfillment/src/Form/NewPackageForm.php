@@ -34,8 +34,8 @@ class NewPackageForm extends FormBase {
     $shipping_types_products = array();
     foreach ($uc_order->products as $product) {
       if (uc_order_product_is_shippable($product)) {
-        $product->shipping_type = uc_product_get_shipping_type($product);
-        $shipping_types_products[$product->shipping_type][] = $product;
+        $shipping_type = uc_product_get_shipping_type($product);
+        $shipping_types_products[$shipping_type][] = $product;
       }
     }
 

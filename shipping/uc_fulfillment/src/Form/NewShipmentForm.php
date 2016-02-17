@@ -89,7 +89,7 @@ class NewShipmentForm extends FormBase {
       $form['shipping_types'][$shipping_type]['table'] = array(
         '#type' => 'table',
         '#header' => $header,
-        '#empty' => $this->t('There are no products available for this type of package.'),
+        '#empty' => $this->t('There are no packages available to ship.'),
       );
 
       foreach ($packages as $package) {

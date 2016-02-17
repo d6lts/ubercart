@@ -91,6 +91,9 @@ class PackageCancelForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $shipment = Shipment::load($this->package->getSid());
     $methods = \Drupal::moduleHandler()->invokeAll('uc_fulfillment_method');
+    // The notion of "cancel" is specific to the fulfillment method, therefore
+    // we delegate all the work to the plugin.
+    // @todo: Replace this with calls to the plugin cancel method instead of hooks.
     if (isset($methods[$shipment->getShippingMethod()]['cancel']) &&
         function_exists($methods[$shipment->getShippingMethod()]['cancel'])) {
       $result = call_user_func($methods[$shipment->getShippingMethod()]['cancel'], $shipment->getTrackingNumber(), array($this->package->getTrackingNumber()));

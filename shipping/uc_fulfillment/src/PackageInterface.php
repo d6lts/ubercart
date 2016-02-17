@@ -260,7 +260,7 @@ interface PackageInterface {
   /**
    * Sets the Products in this package.
    *
-   * @param array $products
+   * @param \Drupal\uc_order\OrderProductInterface[] $products
    *
    * @return $this
    */
@@ -269,7 +269,7 @@ interface PackageInterface {
   /**
    * Returns the Products in this package.
    *
-   * @return array
+   * @return \Drupal\uc_order\OrderProductInterface[]
    *   The package's products.
    */
   public function getProducts();
