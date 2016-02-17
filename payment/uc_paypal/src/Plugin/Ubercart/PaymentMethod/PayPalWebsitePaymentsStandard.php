@@ -300,15 +300,15 @@ class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implem
       $i = 0;
       foreach ($order->products as $item) {
         $i++;
-        $data['amount_' . $i] = uc_currency_format($item->price, FALSE, FALSE, '.');
-        $data['item_name_' . $i] = $item->title;
-        $data['item_number_' . $i] = $item->model;
-        $data['quantity_' . $i] = $item->qty;
+        $data['amount_' . $i] = uc_currency_format($item->price->value, FALSE, FALSE, '.');
+        $data['item_name_' . $i] = $item->title->value;
+        $data['item_number_' . $i] = $item->model->value;
+        $data['quantity_' . $i] = $item->qty->value;
 
         // PayPal will only display the first two...
-        if (!empty($item->data['attributes']) && count($item->data['attributes']) > 0) {
+        if (!empty($item->data->attributes)) {
           $o = 0;
-          foreach ($item->data['attributes'] as $name => $setting) {
+          foreach ($item->data->attributes as $name => $setting) {
             $data['on' . $o . '_' . $i] = $name;
             $data['os' . $o . '_' . $i] = implode(', ', (array)$setting);
             $o++;
