@@ -44,7 +44,7 @@ use Drupal\user\UserInterface;
  *   },
  *   field_ui_base_route = "uc_order.workflow",
  *   links = {
- *     "canonical" = "/user/{user}/orders",
+ *     "canonical" = "/admin/store/orders/{uc_order}",
  *     "delete-form" = "/admin/store/orders/{uc_order}/delete",
  *     "edit-form" = "/admin/store/orders/{uc_order}/edit",
  *     "admin-form" = "/admin/store/orders",
