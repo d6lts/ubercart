@@ -72,7 +72,7 @@ class TestGateway extends CreditCardPaymentMethodBase {
     $user = \Drupal::currentUser();
 
     // cc_exp_month and cc_exp_year are also validated by
-    // _uc_credit_valid_card_expiration() on the checkout form.
+    // CreditCardPaymentMethodBase::validateExpirationDate().
     $month = $order->payment_details['cc_exp_month'];
     $year  = $order->payment_details['cc_exp_year'];
     if ($year < 100) {

@@ -179,7 +179,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     if ($session->has('clear_cc') || !isset($order->payment_details['cc_number'])) {
       $default_num = NULL;
     }
-    elseif (!_uc_credit_valid_card_number($order->payment_details['cc_number'])) {
+    elseif (!$this->validateCardNumber($order->payment_details['cc_number'])) {
       // Display the number as is if it does not validate so it can be corrected.
       $default_num = $order->payment_details['cc_number'];
     }
@@ -258,7 +258,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       if (empty($order->payment_details['cc_issue'])) {
         $default_card_issue = NULL;
       }
-      elseif (!_uc_credit_valid_card_issue($order->payment_details['cc_issue'])) {
+      elseif (!$this->validateIssueNumber($order->payment_details['cc_issue'])) {
         // Display the Issue Number as is if it does not validate so it can be
         // corrected.
         $default_card_issue = $order->payment_details['cc_issue'];
@@ -284,7 +284,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       if ($session->has('clear_cc') || empty($order->payment_details['cc_cvv'])) {
         $default_cvv = NULL;
       }
-      elseif (!_uc_credit_valid_cvv($order->payment_details['cc_cvv'])) {
+      elseif (!$this->validateCvv($order->payment_details['cc_cvv'])) {
         // Display the CVV as is if it does not validate so it can be corrected.
         $default_cvv = $order->payment_details['cc_cvv'];
       }
@@ -339,7 +339,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     if (!empty($fields['owner'])) {
       $review[] = array('title' => $this->t('Card owner'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_owner']));
     }
-    $review[] = array('title' => $this->t('Card number'), 'data' => uc_credit_display_number($order->payment_details['cc_number']));
+    $review[] = array('title' => $this->t('Card number'), 'data' => $this->displayCardNumber($order->payment_details['cc_number']));
     if (!empty($fields['start'])) {
       $start = $order->payment_details['cc_start_month'] . '/' . $order->payment_details['cc_start_year'];
       $review[] = array('title' => $this->t('Start date'), 'data' => strlen($start) > 1 ? $start : '');
@@ -375,7 +375,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       }
 
       if (!empty($order->payment_details['cc_number'])) {
-        $rows[] = $this->t('Card number') . ': ' . uc_credit_display_number($order->payment_details['cc_number']);
+        $rows[] = $this->t('Card number') . ': ' . $this->displayCardNumber($order->payment_details['cc_number']);
       }
 
       if (!empty($order->payment_details['cc_start_month']) && !empty($order->payment_details['cc_start_year'])) {
@@ -421,7 +421,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     $build = array();
 
     if (!empty($order->payment_details['cc_number'])) {
-      $build['#markup'] = $this->t('Card number') . ':<br />' . uc_credit_display_number($order->payment_details['cc_number']);
+      $build['#markup'] = $this->t('Card number') . ':<br />' . $this->displayCardNumber($order->payment_details['cc_number']);
     }
 
     return $build;
@@ -490,20 +490,20 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
 
     // Validate the credit card number.
-    if (!_uc_credit_valid_card_number($cc_data['cc_number'])) {
+    if (!$this->validateCardNumber($cc_data['cc_number'])) {
       $form_state->setErrorByName('panes][payment][details][cc_number', $this->t('You have entered an invalid credit card number.'));
       $return = FALSE;
     }
 
     // Validate the start date (if entered).
-    if (!empty($fields['start']) && !_uc_credit_valid_card_start($cc_data['cc_start_month'], $cc_data['cc_start_year'])) {
+    if (!empty($fields['start']) && !$this->validateStartDate($cc_data['cc_start_month'], $cc_data['cc_start_year'])) {
       $form_state->setErrorByName('panes][payment][details][cc_start_month', $this->t('The start date you entered is invalid.'));
       $form_state->setErrorByName('panes][payment][details][cc_start_year');
       $return = FALSE;
     }
 
     // Validate the card expiration date.
-    if (!_uc_credit_valid_card_expiration($cc_data['cc_exp_month'], $cc_data['cc_exp_year'])) {
+    if (!$this->validateExpirationDate($cc_data['cc_exp_month'], $cc_data['cc_exp_year'])) {
       $form_state->setErrorByName('panes][payment][details][cc_exp_month', $this->t('The credit card you entered has expired.'));
       $form_state->setErrorByName('panes][payment][details][cc_exp_year');
       $return = FALSE;
@@ -511,13 +511,13 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
     // Validate the issue number (if entered).  With issue numbers, '01' is
     // different from '1', but is_numeric() is still appropriate.
-    if (!empty($fields['issue']) && !_uc_credit_valid_card_issue($cc_data['cc_issue'])) {
+    if (!empty($fields['issue']) && !$this->validateIssueNumber($cc_data['cc_issue'])) {
       $form_state->setErrorByName('panes][payment][details][cc_issue', $this->t('The issue number you entered is invalid.'));
       $return = FALSE;
     }
 
     // Validate the CVV number if enabled.
-    if (!empty($fields['cvv']) && !_uc_credit_valid_cvv($cc_data['cc_cvv'])) {
+    if (!empty($fields['cvv']) && !$this->validateCvv($cc_data['cc_cvv'])) {
       $form_state->setErrorByName('panes][payment][details][cc_cvv', $this->t('You have entered an invalid CVV number.'));
       $return = FALSE;
     }
@@ -651,5 +651,146 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    *     successful payment.
    */
   abstract protected function chargeCard(OrderInterface $order, $amount, $txn_type, $reference = NULL);
+
+  /**
+   * Returns a credit card number with appropriate masking.
+   */
+  protected function displayCardNumber($number) {
+    if (strlen($number) == 4) {
+      return t('(Last 4) ') . $number;
+    }
+
+    return str_repeat('-', 12) . substr($number, -4);
+  }
+
+  /**
+   * Validates a credit card number during checkout.
+   *
+   * @see https://en.wikipedia.org/wiki/Luhn_algorithm
+   */
+  protected function validateCardNumber($number) {
+    $id = substr($number, 0, 1);
+    $types = $this->getEnabledTypes();
+    if (($id == 3 && empty($types['amex'])) ||
+      ($id == 4 && empty($types['visa'])) ||
+      ($id == 5 && empty($types['mastercard'])) ||
+      ($id == 6 && empty($types['discover'])) ||
+      !ctype_digit($number)) {
+      return FALSE;
+    }
+
+    $total = 0;
+    for ($i = 0; $i < strlen($number); $i++) {
+      $digit = substr($number, $i, 1);
+      if ((strlen($number) - $i - 1) % 2) {
+        $digit *= 2;
+        if ($digit > 9) {
+          $digit -= 9;
+        }
+      }
+      $total += $digit;
+    }
+
+    if ($total % 10 != 0) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Validates a CVV number during checkout.
+   */
+  protected function validateCvv($cvv) {
+    $digits = array();
+
+    $types = $this->getEnabledTypes();
+    if (!empty($types['visa']) ||
+      !empty($types['mastercard']) ||
+      !empty($types['discover'])) {
+      $digits[] = 3;
+    }
+    if (!empty($types['amex'])) {
+      $digits[] = 4;
+    }
+
+    // Fail validation if it's non-numeric or an incorrect length.
+    if (!is_numeric($cvv) || (count($digits) > 0 && !in_array(strlen($cvv), $digits))) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Validates a start date on a card.
+   *
+   * @param int $month
+   *   The 1 or 2-digit numeric representation of the month, i.e. 1, 6, 12.
+   * @param int $year
+   *   The 4-digit numeric representation of the year, i.e. 2008.
+   *
+   * @return bool
+   *   TRUE for cards whose start date is blank (both month and year) or in the
+   *   past, FALSE otherwise.
+   */
+  protected function validateStartDate($month, $year) {
+    if (empty($month) && empty($year)) {
+      return TRUE;
+    }
+
+    if (empty($month) || empty($year)) {
+      return FALSE;
+    }
+
+    if ($year > date('Y')) {
+      return FALSE;
+    }
+    elseif ($year == date('Y')) {
+      if ($month > date('n')) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Validates an expiration date on a card.
+   *
+   * @param int $month
+   *   The 1 or 2-digit numeric representation of the month, i.e. 1, 6, 12.
+   * @param int $year
+   *   The 4-digit numeric representation of the year, i.e. 2008.
+   *
+   * @return bool
+   *   TRUE for non-expired cards, FALSE for expired.
+   */
+  protected function validateExpirationDate($month, $year) {
+    if ($year < date('Y')) {
+      return FALSE;
+    }
+    elseif ($year == date('Y')) {
+      if ($month < date('n')) {
+        return FALSE;
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Validates an issue number on a card.
+   *
+   * @return bool
+   *   TRUE if the issue number if valid, FALSE otherwise.
+   */
+  protected function validateIssueNumber($issue) {
+    if (empty($issue) || (is_numeric($issue) && $issue > 0)) {
+      return TRUE;
+    }
+
+    return FALSE;
+  }
 
 }
