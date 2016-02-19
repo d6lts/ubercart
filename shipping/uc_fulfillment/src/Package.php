@@ -538,22 +538,25 @@ class Package implements PackageInterface {
             'qty' => $product->qty,
           ));
 
-        $result = db_query('SELECT data FROM {uc_order_products} WHERE order_product_id = :id', [':id' => $id]);
-        if ($order_product = $result->fetchObject()) {
-          $order_product->data = unserialize($order_product->data);
-          $order_product->data['package_id'] = intval($this->package_id);
-
-          db_update('uc_order_products')
-            ->fields(array('data' => serialize($order_product->data)))
-            ->condition('order_product_id', $id)
-            ->execute();
+        // Save the package_id to the OrderProduct.
+        // 'package_id' is a key in the serialized 'data' array.
+        // data->package_id is an array keyed by package ID with a
+        // value equal to the quantity in that package.
+        $order_product = OrderProduct::load($id);
+        if (NULL != $order_product) {
+          $package_array = $order_product->data->package_id;
+          $package_array[intval($this->package_id)] = (int) $product->qty;
+          $order_product->data->package_id = $package_array;
+          $order_product->save();
         }
       }
 
+      // Remove any old data for this package.
       db_delete('uc_packaged_products')
         ->condition('package_id', $this->package_id)
         ->execute();
 
+      // Write the current data for this package.
       $insert->execute();
     }
 
@@ -604,6 +607,18 @@ class Package implements PackageInterface {
     if ($this->label_image) {
       file_usage_delete($this->label_image, 'uc_fulfillment', 'package', $this->package_id);
       file_delete($this->label_image);
+    }
+
+    // Remove the package_id from the OrderProduct.
+    foreach ($this->products as $id => $product) {
+      $order_product = OrderProduct::load($id);
+      if (NULL != $order_product) {
+        // There may be multiple packages per OrderProduct.
+        $package_array = $order_product->data->package_id;
+        unset($package_array[$this->package_id]);
+        $order_product->data->package_id = $package_array;
+        $order_product->save();
+      }
     }
 
     drupal_set_message(t('Package @id has been deleted.', ['@id' => $this->package_id]));
