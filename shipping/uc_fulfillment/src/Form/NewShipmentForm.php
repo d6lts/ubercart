@@ -51,19 +51,6 @@ class NewShipmentForm extends FormBase {
         // This package is already part of a shipment.
         break;
       }
-//@todo: This looks like the code in Package::load() ... should try to replace it here
-// to eliminate the SQL
-      $products = array();
-      $weight = 0;
-      $result2 = db_query('SELECT pp.order_product_id, pp.qty, pp.qty * op.weight__value AS weight, op.weight__units, op.title, op.model FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id', [':id' => $package->id()]);
-      foreach ($result2 as $product) {
-        // Normalize all weights to default units.
-        $units_conversion = uc_weight_conversion($product->weight__units, $units);
-        $weight += $product->weight * $units_conversion;
-        $products[$product->order_product_id] = $product;
-      }
-      $package->setWeight($weight);
-      $package->setProducts($products);
       $packages_by_type[$package->getShippingType()][$package->id()] = $package;
     }
 
