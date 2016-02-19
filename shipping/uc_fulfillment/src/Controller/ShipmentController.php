@@ -403,7 +403,13 @@ class ShipmentController extends ControllerBase {
     $rows[] = array($this->t('Package type:'), isset($pkg_type) ? $pkg_type : array('data' => array('#plain_text' => $package->getPackageType())));
 
     if ($package->getLength() && $package->getWidth() && $package->getHeight()) {
-      $rows[] = array($this->t('Dimensions:'), $this->t('@l x @w x @h', ['@l' => uc_length_format($package->getLength()), '@w' => uc_length_format($package->getWidth()), '@h' => uc_length_format($package->getHeight())]));
+      $units = $package->getLengthUnits();
+      $rows[] = array($this->t('Dimensions:'), $this->t('@l x @w x @h', ['@l' => uc_length_format($package->getLength(), $units), '@w' => uc_length_format($package->getWidth(), $units), '@h' => uc_length_format($package->getHeight(), $units)]));
+    }
+
+    if ($package->getWeight()) {
+      $units = $package->getWeightUnits();
+      $rows[] = array($this->t('Weight:'), uc_weight_format($package->getWeight(), $units));
     }
 
     $rows[] = array($this->t('Insured value:'), array('data' => array('#theme' => 'uc_price', '#price' => $package->getValue())));
