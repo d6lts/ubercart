@@ -120,7 +120,7 @@ class Package implements PackageInterface {
    *
    * @var string
    */
-  protected $label_image = '';
+  protected $label_image;
 
   /** These variables don't map to DB columns */
 
@@ -132,8 +132,7 @@ class Package implements PackageInterface {
   protected $products = array();
 
   /**
-   * Array of Addresses for this package.
-   * @todo: Why is this an array?
+   * Array of ship-from addresses for products in this package.
    *
    * @var \Drupal\uc_store\Address[]
    */
@@ -423,6 +422,10 @@ class Package implements PackageInterface {
    * Constructor.
    */
   protected function __construct() {
+    $store_config = \Drupal::config('uc_store.settings');
+    $this->weight_units = $store_config->get('weight.units');
+    $this->length_units = $store_config->get('length.units');
+    $this->currency = $store_config->get('currency.code');
   }
 
   /**
@@ -521,12 +524,46 @@ class Package implements PackageInterface {
    * Saves this package.
    */
   public function save() {
-    if (!$this->package_id) {
-      $this->package_id = db_insert('uc_packages')
-        ->fields(array('order_id' => $this->order_id))
-        ->execute();
+    $status = '';
+    $fields = array(
+      'order_id' => $this->order_id,
+      'shipping_type' => $this->shipping_type,
+      'pkg_type' => $this->pkg_type,
+      'length' => $this->length,
+      'width' => $this->width,
+      'height' => $this->height,
+      'length_units' => $this->length_units,
+      'weight' => $this->weight,
+      'weight_units' => $this->weight_units,
+      'value' => $this->value,
+      'currency' => $this->currency,
+      'tracking_number' => $this->tracking_number,
+    );
+
+    if ($this->sid) {
+      $fields['sid'] = $this->sid;
+    }
+    if ($this->label_image) {
+      $fields['label_image'] = $this->label_image->fid;
     }
 
+    if (!$this->package_id) {
+      // This is a new package, do an INSERT.
+      $this->package_id = db_insert('uc_packages')
+        ->fields($fields)
+        ->execute();
+      $status = SAVED_NEW;
+    }
+    else {
+      // This is a package we're modifying, do an UPDATE.
+      db_update('uc_packages')
+        ->fields($fields)
+        ->condition('package_id', $this->package_id)
+        ->execute();
+      $status = SAVED_UPDATED;
+    }
+
+    // Now take care of saving the product data.
     if ($this->products) {
       $insert = db_insert('uc_packaged_products')
         ->fields(array('package_id', 'order_product_id', 'qty'));
@@ -560,37 +597,7 @@ class Package implements PackageInterface {
       $insert->execute();
     }
 
-    $fields = array(
-      'order_id' => $this->order_id,
-      'shipping_type' => $this->shipping_type,
-    );
-
-    if ($this->pkg_type) {
-      $fields['pkg_type'] = $this->pkg_type;
-    }
-    if ($this->length && $this->width && $this->height && $this->length_units) {
-      $fields['length'] = $this->length;
-      $fields['width'] = $this->width;
-      $fields['height'] = $this->height;
-      $fields['length_units'] = $this->length_units;
-    }
-    if ($this->value) {
-      $fields['value'] = $this->value;
-    }
-    if ($this->sid) {
-      $fields['sid'] = $this->sid;
-    }
-    if ($this->tracking_number) {
-      $fields['tracking_number'] = $this->tracking_number;
-    }
-    if ($this->label_image) {
-      $fields['label_image'] = $this->label_image->fid;
-    }
-
-    db_update('uc_packages')
-      ->fields($fields)
-      ->condition('package_id', $this->package_id)
-      ->execute();
+    return $status;
   }
 
   /**
