@@ -12,7 +12,7 @@ uc_2checkout.settings:
       label: 'Use direct or dynamic checkout'
     demo:
       type: boolean
-      label: 'Flag to indicate demo mode for gateway - no actual money will be transfered if TRUE'
+      label: 'Flag to indicate demo mode for gateway - no actual money will be transferred if TRUE'
     language:
       type: string
       label: 'Language code'
@@ -44,7 +44,7 @@ payment_method.settings.2checkout:
       label: 'Use direct or dynamic checkout'
     demo:
       type: boolean
-      label: 'Flag to indicate demo mode for gateway - no actual money will be transfered if TRUE'
+      label: 'Flag to indicate demo mode for gateway - no actual money will be transferred if TRUE'
     language:
       type: string
       label: 'Language code'

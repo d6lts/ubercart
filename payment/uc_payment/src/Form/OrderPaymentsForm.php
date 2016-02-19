@@ -7,7 +7,8 @@
 
 namespace Drupal\uc_payment\Form;
 
-use Drupal\Component\Utility\Xss;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -163,7 +164,7 @@ class OrderPaymentsForm extends FormBase {
         '#default_value' => $this->order->getPaymentMethodId(),
       );
       $form['payments']['new']['amount'] = array(
-        '#type' => 'textfield',
+        '#type' => 'uc_price',
         '#title' => $this->t('Amount'),
         '#title_display' => 'invisible',
         '#size' => 6,

@@ -56,7 +56,7 @@ class FileController extends ControllerBase {
   }
 
   /**
-   *
+   * Displays list of all files available to attach to products.
    *
    * @return array
    *   A render array.
@@ -103,6 +103,7 @@ class FileController extends ControllerBase {
     foreach ($result as $file) {
       // All files are shown here, including files which are not attached to products.
       if (isset($file->nid)) {
+        // These are attached to products.
         $options[$file->fid] = array(
           'checked' => array('data' => array('#type' => 'checkbox', '#default_value' => 0)),
           'filename' => array(
@@ -122,6 +123,7 @@ class FileController extends ControllerBase {
         );
       }
       else {
+        // These are not attached to products.
         $options[$file->fid] = array(
           'checked' => array('data' => array('#type' => 'checkbox', '#default_value' => 0)),
           'filename' => array(
