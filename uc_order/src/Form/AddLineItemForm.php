@@ -9,6 +9,7 @@ namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
 
 /**
@@ -57,7 +58,11 @@ class AddLineItemForm extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Add line item'),
-      '#suffix' => Link::createFromRoute($this->t('Cancel'), 'entity.uc_order.edit_form', ['uc_order' => $order->id()])->toString(),
+    );
+    $form['actions']['cancel'] = array(
+      '#type' => 'link',
+      '#title' => $this->t('Cancel'),
+      '#url' => Url::fromRoute('entity.uc_order.edit_form', ['uc_order' => $order->id()]),
     );
 
     return $form;
