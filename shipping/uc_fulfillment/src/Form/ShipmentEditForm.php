@@ -67,10 +67,13 @@ class ShipmentEditForm extends FormBase {
 
       // Create list of products and get a representative product (last one in
       // the loop) to use for some default values
+      $product_list = array();
       $declared_value = 0;
+      $products_weight = 0;
       foreach ($package->getProducts() as $product) {
-        $product_list[]  = $product->qty . ' x ' . $product->model;
-        $declared_value += $product->qty * $product->price;
+        $product_list[]   = $product->qty . ' x ' . $product->model;
+        $declared_value  += $product->qty * $product->price;
+        $products_weight += $product->qty * $product->weight * uc_weight_conversion($product->weight_units, $package->getWeightUnits());
       }
       $pkg_form = array(
         '#type' => 'fieldset',
@@ -94,7 +97,7 @@ class ShipmentEditForm extends FormBase {
       $pkg_form['declared_value'] = array(
         '#type' => 'uc_price',
         '#title' => $this->t('Declared value'),
-        '#default_value' => $package->getValue() ? $package->getValue() : $declared_value,
+        '#default_value' => !empty($package->getValue()) ? $package->getValue() : $declared_value,
       );
       $pkg_form['weight'] = array(
         '#type' => 'container',
@@ -107,7 +110,7 @@ class ShipmentEditForm extends FormBase {
         '#title' => $this->t('Weight'),
         '#min' => 0,
         '#step' => 'any',
-        '#default_value' => $package->getWeight(),
+        '#default_value' => !empty($package->getWeight()) ? $package->getWeight() : $products_weight,
         '#size' => 10,
       );
       $pkg_form['weight']['units'] = array(
@@ -119,7 +122,7 @@ class ShipmentEditForm extends FormBase {
           'oz' => $this->t('Ounces'),
           'g'  => $this->t('Grams'),
         ),
-        '#default_value' => $package->getWeightUnits() ? $package->getWeightUnits() : \Drupal::config('uc_store.settings')->get('weight.units'),
+        '#default_value' => $package->getWeightUnits(),
       );
       $pkg_form['dimensions'] = array(
         '#type' => 'container',
@@ -161,7 +164,7 @@ class ShipmentEditForm extends FormBase {
           'cm' => $this->t('Centimeters'),
           'mm' => $this->t('Millimeters'),
         ),
-        '#default_value' => $package->getLengthUnits() ? $package->getLengthUnits() : \Drupal::config('uc_store.settings')->get('length.units'),
+        '#default_value' => $package->getLengthUnits(),
       );
       $pkg_form['tracking_number'] = array(
         '#type' => 'textfield',
