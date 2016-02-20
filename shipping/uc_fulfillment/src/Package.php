@@ -482,20 +482,20 @@ class Package implements PackageInterface {
         $package = Package::create($assoc);
 
         $products = array();
-        $description = '';
+        $description = array();
         $addresses = array();
-        $result = db_query('SELECT op.order_product_id, pp.qty, pp.qty * op.weight__value AS weight, op.weight__units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id', [':id' => $package->package_id]);
+        $result = db_query('SELECT op.order_product_id, pp.qty, op.weight__value AS weight, op.weight__units as weight_units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id', [':id' => $package->package_id]);
         foreach ($result as $product) {
           $address = uc_quote_get_default_shipping_address($product->nid);
           if (!in_array($address, $addresses)) {
             $addresses[] = $address;
           }
-          $description .= ', ' . $product->qty . ' x ' . $product->model;
+          $description[] = $product->qty . ' x ' . $product->model;
           $product->data = unserialize($product->data);
           $products[$product->order_product_id] = $product;
         }
         $package->addresses = $addresses;
-        $package->description = substr($description, 2);
+        $package->description = implode(', ', $description);
         $package->products = $products;
 
         if ($package->label_image && $image = file_load($package->label_image)) {
