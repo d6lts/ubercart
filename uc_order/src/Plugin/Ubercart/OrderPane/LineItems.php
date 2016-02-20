@@ -55,31 +55,29 @@ class LineItems extends EditableOrderPanePluginBase {
     }
     usort($line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
-    $build['line_items'] = array(
-      '#prefix' => '<table class="line-item-table">',
-      '#suffix' => '</table>',
-    );
+    $rows = array();
     foreach ($line_items as $item) {
-      $table_row = array(
-        '#prefix' => '<tr>',
-        '#suffix' => '</tr>',
+      $rows[] = array(
+        'data' => array(
+          // Title column.
+          array(
+            'data' => array('#markup' => $item['title']),
+            'class' => array('li-title'),
+          ),
+          // Amount column.
+          array(
+            'data' => array('#theme' => 'uc_price', '#price' => $item['amount']),
+            'class' => array('li-amount'),
+          ),
+        ),
       );
-
-      $table_row['title'] = array(
-        '#markup' => $item['title'],
-        '#prefix' => '<td class="li-title">',
-        '#suffix' => '</td>',
-      );
-
-      $table_row['amount'] = array(
-        '#theme' => 'uc_price',
-        '#price' => $item['amount'],
-        '#prefix' => '<td class="li-amount">',
-        '#suffix' => '</td>',
-      );
-
-      $build['line_items'][] = $table_row;
     }
+
+    $build['line_items'] = array(
+      '#type' => 'table',
+      '#rows' => $rows,
+      '#attributes' => array('class' => array('line-item-table')),
+    );
 
     return $build;
   }
