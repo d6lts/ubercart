@@ -483,26 +483,19 @@ class Package implements PackageInterface {
 
         $products = array();
         $description = '';
-        $weight = 0;
-        $units = \Drupal::config('uc_store.settings')->get('weight.units');
         $addresses = array();
         $result = db_query('SELECT op.order_product_id, pp.qty, pp.qty * op.weight__value AS weight, op.weight__units, op.nid, op.title, op.model, op.price, op.data FROM {uc_packaged_products} pp LEFT JOIN {uc_order_products} op ON op.order_product_id = pp.order_product_id WHERE pp.package_id = :id ORDER BY op.order_product_id', [':id' => $package->package_id]);
         foreach ($result as $product) {
           $address = uc_quote_get_default_shipping_address($product->nid);
-          // TODO: Lodge complaint that array_unique() compares as strings.
           if (!in_array($address, $addresses)) {
             $addresses[] = $address;
           }
           $description .= ', ' . $product->qty . ' x ' . $product->model;
-          // Normalize all weights to default units.
-          $weight += $product->weight * uc_weight_conversion($product->weight__units, $units);
           $product->data = unserialize($product->data);
           $products[$product->order_product_id] = $product;
         }
         $package->addresses = $addresses;
         $package->description = substr($description, 2);
-        $package->weight = $weight;
-        $package->weight_units = $units;
         $package->products = $products;
 
         if ($package->label_image && $image = file_load($package->label_image)) {
@@ -563,7 +556,7 @@ class Package implements PackageInterface {
       $status = SAVED_UPDATED;
     }
 
-    // Now take care of saving the product data.
+    // Now take care of saving the product relations.
     if ($this->products) {
       $insert = db_insert('uc_packaged_products')
         ->fields(array('package_id', 'order_product_id', 'qty'));
@@ -581,7 +574,7 @@ class Package implements PackageInterface {
         // value equal to the quantity in that package.
         $order_product = OrderProduct::load($id);
         if (NULL != $order_product) {
-          $package_array = $order_product->data->package_id;
+          $package_array = (array) $order_product->data->package_id;
           $package_array[intval($this->package_id)] = (int) $product->qty;
           $order_product->data->package_id = $package_array;
           $order_product->save();
