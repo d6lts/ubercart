@@ -93,10 +93,10 @@ function uc_quote_schema() {
       ),
       'zone' => array(
         'description' => 'The address state/province, from {uc_countries_zones}.zone_id.',
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 32,
         'not null' => TRUE,
-        'default' => 0,
+        'default' => '',
       ),
       'postal_code' => array(
         'description' => 'The address postal code.',
@@ -107,10 +107,10 @@ function uc_quote_schema() {
       ),
       'country' => array(
         'description' => 'The address country, from {uc_countries}.country_id.',
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => 2,
         'not null' => TRUE,
-        'default' => 0,
+        'default' => '',
       ),
       'phone' => array(
         'description' => 'The address phone number.',
