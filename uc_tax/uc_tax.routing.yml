@@ -43,28 +43,28 @@ entity.uc_tax_rate.collection:
     _permission: 'administer taxes'
 
 entity.uc_tax_rate.add_form:
-  path: '/admin/store/config/tax/add'
+  path: '/admin/store/config/tax/add/{plugin_id}'
   defaults:
-    _entity_form: 'uc_tax_rate.add'
+    _controller: '\Drupal\uc_tax\Controller\TaxRateController::addForm'
     _title: 'Add tax rate'
   requirements:
-    _entity_create_access: 'uc_tax_rate'
+    _permission: 'administer taxes'
 
 entity.uc_tax_rate.edit_form:
-  path: '/admin/store/config/tax/{uc_tax_rate}/edit'
+  path: '/admin/store/config/tax/{uc_tax_rate}'
   defaults:
-    _entity_form: 'uc_tax_rate.edit'
+    _entity_form: 'uc_tax_rate.default'
     _title: 'Edit tax rate'
   requirements:
-    _entity_access: 'uc_tax_rate.update'
+    _permission: 'administer taxes'
 
 entity.uc_tax_rate.clone:
   path: '/admin/store/config/tax/{uc_tax_rate}/clone'
   defaults:
-    _controller: '\Drupal\uc_tax\Controller\TaxController::saveClone'
+    _controller: '\Drupal\uc_tax\Controller\TaxRateController::saveClone'
     _title: 'Clone tax rate'
   requirements:
-    _entity_create_access: 'uc_tax_rate'
+    _permission: 'administer taxes'
 
 entity.uc_tax_rate.delete_form:
   path: '/admin/store/config/tax/{uc_tax_rate}/delete'
@@ -72,4 +72,20 @@ entity.uc_tax_rate.delete_form:
     _entity_form: 'uc_tax_rate.delete'
     _title: 'Delete tax rate'
   requirements:
-    _entity_access: 'uc_tax_rate.delete'
+    _permission: 'administer taxes'
+
+entity.uc_tax_rate.enable:
+  path: '/admin/store/config/tax/{uc_tax_rate}/enable'
+  defaults:
+    _controller: '\Drupal\uc_tax\Controller\TaxRateController::performOperation'
+    op: 'enable'
+  requirements:
+    _permission: 'administer taxes'
+
+entity.uc_tax_rate.disable:
+  path: '/admin/store/config/tax/{uc_tax_rate}/disable'
+  defaults:
+    _controller: '\Drupal\uc_tax\Controller\TaxRateController::performOperation'
+    op: 'disable'
+  requirements:
+    _permission: 'administer taxes'

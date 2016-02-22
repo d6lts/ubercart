@@ -18,23 +18,40 @@ use Drupal\uc_tax\TaxRateInterface;
  *   label = @Translation("Tax rate"),
  *   handlers = {
  *     "access" = "Drupal\Core\Entity\EntityAccessControlHandler",
- *     "list_builder" = "Drupal\uc_tax\Controller\TaxRateListBuilder",
+ *     "list_builder" = "Drupal\uc_tax\TaxRateListBuilder",
  *     "form" = {
- *       "add" = "Drupal\uc_tax\Form\TaxRateAddForm",
- *       "edit" = "Drupal\uc_tax\Form\TaxRateEditForm",
+ *       "default" = "Drupal\uc_tax\Form\TaxRateForm",
  *       "delete" = "Drupal\uc_tax\Form\TaxRateDeleteForm"
  *     }
  *   },
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label"
+ *     "label" = "label",
+ *     "status" = "status",
+ *     "weight" = "weight"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "weight",
+ *     "jurisdiction",
+ *     "shippable",
+ *     "display_include",
+ *     "inclusion_text",
+ *     "product_types",
+ *     "line_item_types",
+ *     "plugin",
+ *     "settings",
  *   },
  *   config_prefix = "rate",
  *   admin_permission = "administer taxes",
  *   links = {
  *     "edit-form" = "/admin/store/config/tax/{uc_tax_rate}",
+ *     "enable" = "/admin/store/config/tax/{uc_tax_rate}/enable",
+ *     "disable" = "/admin/store/config/tax/{uc_tax_rate}/disable",
  *     "delete-form" = "/admin/store/config/tax/{uc_tax_rate}/delete",
- *     "clone" = "/admin/store/config/tax/{uc_tax_rate}/clone"
+ *     "clone" = "/admin/store/config/tax/{uc_tax_rate}/clone",
+ *     "collection" = "/admin/store/config/tax"
  *   }
  * )
  */
@@ -101,21 +118,34 @@ class TaxRate extends ConfigEntityBase implements TaxRateInterface {
    *
    * @var string[]
    */
-  protected $line_item_types;
+  protected $line_item_types = [];
 
   /**
    * Product item types subject to this tax rate.
    *
    * @var string[]
    */
-  protected $product_types;
+  protected $product_types = [];
 
+  /**
+   * The tax rate plugin ID.
+   *
+   * @var string
+   */
+  protected $plugin;
+
+  /**
+   * The tax rate plugin settings.
+   *
+   * @var array
+   */
+  protected $settings = array();
 
   /**
    * {@inheritdoc}
    */
-  public function getId() {
-    return $this->id;
+  public function getPlugin() {
+    return \Drupal::service('plugin.manager.uc_tax.rate')->createInstance($this->plugin, $this->settings);
   }
 
   /**
@@ -220,14 +250,14 @@ class TaxRate extends ConfigEntityBase implements TaxRateInterface {
    * {@inheritdoc}
    */
   public function isIncludedInPrice() {
-    return $this->display_include;
+    return (bool) $this->display_include;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setIncludedInPrice($included) {
-    $this->display_include = $included;
+    $this->display_include = (bool) $included;
     return $this;
   }
 
@@ -250,14 +280,14 @@ class TaxRate extends ConfigEntityBase implements TaxRateInterface {
    * {@inheritdoc}
    */
   public function isForShippable() {
-    return $this->shippable;
+    return (bool) $this->shippable;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setForShippable($shippable) {
-    $this->shippable = $shippable;
+    $this->shippable = (bool) $shippable;
     return $this;
   }
 

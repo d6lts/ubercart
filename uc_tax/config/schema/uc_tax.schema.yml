@@ -4,15 +4,12 @@ uc_tax.rate.*:
   type: config_entity
   label: 'Tax rate'
   mapping:
-    label:
-      type: label
-      label: 'Name'
     id:
       type: string
       label: 'Machine-readable name'
-    rate:
-      type: float
-      label: 'Rate multiplier'
+    label:
+      type: label
+      label: 'Name'
     weight:
       type: integer
       label: 'Relative weight'
@@ -40,3 +37,22 @@ uc_tax.rate.*:
       sequence:
         type: label
         label: 'Line item type label'
+    plugin:
+      type: string
+      label: 'Plugin'
+    settings:
+      type: tax_rate.settings.[%parent.plugin]
+
+tax_rate.settings.*:
+  type: tax_rate
+
+tax_rate.settings.percentage_rate:
+  type: mapping
+  label: 'Tax rate configuration settings'
+  mapping:
+    rate:
+      type: float
+      label: 'Tax rate (per order rate)'
+    field:
+      type: string
+      label: 'Product field holding override values'

@@ -9,27 +9,27 @@ namespace Drupal\uc_tax;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
-
 /**
  * Defines a interface for a tax rate configuration entity.
  */
 interface TaxRateInterface extends ConfigEntityInterface {
 
   /**
-   * The tax rate ID.
-   *
-   * @return string
-   */
-  public function getId();
-
-  /**
-   * The tax rate ID.
+   * Sets the tax rate ID.
    *
    * @param string $id
    *
    * @return $this
    */
   public function setId($id);
+
+  /**
+   * Returns the plugin instance.
+   *
+   * @return \Drupal\uc_tax\TaxRatePluginInterface
+   *   The plugin instance for this tax rate.
+   */
+  public function getPlugin();
 
   /**
    * The tax rate label.

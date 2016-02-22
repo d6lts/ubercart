@@ -13,20 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\uc_order\OrderInterface;
-
-///**
-// * Implements hook_menu().
-// */
-//function uc_tax_menu() {
-//  $items['admin/store/config/taxes'] = array(
-//    'title' => 'Tax',
-//    'description' => 'Configure tax rates and rules.',
-//    'route_name' => 'uc_tax.methods',
-//  );
-//  $items += rules_ui()->config_menu('admin/store/config/taxes');
-//
-//  return $items;
-//}
+use Drupal\uc_tax\Entity\TaxRate;
 
 /**
  * Implements hook_module_implements_alter().
