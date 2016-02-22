@@ -97,8 +97,8 @@ function uc_ups_theme() {
 function uc_ups_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $ups_config = \Drupal::config('uc_ups.settings');
   $quote_config = \Drupal::config('uc_quote.settings');
-  if (uc_product_is_product_form($form)) {
-    $node = $form_state->getFormObject()->getEntity();
+  $node = $form_state->getFormObject()->getEntity();
+  if (uc_product_is_product($node->bundle())) {
 
     $enabled = $quote_config->get('enabled') + array('ups' => FALSE);
     $weight = $quote_config->get('method_weight') + array('ups' => 0);

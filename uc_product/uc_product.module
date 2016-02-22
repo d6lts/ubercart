@@ -711,14 +711,15 @@ function uc_product_is_product($node) {
 /**
  * Determines whether or not a given form array is a product node form.
  *
- * @param $form
- *   The form array to examine.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state object to examine.
  *
- * @return
+ * @return bool
  *   TRUE or FALSE indicating whether or not the form is a product node form.
  */
-function uc_product_is_product_form($form) {
-  return !empty($form['#bundle']) && uc_product_is_product($form['#bundle']);
+function uc_product_is_product_form(FormStateInterface $form_state) {
+  $bundle = $form_state->getFormObject()->getEntity()->bundle();
+  return uc_product_is_product($bundle);
 }
 
 /**

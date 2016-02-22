@@ -148,10 +148,9 @@ function uc_quote_node_delete($node) {
  */
 function uc_quote_form_node_form_alter(&$form, FormStateInterface $form_state) {
   // Alter the product node form.
-  if (uc_product_is_product_form($form)) {
+  $node = $form_state->getFormObject()->getEntity();
+  if (uc_product_is_product($node->bundle())) {
     // Get the shipping address.
-
-    $node = $form_state->getFormObject()->getEntity();
     if (isset($node->shipping_address)) {
       $address = $node->shipping_address;
     }
@@ -170,9 +169,9 @@ function uc_quote_form_node_form_alter(&$form, FormStateInterface $form_state) {
     $form['shipping'] += array(
       '#type' => 'details',
       '#title' => t('Shipping settings'),
-      '#weight' => -3,
+      '#weight' => 150,
       '#attributes' => array('class' => array('product-shipping')),
-      '#group' => 'additional_settings',
+      '#group' => 'advanced',
     );
 
     $nid = $form_state->getFormObject()->getEntity()->id();
