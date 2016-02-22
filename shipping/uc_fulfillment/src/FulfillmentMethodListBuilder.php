@@ -86,6 +86,7 @@ class FulfillmentMethodListBuilder extends DraggableListBuilder implements FormI
     $row['label'] = $entity->label();
     $row['description']['#markup'] = $plugin->getDescription();
     $row['status']['#markup'] = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
+
     return $row + parent::buildRow($entity);
   }
 

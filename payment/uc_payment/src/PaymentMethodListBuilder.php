@@ -83,10 +83,8 @@ class PaymentMethodListBuilder extends DraggableListBuilder implements FormInter
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
-
     $definition = $entity->getPlugin()->getPluginDefinition();
     $row['plugin']['#markup'] = $definition['name'];
-
     $row['status']['#markup'] = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
 
     return $row + parent::buildRow($entity);

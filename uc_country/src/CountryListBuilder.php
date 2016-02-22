@@ -6,7 +6,6 @@
 
 namespace Drupal\uc_country;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Link;
@@ -38,8 +37,9 @@ class CountryListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['title'] = SafeMarkup::checkPlain($entity->label());
-    $row['code'] = SafeMarkup::checkPlain($entity->id());
+    $row['title'] = $entity->label();
+    $row['code'] = $entity->id();
+
     return $row + parent::buildRow($entity);
   }
 
