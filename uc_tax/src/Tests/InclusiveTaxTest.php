@@ -7,17 +7,14 @@
 
 namespace Drupal\uc_tax\Tests;
 
-use Drupal\uc_store\Tests\UbercartTestBase;
-
 /**
  * Tests that inclusive taxes are calculated and displayed correctly.
  *
  * @group Ubercart
  */
-class InclusiveTaxTest extends UbercartTestBase {
+class InclusiveTaxTest extends TaxTestBase {
 
   public static $modules = ['uc_product_kit', 'uc_attribute', 'uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_tax'];
-  public static $adminPermissions = [/*'administer rules', */'administer taxes'];
 
   public function testProductKitAttributes() {
     $this->drupalLogin($this->adminUser);

@@ -9,37 +9,13 @@ namespace Drupal\uc_tax\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\uc_order\Entity\Order;
-use Drupal\uc_store\Tests\UbercartTestBase;
 
 /**
  * Tests that historical tax data is stored correctly, and that the proper amount is displayed.
  *
  * @group Ubercart
  */
-class StoredTaxTest extends UbercartTestBase {
-
-  public static $modules = ['uc_cart', 'uc_payment', 'uc_payment_pack', 'uc_tax'];
-  public static $adminPermissions = [/*'administer rules', */'administer taxes'];
-
-  protected function loadTaxLine($order_id) {
-    // Reset uc_order entity cache then load order.
-    \Drupal::entityManager()->getStorage('uc_order')->resetCache([$order_id]);
-    $order = Order::load($order_id);
-    foreach ($order->line_items as $line) {
-      if ($line['type'] == 'tax') {
-        return $line;
-      }
-    }
-    return FALSE;
-  }
-
-  protected function assertTaxLineCorrect($line, $rate, $when) {
-    $this->assertTrue($line, 'The tax line item was saved to the order ' . $when);
-    $this->assertTrue(number_format($rate * $this->product->price->value, 2) == number_format($line['amount'], 2), 'Stored tax line item has the correct amount ' . $when);
-    $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][li_id]', $line['line_item_id'], 'Found the tax line item ID ' . $when);
-    $this->assertText($line['title'], 'Found the tax title ' . $when);
-    $this->assertText(uc_currency_format($line['amount']), 'Tax display has the correct amount ' . $when);
-  }
+class StoredTaxTest extends TaxTestBase {
 
   public function testTaxDisplay() {
     $this->drupalLogin($this->adminUser);
@@ -138,6 +114,32 @@ class StoredTaxTest extends UbercartTestBase {
     else {
       $this->fail('No order was created.');
     }
+  }
+
+  /**
+   * Loads a tax line item from the database.
+   */
+  protected function loadTaxLine($order_id) {
+    // Reset uc_order entity cache then load order.
+    \Drupal::entityManager()->getStorage('uc_order')->resetCache([$order_id]);
+    $order = Order::load($order_id);
+    foreach ($order->line_items as $line) {
+      if ($line['type'] == 'tax') {
+        return $line;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Complex assert to check various parts of the tax line item.
+   */
+  protected function assertTaxLineCorrect($line, $rate, $when) {
+    $this->assertTrue($line, 'The tax line item was saved to the order ' . $when);
+    $this->assertTrue(number_format($rate * $this->product->price->value, 2) == number_format($line['amount'], 2), 'Stored tax line item has the correct amount ' . $when);
+    $this->assertFieldByName('line_items[' . $line['line_item_id'] . '][li_id]', $line['line_item_id'], 'Found the tax line item ID ' . $when);
+    $this->assertText($line['title'], 'Found the tax title ' . $when);
+    $this->assertText(uc_currency_format($line['amount']), 'Tax display has the correct amount ' . $when);
   }
 
 }
