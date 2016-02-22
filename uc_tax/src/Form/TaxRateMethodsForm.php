@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_tax\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -86,7 +85,7 @@ class TaxRateMethodsForm extends ConfigFormBase {
 
       $form['methods'][$rate_id]['status'] = array(
         '#type' => 'checkbox',
-        '#title' => SafeMarkup::checkPlain($rate->name),
+        '#title' => $rate->name,
         '#default_value' => $rate->enabled,
       );
       $form['methods'][$rate_id]['rate'] = array(
