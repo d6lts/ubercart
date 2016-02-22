@@ -31,16 +31,20 @@ class OrderComments extends OrderPanePluginBase {
     if ($view_mode == 'customer') {
       $comments = uc_order_comments_load($order->id());
       $statuses = OrderStatus::loadMultiple();
-      $header = array($this->t('Date'), $this->t('Status'), $this->t('Message'));
+      $header = array(
+        array('data' => $this->t('Date'), 'class' => array('date')),
+        array('data' => $this->t('Status'), 'class' => array('status')),
+        array('data' => $this->t('Message'), 'class' => array('message')),
+      );
       $rows[] = array(
-        array('data' => \Drupal::service('date.formatter')->format($order->created->value, 'uc_store'), 'class' => array('date')),
+        array('data' => \Drupal::service('date.formatter')->format($order->created->value, 'short'), 'class' => array('date')),
         array('data' => '-', 'class' => array('status')),
         array('data' => $this->t('Order created.'), 'class' => array('message')),
       );
       if (count($comments) > 0) {
         foreach ($comments as $comment) {
           $rows[] = array(
-            array('data' => \Drupal::service('date.formatter')->format($comment->created, 'uc_store'), 'class' => array('date')),
+            array('data' => \Drupal::service('date.formatter')->format($comment->created, 'short'), 'class' => array('date')),
             array('data' => array('#plain_text' => $statuses[$comment->order_status]->getName()), 'class' => array('status')),
             array('data' => array('#markup' => $comment->message), 'class' => array('message')),
           );

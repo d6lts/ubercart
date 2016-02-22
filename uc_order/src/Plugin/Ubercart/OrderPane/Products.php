@@ -35,7 +35,7 @@ class Products extends EditableOrderPanePluginBase {
       '#attributes' => array('class' => array('order-pane-table')),
       '#header' => array(
         'qty' => array(
-          'data' => $this->t('Quantity'),
+          'data' => $this->t('Qty'),
           'class' => array('qty'),
         ),
         'product' => array(
@@ -366,6 +366,7 @@ class Products extends EditableOrderPanePluginBase {
         '#title' => $this->t('Title'),
         '#title_display' => 'invisible',
         '#default_value' => $product->title->value,
+        '#size' => 32,
         '#maxlength' => 255,
       );
       $form['products'][$i]['model'] = array(

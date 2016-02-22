@@ -152,12 +152,18 @@
   vertical-align: top;
 }
 
-.uc-order-comments .date,
+.uc-order-comments .date {
+  width: 25%;
+  text-align: left; /*LTR */
+}
+[dir="rtl"] .uc-order-comments .date {
+  text-align: right;
+}
+
 .uc-order-comments .user,
 .uc-order-comments .notified,
 .uc-order-comments .status {
   text-align: center;
-  white-space: nowrap;
 }
 
 .uc-order-comments .message {
