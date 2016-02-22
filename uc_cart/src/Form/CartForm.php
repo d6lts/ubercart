@@ -73,11 +73,11 @@ class CartForm extends FormBase {
           'class' => array('remove'),
         ),
         'image' => array(
-          'data' => $this->t('Products'),
-          'class' => array('image'),
+          'data' => '',
+          'class' => array('image', RESPONSIVE_PRIORITY_LOW),
         ),
         'desc' => array(
-          'data' => '',
+          'data' => $this->t('Product'),
           'class' => array('desc'),
         ),
         'qty' => array(
