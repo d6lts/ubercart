@@ -18,7 +18,7 @@ class StockSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_stock_settings_form';
   }
 

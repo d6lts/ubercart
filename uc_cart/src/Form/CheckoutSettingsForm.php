@@ -55,7 +55,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_cart_checkout_settings_form';
   }
 

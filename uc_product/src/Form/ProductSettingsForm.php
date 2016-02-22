@@ -18,7 +18,7 @@ class ProductSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_product_settings_form';
   }
 

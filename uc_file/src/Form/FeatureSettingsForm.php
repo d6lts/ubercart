@@ -23,7 +23,7 @@ class FeatureSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_file_feature_settings_form';
   }
 

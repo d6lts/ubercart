@@ -21,7 +21,7 @@ class RoleExpirationForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_role_expiration_form';
   }
 

@@ -18,9 +18,9 @@ use Drupal\uc_usps\USPSUtilities;
 class USPSSettingsForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_usps_admin_settings';
   }
 

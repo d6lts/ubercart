@@ -21,9 +21,9 @@ use Drupal\uc_ups\UPSUtilities;
 class UPSSettingsForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_ups_admin_settings';
   }
 

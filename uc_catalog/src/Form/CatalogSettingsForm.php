@@ -21,7 +21,7 @@ class CatalogSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_catalog_settings_form';
   }
 

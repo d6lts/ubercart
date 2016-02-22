@@ -19,7 +19,7 @@ class StoreSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_store_settings_form';
   }
 

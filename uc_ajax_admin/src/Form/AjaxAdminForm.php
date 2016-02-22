@@ -19,7 +19,7 @@ class AjaxAdminForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_ajax_admin_form';
   }
 

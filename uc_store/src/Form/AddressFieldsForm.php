@@ -18,7 +18,7 @@ class AddressFieldsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_store_address_fields_form';
   }
 

@@ -26,7 +26,7 @@ class FeatureSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_role_feature_settings_form';
   }
 

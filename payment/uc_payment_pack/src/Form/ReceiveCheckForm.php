@@ -20,7 +20,7 @@ class ReceiveCheckForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_payment_pack_receive_check_form';
   }
 

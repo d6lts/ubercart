@@ -19,7 +19,7 @@ class CartSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'uc_cart_cart_settings_form';
   }
 
