@@ -28,11 +28,10 @@ class SelectCustomerForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $operation = NULL, $options = NULL) {
     if ($operation == '' && is_null($options)) {
       $form['desc'] = array(
-        '#prefix' => '<div>',
+        '#type' => 'container',
         '#markup' => $this->t('Search for a customer based on these fields.') . '<br />' .
                      $this->t('Use * as a wildcard to match any character.') . '<br />' .
                      '(<em>' . $this->t('Leave a field empty to ignore it in the search.') . '</em>)',
-        '#suffix' => '</div>',
       );
 
       $form['first_name'] = array(
@@ -68,7 +67,8 @@ class SelectCustomerForm extends FormBase {
     }
     elseif ($operation == 'new') {
       $form['desc'] = array(
-        '#markup' => '<div>' . $this->t('Enter an e-mail address for the new customer.') . '</div>',
+        '#type' => 'container',
+        '#markup' => $this->t('Enter an e-mail address for the new customer.'),
       );
 
       $form['email'] = array(
