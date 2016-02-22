@@ -23,6 +23,24 @@ interface PaymentMethodInterface extends ConfigEntityInterface {
   public function getWeight();
 
   /**
+   * Determines if this payment method is locked.
+   *
+   * @return bool
+   *   TRUE if the payment method is locked, FALSE otherwise.
+   */
+  public function isLocked();
+
+  /**
+   * Sets the lock status of this payment method.
+   *
+   * @param bool $locked
+   *   TRUE to lock payment method.
+   *
+   * @return $this
+   */
+  public function setLocked($locked);
+
+  /**
    * Returns the plugin instance.
    *
    * @return \Drupal\uc_payment\PaymentMethodPluginInterface

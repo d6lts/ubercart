@@ -105,7 +105,15 @@ class PaymentMethod extends ConfigEntityBase implements PaymentMethodInterface {
    * {@inheritdoc}
    */
   public function isLocked() {
-    return $this->locked;
+    return (bool) $this->locked;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLocked($locked) {
+    $this->locked = (bool) $locked;
+    return $this;
   }
 
   /**
