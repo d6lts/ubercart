@@ -45,7 +45,6 @@ class TaxRateUITest extends TaxTestBase {
     $this->drupalGet('admin/store/config/tax');
     $this->assertText($tax_rate->label(), 'Tax was saved successfully.');
     $this->assertText($tax_rate->getRate() . '%', 'Tax rate is correct.');
-    $this->assertText($tax_rate->getJurisdiction(), 'Jurisdiction correct.');
     $this->assertText('Any product', 'Shipping types correct.');
     $this->assertText('product, blank-line', 'Product types correct.');
     $this->assertText('generic, tax', 'Line item types correct.');

@@ -72,9 +72,6 @@ class TaxRateListBuilder extends DraggableListBuilder implements FormInterface {
     $header['description'] = array(
       'data' => $this->t('Description'),
     );
-    $header['jurisdiction'] = array(
-      'data' => $this->t('Jurisdiction'),
-    );
     $header['shippable'] = array(
       'data' => $this->t('Taxed products'),
       'class' => array(RESPONSIVE_PRIORITY_LOW),
@@ -100,7 +97,6 @@ class TaxRateListBuilder extends DraggableListBuilder implements FormInterface {
     $plugin = $entity->getPlugin();
     $row['label'] = $entity->label();
     $row['description']['#markup'] = $plugin->getSummary();
-    $row['jurisdiction']['#markup'] = $entity->getJurisdiction();
     $row['shippable']['#markup'] = $entity->isForShippable() ? $this->t('Shippable products') : $this->t('Any product');
     $row['product_types']['#markup'] = implode(', ', $entity->getProductTypes());
     $row['line_item_types']['#markup'] = implode(', ', $entity->getLineItemTypes());
