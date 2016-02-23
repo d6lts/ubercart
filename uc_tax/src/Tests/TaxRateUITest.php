@@ -72,8 +72,7 @@ class TaxRateUITest extends TaxTestBase {
     $this->clickLink(t('Delete'));
     $this->assertUrl('admin/store/config/tax/' . $tax_rate->id() . '_clone/delete');
     $this->assertText(
-//      'Are you sure you want to delete Copy of ' . $tax_rate->label() . '?',
-      'This action cannot be undone.',
+      'Are you sure you want to delete Copy of ' . $tax_rate->label() . '?',
       'Delete confirmation form found.'
     );
     // Verify the 'Cancel' button works.

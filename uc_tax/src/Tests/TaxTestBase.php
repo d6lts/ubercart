@@ -19,6 +19,16 @@ abstract class TaxTestBase extends UbercartTestBase {
   public static $adminPermissions = [/*'administer rules', */'administer taxes'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+
+    // Need page_title_block because we test page titles.
+    $this->drupalPlaceBlock('page_title_block');
+  }
+
+  /**
    * Defines a new tax rate.
    *
    * @param string $plugin_id
