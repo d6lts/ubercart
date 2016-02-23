@@ -22,9 +22,6 @@ use Drupal\uc_fulfillment\Shipment;
  */
 function uc_fulfillment_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    case 'entity.uc_fulfillment_method.collection':
-      return '<p>' . t('By default, only the "Ship manually" fulfillment method is listed here. To see additional fulfillment methods you must <a href=":install">install additional modules</a>. For more information about payment methods and settings please read the <a href=":doc">Ubercart Documentation</a>.', [':install' => Url::fromRoute('system.modules_list', [], ['fragment' => 'edit-modules-ubercart-shipping'])->toString(), ':doc' => Url::fromUri('http://www.drupal.org/documentation/modules/ubercart')->toString()]) . '</p><p>' . t('The order of methods shown below is the order those methods will appear on the checkout page. To re-order, drag the method to its desired location use the drag icon then save the configuration using the button at the bottom of the page.') . '</p>';
-      break;
     case 'uc_fulfillment.new_package':
       return '<p>' . t('Organize products into packages. Package numbers in multiple shipping types are of the first shipping type they appear in. All packages are given a unique ID when they are saved. Choose the default package "Sep." to automatically create a package for each of the selected quantity of products in that row.') . '</p>';
       break;

@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\uc_quote\Plugin\ShippingQuotePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -157,6 +158,18 @@ class ShippingQuoteMethodListBuilder extends DraggableListBuilder implements For
    */
   public function submitAddMethod(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect('entity.uc_quote_method.add_form', ['plugin_id' => $form_state->getValue('plugin')]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function render() {
+    $build['description'] = array(
+      '#markup' => '<p>' . t('By default, only "Flat rate", "Percentage rate" and "Weight quote" shipping methods are listed here. To see additional shipping methods you must <a href=":install">install additional modules</a>. For more information about shipping methods and settings please read the <a href=":doc">Ubercart Documentation</a>.', [':install' => Url::fromRoute('system.modules_list', [], ['fragment' => 'edit-modules-ubercart-shipping'])->toString(), ':doc' => Url::fromUri('http://www.drupal.org/documentation/modules/ubercart')->toString()]) . '</p><p>' . t('The order of methods shown below is the order those methods will appear on the checkout page. To re-order, drag the method to its desired location using the drag icon then save the configuration using the button at the bottom of the page.') . '</p>',
+    );
+    $build += parent::render();
+
+    return $build;
   }
 
 }
