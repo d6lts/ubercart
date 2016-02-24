@@ -56,11 +56,10 @@ class Quotes extends EditableOrderPanePluginBase {
         ),
       ),
     );
-    // @todo: replace with 'container'
     $form['quotes'] = array(
+      '#type' => 'container',
+      '#attributes' => array('id' => 'quote'),
       '#tree' => TRUE,
-      '#prefix' => '<div id="quote">',
-      '#suffix' => '</div>',
     );
 
     if ($form_state->get('quote_requested')) {

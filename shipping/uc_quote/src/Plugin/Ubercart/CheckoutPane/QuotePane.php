@@ -52,9 +52,9 @@ class QuotePane extends CheckoutPanePluginBase {
       '#limit_validation_errors' => array(),
     );
     $contents['quotes'] = array(
+      '#type' => 'container',
+      '#attributes' => array('id' => 'quote'),
       '#tree' => TRUE,
-      '#prefix' => '<div id="quote">',
-      '#suffix' => '</div>',
       '#weight' => 1,
     );
 

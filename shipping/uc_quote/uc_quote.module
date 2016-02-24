@@ -474,13 +474,17 @@ function uc_quote_build_quote_form($order, $show_errors = TRUE) {
             '#items' => array('items' => $quote['error']),
           );
           $return[$key]['error'] = array(
-            '#markup' => '<div class="quote-error">' . drupal_render($item_list) . '</div>',
+            '#type' => 'container',
+            '#markup' => drupal_render($item_list),
+            '#attributes' => array('class' => array('quote-error')),
           );
         }
 
         if (!empty($quote['notes'])) {
           $return[$key]['notes'] = array(
-            '#markup' => '<div class="quote-notes">' . $quote['notes'] . '</div>',
+            '#type' => 'container',
+            '#markup' => $quote['notes'],
+            '#attributes' => array('class' => array('quote-notes')),
           );
         }
 

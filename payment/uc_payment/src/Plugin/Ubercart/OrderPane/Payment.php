@@ -104,10 +104,11 @@ class Payment extends EditableOrderPanePluginBase {
       ),
     );
 
+    // An empty <div> for Ajax.
     $form['payment_details'] = array(
+      '#type' => 'container',
+      '#attributes' => array('id' => 'payment-details'),
       '#tree' => TRUE,
-      '#prefix' => '<div id="payment-details">',
-      '#suffix' => '</div>',
     );
 
     $method = $form_state->getValue('payment_method') ?: $order->getPaymentMethodId();
