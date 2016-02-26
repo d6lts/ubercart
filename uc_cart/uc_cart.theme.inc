@@ -118,41 +118,60 @@ function theme_uc_cart_checkout_review(array $variables) {
   $panes = $variables['panes'];
   $form = $variables['form'];
 
-  $output = '<p>' . t("Your order is almost complete. Please review the details below and click 'Submit order' if all the information is correct.  You may use the 'Back' button to make changes to your order if necessary.") . '</p>';
+  $build['instructions'] = array(
+    '#prefix' => '<p>',
+    '#markup' => t("Your order is almost complete. Please review the details below and click 'Submit order' if all the information is correct.  You may use the 'Back' button to make changes to your order if necessary."),
+    '#suffix' => '</p>',
+  );
 
-  $output .= '<table class="order-review-table">';
-
+  $rows = array();
   foreach ($panes as $title => $data) {
-    $output .= '<tr class="pane-title-row">';
-    $output .= '<td colspan="2">' . $title . '</td>';
-    $output .= '</tr>';
+    // First pane row is the pane title.
+    $rows[] = array(
+      'data' => array(
+        array('data' => $title, 'colspan' => '2'),
+      ),
+      'no_striping' => TRUE,
+      'class' => array('pane-title-row'),
+    );
+    // Subsequent pane rows may be subtitles or subtitle-data pairs.
     foreach ($data as $row) {
       if (isset($row['data'])) {
-        if (is_array($row['data'])) {
-          $row['data'] = drupal_render($row['data']);
-        }
         if (isset($row['border'])) {
-          $border = ' class="row-border-' . $row['border'] . '"';
+          $border = 'row-border-' . $row['border'];
         }
         else {
           $border = '';
         }
-        $output .= '<tr' . $border . '>';
-        $output .= '<td class="title-col">' . $row['title'] . ':</td>';
-        $output .= '<td class="data-col">' . $row['data'] . '</td>';
-        $output .= '</tr>';
+        $rows[] = array(
+          'data' => array(
+            array('data' => $row['title'] . ':', 'class' => array('title-col')),
+            array('data' => $row['data'], 'class' => array('data-col')),
+          ),
+          'no_striping' => TRUE,
+          'class' => array($border),
+        );
       }
       else {
-        $output .= '<tr><td colspan="2">' . drupal_render($row) . '</td></tr>';
+        // Row is the cart review table.
+        $rows[] = array('data' => array(array('data' => $row, 'colspan' => '2')));
       }
     }
   }
 
-  $output .= '<tr class="review-button-row">';
-  $output .= '<td colspan="2">' . drupal_render($form) . '</td>';
-  $output .= '</tr>';
+  $rows[] = array(
+    'data' => array(
+      array('data' => $form, 'colspan' => '2'),
+    ),
+    'no_striping' => TRUE,
+    'class' => array('review-button-row')
+  );
 
-  $output .= '</table>';
+  $build['review-table'] = array(
+    '#type' => 'table',
+    '#rows' => $rows,
+    '#attributes' => array('class' => array('order-review-table')),
+  );
 
-  return $output;
+  return drupal_render($build);
 }
