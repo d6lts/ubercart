@@ -21,6 +21,7 @@ entity.uc_country.enable:
     _title: 'Enable country'
   requirements:
     _permission: 'administer countries'
+    _csrf_token: 'TRUE'
 
 entity.uc_country.disable:
   path: '/admin/store/config/country/{uc_country}/disable'
@@ -29,3 +30,4 @@ entity.uc_country.disable:
     _title: 'Disable country'
   requirements:
     _permission: 'administer countries'
+    _csrf_token: 'TRUE'

@@ -29,6 +29,7 @@ entity.uc_fulfillment_method.enable:
     op: 'enable'
   requirements:
     _permission: 'fulfill orders'
+    _csrf_token: 'TRUE'
 
 entity.uc_fulfillment_method.disable:
   path: '/admin/store/config/fulfillment/{uc_fulfillment_method}/disable'
@@ -37,6 +38,7 @@ entity.uc_fulfillment_method.disable:
     op: 'disable'
   requirements:
     _permission: 'fulfill orders'
+    _csrf_token: 'TRUE'
 
 entity.uc_fulfillment_method.delete_form:
   path: '/admin/store/config/fulfillment/{uc_fulfillment_method}/delete'

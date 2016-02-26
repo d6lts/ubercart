@@ -26,6 +26,7 @@ uc_tax.rate_clone:
     _controller: '\Drupal\uc_tax\Controller\TaxController::saveClone'
   requirements:
     _permission: 'administer taxes'
+    _csrf_token: 'TRUE'
 
 uc_tax.rate_delete:
   path: '/admin/store/config/taxes/{tax_rate}/delete'
@@ -65,6 +66,7 @@ entity.uc_tax_rate.clone:
     _title: 'Clone tax rate'
   requirements:
     _permission: 'administer taxes'
+    _csrf_token: 'TRUE'
 
 entity.uc_tax_rate.delete_form:
   path: '/admin/store/config/tax/{uc_tax_rate}/delete'
@@ -81,6 +83,7 @@ entity.uc_tax_rate.enable:
     op: 'enable'
   requirements:
     _permission: 'administer taxes'
+    _csrf_token: 'TRUE'
 
 entity.uc_tax_rate.disable:
   path: '/admin/store/config/tax/{uc_tax_rate}/disable'
@@ -89,3 +92,4 @@ entity.uc_tax_rate.disable:
     op: 'disable'
   requirements:
     _permission: 'administer taxes'
+    _csrf_token: 'TRUE'

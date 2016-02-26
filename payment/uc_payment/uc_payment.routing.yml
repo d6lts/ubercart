@@ -29,6 +29,7 @@ entity.uc_payment_method.enable:
     op: 'enable'
   requirements:
     _permission: 'administer store'
+    _csrf_token: 'TRUE'
 
 entity.uc_payment_method.disable:
   path: '/admin/store/config/payment/method/{uc_payment_method}/disable'
@@ -37,6 +38,7 @@ entity.uc_payment_method.disable:
     op: 'disable'
   requirements:
     _permission: 'administer store'
+    _csrf_token: 'TRUE'
 
 entity.uc_payment_method.delete_form:
   path: '/admin/store/config/payment/method/{uc_payment_method}/delete'

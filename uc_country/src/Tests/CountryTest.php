@@ -43,7 +43,7 @@ class CountryTest extends WebTestBase {
       );
 
       // Enable this country.
-      $this->drupalGet('admin/store/config/country/' . $country_id . '/enable');
+      $this->clickLinkInRow($countries[$country_id], 'Enable');
       $this->assertText(t('The country @country has been enabled.', ['@country' => $countries[$country_id]]));
       $this->assertLinkByHref(
         'admin/store/config/country/' . $country_id . '/disable',
@@ -61,7 +61,8 @@ class CountryTest extends WebTestBase {
     );
 
     // Enable the last country.
-    $this->drupalGet('admin/store/config/country/' . $last_country . '/enable');
+    $this->drupalGet('admin/store/config/country');
+    $this->clickLinkInRow($countries[$last_country], 'Enable');
     $this->assertText(t('The country @country has been enabled.', ['@country' => $countries[$last_country]]));
     $this->assertLinkByHref(
       'admin/store/config/country/' . $last_country . '/disable',
@@ -113,6 +114,21 @@ class CountryTest extends WebTestBase {
     $this->drupalGet('admin/store/config/store');
     $this->assertNoText('State/Province');
     $this->assertNoText('Country');
+  }
+
+  /**
+   * Follows a link in the same table row as the label text.
+   *
+   * @param $label
+   *   The label to find in a table column.
+   * @param $link
+   *   The link text to find in the same table row.
+   *
+   * @return bool|string
+   *   Page contents on success, or FALSE on failure.
+   */
+  protected function clickLinkInRow($label, $link) {
+    return $this->clickLinkHelper($label, 0, '//td[normalize-space()=:label]/ancestor::tr[1]//a[normalize-space()="' . $link . '"]');
   }
 
   /**

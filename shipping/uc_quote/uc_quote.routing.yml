@@ -29,6 +29,7 @@ entity.uc_quote_method.enable:
     op: 'enable'
   requirements:
     _permission: 'configure quotes'
+    _csrf_token: 'TRUE'
 
 entity.uc_quote_method.disable:
   path: '/admin/store/config/quotes/{uc_quote_method}/disable'
@@ -37,6 +38,7 @@ entity.uc_quote_method.disable:
     op: 'disable'
   requirements:
     _permission: 'configure quotes'
+    _csrf_token: 'TRUE'
 
 entity.uc_quote_method.delete_form:
   path: '/admin/store/config/quotes/{uc_quote_method}/delete'
