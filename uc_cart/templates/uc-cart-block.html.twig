@@ -23,14 +23,14 @@
   {% for item in items %}
     <tr>
       <td class="cart-block-item-qty">{{ item.qty }} ×</td>
-      <td class="cart-block-item-title">{{ item.title }}</td>
+      {% if item.desc %}
+        <td class="cart-block-item-title">{{ item.title }}<br />
+        <span class="cart-block-item-desc">{{ item.desc }}</span></td>
+      {% else %}
+        <td class="cart-block-item-title">{{ item.title }}</td>
+      {% endif %}
       <td class="cart-block-item-price">{{ item.price }}</td>
     </tr>
-    {% if item.desc %}
-      <tr>
-        <td colspan="3" class="cart-block-item-desc">{{ item.desc }}</td>
-      </tr>
-    {% endif %}
   {% endfor %}
   </table>
 {% else %}

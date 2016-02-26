@@ -83,6 +83,7 @@
 
 .cart-block-item-desc .product-description li {
   font-size: .8em;
+  list-style: initial;
   margin: 0;
   padding-top: 0;
   padding-bottom: 0;
