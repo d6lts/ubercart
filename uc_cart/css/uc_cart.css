@@ -3,6 +3,9 @@
  * Styles for uc_cart module.
  */
 
+/**
+ * CSS rules for the order review table at /cart/checkout/review.
+ */
 .order-review-table {
   border: solid 1px #999;
   font-size: .9em;
@@ -71,8 +74,29 @@
   display: inline;
 }
 
+/** Cart contents pane inside order review table */
+.cart-review ul.product-description {
+  margin: 0;
+}
+.cart-review ul.product-description li {
+  list-style: initial;
+}
+
 /* I cannot testify for any of the data below.. it's a hodge podge. */
 
+.address-book-icon {
+  position: relative;
+  margin-left: 2px; /* LTR */
+  top: 2px;
+}
+[dir="rtl"] .address-book-icon {
+  margin-left: inherit;
+  margin-right: 2px;
+}
+
+/**
+ * CSS rules for the cart form at /cart.
+ */
 #uc-cart-view-form table {
   width: 100%;
 }
@@ -91,19 +115,6 @@
   float: right;
 }
 
-.address-book-icon {
-  position: relative;
-  margin-left: 2px; /* LTR */
-  top: 2px;
-}
-[dir="rtl"] .address-book-icon {
-  margin-left: inherit;
-  margin-right: 2px;
-}
-
-/**
- * CSS rules for the cart form at /cart.
- */
 #uc-cart-view-form th {
   white-space: nowrap;
 }
@@ -115,6 +126,14 @@
 #uc-cart-view-form td.total,
 #uc-cart-view-form td.subtotal {
   white-space: nowrap;
+}
+
+/** Product attribute listing in cart table */
+#uc-cart-view-form ul.product-description {
+  margin: 0;
+}
+#uc-cart-view-form ul.product-description li {
+  list-style: initial;
 }
 
 #uc-cart-view-form .form-actions {
@@ -163,27 +182,27 @@
 /**
  * CSS rules for the cart review table.
  */
-td.qty {
+.cart-review td.qty {
   text-align: center;
   white-space: nowrap;
 }
 
-td.price {
+.cart-review td.price {
   text-align: right; /* LTR */
   white-space: nowrap;
 }
-[dir="rtl"] td.price {
+[dir="rtl"] .cart-review td.price {
   text-align: left;
 }
 
-td.products {
+.cart-review td.products {
   width: 100%;
 }
 
-td.subtotal {
+.cart-review td.subtotal {
   text-align: right; /* LTR */
 }
-[dir="rtl"] td.subtotal {
+[dir="rtl"] .cart-review td.subtotal {
   text-align: left;
 }
 
