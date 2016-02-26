@@ -41,24 +41,27 @@ function theme_uc_cart_review_table(array $variables) {
   foreach ($items as $item) {
     $subtotal += $item->price->value * $item->qty->value;
     $rows[] = array(
-      array(
-        'data' => array(
-          '#theme' => 'uc_qty',
-          '#qty' => $item->qty->value,
+      'data' => array(
+        array(
+          'data' => array(
+            '#theme' => 'uc_qty',
+            '#qty' => $item->qty->value,
+          ),
+          'class' => array('qty'),
         ),
-        'class' => array('qty'),
-      ),
-      array(
-        'data' => array('#markup' => $item->title->value . uc_product_get_description($item)),
-        'class' => array('products'),
-      ),
-      array(
-        'data' => array(
-          '#theme' => 'uc_price',
-          '#price' => $item->price->value * $item->qty->value,
+        array(
+          'data' => array('#markup' => $item->title->value . uc_product_get_description($item)),
+          'class' => array('products'),
         ),
-        'class' => array('price'),
+        array(
+          'data' => array(
+            '#theme' => 'uc_price',
+            '#price' => $item->price->value * $item->qty->value,
+          ),
+          'class' => array('price'),
+        ),
       ),
+      'no_striping' => TRUE,
     );
   }
 
@@ -78,6 +81,7 @@ function theme_uc_cart_review_table(array $variables) {
           'class' => array('subtotal'),
         ),
       ),
+      'no_striping' => TRUE,
       // Row attributes
       'class' => array('subtotal'),
     );
