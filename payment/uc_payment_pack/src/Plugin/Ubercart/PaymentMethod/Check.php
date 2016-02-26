@@ -102,7 +102,7 @@ class Check extends PaymentMethodPluginBase {
     $address->setFirstName($this->configuration['name']);
     $review[] = array(
       'title' => $this->t('Mail to'),
-      'data' => (string) $address,
+      'data' => array('#markup' => (string) $address),
     );
 
     return $review;
