@@ -15,4 +15,12 @@ use Drupal\Core\Entity\ContentEntityInterface;
  */
 interface CartItemInterface extends ContentEntityInterface, EntityChangedInterface {
 
+  /**
+   * Converts a cart item into an order product.
+   *
+   * @return \Drupal\uc_order\OrderProductInterface
+   *   The order product.
+   */
+  public function toOrderProduct();
+
 }

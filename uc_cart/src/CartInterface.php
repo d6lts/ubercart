@@ -33,7 +33,7 @@ interface CartInterface {
   /**
    * Returns the items in the shopping cart.
    *
-   * @return \Drupal\uc_cart\Entity\CartItem[]
+   * @return \Drupal\uc_cart\CartItemInterface[]
    *   The items.
    */
   public function getContents();

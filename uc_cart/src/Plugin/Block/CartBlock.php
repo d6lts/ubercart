@@ -100,6 +100,7 @@ class CartBlock extends BlockBase {
       $item_count = 0;
       $total = 0;
       if ($product_count) {
+        /** @var \Drupal\uc_cart\CartItemInterface $item */
         foreach ($cart->getContents() as $item) {
           $display_item = \Drupal::moduleHandler()->invoke($item->data->module, 'uc_cart_display', array($item));
 
