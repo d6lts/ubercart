@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_attribute\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -62,7 +61,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
             $this->t('Weight'),
             $this->t('List position'),
           ),
-          '#caption' => '<h2>' . SafeMarkup::checkPlain($attribute->name) . '</h2>',
+          '#caption' => array('#markup' => '<h2>' . $attribute->name . '</h2>'),
           '#empty' => $this->t('This attribute does not have any options.'),
           '#tabledrag' => array(
             array(
@@ -107,7 +106,7 @@ abstract class ObjectOptionsFormBase extends FormBase {
           $form['attributes'][$aid]['options'][$oid]['#attributes']['class'][] = 'draggable';
           $form['attributes'][$aid]['options'][$oid]['select'] = array(
             '#type' => 'checkbox',
-            '#title' => SafeMarkup::checkPlain($option->name),
+            '#title' => $option->name,
             '#default_value' => isset($attribute->options[$oid]),
           );
           $form['attributes'][$aid]['options'][$oid]['default'] = array(
