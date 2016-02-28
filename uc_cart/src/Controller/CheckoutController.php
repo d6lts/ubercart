@@ -257,7 +257,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
   /**
    * Loads the order that is being processed for checkout from the session.
    *
-   * @return \Drupal\uc_order\Entity\Order
+   * @return \Drupal\uc_order\OrderInterface
    *   The order object.
    */
   protected function loadOrder() {

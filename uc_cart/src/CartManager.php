@@ -76,7 +76,7 @@ class CartManager implements CartManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function completeSale($order, $login = FALSE) {
+  public function completeSale(OrderInterface $order, $login = FALSE) {
     // Empty that cart...
     $this->emptyCart();
 
@@ -128,10 +128,10 @@ class CartManager implements CartManagerInterface {
   /**
    * Link a completed sale to a user.
    *
-   * @param \Drupal\uc_order\Entity\Order $order
+   * @param \Drupal\uc_order\OrderInterface $order
    *   The order entity that has just been completed.
    */
-  protected function completeSaleAccount($order) {
+  protected function completeSaleAccount(OrderInterface $order) {
     // Order already has a user ID, so the user was logged in during checkout.
     if ($order->getOwnerId()) {
       $order->data->complete_sale = 'logged_in';

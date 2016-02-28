@@ -34,7 +34,7 @@ interface CartManagerInterface {
   /**
    * Completes a sale, including adjusting order status and creating user account.
    *
-   * @param \Drupal\uc_order\Entity\Order $order
+   * @param \Drupal\uc_order\OrderInterface $order
    *   The order entity that has just been completed.
    * @param bool $login
    *   Whether or not to login a new user when this function is called.
@@ -42,6 +42,6 @@ interface CartManagerInterface {
    * @return
    *   The HTML text of the default order completion page.
    */
-  public function completeSale($order, $login = FALSE);
+  public function completeSale(OrderInterface $order, $login = FALSE);
 
 }
