@@ -115,18 +115,57 @@ uc_cart.settings:
     email_validation:
       type: boolean
       label: ''
-    default_same_address:
-      type: boolean
-      label: ''
     checkout_anonymous:
       type: boolean
       label: ''
     checkout_enabled:
       type: boolean
       label: ''
+    panes:
+      type: sequence
+      label: 'Pane settings'
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+            label: 'Plugin ID'
+          status:
+            type: boolean
+            label: 'Enabled status'
+          weight:
+            type: integer
+            label: 'Ordinal'
+          settings:
+            type: uc_cart_pane.[%parent.id]
+
+uc_cart_pane.billing:
+  type: mapping
+  label: 'Billing cart pane configuration settings'
+  mapping:
+    default_same_address:
+      type: boolean
+      label: 'Use the same address for billing and delivery by default'
+
+uc_cart_pane.delivery:
+  type: mapping
+  label: 'Delivery cart pane configuration settings'
+  mapping:
     delivery_not_shippable:
       type: boolean
-      label: ''
+      label: 'Hide delivery information when carts have no shippable items'
+
+uc_cart_pane.cart:
+  type: mapping
+  label: 'Cart cart pane configuration settings'
+
+uc_cart_pane.customer:
+  type: mapping
+  label: 'Customer cart pane configuration settings'
+
+uc_cart_pane.comments:
+  type: mapping
+  label: 'Comments cart pane configuration settings'
 
 action.configuration.uc_cart_add_product_action:
   type: action_configuration_default

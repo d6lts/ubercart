@@ -173,29 +173,6 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function settingsForm() {
-    if ($this->sourcePaneId() != $this->pluginDefinition['id']) {
-      $form['default_same_address'] = array(
-        '#type' => 'checkbox',
-        '#title' => $this->t('Use the same address for billing and delivery by default.'),
-        '#default_value' => $this->configuration['default_same_address'],
-      );
-      return $form;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
-    return [
-      'default_same_address' => FALSE,
-    ];
-  }
-
-  /**
    * Ajax callback to re-render the full address element.
    */
   public function ajaxRender(array $form, FormStateInterface $form_state) {

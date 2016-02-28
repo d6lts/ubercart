@@ -173,7 +173,10 @@ class CheckoutSettingsForm extends ConfigFormBase {
     $panes = $this->checkoutPaneManager->getPanes();
     $form['checkout']['panes'] = array(
       '#type' => 'table',
-      '#header' => array($this->t('Pane'), $this->t('List position')),
+      '#header' => array(
+        $this->t('Pane'),
+        array('data' => $this->t('List postion'), 'colspan' => 2, 'class' => array(RESPONSIVE_PRIORITY_LOW)),
+      ),
       '#tabledrag' => array(
         array(
           'action' => 'order',
@@ -199,6 +202,10 @@ class CheckoutSettingsForm extends ConfigFormBase {
           'class' => array('uc-checkout-pane-weight'),
         ),
       );
+      $form['checkout']['panes'][$id]['id'] = array(
+        '#type' => 'hidden',
+        '#value' => $id,
+      );
       $form['checkout']['panes'][$id]['#weight'] = $pane->getWeight();
 
       // @todo Move settingsForm to an interface.
@@ -212,12 +219,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
         );
       }
     }
-
-    $form['checkout']['uc_cart_delivery_not_shippable'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Hide delivery information when carts have no shippable items.'),
-      '#default_value' => $cart_config->get('delivery_not_shippable'),
-    );
 
     $form['completion_messages'] = array(
       '#type' => 'details',
@@ -290,7 +291,6 @@ class CheckoutSettingsForm extends ConfigFormBase {
       ->set('new_customer_email', $form_state->getValue('uc_new_customer_email'))
       ->set('new_customer_login', $form_state->getValue('uc_new_customer_login'))
       ->set('new_customer_status_active', $form_state->getValue('uc_new_customer_status_active'))
-      ->set('delivery_not_shippable', $form_state->getValue('uc_cart_delivery_not_shippable'))
       ->set('panes', $form_state->getValue('panes'))
       ->save();
 

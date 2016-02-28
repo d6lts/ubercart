@@ -118,3 +118,7 @@ quote_method.settings.weightquote:
     field:
       type: string
       label: 'Product field holding override values'
+
+uc_cart_pane.quotes:
+  type: mapping
+  label: 'Shipping quotes cart pane configuration settings'

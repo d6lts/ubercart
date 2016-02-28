@@ -31,5 +31,3 @@ email_validation: false
 
 checkout_anonymous: true
 checkout_enabled: true
-
-delivery_not_shippable: true
