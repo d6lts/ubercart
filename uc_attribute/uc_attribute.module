@@ -24,7 +24,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
-use Drupal\uc_cart\Entity\CartItem;
+use Drupal\uc_cart\CartItemInterface;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_order\OrderProductInterface;
 
@@ -386,7 +386,7 @@ function uc_attribute_uc_product_description($product) {
   // Cart version of the product has numeric attribute => option values so we
   // need to retrieve the right ones.
   $weight = 0;
-  if ($product instanceof CartItem) {
+  if ($product instanceof CartItemInterface) {
     foreach (_uc_cart_product_get_options($product) as $option) {
       if (!isset($desc[$option['aid']])) {
         $desc[$option['aid']]['#attribute_name'] = $option['attribute'];

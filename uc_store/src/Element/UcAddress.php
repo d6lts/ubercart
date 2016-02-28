@@ -12,6 +12,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\uc_store\Address;
+use Drupal\uc_store\AddressInterface;
 
 /**
  * Provides a form element for Ubercart address input.
@@ -178,7 +179,7 @@ class UcAddress extends Element\FormElement {
     if ($input !== FALSE) {
       return Address::create($input);
     }
-    elseif ($element['#default_value'] instanceof Address) {
+    elseif ($element['#default_value'] instanceof AddressInterface) {
       return $element['#default_value'];
     }
     elseif (is_array($element['#default_value'])) {
