@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_cart\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -110,7 +109,7 @@ class CheckoutForm extends FormBase {
       $form['panes'][$id] = $pane->view($order, $form, $form_state);
       $form['panes'][$id] += array(
         '#type' => 'details',
-        '#title' => SafeMarkup::checkPlain($pane->getTitle()),
+        '#title' => $pane->getTitle(),
         '#id' => $id . '-pane',
         '#open' => TRUE,
       );

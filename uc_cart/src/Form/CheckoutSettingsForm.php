@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_cart\Form;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -190,7 +189,7 @@ class CheckoutSettingsForm extends ConfigFormBase {
       $form['checkout']['panes'][$id]['#attributes']['class'][] = 'draggable';
       $form['checkout']['panes'][$id]['status'] = array(
         '#type' => 'checkbox',
-        '#title' => SafeMarkup::checkPlain($pane->getTitle()),
+        '#title' => $pane->getTitle(),
         '#default_value' => $pane->isEnabled(),
       );
       $form['checkout']['panes'][$id]['weight'] = array(
