@@ -31,3 +31,25 @@ email_validation: false
 
 checkout_anonymous: true
 checkout_enabled: true
+
+panes:
+  billing:
+    id: billing
+    settings:
+      default_same_address: false
+  delivery:
+    id: delivery
+    settings:
+      delivery_not_shippable: true
+  payment:
+    id: payment
+    settings:
+      show_preview: true
+  cart:
+    id: cart
+  comments:
+    id: comments
+  customer:
+    id: customer
+  quotes:
+    id: quotes
