@@ -110,7 +110,7 @@ class CartForm extends FormBase {
         $form['items'][$i]['total'] = array(
           '#theme' => 'uc_price',
           '#price' => $item['#total'],
-          '#wrapper_attributes' => array('class' => 'total'),
+          '#wrapper_attributes' => array('class' => 'price'),
         );
         if (!empty($item['#suffixes'])) {
           $form['items'][$i]['total']['#suffixes'] = $item['#suffixes'];
@@ -130,15 +130,25 @@ class CartForm extends FormBase {
       $i++;
     }
 
-    $form['items'][]['total'] = array(
-      '#theme' => 'uc_price',
-      '#prefix' => '<span id="subtotal-title">' . $this->t('Subtotal') . ':</span> ',
-      '#price' => $subtotal,
-      '#wrapper_attributes' => array(
-        'colspan' => 5,
-        'class' => array('subtotal'),
+    $footer[] = array(
+      array(''),
+      array(''),
+      array(
+        'data' => array(
+          '#markup' => $this->t('Subtotal:'),
+        ),
+        'colspan' => 2,
+        'class' => array('subtotal-title'),
+      ),
+      array(
+        'data' => array(
+          '#theme' => 'uc_price',
+          '#price' => $subtotal,
+        ),
+        'class' => array('price'),
       ),
     );
+    $form['items']['#footer'] = $footer;
 
     $form['actions'] = array('#type' => 'actions');
 

@@ -123,10 +123,21 @@
   width: 100%;
 }
 
-#uc-cart-view-form td.total,
 #uc-cart-view-form td.subtotal {
-  white-space: nowrap;
+  text-align: right; /* LTR */
 }
+[dir="rtl"] #uc-cart-view-form td.subtotal {
+  text-align: left;
+}
+#uc-cart-view-form td.subtotal-title {
+  font-weight: bold;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] #uc-cart-view-form td.subtotal-title {
+  font-weight: bold;
+  text-align: left;
+}
+
 
 /** Product attribute listing in cart table */
 #uc-cart-view-form ul.product-description {
