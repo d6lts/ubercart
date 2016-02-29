@@ -7,6 +7,8 @@
 
 namespace Drupal\uc_cart;
 
+use Drupal\uc_order\OrderInterface;
+
 /**
  * Defines a common interface for cart managers.
  */

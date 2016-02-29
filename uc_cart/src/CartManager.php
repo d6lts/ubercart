@@ -9,6 +9,7 @@ namespace Drupal\uc_cart;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\user\Entity\User;
+use Drupal\uc_order\OrderInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
