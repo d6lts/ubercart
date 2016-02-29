@@ -198,7 +198,7 @@ function uc_quote_form_node_form_alter(&$form, FormStateInterface $form_state) {
 function uc_quote_uc_cart_pane($items) {
   if (\Drupal::routeMatch()->getRouteName() == 'uc_cart.cart') {
     $quote_config = \Drupal::config('uc_quote.settings');
-    if (!$quote_config->get('quotes_enabled') || ($quote_config->get('uc_cart_delivery_not_shippable') && !uc_cart_is_shippable())) {
+    if (!$quote_config->get('quotes_enabled') || ($quote_config->get('panes.delivery.settings.delivery_not_shippable') && !uc_cart_is_shippable())) {
       return array();
     }
 

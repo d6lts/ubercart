@@ -201,7 +201,7 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
     $filter = array('enabled' => FALSE);
 
     // If the cart isn't shippable, bypass panes with shippable == TRUE.
-    if (!$order->isShippable() && $this->config('uc_cart.settings')->get('delivery_not_shippable')) {
+    if (!$order->isShippable() && $this->config('uc_cart.settings')->get('panes.delivery.settings.delivery_not_shippable')) {
       $filter['shippable'] = TRUE;
     }
 
