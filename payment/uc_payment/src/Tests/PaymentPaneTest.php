@@ -81,14 +81,15 @@ class PaymentPaneTest extends UbercartTestBase {
     $this->drupalGet('cart/checkout');
     $this->assertEscaped($check['label']);
     $this->assertNoText('No payment required');
-    $this->assertNoText('Subtotal: $0.00');
+    $this->assertNoText("Subtotal:\n      $0.00");
+
 
     // Check that a mixture of free and paid products cannot be purchased for free.
     $this->addToCart($free_product);
     $this->drupalGet('cart/checkout');
     $this->assertEscaped($check['label']);
     $this->assertNoText('No payment required');
-    $this->assertNoText('Subtotal: $0.00');
+    $this->assertNoText("Subtotal:\n      $0.00");
 
     // Check that free products can be purchased successfully with no payment.
     $this->drupalPostForm('cart', array(), t('Remove'));
@@ -98,7 +99,7 @@ class PaymentPaneTest extends UbercartTestBase {
     $this->assertNoEscaped($check['label']);
     $this->assertText('No payment required');
     $this->assertText('Continue with checkout to complete your order.');
-    $this->assertText('Subtotal: $0.00');
+    $this->assertTextPattern('/Subtotal:\s*\$0.00/', '"Subtotal: $0.00" found');
 
     // Check that this is the only available payment method.
     $this->assertNoText('Select a payment method from the following options.');

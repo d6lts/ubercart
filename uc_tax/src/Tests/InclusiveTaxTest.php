@@ -90,14 +90,14 @@ class InclusiveTaxTest extends TaxTestBase {
 
     // Check that the subtotal is $16.80 ($10 base + $5 option - $1 discount, with 20% tax)
     $this->drupalGet('cart');
-    $this->assertText('Subtotal: $16.80', 'Order subtotal is correct on cart page.');
+    $this->assertTextPattern('/Subtotal:\s*\$16.80/', 'Order subtotal is correct on cart page.');
 
     // @todo: disable rest of test, see [#2306379]
     return;
 
     // Make sure that the subtotal is also correct on the checkout page.
     $this->drupalPostForm('cart', [], 'Checkout');
-    $this->assertText('Subtotal: $16.80', 'Order subtotal is correct on checkout page.');
+    $this->assertTextPattern('/Subtotal:\s*\$16.80/', 'Order subtotal is correct on checkout page.');
 
     // Manually proceed to checkout review.
     $edit = $this->populateCheckoutForm();

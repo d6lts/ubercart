@@ -173,11 +173,11 @@ class ProductKitTest extends UbercartTestBase {
     $this->assertNoText($products[2]->label(), 'Product 3 title not shown.');
 
     $total = $products[0]->price->value + $products[1]->price->value + $products[2]->price->value;
-    $this->assertText('Subtotal: ' . uc_currency_format($total), 'Product kit total found.');
+    $this->assertTextPattern('/Subtotal:\s*' . preg_quote(uc_currency_format($total)) . '/', 'Product kit total found.');
 
     $qty = mt_rand(2, 10);
     $this->drupalPostForm(NULL, array('items[2][qty]' => $qty), 'Update cart');
-    $this->assertText('Subtotal: ' . uc_currency_format($total * $qty), 'Updated product kit total found.');
+    $this->assertTextPattern('/Subtotal:\s*' . preg_quote(uc_currency_format($total * $qty)) . '/', 'Updated product kit total found.');
 
     $this->drupalPostForm(NULL, array(), 'Remove');
     $this->assertText('There are no products in your shopping cart.');
@@ -199,11 +199,11 @@ class ProductKitTest extends UbercartTestBase {
     $this->assertText($products[2]->label(), 'Product 3 title shown.');
 
     $total = $products[0]->price->value + $products[1]->price->value + $products[2]->price->value;
-    $this->assertText('Subtotal: ' . uc_currency_format($total), 'Product kit total found.');
+    $this->assertTextPattern('/Subtotal:\s*' . preg_quote(uc_currency_format($total)) . '/', 'Product kit total found.');
 
     $qty = mt_rand(2, 10);
     $this->drupalPostForm(NULL, array('items[2][qty]' => $qty), 'Update cart');
-    $this->assertText('Subtotal: ' . uc_currency_format($total * $qty), 'Updated product kit total found.');
+    $this->assertTextPattern('/Subtotal:\s*' . preg_quote(uc_currency_format($total * $qty)) . '/', 'Updated product kit total found.');
 
     $this->drupalPostForm(NULL, array(), 'Remove');
     $this->assertText('There are no products in your shopping cart.');
@@ -225,7 +225,7 @@ class ProductKitTest extends UbercartTestBase {
     $this->assertText($products[2]->label(), 'Product 3 title shown.');
 
     $total = $products[0]->price->value + $products[1]->price->value + $products[2]->price->value;
-    $this->assertText('Subtotal: ' . uc_currency_format($total), 'Product kit total found.');
+    $this->assertTextPattern('/Subtotal:\s*' . preg_quote(uc_currency_format($total)) . '/', 'Product kit total found.');
 
     $qty = array(mt_rand(2, 10), mt_rand(2, 10), mt_rand(2, 10));
     $edit = array(
@@ -237,7 +237,7 @@ class ProductKitTest extends UbercartTestBase {
     $total = $products[0]->price->value * $qty[0];
     $total += $products[1]->price->value * $qty[1];
     $total += $products[2]->price->value * $qty[2];
-    $this->assertText('Subtotal: ' . uc_currency_format($total), 'Updated product kit total found.');
+    $this->assertTextPattern('/Subtotal:\s*' . preg_quote(uc_currency_format($total)) . '/', 'Updated product kit total found.');
 
     $this->drupalPostForm(NULL, array(), 'Remove');
     $this->drupalPostForm(NULL, array(), 'Remove');
