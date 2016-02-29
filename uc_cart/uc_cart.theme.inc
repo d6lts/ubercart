@@ -65,25 +65,27 @@ function theme_uc_cart_review_table(array $variables) {
     );
   }
 
-  // Add the subtotal as the final row.
+  // Add the subtotal in the table footer.
+  $footer = array();
   if ($show_subtotal) {
-    $rows[] = array(
+    $footer[] = array(
       'data' => array(
-        // One cell
+        // Cells.
+        array(
+          'data' => array('#markup' => t('Subtotal:')),
+          'colspan' => 2,
+          'class' => array('subtotal-title'),
+        ),
         array(
           'data' => array(
             '#theme' => 'uc_price',
-            '#prefix' => '<span id="subtotal-title">' . t('Subtotal:') . '</span> ',
             '#price' => $subtotal,
           ),
-          // Cell attributes
-          'colspan' => 3,
-          'class' => array('subtotal'),
+          'class' => array('price'),
         ),
       ),
+      // Row attributes.
       'no_striping' => TRUE,
-      // Row attributes
-      'class' => array('subtotal'),
     );
   }
 
@@ -91,6 +93,7 @@ function theme_uc_cart_review_table(array $variables) {
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
+    '#footer' => $footer,
     '#attributes' => array('class' => array('cart-review')),
   );
 

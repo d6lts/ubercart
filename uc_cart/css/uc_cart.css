@@ -205,9 +205,13 @@
 [dir="rtl"] .cart-review td.subtotal {
   text-align: left;
 }
-
-#subtotal-title {
+.cart-review td.subtotal-title {
   font-weight: bold;
+  text-align: right; /* LTR */
+}
+[dir="rtl"] .cart-review td.subtotal-title {
+  font-weight: bold;
+  text-align: left;
 }
 
 /**
