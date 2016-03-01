@@ -79,7 +79,7 @@ class PayPalController extends ControllerBase {
     }
 
     // Determine server.
-    if (empty($data['test_ipn'])) {
+    if (empty($ipn['test_ipn'])) {
       $host = 'https://www.paypal.com/cgi-bin/webscr';
     }
     else {
