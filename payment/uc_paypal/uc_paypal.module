@@ -26,7 +26,7 @@ function uc_paypal_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('PayPal Express Checkout settings help.') . '</p>';
     }
     elseif ($route_match->getRawParameter('plugin_id') == 'paypal_wps') {
-      return '<p>' . t('PayPal Website Payments Standard settings help.') . '</p>';
+      return '<p>' . t('PayPal Payments Standard settings help.') . '</p>';
     }
   }
   // Provide information and instructions on the payment method edit form.
@@ -35,7 +35,7 @@ function uc_paypal_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('PayPal Express Checkout settings help.') . '</p>';
     }
     elseif ($route_match->getParameter('uc_payment_method')->getPlugin()->getPluginId() == 'paypal_wps') {
-      return '<p>' . t('PayPal Website Payments Standard settings help.') . '</p>';
+      return '<p>' . t('PayPal Payments Standard settings help.') . '</p>';
     }
   }
 }

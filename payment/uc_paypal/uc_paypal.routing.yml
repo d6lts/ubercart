@@ -32,7 +32,7 @@ uc_paypal.ec_submit:
   requirements:
     _permission: 'access content'
 
-# Callback functions for Website Payments Standard.
+# Callback functions for PayPal Payments Standard.
 uc_paypal.wps_complete:
   path: '/uc_paypal/wps/complete/{uc_order}'
   defaults:

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod\PayPalWebsitePaymentsStandard.
+ * Contains \Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod\PayPalPaymentsStandard.
  */
 
 namespace Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod;
@@ -13,14 +13,14 @@ use Drupal\uc_order\OrderInterface;
 use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
 
 /**
- * Defines the PayPal Website Payments Standard payment method.
+ * Defines the PayPal Payments Standard payment method.
  *
  * @UbercartPaymentMethod(
  *   id = "paypal_wps",
- *   name = @Translation("PayPal Website Payments Standard")
+ *   name = @Translation("PayPal Payments Standard")
  * )
  */
-class PayPalWebsitePaymentsStandard extends PayPalPaymentMethodPluginBase implements OffsitePaymentMethodPluginInterface {
+class PayPalPaymentsStandard extends PayPalPaymentMethodPluginBase implements OffsitePaymentMethodPluginInterface {
 
   /**
    * Returns the set of card types which are used by this payment method.

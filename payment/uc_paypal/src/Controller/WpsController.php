@@ -9,7 +9,7 @@ namespace Drupal\uc_paypal\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\uc_order\OrderInterface;
-use Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod\PayPalWebsitePaymentsStandard;
+use Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod\PayPalPaymentsStandard;
 
 /**
  * Returns responses for PayPal routes.
@@ -17,7 +17,7 @@ use Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod\PayPalWebsitePaymentsStandard
 class WpsController extends ControllerBase {
 
   /**
-   * Handles a complete Website Payments Standard sale.
+   * Handles a complete PayPal Payments Standard sale.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect to the cart or checkout complete page.
@@ -36,7 +36,7 @@ class WpsController extends ControllerBase {
 
     // Ensure the payment method is PayPal WPS.
     $method = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($uc_order);
-    if (!$method instanceof PayPalWebsitePaymentsStandard) {
+    if (!$method instanceof PayPalPaymentsStandard) {
       return $this->redirect('uc_cart.cart');
     }
 
