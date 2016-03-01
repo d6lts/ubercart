@@ -1,15 +1,13 @@
-uuid: e9f07d51-3d33-4169-a700-c49a1df81014
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.uc_catalog_image
+    - taxonomy.vocabulary.catalog
   module:
     - image
     - taxonomy
     - user
-_core:
-  default_config_hash: DGn4Mspn405DsYKYYAy62vkPW64fH7n3V7W4_P1gk3U
 id: uc_catalog_terms
 label: 'Catalog categories'
 module: views
@@ -123,6 +121,7 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: number_unformatted
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -131,6 +130,7 @@ display:
           delta_reversed: false
           delta_first_last: false
           multi_type: separator
+          separator: ', '
           field_api_classes: false
           entity_type: taxonomy_term
           entity_field: tid
@@ -203,8 +203,6 @@ display:
           id: name
           table: taxonomy_term_field_data
           field: name
-          entity_type: taxonomy_term
-          entity_field: name
           relationship: none
           group_type: group
           admin_label: ''
@@ -249,15 +247,62 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_taxonomy: false
-          plugin_id: taxonomy
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          convert_spaces: false
+          entity_type: taxonomy_term
+          entity_field: name
+          plugin_id: term_name
       filters:
         vid:
           id: vid
-          table: taxonomy_term_data
+          table: taxonomy_term_field_data
           field: vid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
           value:
             catalog: catalog
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
           entity_type: taxonomy_term
           entity_field: vid
           plugin_id: bundle
@@ -272,7 +317,7 @@ display:
           order: ASC
           exposed: false
           expose:
-            label: ''
+            label: Weight
           entity_type: taxonomy_term
           entity_field: weight
           plugin_id: standard
@@ -287,7 +332,6 @@ display:
           exposed: false
           expose:
             label: Name
-            order: ASC
           entity_type: taxonomy_term
           entity_field: name
           plugin_id: standard
@@ -303,7 +347,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          default_action: ignore
+          default_action: default
           exception:
             value: all
             title_enable: false
