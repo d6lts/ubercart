@@ -12,36 +12,6 @@
  */
 
 /**
- * Handles the subtotal line item.
- */
-function uc_line_item_subtotal($op, $order) {
-  switch ($op) {
-    case 'load':
-      $lines[] = array(
-        'id' => 'subtotal',
-        'title' => t('Subtotal'),
-        'amount' => $order->getSubtotal(),
-      );
-      return $lines;
-  }
-}
-
-/**
- * Handles the total line item.
- */
-function uc_line_item_total($op, $order) {
-  switch ($op) {
-    case 'display':
-      $lines[] = array(
-        'id' => 'total',
-        'title' => t('Order total'),
-        'amount' => $order->getTotal(),
-      );
-      return $lines;
-  }
-}
-
-/**
  * Updates a line item.
  */
 function uc_order_update_line_item($id, $title, $amount, $data = NULL) {
@@ -94,7 +64,8 @@ function uc_order_delete_line_item($id, $order = FALSE) {
  */
 function uc_order_line_item_add($order_id, $type, $title, $amount, $weight = NULL, $data = NULL) {
   if (is_null($weight)) {
-    $weight = _uc_line_item_data($type, 'weight');
+    $line_item_manager = \Drupal::service('plugin.manager.uc_order.line_item');
+    $weight = $line_item_manager->getDefinition($type)['weight'];
   }
 
   $line_item = array(
@@ -113,53 +84,4 @@ function uc_order_line_item_add($order_id, $type, $title, $amount, $weight = NUL
   $line_item['data'] = $data;
 
   return $line_item;
-}
-
-/**
- * Builds a list of line items defined in the enabled modules.
- */
-function _uc_line_item_list($action = NULL) {
-  static $items;
-
-  if (count($items) > 0 && $action !== 'rebuild') {
-    return $items;
-  }
-
-  $items = array();
-  foreach (\Drupal::moduleHandler()->invokeAll('uc_line_item') as $id => $item) {
-    // Preserve backward compatibility for methods with no key specified.
-    if (is_numeric($id)) {
-      $id = $item['id'];
-    }
-
-    // Set defaults.
-    $item += array(
-      'id' => $id,
-      'enabled' => TRUE,
-      'weight' => 1,
-    );
-
-    // Merge in any settings.
-    $items[$id] = array_merge($item, array(
-//      @todo: Is something needed here to replace variable_get ?
-//      'enabled' => variable_get('uc_li_' . $id . '_enabled', $item['enabled']),
-//      'weight' => variable_get('uc_li_' . $id . '_weight', $item['weight']),
-      'enabled' => $item['enabled'],
-      'weight' => $item['weight'],
-    ));
-  }
-
-  \Drupal::moduleHandler()->alter('uc_line_item_data', $items);
-
-  uasort($items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-
-  return $items;
-}
-
-/**
- * Returns data from a line item by ID and the array key.
- */
-function _uc_line_item_data($item_id, $key) {
-  $items = _uc_line_item_list();
-  return isset($items[$item_id][$key]) ? $items[$item_id][$key] : NULL;
 }

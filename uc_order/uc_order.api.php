@@ -13,100 +13,15 @@ use Drupal\uc_order\OrderInterface;
  */
 
 /**
- * Defines line items that are attached to orders.
- *
- * A line item is a representation of charges, fees, and totals for an order.
- * Default line items include the subtotal and total line items, the tax line
- * item, and the shipping line item. There is also a generic line item that
- * store admins can use to add extra fees and discounts to manually created
- * orders. Module developers will use this hook to define new types of line
- * items for their stores. An example use would be for a module that allows
- * customers to use coupons and wants to represent an entered coupon as a line
- * item.
- *
- * Once a line item has been defined in hook_uc_line_item, Ubercart will begin
- * interacting with it in various parts of the code. One of the primary ways
- * this is done is through the callback function you specify for the line item.
- *
- * @return
- *   Your hook should return an array of associative arrays. Each item in the
- *   array represents a single line item, keyed by the internal ID of the line
- *   item, and with the following members:
- *   - "title"
- *     - type: string
- *     - value: The title of the line item shown to the user in various
- *       interfaces. Use t().
- *   - "callback"
- *     - type: string
- *     - value: Name of the line item's callback function, called for various
- *       operations.
- *   - "weight"
- *     - type: integer
- *     - value: Display order of the line item in lists; "lighter" items are
- *       displayed first.
- *   - "stored"
- *     - type: boolean
- *     - value: Whether or not the line item will be stored in the database.
- *       Should be TRUE for any line item that is modifiable from the order
- *       edit screen.
- *   - "add_list"
- *     - type: boolean
- *     - value: Whether or not a line item should be included in the "Add a Line
- *       Item" select box on the order edit screen.
- *   - "calculated"
- *     - type: boolean
- *     - value: Whether or not the value of this line item should be added to
- *       the order total. (Ex: would be TRUE for a shipping charge line item but
- *       FALSE for the subtotal line item since the product prices are already
- *       taken into account.)
- *   - "display_only"
- *     - type: boolean
- *     - value: Whether or not this line item is simply a display of information
- *       but not calculated anywhere. (Ex: the total line item uses display to
- *       simply show the total of the order at the bottom of the list of line
- *       items.)
- */
-function hook_uc_line_item() {
-  $items[] = array(
-    'id' => 'generic',
-    'title' => t('Empty line'),
-    'weight' => 2,
-    'default' => FALSE,
-    'stored' => TRUE,
-    'add_list' => TRUE,
-    'calculated' => TRUE,
-    'callback' => 'uc_line_item_generic',
-  );
-
-  return $items;
-}
-
-/**
- * Alters a line item on an order when the order is loaded.
- *
- * @param &$item
- *   The line item array.
- * @param $order
- *   The order object containing the line item.
- */
-function hook_uc_line_item_alter(&$item, $order) {
-  rules_invoke_event('calculate_line_item_discounts', $item, $order->getOwner());
-}
-
-/**
- * Alters the line item definitions declared in hook_uc_line_item().
+ * Alters the line item plugin definitions.
  *
  * @param &$items
- *   The combined return value of hook_uc_line_item().
+ *   Array of line item plugin definitions passed by reference.
  */
-function hook_uc_line_item_data_alter(&$items) {
+function hook_uc_line_item_alter(&$items) {
   // Tax amounts are added in to other line items, so the actual tax line
   // items should not be added to the order total.
   $items['tax']['calculated'] = FALSE;
-
-  // Taxes are included already, so the subtotal without taxes doesn't
-  // make sense.
-  $items['tax_subtotal']['callback'] = NULL;
 }
 
 

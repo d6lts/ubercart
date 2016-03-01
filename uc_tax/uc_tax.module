@@ -95,38 +95,6 @@ function uc_tax_entity_view_alter(&$build, EntityInterface $entity, EntityViewDi
 }
 
 /**
- * Implements hook_uc_line_item().
- */
-function uc_tax_uc_line_item() {
-  $items['tax'] = array(
-    'title' => t('Tax'),
-    'weight' => 9,
-    'stored' => TRUE,
-    'default' => FALSE,
-    'calculated' => TRUE,
-    'display_only' => FALSE,
-  );
-  $items['tax_display'] = array(
-    'title' => t('Tax'),
-    'callback' => 'uc_line_item_tax_display',
-    'weight' => 5,
-    'stored' => FALSE,
-    'calculated' => TRUE,
-    'display_only' => TRUE,
-  );
-  $items['tax_subtotal'] = array(
-    'title' => t('Subtotal excluding taxes'),
-    'callback' => 'uc_line_item_tax_subtotal',
-    'weight' => 7,
-    'stored' => FALSE,
-    'calculated' => FALSE,
-    'display_only' => TRUE,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_uc_order_insert().
  */
 function uc_tax_uc_order_insert(OrderInterface $order) {
@@ -205,26 +173,6 @@ function uc_tax_node_type_update(EntityInterface $info) {
 }
 
 /**
- * Tax line item callback.
- */
-function uc_line_item_tax_display($op, $order) {
-  switch ($op) {
-    case 'display':
-      $lines = array();
-      $taxes = uc_tax_calculate($order);
-      foreach ($taxes as $tax) {
-        foreach ($order->line_items as $line_item) {
-          if ($line_item['type'] == 'tax' && $line_item['data']['tax_id'] == $tax->id) {
-            continue 2;
-          }
-        }
-        $lines[] = _uc_tax_to_line_item($tax);
-      }
-      return $lines;
-  }
-}
-
-/**
  * Converts a tax object to the format expected by line item callbacks.
  *
  * @param $tax
@@ -242,52 +190,6 @@ function _uc_tax_to_line_item($tax) {
   );
   $line['data']['tax_id'] = $tax->id;
   return $line;
-}
-
-/**
- * Handles the line item subtotal before taxes.
- */
-function uc_line_item_tax_subtotal($op, $order) {
-  $amount = 0;
-  switch ($op) {
-    case 'display':
-      $has_taxes = FALSE;
-      $different = FALSE;
-
-      if (is_array($order->products)) {
-        foreach ($order->products as $item) {
-          $amount += $item->price->value * $item->qty->value;
-        }
-      }
-      if (is_array($order->line_items)) {
-        foreach ($order->line_items as $line_item) {
-          if ($line_item['type'] == 'subtotal') {
-            continue;
-          }
-          if (substr($line_item['type'], 0, 3) != 'tax') {
-            $amount += $line_item['amount'];
-            $different = TRUE;
-          }
-          else {
-            $has_taxes = TRUE;
-          }
-        }
-      }
-
-      if (isset($order->tax) && is_array($order->tax) && count($order->tax)) {
-        $has_taxes = TRUE;
-      }
-
-      if ($different && $has_taxes) {
-        return array(array(
-          'id' => 'tax_subtotal',
-          'title' => t('Subtotal excluding taxes'),
-          'amount' => $amount,
-          'weight' => \Drupal::config('uc_tax.settings')->get('tax_line_item.subtotal_weight'),
-        ));
-      }
-      break;
-  }
 }
 
 /**
@@ -597,13 +499,7 @@ function uc_tax_apply_tax($order, $tax) {
         continue;
       }
       if (in_array($line_item['type'], $taxed_line_items)) {
-        $callback = _uc_line_item_data($line_item['type'], 'tax_adjustment');
-        if (isset($callback) && function_exists($callback)) {
-          $taxable_amount += $callback($line_item['amount'], $order, $tax);
-        }
-        else {
-          $taxable_amount += $line_item['amount'];
-        }
+        $taxable_amount += $line_item['amount'];
       }
     }
   }

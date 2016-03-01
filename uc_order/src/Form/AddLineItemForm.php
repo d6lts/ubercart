@@ -28,23 +28,20 @@ class AddLineItemForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL, $line_item_id = '') {
-    $func = _uc_line_item_data($line_item_id, 'callback');
-
-    if (!function_exists($func) || ($form = $func('form', $order->id())) == NULL) {
-      $form['title'] = array(
-        '#type' => 'textfield',
-        '#title' => $this->t('Line item title'),
-        '#description' => $this->t('Display title of the line item.'),
-        '#size' => 32,
-        '#maxlength' => 128,
-        '#default_value' => _uc_line_item_data($line_item_id, 'title'),
-      );
-      $form['amount'] = array(
-        '#type' => 'uc_price',
-        '#title' => $this->t('Line item amount'),
-        '#allow_negative' => TRUE,
-      );
-    }
+    $line_item_manager = \Drupal::service('plugin.manager.uc_order.line_item');
+    $form['title'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Line item title'),
+      '#description' => $this->t('Display title of the line item.'),
+      '#size' => 32,
+      '#maxlength' => 128,
+      '#default_value' => $line_item_manager->getDefinition($line_item_id)['title'],
+    );
+    $form['amount'] = array(
+      '#type' => 'uc_price',
+      '#title' => $this->t('Line item amount'),
+      '#allow_negative' => TRUE,
+    );
 
     $form['order_id'] = array(
       '#type' => 'hidden',
@@ -71,26 +68,9 @@ class AddLineItemForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    $func = _uc_line_item_data($form_state->getValue('line_item_id'), 'callback');
-    if (function_exists($func) && ($form = $func('form', $form_state->getValue('order_id'))) != NULL) {
-      $func('validate', $form, $form_state);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $func = _uc_line_item_data($form_state->getValue('line_item_id'), 'callback');
-    if (function_exists($func) && ($form = $func('form', $form_state->getValue('order_id'))) != NULL) {
-      $func('submit', $form, $form_state);
-    }
-    else {
-      uc_order_line_item_add($form_state->getValue('order_id'), $form_state->getValue('line_item_id'), $form_state->getValue('title'), $form_state->getValue('amount'));
-      drupal_set_message($this->t('Line item added to order.'));
-    }
-
+    uc_order_line_item_add($form_state->getValue('order_id'), $form_state->getValue('line_item_id'), $form_state->getValue('title'), $form_state->getValue('amount'));
+    drupal_set_message($this->t('Line item added to order.'));
     $form_state->setRedirect('entity.uc_order.edit_form', ['uc_order' => $form_state->getValue('order_id')]);
   }
 

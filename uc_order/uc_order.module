@@ -214,37 +214,6 @@ function uc_order_form_views_exposed_form_submit($form, FormStateInterface $form
 }
 
 /**
- * Implements hook_uc_line_item().
- */
-function uc_order_uc_line_item() {
-  $items['subtotal'] = array(
-    'title' => t('Subtotal'),
-    'weight' => 0,
-    'stored' => FALSE,
-    'calculated' => FALSE,
-    'callback' => 'uc_line_item_subtotal',
-  );
-  $items['generic'] = array(
-    'title' => t('Empty line'),
-    'weight' => 2,
-    'stored' => TRUE,
-    'add_list' => TRUE,
-    'calculated' => TRUE,
-    'callback' => 'uc_line_item_generic',
-  );
-  $items['total'] = array(
-    'title' => t('Total'),
-    'weight' => 15,
-    'stored' => FALSE,
-    'calculated' => FALSE,
-    'display_only' => TRUE,
-    'callback' => 'uc_line_item_total',
-  );
-
-  return $items;
-}
-
-/**
  * Save a product to an order.
  */
 function uc_order_product_save($order_id, $product) {

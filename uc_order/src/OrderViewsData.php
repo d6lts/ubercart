@@ -398,7 +398,8 @@ class OrderViewsData extends EntityViewsData {
     // I don't think this wider apporach would harm. At most, it will duplicate
     // line items
     $line_items = array();
-    foreach (_uc_line_item_list() as $line_item) {
+    $definitions = \Drupal::service('plugin.manager.uc_order.line_item')->getDefinitions();
+    foreach ($definitions as $line_item) {
       if (!in_array($line_item['id'], array('subtotal', 'tax_subtotal', 'total', 'generic')) && $line_item['stored']) {
         $line_items[$line_item['id']] = $line_item['title'];
       }

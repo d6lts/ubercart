@@ -255,22 +255,6 @@ function uc_quote_uc_order_delete(OrderInterface $order) {
 }
 
 /**
- * Implements hook_uc_line_item().
- */
-function uc_quote_uc_line_item() {
-  $items['shipping'] = array(
-    'title' => t('Shipping'),
-    'weight' => 1,
-    'default' => FALSE,
-    'stored' => TRUE,
-    'calculated' => TRUE,
-    'display_only' => FALSE,
-    'add_list' => TRUE,
-  );
-  return $items;
-}
-
-/**
  * Implements hook_uc_shipping_type().
  */
 function uc_quote_uc_shipping_type() {

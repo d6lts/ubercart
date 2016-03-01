@@ -98,7 +98,8 @@ class TaxRateFormBase extends EntityForm {
     );
 
     $options = array();
-    foreach (_uc_line_item_list() as $id => $line_item) {
+    $definitions = \Drupal::service('plugin.manager.uc_order.line_item')->getDefinitions();
+    foreach ($definitions as $id => $line_item) {
       if (!in_array($id, ['subtotal', 'tax_subtotal', 'total', 'tax_display'])) {
         $options[$id] = $line_item['title'];
       }

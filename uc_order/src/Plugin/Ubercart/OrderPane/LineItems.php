@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_order\Plugin\Ubercart\OrderPane;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -37,26 +36,8 @@ class LineItems extends EditableOrderPanePluginBase {
    * {@inheritdoc}
    */
   public function view(OrderInterface $order, $view_mode) {
-    $line_items = $order->line_items;
-    $items = _uc_line_item_list();
-    foreach ($items as $item) {
-      if (isset($item['display_only']) && $item['display_only'] == TRUE) {
-        $result = $item['callback']('display', $order);
-        if (is_array($result)) {
-          foreach ($result as $line) {
-            $line_items[] = array(
-              'title' => $line['title'],
-              'amount' => $line['amount'],
-              'weight' => $item['weight']
-            );
-          }
-        }
-      }
-    }
-    usort($line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
-
     $rows = array();
-    foreach ($line_items as $item) {
+    foreach ($order->getDisplayLineItems() as $item) {
       $rows[] = array(
         'data' => array(
           // Title column.
@@ -87,27 +68,13 @@ class LineItems extends EditableOrderPanePluginBase {
    */
   public function buildForm(OrderInterface $order, array $form, FormStateInterface $form_state) {
     $options = array();
-    $items = _uc_line_item_list();
-    $line_items = $order->line_items;
-    foreach ($items as $item) {
-      if (isset($item['add_list']) && $item['add_list'] === TRUE) {
-        $options[$item['id']] = SafeMarkup::checkPlain($item['title']);
-      }
-      if (isset($item['display_only']) && $item['display_only'] == TRUE) {
-        $result = $item['callback']('display', $order);
-        if (is_array($result)) {
-          foreach ($result as $line) {
-            $line_items[] = array(
-              'line_item_id' => $line['id'],
-              'title' => $line['title'],
-              'amount' => $line['amount'],
-              'weight' => $item['weight'],
-            );
-          }
-        }
+    $line_item_manager = \Drupal::service('plugin.manager.uc_order.line_item');
+    $definitions = $line_item_manager->getDefinitions();
+    foreach ($definitions as $item) {
+      if ($item['add_list']) {
+        $options[$item['id']] = $item['title'];
       }
     }
-    usort($line_items, 'Drupal\Component\Utility\SortArray::sortByWeightElement');
 
     $form['add_line_item'] = array('#type' => 'container');
 
@@ -132,13 +99,14 @@ class LineItems extends EditableOrderPanePluginBase {
       '#suffix' => '</div>',
     );
 
-    foreach ($line_items as $item) {
-      $form['line_items'][$item['line_item_id']]['li_id'] = array(
+    foreach ($order->getDisplayLineItems() as $item) {
+      $id = $item['line_item_id'];
+      $form['line_items'][$id]['li_id'] = array(
         '#type' => 'hidden',
-        '#value' => $item['line_item_id'],
+        '#value' => $id,
       );
-      if (isset($item['type']) && _uc_line_item_data($item['type'], 'stored') == TRUE) {
-        $form['line_items'][$item['line_item_id']]['remove'] = array(
+      if (!empty($definitions[$item['type']]['stored'])) {
+        $form['line_items'][$id]['remove'] = array(
           '#type' => 'image_button',
           '#title' => $this->t('Remove line item.'),
           '#src' => drupal_get_path('module', 'uc_store') . '/images/error.gif',
@@ -147,9 +115,9 @@ class LineItems extends EditableOrderPanePluginBase {
           '#ajax' => array(
             'callback' => array($this, 'ajaxCallback'),
           ),
-          '#return_value' => $item['line_item_id'],
+          '#return_value' => $id,
         );
-        $form['line_items'][$item['line_item_id']]['title'] = array(
+        $form['line_items'][$id]['title'] = array(
           '#type' => 'textfield',
           '#title' => $this->t('Title'),
           '#title_display' => 'invisible',
@@ -157,7 +125,7 @@ class LineItems extends EditableOrderPanePluginBase {
           '#size' => 40,
           '#maxlength' => 128,
         );
-        $form['line_items'][$item['line_item_id']]['amount'] = array(
+        $form['line_items'][$id]['amount'] = array(
           '#type' => 'uc_price',
           '#title' => $this->t('Amount'),
           '#title_display' => 'invisible',
@@ -168,13 +136,13 @@ class LineItems extends EditableOrderPanePluginBase {
         );
       }
       else {
-        $form['line_items'][$item['line_item_id']]['remove'] = array(
+        $form['line_items'][$id]['remove'] = array(
           '#markup' => '',
         );
-        $form['line_items'][$item['line_item_id']]['title'] = array(
+        $form['line_items'][$id]['title'] = array(
           '#plain_text' => $item['title'],
         );
-        $form['line_items'][$item['line_item_id']]['amount'] = array(
+        $form['line_items'][$id]['amount'] = array(
           '#theme' => 'uc_price',
           '#price' => $item['amount'],
           '#wrapper_attributes' => array('class' => array('li-amount')),
@@ -207,7 +175,8 @@ class LineItems extends EditableOrderPanePluginBase {
     $order = &$form_state->get('order');
     $type = $form_state->getValue('li_type_select');
 
-    uc_order_line_item_add($order->id(), $type, _uc_line_item_data($type, 'title'), 0);
+    $line_item_manager = \Drupal::service('plugin.manager.uc_order.line_item');
+    uc_order_line_item_add($order->id(), $type, $line_item_manager->getDefinition($type)['title'], 0);
     $order->line_items = $order->getLineItems();
 
     $form_state->setRebuild();

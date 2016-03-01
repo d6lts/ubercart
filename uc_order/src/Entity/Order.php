@@ -203,7 +203,7 @@ class Order extends ContentEntityBase implements OrderInterface {
 
     $result = db_query("SELECT * FROM {uc_order_line_items} WHERE order_id = :id", [':id' => $this->id()]);
     foreach ($result as $row) {
-      $item = array(
+      $items[] = array(
         'line_item_id' => $row->line_item_id,
         'type' => $row->type,
         'title' => $row->title,
@@ -211,20 +211,15 @@ class Order extends ContentEntityBase implements OrderInterface {
         'weight' => $row->weight,
         'data' => unserialize($row->data),
       );
-      \Drupal::moduleHandler()->alter('uc_line_item', $item, $this);
-      $items[] = $item;
     }
 
-    // Set stored line items so hook_uc_line_item_alter() can access them.
-    // @todo Somehow avoid this!
-    $this->line_items = $items;
-
-    foreach (_uc_line_item_list() as $type) {
-      if ($type['stored'] == FALSE && empty($type['display_only']) && !empty($type['callback']) && function_exists($type['callback'])) {
-        $result = $type['callback']('load', $this);
+    $line_item_manager = \Drupal::service('plugin.manager.uc_order.line_item');
+    foreach ($line_item_manager->getDefinitions() as $type) {
+      if (!$type['stored'] && !$type['display_only']) {
+        $result = $line_item_manager->createInstance($type['id'])->load($this);
         if ($result !== FALSE && is_array($result)) {
           foreach ($result as $line) {
-            $item = array(
+            $items[] = array(
               'line_item_id' => $line['id'],
               'type' => $type['id'],
               'title' => $line['title'],
@@ -232,8 +227,6 @@ class Order extends ContentEntityBase implements OrderInterface {
               'weight' => isset($line['weight']) ? $line['weight'] : $type['weight'],
               'data' => isset($line['data']) ? $line['data'] : array(),
             );
-            \Drupal::moduleHandler()->alter('uc_line_item', $item, $this);
-            $items[] = $item;
           }
         }
       }
@@ -248,16 +241,16 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function getDisplayLineItems() {
-    $temp = clone $this;
     $line_items = $this->getLineItems();
 
-    $items = _uc_line_item_list();
-    foreach ($items as $item) {
-      if (!empty($item['display_only'])) {
-        $result = $item['callback']('display', $temp);
+    $line_item_manager = \Drupal::service('plugin.manager.uc_order.line_item');
+    foreach ($line_item_manager->getDefinitions() as $item) {
+      if ($item['display_only']) {
+        $result = $line_item_manager->createInstance($item['id'])->display($this);
         if (is_array($result)) {
           foreach ($result as $line) {
             $line_items[] = array(
+              'line_item_id' => $line['id'],
               'type' => $item['id'],
               'title' => $line['title'],
               'amount' => $line['amount'],
@@ -368,8 +361,9 @@ class Order extends ContentEntityBase implements OrderInterface {
    */
   public function getTotal() {
     $total = $this->getSubtotal();
+    $definitions = \Drupal::service('plugin.manager.uc_order.line_item')->getDefinitions();
     foreach ($this->line_items as $item) {
-      if (_uc_line_item_data($item['type'], 'calculated') == TRUE) {
+      if (!empty($definitions[$item['type']]['calculated'])) {
         $total += $item['amount'];
       }
     }
