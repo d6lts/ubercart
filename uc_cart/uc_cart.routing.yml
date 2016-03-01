@@ -39,6 +39,8 @@ uc_cart.checkout_review:
     _controller: '\Drupal\uc_cart\Controller\CheckoutController::review'
   requirements:
     _permission: 'access content'
+  options:
+    no_cache: TRUE
 
 uc_cart.checkout_complete:
   path: '/cart/checkout/complete'
@@ -47,6 +49,8 @@ uc_cart.checkout_complete:
     _controller: '\Drupal\uc_cart\Controller\CheckoutController::complete'
   requirements:
     _permission: 'access content'
+  options:
+    no_cache: TRUE
 
 uc_cart.empty:
   path: '/cart/empty'
