@@ -9,43 +9,32 @@ namespace Drupal\uc_catalog;
 
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Link;
 
 /**
- * Provides a custom breadcrumb builder for catalog node pages.
+ * Provides a custom breadcrumb builder for catalog node and listing pages.
  */
 class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   use StringTranslationTrait;
 
   /**
-   * Configuration object for this builder.
+   * The taxonomy storage.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Taxonomy\TermStorageInterface
    */
-  protected $config;
-
-  /**
-   * Stores the entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
+  protected $termStorage;
 
   /**
    * Constructs a new CatalogBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactory $configFactory
-   *   The configuration factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $configFactory) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->config = $configFactory->get('uc_catalog.settings');
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
   }
 
   /**
@@ -53,55 +42,42 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function applies(RouteMatchInterface $route_match) {
     $route_name = $route_match->getRouteName();
-    return $route_name == 'node.view' && $route_match->getParameter('node') && isset($route_match->getParameter('node')->taxonomy_catalog)
-        || (substr($route_name, 0, 16) == 'view.uc_catalog.' && $route_match->getParameter('arg_term_node_tid_depth'));
+    return $route_name == 'entity.node.canonical' && $route_match->getParameter('node') && isset($route_match->getParameter('node')->taxonomy_catalog)
+        || (substr($route_name, 0, 16) == 'view.uc_catalog.' && $route_match->getParameter('arg_0'));
   }
 
   /**
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
-    $route_name = $route_match->getRouteName();
-    if ($route_name == 'node.view' && $route_match->getParameter('node') && isset($route_match->getParameter('node')->taxonomy_catalog)) {
-      return $this->catalogBreadcrumb($route_match->getParameter('node'));
-    }
-    elseif (substr($route_name, 0, 16) == 'view.uc_catalog.' && $route_match->getParameter('arg_term_node_tid_depth')) {
-      return $this->catalogTermBreadcrumb($route_match->getParameter('arg_term_node_tid_depth'));
-    }
-  }
-
-  /**
-   * Builds the breadcrumb for a catalog page.
-   */
-  protected function catalogBreadcrumb($node) {
-    $links[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $links[] = Link::createFromRoute($this->t('Catalog'), 'view.uc_catalog.page_1');
-    if ($parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->target_id)) {
-      $parents = array_reverse($parents);
-      foreach ($parents as $parent) {
-        $links[] = Link::createFromRoute($parent->label(), 'view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]);
-      }
-    }
-
     $breadcrumb = new Breadcrumb();
-    $breadcrumb->setLinks($links);
+    $breadcrumb->addCacheContexts(['route']);
 
-    return $breadcrumb;
-  }
+    $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
+    $breadcrumb->addLink(Link::createFromRoute($this->t('Catalog'), 'view.uc_catalog.page_1'));
 
-  /**
-   * Builds the breadcrumb for a catalog term page.
-   */
-  protected function catalogTermBreadcrumb($tid) {
-    $breadcrumb[] = Link::createFromRoute($this->t('Home'), '<front>');
-    $breadcrumb[] = Link::createFromRoute($this->t('Catalog'), 'view.uc_catalog.page_1');
-    if ($parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($tid)) {
-      array_shift($parents);
+    if ($route_match->getRouteName() == 'entity.node.canonical') {
+      // Extract term ID for node view.
+      $tid = $route_match->getParameter('node')->taxonomy_catalog->target_id;
+      $skip_last = FALSE;
+    }
+    else {
+      // Get term ID argument for catalog view, and skip the last term.
+      $tid = $route_match->getParameter('arg_0');
+      $skip_last = TRUE;
+    }
+
+    if ($parents = $this->termStorage->loadAllParents($tid)) {
+      if ($skip_last) {
+        array_shift($parents);
+      }
       $parents = array_reverse($parents);
       foreach ($parents as $parent) {
-        $breadcrumb[] = Link::createFromRoute($parent->label(), 'view.uc_catalog.page_1', ['term_node_tid_depth' => $parent->id()]);
+        $breadcrumb->addCacheableDependency($parent);
+        $breadcrumb->addLink(Link::createFromRoute($parent->label(), 'view.uc_catalog.page_1', ['arg_0' => $parent->id()]));
       }
     }
+
     return $breadcrumb;
   }
 
