@@ -75,6 +75,8 @@ function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $for
  * page.
  */
 function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
+  $form['#validate'][] = 'uc_payment_checkout_review_form_validate';
+
   $order = $form_state->get('uc_order');
   /** @var \Drupal\uc_payment\PaymentMethodPluginInterface $plugin */
   $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
@@ -88,12 +90,16 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInt
 }
 
 /**
- * Implements hook_uc_order().
+ * Validation callback for the checkout review form.
  */
-function uc_payment_uc_order($op, $order) {
-  switch ($op) {
-    case 'submit':
-      return \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSubmit($order);
+function uc_payment_checkout_review_form_validate($form, FormStateInterface $form_state) {
+  $order = $form_state->get('uc_order');
+  /** @var \Drupal\uc_payment\PaymentMethodPluginInterface $plugin */
+  $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+
+  // If the plugin failed for any reason, show the message to the user.
+  if ($message = $plugin->orderSubmit($order)) {
+    $form_state->setErrorByName('', $message);
   }
 }
 

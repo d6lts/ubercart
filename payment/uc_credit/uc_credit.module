@@ -66,6 +66,17 @@ function uc_credit_theme() {
 }
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function uc_credit_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter' && isset($implementations['uc_credit'])) {
+    $group = $implementations['uc_credit'];
+    unset($implementations['uc_credit']);
+    $implementations['uc_credit'] = $group;
+  }
+}
+
+/**
  * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_form().
  */
 function uc_credit_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
@@ -122,11 +133,9 @@ function uc_credit_form_uc_cart_checkout_review_form_alter(&$form, FormStateInte
   // failed order submissions.
   $form['actions']['back']['#submit'][] = 'uc_credit_cart_review_back_submit';
 
-  // Reconstruct the submit handler array for before and after processing.
-  $submit = array_merge(array('uc_credit_cart_review_pre_form_submit'), $form['#submit']);
-  $submit[] = 'uc_credit_cart_review_post_form_submit';
-
-  $form['#submit'] = $submit;
+  // Reconstruct the validate handler array for before and after processing.
+  array_unshift($form['#validate'], 'uc_credit_cart_review_pre_form_validate');
+  array_push($form['#validate'], 'uc_credit_cart_review_post_form_validate');
 
   // Clear the session of the details.
   $session->remove('sescrd');
@@ -213,39 +222,25 @@ function uc_credit_cache($op, $data = NULL, $encrypted = TRUE) {
 }
 
 /**
- * Caches the encrypted CC data on the review order form for processing.
+ * Store the temporary CC data again if the back button is pressed.
  */
 function uc_credit_cart_review_back_submit($form, FormStateInterface $form_state) {
-  $session = \Drupal::service('session');
-  $session_card_data = base64_decode($_POST['sescrd']);
-
-  $session->set('sescrd', $session_card_data);
-  uc_credit_cache('save', $session_card_data);
+  \Drupal::service('session')->set('sescrd', base64_decode($_POST['sescrd']));
 }
 
 /**
  * Caches the encrypted CC data on the review order form for processing.
  */
-function uc_credit_cart_review_pre_form_submit($form, FormStateInterface $form_state) {
-  $session = \Drupal::service('session');
-  $session_card_data = base64_decode($_POST['sescrd']);
-
-  $session->set('sescrd', $session_card_data);
-  uc_credit_cache('save', $session_card_data);
+function uc_credit_cart_review_pre_form_validate($form, FormStateInterface $form_state) {
+  uc_credit_cache('save', base64_decode($_POST['sescrd']));
 }
 
 /**
- * Clears the temporary CC data if the review order form submits.
+ * Store the temporary CC data again if the review order form does not validate.
  */
-function uc_credit_cart_review_post_form_submit($form, FormStateInterface $form_state) {
-  $session = \Drupal::service('session');
-  $complete = array();
-  if ($session->has('uc_checkout')) {
-    $complete = $session->get('uc_checkout');
-  }
-  if (!empty($complete[$session->get('cart_order')]['do_complete'])) {
-    // Otherwise stuff it back in the session for the next pageload.
-    $session->remove('sescrd');
+function uc_credit_cart_review_post_form_validate($form, FormStateInterface $form_state) {
+  if ($form_state->hasAnyErrors()) {
+    \Drupal::service('session')->set('sescrd', base64_decode($_POST['sescrd']));
   }
 }
 

@@ -198,11 +198,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
     $max = $this->configuration['max_order'];
 
     if ($max > 0 && $order->getTotal() > $max) {
-      $result[] = array(
-        'pass' => FALSE,
-        'message' => $this->t('Your final order total exceeds the maximum for COD payment.  Please go back and select a different method of payment.')
-      );
-      return $result;
+      return $this->t('Your final order total exceeds the maximum for COD payment.  Please go back and select a different method of payment.');
     }
   }
 

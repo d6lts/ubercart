@@ -36,10 +36,7 @@ class FreeOrder extends PaymentMethodPluginBase {
    */
   public function orderSubmit(OrderInterface $order) {
     if ($order->getTotal() >= 0.01) {
-      return array(array(
-        'pass' => FALSE,
-        'message' => $this->t('We cannot process your order without payment.'),
-      ));
+      return $this->t('We cannot process your order without payment.');
     }
 
     uc_payment_enter($order->id(), 'free_order', 0, 0, NULL, $this->t('Checkout completed for a free order.'));

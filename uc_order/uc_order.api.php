@@ -24,48 +24,6 @@ function hook_uc_line_item_alter(&$items) {
   $items['tax']['calculated'] = FALSE;
 }
 
-
-/**
- * Performs actions on orders.
- *
- * An order in Ubercart represents a single transaction. Orders are created
- * during the checkout process where they sit in the database with a status of
- * "In checkout". When a customer completes checkout, the order's status gets
- * updated to show that the sale has gone through. Once an order is created,
- * and even during its creation, it may be acted on by any module to connect
- * extra information to an order. Every time an action occurs to an order,
- * hook_uc_order() gets invoked to let your modules know what's happening and
- * make stuff happen.
- *
- * @param $op
- *   The action being performed.
- * @param $order
- *   This is the order object.
- * @param $arg2
- *   This is variable and is based on the value of $op:
- *   - submit: When a sale is being completed and the customer has clicked the
- *     Submit order button from the checkout screen, the hook is invoked with
- *     this op. This gives modules a chance to determine whether or not the
- *     order should be allowed. An example use of this is the credit module
- *     attempting to process payments when an order is submitted and returning
- *     a failure message if the payment failed.
- *     To prevent an order from passing through, you must return an array
- *     resembling the following one with the failure message:
- *     @code
- *       return array(array(
- *         'pass' => FALSE,
- *         'message' => t('We were unable to process your credit card.'),
- *       ));
- *     @endcode
- */
-function hook_uc_order($op, $order, $arg2) {
-  switch ($op) {
-    case 'save':
-      // Do something to save payment info!
-      break;
-  }
-}
-
 /**
  * Adds links to local tasks for orders on the admin's list of orders.
  *

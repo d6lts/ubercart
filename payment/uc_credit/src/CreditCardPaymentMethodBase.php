@@ -580,13 +580,9 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     // Clear out that session variable denoting this as a CC paid order.
     \Drupal::service('session')->remove('cc_pay');
 
-    // Attempt to process the CC payment.
-    $pass = $this->processPayment($order, $order->getTotal(), $this->configuration['txn_type']);
-
-    // If the payment failed, store the data back in the session and
-    // halt the checkout process.
-    if (!$pass) {
-      return array(array('pass' => FALSE, 'message' => $this->t('We were unable to process your credit card payment. Please verify your details and try again.')));
+    // Attempt to process the credit card payment.
+    if (!$this->processPayment($order, $order->getTotal(), $this->configuration['txn_type'])) {
+      return $this->t('We were unable to process your credit card payment. Please verify your details and try again.');
     }
   }
 
