@@ -53,37 +53,10 @@ class Address implements AddressInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function isSamePhysicalLocation(AddressInterface $address) {
-    $physicalProperty = array(
-      'street1', 'street2', 'city', 'zone', 'country', 'postal_code'
-    );
-
-    foreach ($physicalProperty as $property) {
-      // Canonicalize properties before comparing.
-      if (Address::makeCanonical($this->$property)   !=
-          Address::makeCanonical($address->$property)  ) {
-        return FALSE;
-      }
-    }
-    return TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function makeCanonical($string = '') {
-    // Remove all whitespace.
-    $string = preg_replace('/\s+/', '', $string);
-    // Make all characters upper case.
-    $string = Unicode::strtoupper($string);
-
-    return $string;
-  }
-
-  /**
-   * {@inheritdoc}
+   * Formats the address for display based on the country's address format.
+   *
+   * @return string
+   *   A formatted string containing the address.
    */
   public function __toString() {
     $variables = array(

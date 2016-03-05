@@ -244,11 +244,4 @@ interface AddressInterface {
    */
   public static function makeCanonical($string);
 
-  /**
-   * Formats the address for display based on the country's address format.
-   *
-   * @return string
-   *   A formatted string containing the address.
-   */
-  public function __toString();
 }

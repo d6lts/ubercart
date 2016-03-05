@@ -7,8 +7,10 @@
 
 namespace Drupal\uc_store;
 
+use Drupal\Component\Utility\Unicode;
+
 /**
- * Defines the address trait.
+ * Defines a trait implementing \Drupal\uc_store\AddressInterface.
  */
 trait AddressTrait {
 
@@ -312,70 +314,6 @@ trait AddressTrait {
     $string = Unicode::strtoupper($string);
 
     return $string;
-  }
-
-  /**
-   * Formats the address for display based on the country's address format.
-   *
-   * @return
-   *   A formatted string containing the address.
-   */
-  public function __toString() {
-    $variables = array(
-      '!company' => $this->company,
-      '!first_name' => $this->first_name,
-      '!last_name' => $this->last_name,
-      '!street1' => $this->street1,
-      '!street2' => $this->street2,
-      '!city' => $this->city,
-      '!postal_code' => $this->postal_code,
-    );
-
-    $country = \Drupal::service('country_manager')->getCountry($this->country);
-    if ($country) {
-      $variables += array(
-        '!zone_code' => $this->zone ?: t('N/A'),
-        '!zone_name' => isset($country->getZones()[$this->zone]) ? $country->getZones()[$this->zone] : t('Unknown'),
-        '!country_name' => t($country->getName()),
-        '!country_code2' => $country->id(),
-        '!country_code3' => $country->getAlpha3(),
-      );
-      $format = implode("\r\n", $country->getAddressFormat());
-    }
-    else {
-      $variables += array(
-        '!zone_code' => t('N/A'),
-        '!zone_name' => t('Unknown'),
-        '!country_name' => t('Unknown'),
-        '!country_code2' => t('N/A'),
-        '!country_code3' => t('N/A'),
-      );
-      $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
-    }
-
-    if (uc_store_default_country() != $this->country) {
-      $variables['!country_name_if'] = $variables['!country_name'];
-      $variables['!country_code2_if'] = $variables['!country_code2'];
-      $variables['!country_code3_if'] = $variables['!country_code3'];
-    }
-    else {
-      $variables['!country_name_if']  = '';
-      $variables['!country_code2_if'] = '';
-      $variables['!country_code3_if'] = '';
-    }
-
-    $address = SafeMarkup::checkPlain(strtr($format, $variables));
-    $address = preg_replace("/\r/", '', $address);
-    $address = preg_replace("/\n +\n/", "\n", $address);
-    $address = trim($address, "\n");
-
-    if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
-      $address = Unicode::strtoupper($address);
-    }
-
-    // <br> instead of <br />, because Twig will change it to <br> anyway and it's nice
-    // to be able to test the Raw output.
-    return nl2br($address, FALSE);
   }
 
 }
