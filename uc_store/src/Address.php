@@ -10,8 +10,6 @@ namespace Drupal\uc_store;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\uc_store\AddressInterface;
-use Drupal\uc_store\AddressTrait;
 
 /**
  * Defines an object to hold Ubercart mailing address information.
@@ -126,7 +124,10 @@ class Address implements AddressInterface {
     }
 
     $address = Html::escape(strtr($format, $variables));
-    $address = trim(trim(preg_replace("/\n+/", "\n", $address), "\n"), ' ');
+    // Remove empty lines in the middle of an address string (0 or more
+    // whitespace characters bracketed by \n) then remove (trim) whitespace
+    // from the beginning and end of the string.
+    $address = trim(preg_replace("/\n\s*\n/", "\n", $address));
 
     if (\Drupal::config('uc_store.settings')->get('capitalize_address')) {
       $address = Unicode::strtoupper($address);
