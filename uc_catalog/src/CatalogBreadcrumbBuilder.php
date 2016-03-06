@@ -42,7 +42,7 @@ class CatalogBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function applies(RouteMatchInterface $route_match) {
     $route_name = $route_match->getRouteName();
-    return $route_name == 'entity.node.canonical' && $route_match->getParameter('node') && isset($route_match->getParameter('node')->taxonomy_catalog)
+    return $route_name == 'entity.node.canonical' && $route_match->getParameter('node') && !empty($route_match->getParameter('node')->taxonomy_catalog->target_id)
         || (substr($route_name, 0, 16) == 'view.uc_catalog.' && $route_match->getParameter('arg_0'));
   }
 
