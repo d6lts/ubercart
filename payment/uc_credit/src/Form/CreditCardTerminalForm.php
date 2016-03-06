@@ -247,7 +247,7 @@ class CreditCardTerminalForm extends FormBase {
     }
 
     // Cache the values for use during processing.
-    uc_credit_cache('save', $cc_data, FALSE);
+    uc_credit_cache($cc_data, FALSE);
 
     // Build the data array passed on to the payment gateway.
     $txn_type = NULL;
@@ -295,8 +295,10 @@ class CreditCardTerminalForm extends FormBase {
         $reference = $form_state->getValue('select_ref');
     }
 
-    $result = $this->paymentMethod->getPlugin()->processPayment($this->order, $form_state->getValue('amount'), $txn_type, $reference);
-    _uc_credit_save_cc_data_to_order(uc_credit_cache('load'), $this->order->id());
+    $plugin = $this->paymentMethod->getPlugin();
+    $result = $plugin->processPayment($this->order, $form_state->getValue('amount'), $txn_type, $reference);
+    $this->order->payment_details = uc_credit_cache();
+    $plugin->orderSave($this->order);
 
     if ($result) {
       drupal_set_message($this->t('The credit card was processed successfully. See the admin comments for more details.'));

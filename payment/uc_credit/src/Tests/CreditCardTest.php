@@ -226,16 +226,55 @@ class CreditCardTest extends UbercartTestBase {
   }
 
   /**
-   * Tests that an order can be placed using the test gateway.
+   * Tests that an order can be placed using the test gateway even if
+   * the user changes their mind and fails a payment attempt.
    */
   public function testCheckout() {
     $this->addToCart($this->product);
-    $this->checkout(array(
+
+    // Submit the checkout page.
+    $edit = $this->populateCheckoutForm(array(
       'panes[payment][details][cc_number]' => array_rand(array_flip(self::$test_cards)),
       'panes[payment][details][cc_cvv]' => mt_rand(100, 999),
       'panes[payment][details][cc_exp_month]' => mt_rand(1, 12),
       'panes[payment][details][cc_exp_year]' => mt_rand(date('Y') + 1, 2022),
     ));
+    $this->drupalPostForm('cart/checkout', $edit, 'Review order');
+    $this->assertText('(Last 4) ' . substr($edit['panes[payment][details][cc_number]'], -4), 'Truncated credit card number found.');
+    $this->assertText($edit['panes[payment][details][cc_exp_year]'], 'Expiry date found.');
+
+    // Go back.
+    $this->drupalPostForm(NULL, [], 'Back');
+    $this->assertFieldByName('panes[payment][details][cc_number]', '(Last 4) ' . substr($edit['panes[payment][details][cc_number]'], -4), 'Truncated credit card number found.');
+    $this->assertFieldByName('panes[payment][details][cc_cvv]', '---', 'Masked CVV found.');
+    $this->assertFieldByName('panes[payment][details][cc_exp_month]', $edit['panes[payment][details][cc_exp_month]'], 'Expiry month found.');
+    $this->assertFieldByName('panes[payment][details][cc_exp_year]', $edit['panes[payment][details][cc_exp_year]'], 'Expiry year found.');
+
+    // Change the number and fail with a known-bad CVV.
+    $edit = array(
+      'panes[payment][details][cc_number]' => array_rand(array_flip(self::$test_cards)),
+      'panes[payment][details][cc_cvv]' => '000',
+    );
+    $this->drupalPostForm(NULL, $edit, 'Review order');
+    $this->assertText('(Last 4) ' . substr($edit['panes[payment][details][cc_number]'], -4), 'Truncated updated credit card number found.');
+
+    // Try to submit the bad CVV.
+    $this->drupalPostForm(NULL, [], 'Submit order');
+    $this->assertText('We were unable to process your credit card payment. Please verify your details and try again.');
+
+    // Go back.
+    $this->drupalPostForm(NULL, [], 'Back');
+    $this->assertFieldByName('panes[payment][details][cc_number]', '(Last 4) ' . substr($edit['panes[payment][details][cc_number]'], -4), 'Truncated updated credit card number found.');
+    $this->assertFieldByName('panes[payment][details][cc_cvv]', '---', 'Masked CVV found.');
+
+    // Fix the CVV.
+    $edit = array(
+      'panes[payment][details][cc_cvv]' => mt_rand(100, 999),
+    );
+    $this->drupalPostForm(NULL, $edit, 'Review order');
+
+    // Check for success.
+    $this->drupalPostForm(NULL, [], 'Submit order');
     $this->assertText('Your order is complete!');
   }
 

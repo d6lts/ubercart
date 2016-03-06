@@ -66,35 +66,10 @@ function uc_credit_theme() {
 }
 
 /**
- * Implements hook_module_implements_alter().
- */
-function uc_credit_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'form_alter' && isset($implementations['uc_credit'])) {
-    $group = $implementations['uc_credit'];
-    unset($implementations['uc_credit']);
-    $implementations['uc_credit'] = $group;
-  }
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_form().
  */
 function uc_credit_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
-  // Cache the CC details for use in other functions.
-  $session = \Drupal::service('session');
-  if ($session->has('sescrd')) {
-    uc_credit_cache('save', $session->get('sescrd'));
-
-    // Store the encrypted details to the form for processing on submit.
-    $form['payment_details_data'] = array(
-      '#type' => 'hidden',
-      '#value' => $session->get('sescrd'),
-    );
-
-    // Clear the session of the details.
-    $session->remove('sescrd');
-  }
-  $session->remove('cc_pay');
+  \Drupal::service('session')->remove('cc_pay');
 }
 
 /**
@@ -112,47 +87,33 @@ function uc_credit_form_uc_cart_checkout_review_form_alter(&$form, FormStateInte
     return new RedirectResponse(Url::fromRoute('uc_cart.checkout')->toString());
   }
 
+  // Encrypted data in the session is from the user coming from the checkout.
   if ($session->has('sescrd')) {
-    // Cache the CC details for use in other functions.
-    uc_credit_cache('save', $session->get('sescrd'));
-
-    // Store the encrypted details to the form for processing on submit.
     $form['sescrd'] = array(
       '#type' => 'hidden',
       '#value' => base64_encode($session->get('sescrd')),
     );
+    $session->remove('sescrd');
   }
-  else {
+  elseif (isset($_POST['sescrd'])) {
+    // Copy and cache encrypted data that was POSTed in.
     $form['sescrd'] = array(
       '#type' => 'hidden',
-      '#value' => '',
+      '#value' => $_POST['sescrd'],
     );
+    uc_credit_cache(base64_decode($_POST['sescrd']));
   }
 
-  // Add submit handler to preserve CC details for the back button and
-  // failed order submissions.
+  // Add submit handler to preserve CC details for the back button.
   $form['actions']['back']['#submit'][] = 'uc_credit_cart_review_back_submit';
-
-  // Reconstruct the validate handler array for before and after processing.
-  array_unshift($form['#validate'], 'uc_credit_cart_review_pre_form_validate');
-  array_push($form['#validate'], 'uc_credit_cart_review_post_form_validate');
-
-  // Clear the session of the details.
-  $session->remove('sescrd');
 }
 
 /**
- * Implements hook_exit().
+ * Store the temporary CC data again if the back button is pressed.
  */
-function uc_credit_exit() {
-  // Make sure sensitive checkout session data doesn't persist on other pages.
-  $session = \Drupal::service('session');
-  if ($session->has('sescrd')) {
-    // Separate the args ourself since the arg() function may not be loaded.
-    $args = explode('/', Url::fromRoute('<current>')->toString());
-    if (!isset($args[1]) || $args[1] != 'checkout') {
-      $session->remove('sescrd');
-    }
+function uc_credit_cart_review_back_submit($form, FormStateInterface $form_state) {
+  if ($form_state->hasValue('sescrd')) {
+    \Drupal::service('session')->set('sescrd', base64_decode($form_state->getValue('sescrd')));
   }
 }
 
@@ -182,66 +143,31 @@ function uc_credit_uc_store_status() {
 /**
  * Caches CC details on a pageload for use in various functions.
  *
- * @param string $op
- *   The cache operation to perform; either 'save', 'load', or 'clear'.
  * @param string $data
  *   The encrypted, serialized string containing the CC data.
+ * @param bool $encrypted
+ *   TRUE if the data is encrypted, FALSE otherwise.
  *
  * @return array
  *   An array of credit card details.
  */
-function uc_credit_cache($op, $data = NULL, $encrypted = TRUE) {
+function uc_credit_cache($data = NULL, $encrypted = TRUE) {
   // The CC data will be stored in this static variable.
-  static $cc_cache = array();
+  $cache = &drupal_static(__FUNCTION__, array());
 
-  if ($op == 'save') {
+  if ($data) {
     if ($encrypted) {
       // Initialize the encryption key and class.
       $key = uc_credit_encryption_key();
       $crypt = \Drupal::service('uc_store.encryption');
 
       // Save the unencrypted CC details for the duration of this request.
-      // In recent versions, we base64_encode() the payment details before
-      // encrypting. We can detect encoded data by the lack of colons,
-      // due to base64's limited character set.
-      $data = $crypt->decrypt($key, $data);
-      if (strpos($data, ':') === FALSE) {
-        $data = base64_decode($data);
-      }
-      $cc_cache = @unserialize($data);
+      $data = @unserialize(base64_decode($crypt->decrypt($key, $data)));
     }
-    else {
-      $cc_cache = $data;
-    }
-  }
-  elseif ($op == 'clear') {
-    $cc_cache = array();
+    $cache = $data;
   }
 
-  return $cc_cache;
-}
-
-/**
- * Store the temporary CC data again if the back button is pressed.
- */
-function uc_credit_cart_review_back_submit($form, FormStateInterface $form_state) {
-  \Drupal::service('session')->set('sescrd', base64_decode($_POST['sescrd']));
-}
-
-/**
- * Caches the encrypted CC data on the review order form for processing.
- */
-function uc_credit_cart_review_pre_form_validate($form, FormStateInterface $form_state) {
-  uc_credit_cache('save', base64_decode($_POST['sescrd']));
-}
-
-/**
- * Store the temporary CC data again if the review order form does not validate.
- */
-function uc_credit_cart_review_post_form_validate($form, FormStateInterface $form_state) {
-  if ($form_state->hasAnyErrors()) {
-    \Drupal::service('session')->set('sescrd', base64_decode($_POST['sescrd']));
-  }
+  return $cache;
 }
 
 /**
@@ -266,30 +192,6 @@ function uc_credit_encryption_key() {
   }
 
   return $key;
-}
-
-/**
- * Saves a CC data array to an order's data array.
- */
-function _uc_credit_save_cc_data_to_order($cc_data, $order_id) {
-  // Save only some limited, PCI compliant data.
-  $cc_data['cc_number'] = substr($cc_data['cc_number'], -4);
-  unset($cc_data['cc_cvv']);
-
-  // Load up the existing data array.
-  $data = db_query("SELECT data FROM {uc_orders} WHERE order_id = :id", [':id' => $order_id])->fetchField();
-  $data = unserialize($data);
-
-  // Stuff the serialized and encrypted CC details into the array.
-  $crypt = \Drupal::service('uc_store.encryption');
-  $data['cc_data'] = $crypt->encrypt(uc_credit_encryption_key(), base64_encode(serialize($cc_data)));
-  uc_store_encryption_errors($crypt, 'uc_credit');
-
-  // Save it again.
-  db_update('uc_orders')
-    ->fields(array('data' => serialize($data)))
-    ->condition('order_id', $order_id)
-    ->execute();
 }
 
 /**

@@ -121,28 +121,6 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function cartDetails(OrderInterface $order, array $form, FormStateInterface $form_state) {
-    $session = \Drupal::service('session');
-
-    // Normally the CC data is posted in via AJAX.
-    if ($form_state->hasValue('payment_details_data') && \Drupal::routeMatch()->getRouteName() == 'uc_cart.cart') {
-      $order->payment_details = uc_credit_cache('save', $form_state->getValue('payment_details_data'));
-    }
-
-    // But we have to accommodate failed checkout form validation here.
-    if ($session->has('sescrd')) {
-      $order->payment_details = uc_credit_cache('save', $session->get('sescrd'));
-      $session->remove('sescrd');
-    }
-
-    if (!isset($order->payment_details) && $form_state->hasValue(['panes', 'payment', 'details'])) {
-      $order->payment_details = $form_state->getValue(['panes', 'payment', 'details']);
-      $order->payment_details['cc_number'] = str_replace(' ', '', $order->payment_details['cc_number']);
-    }
-
-    if (!isset($order->payment_details)) {
-      $order->payment_details = array();
-    }
-
     $build = array(
       '#type' => 'container',
       '#attributes' => array('class' => 'uc-credit-form')
@@ -153,6 +131,26 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       '#markup' => $this->t('Your billing information must match the billing address for the credit card entered below or we will be unable to process your payment.'),
       '#suffix' => '</p>',
     );
+
+    $order->payment_details = array();
+
+    // Encrypted data in the session is from the user returning from the review page.
+    $session = \Drupal::service('session');
+    if ($session->has('sescrd')) {
+      $order->payment_details = uc_credit_cache($session->get('sescrd'));
+      $build['payment_details_data'] = array(
+        '#type' => 'hidden',
+        '#value' => base64_encode($session->get('sescrd')),
+      );
+      $session->remove('sescrd');
+    }
+    elseif (isset($_POST['panes']['payment']['details']['payment_details_data'])) {
+      // Copy any encrypted data that was POSTed in.
+      $build['payment_details_data'] = array(
+        '#type' => 'hidden',
+        '#value' => $_POST['panes']['payment']['details']['payment_details_data'],
+      );
+    }
 
     $fields = $this->getEnabledFields();
     if (!empty($fields['type'])) {
@@ -447,12 +445,12 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
     // Fetch the CC details from the $_POST directly.
     $cc_data = $form_state->getValue(['panes', 'payment', 'details']);
-
     $cc_data['cc_number'] = str_replace(' ', '', $cc_data['cc_number']);
 
     // Recover cached CC data in form state, if it exists.
-    if ($form_state->hasValue(['panes', 'payment', 'details', 'payment_details_data'])) {
-      $cache = uc_credit_cache('save', $form_state->getValue(['panes', 'payment', 'details', 'payment_details_data']));
+    if (isset($cc_data['payment_details_data'])) {
+      $cache = uc_credit_cache(base64_decode($cc_data['payment_details_data']));
+      unset($cc_data['payment_details_data']);
     }
 
     // Account for partial CC numbers when masked by the system.
@@ -558,11 +556,11 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    */
   public function orderLoad(OrderInterface $order) {
     // Load the CC details from the credit cache if available.
-    $order->payment_details = uc_credit_cache('load');
+    $order->payment_details = uc_credit_cache();
 
     // Otherwise load any details that might be stored in the data array.
     if (empty($order->payment_details) && isset($order->data->cc_data)) {
-      $order->payment_details = uc_credit_cache('save', $order->data->cc_data);
+      $order->payment_details = uc_credit_cache($order->data->cc_data);
     }
   }
 
@@ -570,7 +568,15 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderSave(OrderInterface $order) {
-    _uc_credit_save_cc_data_to_order($order->payment_details, $order->id());
+    // Save only some limited, PCI compliant data.
+    $cc_data = $order->payment_details;
+    $cc_data['cc_number'] = substr($cc_data['cc_number'], -4);
+    unset($cc_data['cc_cvv']);
+
+    // Stuff the serialized and encrypted CC details into the array.
+    $crypt = \Drupal::service('uc_store.encryption');
+    $order->data->cc_data = $crypt->encrypt(uc_credit_encryption_key(), base64_encode(serialize($cc_data)));
+    uc_store_encryption_errors($crypt, 'uc_credit');
   }
 
   /**
