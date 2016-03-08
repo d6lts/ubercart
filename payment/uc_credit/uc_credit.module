@@ -66,28 +66,11 @@ function uc_credit_theme() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_form().
- */
-function uc_credit_form_uc_cart_checkout_form_alter(&$form, FormStateInterface $form_state) {
-  \Drupal::service('session')->remove('cc_pay');
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for uc_cart_checkout_review_form().
  */
 function uc_credit_form_uc_cart_checkout_review_form_alter(&$form, FormStateInterface $form_state) {
-  // Check if the customer paid by CC and refreshed on the review page.
-  $session = \Drupal::service('session');
-  if ($session->has('cc_pay') && !$session->has('sescrd') && empty($_POST['sescrd'])) {
-    // Send them back to the checkout form to put in their details again.
-    drupal_set_message(t('To protect our customers from identity theft, credit card details are erased when a browser refreshes on the checkout review page.  Please enter your card details again and re-submit the form.'), 'error');
-
-    $session->set('clear_cc', TRUE);
-    $session->remove('cc_pay');
-    return new RedirectResponse(Url::fromRoute('uc_cart.checkout')->toString());
-  }
-
   // Encrypted data in the session is from the user coming from the checkout.
+  $session = \Drupal::service('session');
   if ($session->has('sescrd')) {
     $form['sescrd'] = array(
       '#type' => 'hidden',

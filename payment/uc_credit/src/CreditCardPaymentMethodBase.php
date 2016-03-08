@@ -174,7 +174,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
 
     // Set up the default CC number on the credit card form.
-    if ($session->has('clear_cc') || !isset($order->payment_details['cc_number'])) {
+    if (!isset($order->payment_details['cc_number'])) {
       $default_num = NULL;
     }
     elseif (!$this->validateCardNumber($order->payment_details['cc_number'])) {
@@ -279,7 +279,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
     if (!empty($fields['cvv'])) {
       // Set up the default CVV  on the credit card form.
-      if ($session->has('clear_cc') || empty($order->payment_details['cc_cvv'])) {
+      if (empty($order->payment_details['cc_cvv'])) {
         $default_cvv = NULL;
       }
       elseif (!$this->validateCvv($order->payment_details['cc_cvv'])) {
@@ -312,8 +312,6 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
         '#maxlength' => 64,
       );
     }
-
-    $session->remove('clear_cc');
 
     return $build;
   }
@@ -542,12 +540,6 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     // Log any errors to the watchdog.
     uc_store_encryption_errors($crypt, 'uc_credit');
 
-    // If we're going to the review screen, set a variable that lets us know
-    // we're paying by CC.
-    if ($return) {
-      $session->set('cc_pay', TRUE);
-    }
-
     return $return;
   }
 
@@ -583,9 +575,6 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    * {@inheritdoc}
    */
   public function orderSubmit(OrderInterface $order) {
-    // Clear out that session variable denoting this as a CC paid order.
-    \Drupal::service('session')->remove('cc_pay');
-
     // Attempt to process the credit card payment.
     if (!$this->processPayment($order, $order->getTotal(), $this->configuration['txn_type'])) {
       return $this->t('We were unable to process your credit card payment. Please verify your details and try again.');
