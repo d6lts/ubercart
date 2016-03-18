@@ -11,10 +11,10 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
 
 /**
- * Handles encryption of credit-card information.
+ * Deprecated. Handles encryption of credit-card information.
  *
- * This class is provided for backwards-compatibility with Drupal 6 and
- * Drupal 7 Ubercart sites.
+ * @deprecated in Ubercart 8.x-4.x. This class is provided only for
+ *   backwards compatibility with Drupal 6 and Drupal 7 Ubercart sites.
  *
  * Trimmed down version of GPL class by Tony Marston.  Details available at
  * http://www.tonymarston.co.uk/php-mysql/encryption.html
@@ -42,31 +42,31 @@ class MarstonEncryption implements EncryptionInterface {
   /**
    * {@inheritdoc}
    */
-  public function encrypt($key, $source, $sourcelen = 0) {
+  public function encrypt($key, $plaintext, $sourcelen = 0) {
     $this->errors = array();
 
-    // Convert key into sequence of numbers
+    // Convert key into sequence of numbers.
     $fudgefactor = $this->convertKey($key);
     if ($this->errors) {
       return;
     }
 
-    if (empty($source)) {
+    if (empty($plaintext)) {
       // Commented out to prevent errors getting logged for use cases that may
       // have variable encryption/decryption requirements. -RS
       // $this->errors[] = t('No value has been supplied for encryption');
       return;
     }
 
-    while (strlen($source) < $sourcelen) {
-      $source .= ' ';
+    while (strlen($plaintext) < $sourcelen) {
+      $plaintext .= ' ';
     }
 
     $target = NULL;
     $factor2 = 0;
 
-    for ($i = 0; $i < Unicode::strlen($source); $i++) {
-      $char1 = Unicode::substr($source, $i, 1);
+    for ($i = 0; $i < Unicode::strlen($plaintext); $i++) {
+      $char1 = Unicode::substr($plaintext, $i, 1);
 
       $num1 = strpos(self::$scramble1, $char1);
       if ($num1 === FALSE) {
@@ -89,16 +89,16 @@ class MarstonEncryption implements EncryptionInterface {
   /**
    * {@inheritdoc}
    */
-  public function decrypt($key, $source) {
+  public function decrypt($key, $cyphertext) {
     $this->errors = array();
 
-    // Convert key into sequence of numbers
+    // Convert key into sequence of numbers.
     $fudgefactor = $this->convertKey($key);
     if ($this->errors) {
       return;
     }
 
-    if (empty($source)) {
+    if (empty($cyphertext)) {
       // Commented out to prevent errors getting logged for use cases that may
       // have variable encryption/decryption requirements. -RS
       // $this->errors[] = t('No value has been supplied for decryption');
@@ -108,8 +108,8 @@ class MarstonEncryption implements EncryptionInterface {
     $target = NULL;
     $factor2 = 0;
 
-    for ($i = 0; $i < strlen($source); $i++) {
-      $char2 = substr($source, $i, 1);
+    for ($i = 0; $i < strlen($cyphertext); $i++) {
+      $char2 = substr($cyphertext, $i, 1);
 
       $num2 = strpos(self::$scramble2, $char2);
       if ($num2 === FALSE) {
@@ -142,6 +142,15 @@ class MarstonEncryption implements EncryptionInterface {
    */
   public function setErrors(array $errors) {
     $this->errors = $errors;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCypher($cypher) {
+    // This function is a no-op for MarstonEncryption.
+    return $this;
   }
 
   /**
@@ -156,6 +165,7 @@ class MarstonEncryption implements EncryptionInterface {
    */
   public function setAdjustment($adj) {
     $this->adj = (float) $adj;
+    return $this;
   }
 
   /**
@@ -170,6 +180,7 @@ class MarstonEncryption implements EncryptionInterface {
    */
   public function setModulus($mod) {
     $this->mod = (int) abs($mod);
+    return $this;
   }
 
   /**
@@ -258,4 +269,5 @@ class MarstonEncryption implements EncryptionInterface {
 
     return $array;
   }
+
 }
