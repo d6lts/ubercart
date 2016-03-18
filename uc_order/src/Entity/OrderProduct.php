@@ -47,36 +47,36 @@ class OrderProduct extends ContentEntityBase implements OrderProductInterface {
       ->setSetting('default_value', 0);
     $fields['nid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Node ID'))
-      ->setDescription('The user that placed the order.')
+      ->setDescription(t('The user that placed the order.'))
       ->setSetting('target_type', 'node')
       ->setSetting('default_value', 0);
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Title'))
-      ->setDescription('The product title.')
+      ->setDescription(t('The product title.'))
       ->setSetting('default_value', '');
     $fields['model'] = BaseFieldDefinition::create('string')
       ->setLabel(t('SKU'))
-      ->setDescription('The product model/SKU.')
+      ->setDescription(t('The product model/SKU.'))
       ->setSetting('default_value', '');
     $fields['qty'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Quantity'))
-      ->setDescription('The number of the product ordered.')
+      ->setDescription(t('The number of the product ordered.'))
       ->setSetting('default_value', 0)
       ->setSetting('unsigned', TRUE);
     $fields['cost'] = BaseFieldDefinition::create('float')
       ->setLabel(t('Cost'))
-      ->setDescription('The cost to the store for the product.')
+      ->setDescription(t('The cost to the store for the product.'))
       ->setSetting('default_value', 0.0);
     $fields['price'] = BaseFieldDefinition::create('float')
       ->setLabel(t('Price'))
-      ->setDescription('The price paid for the ordered product.')
+      ->setDescription(t('The price paid for the ordered product.'))
       ->setSetting('default_value', 0.0);
     $fields['weight'] = BaseFieldDefinition::create('uc_weight')
       ->setLabel(t('Weight'))
-      ->setDescription('The physical weight.');
+      ->setDescription(t('The physical weight.'));
     $fields['data'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
-      ->setDescription('A serialized array of extra data.');
+      ->setDescription(t('A serialized array of extra data.'));
 
     return $fields;
   }
