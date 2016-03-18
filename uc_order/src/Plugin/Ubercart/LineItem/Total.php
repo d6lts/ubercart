@@ -25,7 +25,7 @@ class Total extends LineItemPluginBase {
   public function display(OrderInterface $order) {
     $lines[] = array(
       'id' => 'total',
-      'title' => t('Order total'),
+      'title' => $this->t('Order total'),
       'amount' => $order->getTotal(),
     );
     return $lines;

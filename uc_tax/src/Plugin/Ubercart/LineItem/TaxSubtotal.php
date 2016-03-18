@@ -54,7 +54,7 @@ class TaxSubtotal extends LineItemPluginBase {
     if ($different && $has_taxes) {
       return array(array(
         'id' => 'tax_subtotal',
-        'title' => t('Subtotal excluding taxes'),
+        'title' => $this->t('Subtotal excluding taxes'),
         'amount' => $amount,
         'weight' => \Drupal::config('uc_tax.settings')->get('tax_line_item.subtotal_weight'),
       ));

@@ -24,7 +24,7 @@ class Subtotal extends LineItemPluginBase {
   public function load(OrderInterface $order) {
     $lines[] = array(
       'id' => 'subtotal',
-      'title' => t('Subtotal'),
+      'title' => $this->t('Subtotal'),
       'amount' => $order->getSubtotal(),
     );
     return $lines;
