@@ -13,6 +13,7 @@
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\uc_cart\CartInterface;
+use Drupal\uc_payment\PaymentReceiptInterface;
 
 /**
  * Implements hook_cron().
@@ -219,6 +220,15 @@ function uc_cart_user_login($account) {
     // Unset the anonymous cart ID, it's no longer needed.
     $session->remove('uc_cart_id');
   }
+}
+
+/**
+ * Implements hook_uc_payment_receipt_insert().
+ *
+ * Ensure the user has an account when payment is made.
+ */
+function uc_cart_uc_payment_receipt_insert(PaymentReceiptInterface $payment) {
+  \Drupal::service('uc_cart.manager')->completeSale($payment->getOrder());
 }
 
 /**

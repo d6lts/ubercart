@@ -11,6 +11,7 @@ use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_payment\Entity\PaymentReceipt;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -54,11 +55,11 @@ class PaymentDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, $payment = NULL) {
-    $this->payment = uc_payment_load($payment);
+  public function buildForm(array $form, FormStateInterface $form_state, OrderInterface $uc_order = NULL, PaymentReceipt $payment = NULL) {
+    $this->payment = $payment;
 
     // Make sure the payment is for the specified order.
-    if ($this->payment->order_id != $uc_order->id()) {
+    if ($this->payment->order_id->target_id != $uc_order->id()) {
       throw new NotFoundHttpException();
     }
 
@@ -69,9 +70,9 @@ class PaymentDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    uc_payment_delete($this->payment->receipt_id);
+    $this->payment->delete();
     drupal_set_message($this->t('Payment deleted.'));
-    $form_state->setRedirect('uc_payments.order_payments', ['uc_order' => $this->payment->order_id]);
+    $form_state->setRedirect('uc_payments.order_payments', ['uc_order' => $this->payment->order_id->target_id]);
   }
 
 }

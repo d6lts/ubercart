@@ -82,7 +82,7 @@ function hook_uc_order_actions_alter(&$actions, $order) {
  *   FALSE if the order should not be deleted.
  */
 function hook_uc_order_can_delete(OrderInterface $order) {
-  if (uc_payment_load_payments($order->id()) !== FALSE) {
+  if (uc_payment_load_payments($order->id())) {
     return FALSE;
   }
 }
