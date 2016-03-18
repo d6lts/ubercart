@@ -567,17 +567,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: 0
-          format_plural_string: "1\x03@count"
-          prefix: ''
-          suffix: ''
           click_sort_column: value
           type: number_integer
-          settings: {  }
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -586,6 +580,7 @@ display:
           delta_reversed: false
           delta_first_last: false
           multi_type: separator
+          separator: ', '
           field_api_classes: false
           entity_type: uc_order
           entity_field: order_id
