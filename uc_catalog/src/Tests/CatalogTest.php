@@ -65,6 +65,22 @@ class CatalogTest extends UbercartTestBase {
     $this->assertText('This product has options that need to be selected before purchase. Please select them in the form below.');
   }
 
+  /**
+   * Tests the catalog from the node page.
+   */
+  public function testCatalogNode() {
+    $this->drupalLogin($this->adminUser);
+
+    $term = $this->createTerm();
+    $product = $this->createProduct(array(
+      'taxonomy_catalog' => array($term->id()),
+    ));
+
+    $this->drupalGet('node/' . $product->id());
+    $this->assertLink($term->label(), 0, 'The product links back to the catalog term.');
+    $this->assertLinkByHref('/catalog/' . $term->id(), 0, 'The product links back to the catalog view.');
+  }
+
   public function testCatalogField() {
     $this->drupalLogin($this->adminUser);
 
