@@ -14,7 +14,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
+use Drupal\uc_payment\Entity\PaymentMethod;
 use Drupal\uc_payment\Entity\PaymentReceipt;
+use Drupal\uc_payment\ExpressPaymentMethodPluginInterface;
 use Drupal\uc_payment\Form\OffsitePaymentMethodForm;
 use Drupal\uc_payment\OffsitePaymentMethodPluginInterface;
 use Drupal\uc_payment\PaymentReceiptInterface;
@@ -48,20 +50,14 @@ function template_preprocess_uc_payment_totals(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter() for uc_cart_view_form().
  *
- * Adds express buttons for enabled payment modules directly to the cart page.
+ * Adds express buttons for enabled payment methods directly to the cart page.
  */
 function uc_payment_form_uc_cart_view_form_alter(&$form, FormStateInterface $form_state) {
-// @todo Add express payment methods
-//  foreach (uc_payment_method_list() as $id => $method) {
-//    if ($method['checkout'] && isset($method['express']) && $express = $method['express'](array(), $form_state)) {
-//      $form['actions']['checkout'][$id] = $express;
-//    }
-//  }
-  $definitions = \Drupal::service('plugin.manager.uc_payment.method')->getDefinitions();
-  foreach ($definitions as $key => $definition) {
-    if (!empty($definition['express'])) {
-      $express = \Drupal::formBuilder()->getForm($definition['express']);
-//      $form['actions']['checkout'][] = \Drupal::service('renderer')->renderPlain($express);
+  $methods = PaymentMethod::loadMultiple();
+  foreach ($methods as $method) {
+    $plugin = $method->getPlugin();
+    if ($plugin instanceof ExpressPaymentMethodPluginInterface) {
+      $form['actions']['checkout'][$method->id()] = $plugin->getExpressButton($method->id());
     }
   }
 }
@@ -80,10 +76,12 @@ function uc_payment_form_uc_cart_checkout_review_form_alter(&$form, FormStateInt
   $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
 
   if ($plugin instanceof OffsitePaymentMethodPluginInterface) {
-    unset($form['actions']['submit']);
     $offsite_form = new OffsitePaymentMethodForm($plugin);
     $suffix = \Drupal::formBuilder()->getForm($offsite_form, $order);
-    $form['#suffix'] = \Drupal::service('renderer')->renderPlain($suffix);
+    if (!empty($suffix['actions'])) {
+      unset($form['actions']['submit']);
+      $form['#suffix'] = \Drupal::service('renderer')->renderPlain($suffix);
+    }
   }
 }
 

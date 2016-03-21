@@ -30,8 +30,6 @@ class WppController extends ControllerBase {
       );
     }
     else {
-      list($desc, $subtotal) = _uc_paypal_product_details($order->products);
-
       if (intval($order->payment_details['cc_exp_month']) < 10) {
         $expdate = '0' . $order->payment_details['cc_exp_month'] . $order->payment_details['cc_exp_year'];
       }
@@ -88,7 +86,7 @@ class WppController extends ControllerBase {
         'ZIP' => $order->billing_postal_code,
         'COUNTRYCODE' => $order->billing_country,
         'CURRENCYCODE' => $order->getCurrency(),
-        'DESC' => substr($desc, 0, 127),
+        'DESC' => $this->t('Order @order_id at @store', ['@order_id' => $order->id(), '@store' => uc_store_name()]),
         'INVNUM' => $order_id . '-' . REQUEST_TIME,
         'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
         'NOTIFYURL' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),

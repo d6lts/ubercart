@@ -8,10 +8,10 @@ uc_paypal.ipn:
     _access: 'TRUE'
 
 # Callback functions for Express Checkout.
-uc_paypal.ec_review_redirect:
-  path: '/cart/echeckout/selected'
+uc_paypal.ec_complete:
+  path: '/cart/echeckout/complete'
   defaults:
-    _controller: '\Drupal\uc_paypal\Controller\EcController::ecReviewRedirect'
+    _controller: '\Drupal\uc_paypal\Controller\EcController::ecComplete'
     _title: 'Review order'
   requirements:
     _permission: 'access content'
@@ -23,14 +23,6 @@ uc_paypal.ec_review:
     _title: 'Review payment'
   requirements:
     _access: 'TRUE'
-
-uc_paypal.ec_submit:
-  path: '/cart/echeckout/submit'
-  defaults:
-    _controller: '\Drupal\uc_paypal\Controller\EcController::ecSubmit'
-    _title: 'Submit order'
-  requirements:
-    _permission: 'access content'
 
 # Callback functions for PayPal Payments Standard.
 uc_paypal.wps_complete:
