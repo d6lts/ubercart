@@ -106,7 +106,7 @@ class OrderPaymentsForm extends FormBase {
         '#price' => $total,
       );
       $form['payments'][$id]['comment'] = array(
-        '#markup' => $payment->getComment ?: '-',
+        '#markup' => $payment->getComment() ?: '-',
       );
       $form['payments'][$id]['action'] = array(
         '#type' => 'operations',
