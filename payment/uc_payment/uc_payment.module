@@ -150,7 +150,7 @@ function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $
     'amount' => $amount,
     'currency' => $order->getCurrency(),
     'uid' => $uid,
-    'data' => $data,
+    'data' => is_array($data) ? $data : serialize($data),
     'comment' => $comment,
     'received' => $received,
   ]);

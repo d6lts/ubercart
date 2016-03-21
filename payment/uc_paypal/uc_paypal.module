@@ -10,7 +10,6 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -36,46 +35,3 @@ function uc_paypal_help($route_name, RouteMatchInterface $route_match) {
     }
   }
 }
-
-/**
- * Implements hook_uc_payment_gateway().
- */
-function uc_paypal_uc_payment_gateway() {
-  if (!\Drupal::moduleHandler()->moduleExists('uc_credit')) {
-    drupal_set_message(t('You must <a href=":modules">enable the Credit Card module</a> to use PayPal Website Payments Pro.', [':modules' => Url::fromRoute('system.modules_list', [], ['fragment' => 'edit-modules-ubercart-payment'])->toString()]), 'warning');
-    return;
-  }
-
-  $gateways['paypal_wpp'] = array(
-    'title' => t('PayPal Website Payments Pro'),
-    'description' => t('Process credit card payments using Website Payments Pro.'),
-    'settings' => 'uc_paypal_wpp_settings_form',
-    'credit' => 'uc_paypal_wpp_charge',
-    'credit_txn_types' => array(UC_CREDIT_AUTH_ONLY, UC_CREDIT_PRIOR_AUTH_CAPTURE, UC_CREDIT_AUTH_CAPTURE),
-  );
-
-  return $gateways;
-}
-
-  // Payment method titles ...
-  //
-  // $title1 = '<img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="PayPal" class="uc-credit-cctype" />'
-  //       . ' ' . t('PayPal - pay without sharing your financial information.');
-  /*
-  $title2 = '<br /><span id="paypal-includes">' . t('Includes:');
-  $cc_types = array(
-    'visa' => t('Visa'),
-    'mastercard' => t('MasterCard'),
-    'discover' => t('Discover'),
-    'amex' => t('American Express'),
-    'echeck' => t('eCheck'),
-  );
-  foreach ($cc_types as $type => $label) {
-    $title2 .= ' ' . theme('image', array(
-      'uri' => drupal_get_path('module', 'uc_credit') . '/images/' . $type . '.gif',
-      'alt' => $label,
-      'attributes' => array('class' => array('uc-credit-cctype', 'uc-credit-cctype-' . $type)),
-    ));
-  }
-  $title2 .= ' <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="PayPal" class="uc-credit-cctype" /></span>';
-  */

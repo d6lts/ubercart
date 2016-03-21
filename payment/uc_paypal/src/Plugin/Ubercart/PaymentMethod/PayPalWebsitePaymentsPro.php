@@ -2,28 +2,111 @@
 
 /**
  * @file
- * Contains \Drupal\uc_paypal\Controller\WppController.
+ * Contains \Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod\PayPalWebsitePaymentsPro.
  */
 
-namespace Drupal\uc_paypal\Controller;
+namespace Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\uc_credit\CreditCardPaymentMethodBase;
+use Drupal\uc_order\OrderInterface;
+use GuzzleHttp\Exception\TransferException;
 
 /**
- * Processes a credit card payment through Website Payments Pro.
+ * Defines the PayPal Website Payments Pro payment method.
+ *
+ * @UbercartPaymentMethod(
+ *   id = "paypal_wpp",
+ *   name = @Translation("PayPal Website Payments Pro"),
+ * )
  */
-class WppController extends ControllerBase {
+class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
 
-  public function wppCharge($order_id, $amount, $data) {
-    $order = Order::load($order_id);
-    $paypal_config = $this->config('uc_paypal.settings');
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return parent::defaultConfiguration() + [
+      'wps_email' => '',
+      'wpp_server' => 'https://api-3t.sandbox.paypal.com/nvp',
+      'api' => [
+        'api_username' => '',
+        'api_password' => '',
+        'api_signature' => '',
+      ],
+    ];
+  }
 
-    if ($data['txn_type'] == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
+
+    $form['wps_email'] = array(
+      '#type' => 'email',
+      '#title' => $this->t('PayPal e-mail address'),
+      '#description' => $this->t('The e-mail address you use for the PayPal account you want to receive payments.'),
+      '#default_value' => $this->configuration['wps_email'],
+    );
+    $form['wpp_server'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('API server'),
+      '#description' => $this->t('Sign up for and use a Sandbox account for testing.'),
+      '#options' => array(
+        'https://api-3t.sandbox.paypal.com/nvp' => $this->t('Sandbox'),
+        'https://api-3t.paypal.com/nvp' => $this->t('Live'),
+      ),
+      '#default_value' => $this->configuration['wpp_server'],
+    );
+    $form['api'] = array(
+      '#type' => 'details',
+      '#title' => $this->t('API credentials'),
+      '#description' => $this->t('@link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://developer.paypal.com/docs/classic/api/apiCredentials/'))->toString()]),
+      '#open' => TRUE,
+    );
+    $form['api']['api_username'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('API username'),
+      '#default_value' => $this->configuration['api']['api_username'],
+    );
+    $form['api']['api_password'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('API password'),
+      '#default_value' => $this->configuration['api']['api_password'],
+    );
+    $form['api']['api_signature'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Signature'),
+      '#default_value' => $this->configuration['api']['api_signature'],
+    );
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    parent::submitConfigurationForm($form, $form_state);
+    $this->configuration['wps_email'] = trim($form_state->getValue('wps_email'));
+    $this->configuration['wpp_server'] = $form_state->getValue('wpp_server');
+    $this->configuration['api']['api_username'] = $form_state->getValue(['settings', 'api', 'api_username']);
+    $this->configuration['api']['api_password'] = $form_state->getValue(['settings', 'api', 'api_password']);
+    $this->configuration['api']['api_signature'] = $form_state->getValue(['settings', 'api', 'api_signature']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function chargeCard(OrderInterface $order, $amount, $txn_type, $reference = NULL) {
+    if ($txn_type == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
       $nvp_request = array(
         'METHOD' => 'DoCapture',
-        'AUTHORIZATIONID' => $data['auth_id'],
+        'AUTHORIZATIONID' => $reference,
         'AMT' => uc_currency_format($amount, FALSE, FALSE, '.'),
         'CURRENCYCODE' => $order->getCurrency(),
         'COMPLETETYPE' => 'Complete',
@@ -68,51 +151,48 @@ class WppController extends ControllerBase {
       // PayPal doesn't accept IPv6 addresses.
       $ip_address = ltrim(\Drupal::request()->getClientIp(), '::ffff:');
 
+      $address = $order->getAddress('billing');
       $nvp_request = array(
         'METHOD' => 'DoDirectPayment',
-        'PAYMENTACTION' => $data['txn_type'] == UC_CREDIT_AUTH_ONLY ? 'Authorization' : 'Sale',
+        'PAYMENTACTION' => $txn_type == UC_CREDIT_AUTH_ONLY ? 'Authorization' : 'Sale',
         'IPADDRESS' => $ip_address,
         'AMT' => uc_currency_format($amount, FALSE, FALSE, '.'),
         'CREDITCARDTYPE' => $cc_type,
         'ACCT' =>  $order->payment_details['cc_number'],
         'EXPDATE' => $expdate,
         'CVV2' => $order->payment_details['cc_cvv'],
-        'FIRSTNAME' => substr($order->billing_first_name, 0, 25),
-        'LASTNAME' => substr($order->billing_last_name, 0, 25),
-        'STREET' => substr($order->billing_street1, 0, 100),
-        'STREET2' => substr($order->billing_street2, 0, 100),
-        'CITY' => substr($order->billing_city, 0, 40),
-        'STATE' => $order->billing_zone,
-        'ZIP' => $order->billing_postal_code,
-        'COUNTRYCODE' => $order->billing_country,
+        'FIRSTNAME' => substr($address->first_name, 0, 25),
+        'LASTNAME' => substr($address->last_name, 0, 25),
+        'STREET' => substr($address->street1, 0, 100),
+        'STREET2' => substr($address->street2, 0, 100),
+        'CITY' => substr($address->city, 0, 40),
+        'STATE' => $address->zone,
+        'ZIP' => $address->postal_code,
+        'COUNTRYCODE' => $address->country,
         'CURRENCYCODE' => $order->getCurrency(),
         'DESC' => $this->t('Order @order_id at @store', ['@order_id' => $order->id(), '@store' => uc_store_name()]),
-        'INVNUM' => $order_id . '-' . REQUEST_TIME,
+        'INVNUM' => $order->id() . '-' . REQUEST_TIME,
         'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
         'NOTIFYURL' => Url::fromRoute('uc_paypal.ipn', [], ['absolute' => TRUE])->toString(),
         'EMAIL' => substr($order->getEmail(), 0, 127),
-        'PHONENUM' => substr($order->billing_phone, 0, 20),
+        'PHONENUM' => substr($address->phone, 0, 20),
       );
 
-      if ($order->isShippable() && !empty($order->delivery_first_name)) {
-        $shipdata = array(
-          'SHIPTONAME' => substr($order->delivery_first_name . ' ' . $order->delivery_last_name, 0, 25),
-          'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
-          'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
-          'SHIPTOCITY' => substr($order->delivery_city, 0, 40),
-          'SHIPTOSTATE' => $order->delivery_zone,
-          'SHIPTOZIP' => $order->delivery_postal_code,
-          'SHIPTOCOUNTRYCODE' => $order->delivery_country,
+      if ($order->isShippable()) {
+        $address = $order->getAddress('delivery');
+        $nvp_request += array(
+          'SHIPTONAME' => substr($address->first_name . ' ' . $address->last_name, 0, 25),
+          'SHIPTOSTREET' => substr($address->street1, 0, 100),
+          'SHIPTOSTREET2' => substr($address->street2, 0, 100),
+          'SHIPTOCITY' => substr($address->city, 0, 40),
+          'SHIPTOSTATE' => $address->zone,
+          'SHIPTOZIP' => $address->postal_code,
+          'SHIPTOCOUNTRYCODE' => $address->country,
         );
-        $nvp_request += $shipdata;
-      }
-
-      if ($paypal_config->get('uc_credit_cvv_enabled')) {
-        $nvp_request['CVV2'] = $order->payment_details['cc_cvv'];
       }
     }
 
-    $nvp_response = uc_paypal_api_request($nvp_request, $paypal_config->get('wpp_server'));
+    $nvp_response = $this->sendNvpRequest($nvp_request);
     $types = uc_credit_transaction_types();
 
     switch ($nvp_response['ACK']) {
@@ -120,34 +200,32 @@ class WppController extends ControllerBase {
         \Drupal::logger('uc_paypal')->warning('<b>@type succeeded with a warning.</b>@paypal_message',
           array(
             '@paypal_message' => $this->buildErrorMessages($nvp_response),
-            '@type' => $types[$data['txn_type']],
+            '@type' => $types[$txn_type],
             'link' => $order->toLink($this->t('view order'))->toString(),
           )
         );
-        // Fall through.
+      // Fall through.
       case 'Success':
-        $message = t('<b>@type</b><br /><b>Success: </b>@amount @currency', ['@type' => $types[$data['txn_type']], '@amount' => uc_currency_format($nvp_response['AMT'], FALSE), '@currency' => $nvp_response['CURRENCYCODE']]);
-        if ($data['txn_type'] != UC_CREDIT_PRIOR_AUTH_CAPTURE) {
+        $message = t('<b>@type</b><br /><b>Success: </b>@amount @currency', ['@type' => $types[$txn_type], '@amount' => uc_currency_format($nvp_response['AMT'], FALSE), '@currency' => $nvp_response['CURRENCYCODE']]);
+        if ($txn_type != UC_CREDIT_PRIOR_AUTH_CAPTURE) {
           $message .= '<br />' . t('<b>Address:</b> @avscode', ['@avscode' => $this->avscodeMessage($nvp_response['AVSCODE'])]);
-          if ($paypal_config->get('uc_credit_cvv_enabled')) {
-            $message .= '<br />' . t('<b>CVV2:</b> @cvvmatch', ['@cvvmatch' => $this->cvvmatchMessage($nvp_response['CVV2MATCH'])]);
-          }
+          $message .= '<br />' . t('<b>CVV2:</b> @cvvmatch', ['@cvvmatch' => $this->cvvmatchMessage($nvp_response['CVV2MATCH'])]);
         }
         $result = array(
           'success' => TRUE,
           'comment' => t('PayPal transaction ID: @transactionid', ['@transactionid' => $nvp_response['TRANSACTIONID']]),
           'message' => $message,
           'data' => SafeMarkup::checkPlain($nvp_response['TRANSACTIONID']),
-          'uid' => $this->currentUser()->id(),
+          'uid' => \Drupal::currentUser()->id(),
         );
 
         // If this was an authorization only transaction...
-        if ($data['txn_type'] == UC_CREDIT_AUTH_ONLY) {
+        if ($txn_type == UC_CREDIT_AUTH_ONLY) {
           // Log the authorization to the order.
-          uc_credit_log_authorization($order_id, $nvp_response['TRANSACTIONID'], $nvp_response['AMT']);
+          uc_credit_log_authorization($order->id(), $nvp_response['TRANSACTIONID'], $nvp_response['AMT']);
         }
-        elseif ($data['txn_type'] == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
-          uc_credit_log_prior_auth_capture($order_id, $data['auth_id']);
+        elseif ($txn_type == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
+          uc_credit_log_prior_auth_capture($order->id(), $reference);
         }
 
         // Log the IPN to the database.
@@ -167,11 +245,11 @@ class WppController extends ControllerBase {
       case 'FailureWithWarning':
         // Fall through.
       case 'Failure':
-        $message = t('<b>@type failed.</b>', ['@type' => $types[$data['txn_type']]]) . $this->buildErrorMessages($nvp_response);
+        $message = t('<b>@type failed.</b>', ['@type' => $types[$txn_type]]) . $this->buildErrorMessages($nvp_response);
         $result = array(
           'success' => FALSE,
           'message' => $message,
-          'uid' => $this->currentUser()->id(),
+          'uid' => \Drupal::currentUser()->id(),
         );
         break;
       default:
@@ -179,19 +257,43 @@ class WppController extends ControllerBase {
         $result = array(
           'success' => NULL,
           'message' => $message,
-          'uid' => $this->currentUser()->id(),
+          'uid' => \Drupal::currentUser()->id(),
         );
         break;
     }
 
-    uc_order_comment_save($order_id, $this->currentUser()->id(), $message, 'admin');
+    uc_order_comment_save($order->id(), \Drupal::currentUser()->id(), $message, 'admin');
 
     // Don't log this as a payment money wasn't actually captured.
-    if (in_array($data['txn_type'], array(UC_CREDIT_AUTH_ONLY))) {
+    if (in_array($txn_type, array(UC_CREDIT_AUTH_ONLY))) {
       $result['log_payment'] = FALSE;
     }
 
     return $result;
+  }
+
+  /**
+   * Sends a request to the PayPal NVP API.
+   */
+  public function sendNvpRequest($params) {
+    $host = $this->configuration['wpp_server'];
+    $params += [
+      'USER' => $this->configuration['api']['api_username'],
+      'PWD' => $this->configuration['api']['api_password'],
+      'SIGNATURE' => $this->configuration['api']['api_signature'],
+      'VERSION' => '3.0',
+    ];
+
+    try {
+      $response = \Drupal::httpClient()->request('POST', $host, [
+        'form_params' => $params,
+      ]);
+      parse_str($response->getBody(), $output);
+      return $output;
+    }
+    catch (TransferException $e) {
+      \Drupal::logger('uc_paypal')->error('NVP API request failed with HTTP error %error.', ['%error' => $e->getMessage()]);
+    }
   }
 
   /**
