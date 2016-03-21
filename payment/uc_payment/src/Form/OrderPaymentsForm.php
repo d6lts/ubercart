@@ -113,7 +113,7 @@ class OrderPaymentsForm extends FormBase {
         '#links' => array(
           'delete' => array(
             'title' => $this->t('Delete'),
-            'url' => Url::fromRoute('uc_payments.delete', ['uc_order' => $this->order->id(), 'payment' => $id]),
+            'url' => Url::fromRoute('uc_payments.delete', ['uc_order' => $this->order->id(), 'uc_payment_receipt' => $id]),
           ),
         ),
         '#access' => $account->hasPermission('delete payments'),

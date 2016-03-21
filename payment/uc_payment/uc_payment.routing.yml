@@ -57,7 +57,7 @@ uc_payments.order_payments:
     _permission: 'view payments'
 
 uc_payments.delete:
-  path: '/admin/store/orders/{uc_order}/payments/{payment}/delete'
+  path: '/admin/store/orders/{uc_order}/payments/{uc_payment_receipt}/delete'
   defaults:
     _form: '\Drupal\uc_payment\Form\PaymentDeleteForm'
   requirements:
