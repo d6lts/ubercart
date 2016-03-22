@@ -51,24 +51,14 @@ class AttributeController extends ControllerBase {
         $attr->label = $attr->name;
       }
       $build['attributes'][] = array(
-        'name' => array(
-          '#markup' => $attr->name,
-        ),
-        'label' => array(
-          '#markup' => $attr->label,
-        ),
+        'name' => array('#plain_text' => $attr->name),
+        'label' => array('#plain_text' => $attr->label),
         'required' => array(
-          '#markup' => $attr->required == 1 ? $this->t('Yes') : $this->t('No'),
+          '#plain_text' => $attr->required == 1 ? $this->t('Yes') : $this->t('No'),
         ),
-        'ordering' => array(
-          '#markup' => $attr->ordering,
-        ),
-        'options' => array(
-          '#markup' => $attr->options,
-        ),
-        'display' => array(
-          '#markup' => $display_types[$attr->display],
-        ),
+        'ordering' => array('#markup' => $attr->ordering),
+        'options' => array('#markup' => $attr->options),
+        'display' => array('#markup' => $display_types[$attr->display]),
         'operations' => array(
           '#type' => 'operations',
           '#links' => array(
