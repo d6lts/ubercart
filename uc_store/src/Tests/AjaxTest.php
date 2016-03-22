@@ -37,13 +37,13 @@ class AjaxTest extends UbercartTestBase {
   }
 
   /**
-   * Set a zone-based condition for a particular payment method.
+   * Sets a zone-based condition for a particular payment method.
    *
-   * @param $method
+   * @param string $method
    *   The method to set (e.g. 'check')
-   * @param $zone
+   * @param int $zone
    *   The zone id (numeric) to check for.
-   * @param $negate
+   * @param bool $negate
    *   TRUE to negate the condition.
    */
   protected function addPaymentZoneCondition($method, $zone, $negate = FALSE) {
@@ -81,6 +81,9 @@ class AjaxTest extends UbercartTestBase {
     //$this->drupalGet('admin/config/workflow/rules/components/manage/' . $newconfig->id);
   }
 
+  /**
+   * Tests Ajax on the checkout form.
+   */
   public function testCheckoutAjax() {
     // Enable two payment methods and set a condition on one.
     $this->createPaymentMethod('check');

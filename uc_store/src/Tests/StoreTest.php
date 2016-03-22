@@ -14,6 +14,9 @@ namespace Drupal\uc_store\Tests;
  */
 class StoreTest extends UbercartTestBase {
 
+  /**
+   * Tests operation of store configuration page.
+   */
   public function testStoreAdmin() {
     $this->drupalLogin($this->adminUser);
 

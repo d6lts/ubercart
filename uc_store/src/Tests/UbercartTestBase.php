@@ -102,6 +102,13 @@ abstract class UbercartTestBase extends WebTestBase {
 
   /**
    * Creates a new product.
+   *
+   * @param array $product
+   *   (optional) An associative array of product fields to change from the
+   *   defaults, keys are product field names. For example, 'price' => '12.34'.
+   *
+   * @return \Drupal\node\NodeInterface
+   *   Product node object.
    */
   protected function createProduct($product = []) {
     // Set the default required fields.
@@ -136,8 +143,13 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Creates an attribute.
    *
-   * @param $data
-   * @param $save
+   * @param array $data
+   *   (optional) An associative array of attribute initialization data.
+   * @param bool $save
+   *   If TRUE, save attribute in database.
+   *
+   * @return array
+   *   Associative array of attribute data.
    */
   protected function createAttribute($data = [], $save = TRUE) {
     $attribute = $data + array(
@@ -159,8 +171,12 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Creates an attribute option.
    *
-   * @param $data
-   * @param $save
+   * @param array $data
+   * @param bool $save
+   *   If TRUE, save attribute option in database.
+   *
+   * @return array
+   *   Associative array of attribute option data.
    */
   protected function createAttributeOption($data = [], $save = TRUE) {
     $max_aid = db_select('uc_attributes', 'a')
@@ -196,6 +212,13 @@ abstract class UbercartTestBase extends WebTestBase {
    * Creates a new product class.
    *
    * Fix this after adding a proper API call for saving a product class.
+   *
+   * @param array $data
+   *   (optional) An associative array with possible keys of 'type', 'name',
+   *   and 'description' to initialize the product class.
+   *
+   * @return \Drupal\node\NodeInterface
+   *   Product node object.
    */
   protected function createProductClass($data = []) {
     $class = strtolower($this->randomMachineName(12));
@@ -291,6 +314,13 @@ abstract class UbercartTestBase extends WebTestBase {
 
   /**
    * Creates a new order directly, without going through checkout.
+   *
+   * @param array $edit
+   *   (optional) An associative array of order fields to change from the
+   *   defaults, keys are order field names. For example, 'price' => '12.34'.
+   *
+   * @return \Drupal\uc_order\OrderInterface
+   *   Product node object.
    */
   protected function createOrder($edit = []) {
     if (empty($edit['primary_email'])) {
@@ -319,6 +349,14 @@ abstract class UbercartTestBase extends WebTestBase {
 
   /**
    * Defines a new payment method.
+   *
+   * @param string $plugin_id
+   *   The plugin ID of the method.
+   * @param array $values
+   *   (optional) An associative array with possible keys of 'id', and 'name',
+   *   to initialize the payment method.
+   *
+   * @return array
    */
   protected function createPaymentMethod($plugin_id, $values = []) {
     $has_user = $this->loggedInUser;
@@ -342,23 +380,23 @@ abstract class UbercartTestBase extends WebTestBase {
   /**
    * Asserts that the most recently sent e-mails do not have the string in it.
    *
-   * @param $field_name
+   * @param string $field_name
    *   Name of field or message property to assert: subject, body, id, ...
-   * @param $string
+   * @param string $string
    *   String to search for.
-   * @param $email_depth
+   * @param int $email_depth
    *   Number of emails to search for string, starting with most recent.
-   * @param $message
+   * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use SafeMarkup::format() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
-   * @param $group
+   * @param string $group
    *   (optional) The group this message is in, which is displayed in a column
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
    *
-   * @return
+   * @return bool
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoMailString($field_name, $string, $email_depth, $message = '', $group = 'Other') {
@@ -447,4 +485,5 @@ abstract class UbercartTestBase extends WebTestBase {
     $this->verbose('Page content after ajax submission:<hr />' . $this->content);
     return $commands;
   }
+
 }
