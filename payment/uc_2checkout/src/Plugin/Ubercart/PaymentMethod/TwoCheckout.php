@@ -53,10 +53,8 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
       'checkout_type' => 'dynamic',
       'demo' => TRUE,
       'language' => 'en',
-      'method_title' => 'Credit card on a secure server:',
       'notification_url' => '',
       'secret_word' => 'tango',
-      'server_url' => 'https://www.2checkout.com/checkout/purchase',
       'sid' => '',
     ];
   }
@@ -99,11 +97,6 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
       '#title' => $this->t('Allow customers to choose to pay by credit card or online check.'),
       '#default_value' => $this->configuration['check'],
     );
-    $form['method_title'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Payment method title'),
-      '#default_value' => $this->configuration['method_title'],
-    );
     $form['checkout_type'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Checkout type'),
@@ -118,14 +111,7 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
       '#title' => $this->t('Instant notification settings URL'),
       '#description' => $this->t('Pass this URL to the <a href=":help_url">instant notification settings</a> parameter in your 2Checkout account. This way, any refunds or failed fraud reviews will automatically cancel the Ubercart order.', [':help_url' => Url::fromUri('https://www.2checkout.com/static/va/documentation/INS/index.html')->toString()]),
       '#default_value' => Url::fromRoute('uc_2checkout.notification', [], ['absolute' => TRUE])->toString(),
-      '#disabled' => TRUE,
-    );
-    $form['server_url'] = array(
-      '#type' => 'url',
-      '#title' => $this->t('2Checkout server URL'),
-      '#description' => $this->t('URL used to POST payments to the 2Checkout server.'),
-      '#default_value' => Url::fromUri($this->configuration['server_url'])->toString(),
-      '#disabled' => TRUE,
+      '#attributes' => array('readonly' => 'readonly'),
     );
 
     return $form;
@@ -140,9 +126,7 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
     $this->configuration['demo'] = $form_state->getValue('demo');
     $this->configuration['language'] = $form_state->getValue('language');
     $this->configuration['notification_url'] = $form_state->getValue('notification_url');
-    $this->configuration['method_title'] = $form_state->getValue('method_title');
     $this->configuration['secret_word'] = $form_state->getValue('secret_word');
-    $this->configuration['server_url'] = $form_state->getValue('server_url');
     $this->configuration['sid'] = $form_state->getValue('sid');
   }
 
@@ -195,20 +179,26 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
    * {@inheritdoc}
    */
   public function buildRedirectForm(array $form, FormStateInterface $form_state, OrderInterface $order = NULL) {
-    $country = \Drupal::service('country_manager')->getCountry($order->getAddress('billing')->country);
+    $address = $order->getAddress('billing');
+    if ($address->country) {
+      $country = \Drupal::service('country_manager')->getCountry($address->country)->getAlpha3();
+    }
+    else {
+      $country = '';
+    }
 
     $data = array(
       'sid' => $this->configuration['sid'],
       'mode' => '2CO',
-      'card_holder_name' => Unicode::substr($order->getAddress('billing')->first_name . ' ' . $order->getAddress('billing')->last_name, 0, 128),
-      'street_address' => Unicode::substr($order->getAddress('billing')->street1, 0, 64),
-      'street_address2' => Unicode::substr($order->getAddress('billing')->street2, 0, 64),
-      'city' => Unicode::substr($order->getAddress('billing')->city, 0, 64),
-      'state' => $order->getAddress('billing')->zone,
-      'zip' => Unicode::substr($order->getAddress('billing')->postal_code, 0, 16),
-      'country' => $country ? $country->getAlpha3() : 'USA',
+      'card_holder_name' => Unicode::substr($address->first_name . ' ' . $address->last_name, 0, 128),
+      'street_address' => Unicode::substr($address->street1, 0, 64),
+      'street_address2' => Unicode::substr($address->street2, 0, 64),
+      'city' => Unicode::substr($address->city, 0, 64),
+      'state' => $address->zone,
+      'zip' => Unicode::substr($address->postal_code, 0, 16),
+      'country' => $country,
       'email' => Unicode::substr($order->getEmail(), 0, 64),
-      'phone' => Unicode::substr($order->getAddress('billing')->phone, 0, 16),
+      'phone' => Unicode::substr($address->phone, 0, 16),
       'purchase_step' => 'payment-method',
 
       'demo' => $this->configuration['demo'] ? 'Y' : 'N',
@@ -236,7 +226,8 @@ class TwoCheckout extends PaymentMethodPluginBase implements OffsitePaymentMetho
       $form['#attached']['library'][] = 'uc_2checkout/2checkout.direct';
     }
 
-    $form['#action'] = $this->configuration['server_url'];
+    $host = $this->configuration['demo'] ? 'sandbox' : 'www';
+    $form['#action'] = "https://$host.2checkout.com/checkout/purchase";
 
     foreach ($data as $name => $value) {
       $form[$name] = array('#type' => 'hidden', '#value' => $value);

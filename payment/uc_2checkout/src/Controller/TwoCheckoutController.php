@@ -89,14 +89,15 @@ class TwoCheckoutController extends ControllerBase {
       }
     }
 
-//@todo: Check if this is the right way to save the order
-    $order->billing_street1 = $request->request->get('street_address');
-    $order->billing_street2 = $request->request->get('street_address2');
-    $order->billing_city = $request->request->get('city');
-    $order->billing_postal_code = $request->request->get('zip');
-    $order->billing_phone = $request->request->get('phone');
-    $order->billing_zone = $request->request->get('state');
-    $order->billing_country = $request->request->get('country');
+    $address = $order->getAddress('billing');
+    $address->street1 = $request->request->get('street_address');
+    $address->street2 = $request->request->get('street_address2');
+    $address->city = $request->request->get('city');
+    $address->postal_code = $request->request->get('zip');
+    $address->phone = $request->request->get('phone');
+    $address->zone = $request->request->get('state');
+    $address->country = $request->request->get('country');
+    $order->setAddress('billing', $address);
     $order->save();
 
     if (Unicode::strtolower($request->request->get('email')) !== Unicode::strtolower($order->getEmail())) {
@@ -113,13 +114,12 @@ class TwoCheckoutController extends ControllerBase {
     }
 
     // Empty that cart...
-    $cart = $this->cartManager->get($cart_id);
-    $cart->emptyCart();
+    $this->cartManager->emptyCart($cart_id);
 
     // Add a comment to let sales team know this came in through the site.
     uc_order_comment_save($order->id(), 0, $this->t('Order created through website.'), 'admin');
 
-    $build = $cart->completeSale($order, $cart_config->get('new_customer_login'));
+    $build = $this->cartManager->completeSale($order, $cart_config->get('new_customer_login'));
 
     return $build;
   }
