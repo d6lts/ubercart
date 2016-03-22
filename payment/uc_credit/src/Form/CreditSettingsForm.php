@@ -45,7 +45,7 @@ class CreditSettingsForm extends ConfigFormBase {
     $form['cc_security'] = array(
       '#type' => 'details',
       '#title' => $this->t('Security settings'),
-      '#description' => $this->t('You are responsible for the security of your website, including the protection of credit card numbers.  Please be aware that choosing some settings in this section may decrease the security of credit card data on your website and increase your liability for damages in the case of fraud.'),
+      '#description' => $this->t('You are responsible for the security of your website, including the protection of credit card numbers. Please be aware that choosing some settings in this section may decrease the security of credit card data on your website and increase your liability for damages in the case of fraud.'),
       '#group' => 'uc_credit',
     );
     $form['cc_security']['uc_credit_encryption_path'] = array(

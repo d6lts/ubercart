@@ -65,7 +65,7 @@ class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
     $form['api'] = array(
       '#type' => 'details',
       '#title' => $this->t('API credentials'),
-      '#description' => $this->t('@link for information on obtaining credentials.  You need to acquire an API Signature.  If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://developer.paypal.com/docs/classic/api/apiCredentials/'))->toString()]),
+      '#description' => $this->t('@link for information on obtaining credentials. You need to acquire an API Signature. If you have already requested API credentials, you can review your settings under the API Access section of your PayPal profile.', ['@link' => Link::fromTextAndUrl($this->t('Click here'), Url::fromUri('https://developer.paypal.com/docs/classic/api/apiCredentials/'))->toString()]),
       '#open' => TRUE,
     );
     $form['api']['api_username'] = array(
@@ -142,7 +142,7 @@ class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
       if (is_null($cc_type)) {
         $cc_type = $this->cardType($order->payment_details['cc_number']);
         if ($cc_type === FALSE) {
-          drupal_set_message(t('The credit card type did not pass validation.'), 'error');
+          drupal_set_message($this->t('The credit card type did not pass validation.'), 'error');
           \Drupal::logger('uc_paypal')->error('Could not figure out cc type: @number / @type', ['@number' => $order->payment_details['cc_number'], '@type' => $order->payment_details['cc_type']]);
           return array('success' => FALSE);
         }
@@ -158,7 +158,7 @@ class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
         'IPADDRESS' => $ip_address,
         'AMT' => uc_currency_format($amount, FALSE, FALSE, '.'),
         'CREDITCARDTYPE' => $cc_type,
-        'ACCT' =>  $order->payment_details['cc_number'],
+        'ACCT' => $order->payment_details['cc_number'],
         'EXPDATE' => $expdate,
         'CVV2' => $order->payment_details['cc_cvv'],
         'FIRSTNAME' => substr($address->first_name, 0, 25),
@@ -206,14 +206,14 @@ class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
         );
       // Fall through.
       case 'Success':
-        $message = t('<b>@type</b><br /><b>Success: </b>@amount @currency', ['@type' => $types[$txn_type], '@amount' => uc_currency_format($nvp_response['AMT'], FALSE), '@currency' => $nvp_response['CURRENCYCODE']]);
+        $message = $this->t('<b>@type</b><br /><b>Success: </b>@amount @currency', ['@type' => $types[$txn_type], '@amount' => uc_currency_format($nvp_response['AMT'], FALSE), '@currency' => $nvp_response['CURRENCYCODE']]);
         if ($txn_type != UC_CREDIT_PRIOR_AUTH_CAPTURE) {
-          $message .= '<br />' . t('<b>Address:</b> @avscode', ['@avscode' => $this->avscodeMessage($nvp_response['AVSCODE'])]);
-          $message .= '<br />' . t('<b>CVV2:</b> @cvvmatch', ['@cvvmatch' => $this->cvvmatchMessage($nvp_response['CVV2MATCH'])]);
+          $message .= '<br />' . $this->t('<b>Address:</b> @avscode', ['@avscode' => $this->avscodeMessage($nvp_response['AVSCODE'])]);
+          $message .= '<br />' . $this->t('<b>CVV2:</b> @cvvmatch', ['@cvvmatch' => $this->cvvmatchMessage($nvp_response['CVV2MATCH'])]);
         }
         $result = array(
           'success' => TRUE,
-          'comment' => t('PayPal transaction ID: @transactionid', ['@transactionid' => $nvp_response['TRANSACTIONID']]),
+          'comment' => $this->t('PayPal transaction ID: @transactionid', ['@transactionid' => $nvp_response['TRANSACTIONID']]),
           'message' => $message,
           'data' => SafeMarkup::checkPlain($nvp_response['TRANSACTIONID']),
           'uid' => \Drupal::currentUser()->id(),
@@ -245,7 +245,7 @@ class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
       case 'FailureWithWarning':
         // Fall through.
       case 'Failure':
-        $message = t('<b>@type failed.</b>', ['@type' => $types[$txn_type]]) . $this->buildErrorMessages($nvp_response);
+        $message = $this->t('<b>@type failed.</b>', ['@type' => $types[$txn_type]]) . $this->buildErrorMessages($nvp_response);
         $result = array(
           'success' => FALSE,
           'message' => $message,
@@ -253,7 +253,7 @@ class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
         );
         break;
       default:
-        $message = t('Unexpected acknowledgement status: @status', ['@status' => $nvp_response['ACK']]);
+        $message = $this->t('Unexpected acknowledgement status: @status', ['@status' => $nvp_response['ACK']]);
         $result = array(
           'success' => NULL,
           'message' => $message,
@@ -334,52 +334,52 @@ class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
     if (is_numeric($code)) {
       switch ($code) {
         case '0':
-          return t('All the address information matched.');
+          return $this->t('All the address information matched.');
         case '1':
-          return t('None of the address information matched; transaction declined.');
+          return $this->t('None of the address information matched; transaction declined.');
         case '2':
-          return t('Part of the address information matched.');
+          return $this->t('Part of the address information matched.');
         case '3':
-          return t('The merchant did not provide AVS information. Not processed.');
+          return $this->t('The merchant did not provide AVS information. Not processed.');
         case '4':
-          return t('Address not checked, or acquirer had no response. Service not available.');
+          return $this->t('Address not checked, or acquirer had no response. Service not available.');
         default:
-          return t('No AVS response was obtained.');
+          return $this->t('No AVS response was obtained.');
       }
     }
 
     switch ($code) {
       case 'A':
       case 'B':
-        return t('Address matched; postal code did not');
+        return $this->t('Address matched; postal code did not');
       case 'C':
       case 'N':
-        return t('Nothing matched; transaction declined');
+        return $this->t('Nothing matched; transaction declined');
       case 'D':
       case 'F':
       case 'X':
       case 'Y':
-        return t('Address and postal code matched');
+        return $this->t('Address and postal code matched');
       case 'E':
-        return t('Not allowed for MOTO transactions; transaction declined');
+        return $this->t('Not allowed for MOTO transactions; transaction declined');
       case 'G':
-        return t('Global unavailable');
+        return $this->t('Global unavailable');
       case 'I':
-        return t('International unavailable');
+        return $this->t('International unavailable');
       case 'P':
       case 'W':
       case 'Z':
-        return t('Postal code matched; address did not');
+        return $this->t('Postal code matched; address did not');
       case 'R':
-        return t('Retry for validation');
+        return $this->t('Retry for validation');
       case 'S':
-        return t('Service not supported');
+        return $this->t('Service not supported');
       case 'U':
-        return t('Unavailable');
+        return $this->t('Unavailable');
       case 'Null':
-        return t('No AVS response was obtained.');
+        return $this->t('No AVS response was obtained.');
       default:
-        return t('An unknown error occurred.');
+        return $this->t('An unknown error occurred.');
     }
   }
 
@@ -390,35 +390,35 @@ class PayPalWebsitePaymentsPro extends CreditCardPaymentMethodBase {
     if (is_numeric($code)) {
       switch ($code) {
         case '0':
-          return t('Matched');
+          return $this->t('Matched');
         case '1':
-          return t('No match');
+          return $this->t('No match');
         case '2':
-          return t('The merchant has not implemented CVV2 code handling.');
+          return $this->t('The merchant has not implemented CVV2 code handling.');
         case '3':
-          return t('Merchant has indicated that CVV2 is not present on card.');
+          return $this->t('Merchant has indicated that CVV2 is not present on card.');
         case '4':
-          return t('Service not available');
+          return $this->t('Service not available');
         default:
-          return t('Unkown error');
+          return $this->t('Unkown error');
       }
     }
 
     switch ($code) {
       case 'M':
-        return t('Match');
+        return $this->t('Match');
       case 'N':
-        return t('No match');
+        return $this->t('No match');
       case 'P':
-        return t('Not processed');
+        return $this->t('Not processed');
       case 'S':
-        return t('Service not supported');
+        return $this->t('Service not supported');
       case 'U':
-        return t('Service not available');
+        return $this->t('Service not available');
       case 'X':
-        return t('No response');
+        return $this->t('No response');
       default:
-        return t('Not checked');
+        return $this->t('Not checked');
     }
   }
 

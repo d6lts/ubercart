@@ -130,7 +130,7 @@ class CreditCardTerminalForm extends FormBase {
       $form['authorizations'] = array(
         '#type' => 'details',
         '#title' => $this->t('Prior authorizations'),
-        '#description' => $this->t('Use the available buttons in this fieldset to select and act on a prior authorization. The charge amount specified above will be captured against the authorization listed below.  Only one capture is possible per authorization, and a capture for more than the amount of the authorization may result in additional fees to you.'),
+        '#description' => $this->t('Use the available buttons in this fieldset to select and act on a prior authorization. The charge amount specified above will be captured against the authorization listed below. Only one capture is possible per authorization, and a capture for more than the amount of the authorization may result in additional fees to you.'),
         '#open' => TRUE,
       );
 
@@ -304,7 +304,7 @@ class CreditCardTerminalForm extends FormBase {
       drupal_set_message($this->t('The credit card was processed successfully. See the admin comments for more details.'));
     }
     else {
-      drupal_set_message($this->t('There was an error processing the credit card.  See the admin comments for details.'), 'error');
+      drupal_set_message($this->t('There was an error processing the credit card. See the admin comments for details.'), 'error');
     }
 
     $form_state->setRedirect('entity.uc_order.canonical', ['uc_order' => $this->order->id()]);

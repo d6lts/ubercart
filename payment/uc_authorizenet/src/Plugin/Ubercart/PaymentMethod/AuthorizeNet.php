@@ -82,7 +82,7 @@ class AuthorizeNet extends CreditCardPaymentMethodBase {
     $form['duplicate_window'] = array(
       '#type' => 'select',
       '#title' => $this->t('Duplicate window'),
-      '#description' => $this->t('Blocks submission of duplicate transactions within the specified window.  Defaults to 120 seconds.'),
+      '#description' => $this->t('Blocks submission of duplicate transactions within the specified window. Defaults to 120 seconds.'),
       '#default_value' => $this->configuration['duplicate_window'],
       '#options' => array_combine($intervals, $intervals),
     );
@@ -90,7 +90,7 @@ class AuthorizeNet extends CreditCardPaymentMethodBase {
     $form['api'] = array(
       '#type' => 'details',
       '#title' => $this->t('API Login ID and Transaction Key'),
-      '#description' => $this->t('This information is required for Ubercart to interact with your payment gateway account.  It is different from your login ID and password and may be found through your account settings page.  Do not change the gateway URLs unless you are using this module with an Authorize.net-compatible gateway that requires different URLs.'),
+      '#description' => $this->t('This information is required for Ubercart to interact with your payment gateway account. It is different from your login ID and password and may be found through your account settings page. Do not change the gateway URLs unless you are using this module with an Authorize.net-compatible gateway that requires different URLs.'),
       '#open' => TRUE,
     );
     $form['api']['login_id'] = array(

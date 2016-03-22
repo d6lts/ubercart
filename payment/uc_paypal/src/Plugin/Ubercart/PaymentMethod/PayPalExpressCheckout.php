@@ -163,7 +163,7 @@ class PayPalExpressCheckout extends PayPalPaymentMethodPluginBase implements Exp
       'AMT' => uc_currency_format($order->getTotal(), FALSE, FALSE, '.'),
       'CURRENCYCODE' => $order->getCurrency(),
       'PAYMENTACTION' => $this->configuration['wpp_cc_txn_type'],
-      'DESC' => t('Order @order_id at @store', ['@order_id' => $order->id(), '@store' => uc_store_name()]),
+      'DESC' => $this->t('Order @order_id at @store', ['@order_id' => $order->id(), '@store' => uc_store_name()]),
       'INVNUM' => $order->id() . '-' . REQUEST_TIME,
       'REQCONFIRMSHIPPING' => $this->configuration['ec_rqconfirmed_addr'],
       'ADDROVERRIDE' => 1,

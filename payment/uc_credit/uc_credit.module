@@ -267,7 +267,7 @@ function uc_credit_log_prior_auth_capture($order_id, $auth_id) {
  *   The payment service's ID for the reference that may be used to charge the
  *     same credit card at a later date.
  * @param string $cc_number
- *   The credit card number associated with this reference.  Only the last 4
+ *   The credit card number associated with this reference. Only the last 4
  *     digits will be stored.
  *
  * @return array

@@ -203,12 +203,12 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
         '#type' => 'number',
         '#title' => $this->t('Start date'),
         '#options' => array(
-          1 => t('01 - January'), 2 => t('02 - February'),
-          3 => t('03 - March'), 4 => t('04 - April'),
-          5 => t('05 - May'), 6 => t('06 - June'),
-          7 => t('07 - July'), 8 => t('08 - August'),
-          9 => t('09 - September'), 10 => t('10 - October'),
-          11 => t('11 - November'), 12 => t('12 - December'),
+          1 => $this->t('01 - January'), 2 => $this->t('02 - February'),
+          3 => $this->t('03 - March'), 4 => $this->t('04 - April'),
+          5 => $this->t('05 - May'), 6 => $this->t('06 - June'),
+          7 => $this->t('07 - July'), 8 => $this->t('08 - August'),
+          9 => $this->t('09 - September'), 10 => $this->t('10 - October'),
+          11 => $this->t('11 - November'), 12 => $this->t('12 - December'),
         ),
         '#default_value' => $month,
         '#required' => TRUE,
@@ -231,12 +231,12 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       '#type' => 'select',
       '#title' => $this->t('Expiration date'),
       '#options' => array(
-        1 => t('01 - January'), 2 => t('02 - February'),
-        3 => t('03 - March'), 4 => t('04 - April'),
-        5 => t('05 - May'), 6 => t('06 - June'),
-        7 => t('07 - July'), 8 => t('08 - August'),
-        9 => t('09 - September'), 10 => t('10 - October'),
-        11 => t('11 - November'), 12 => t('12 - December'),
+        1 => $this->t('01 - January'), 2 => $this->t('02 - February'),
+        3 => $this->t('03 - March'), 4 => $this->t('04 - April'),
+        5 => $this->t('05 - May'), 6 => $this->t('06 - June'),
+        7 => $this->t('07 - July'), 8 => $this->t('08 - August'),
+        9 => $this->t('09 - September'), 10 => $this->t('10 - October'),
+        11 => $this->t('11 - November'), 12 => $this->t('12 - December'),
       ),
       '#default_value' => $month,
       '#required' => TRUE,
@@ -278,7 +278,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     }
 
     if (!empty($fields['cvv'])) {
-      // Set up the default CVV  on the credit card form.
+      // Set up the default CVV on the credit card form.
       if (empty($order->payment_details['cc_cvv'])) {
         $default_cvv = NULL;
       }
@@ -505,7 +505,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $return = FALSE;
     }
 
-    // Validate the issue number (if entered).  With issue numbers, '01' is
+    // Validate the issue number (if entered). With issue numbers, '01' is
     // different from '1', but is_numeric() is still appropriate.
     if (!empty($fields['issue']) && !$this->validateIssueNumber($cc_data['cc_issue'])) {
       $form_state->setErrorByName('panes][payment][details][cc_issue', $this->t('The issue number you entered is invalid.'));

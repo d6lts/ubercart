@@ -133,7 +133,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
 
     if ($this->configuration['delivery_date'] &&
         isset($order->payment_details['delivery_date'])) {
-      $build['#markup'] = $this->t('Desired delivery date:') . '<br />' .  \Drupal::service('date.formatter')->format($order->payment_details['delivery_date'], 'uc_store');
+      $build['#markup'] = $this->t('Desired delivery date:') . '<br />' . \Drupal::service('date.formatter')->format($order->payment_details['delivery_date'], 'uc_store');
     }
 
     return $build;
@@ -198,7 +198,7 @@ class CashOnDelivery extends PaymentMethodPluginBase {
     $max = $this->configuration['max_order'];
 
     if ($max > 0 && $order->getTotal() > $max) {
-      return $this->t('Your final order total exceeds the maximum for COD payment.  Please go back and select a different method of payment.');
+      return $this->t('Your final order total exceeds the maximum for COD payment. Please go back and select a different method of payment.');
     }
   }
 

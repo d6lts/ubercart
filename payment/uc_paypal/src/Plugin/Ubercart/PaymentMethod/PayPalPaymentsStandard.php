@@ -51,11 +51,11 @@ class PayPalPaymentsStandard extends PayPalPaymentMethodPluginBase implements Of
     );
     $build['label'] = array(
       '#prefix' => ' ',
-      '#markup' => $this->t('PayPal - pay without sharing your financial information.'),
+      '#plain_text' => $this->t('PayPal - pay without sharing your financial information.'),
       '#suffix' => '<br /> ',
     );
     $build['includes'] = array(
-      '#markup' => $this->t('Includes:') . ' ',
+      '#plain_text' => $this->t('Includes:') . ' ',
     );
     $cc_types = $this->getEnabledTypes();
     foreach ($cc_types as $type => $description) {
@@ -262,7 +262,7 @@ class PayPalPaymentsStandard extends PayPalPaymentMethodPluginBase implements Of
       // Transaction information.
       'currency_code' => $order->getCurrency(),
       'handling_cart' => uc_currency_format($shipping, FALSE, FALSE, '.'),
-      'invoice' => $order->id() . '-' .  \Drupal::service('uc_cart.manager')->get()->getId(),
+      'invoice' => $order->id() . '-' . \Drupal::service('uc_cart.manager')->get()->getId(),
       'tax_cart' => uc_currency_format($tax, FALSE, FALSE, '.'),
 
       // Shopping cart specific variables.

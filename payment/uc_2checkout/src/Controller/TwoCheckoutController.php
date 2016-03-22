@@ -65,7 +65,7 @@ class TwoCheckoutController extends ControllerBase {
     $order = Order::load($request->request->get('merchant_order_id'));
 
     if (!$order || $order->getStateId() != 'in_checkout') {
-      return $this->t('An error has occurred during payment.  Please contact us to ensure your order has submitted.');
+      return $this->t('An error has occurred during payment. Please contact us to ensure your order has submitted.');
     }
 
     $key = $request->request->get('key');
