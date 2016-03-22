@@ -137,7 +137,7 @@ interface PaymentMethodPluginInterface extends PluginInspectionInterface, Plugin
    * @param \Drupal\uc_order\OrderInterface $order
    *   The order that is being submitted.
    *
-   * @return string|NULL
+   * @return string|null
    *   An error message that can be shown to the user if the payment failed,
    *   or NULL if everything was successful.
    */
