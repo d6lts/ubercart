@@ -61,7 +61,6 @@ class AuthorizeNet extends CreditCardPaymentMethodBase {
 
     // If CC encryption has been configured properly.
     if ($key = uc_credit_encryption_key()) {
-drupal_set_message('key found');
       // Setup our encryption object.
       $crypt = \Drupal::service('uc_store.encryption');
 
@@ -259,7 +258,7 @@ drupal_set_message('key found');
 
       // Accommodate all other transaction types.
       default:
-        return _uc_authorizenet_charge($order, $amount, $data);
+        return _uc_authorizenet_charge($order, $amount, $txn_type, $reference);
     }
 
   }
@@ -267,7 +266,7 @@ drupal_set_message('key found');
   /**
    * Handles authorizations and captures through AIM at Authorize.Net
    */
-  function _uc_authorizenet_charge($order, $amount, $data) {
+  protected function _uc_authorizenet_charge(OrderInterface $order, $amount, $txn_type, $reference) {
     global $user;
 
     // Build a description of the order for logging in Auth.Net.
@@ -417,24 +416,24 @@ drupal_set_message('key found');
       );
 
       // If this was an authorization only transaction...
-      if ($data['txn_type'] == UC_CREDIT_AUTH_ONLY) {
+      if ($txn_type == UC_CREDIT_AUTH_ONLY) {
         // Log the authorization to the order.
         uc_credit_log_authorization($order->id(), $response[6], $amount);
       }
-      elseif ($data['txn_type'] == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
+      elseif ($txn_type == UC_CREDIT_PRIOR_AUTH_CAPTURE) {
         uc_credit_log_prior_auth_capture($order->id(), $data['auth_id']);
       }
 
       // Create a transaction reference if specified in the payment gateway
       // settings and this is an appropriate transaction type.
-      if ($this->configuration['cim']['cim_profile'] && in_array($data['txn_type'], array(UC_CREDIT_AUTH_ONLY, UC_CREDIT_AUTH_CAPTURE))) {
+      if ($this->configuration['cim']['cim_profile'] && in_array($txn_type, array(UC_CREDIT_AUTH_ONLY, UC_CREDIT_AUTH_CAPTURE))) {
         // Ignore the returned message for now; that will appear in the comments.
         _uc_authorizenet_cim_profile_create($order);
       }
     }
 
     // Don't log this as a payment money wasn't actually captured.
-    if (in_array($data['txn_type'], array(UC_CREDIT_AUTH_ONLY))) {
+    if (in_array($txn_type, array(UC_CREDIT_AUTH_ONLY))) {
       $result['log_payment'] = FALSE;
     }
 

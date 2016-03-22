@@ -1,10 +1,8 @@
-
-# IPN, always accessible, helps for testing while site is offline.
+# Silent post is always accessible, helps for testing while site is offline.
 uc_authorizenet.silent_post:
   path: '/authnet/silent-post'
   defaults:
     _controller: '\Drupal\uc_authorizenet\Controller\AuthorizeNetController::silentPost'
-#    'page callback' => 'uc_authorizenet_silent_post',
     _title: 'Authorize.net silent post'
   requirements:
     _access: 'TRUE'
