@@ -180,6 +180,18 @@ function uc_payment_uc_payment_receipt_insert(PaymentReceiptInterface $payment) 
 }
 
 /**
+ * Implements hook_uc_payment_receipt_delete().
+ */
+function uc_payment_uc_payment_receipt_delete(PaymentReceiptInterface $payment) {
+  $order = $payment->getOrder();
+
+  // Log a message against the order.
+  $method_name = $payment->getMethod() ? $payment->getMethod()->getPlugin()->cartReviewTitle() : t('Other');
+  $log_message = t('@method payment for @amount deleted.', array('@method' => $method_name, '@amount' => uc_currency_format($payment->getAmount())));
+  $order->logChanges(array($log_message));
+}
+
+/**
  * Implements hook_uc_order_load().
  */
 function uc_payment_uc_order_load($orders) {
@@ -247,12 +259,8 @@ function uc_payment_delete($receipt_id) {
   if (!is_numeric($receipt_id)) {
     return FALSE;
   }
-
   /** @var \Drupal\uc_payment\PaymentReceiptInterface $payment */
   $payment = PaymentReceipt::load($receipt_id);
-  $log_message = t('@method payment for @amount deleted.', array('@method' => $payment->getMethod()->label(), '@amount' => uc_currency_format($payment->getAmount())));
-  $payment->getOrder()->logChanges(array($log_message));
-
   $payment->delete();
 }
 
