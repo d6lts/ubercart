@@ -55,6 +55,14 @@ function uc_product_preprocess_field(&$variables) {
  * Implements hook_node_insert().
  */
 function uc_product_node_insert($node) {
+  // Set sample values for Devel Generate.
+  if (!empty($node->devel_generate) && uc_product_is_product($node)) {
+    $fields = array('model', 'cost', 'price', 'weight', 'dimensions', 'shippable');
+    foreach ($fields as $field) {
+      $node->$field->generateSampleItems();
+    }
+  }
+
   uc_product_node_update($node);
 }
 
@@ -426,6 +434,8 @@ function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $
       ->setDescription(t('Product SKU/model.'))
       ->setRequired(TRUE)
       ->setCustomStorage(TRUE)
+      ->setDefaultValue('')
+      ->setSetting('max_length', 40)
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
         'weight' => 1,
@@ -447,6 +457,7 @@ function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $
       ->setRequired(TRUE)
       ->setCustomStorage(TRUE)
       ->setDefaultValue('0.00')
+      ->setSetting('min', 0)
       ->setDisplayOptions('form', array(
         'type' => 'hidden',
       ))
@@ -462,6 +473,7 @@ function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $
       ->setRequired(TRUE)
       ->setCustomStorage(TRUE)
       ->setDefaultValue('0.00')
+      ->setSetting('min', 0)
       ->setDisplayOptions('form', array(
         'type' => 'uc_price',
         'weight' => 2,
@@ -493,6 +505,10 @@ function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $
       ->setLabel(t('Weight'))
       ->setRequired(TRUE)
       ->setCustomStorage(TRUE)
+      ->setDefaultValue([
+        'value' => 0,
+        'units' => \Drupal::config('uc_store.settings')->get('weight.units'),
+      ])
       ->setDisplayOptions('form', array(
         'type' => 'uc_weight',
         'weight' => 4,
@@ -509,6 +525,12 @@ function uc_product_entity_bundle_field_info(EntityTypeInterface $entity_type, $
       ->setLabel(t('Dimensions'))
       ->setRequired(TRUE)
       ->setCustomStorage(TRUE)
+      ->setDefaultValue([
+        'length' => 0,
+        'width' => 0,
+        'height' => 0,
+        'units' => \Drupal::config('uc_store.settings')->get('length.units'),
+      ])
       ->setDisplayOptions('form', array(
         'type' => 'uc_dimensions',
         'weight' => 5,

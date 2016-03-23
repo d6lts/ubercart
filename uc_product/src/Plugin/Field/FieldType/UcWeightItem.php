@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_product\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -53,6 +54,15 @@ class UcWeightItem extends FieldItemBase {
         ),
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $values['value'] = mt_rand(1, 999);
+    $values['units'] = array_rand(array_flip(['lb', 'kg', 'oz', 'g']));
+    return $values;
   }
 
 }

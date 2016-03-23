@@ -7,6 +7,7 @@
 
 namespace Drupal\uc_product\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -72,6 +73,17 @@ class UcDimensionsItem extends FieldItemBase {
         ),
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    $values['length'] = mt_rand(1, 999);
+    $values['width'] = mt_rand(1, 999);
+    $values['height'] = mt_rand(1, 999);
+    $values['units'] = array_rand(array_flip(['in', 'ft', 'cm', 'mm']));
+    return $values;
   }
 
 }
