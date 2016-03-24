@@ -136,6 +136,23 @@ class ProductKitTest extends UbercartTestBase {
     $this->assertFieldByName('items[' . $products[0]->id() . '][discount]', $products[0]->price->value);
     $this->assertFieldByName('items[' . $products[1]->id() . '][discount]', $products[1]->price->value);
     $this->assertFieldByName('items[' . $products[2]->id() . '][discount]', $products[2]->price->value);
+
+    // Reset the kit prices so the discounts should equal zero.
+    $edit = array(
+      'price[0][value]' => $total - ($products[1]->price->value + $products[2]->price->value),
+    );
+    $this->drupalPostForm('node/' . $products[0]->id() . '/edit', $edit, 'Save');
+
+    // Check the kit total is still the same.
+    $this->drupalGet('node/' . $kit->id());
+    $this->assertText(uc_currency_format($total), 'Fixed product kit total found.');
+
+    // Check the discounts are zeroed on the edit page.
+    $this->drupalGet('node/' . $kit->id() . '/edit');
+    $this->assertFieldByName('kit_total', $total);
+    $this->assertFieldByName('items[' . $products[0]->id() . '][discount]', '0.000');
+    $this->assertFieldByName('items[' . $products[1]->id() . '][discount]', '0.000');
+    $this->assertFieldByName('items[' . $products[2]->id() . '][discount]', '0.000');
   }
 
   public function testProductKitMutability() {
