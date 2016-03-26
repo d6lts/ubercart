@@ -57,34 +57,37 @@ class TwoCheckoutController extends ControllerBase {
    *   The request of the page.
    */
   public function complete($cart_id = 0, Request $request) {
-    $cart_config = $this->config('uc_cart.settings');
-    $module_config = $this->config('uc_2checkout.settings');
-
     \Drupal::logger('uc_2checkout')->notice('Receiving new order notification for order @order_id.', ['@order_id' => SafeMarkup::checkPlain($request->request->get('merchant_order_id'))]);
 
     $order = Order::load($request->request->get('merchant_order_id'));
 
     if (!$order || $order->getStateId() != 'in_checkout') {
-      return $this->t('An error has occurred during payment. Please contact us to ensure your order has submitted.');
+      return ['#plain_text' => $this->t('An error has occurred during payment. Please contact us to ensure your order has submitted.')];
     }
 
+    $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+    if ($plugin->getPluginId() != '2checkout') {
+      throw new AccessDeniedHttpException();
+    }
+
+    $configuration = $plugin->getConfiguration();
     $key = $request->request->get('key');
-    $order_number = $module_config->get('demo') ? 1 : $request->request->get('order_number');
-    $valid = md5($module_config->get('secret_word') . $request->request->get('sid') . $order_number . $request->request->get('total'));
+    $order_number = $configuration['demo'] ? 1 : $request->request->get('order_number');
+    $valid = md5($configuration['secret_word'] . $request->request->get('sid') . $order_number . $request->request->get('total'));
     if (Unicode::strtolower($key) != Unicode::strtolower($valid)) {
       uc_order_comment_save($order->id(), 0, $this->t('Attempted unverified 2Checkout completion for this order.'), 'admin');
       throw new AccessDeniedHttpException();
     }
 
-    if ($request->request->get('demo') == 'Y' xor $module_config->get('demo')) {
+    if ($request->request->get('demo') == 'Y' xor $configuration['demo']) {
       \Drupal::logger('uc_2checkout')->error('The 2Checkout payment for order <a href=":order_url">@order_id</a> demo flag was set to %flag, but the module is set to %mode mode.', array(
         ':order_url' => $order->toUrl()->toString(),
         '@order_id' => $order->id(),
         '%flag' => $request->request->get('demo') == 'Y' ? 'Y' : 'N',
-        '%mode' => $module_config->get('demo') ? 'Y' : 'N',
+        '%mode' => $configuration['demo'] ? 'Y' : 'N',
       ));
 
-      if (!$module_config->get('demo')) {
+      if (!$configuration['demo']) {
         throw new AccessDeniedHttpException();
       }
     }
@@ -119,6 +122,7 @@ class TwoCheckoutController extends ControllerBase {
     // Add a comment to let sales team know this came in through the site.
     uc_order_comment_save($order->id(), 0, $this->t('Order created through website.'), 'admin');
 
+    $cart_config = $this->config('uc_cart.settings');
     $build = $this->cartManager->completeSale($order, $cart_config->get('new_customer_login'));
 
     return $build;
@@ -133,12 +137,16 @@ class TwoCheckoutController extends ControllerBase {
   public function notification(Request $request) {
     $values = $request->request;
     \Drupal::logger('uc_2checkout')->notice('Received 2Checkout notification with following data: @data', ['@data' => print_r($values->all(), TRUE)]);
-    $module_config = $this->config('uc_2checkout.settings');
 
     if ($values->has('message_type') && $values->has('md5_hash') && $values->has('message_id')) {
+      $order_id = $values->get('vendor_order_id');
+      $order = Order::load($order_id);
+      $plugin = \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order);
+      $configuration = $plugin->getConfiguration();
+
       // Validate the hash
-      $secret_word = $module_config->get('secret_word');
-      $sid = $module_config->get('sid');
+      $secret_word = $configuration['secret_word'];
+      $sid = $configuration['sid'];
       $twocheckout_order_id = $values->get('sale_id');
       $twocheckout_invoice_id = $values->get('invoice_id');
       $hash = strtoupper(md5($twocheckout_order_id . $sid . $twocheckout_invoice_id . $secret_word));
@@ -148,8 +156,6 @@ class TwoCheckoutController extends ControllerBase {
         die('Hash Incorrect');
       }
 
-      $order_id = $values->get('vendor_order_id');
-      $order = Order::load($order_id);
       if ($values->get('message_type') == 'FRAUD_STATUS_CHANGED') {
         switch ($values->get('fraud_status')) {
 // @todo: I think this still needs a lot of work, I don't see anywhere that it

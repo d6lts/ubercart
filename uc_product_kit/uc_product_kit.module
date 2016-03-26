@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
@@ -247,10 +248,10 @@ function uc_product_kit_node_insert($node) {
 function uc_product_kit_node_update($node) {
   // Recalculate kit discounts that include the updated node.
   if (uc_product_is_product($node)) {
-    $result = db_query('SELECT DISTINCT nid FROM {uc_product_kits} WHERE product_id = :nid', [':nid' => $node->nid]);
+    $result = db_query('SELECT DISTINCT nid FROM {uc_product_kits} WHERE product_id = :nid', [':nid' => $node->id()]);
     while ($nid = $result->fetchField()) {
-      $kit = node_load($nid, NULL, TRUE);
-      $kit->save();
+      $kit = Node::load($nid);
+      uc_product_kit_node_update($kit);
     }
 
     return;
@@ -273,7 +274,7 @@ function uc_product_kit_node_update($node) {
 
   if (!isset($node->kit_total) && isset($node->synchronized) && isset($node->price)) {
     $override_discounts = !$node->synchronized;
-    $node->kit_total = $node->price;
+    $node->kit_total = $node->price->value;
   }
   else {
     $override_discounts = isset($node->kit_total) && is_numeric($node->kit_total);
@@ -290,7 +291,7 @@ function uc_product_kit_node_update($node) {
       // actual product kit node. $node->products is an array of objects and
       // $node->items doesn't exist then.
       if (is_numeric($nid)) {
-        $product = node_load($nid, NULL, TRUE);
+        $product = Node::load($nid);
         if (!isset($node->items[$nid]['qty']) || $node->items[$nid]['qty'] === '') {
           $node->items[$nid]['qty'] = 1;
         }
@@ -313,7 +314,7 @@ function uc_product_kit_node_update($node) {
   }
   foreach ($node->products as $nid) {
     if (is_numeric($nid)) {
-      $product = node_load($nid);
+      $product = Node::load($nid);
     }
     else {
       $product = $nid;

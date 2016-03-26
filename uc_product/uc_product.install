@@ -71,7 +71,7 @@ function uc_product_schema() {
       'model' => array(
         'description' => 'SKU or model number.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 40,
         'not null' => TRUE,
         'default' => '',
       ),

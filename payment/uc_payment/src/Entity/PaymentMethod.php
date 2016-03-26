@@ -21,7 +21,7 @@ use Drupal\uc_payment\PaymentMethodInterface;
  *     "list_builder" = "Drupal\uc_payment\PaymentMethodListBuilder",
  *     "form" = {
  *       "default" = "Drupal\uc_payment\Form\PaymentMethodForm",
- *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
+ *       "delete" = "Drupal\uc_payment\Form\PaymentMethodDeleteConfirm"
  *     }
  *   },
  *   config_prefix = "method",

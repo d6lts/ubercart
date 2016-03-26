@@ -73,6 +73,7 @@ use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\uc_store\Ajax\CommandWrapper;
 
 /**
  * Form process callback to allow multiple Ajax callbacks on form elements.
@@ -164,22 +165,21 @@ function uc_ajax_multiplex($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
 
   $element = $form_state->getTriggeringElement();
-  if (!empty($element['#ajax']['list'])) {
-    $commands = array();
-    foreach ($element['#ajax']['list'] as $wrapper => $callback) {
-      if (!empty($callback) && function_exists($callback) && $result = $callback($form, $form_state, $wrapper)) {
-        if (is_array($result) && !empty($result['#type']) && $result['#type'] == 'ajax') {
-          // If the callback returned an array of commands, simply add these to the list.
-          // @TODO Fix this for D8's new AjaxResponse object.
-          $commands = array_merge($commands, $result['#commands']);
+  foreach ($element['#ajax']['list'] as $wrapper => $callback) {
+    $callback = $form_state->prepareCallback($callback);
+    if (!empty($callback) && is_callable($callback) && $result = call_user_func_array($callback, [$form, $form_state, $wrapper])) {
+      if ($result instanceof AjaxResponse) {
+        // Merge AjaxResponse commands into our single list.
+        foreach ($result->getCommands() as $command) {
+          $response->addCommand(new CommandWrapper($command));
         }
-        elseif (is_string($wrapper)) {
-          // Otherwise, assume the callback returned a string or render-array, and insert it into the wrapper.
-          $html = is_string($result) ? $result : drupal_render($result);
-          $response->addCommand(new ReplaceCommand('#' . $wrapper, trim($html)));
-          $status_messages = array('#type' => 'status_messages');
-          $response->addCommand(new PrependCommand('#' . $wrapper, drupal_render($status_messages)));
-        }
+      }
+      elseif (is_string($wrapper)) {
+        // Otherwise, assume the callback returned a string or render-array, and insert it into the wrapper.
+        $html = is_string($result) ? $result : drupal_render($result);
+        $response->addCommand(new ReplaceCommand('#' . $wrapper, trim($html)));
+        $status_messages = array('#type' => 'status_messages');
+        $response->addCommand(new PrependCommand('#' . $wrapper, drupal_render($status_messages)));
       }
     }
   }

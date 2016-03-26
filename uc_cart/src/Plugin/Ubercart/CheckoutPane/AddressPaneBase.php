@@ -7,6 +7,9 @@
 
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_cart\CheckoutPanePluginBase;
 use Drupal\uc_order\OrderInterface;
@@ -115,9 +118,10 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       if ($element['#name'] == "panes[$pane][select_address]") {
         $address = $addresses[$element['#value']];
         foreach ($address as $field => $value) {
-          $input['panes'][$pane][$pane . '_' . $field] = $value;
+          $input['panes'][$pane][$field] = $value;
           $order->{$pane . '_' . $field} = $value;
         }
+        $contents['address']['#default_value'] = $order->getAddress($pane);
       }
 
       $form_state->setUserInput($input);
@@ -181,7 +185,13 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
     foreach (array_slice($triggering_element['#array_parents'], 0, -1) as $field) {
       $element = &$element[$field];
     }
-    return $element['address'];
+
+    $response = new AjaxResponse();
+    $id = $this->pluginDefinition['id']  . '-address-pane';
+    $response->addCommand(new ReplaceCommand('#' . $id, trim(drupal_render($element['address']))));
+    $status_messages = array('#type' => 'status_messages');
+    $response->addCommand(new PrependCommand('#' . $id, drupal_render($status_messages)));
+    return $response;
   }
 
 }
