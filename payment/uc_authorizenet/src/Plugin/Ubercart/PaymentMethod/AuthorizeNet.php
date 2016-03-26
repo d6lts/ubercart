@@ -281,13 +281,15 @@ class AuthorizeNet extends CreditCardPaymentMethodBase {
       $description[] = $product->qty . 'x ' . $product->model;
     }
 
-    $billing_address = $order->billing_street1;
-    if ($order->billing_street2) {
-      $billing_address .= ', ' . $order->billing_street2;
+    $billing_address = $order->getAddress('billing');
+    $billing_street = $billing_address->getStreet1();
+    if ($billing_address->getStreet2()) {
+      $billing_street .= ', ' . $billing_address->getStreet2();
     }
-    $delivery_address = $order->delivery_street1;
-    if ($order->delivery_street2) {
-      $delivery_address .= ', ' . $order->delivery_street2;
+    $delivery_address = $order->getAddress('delivery');
+    $delivery_street = $delivery_address->getStreet1();
+    if ($delivery_address->getStreet2()) {
+      $delivery_street .= ', ' . $delivery_address->getStreet2();
     }
 
     // Build the POST data for the transaction.
@@ -316,29 +318,29 @@ class AuthorizeNet extends CreditCardPaymentMethodBase {
       'x_description' => substr(implode(', ', $description), 0, 255),
 
       // Customer information.
-      'x_first_name' => substr($order->billing_first_name, 0, 50),
-      'x_last_name' => substr($order->billing_last_name, 0, 50),
-      'x_company' => substr($order->billing_company, 0, 50),
-      'x_address' => substr($billing_address, 0, 60),
-      'x_city' => substr($order->billing_city, 0, 40),
-      'x_state' => substr($order->billing_zone, 0, 40),
-      'x_zip' => substr($order->billing_postal_code, 0, 20),
-      'x_country' => $order->billing_country,
-      'x_phone' => substr($order->billing_phone, 0, 25),
+      'x_first_name' => substr($billing_address->getFirstName(), 0, 50),
+      'x_last_name' => substr($billing_address->getLastName(), 0, 50),
+      'x_company' => substr($billing_address->getCompany(), 0, 50),
+      'x_address' => substr($billing_street, 0, 60),
+      'x_city' => substr($billing_address->getCity(), 0, 40),
+      'x_state' => substr($billing_address->getZone(), 0, 40),
+      'x_zip' => substr($billing_address->getPostalCode(), 0, 20),
+      'x_country' => $billing_address->getCountry(),
+      'x_phone' => substr($billing_address->getPhone(), 0, 25),
       // 'x_fax' => substr('', 0, 25),
       'x_email' => substr($order->getEmail(), 0, 255),
       'x_cust_id' => $order->getOwnerId(),
       'x_customer_ip' => substr(Drupal::request()->getClientIp(), 0, 15),
 
       // Shipping information.
-      'x_ship_to_first_name' => substr($order->delivery_first_name, 0, 50),
-      'x_ship_to_last_name' => substr($order->delivery_last_name, 0, 50),
-      'x_ship_to_company' => substr($order->delivery_company, 0, 50),
-      'x_ship_to_address' => substr($delivery_address, 0, 60),
-      'x_ship_to_city' => substr($order->delivery_city, 0, 40),
-      'x_ship_to_state' => substr($order->delivery_zone, 0, 40),
-      'x_ship_to_zip' => substr($order->delivery_postal_code, 0, 20),
-      'x_ship_to_country' => $order->delivery_country,
+      'x_ship_to_first_name' => substr($delivery_address->getFirstName(), 0, 50),
+      'x_ship_to_last_name' => substr($delivery_address->getLastName(), 0, 50),
+      'x_ship_to_company' => substr($delivery_address->getCompany(), 0, 50),
+      'x_ship_to_address' => substr($delivery_street, 0, 60),
+      'x_ship_to_city' => substr($delivery_address->getCity(), 0, 40),
+      'x_ship_to_state' => substr($delivery_address->getZone(), 0, 40),
+      'x_ship_to_zip' => substr($delivery_address->getPostalCode(), 0, 20),
+      'x_ship_to_country' => $delivery_address->getCountry(),
 
       // Extra information.
       'x_delim_data' => 'TRUE',
