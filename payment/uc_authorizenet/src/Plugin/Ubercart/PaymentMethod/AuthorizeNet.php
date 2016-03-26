@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_authorizenet\Plugin\Ubercart\PaymentMethod;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_credit\CreditCardPaymentMethodBase;
@@ -232,6 +231,13 @@ class AuthorizeNet extends CreditCardPaymentMethodBase {
       // Store any errors.
       uc_store_encryption_errors($crypt, 'uc_authorizenet');
     }
+  }
+
+  public function getTransactionTypes() {
+    return [
+      UC_CREDIT_AUTH_ONLY, UC_CREDIT_PRIOR_AUTH_CAPTURE, UC_CREDIT_AUTH_CAPTURE,
+      UC_CREDIT_REFERENCE_SET, UC_CREDIT_REFERENCE_TXN
+    ];
   }
 
   /**
