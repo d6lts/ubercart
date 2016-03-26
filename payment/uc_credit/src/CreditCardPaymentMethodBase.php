@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_credit;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_order\OrderInterface;
@@ -61,7 +60,10 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    *   and UC_CREDIT_VOID.
    */
   public function getTransactionTypes() {
-    return [UC_CREDIT_AUTH_CAPTURE];
+    return [
+      UC_CREDIT_AUTH_CAPTURE,
+      UC_CREDIT_AUTH_ONLY,
+    ];
   }
 
   /**
@@ -330,10 +332,10 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
     $fields = $this->getEnabledFields();
 
     if (!empty($fields['type'])) {
-      $review[] = array('title' => $this->t('Card type'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_type']));
+      $review[] = array('title' => $this->t('Card type'), 'data' => $order->payment_details['cc_type']);
     }
     if (!empty($fields['owner'])) {
-      $review[] = array('title' => $this->t('Card owner'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_owner']));
+      $review[] = array('title' => $this->t('Card owner'), 'data' => $order->payment_details['cc_owner']);
     }
     $review[] = array('title' => $this->t('Card number'), 'data' => $this->displayCardNumber($order->payment_details['cc_number']));
     if (!empty($fields['start'])) {
@@ -345,7 +347,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $review[] = array('title' => $this->t('Issue number'), 'data' => $order->payment_details['cc_issue']);
     }
     if (!empty($fields['bank'])) {
-      $review[] = array('title' => $this->t('Issuing bank'), 'data' => SafeMarkup::checkPlain($order->payment_details['cc_bank']));
+      $review[] = array('title' => $this->t('Issuing bank'), 'data' => $order->payment_details['cc_bank']);
     }
 
     return $review;
@@ -363,11 +365,11 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       $rows = array();
 
       if (!empty($order->payment_details['cc_type'])) {
-        $rows[] = $this->t('Card type') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_type']);
+        $rows[] = $this->t('Card type') . ': ' . $order->payment_details['cc_type'];
       }
 
       if (!empty($order->payment_details['cc_owner'])) {
-        $rows[] = $this->t('Card owner') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_owner']);
+        $rows[] = $this->t('Card owner') . ': ' . $order->payment_details['cc_owner'];
       }
 
       if (!empty($order->payment_details['cc_number'])) {
@@ -383,11 +385,11 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
       }
 
       if (!empty($order->payment_details['cc_issue'])) {
-        $rows[] = $this->t('Issue number') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_issue']);
+        $rows[] = $this->t('Issue number') . ': ' . $order->payment_details['cc_issue'];
       }
 
       if (!empty($order->payment_details['cc_bank'])) {
-        $rows[] = $this->t('Issuing bank') . ': ' . SafeMarkup::checkPlain($order->payment_details['cc_bank']);
+        $rows[] = $this->t('Issuing bank') . ': ' . $order->payment_details['cc_bank'];
       }
 
       $build['cc_info'] = array(
