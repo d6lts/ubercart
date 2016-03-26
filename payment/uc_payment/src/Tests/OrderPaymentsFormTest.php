@@ -20,6 +20,12 @@ class OrderPaymentsFormTest extends UbercartTestBase {
   public static $adminPermissions = array('view payments', 'manual payments', 'delete payments');
 
   /**
+   * @var int
+   *   Number of digits after decimal point, for currency rounding.
+   */
+  protected $precision = 2;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -27,6 +33,10 @@ class OrderPaymentsFormTest extends UbercartTestBase {
 
     // Need page_title_block because we test page titles.
     $this->drupalPlaceBlock('page_title_block');
+
+    // Get configured currency precision.
+    $config = \Drupal::config('uc_store.settings')->get('currency');
+    $this->precision = $config['precision'];
   }
 
   /**
@@ -55,7 +65,7 @@ class OrderPaymentsFormTest extends UbercartTestBase {
     );
 
     // Add a partial payment.
-    $first_payment = $order->getTotal() / 4.0;
+    $first_payment = round($order->getTotal() / 4.0, $this->precision);
     $edit = array(
       'amount' => $first_payment,
       'method' => 'check',
@@ -83,7 +93,7 @@ class OrderPaymentsFormTest extends UbercartTestBase {
       'Markup is preserved in payment receipt comments.'
     );
     // Add another partial payment.
-    $second_payment = $order->getTotal() / 2.0;
+    $second_payment = round($order->getTotal() / 2.0, $this->precision);
     $edit = array(
       'amount' => $second_payment,
       'method' => 'check',
