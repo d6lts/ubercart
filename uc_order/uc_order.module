@@ -32,20 +32,7 @@ function uc_order_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'uc_order.workflow':
       return '<p>' . t('Order statuses with a list position below zero are considered inactive when filtering lists of orders.') . '</p>';
-    case 'field_ui.overview_uc_order':
-      return '<p>' . t('Attach fields to order product entities. These entities represent the product line items that appear in orders. Fields attached here are not visible in the current version of Ubercart, but they are available in Views. A <a href=":url">Computed Field</a> is useful for attaching custom data to each product as it is ordered.', [':url' => Url::fromUri('http://drupal.org/project/computed_field')->toString()]) . '</p>';
   }
-}
-
-/**
- * Implements hook_menu_alter().
- */
-function uc_order_menu_alter(&$items) {
-  // Adjust the Field UI tabs on admin/store/config/orders.
-  $items['admin/store/config/orders/products/fields']['title'] = 'Ordered product fields';
-  $items['admin/store/config/orders/products/fields']['weight'] = 3;
-  // Disable field display settings for ordered products, as we don't use this anywhere (yet).
-  unset($items['admin/store/config/orders/products/display']);
 }
 
 /**
