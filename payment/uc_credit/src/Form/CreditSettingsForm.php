@@ -29,62 +29,14 @@ class CreditSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
-    $credit_config = $this->config('uc_credit.settings');
+    $config = $this->config('uc_credit.settings');
 
-    $form['uc_credit'] = array(
-      '#type' => 'vertical_tabs',
-      '#attached' => array(
-        'library' => array(
-          'uc_credit/uc_credit.scripts',
-          'uc_credit/uc_credit.styles',
-        ),
-      ),
-    );
-
-    // Form elements that deal specifically with card number security.
-    $form['cc_security'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Security settings'),
-      '#description' => $this->t('You are responsible for the security of your website, including the protection of credit card numbers. Please be aware that choosing some settings in this section may decrease the security of credit card data on your website and increase your liability for damages in the case of fraud.'),
-      '#group' => 'uc_credit',
-    );
     $form['cc_security']['uc_credit_encryption_path'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Encryption key directory'),
       '#description' => $this->t('The card type, expiration date and last four digits of the card number are encrypted and stored temporarily while the customer is in the process of checking out.<br /><b>You must enable encryption</b> by following the <a href=":url">encryption instructions</a> in order to accept credit card payments.<br />In short, you must enter the path of a directory outside of your document root where the encryption key may be stored.<br />Relative paths will be resolved relative to the Drupal installation directory.<br />Once this directory is set, you should not change it.', [':url' => Url::fromUri('http://drupal.org/node/1309226')->toString()]),
-      '#default_value' => uc_credit_encryption_key() ? $credit_config->get('encryption_path') : $this->t('Not configured.'),
+      '#default_value' => uc_credit_encryption_key() ? $config->get('encryption_path') : $this->t('Not configured.'),
     );
-
-    // Form elements that deal with card types accepted.
-    $form['cc_fields']['cc_types'] = array(
-      '#type' => 'details',
-      '#title' => $this->t('Card types'),
-      '#description' => $this->t('Use the checkboxes to specify which card types you accept for payment. Selected card types will show their icons in the payment method selection list and be used for card number validation.'),
-    );
-    $form['cc_fields']['cc_types']['uc_credit_visa'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Visa'),
-      '#default_value' => $credit_config->get('visa'),
-    );
-    $form['cc_fields']['cc_types']['uc_credit_mastercard'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Mastercard'),
-      '#default_value' => $credit_config->get('mastercard'),
-    );
-    $form['cc_fields']['cc_types']['uc_credit_discover'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('Discover'),
-      '#default_value' => $credit_config->get('discover'),
-    );
-    $form['cc_fields']['cc_types']['uc_credit_amex'] = array(
-      '#type' => 'checkbox',
-      '#title' => $this->t('American Express'),
-      '#default_value' => $credit_config->get('amex'),
-    );
-
-    if (empty($_POST) && !uc_credit_encryption_key()) {
-      drupal_set_message($this->t('Credit card security settings must be configured in the security settings tab.'), 'warning');
-    }
 
     return $form;
   }
@@ -202,10 +154,6 @@ class CreditSettingsForm extends ConfigFormBase {
 
     $this->config('uc_credit.settings')
       ->set('encryption_path', $form_state->getValue('uc_credit_encryption_path'))
-      ->set('visa', $form_state->getValue('uc_credit_visa'))
-      ->set('mastercard', $form_state->getValue('uc_credit_mastercard'))
-      ->set('discover', $form_state->getValue('uc_credit_discover'))
-      ->set('amex', $form_state->getValue('uc_credit_amex'))
       ->save();
   }
 

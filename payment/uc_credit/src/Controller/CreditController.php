@@ -8,6 +8,7 @@
 namespace Drupal\uc_credit\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\uc_payment\Entity\PaymentMethod;
 
 /**
  * Utility functions for credit card payment methods.
@@ -17,10 +18,14 @@ class CreditController extends ControllerBase {
   /**
    * Displays the contents of the CVV information popup window.
    *
+   * @param \Drupal\uc_payment\Entity\PaymentMethod $uc_payment_method
+   *   The payment method to display information for.
+   *
    * @return string
    *   HTML markup for a page.
    */
-  public function cvvInfo() {
+  public function cvvInfo(PaymentMethod $uc_payment_method) {
+    $types = $uc_payment_method->getPlugin()->getEnabledTypes();
 
     $build['#attached']['library'][] = 'uc_credit/uc_credit.styles';
     // @todo: Move the embedded CSS below into uc_credit.css.
@@ -35,18 +40,8 @@ class CreditController extends ControllerBase {
       '#suffix' => '</p>',
     );
 
-    $credit_config = $this->config('uc_credit.settings');
-    $cc_types = array(
-      'visa' => $this->t('Visa'),
-      'mastercard' => $this->t('MasterCard'),
-      'discover' => $this->t('Discover'),
-    );
-    foreach ($cc_types as $type => $label) {
-      if ($credit_config->get($type)) {
-        $valid_types[] = $label;
-      }
-    }
-    if (count($valid_types) > 0) {
+    $valid_types = array_diff_key($types, ['amex' => 1]);
+    if (!empty($valid_types)) {
       $build['types'] = array(
         '#prefix' => '<br /><strong>',
         '#markup' => implode(', ', $valid_types),
@@ -55,7 +50,7 @@ class CreditController extends ControllerBase {
       $build['image'] = array(
         '#theme' => 'image',
         '#uri' => drupal_get_path('module', 'uc_credit') . '/images/visa_cvv.jpg',
-        '#alt' => 'MasterCard/Visa/Discover CVV location',
+        '#alt' => 'CVV location',
         '#attributes' => array('align' => 'left'),
         '#prefix' => '<p>',
         '#suffix' => '</p>',
@@ -67,7 +62,7 @@ class CreditController extends ControllerBase {
       );
     }
 
-    if ($credit_config->get('amex')) {
+    if (isset($types['amex'])) {
       $build['types-amex'] = array(
         '#prefix' => '<br /><strong>',
         '#markup' => $this->t('American Express'),

@@ -15,7 +15,7 @@ uc_credit.terminal:
     _permission: 'process credit cards'
 
 uc_credit.cvv:
-  path: '/cart/checkout/credit/cvv_info'
+  path: '/cart/checkout/credit/cvv_info/{uc_payment_method}'
   defaults:
     _controller: '\Drupal\uc_credit\Controller\CreditController::cvvInfo'
     _title: 'CVV information'

@@ -23,7 +23,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    * @return array
    *   An array with keys 'cvv', 'owner', 'start', 'issue', 'bank' and 'type'.
    */
-  protected function getEnabledFields() {
+  public function getEnabledFields() {
     return [
       'cvv' => TRUE,
       'owner' => FALSE,
@@ -41,7 +41,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    *   An array with keys as needed by the chargeCard() method and values
    *   that can be displayed to the customer.
    */
-  protected function getEnabledTypes() {
+  public function getEnabledTypes() {
     return [
       'visa' => $this->t('Visa'),
       'mastercard' => $this->t('MasterCard'),
@@ -300,7 +300,10 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
         '#attributes' => array('autocomplete' => 'off'),
         '#size' => 4,
         '#maxlength' => 4,
-        '#field_suffix' => array('#theme' => 'uc_credit_cvv_help'),
+        '#field_suffix' => array(
+          '#theme' => 'uc_credit_cvv_help',
+          '#method' => $order->getPaymentMethodId(),
+        ),
       );
     }
 

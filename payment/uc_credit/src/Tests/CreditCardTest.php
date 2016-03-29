@@ -140,9 +140,6 @@ class CreditCardTest extends UbercartTestBase {
     $this->drupalGet('admin/store');
     $this->assertText('You must review your credit card security settings and enable encryption before you can accept credit card payments.');
 
-    $this->drupalGet('admin/store/config/payment/credit');
-    $this->assertText(t('Credit card security settings must be configured in the security settings tab.'));
-
     $this->drupalPostForm(
       'admin/store/config/payment/credit',
       array(),

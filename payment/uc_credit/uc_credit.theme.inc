@@ -20,8 +20,8 @@ function theme_uc_credit_cvv_help(array $variables) {
   $build['link'] = array(
     '#type' => 'link',
     '#title' => t("What's the CVV?"),
-    '#url' => Url::fromRoute('uc_credit.cvv', [], ['attributes' => ['onclick' => "window.open(this.href, 'CVV_Info', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=480,height=520'); return false;",]]),
-   '#suffix' => '</div>',
+    '#url' => Url::fromRoute('uc_credit.cvv', ['uc_payment_method' => $variables['method']], ['attributes' => ['onclick' => "window.open(this.href, 'CVV_Info', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=1,width=480,height=520'); return false;",]]),
+    '#suffix' => '</div>',
   );
 
   return \Drupal::service('renderer')->render($build);

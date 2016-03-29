@@ -58,7 +58,7 @@ function uc_credit_help($route_name, RouteMatchInterface $route_match) {
 function uc_credit_theme() {
   return array(
     'uc_credit_cvv_help' => array(
-      'variables' => array(),
+      'variables' => array('method' => ''),
       'file' => 'uc_credit.theme.inc',
       'function' => 'theme_uc_credit_cvv_help',
     ),
