@@ -433,7 +433,7 @@ class CartCheckoutTest extends UbercartTestBase {
       'primary_email' => 'simpletest2@ubercart.org',
     ];
     $order = $this->createOrder($order_data);
-    $output = $this->cartManager->completeSale($order, TRUE);
+    $output = $this->cartManager->completeSale($order);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // 3 e-mails: new account, customer invoice, admin invoice
@@ -449,7 +449,7 @@ class CartCheckoutTest extends UbercartTestBase {
 
     // Same user, new order.
     $order = $this->createOrder($order_data);
-    $output = $this->cartManager->completeSale($order, TRUE);
+    $output = $this->cartManager->completeSale($order);
     uc_payment_enter($order->id(), 'SimpleTest', $order->getTotal());
 
     // Check that no new account was created.

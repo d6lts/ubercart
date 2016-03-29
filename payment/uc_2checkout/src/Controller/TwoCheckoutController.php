@@ -116,16 +116,10 @@ class TwoCheckoutController extends ControllerBase {
       uc_order_comment_save($order->id(), 0, $this->t('@type payment is pending approval at 2Checkout.com.', ['@type' => $request->request->get('pay_method') == 'CC' ? $this->t('Credit card') : $this->t('eCheck')]), 'admin');
     }
 
-    // Empty that cart...
-    $this->cartManager->emptyCart($cart_id);
-
     // Add a comment to let sales team know this came in through the site.
     uc_order_comment_save($order->id(), 0, $this->t('Order created through website.'), 'admin');
 
-    $cart_config = $this->config('uc_cart.settings');
-    $build = $this->cartManager->completeSale($order, $cart_config->get('new_customer_login'));
-
-    return $build;
+    return $this->cartManager->completeSale($order);
   }
 
   /**

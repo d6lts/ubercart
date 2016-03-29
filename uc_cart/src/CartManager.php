@@ -77,7 +77,7 @@ class CartManager implements CartManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function completeSale(OrderInterface $order, $login = FALSE) {
+  public function completeSale(OrderInterface $order, $login = TRUE) {
     // Empty that cart...
     $this->emptyCart();
 
@@ -108,8 +108,10 @@ class CartManager implements CartManagerInterface {
 
     // Log in new users, if requested.
     if ($type == 'new_user' && $login && $this->currentUser->isAnonymous()) {
-      $type = 'new_user_logged_in';
-      user_login_finalize($order->getOwner());
+      if (\Drupal::config('uc_cart.settings')->get('new_customer_login')) {
+        $type = 'new_user_logged_in';
+        user_login_finalize($order->getOwner());
+      }
     }
 
     $message = \Drupal::config('uc_cart.messages')->get($type);

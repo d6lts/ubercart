@@ -242,16 +242,13 @@ class CheckoutController extends ControllerBase implements ContainerInjectionInt
       return $this->redirect('uc_cart.cart');
     }
 
-    $cart_config = $this->config('uc_cart.settings');
-    $build = $this->cartManager->completeSale($order, $cart_config->get('new_customer_login'));
-
     $this->session->remove('uc_checkout_complete_' . $this->session->get('cart_order'));
     $this->session->remove('cart_order');
 
     // Add a comment to let sales team know this came in through the site.
     uc_order_comment_save($order->id(), 0, $this->t('Order created through website.'), 'admin');
 
-    return $build;
+    return $this->cartManager->completeSale($order);
   }
 
   /**

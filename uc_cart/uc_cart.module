@@ -228,7 +228,7 @@ function uc_cart_user_login($account) {
  * Ensure the user has an account when payment is made.
  */
 function uc_cart_uc_payment_receipt_insert(PaymentReceiptInterface $payment) {
-  \Drupal::service('uc_cart.manager')->completeSale($payment->getOrder());
+  \Drupal::service('uc_cart.manager')->completeSale($payment->getOrder(), FALSE);
 }
 
 /**
