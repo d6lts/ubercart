@@ -25,3 +25,5 @@ uc_role.delete:
 #    _form: 'uc_role_deletion_form', 4, 5)
   requirements:
     _permission: 'administer users'
+  options:
+    user: \d+

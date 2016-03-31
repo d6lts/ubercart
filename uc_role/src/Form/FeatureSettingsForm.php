@@ -11,6 +11,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\user\RoleInterface;
 
 
 /**
@@ -44,7 +45,7 @@ class FeatureSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $default_role_choices = user_role_names(TRUE);
-    unset($default_role_choices[DRUPAL_AUTHENTICATED_RID]);
+    unset($default_role_choices[RoleInterface::AUTHENTICATED_ID]);
     $roles_config = $this->config('uc_role.settings');
 
     if (!count($default_role_choices)) {

@@ -60,7 +60,7 @@ function uc_role_cron() {
     $account = User::load($expiration->id());
 
     // Cleanup if user or role was deleted already.
-    if (!$account || !in_array($expiration->rid, array_keys($account->roles))) {
+    if (!$account || !in_array($expiration->rid, array_keys($account->getRoles))) {
       uc_role_delete($expiration, $expiration->rid, TRUE);
     }
 
@@ -110,7 +110,7 @@ function uc_role_form_user_profile_form_alter(&$form, FormStateInterface $form_s
   $roles_config = \Drupal::config('uc_role.settings');
   $account = $form_state->getFormObject()->getEntity();
 
-  $role_choices = _uc_role_get_choices(array_keys($account->roles));
+  $role_choices = _uc_role_get_choices(array_keys($account->getRoles()));
 
   $polarity_widget = array(
     '#type' => 'select',
@@ -242,14 +242,14 @@ function uc_role_user_validate($form, FormStateInterface $form_state) {
 /**
  * Implements hook_user_cancel().
  */
-function uc_role_user_cancel($edit, $account, $method) {
+function uc_role_user_cancel($edit, AccountInterface $account, $method) {
   uc_role_delete($account);
 }
 
 /**
  * Implements hook_user_presave().
  */
-function uc_role_user_presave($account) {
+function uc_role_user_presave(UserInterface $account) {
   if (!\Drupal::currentUser()->hasPermission('administer users')) {
     return;
   }
@@ -279,7 +279,7 @@ function uc_role_user_presave($account) {
 
       // Adjust it.
       else {
-        if ($value['qty'] && $account->roles[$rid]) {
+        if ($value['qty'] && $account->hasRole($rid)) {
           $qty = $value['qty'];
           $qty *= $value['polarity'] == 'add' ? 1 : -1;
 
@@ -292,7 +292,7 @@ function uc_role_user_presave($account) {
   // If a user's role is removed using Drupal, then so is any expiration data.
   if (isset($account->original->roles)) {
     foreach ($account->original->roles as $rid => $role) {
-      if (!in_array($rid, $account->roles) && $rid != DRUPAL_AUTHENTICATED_RID) {
+      if (!in_array($rid, $account->getRoles()) && $rid != AccountInterface::AUTHENTICATED_ROLE) {
         uc_role_delete($account, $rid);
       }
     }
@@ -424,7 +424,7 @@ function _uc_role_get_choices($exclude = array()) {
 
   // Get roles from Drupal, excluding Anonymous and Authenticated.
   $roles = user_role_names(TRUE);
-  unset($roles[DRUPAL_AUTHENTICATED_RID]);
+  unset($roles[AccountInterface::AUTHENTICATED_ROLE]);
 
   // User set specific roles that we must use?
   $selected = \Drupal::config('uc_role.settings')->get('default_role_choices');
@@ -462,14 +462,14 @@ function uc_role_feature_delete($pfid) {
  * notifies the user. The menu cache is then flushed, as privileges to view
  * menu items may have been lost in the process.
  *
- * @param $account
+ * @param \Drupal\user\UserInterface $account
  *   A Drupal user object.
  * @param $rid
  *   A Drupal role ID.
  * @param bool $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
-function uc_role_delete($account, $rid = NULL, $silent = FALSE) {
+function uc_role_delete(UserInterface $account, $rid = NULL, $silent = FALSE) {
   $query = db_delete('uc_roles_expirations')
     ->condition('uid', $account->id());
 
@@ -505,16 +505,16 @@ function uc_role_delete($account, $rid = NULL, $silent = FALSE) {
  * well as removing any expiration data associated with the user/role.
  * The function notifies the user of revocation.
  *
- * @param $account
+ * @param \Drupal\user\UserInterface $account
  *   A Drupal user object.
  * @param $rid
  *   A Drupal role ID.
  * @param bool $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
-function uc_role_revoke(&$account, $rid, $silent = FALSE) {
+function uc_role_revoke(UserInterface &$account, $rid, $silent = FALSE) {
   // Remove this role from the user's list.
-  unset($account->roles[$rid]);
+  $account->removeRole($rid);
   $account->save();
 
   // Remove our record of the expiration.
@@ -549,7 +549,7 @@ function uc_role_revoke(&$account, $rid, $silent = FALSE) {
  * The menu cache is flushed, as new menu items may be visible after the
  * new role is granted. The function notifies the user of the role grant.
  *
- * @param $account
+ * @param \Drupal\user\UserInterface $account
  *   A Drupal user object.
  * @param $rid
  *   A Drupal role ID.
@@ -561,13 +561,13 @@ function uc_role_revoke(&$account, $rid, $silent = FALSE) {
  * @param bool $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
-function uc_role_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent = FALSE) {
+function uc_role_grant(UserInterface &$account, $rid, $timestamp, $save_user = TRUE, $silent = FALSE) {
   // First, delete any previous record of this user/role association.
   uc_role_delete($account, $rid, $silent);
 
   if ($save_user) {
     // Punch the role into the user object.
-    $account->roles += array($rid => _uc_role_get_name($rid));
+    $account->addRole($rid);
     $account->save();
   }
 
@@ -621,7 +621,7 @@ function uc_role_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent =
  * management up to Drupal. Otherwise, the record is updated with the new
  * expiration time, and the user is notified of the change.
  *
- * @param $account
+ * @param \Drupal\user\UserInterface $account
  *   A Drupal user object.
  * @param $rid
  *   A Drupal role ID.
@@ -630,7 +630,7 @@ function uc_role_grant(&$account, $rid, $timestamp, $save_user = TRUE, $silent =
  * @param bool $silent
  *   When set to TRUE will suppress any Drupal messages from this function.
  */
-function uc_role_renew($account, $rid, $timestamp, $silent = FALSE) {
+function uc_role_renew(UserInterface $account, $rid, $timestamp, $silent = FALSE) {
   // If it doesn't expire, we'll remove our data associated with it.
   // After that, Drupal will take care of it.
   if (is_null($timestamp)) {
@@ -676,13 +676,13 @@ function uc_role_renew($account, $rid, $timestamp, $silent = FALSE) {
  * When roles are gained/lost, menu items might appear/disappear respectively,
  * so we have to ensure the cache is rebuilt with any new values.
  *
- * @param $account
+ * @param \Drupal\user\UserInterface $account
  *   A Drupal user object.
  *
  * @see uc_role_delete()
  * @see uc_role_grant()
  */
-function _uc_role_flush_menu_cache($account) {
+function _uc_role_flush_menu_cache(UserInterface $account) {
   cache_clear_all($account->id() . ':', 'cache_menu', TRUE);
 }
 
