@@ -375,24 +375,6 @@ function uc_length_conversion($from_units, $to_units = NULL) {
 }
 
 /**
- * Formats a date value for display.
- *
- * @param int $month
- *   Numerical month value.
- * @param int $day
- *   Numerical day value.
- * @param int $year
- *   Numerical year value.
- *
- * @return string
- *   String containing formattted date, using the 'uc_store' date format.
- */
-function uc_date_format($month, $day, $year) {
-  $time = strtotime($month . '/' . $day . '/' . $year);
-  return \Drupal::service('date.formatter')->format($time, 'uc_store');
-}
-
-/**
  * Returns TRUE if the address field is enabled.
  */
 function uc_address_field_enabled($field = NULL) {
