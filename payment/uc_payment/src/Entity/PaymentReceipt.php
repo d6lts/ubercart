@@ -44,11 +44,12 @@ class PaymentReceipt extends ContentEntityBase implements PaymentReceiptInterfac
       ->setLabel(t('Payment method'))
       ->setDescription('The payment method used.')
       ->setSetting('target_type', 'uc_payment_method');
-    // @todo Create a numeric field type and use that instead.
-    $fields['amount'] = BaseFieldDefinition::create('float')
+    $fields['amount'] = BaseFieldDefinition::create('decimal')
       ->setLabel(t('Amount'))
       ->setDescription('The payment amount in the store default currency.')
-      ->setSetting('default_value', 0.0);
+      ->setSetting('default_value', 0.0)
+      ->setSetting('precision', 16)
+      ->setSetting('scale', 5);
     $fields['currency'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Currency'))
       ->setDescription(t('The ISO currency code for the payment.'))

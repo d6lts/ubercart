@@ -63,14 +63,18 @@ class OrderProduct extends ContentEntityBase implements OrderProductInterface {
       ->setDescription(t('The number of the product ordered.'))
       ->setSetting('default_value', 0)
       ->setSetting('unsigned', TRUE);
-    $fields['cost'] = BaseFieldDefinition::create('float')
+    $fields['cost'] = BaseFieldDefinition::create('decimal')
       ->setLabel(t('Cost'))
       ->setDescription(t('The cost to the store for the product.'))
-      ->setSetting('default_value', 0.0);
-    $fields['price'] = BaseFieldDefinition::create('float')
+      ->setSetting('default_value', 0.0)
+      ->setSetting('precision', 16)
+      ->setSetting('scale', 5);
+    $fields['price'] = BaseFieldDefinition::create('decimal')
       ->setLabel(t('Price'))
       ->setDescription(t('The price paid for the ordered product.'))
-      ->setSetting('default_value', 0.0);
+      ->setSetting('default_value', 0.0)
+      ->setSetting('precision', 16)
+      ->setSetting('scale', 5);
     $fields['weight'] = BaseFieldDefinition::create('uc_weight')
       ->setLabel(t('Weight'))
       ->setDescription(t('The physical weight.'));

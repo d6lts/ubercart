@@ -25,7 +25,6 @@ use Drupal\user\UserInterface;
  *   label = @Translation("Order"),
  *   module = "uc_order",
  *   handlers = {
- *     "storage_schema" = "Drupal\uc_order\OrderStorageSchema",
  *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",
  *     "access" = "Drupal\uc_order\OrderAccessControlHandler",
  *     "views_data" = "Drupal\uc_order\OrderViewsData",
@@ -502,10 +501,12 @@ class Order extends ContentEntityBase implements OrderInterface {
       ->setSetting('target_type', 'uc_order_status')
       ->setSetting('default_value', '')
       ->setSetting('max_length', 32);
-    $fields['order_total'] = BaseFieldDefinition::create('float')
+    $fields['order_total'] = BaseFieldDefinition::create('decimal')
       ->setLabel(t('Order total'))
       ->setDescription(t('The total amount to be paid for the order.'))
-      ->setSetting('default_value', 0.0);
+      ->setSetting('default_value', 0.0)
+      ->setSetting('precision', 16)
+      ->setSetting('scale', 5);
     $fields['product_count'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Product count'))
       ->setDescription(t('The total product quantity of the order.'))
