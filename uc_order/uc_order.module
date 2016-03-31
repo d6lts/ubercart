@@ -12,6 +12,7 @@
 
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
@@ -19,6 +20,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\user\UserInterface;
 use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 
@@ -121,7 +123,7 @@ function uc_order_entity_extra_field_info() {
 /**
  * Implements hook_user_view().
  */
-function uc_order_user_view(array &$build, \Drupal\Core\Entity\EntityInterface $account, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+function uc_order_user_view(array &$build, UserInterface $account, EntityViewDisplayInterface $display, $view_mode) {
   $user = \Drupal::currentUser();
 
   if ($view_mode == 'full' &&

@@ -11,10 +11,13 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_help().
@@ -298,46 +301,38 @@ function uc_role_user_presave($account) {
 
 /**
  * Implements hook_user_view().
- *
- * Displays role expirations on the user account screen.
  */
-function uc_role_user_view($account, $view_mode) {
-  // Kick out anonymous or other view modes.
-  if (\Drupal::currentUser()->isAnonymous() || $view_mode != 'full') {
-    return;
-  }
-
-  $roles_config = \Drupal::config('uc_role.settings');
+function uc_role_user_view(array &$build, UserInterface $account, EntityViewDisplayInterface $display, $view_mode) {
+  $user = \Drupal::currentUser();
 
   // Only show if this user can access all role expirations, or if it's the same
   // user and the expirations are showing on the user pages.
-  $show_expiration = $roles_config->get('default_show_expiration');
-  if (!$user->hasPermission('view all role expirations') && ($user->id() != $account->id() || !$show_expiration)) {
-    return;
-  }
+  // Kick out anonymous or other view modes.
+  $show_expiration = \Drupal::config('uc_role.settings')->get('default_show_expiration');
+  if ($view_mode == 'full' &&
+      $user->isAuthenticated() &&
+      (($user->id() == $account->id() && $show_expiration) || $user->hasPermission('view all role expirations')) ) {
 
-  $form = array();
-  $expirations = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
-  foreach ($expirations as $expiration) {
-    $form[$expiration->rid] = array(
+    $expirations = db_query('SELECT * FROM {uc_roles_expirations} WHERE uid = :uid', [':uid' => $account->id()]);
+    if (count($expirations)) {
+      // No role expirations, so nothing to show.
+      return;
+    }
+
+    $build['uc_role'] = array(
       '#type' => 'item',
-      '#title' => SafeMarkup::checkPlain(_uc_role_get_name($expiration->rid)),
-      '#markup' => t('This role will expire on @date', ['@date' => \Drupal::service('date.formatter')->format($expiration->expiration, 'short')]),
+      '#weight' => '-1',
+      '#title' => t('Expiring roles'),
     );
+
+    foreach ($expirations as $expiration) {
+      $build['uc_role'][$expiration->rid] = array(
+        '#type' => 'item',
+        '#title' => _uc_role_get_name($expiration->rid),
+        '#markup' => t('This role will expire on @date', ['@date' => \Drupal::service('date.formatter')->format($expiration->expiration, 'short')]),
+      );
+    }
   }
-
-  // Don't display anything if there aren't any expirations.
-  if (!count($form)) {
-    return;
-  }
-
-  $item = array(
-    '#type' => 'item',
-    '#weight' => '-1',
-    '#title' => t('Expiring roles'),
-  );
-
-  $account->content['uc_role'] = $item + $form;
 }
 
 /**

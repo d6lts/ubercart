@@ -78,16 +78,17 @@ function uc_file_user_view(array &$build, UserInterface $account, EntityViewDisp
 
   // If user has files and permission to view them, put a link
   // on the user's profile.
-  $existing_download = db_query("SELECT fid FROM {uc_file_users} WHERE uid = :uid", [':uid' => $account->id()])->fetchField();
-  if ($view_mode != 'full' || !$existing_download || (!$user->hasPermission('view all downloads') && $user->id() != $account->id())) {
-    return;
-  }
+  $existing_download = db_query('SELECT fid FROM {uc_file_users} WHERE uid = :uid', [':uid' => $account->id()])->fetchField();
+  if ($view_mode == 'full' &&
+      $existing_download &&
+      (($user->id() == $account->id()) || $user->hasPermission('view all downloads'))) {
 
-  $build['uc_file_download'] = array(
-    '#type' => 'item',
-    '#title' => t('File downloads'),
-    '#markup' => Link::createFromRoute(t('Click here to view your file downloads.'), 'uc_file.user_downloads', ['user' => $account->id()])->toString(),
-  );
+    $build['uc_file_download'] = array(
+      '#type' => 'item',
+      '#title' => t('File downloads'),
+      '#markup' => Link::createFromRoute(t('Click here to view your file downloads.'), 'uc_file.user_downloads', ['user' => $account->id()])->toString(),
+    );
+  }
 }
 
 /**
