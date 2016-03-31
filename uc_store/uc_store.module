@@ -157,23 +157,23 @@ function uc_store_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Formats an amount for display with the store's currency settings.
  *
- * @param $value
+ * @param float $value
  *   The numeric value of the currency amount.
- * @param $symbol
+ * @param string $symbol
  *   The currency symbol. If FALSE is given, no symbol is used. The default,
  *   NULL, causes the configuration variable 'currency.symbol' to be used, which
  *   defaults to '$'.
- * @param $thou
+ * @param string $thou
  *   The thousands separator character. If FALSE is given, no separator is used.
  *   The default, NULL, causes the configuration variable
  *   'currency.thousands_marker' to be used, which defaults to ','.
- * @param $dec
+ * @param string $dec
  *   The decimal separator character. If FALSE is given, confusion will abound,
  *   because it will look 100 times bigger. The default, NULL, causes the
  *   configuration variable 'currency.decimal_marker' to be used, which
  *   defaults to '.'.
  *
- * @return
+ * @return string
  *   String containing price formatted with currency symbol and separators.
  */
 function uc_currency_format($value, $symbol = NULL, $thou = NULL, $dec = NULL) {
@@ -226,22 +226,22 @@ function uc_currency_format($value, $symbol = NULL, $thou = NULL, $dec = NULL) {
 /**
  * Formats a weight value for display.
  *
- * @param $value
+ * @param float $value
  *   Numerical weight value.
- * @param $unit
+ * @param string $unit
  *   Weight unit. One of 'lb', 'oz', 'kg', or 'g', or NULL to use store
  *   default weight units.
- * @param $thou
+ * @param string $thou
  *   The thousands separator character. If FALSE is given, no separator is used.
  *   The default, NULL, causes the configuration variable
  *   'weight.thousands_marker' to be used, which defaults to ','.
- * @param $dec
+ * @param string $dec
  *   The decimal separator character. If FALSE is given, confusion will abound,
  *   because it will look 100 times bigger. The default, NULL, causes the
  *   configuration variable 'weight.decimal_marker' to be used, which
  *   defaults to '.'.
  *
- * @return
+ * @return string
  *   String containing formattted weight, including weight units.
  */
 function uc_weight_format($value, $unit = NULL, $thou = NULL, $dec = NULL) {
@@ -302,22 +302,22 @@ function uc_weight_conversion($from_units, $to_units = NULL) {
 /**
  * Formats a length value for display.
  *
- * @param $value
+ * @param float $value
  *   Numerical length value.
- * @param $unit
+ * @param string $unit
  *   Length unit. One of 'ft', 'in', 'cm', or 'mm', or NULL to use store
  *   default length units.
- * @param $thou
+ * @param string $thou
  *   The thousands separator character. If FALSE is given, no separator is used.
  *   The default, NULL, causes the configuration variable
  *   'length.thousands_marker' to be used, which defaults to ','.
- * @param $dec
+ * @param string $dec
  *   The decimal separator character. If FALSE is given, confusion will abound,
  *   because it will look 100 times bigger. The default, NULL, causes the
  *   configuration variable 'length.decimal_marker' to be used, which
  *   defaults to '.'.
  *
- * @return
+ * @return string
  *   String containing formattted length, including length units.
  */
 function uc_length_format($value, $unit = NULL, $thou = NULL, $dec = NULL) {
@@ -377,14 +377,14 @@ function uc_length_conversion($from_units, $to_units = NULL) {
 /**
  * Formats a date value for display.
  *
- * @param $month
+ * @param int $month
  *   Numerical month value.
- * @param $day
+ * @param int $day
  *   Numerical day value.
- * @param $year
+ * @param int $year
  *   Numerical year value.
  *
- * @return
+ * @return string
  *   String containing formattted date, using the 'uc_store' date format.
  */
 function uc_date_format($month, $day, $year) {
@@ -439,9 +439,9 @@ function uc_select_address($uid, $type = 'billing', $onchange = '', $title = NUL
 /**
  * Creates an address select box based on a user's previous orders.
  *
- * @param $uid
+ * @param int $uid
  *   The user's ID to search for in the orders table.
- * @param $type
+ * @param string $type
  *   Choose either 'shipping' or 'billing'.
  *
  * @return array
@@ -567,7 +567,7 @@ function uc_store_email() {
  * e-mail to customers. It will look something like:
  * Store Name <store@example.com>
  *
- * @return
+ * @return string
  *   An RFC 2822 compliant e-mail address.
  */
 function uc_store_email_from() {
@@ -590,7 +590,7 @@ function uc_store_email_from() {
  * to be quoted in order to be used an an e-mail header such as the "From"
  * address. Double quotes in the original string are escaped (and nothing else).
  *
- * @param $name
+ * @param string $name
  *   The text string to convert to a RFC 2822 quoted string.
  *
  * @return string
@@ -611,10 +611,10 @@ function uc_store_rfc2822_display_name($name) {
 /**
  * Derives a valid username from an e-mail address.
  *
- * @param $email
+ * @param string $email
  *   An e-mail address.
  *
- * @return
+ * @return string
  *   A username derived from the e-mail address, using the part of the address
  *   up to the @ with integers appended to the end if needed to avoid a
  *   duplicate username.
@@ -666,7 +666,7 @@ function uc_store_encryption_errors(&$crypt, $module) {
 /**
  * Returns a default store country value.
  *
- * @return
+ * @return string
  *   The two character country code representing the store default.
  */
 function uc_store_default_country() {
@@ -676,10 +676,10 @@ function uc_store_default_country() {
 /**
  * Gets the preferred language code for a user's email address.
  *
- * @param $address
+ * @param string $address
  *   The email address to check.
  *
- * @return
+ * @return string
  *   The language code to be used in translation, localization, etc. If a user
  *   account can not be found for $address, the default language code is
  *   returned.

@@ -353,7 +353,7 @@ abstract class UbercartTestBase extends WebTestBase {
    * @param string $plugin_id
    *   The plugin ID of the method.
    * @param array $values
-   *   (optional) An associative array with possible keys of 'id', and 'name',
+   *   (optional) An associative array with possible keys of 'id', and 'label',
    *   to initialize the payment method.
    *
    * @return array
