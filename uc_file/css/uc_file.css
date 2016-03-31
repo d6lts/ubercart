@@ -7,16 +7,11 @@
   vertical-align: top;
 }
 
-.download-table-index {
-  display: inline;
-}
-
 .download-table-index .form-item {
   display: inline;
 }
 
 .duration  {
-  display: inline;
   white-space: nowrap;
 }
 

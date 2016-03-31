@@ -9,14 +9,20 @@ namespace Drupal\uc_file\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\user\AccountInterface;
 
 /**
  * Creates or edits a file feature for a product.
  */
 class UserForm extends FormBase {
+
+  /**
+   * The user account.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $account;
 
   /**
    * {@inheritdoc}
@@ -29,6 +35,7 @@ class UserForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, AccountInterface $account = NULL) {
+    $this->account = $account;
     $form['file'] = array(
       '#type' => 'details',
       '#title' => $this->t('Administration'),
@@ -49,8 +56,11 @@ class UserForm extends FormBase {
     $form['file']['download']['#theme'] = 'uc_file_hook_user_file_downloads';
     $form['file']['download']['file_download']['#tree'] = TRUE;
 
+    $form['#attached']['library'][] = 'uc_file/uc_file.scripts';
+    $form['#attached']['library'][] = 'uc_file/uc_file.styles';
+
     $downloadable_files = array();
-    $file_downloads = db_query("SELECT * FROM {uc_file_users} ufu INNER JOIN {uc_files} uf ON ufu.fid = uf.fid WHERE ufu.uid = :uid ORDER BY uf.filename ASC", [':uid' => $account->id()]);
+    $file_downloads = db_query('SELECT * FROM {uc_file_users} ufu INNER JOIN {uc_files} uf ON ufu.fid = uf.fid WHERE ufu.uid = :uid ORDER BY uf.filename ASC', [':uid' => $account->id()]);
     $behavior = 0;
     foreach ($file_downloads as $file_download) {
 
@@ -59,14 +69,15 @@ class UserForm extends FormBase {
       $downloadable_files[$file_download->fid] = $file_download->filename;
 
       $form['file']['download']['file_download'][$file_download->fid] = array(
-        'fuid' => array('#type' => 'value', '#value' => $file_download->fuid),
+        'fuid'       => array('#type' => 'value', '#value' => $file_download->fuid),
         'expiration' => array('#type' => 'value', '#value' => $file_download->expiration),
-
-        'remove' => array('#type' => 'checkbox'),
-
-        'filename' => array('#markup' => $file_download->filename),
-
-        'expires' => array('#markup' => $file_download->expiration ? \Drupal::service('date.formatter')->format($file_download->expiration, 'short') : $this->t('Never')),
+        'remove'     => array('#type' => 'checkbox'),
+        'filename'   => array('#markup' => $file_download->filename),
+        'expires'    => array(
+          '#markup' => $file_download->expiration ?
+                       \Drupal::service('date.formatter')->format($file_download->expiration, 'short') :
+                       $this->t('Never')
+        ),
         'time_polarity' => array(
           '#type' => 'select',
           '#default_value' => '+',
@@ -110,7 +121,8 @@ class UserForm extends FormBase {
       );
 
       // Incrementally add behaviors.
-      _uc_file_download_table_behavior($behavior++, $file_download->fid);
+      // @todo: _uc_file_download_table_behavior($behavior++, $file_download->fid);
+      $form['#attached']['drupalSettings']['behavior'][$behavior++] = $file_download->fid;
 
       // Store old values for comparing to see if we actually made any changes.
       $less_reading = &$form['file']['download']['file_download'][$file_download->fid];
@@ -123,7 +135,7 @@ class UserForm extends FormBase {
     // Create the list of files able to be attached to this user.
     $available_files = array();
 
-    $files = db_query("SELECT * FROM {uc_files} ORDER BY filename ASC");
+    $files = db_query('SELECT * FROM {uc_files} ORDER BY filename ASC');
     foreach ($files as $file) {
       if (substr($file->filename, -1) != '/' && substr($file->filename, -1) != '\\') {
         $available_files[$file->fid] = $file->filename;
@@ -138,7 +150,7 @@ class UserForm extends FormBase {
         '#multiple' => TRUE,
         '#size' => 6,
         '#title' => $this->t('Add file'),
-        '#description' => $this->t('Select a file to add as a download. Newly added files will inherit the settings at the :url.', [':url' => Link::createFromRoute($this->t('Ubercart product settings page'), 'uc_product.settings')->toString()]),
+        '#description' => array('#markup' => $this->t('Select a file to add as a download. Newly added files will inherit the settings at the <a href=":url">Ubercart products settings page</a>.', [':url' => Url::fromRoute('uc_product.settings')->toString()])),
         '#options' => $available_files,
         '#tree' => TRUE,
       );
@@ -200,8 +212,6 @@ class UserForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $build_info = $form_state->getBuildInfo();
-    $account = $build_info['args'][0];
     $edit = $form_state->getValues();
 
     // Check out if any downloads were modified.
@@ -209,7 +219,7 @@ class UserForm extends FormBase {
       foreach ((array)$edit['file_download'] as $fid => $download_modification) {
         // Remove this user download?
         if ($download_modification['remove']) {
-          uc_file_remove_user_file_by_id($account, $fid);
+          uc_file_remove_user_file_by_id($this->account, $fid);
         }
 
         // Update the modified downloads.
@@ -225,7 +235,7 @@ class UserForm extends FormBase {
           }
 
           // Renew. (Explicit overwrite.)
-          uc_file_user_renew($fid, $account, NULL, $download_modification, TRUE);
+          uc_file_user_renew($fid, $this->account, NULL, $download_modification, TRUE);
         }
       }
     }
@@ -234,7 +244,7 @@ class UserForm extends FormBase {
     // because this shouldn't be associated with a random product.
     if (isset($edit['file_add'])) {
       $file_config = $this->config('uc_file.settings');
-      foreach ((array)$edit['file_add'] as $fid => $data) {
+      foreach ((array) $edit['file_add'] as $fid => $data) {
         $download_modification['download_limit'] = $file_config->get('download_limit_number');
         $download_modification['address_limit'] = $file_config->get('download_limit_addresses');
 
@@ -245,7 +255,7 @@ class UserForm extends FormBase {
         ), REQUEST_TIME);
 
         // Renew. (Explicit overwrite.)
-        uc_file_user_renew($fid, $account, NULL, $download_modification, TRUE);
+        uc_file_user_renew($fid, $this->account, NULL, $download_modification, TRUE);
       }
     }
   }

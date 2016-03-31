@@ -13,6 +13,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -97,7 +98,7 @@ class DownloadController extends ControllerBase {
   /**
    * Table builder for user downloads.
    */
-  public function userDownloads($account) {
+  public function userDownloads(AccountInterface $user) {
     // Create a header and the pager it belongs to.
     $header = array(
       array('data' => $this->t('Purchased'  ), 'field' => 'u.granted', 'sort' => 'desc'),
@@ -114,7 +115,7 @@ class DownloadController extends ControllerBase {
     $query = $this->database->select('uc_file_users', 'u')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->extend('Drupal\Core\Database\Query\TableSortExtender')
-      ->condition('uid', $account->id())
+      ->condition('uid', $user->id())
       ->orderByHeader($header)
       ->limit(UC_FILE_PAGER_SIZE);
     $query->leftJoin('uc_files', 'f', 'u.fid = f.fid');
@@ -135,7 +136,7 @@ class DownloadController extends ControllerBase {
       ->fields('p', array('description'));
 
     $count_query = $this->database->select('uc_file_users')
-      ->condition('uid', $account->id());
+      ->condition('uid', $user->id());
     $count_query->addExpression('COUNT(*)');
 
     $query->setCountQuery($count_query);
@@ -150,7 +151,7 @@ class DownloadController extends ControllerBase {
       // Set the JS behavior when this link gets clicked.
       $onclick = array(
         'attributes' => array(
-          'onclick' => 'uc_file_update_download(' . $row . ', ' . $file->accessed . ', ' . ((empty($download_limit)) ? -1 : $download_limit) . ');', 'id' => 'link-' . $row
+          'onclick' => 'Drupal.behaviors.ucFileUpdateDownload(' . $row . ', ' . $file->accessed . ', ' . ((empty($download_limit)) ? -1 : $download_limit) . ');', 'id' => 'link-' . $row
         ),
       );
 
@@ -188,7 +189,7 @@ class DownloadController extends ControllerBase {
     );
 
     if (\Drupal::currentUser()->hasPermission('administer users')) {
-      $build['admin'] = $this->formBuilder()->getForm('Drupal\uc_file\Form\UserForm', $account);
+      $build['admin'] = $this->formBuilder()->getForm('Drupal\uc_file\Form\UserForm', $user);
     }
 
     return $build;

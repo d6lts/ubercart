@@ -9,16 +9,14 @@
  * download link via email. Additionally, after logging on a customer can
  * download files via their account page. Optionally, an admininstrator can set
  * restrictions on how and when files are downloaded.
- *
- * Development sponsored by the Ubercart project.  http://www.ubercart.org
  */
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\user\UserInterface;
 
 /**
  * The maximum amount of rows shown in tables of file downloads.
@@ -73,7 +71,7 @@ function uc_file_user_cancel($edit, $account, $method) {
 /**
  * Implements hook_ENTITY_TYPE_view() for user entities.
  */
-function uc_file_user_view(array &$build, UserInterface $account, EntityViewDisplayInterface $display, $view_mode) {
+function uc_file_user_view(array &$build, AccountInterface $account, EntityViewDisplayInterface $display, $view_mode) {
   $user = \Drupal::currentUser();
 
   // If user has files and permission to view them, put a link
@@ -89,25 +87,6 @@ function uc_file_user_view(array &$build, UserInterface $account, EntityViewDisp
       '#markup' => Link::createFromRoute(t('Click here to view your file downloads.'), 'uc_file.user_downloads', ['user' => $account->id()])->toString(),
     );
   }
-}
-
-/**
- * Attaches jQuery behaviors to the file download modification table.
- */
-function _uc_file_download_table_behavior($id, $fid) {
-
-  drupal_add_js( "
-Drupal.behaviors.ucUserAccountFileDownload" . $id . " = {
-  attach: function(context) {
-    jQuery('#edit-file-download-" . $fid . "-time-granularity:not(.ucUserAccountFileDownload-processed)', context).addClass('ucUserAccountFileDownload-processed').change(
-      function() {
-        _uc_file_expiration_disable_check('#edit-file-download-" . $fid . "-time-granularity', '#edit-file-download-" . $fid . "-time-quantity');
-        _uc_file_expiration_disable_check('#edit-file-download-" . $fid . "-time-granularity', '#edit-file-download-" . $fid . "-time-polarity');
-      }
-    );
-  }
-}", 'inline');
-
 }
 
 /**
@@ -386,7 +365,7 @@ function _uc_file_expiration_date($file_limits, $timestamp) {
  * Removes all downloadable files, as well as their associations.
  */
 function uc_file_empty() {
-  $files = db_query("SELECT * FROM {uc_files}");
+  $files = db_query('SELECT * FROM {uc_files}');
   foreach ($files as $file) {
     _uc_file_prune_db($file->fid);
   }
@@ -396,7 +375,7 @@ function uc_file_empty() {
  * Removes all db entries associated with a given $fid.
  */
 function _uc_file_prune_db($fid) {
-  $pfids = db_query("SELECT pfid FROM {uc_file_products} WHERE fid = :fid", [':fid' => $fid]);
+  $pfids = db_query('SELECT pfid FROM {uc_file_products} WHERE fid = :fid', [':fid' => $fid]);
   while ($pfid = $pfids->fetchField()) {
     db_delete('uc_product_features')
       ->condition('pfid', $pfid)
@@ -421,7 +400,7 @@ function _uc_file_prune_db($fid) {
  * Removes non-existent files.
  */
 function _uc_file_prune_files() {
-  $files = db_query("SELECT * FROM {uc_files}");
+  $files = db_query('SELECT * FROM {uc_files}');
   foreach ($files as $file) {
     $filename = uc_file_qualify_file($file->filename);
 
@@ -457,12 +436,12 @@ function _uc_file_gather_files() {
     $fid = NULL;
 
     // Insert new entries.
-    if ($file_dir != '.' && !db_query("SELECT fid FROM {uc_files} WHERE filename = :name", [':name' => $file_dir . '/'])->fetchField()) {
+    if ($file_dir != '.' && !db_query('SELECT fid FROM {uc_files} WHERE filename = :name', [':name' => $file_dir . '/'])->fetchField()) {
       $fid = db_insert('uc_files')
         ->fields(array('filename' => $file_dir . '/'))
         ->execute();
     }
-    if (!db_query("SELECT fid FROM {uc_files} WHERE filename = :name", [':name' => $filename])->fetchField()) {
+    if (!db_query('SELECT fid FROM {uc_files} WHERE filename = :name', [':name' => $filename])->fetchField()) {
       $fid = db_insert('uc_files')
         ->fields(array('filename' => $filename))
         ->execute();
@@ -520,7 +499,7 @@ function uc_file_remove_by_id($fid, $recur) {
     $remove_fields = FALSE;
 
     // Qualify the path for I/O, and delete the files/dirs.
-    $filename = db_query("SELECT filename FROM {uc_files} WHERE fid = :fid", [':fid' => $fid])->fetchField();
+    $filename = db_query('SELECT filename FROM {uc_files} WHERE fid = :fid', [':fid' => $fid])->fetchField();
     $dir = uc_file_qualify_file($filename);
     if (is_dir($dir)) {
 
@@ -591,7 +570,7 @@ function _uc_file_get_dir_file_ids($fids, $recursive = FALSE) {
     }
 
     $base_name = $base->filename . (is_dir(uc_file_qualify_file($base->filename)) ? '%' : '');
-    $files = db_query("SELECT * FROM {uc_files} WHERE filename LIKE :name", [':name' => $base_name]);
+    $files = db_query('SELECT * FROM {uc_files} WHERE filename LIKE :name', [':name' => $base_name]);
 
     // PHP str_replace() can't replace only N matches, so we use regex. First
     // we escape our file slashes, though, ... using str_replace().
@@ -787,7 +766,7 @@ function &uc_file_get_by_name($filename) {
   $cache = _uc_file_get_cache();
 
   if (!isset($cache[$filename])) {
-    $cache[$filename] = db_query("SELECT * FROM {uc_files} WHERE filename = :name", [':name' => $filename])->fetchObject();
+    $cache[$filename] = db_query('SELECT * FROM {uc_files} WHERE filename = :name', [':name' => $filename])->fetchObject();
   }
 
   return $cache[$filename];
@@ -806,7 +785,7 @@ function &uc_file_get_by_id($fid) {
   $cache = _uc_file_get_cache();
 
   if (!isset($cache[$fid])) {
-    $cache[$fid] = db_query("SELECT * FROM {uc_files} WHERE fid = :fid", [':fid' => $fid])->fetchObject();
+    $cache[$fid] = db_query('SELECT * FROM {uc_files} WHERE fid = :fid', [':fid' => $fid])->fetchObject();
   }
 
   return $cache[$fid];
@@ -874,19 +853,19 @@ function &uc_file_get_by_uid($uid, $fid) {
  *
  * @param $fid
  *   A file ID.
- * @param $user
+ * @param \Drupal\Core\Session\AccountInterface $user
  *   A Drupal user object.
  * @param $pfid
  *   An Ubercart product feature ID.
  * @param $file_limits
  *   The limits inherited from this file.
- * @param $force_overwrite
+ * @param bool $force_overwrite
  *   Don't accumulate, assign.
  *
- * @return
+ * @return array
  *   An array of uc_file objects.
  */
-function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) {
+function uc_file_user_renew($fid, AccountInterface $user, $pfid, $file_limits, $force_overwrite) {
   $result = array();
 
   // Data shared between all files passed.
@@ -908,7 +887,7 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
       $file_user = array(
         'granted' => REQUEST_TIME,
         'accessed' => 0,
-        'addresses' => array(),
+        'addresses' => '',
       );
 
       $force_overwrite = TRUE;
@@ -919,7 +898,7 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
     }
 
     // Add file data in as well.
-    $file_info = (array)uc_file_get_by_id($fid);
+    $file_info = (array) uc_file_get_by_id($fid);
 
     $file_user += $user_file_global + $file_info;
 
@@ -933,6 +912,7 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
     // Calculate hash.
     $file_user['file_key'] = isset($file_user['file_key']) && $file_user['file_key'] ? $file_user['file_key'] : \Drupal::csrfToken()->get(serialize($file_user));
 
+    unset($file_user['filename']);
     // Insert or update (if $key is already in table) uc_file_users table.
     db_merge('uc_file_users')
       ->key(['fuid' => $key])
@@ -955,8 +935,8 @@ function uc_file_user_renew($fid, $user, $pfid, $file_limits, $force_overwrite) 
 /**
  * Retrieves a file_user object by user and fid.
  */
-function _uc_file_user_get($user, $fid) {
-  $file_user = db_query("SELECT * FROM {uc_file_users} WHERE uid = :uid AND fid = :fid", [':uid' => $user->id(), ':fid' => $fid])->fetchObject();
+function _uc_file_user_get(AccountInterface $user, $fid) {
+  $file_user = db_query('SELECT * FROM {uc_file_users} WHERE uid = :uid AND fid = :fid', [':uid' => $user->id(), ':fid' => $fid])->fetchObject();
 
   if ($file_user) {
     $file_user->addresses = unserialize($file_user->addresses);
@@ -1027,8 +1007,8 @@ function uc_file_get_time_limit($file) {
     $file_config = \Drupal::config('uc_file.settings');
     return array(
       'time_polarity'    => '+',
-      'time_granularity' => $file_config->get('download_limit_duration_granularity'),
-      'time_quantity'    => $file_config->get('download_limit_duration_qty'),
+      'time_granularity' => $file_config->get('duration_granularity'),
+      'time_quantity'    => $file_config->get('duration_qty'),
     );
   }
   else {
@@ -1094,5 +1074,5 @@ function theme_uc_file_user_downloads(array $variables) {
     '#markup' => '<div class="form-item"><p class="description">' . t('Once your download is finished, you must refresh the page to download again. (Provided you have permission)') . '<br />' . t('Downloads will not be counted until the file is finished transferring, even though the number may increment when you click.') . '<br /><b>' . t('Do not use any download acceleration feature to download the file, or you may lock yourself out of the download.') . '</b>' . '</p></div>',
   );
 
-  return $build;
+  return drupal_render($build);
 }

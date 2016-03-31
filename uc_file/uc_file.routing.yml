@@ -50,11 +50,14 @@ uc_file.download_file:
 uc_file.user_downloads:
   path: '/user/{user}/purchased-files'
   defaults:
-    _controller: '\Drupal\uc_file\Controller\DownloadController'
+    _controller: '\Drupal\uc_file\Controller\DownloadController::userDownloads'
     _title: 'Files'
 #   _description: 'View your purchased files'
   requirements:
     _custom_access: '\Drupal\uc_file\Controller\DownloadController::accessUserDownloads'
+  options:
+    _admin_route: TRUE
+    user: \d+
 
 uc_file.autocomplete_filename:
   path: '/file/autocomplete'
