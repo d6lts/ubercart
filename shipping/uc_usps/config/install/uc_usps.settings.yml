@@ -1,4 +1,4 @@
-user_id: ""
+user_id: ''
 online_rates: false
 services:
   'zeroFlat': 'U.S.P.S. First-Class Mail Letter'

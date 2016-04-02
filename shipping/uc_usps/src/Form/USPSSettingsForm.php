@@ -34,7 +34,7 @@ class USPSSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $usps_config = $this->config('uc_usps.settings');
@@ -50,14 +50,14 @@ class USPSSettingsForm extends ConfigFormBase {
     );
 
     // Container for credential forms
-    $form['uc_usps_credentials'] = array(
+    $form['credentials'] = array(
       '#type'          => 'details',
       '#title'         => $this->t('Credentials'),
       '#description'   => $this->t('Account number and authorization information.'),
       '#group'         => 'usps-settings',
     );
 
-    $form['uc_usps_credentials']['uc_usps_user_id'] = array(
+    $form['credentials']['user_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('USPS user ID'),
       '#description' => $this->t('To acquire or locate your user ID, refer to the <a href=":url">USPS documentation</a>.', [':url' => Url::fromUri('http://drupal.org/node/1308256')->toString()]),
@@ -71,14 +71,14 @@ class USPSSettingsForm extends ConfigFormBase {
       '#group'         => 'usps-settings',
     );
 
-    $form['domestic']['uc_usps_online_rates'] = array(
+    $form['domestic']['online_rates'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Display USPS "online" rates'),
       '#default_value' => $usps_config->get('online_rates'),
       '#description' => $this->t('Show your customer standard USPS rates (default) or discounted "online" rates.  Online rates apply only if you, the merchant, pay for and print out postage from the USPS <a href="https://cns.usps.com/labelInformation.shtml">Click-N-Ship</a> web site.'),
     );
 
-    $form['domestic']['uc_usps_env_services'] = array(
+    $form['domestic']['env_services'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('USPS envelope services'),
       '#default_value' => $usps_config->get('env_services'),
@@ -86,7 +86,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Select the USPS services that are available to customers. Be sure to include the services that the Postal Service agrees are available to you.'),
     );
 
-    $form['domestic']['uc_usps_services'] = array(
+    $form['domestic']['services'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('USPS parcel services'),
       '#default_value' => $usps_config->get('services'),
@@ -101,7 +101,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#group'         => 'usps-settings',
     );
 
-    $form['international']['uc_usps_intl_env_services'] = array(
+    $form['international']['intl_env_services'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('USPS international envelope services'),
       '#default_value' => $usps_config->get('intl_env_services'),
@@ -109,7 +109,7 @@ class USPSSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Select the USPS services that are available to customers. Be sure to include the services that the Postal Service agrees are available to you.'),
     );
 
-    $form['international']['uc_usps_intl_services'] = array(
+    $form['international']['intl_services'] = array(
       '#type' => 'checkboxes',
       '#title' => $this->t('USPS international parcel services'),
       '#default_value' => $usps_config->get('intl_services'),
@@ -118,14 +118,14 @@ class USPSSettingsForm extends ConfigFormBase {
     );
 
     // Container for quote options
-    $form['uc_usps_quote_options'] = array(
+    $form['quote_options'] = array(
       '#type'          => 'details',
       '#title'         => $this->t('Quote options'),
       '#description'   => $this->t('Preferences that affect computation of quote.'),
       '#group'         => 'usps-settings',
     );
 
-    $form['uc_usps_quote_options']['uc_usps_all_in_one'] = array(
+    $form['quote_options']['all_in_one'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Product packages'),
       '#default_value' => $usps_config->get('all_in_one'),
@@ -137,7 +137,7 @@ class USPSSettingsForm extends ConfigFormBase {
     );
 
     // Insurance
-    $form['uc_usps_quote_options']['uc_usps_insurance'] = array(
+    $form['quote_options']['insurance'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Package insurance'),
       '#default_value' => $usps_config->get('insurance'),
@@ -146,7 +146,7 @@ class USPSSettingsForm extends ConfigFormBase {
     );
 
     // Delivery Confirmation
-    $form['uc_usps_quote_options']['uc_usps_delivery_confirmation'] = array(
+    $form['quote_options']['delivery_confirmation'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Delivery confirmation'),
       '#default_value' => $usps_config->get('delivery_confirmation'),
@@ -155,7 +155,7 @@ class USPSSettingsForm extends ConfigFormBase {
     );
 
     // Signature Confirmation
-    $form['uc_usps_quote_options']['uc_usps_signature_confirmation'] = array(
+    $form['quote_options']['signature_confirmation'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Signature confirmation'),
       '#default_value' => $usps_config->get('signature_confirmation'),
@@ -164,14 +164,14 @@ class USPSSettingsForm extends ConfigFormBase {
     );
 
     // Container for markup forms
-    $form['uc_usps_markups'] = array(
+    $form['markups'] = array(
       '#type'          => 'details',
       '#title'         => $this->t('Markups'),
       '#description'   => $this->t('Modifiers to the shipping weight and quoted rate.'),
       '#group'         => 'usps-settings',
     );
 
-    $form['uc_usps_markups']['uc_usps_rate_markup_type'] = array(
+    $form['markups']['rate_markup_type'] = array(
       '#type' => 'select',
       '#title' => $this->t('Rate markup type'),
       '#default_value' => $usps_config->get('rate_markup_type'),
@@ -181,7 +181,7 @@ class USPSSettingsForm extends ConfigFormBase {
         'currency' => $this->t('Addition (@currency)', ['@currency' => \Drupal::config('uc_store.settings')->get('currency.symbol')]),
       ),
     );
-    $form['uc_usps_markups']['uc_usps_rate_markup'] = array(
+    $form['markups']['rate_markup'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Shipping rate markup'),
       '#default_value' => $usps_config->get('rate_markup'),
@@ -189,7 +189,7 @@ class USPSSettingsForm extends ConfigFormBase {
     );
 
     // Form to select type of weight markup
-    $form['uc_usps_markups']['uc_usps_weight_markup_type'] = array(
+    $form['markups']['weight_markup_type'] = array(
       '#type'          => 'select',
       '#title'         => $this->t('Weight markup type'),
       '#default_value' => $usps_config->get('weight_markup_type'),
@@ -202,7 +202,7 @@ class USPSSettingsForm extends ConfigFormBase {
     );
 
     // Form to select weight markup amount
-    $form['uc_usps_markups']['uc_usps_weight_markup'] = array(
+    $form['markups']['weight_markup'] = array(
       '#type'          => 'textfield',
       '#title'         => $this->t('Shipping weight markup'),
       //'#default_value' => $usps_config->get('weight_markup'),
@@ -235,39 +235,39 @@ class USPSSettingsForm extends ConfigFormBase {
 
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!is_numeric($form_state->getValue('uc_usps_rate_markup'))) {
-      $form_state->setErrorByName('uc_usps_rate_markup', $this->t('Rate markup must be a numeric value.'));
+    if (!is_numeric($form_state->getValue('rate_markup'))) {
+      $form_state->setErrorByName('rate_markup', $this->t('Rate markup must be a numeric value.'));
     }
-    if (!is_numeric($form_state->getValue('uc_usps_weight_markup'))) {
-      $form_state->setErrorByName('uc_usps_weight_markup', $this->t('Weight markup must be a numeric value.'));
+    if (!is_numeric($form_state->getValue('weight_markup'))) {
+      $form_state->setErrorByName('weight_markup', $this->t('Weight markup must be a numeric value.'));
     }
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $usps_config = $this->config('uc_usps.settings');
 
     $values = $form_state->getValues();
     $usps_config
-      ->set('user_id', $values['uc_usps_user_id'])
-      ->set('online_rates', $values['uc_usps_online_rates'])
-      ->set('env_services', $values['uc_usps_env_services'])
-      ->set('services', $values['uc_usps_services'])
-      ->set('intl_env_services', $values['uc_usps_intl_env_services'])
-      ->set('intl_services', $values['uc_usps_intl_services'])
-      ->set('rate_markup_type', $values['uc_usps_rate_markup_type'])
-      ->set('rate_markup', $values['uc_usps_rate_markup'])
-      ->set('weight_markup_type', $values['uc_usps_weight_markup_type'])
-      ->set('weight_markup', $values['uc_usps_weight_markup'])
-      ->set('all_in_one', $values['uc_usps_all_in_one'])
-      ->set('insurance', $values['uc_usps_insurance'])
-      ->set('delivery_confirmation', $values['uc_usps_delivery_confirmation'])
-      ->set('signature_confirmation', $values['uc_usps_signature_confirmation'])
+      ->set('user_id', $values['user_id'])
+      ->set('online_rates', $values['online_rates'])
+      ->set('env_services', $values['env_services'])
+      ->set('services', $values['services'])
+      ->set('intl_env_services', $values['intl_env_services'])
+      ->set('intl_services', $values['intl_services'])
+      ->set('rate_markup_type', $values['rate_markup_type'])
+      ->set('rate_markup', $values['rate_markup'])
+      ->set('weight_markup_type', $values['weight_markup_type'])
+      ->set('weight_markup', $values['weight_markup'])
+      ->set('all_in_one', $values['all_in_one'])
+      ->set('insurance', $values['insurance'])
+      ->set('delivery_confirmation', $values['delivery_confirmation'])
+      ->set('signature_confirmation', $values['signature_confirmation'])
       ->save();
 
     drupal_set_message($this->t('The configuration options have been saved.'));
