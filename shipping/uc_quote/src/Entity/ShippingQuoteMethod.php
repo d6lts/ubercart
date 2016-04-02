@@ -105,4 +105,12 @@ class ShippingQuoteMethod extends ConfigEntityBase implements ShippingQuoteMetho
     return $this->settings;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayLabel() {
+    $build = $this->getPlugin()->getDisplayLabel($this->label());
+    return \Drupal::service('renderer')->renderPlain($build);
+  }
+
 }

@@ -15,6 +15,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_store\Address;
 
@@ -372,7 +373,7 @@ function uc_quote_get_default_shipping_address($nid) {
  * @ingroup forms
  */
 function uc_cart_pane_quotes($form, FormStateInterface $form_state, $items) {
-  $order = \Drupal\uc_order\Entity\Order::create(array(
+  $order = Order::create(array(
     'uid' => \Drupal::currentUser()->id(),
   ));
   $order->delivery_country = $form_state->getValue('delivery_country') ?: uc_store_default_country();

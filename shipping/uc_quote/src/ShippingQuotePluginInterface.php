@@ -26,6 +26,17 @@ interface ShippingQuotePluginInterface extends PluginInspectionInterface, Config
   public function getDescription();
 
   /**
+   * Returns the shipping quote method label with logo.
+   *
+   * @param string $label
+   *   The shipping quote method label to be styled.
+   *
+   * @return array
+   *   A render array containing the formatted shipping quote method label.
+   */
+  public function getDisplayLabel($label);
+
+  /**
    * Retrieves shipping quotes for this method.
    *
    * @param \Drupal\uc_order\OrderInterface $order

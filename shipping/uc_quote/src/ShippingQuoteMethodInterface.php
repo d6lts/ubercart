@@ -38,4 +38,12 @@ interface ShippingQuoteMethodInterface extends ConfigEntityInterface {
    */
   public function getPluginConfiguration();
 
+  /**
+   * Returns the shipping quote method label with logo.
+   *
+   * @return string
+   *   A string containing the HTML rendered label.
+   */
+  public function getDisplayLabel();
+
 }
