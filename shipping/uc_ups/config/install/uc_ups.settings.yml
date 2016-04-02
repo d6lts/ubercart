@@ -1,7 +1,7 @@
-access_license: ""
-shipper_number: ""
-user_id: ""
-password: ""
+access_license: ''
+shipper_number: ''
+user_id: ''
+password: ''
 connection_address: 'https://wwwcie.ups.com/ups.app/xml/'
 services:
   '03': 'UPS Ground'
@@ -16,13 +16,13 @@ services:
   '08': 'UPS Worldwide Expedited'
   '54': 'UPS Worldwide Express Plus'
   '65': 'UPS Worldwide Saver'
-package_type: ""
+package_type: ''
 pickup_type: '01'
 classification: '04'
-negotiated_rates: 0
-residential_quotes: 0
+negotiated_rates: false
+residential_quotes: false
 all_in_one: 1
-unit_system: ""
+unit_system: ''
 insurance: true
 rate_markup_type: 'percentage'
 rate_markup: 0

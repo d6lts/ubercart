@@ -53,38 +53,38 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Container for credential forms
-    $form['uc_ups_credentials'] = array(
+    $form['credentials'] = array(
       '#type'          => 'details',
       '#title'         => $this->t('Credentials'),
       '#description'   => $this->t('Account number and authorization information.'),
       '#group'         => 'ups-settings',
     );
 
-    $form['uc_ups_credentials']['uc_ups_access_license'] = array(
+    $form['credentials']['access_license'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('UPS OnLine Tools XML Access Key'),
       '#default_value' => $ups_config->get('access_license'),
       '#required' => TRUE,
     );
-    $form['uc_ups_credentials']['uc_ups_shipper_number'] = array(
+    $form['credentials']['shipper_number'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('UPS Shipper #'),
       '#description' => $this->t('The 6-character string identifying your UPS account as a shipper.'),
       '#default_value' => $ups_config->get('shipper_number'),
       '#required' => TRUE,
     );
-    $form['uc_ups_credentials']['uc_ups_user_id'] = array(
+    $form['credentials']['user_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('UPS.com user ID'),
       '#default_value' => $ups_config->get('user_id'),
       '#required' => TRUE,
     );
-    $form['uc_ups_credentials']['uc_ups_password'] = array(
+    $form['credentials']['password'] = array(
       '#type' => 'password',
       '#title' => $this->t('Password'),
       '#default_value' => $ups_config->get('password'),
     );
-    $form['uc_ups_credentials']['uc_ups_connection_address'] = array(
+    $form['credentials']['connection_address'] = array(
       '#type' => 'select',
       '#title' => $this->t('Server mode'),
       '#description' => $this->t('Use the Testing server while developing and configuring your site. Switch to the Production server only after you have demonstrated that transactions on the Testing server are working and you are ready to go live.'),
@@ -111,14 +111,14 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Container for quote options
-    $form['uc_ups_quote_options'] = array(
+    $form['quote_options'] = array(
       '#type'          => 'details',
       '#title'         => $this->t('Quote options'),
       '#description'   => $this->t('Preferences that affect computation of quote.'),
       '#group'         => 'ups-settings',
     );
 
-    $form['uc_ups_quote_options']['uc_ups_all_in_one'] = array(
+    $form['quote_options']['all_in_one'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Product packages'),
       '#default_value' => $ups_config->get('all_in_one'),
@@ -130,14 +130,14 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Form to select package types
-    $form['uc_ups_quote_options']['uc_ups_package_type'] = array(
+    $form['quote_options']['package_type'] = array(
       '#type' => 'select',
       '#title' => $this->t('Default Package Type'),
       '#default_value' => $ups_config->get('package_type'),
       '#options' => UPSUtilities::packageTypes(),
       '#description' => $this->t('Type of packaging to be used.  May be overridden on a per-product basis via the product node edit form.'),
     );
-    $form['uc_ups_quote_options']['uc_ups_classification'] = array(
+    $form['quote_options']['classification'] = array(
       '#type' => 'select',
       '#title' => $this->t('UPS Customer classification'),
       '#options' => array(
@@ -149,7 +149,7 @@ class UPSSettingsForm extends ConfigFormBase {
       '#description' => $this->t('The kind of customer you are to UPS. For daily pickups the default is wholesale; for customer counter pickups the default is retail; for other pickups the default is occasional.'),
     );
 
-    $form['uc_ups_quote_options']['uc_ups_negotiated_rates'] = array(
+    $form['quote_options']['negotiated_rates'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Negotiated rates'),
       '#default_value' => $ups_config->get('negotiated_rates'),
@@ -158,7 +158,7 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Form to select pickup type
-    $form['uc_ups_quote_options']['uc_ups_pickup_type'] = array(
+    $form['quote_options']['pickup_type'] = array(
       '#type' => 'select',
       '#title' => $this->t('Pickup type'),
       '#options' => array(
@@ -173,7 +173,7 @@ class UPSSettingsForm extends ConfigFormBase {
       '#default_value' => $ups_config->get('pickup_type'),
     );
 
-    $form['uc_ups_quote_options']['uc_ups_residential_quotes'] = array(
+    $form['quote_options']['residential_quotes'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Assume UPS shipping quotes will be delivered to'),
       '#default_value' => $ups_config->get('residential_quotes'),
@@ -183,7 +183,7 @@ class UPSSettingsForm extends ConfigFormBase {
       ),
     );
 
-    $form['uc_ups_quote_options']['uc_ups_unit_system'] = array(
+    $form['quote_options']['unit_system'] = array(
       '#type' => 'select',
       '#title' => $this->t('System of measurement'),
       '#default_value' => $ups_config->get('unit_system', \Drupal::config('uc_store.settings')->get('length.units')),
@@ -194,7 +194,7 @@ class UPSSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Choose the standard system of measurement for your country.'),
     );
 
-    $form['uc_ups_quote_options']['uc_ups_insurance'] = array(
+    $form['quote_options']['insurance'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Package insurance'),
       '#default_value' => $ups_config->get('insurance'),
@@ -202,7 +202,7 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Container for markup forms
-    $form['uc_ups_markups'] = array(
+    $form['markups'] = array(
       '#type'          => 'details',
       '#title'         => $this->t('Markups'),
       '#description'   => $this->t('Modifiers to the shipping weight and quoted rate.'),
@@ -210,7 +210,7 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Form to select type of rate markup
-    $form['uc_ups_markups']['uc_ups_rate_markup_type'] = array(
+    $form['markups']['rate_markup_type'] = array(
       '#type' => 'select',
       '#title' => $this->t('Rate markup type'),
       '#default_value' => $ups_config->get('rate_markup_type'),
@@ -222,7 +222,7 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Form to select rate markup amount
-    $form['uc_ups_markups']['uc_ups_rate_markup'] = array(
+    $form['markups']['rate_markup'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Shipping rate markup'),
       '#default_value' => $ups_config->get('rate_markup'),
@@ -230,7 +230,7 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Form to select type of weight markup
-    $form['uc_ups_markups']['uc_ups_weight_markup_type'] = array(
+    $form['markups']['weight_markup_type'] = array(
       '#type'          => 'select',
       '#title'         => $this->t('Weight markup type'),
       '#default_value' => $ups_config->get('weight_markup_type'),
@@ -243,7 +243,7 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Form to select weight markup amount
-    $form['uc_ups_markups']['uc_ups_weight_markup'] = array(
+    $form['markups']['weight_markup'] = array(
       '#type'          => 'textfield',
       '#title'         => $this->t('Shipping weight markup'),
       '#default_value' => $ups_config->get('weight_markup'),
@@ -252,7 +252,7 @@ class UPSSettingsForm extends ConfigFormBase {
     );
 
     // Container for label printing
-    $form['uc_ups_labels'] = array(
+    $form['labels'] = array(
       '#type'          => 'details',
       '#title'         => $this->t('Label Printing'),
       '#description'   => $this->t('Preferences for UPS Shipping Label Printing.  Additional permissions from UPS are required to use this feature.'),
@@ -264,7 +264,7 @@ class UPSSettingsForm extends ConfigFormBase {
     $period[0] = $this->t('Forever');
 
     // Form to select how long labels stay on server
-    $form['uc_ups_labels']['uc_ups_label_lifetime'] = array(
+    $form['labels']['label_lifetime'] = array(
       '#type'          => 'select',
       '#title'         => $this->t('Label lifetime'),
       '#default_value' => $ups_config->get('label_lifetime'),
@@ -302,18 +302,18 @@ class UPSSettingsForm extends ConfigFormBase {
     $old_password = $this->config('uc_ups.settings')->get('password');
     if (!$form_state->getValue('uc_ups_password')) {
       if ($old_password) {
-        $form_state->setValueForElement($form['uc_ups_credentials']['uc_ups_password'], $old_password);
+        $form_state->setValueForElement($form['credentials']['password'], $old_password);
       }
       else {
-        $form_state->setErrorByName('uc_ups_password', $this->t('Password field is required.'));
+        $form_state->setErrorByName('password', $this->t('Password field is required.'));
       }
     }
 
-    if (!is_numeric($form_state->getValue('uc_ups_rate_markup'))) {
-      $form_state->setErrorByName('uc_ups_rate_markup', $this->t('Rate markup must be a numeric value.'));
+    if (!is_numeric($form_state->getValue('rate_markup'))) {
+      $form_state->setErrorByName('rate_markup', $this->t('Rate markup must be a numeric value.'));
     }
-    if (!is_numeric($form_state->getValue('uc_ups_weight_markup'))) {
-      $form_state->setErrorByName('uc_ups_weight_markup', $this->t('Weight markup must be a numeric value.'));
+    if (!is_numeric($form_state->getValue('weight_markup'))) {
+      $form_state->setErrorByName('weight_markup', $this->t('Weight markup must be a numeric value.'));
     }
   }
 
@@ -325,25 +325,25 @@ class UPSSettingsForm extends ConfigFormBase {
 
     $values = $form_state->getValues();
     $ups_config
-      ->set('access_license', $values['uc_ups_access_license'])
-      ->set('shipper_number', $values['uc_ups_shipper_number'])
-      ->set('user_id', $values['uc_ups_user_id'])
-      ->set('password', $values['uc_ups_password'])
-      ->set('connection_address', $values['uc_ups_connection_address'])
+      ->set('access_license', $values['access_license'])
+      ->set('shipper_number', $values['shipper_number'])
+      ->set('user_id', $values['user_id'])
+      ->set('password', $values['password'])
+      ->set('connection_address', $values['connection_address'])
       ->set('services', $values['uc_ups_services'])
-      ->set('pickup_type', $values['uc_ups_pickup_type'])
-      ->set('package_type', $values['uc_ups_package_type'])
-      ->set('classification', $values['uc_ups_classification'])
-      ->set('negotiated_rates', $values['uc_ups_negotiated_rates'])
-      ->set('residential_quotes', $values['uc_ups_residential_quotes'])
-      ->set('rate_markup_type', $values['uc_ups_rate_markup_type'])
-      ->set('rate_markup', $values['uc_ups_rate_markup'])
-      ->set('weight_markup_type', $values['uc_ups_weight_markup_type'])
-      ->set('weight_markup', $values['uc_ups_weight_markup'])
-      ->set('label_lifetime', $values['uc_ups_label_lifetime'])
-      ->set('all_in_one', $values['uc_ups_all_in_one'])
-      ->set('unit_system', $values['uc_ups_unit_system'])
-      ->set('insurance', $values['uc_ups_insurance'])
+      ->set('pickup_type', $values['pickup_type'])
+      ->set('package_type', $values['package_type'])
+      ->set('classification', $values['classification'])
+      ->set('negotiated_rates', $values['negotiated_rates'])
+      ->set('residential_quotes', $values['residential_quotes'])
+      ->set('rate_markup_type', $values['rate_markup_type'])
+      ->set('rate_markup', $values['rate_markup'])
+      ->set('weight_markup_type', $values['weight_markup_type'])
+      ->set('weight_markup', $values['weight_markup'])
+      ->set('label_lifetime', $values['label_lifetime'])
+      ->set('all_in_one', $values['all_in_one'])
+      ->set('unit_system', $values['unit_system'])
+      ->set('insurance', $values['insurance'])
       ->save();
 
     drupal_set_message($this->t('The configuration options have been saved.'));
