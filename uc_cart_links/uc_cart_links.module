@@ -8,6 +8,7 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\uc_cart_links\Controller\CartLinksHelp;
 
 /**
  * Implements hook_help().
@@ -18,7 +19,7 @@ function uc_cart_links_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('<a href=":url">View the help page</a> to learn how to create Cart Links.', [':url' => Url::fromRoute('help.page', ['name' => 'uc_cart_links'])->toString()]) . '</p>';
 
     case 'help.page.uc_cart_links':
-      $build = \Drupal\uc_cart_links\Controller\CartLinksHelp::creationHelp();
+      $build = CartLinksHelp::creationHelp();
       return drupal_render($build);
   }
 }

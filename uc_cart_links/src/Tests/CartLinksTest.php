@@ -550,7 +550,7 @@ class CartLinksTest extends UbercartTestBase {
    *
    * Must be logged in with 'administer cart links' permission.
    *
-   * @param $state
+   * @param bool $state
    *   TRUE to display product action messages, FALSE to not display.
    *   Defaults to FALSE.
    */
@@ -572,7 +572,7 @@ class CartLinksTest extends UbercartTestBase {
    *
    * Must be logged in with 'administer cart links' permission.
    *
-   * @param $state
+   * @param bool $state
    *   TRUE to display product action messages, FALSE to not display.
    *   Defaults to TRUE.
    */
@@ -594,7 +594,7 @@ class CartLinksTest extends UbercartTestBase {
    *
    * Must be logged in with 'administer cart links' permission.
    *
-   * @param $state
+   * @param bool $state
    *   TRUE to display product action messages, FALSE to not display.
    *   Defaults to TRUE.
    */
@@ -616,7 +616,7 @@ class CartLinksTest extends UbercartTestBase {
    *
    * Must be logged in with 'administer cart links' permission.
    *
-   * @param $messages
+   * @param string $messages
    *   String containing user input from a textarea, one message per line.
    *   Messages have numeric key and text value, separated by '|'.
    */
@@ -639,7 +639,7 @@ class CartLinksTest extends UbercartTestBase {
    *
    * Must be logged in with 'administer cart links' permission.
    *
-   * @param $restrictions
+   * @param string $restrictions
    *   String containing user input from a textarea, one restriction per line.
    *   Restrictions are valid Cart Links - i.e. relative URLs.
    */
@@ -661,7 +661,7 @@ class CartLinksTest extends UbercartTestBase {
    *
    * Must be logged in with 'administer cart links' permission.
    *
-   * @param $url
+   * @param string $url
    *   Relative URL of the destination page for the redirect.  Omit leading '/'.
    */
   protected function setCartLinksUIRedirect($url = '') {
@@ -680,7 +680,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Create a page with Cart Links in the body.
    *
-   * @param $links
+   * @param array $links
    *   Array of Cart Links to appear on page.
    *
    * @return \Drupal\node\NodeInterface
@@ -718,7 +718,7 @@ class CartLinksTest extends UbercartTestBase {
   /**
    * Creates a product with all attribute types and options.
    *
-   * @param $product_class
+   * @param bool $product_class
    *   Defaults to FALSE to create a normal product, set to TRUE to
    *   create a product class instead.
    */
@@ -788,10 +788,10 @@ class CartLinksTest extends UbercartTestBase {
    * the $products array that is passed in as an argument, so these keys may
    * be used to lookup the link and metadata for a specific product.
    *
-   * @param $products
+   * @param array $products
    *   An array of products.
    *
-   * @return
+   * @return array
    *   Array containing Cart Links and link metadata.
    */
   protected function createValidCartLinks($products = array()) {

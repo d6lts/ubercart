@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 /**
  * Provides instructions on how to create Cart Links.
  *
- * @return
+ * @return array
  *   Form API array with help text.
  */
 class CartLinksHelp {
