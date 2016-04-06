@@ -20,3 +20,4 @@ uc_cart_links.process:
     _form: '\Drupal\uc_cart_links\Form\CartLinksForm'
   requirements:
     _permission: 'access content'
+    actions: '(e-)?(p[1-9][0-9]*(_q[1-9][0-9]*)*(_a[1-9][0-9]*o[a-zA-Z0-9%]+)*(_s)?)+(-m[0-9]+|-i[a-zA-Z0-9]+)*(\?destination=[a-zA-Z0-9/%]+)?'
