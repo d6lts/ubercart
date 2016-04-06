@@ -77,7 +77,12 @@
 /** Cart contents pane inside order review table */
 .cart-review ul.product-description {
   margin: 0;
+  padding: 0 0 0 1em; /* LTR */
 }
+[dir="rtl"] .cart-review ul.product-description {
+  padding: 0 1em 0 0;
+}
+
 .cart-review ul.product-description li {
   list-style: initial;
 }
@@ -138,11 +143,17 @@
   text-align: left;
 }
 
-
-/** Product attribute listing in cart table */
+/**
+ * Product attribute listing in cart table.
+ */
 #uc-cart-view-form ul.product-description {
   margin: 0;
+  padding: 0 0 0 1em; /* LTR */
 }
+[dir="rtl"] #uc-cart-view-form ul.product-description {
+  padding: 0 1em 0 0;
+}
+
 #uc-cart-view-form ul.product-description li {
   list-style: initial;
 }
