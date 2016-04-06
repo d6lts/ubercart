@@ -41,8 +41,8 @@ interface CartManagerInterface {
    * @param bool $login
    *   TRUE if the user should be logged in (where configured), FALSE otherwise.
    *
-   * @return
-   *   The HTML text of the default order completion page.
+   * @return array
+   *   A render array for the default order completion page.
    */
   public function completeSale(OrderInterface $order, $login = TRUE);
 

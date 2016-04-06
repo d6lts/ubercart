@@ -36,16 +36,50 @@ class CartItem extends ContentEntityBase implements CartItemInterface {
 
   use EntityChangedTrait;
 
-  public $product;
+  /**
+   * The user-facing name of this item.
+   *
+   * @var string
+   */
   public $title;
+
+  /**
+   * The SKU of this item.
+   *
+   * @var string
+   */
   public $model;
+
+  /**
+   * The cost of this item.
+   *
+   * @var float
+   */
   public $cost;
+
+  /**
+   * The price of this item.
+   *
+   * @var float
+   */
   public $price;
+
+  /**
+   * The shipping weight of this item.
+   *
+   * @var float
+   */
   public $weight;
+
+  /**
+   * The units of $weight.
+   *
+   * @var string
+   */
   public $weight_units;
 
   /**
-   * Converts a cart item into an order product.
+   * {@inheritdoc}
    */
   public function toOrderProduct() {
     $order_product = OrderProduct::create(array(
