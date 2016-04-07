@@ -70,14 +70,6 @@ class TaxRateForm extends EntityForm {
     $form['settings'] = $this->plugin->buildConfigurationForm([], $form_state);
     $form['settings']['#tree'] = TRUE;
 
-    $form['jurisdiction'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Jurisdiction'),
-      '#description' => $this->t('Administrative label for the taxing authority, used to prepare reports of collected taxes.'),
-      '#default_value' => $this->entity->getJurisdiction(),
-      '#required' => FALSE,
-    );
-
     $form['shippable'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Taxed products'),

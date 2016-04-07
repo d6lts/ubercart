@@ -13,9 +13,6 @@ uc_tax.rate.*:
     weight:
       type: integer
       label: 'Relative weight'
-    jurisdiction:
-      type: string
-      label: 'Jurisdiction'
     shippable:
       type: boolean
       label: 'Shippable'
@@ -53,6 +50,9 @@ tax_rate.settings.percentage_rate:
     rate:
       type: float
       label: 'Tax rate (per order rate)'
+    jurisdiction:
+      type: string
+      label: 'Tax jurisdiction'
     field:
       type: string
       label: 'Product field holding override values'

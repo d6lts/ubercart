@@ -62,14 +62,6 @@ class TaxRateFormBase extends EntityForm {
       '#required' => TRUE,
     );
 
-    $form['jurisdiction'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Jurisdiction'),
-      '#description' => $this->t('Administrative label for the taxing authority, used to prepare reports of collected taxes.'),
-      '#default_value' => $rate->getJurisdiction(),
-      '#required' => FALSE,
-    );
-
     $form['shippable'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Taxed products'),

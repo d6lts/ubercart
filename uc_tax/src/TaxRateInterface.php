@@ -48,38 +48,6 @@ interface TaxRateInterface extends ConfigEntityInterface {
   public function setLabel($label);
 
   /**
-   * The tax rate.
-   *
-   * @return float
-   */
-  public function getRate();
-
-  /**
-   * The tax rate.
-   *
-   * @param float $rate
-   *
-   * @return $this
-   */
-  public function setRate($rate);
-
-  /**
-   * The taxing authority jurisdiction.
-   *
-   * @return string
-   */
-  public function getJurisdiction();
-
-  /**
-   * The taxing authority jurisdiction.
-   *
-   * @param string $jurisdiction
-   *
-   * @return $this
-   */
-  public function setJurisdiction($jurisdiction);
-
-  /**
    * Product item types subject to this tax rate.
    *
    * @return array

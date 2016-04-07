@@ -22,7 +22,6 @@ class TaxRateListBuilder extends ConfigEntityListBuilder {
   public function buildHeader() {
     $header['label'] = $this->t('Name');
     $header['rate'] = $this->t('Rate');
-    $header['jurisdiction'] = $this->t('Jurisdiction');
     $header['shippable'] = $this->t('Taxed products');
     $header['product_types'] = $this->t('Taxed product types');
     $header['line_item_types'] = $this->t('Taxed line items');
@@ -37,7 +36,6 @@ class TaxRateListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $this->getLabel($entity);
     $row['rate'] = ((float) $entity->getRate() * 100) . '%' ;
-    $row['jurisdiction'] = $entity->getJurisdiction();
     $row['shippable'] = $entity->isForShippable() ? $this->t('Shippable products') : $this->t('Any product');
     $row['product_types'] = implode(', ', $entity->getProductTypes());
     $row['line_item_types'] = implode(', ', $entity->getLineItemTypes());

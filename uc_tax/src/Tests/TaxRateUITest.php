@@ -29,7 +29,7 @@ class TaxRateUITest extends TaxTestBase {
     $rate = array(
       'label' => $this->randomMachineName(8),
       'settings[rate]' => 20,
-      'jurisdiction' => 'Uberland',
+      'settings[jurisdiction]' => 'Uberland',
       'shippable' => 0,
       'product_types[product]' => 1,
       'product_types[blank-line]' => 1,

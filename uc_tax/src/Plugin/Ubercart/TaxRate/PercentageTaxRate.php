@@ -29,6 +29,7 @@ class PercentageTaxRate extends TaxRatePluginBase {
   public function defaultConfiguration() {
     return array(
       'rate' => 0,
+      'jurisdiction' => '',
       'field' => '',
     );
   }
@@ -55,6 +56,14 @@ class PercentageTaxRate extends TaxRatePluginBase {
       '#field_suffix' => $this->t('% (percent)'),
       '#required' => TRUE,
     );
+    $form['jurisdiction'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Jurisdiction'),
+      '#description' => $this->t('Administrative label for the taxing authority, used to prepare reports of collected taxes.'),
+      '#default_value' => $this->configuration['jurisdiction'],
+      '#required' => FALSE,
+    );
+
     $form['field'] = array(
       '#type' => 'select',
       '#title' => $this->t('Tax rate override field'),
@@ -85,6 +94,7 @@ class PercentageTaxRate extends TaxRatePluginBase {
    */
   public function calculateTax(OrderInterface $order) {
     $rate = $this->configuration['rate'];
+    $jurisdiction = $this->configuration['jurisdiction'];
     $field = $this->configuration['field'];
 
     foreach ($order->products as $product) {

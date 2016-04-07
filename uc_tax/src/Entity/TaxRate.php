@@ -34,7 +34,6 @@ use Drupal\uc_tax\TaxRateInterface;
  *     "id",
  *     "label",
  *     "weight",
- *     "jurisdiction",
  *     "shippable",
  *     "display_include",
  *     "inclusion_text",
@@ -84,13 +83,6 @@ class TaxRate extends ConfigEntityBase implements TaxRateInterface {
    * @var int
    */
   protected $weight = 0;
-
-  /**
-   * The taxing authority jurisdiction.
-   *
-   * @var string
-   */
-  protected $jurisdiction;
 
   /**
    * Whether to display prices including tax.
@@ -183,21 +175,6 @@ class TaxRate extends ConfigEntityBase implements TaxRateInterface {
    */
   public function setRate($rate) {
     $this->rate = $rate;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getJurisdiction() {
-    return $this->jurisdiction;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setJurisdiction($jurisdiction) {
-    $this->jurisdiction = $jurisdiction;
     return $this;
   }
 
