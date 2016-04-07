@@ -645,11 +645,24 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    *     transaction.
    *   - "log_payment": TRUE if the transaction should be regarded as a
    *     successful payment.
+   *   - "uid": The user ID of the person logging the payment, or 0 if the
+   *     payment was processed automatically.
+   *   - "comment": The comment string, markup allowed, to enter in the
+   *     payment log.
+   *   - "data": Any data that should be serialized and stored with the payment.
+   *
+   * @todo: Replace the return array with a typed object.
    */
   abstract protected function chargeCard(OrderInterface $order, $amount, $txn_type, $reference = NULL);
 
   /**
    * Returns a credit card number with appropriate masking.
+   *
+   * @param string $number
+   *   Credit card number as a string.
+   *
+   * @return string
+   *   Masked credit card number - just the last four digits.
    */
   protected function displayCardNumber($number) {
     if (strlen($number) == 4) {
@@ -661,6 +674,12 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
   /**
    * Validates a credit card number during checkout.
+   *
+   * @param string $number
+   *   Credit card number as a string.
+   *
+   * @return bool
+   *   TRUE if card number is valid according to the Luhn algorithm.
    *
    * @see https://en.wikipedia.org/wiki/Luhn_algorithm
    */
@@ -696,6 +715,12 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
   /**
    * Validates a CVV number during checkout.
+   *
+   * @param string $cvv
+   *   CVV number as a string.
+   *
+   * @return bool
+   *   TRUE if CVV has the correct number of digits.
    */
   protected function validateCvv($cvv) {
     $digits = array();
@@ -760,7 +785,7 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
    *   The 4-digit numeric representation of the year, i.e. 2008.
    *
    * @return bool
-   *   TRUE for non-expired cards, FALSE for expired.
+   *   TRUE if expiration date is in the future, FALSE otherwise.
    */
   protected function validateExpirationDate($month, $year) {
     if ($year < date('Y')) {
@@ -777,6 +802,9 @@ abstract class CreditCardPaymentMethodBase extends PaymentMethodPluginBase {
 
   /**
    * Validates an issue number on a card.
+   *
+   * @param string $issue
+   *   The issue number.
    *
    * @return bool
    *   TRUE if the issue number if valid, FALSE otherwise.

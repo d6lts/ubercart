@@ -140,7 +140,7 @@ function uc_payment_uc_payment_method_checkout_alter(array &$methods, OrderInter
  *   (optional) The timestamp at which the payment was received.
  *
  * @return string
- *   A unique ID identifying the payment.
+ *   A unique ID identifying the PaymentReceipt entity.
  */
 function uc_payment_enter($order_id, $method, $amount, $uid = 0, $data = NULL, $comment = '', $received = REQUEST_TIME) {
   $order = Order::load($order_id);
@@ -254,6 +254,9 @@ function uc_payment_uc_order_delete(OrderInterface $order) {
 
 /**
  * Deletes a payment from the database.
+ *
+ * @param string $receipt_id
+ *   A PaymentReceipt entity id.
  */
 function uc_payment_delete($receipt_id) {
   if (!is_numeric($receipt_id)) {
@@ -266,8 +269,11 @@ function uc_payment_delete($receipt_id) {
 
 /**
  * Returns the balance of payments on an order.
+ *
+ * @param \Drupal\uc_order\OrderInterface $order
+ *   An order entity.
  */
-function uc_payment_balance($order) {
+function uc_payment_balance(OrderInterface $order) {
   $total = $order->getTotal();
   $payments = uc_payment_load_payments($order->id());
 
@@ -289,7 +295,7 @@ function uc_payment_balance($order) {
  *   The order's id.
  *
  * @return \Drupal\uc_payment\PaymentReceiptInterface[]
- *   Array of payment objects.
+ *   Array of PaymentReceipt entities.
  */
 function uc_payment_load_payments($order_id) {
   $result = \Drupal::entityQuery('uc_payment_receipt')
