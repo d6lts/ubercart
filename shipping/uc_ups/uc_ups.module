@@ -735,7 +735,7 @@ function uc_ups_quote($products, $details, $method) {
           if (!isset($quotes[$ups_service]['rate'])) {
             $quotes[$ups_service]['rate'] = 0;
           }
-          $rate = uc_ups_rate_markup((string)$charge->MonetaryValue);
+          $rate = $this->rateMarkup((string)$charge->MonetaryValue);
           $quotes[$ups_service]['rate'] += $rate;
         }
       }
@@ -847,85 +847,4 @@ function uc_ups_void_shipment($shipment_number, $tracking_numbers = array()) {
     }
   }
   return (bool)$success;
-}
-
-/**
- * Modifies the rate received from UPS before displaying to the customer.
- *
- * @param $rate
- *   Shipping rate without any rate markup.
- *
- * @return
- *   Shipping rate after markup.
- */
-function uc_ups_rate_markup($rate) {
-  $ups_config = \Drupal::config('uc_ups.settings');
-  $markup = trim($ups_config->get('rate_markup'));
-  $type   = $ups_config->get('rate_markup_type');
-
-  if (is_numeric($markup)) {
-    switch ($type) {
-      case 'percentage':
-        return $rate + $rate * floatval($markup) / 100;
-      case 'multiplier':
-        return $rate * floatval($markup);
-      case 'currency':
-        return $rate + floatval($markup);
-    }
-  }
-  else {
-    return $rate;
-  }
-}
-
-/**
- * Modifies the weight of shipment before sending to UPS for a quote.
- *
- * @param $weight
- *   Shipping weight without any weight markup.
- *
- * @return
- *   Shipping weight after markup.
- */
-function uc_ups_weight_markup($weight) {
-  $ups_config = \Drupal::config('uc_ups.settings');
-  $markup = trim($ups_config->get('weight_markup'));
-  $type   = $ups_config->get('weight_markup_type');
-
-  if (is_numeric($markup)) {
-    switch ($type) {
-      case 'percentage':
-        return $weight + $weight * floatval($markup) / 100;
-
-      case 'multiplier':
-        return $weight * floatval($markup);
-
-      case 'mass':
-        return $weight + floatval($markup);
-    }
-  }
-  else {
-    return $weight;
-  }
-}
-
-/**
- * Pseudo-constructor to set default values of a package.
- */
-function _uc_ups_new_package() {
-  $package = new stdClass();
-
-  $package->weight = 0;
-  $package->price = 0;
-
-  $package->length = 0;
-  $package->width = 0;
-  $package->height = 0;
-
-  $package->length_units = 'in';
-  $package->weight_units = 'lb';
-  $package->qty = 1;
-  $package->pkg_type = '02';
-
-  return $package;
 }

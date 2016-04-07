@@ -37,7 +37,7 @@ class UPSSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $ups_config = $this->config('uc_ups.settings');
@@ -296,7 +296,7 @@ class UPSSettingsForm extends ConfigFormBase {
 
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $old_password = $this->config('uc_ups.settings')->get('password');
@@ -318,7 +318,7 @@ class UPSSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $ups_config = $this->config('uc_ups.settings');
