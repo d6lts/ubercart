@@ -34,9 +34,9 @@ function uc_ups_fulfill_order($form, FormStateInterface $form_state, $order, $pa
 
   // Container for package data
   $form['packages'] = array(
-    '#type'        => 'fieldset',
-    '#title'       => t('Packages'),
-    '#tree'        => TRUE
+    '#type' => 'fieldset',
+    '#title' => t('Packages'),
+    '#tree' => TRUE
   );
   foreach ($package_ids as $id) {
     $package = uc_shipping_package_load($id);

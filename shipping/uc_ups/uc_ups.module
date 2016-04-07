@@ -221,10 +221,6 @@ function uc_ups_node_revision_delete($node) {
     ->execute();
 }
 
-/******************************************************************************
- * Ubercart Hooks                                                             *
- ******************************************************************************/
-
 /**
  * Implements hook_uc_shipping_type().
  */
@@ -306,10 +302,6 @@ function uc_ups_uc_store_status() {
   return $messages;
 }
 
-/******************************************************************************
- * Module Functions                                                           *
- ******************************************************************************/
-
 /**
  * Returns XML access request to be prepended to all requests to the
  * UPS webservice.
@@ -319,13 +311,19 @@ function uc_ups_access_request() {
   $access = $ups_config->get('access_license');
   $user = $ups_config->get('user_id');
   $password = $ups_config->get('password');
-  return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<AccessRequest xml:lang=\"en-US\">
-  <AccessLicenseNumber>$access</AccessLicenseNumber>
-  <UserId>$user</UserId>
-  <Password>$password</Password>
-</AccessRequest>
-";
+
+  $xml = new \XMLWriter();
+  $xml->openMemory();
+  $xml->startDocument('1.0', 'UTF-8');
+  $xml->startElement('AccessRequest');
+  $xml->writeAttribute('xml:lang', 'en-US');
+  $xml->writeElement('AccessLicenseNumber', $access);
+  $xml->writeElement('UserId', $user);
+  $xml->writeElement('Password', $password);
+  $xml->endElement();
+  $xml->endDocument();
+
+  return $xml->outputMemory(TRUE);
 }
 
 /**
@@ -788,26 +786,31 @@ function uc_ups_quote($products, $details, $method) {
  *   XML VoidShipmentRequest message.
  */
 function uc_ups_void_shipment_request($shipment_number, $tracking_numbers = array()) {
-  $schema = uc_ups_access_request();
-  $schema .= '<?xml version="1.0"?>';
-  $schema .= '<VoidShipmentRequest>';
-  $schema .= '<Request>';
-    $schema .= '<RequestAction>Void</RequestAction>';
-    $schema .= '<TransactionReference>';
-      $schema .= '<CustomerContext>';
-      $schema .= t('Void shipment @ship_number and tracking numbers @track_list', ['@ship_number' => $shipment_number, '@track_list' => implode(', ', $tracking_numbers)]);
-      $schema .= '</CustomerContext>';
-      $schema .= '<XpciVersion>1.0</XpciVersion>';
-    $schema .= '</TransactionReference>';
-  $schema .= '</Request>';
-  $schema .= '<ExpandedVoidShipment>';
-    $schema .= '<ShipmentIdentificationNumber>' . $shipment_number . '</ShipmentIdentificationNumber>';
-    foreach ($tracking_numbers as $number) {
-      $schema .= '<TrackingNumber>' . $number . '</TrackingNumber>';
-    }
-  $schema .= '</ExpandedVoidShipment>';
-  $schema .= '</VoidShipmentRequest>';
-  return $schema;
+  $customer_context = t('Void shipment @ship_number and tracking numbers @track_list', ['@ship_number' => $shipment_number, '@track_list' => implode(', ', $tracking_numbers)]);
+
+  $xml = new \XMLWriter();
+  $xml->openMemory();
+  $xml->startDocument('1.0', 'UTF-8');
+  $xml->startElement('VoidShipmentRequest');
+  $xml->writeAttribute('xml:lang', 'en-US');
+  $xml->startElement(  'Request');
+  $xml->writeElement(    'RequestAction', 'Void');
+  $xml->startElement(    'TransactionReference');
+  $xml->writeElement(      'CustomerContext', $customer_context);
+  $xml->writeElement(      'XpciVersion', '1.0');
+  $xml->endElement();//   TransactionReference
+  $xml->endElement();// Request
+
+  $xml->startElement(  'ExpandedVoidShipment');
+  $xml->writeElement(    'ShipmentIdentificationNumber', $shipment_number);
+  foreach ($tracking_numbers as $number) {
+    $xml->writeElement(  'TrackingNumber', $number);
+  }
+  $xml->endElement();// ExpandedVoidShipment
+  $xml->endElement();// VoidShipmentRequest
+  $xml->endDocument();
+
+  return uc_ups_access_request() . $xml->outputMemory(TRUE);
 }
 
 /**
