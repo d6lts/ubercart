@@ -136,7 +136,7 @@ function uc_product_node_load($nodes) {
  * @param $node
  *   The product node to alter. Throws an exception if this is already a
  *   product variant.
- * @param $data
+ * @param array $data
  *   Optional data to add to the product before invoking the alter hooks.
  *
  * @return
@@ -171,7 +171,7 @@ function _uc_product_get_variant($node, $data = FALSE) {
  *
  * @param $nid
  *   The nid of the product to load.
- * @param $data
+ * @param array $data
  *   Optional data to add to the product before invoking the alter hooks.
  *
  * @return
@@ -701,7 +701,7 @@ function uc_product_types() {
  * @param $node
  *   Either a full node object/array, a node ID, or a node type.
  *
- * @return
+ * @return bool
  *   TRUE or FALSE indicating whether or not a node type is a product node type.
  */
 function uc_product_is_product($node) {
@@ -750,13 +750,13 @@ function uc_product_is_product_form(FormStateInterface $form_state) {
  * Gathers any modules' models on this node, then add the node's SKU and the
  * optional 'Any' option.
  *
- * @param $nid
+ * @param int $nid
  *   The node ID of the product.
- * @param $add_blank
+ * @param string $add_blank
  *   String to use for the initial blank entry. If not desired, set to NULL
  *   or FALSE. Make sure to localize the string first. Defaults to '- Any -'.
  *
- * @return
+ * @return array
  *   An associative array of model numbers. The key for '- Any -' is the empty
  *   string.
  */
@@ -785,12 +785,12 @@ function uc_product_get_models($nid, $add_blank = TRUE) {
 /**
  * Returns a product node's first attached image.
  *
- * @param $node_id
+ * @param int $node_id
  *   The node's id.
- * @param $style
+ * @param string $style
  *   The image style used to format the image. 'uc_product' by default.
  *
- * @return
+ * @return array
  *   A renderable array of the first product image, linked to the
  *   product node, or an empty array if no image is available.
  */
@@ -833,7 +833,7 @@ function uc_product_get_picture($nid, $style = 'uc_product') {
  * @param $product
  *   Product.
  *
- * @return
+ * @return string
  *   HTML rendered product description.
  */
 function uc_product_get_description($product) {
@@ -849,9 +849,9 @@ function uc_product_get_description($product) {
 /**
  * Returns data for a product feature, given a feature ID and array key.
  *
- * @param $fid
+ * @param string $fid
  *   The string ID of the product feature you want to get data from.
- * @param $key
+ * @param string $key
  *   The key in the product feature array you want: title, callback, delete,
  *   settings.
  *
@@ -873,7 +873,7 @@ function uc_product_feature_data($fid, $key) {
 /**
  * Saves a product feature to a product node.
  *
- * @param $data
+ * @param array $data
  *   An array consisting of the following keys:
  *   - pfid: (optional) When editing an existing product feature, the numeric
  *     ID of the feature.
@@ -904,7 +904,7 @@ function uc_product_feature_save(&$data) {
  * @param $nid
  *   The product node ID.
  *
- * @return
+ * @return array
  *   The array of all product features object.
  */
 function uc_product_feature_load_multiple($nid) {
@@ -923,7 +923,7 @@ function uc_product_feature_load_multiple($nid) {
  * @param $fid
  *   Optional. Specify a specific feature id.
  *
- * @return
+ * @return array
  *   The product feature array.
  */
 function uc_product_feature_load($pfid) {

@@ -455,7 +455,6 @@ class Order extends ContentEntityBase implements OrderInterface {
    * {@inheritdoc}
    */
   public function logChanges(array $changes) {
-
     if (!empty($changes)) {
       foreach ($changes as $key => $value) {
         if (is_array($value)) {

@@ -31,8 +31,7 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface,
    * @param int $timestamp
    *   The order creation timestamp.
    *
-   * @return \Drupal\uc_order\OrderInterface
-   *   The called order entity.
+   * @return $this
    */
   public function setCreatedTime($timestamp);
 
@@ -83,8 +82,7 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface,
    * @param string $status
    *   The order status ID.
    *
-   * @return \Drupal\uc_order\OrderInterface
-   *   The called owner entity.
+   * @return $this
    */
   public function setStatusId($status);
 
@@ -110,8 +108,7 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface,
    * @param string $email
    *   The e-mail address.
    *
-   * @return \Drupal\uc_order\OrderInterface
-   *   The called owner entity.
+   * @return $this
    */
   public function setEmail($email);
 
@@ -161,8 +158,7 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface,
    * @param string $payment_method
    *   The payment method ID.
    *
-   * @return \Drupal\uc_order\OrderInterface
-   *   The called owner entity.
+   * @return $this
    */
   public function setPaymentMethodId($payment_method);
 
@@ -185,8 +181,7 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface,
    * @param \Drupal\uc_store\Address $address
    *   The address object.
    *
-   * @return \Drupal\uc_order\OrderInterface
-   *   The called owner entity.
+   * @return $this
    */
   public function setAddress($type, Address $address);
 
@@ -210,8 +205,7 @@ interface OrderInterface extends ContentEntityInterface, EntityChangedInterface,
    *   - string: A pre-formatted string describing the change. This is useful for
    *     logging details like payments.
    *
-   * @return \Drupal\uc_order\OrderInterface
-   *   The called owner entity.
+   * @return $this
    */
   public function logChanges(array $changes);
 
