@@ -17,13 +17,13 @@ function uc_ups_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('uc_ups_confirm_shipment', 3),
     'access arguments' => array('fulfill orders'),
-    'file' => 'uc_ups.ship.inc',
+    'file' => 'src/Plugin/Ubercart/FulfillmentMethod/uc_ups.ship.inc',
   );
   $items['admin/store/orders/%uc_order/shipments/labels/ups'] = array(
     'page callback' => 'theme',
     'page arguments' => array('uc_ups_label_image'),
     'access arguments' => array('fulfill orders'),
-    'file' => 'uc_ups.ship.inc',
+    'file' => 'src/Plugin/Ubercart/FulfillmentMethod/uc_ups.ship.inc',
   );
 
   return $items;
@@ -70,12 +70,12 @@ function uc_ups_theme() {
     ),
     'uc_ups_confirm_shipment' => array(
       'render element' => 'form',
-      'file' => 'uc_ups.ship.inc',
+      'file' => 'src/Plugin/Ubercart/FulfillmentMethod/uc_ups.ship.inc',
       'function' => 'theme_uc_ups_confirm_shipment',
     ),
     'uc_ups_label_image' => array(
       'variables' => array(),
-      'file' => 'uc_ups.ship.inc',
+      'file' => 'src/Plugin/Ubercart/FulfillmentMethod/uc_ups.ship.inc',
       'function' => 'theme_uc_ups_label_image',
     ),
   );
@@ -260,7 +260,7 @@ function uc_ups_uc_shipping_method() {
     'ship' => array(
       'type' => 'small_package',
       'callback' => 'uc_ups_fulfill_order',
-      'file' => 'uc_ups.ship.inc',
+      'file' => 'src/Plugin/Ubercart/FulfillmentMethod/uc_ups.ship.inc',
       'pkg_types' => \Drupal\uc_ups\UPSUtilities::packageTypes(),
     ),
     'cancel' => 'uc_ups_void_shipment',
