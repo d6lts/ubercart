@@ -521,7 +521,7 @@ function uc_order_actions(OrderInterface $order, $icon_html = FALSE) {
     if ($order->access('invoice')) {
       $actions['print'] = array(
         'title' => t('Print'),
-        'url' => Url::fromRoute('uc_order.user_invoice_print', ['uc_order' => $order->id()]),
+        'url' => Url::fromRoute('uc_order.user_invoice_print', ['user' => $user->id(), 'uc_order' => $order->id()]),
         'weight' => 5,
       );
     }
