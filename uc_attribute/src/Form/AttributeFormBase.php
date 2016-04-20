@@ -39,6 +39,7 @@ abstract class AttributeFormBase extends FormBase {
       '#title' => $this->t('Label'),
       '#description' => $this->t("Enter a label that customers will see instead of the attribute name. Use &lt;none&gt; if you don't want a title to appear at all."),
       '#default_value' => '',
+      '#maxlength' => 255,
     );
     $form['description'] = array(
       '#type' => 'textfield',

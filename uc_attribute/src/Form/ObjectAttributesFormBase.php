@@ -84,6 +84,7 @@ abstract class ObjectAttributesFormBase extends FormBase {
         '#title_display' => 'invisible',
         '#default_value' => empty($attribute->label) ? $attribute->name : $attribute->label,
         '#size' => 20,
+        '#maxlength' => 255,
       );
       $form['attributes'][$aid]['option'] = array(
         '#markup' => $option ? ($option->name . ' (' . uc_currency_format($option->price) . ')' ) : $this->t('n/a'),
