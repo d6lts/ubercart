@@ -53,3 +53,17 @@ panes:
     id: customer
   quotes:
     id: quotes
+
+ajax:
+  checkout:
+    'panes][delivery][address][delivery_country':
+      - payment-pane
+      - quotes-pane
+    'panes][delivery][address][delivery_postal_code':
+      - payment-pane
+      - quotes-pane
+    'panes][delivery][select_address':
+      - payment-pane
+      - quotes-pane
+    'panes][billing][address][billing_country':
+      - payment-pane

@@ -9,12 +9,15 @@ namespace Drupal\uc_ajax_admin\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\uc_store\AjaxAttachTrait;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Configures Ajax behaviours on the Ubercart checkout page.
  */
 class AjaxAdminForm extends FormBase {
+
+  use AjaxAttachTrait;
 
   /**
    * {@inheritdoc}
@@ -31,7 +34,6 @@ class AjaxAdminForm extends FormBase {
    *   'checkout' is supported.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $target_form = 'checkout') {
-    module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
     switch ($target_form) {
       case 'checkout':
         $triggers = _uc_ajax_admin_checkout_trigger_options(_uc_ajax_admin_build_checkout_form());
@@ -46,8 +48,7 @@ class AjaxAdminForm extends FormBase {
         throw new NotFoundHttpException();
     }
     $form['#uc_ajax_target'] = $target_form;
-    $config = $this->config('uc_cart.settings')->get('ajax.' . $target_form);
-    $form['#uc_ajax_config'] = $config ?: _uc_ajax_defaults($target_form);
+    $form['#uc_ajax_config'] = $this->config('uc_cart.settings')->get('ajax.' . $target_form) ?: [];
 
     $form['table'] = uc_ajax_admin_table($triggers, $wrappers, $form['#uc_ajax_config']);
     $form['actions'] = array(

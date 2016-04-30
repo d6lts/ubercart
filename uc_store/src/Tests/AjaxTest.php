@@ -8,6 +8,7 @@
 namespace Drupal\uc_store\Tests;
 
 use Drupal\uc_country\Entity\Country;
+use Drupal\uc_store\AjaxAttachTrait;
 
 /**
  * Tests Ajax updating of checkout and order pages.
@@ -15,6 +16,8 @@ use Drupal\uc_country\Entity\Country;
  * @group Ubercart
  */
 class AjaxTest extends UbercartTestBase {
+
+  use AjaxAttachTrait;
 
   public static $modules = array(/*'rules_admin', */'uc_payment', 'uc_payment_pack');
   public static $adminPermissions = array(/*'administer rules', 'bypass rules access'*/);
@@ -25,10 +28,6 @@ class AjaxTest extends UbercartTestBase {
   protected function setUp() {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
-
-    // module_load_include() has to be called after parent::setUp()
-    // because the moduler_handler service isn't initialized yet.
-    module_load_include('inc', 'uc_store', 'includes/uc_ajax_attach');
 
     // In order to test zone-based conditions, this particular test class
     // assumes that US is enabled and set as the store country.
@@ -93,10 +92,8 @@ class AjaxTest extends UbercartTestBase {
     // $this->addPaymentZoneCondition($other['id'], 'KS');
 
     // Specify that the billing zone should update the payment pane.
-    $config = _uc_ajax_defaults('checkout');
-    $config['panes][billing][address][zone'] = array('payment-pane' => 'payment-pane');
     \Drupal::configFactory()->getEditable('uc_cart.settings')
-      ->set('ajax.checkout', $config)
+      ->set('ajax.checkout.panes][billing][address][zone', ['payment-pane' => 'payment-pane'])
       ->save();
 
     // Go to the checkout page, verify that the conditional payment method is

@@ -61,11 +61,11 @@ class QuotePane extends CheckoutPanePluginBase {
     $contents['quotes'] += $order->quote_form;
 
     $form_state->set(['uc_ajax', 'uc_quote', 'panes][quotes][quote_button'], array(
-      'payment-pane' => 'uc_ajax_replace_checkout_pane',
-      'quotes-pane' => 'uc_ajax_replace_checkout_pane'
+      'payment-pane' => '::ajaxReplaceCheckoutPane',
+      'quotes-pane' => '::ajaxReplaceCheckoutPane'
     ));
     $form_state->set(['uc_ajax', 'uc_quote', 'panes][quotes][quotes][quote_option'], array(
-      'payment-pane' => 'uc_ajax_replace_checkout_pane',
+      'payment-pane' => '::ajaxReplaceCheckoutPane',
     ));
 
     return $contents;

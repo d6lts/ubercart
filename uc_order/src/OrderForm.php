@@ -11,12 +11,15 @@ use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\Plugin\OrderPaneManager;
+use Drupal\uc_store\AjaxAttachTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the Ubercart order form.
  */
 class OrderForm extends ContentEntityForm {
+
+  use AjaxAttachTrait;
 
   /**
    * The order pane plugin manager.
@@ -79,8 +82,7 @@ class OrderForm extends ContentEntityForm {
 
     $form = parent::form($form, $form_state);
 
-    $form_state->loadInclude('uc_store', 'inc', 'includes/uc_ajax_attach');
-    $form['#process'][] = 'uc_ajax_process_form';
+    $form['#process'][] = array($this, 'ajaxProcessForm');
 
     return $form;
   }

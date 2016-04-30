@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\uc_cart\Plugin\CheckoutPaneManager;
+use Drupal\uc_store\AjaxAttachTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * The checkout form built up from the enabled checkout panes.
  */
 class CheckoutForm extends FormBase {
+
+  use AjaxAttachTrait;
 
   /**
    * The checkout pane manager.
@@ -129,8 +132,7 @@ class CheckoutForm extends FormBase {
       '#button_type' => 'primary',
     );
 
-    $form_state->loadInclude('uc_store', 'inc', 'includes/uc_ajax_attach');
-    $form['#process'][] = 'uc_ajax_process_form';
+    $form['#process'][] = array($this, 'ajaxProcessForm');
 
     $this->session->remove('uc_checkout_review_' . $order->id());
     $this->session->remove('uc_checkout_complete_' . $order->id());
