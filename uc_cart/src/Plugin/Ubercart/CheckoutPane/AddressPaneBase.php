@@ -101,6 +101,8 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       $contents['address']['#hidden'] = $this->configuration['default_same_address'];
     }
 
+    // If this was an Ajax request, update form input values for the
+    // copy and select address features.
     if ($element = $form_state->getTriggeringElement()) {
       $input = $form_state->getUserInput();
 
@@ -110,7 +112,6 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
           if (substr($field, 0, strlen($source)) == $source) {
             $field = str_replace($source, $pane, $field);
             $input['panes'][$pane][$field] = $value;
-            $order->$field = $value;
           }
         }
       }
@@ -119,7 +120,6 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
         $address = $addresses[$element['#value']];
         foreach ($address as $field => $value) {
           $input['panes'][$pane][$field] = $value;
-          $order->{$pane . '_' . $field} = $value;
         }
         $contents['address']['#default_value'] = $order->getAddress($pane);
       }
@@ -147,6 +147,12 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
         else {
           $address->$field = $value;
         }
+      }
+    }
+    if (isset($panes[$pane]['select_address']) && $panes[$pane]['select_address'] >= 0) {
+      $addresses = uc_select_addresses(\Drupal::currentUser()->id(), $pane);
+      foreach ($addresses[$panes[$pane]['select_address']] as $field => $value) {
+        $address->$field = $value;
       }
     }
     $order->setAddress($pane, $address);

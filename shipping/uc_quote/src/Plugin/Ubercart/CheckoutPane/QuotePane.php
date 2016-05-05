@@ -58,6 +58,11 @@ class QuotePane extends CheckoutPanePluginBase {
       '#weight' => 1,
     );
 
+    // If this was an Ajax request, we reinvoke the 'prepare' op to ensure
+    // that we catch any changes in panes heavier than this one.
+    if ($form_state->getTriggeringElement()) {
+      $this->prepare($order, $form, $form_state);
+    }
     $contents['quotes'] += $order->quote_form;
 
     $form_state->set(['uc_ajax', 'uc_quote', 'panes][quotes][quote_button'], array(
