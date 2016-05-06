@@ -109,10 +109,7 @@ abstract class AddressPaneBase extends CheckoutPanePluginBase {
       if ($element['#name'] == "panes[$pane][copy_address]") {
         $address = &$form_state->getValue(['panes', $source]);
         foreach ($address as $field => $value) {
-          if (substr($field, 0, strlen($source)) == $source) {
-            $field = str_replace($source, $pane, $field);
-            $input['panes'][$pane][$field] = $value;
-          }
+          $input['panes'][$pane][$field] = $value;
         }
       }
 
