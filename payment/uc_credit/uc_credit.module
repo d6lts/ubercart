@@ -8,7 +8,6 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /** Just authorize an amount on a credit card account. */
 define('UC_CREDIT_AUTH_ONLY', 'authorize');

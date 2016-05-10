@@ -7,12 +7,10 @@
 
 namespace Drupal\uc_product\Controller;
 
-use Drupal\Core\Access\AccessInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller routines for product feature routes.

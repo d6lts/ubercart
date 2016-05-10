@@ -9,7 +9,6 @@ namespace Drupal\uc_quote\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\uc_store\Address;
 
 /**
  * Default shipping settings form.

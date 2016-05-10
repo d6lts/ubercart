@@ -9,7 +9,6 @@ namespace Drupal\uc_fulfillment;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\uc_order\OrderInterface;
 
 /**
  * Defines a base fulfillment method plugin implementation.

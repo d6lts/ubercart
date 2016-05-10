@@ -11,7 +11,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\uc_credit\CreditCardPaymentMethodBase;
 use Drupal\uc_order\OrderInterface;
-use GuzzleHttp\Exception\TransferException;
 
 /**
  * Defines the Authorize.net payment method.

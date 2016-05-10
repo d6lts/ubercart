@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_fulfillment\Plugin\Ubercart\OrderPane;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\uc_order\OrderPanePluginBase;
 use Drupal\uc_fulfillment\Shipment;
 use Drupal\uc_order\OrderInterface;

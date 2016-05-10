@@ -7,13 +7,7 @@
 
 namespace Drupal\uc_authorizenet\Controller;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Link;
-use Drupal\uc_order\Entity\Order;
-use GuzzleHttp\Exception\TransferException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Returns responses for PayPal routes.

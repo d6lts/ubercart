@@ -8,7 +8,6 @@
 namespace Drupal\uc_fulfillment;
 
 use Drupal\uc_order\Entity\OrderProduct;
-use Drupal\uc_store\Address;
 
 /**
  * Defines the Package class.

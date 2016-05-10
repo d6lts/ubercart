@@ -7,12 +7,10 @@
  * and tracking numbers.
  */
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\uc_order\Entity\Order;
 use Drupal\uc_order\OrderInterface;
 use Drupal\uc_fulfillment\Package;
 use Drupal\uc_fulfillment\Shipment;

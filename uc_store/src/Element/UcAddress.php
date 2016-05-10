@@ -8,7 +8,6 @@
 namespace Drupal\uc_store\Element;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\uc_store\Address;

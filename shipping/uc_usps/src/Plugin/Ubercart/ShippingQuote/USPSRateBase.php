@@ -10,9 +10,7 @@ namespace Drupal\uc_usps\Plugin\Ubercart\ShippingQuote;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\uc_order\OrderInterface;
-use Drupal\uc_order\Entity\OrderProduct;
 use Drupal\uc_quote\ShippingQuotePluginBase;
-use Drupal\uc_store\Address;
 
 /**
  * Common functionality for USPS shipping quotes plugins.

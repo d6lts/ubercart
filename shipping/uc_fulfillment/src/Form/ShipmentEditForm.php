@@ -7,7 +7,6 @@
 
 namespace Drupal\uc_fulfillment\Form;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;

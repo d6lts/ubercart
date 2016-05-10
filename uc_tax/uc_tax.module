@@ -13,7 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\uc_order\OrderInterface;
-use Drupal\uc_tax\Entity\TaxRate;
 
 /**
  * Implements hook_module_implements_alter().
