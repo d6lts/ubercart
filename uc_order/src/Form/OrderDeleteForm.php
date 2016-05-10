@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Form\OrderDeleteForm.
- */
-
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;

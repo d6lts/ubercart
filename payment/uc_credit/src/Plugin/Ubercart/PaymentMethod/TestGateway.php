@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_credit\Plugin\Ubercart\PaymentMethod\TestGateway.
- */
-
 namespace Drupal\uc_credit\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;

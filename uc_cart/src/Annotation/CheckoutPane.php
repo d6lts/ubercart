@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Annotation\CheckoutPane.
- */
-
 namespace Drupal\uc_cart\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

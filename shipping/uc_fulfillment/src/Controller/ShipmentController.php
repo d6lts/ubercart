@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Controller\Shipmentontroller.
- */
-
 namespace Drupal\uc_fulfillment\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

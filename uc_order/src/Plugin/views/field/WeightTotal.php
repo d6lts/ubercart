@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\views\field\WeightTotal.
- */
-
 namespace Drupal\uc_order\Plugin\views\field;
 
 use Drupal\uc_store\Plugin\views\field\Weight;

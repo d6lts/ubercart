@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_country\CountryInterface.
- */
-
 namespace Drupal\uc_country;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

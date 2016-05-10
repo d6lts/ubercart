@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\PaymentMethodListBuilder.
- */
-
 namespace Drupal\uc_payment;
 
 use Drupal\Core\Config\Entity\DraggableListBuilder;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\TaxRateListBuilder.
- */
-
 namespace Drupal\uc_tax;
 
 use Drupal\Core\Config\Entity\DraggableListBuilder;

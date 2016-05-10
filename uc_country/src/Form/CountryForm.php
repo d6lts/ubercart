@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_country\Form\CountryForm.
- */
-
 namespace Drupal\uc_country\Form;
 
 use Drupal\Core\Entity\EntityForm;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_role\Tests\RoleCheckoutTest.
- */
-
 namespace Drupal\uc_role\Tests;
 
 use Drupal\uc_order\Entity\Order;

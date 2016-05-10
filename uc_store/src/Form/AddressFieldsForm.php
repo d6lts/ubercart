@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Form\AddressFieldsForm.
- */
-
 namespace Drupal\uc_store\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

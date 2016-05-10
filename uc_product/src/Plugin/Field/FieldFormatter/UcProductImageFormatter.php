@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Plugin\Field\FieldFormatter\UcProductImageFormatter.
- */
-
 namespace Drupal\uc_product\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;

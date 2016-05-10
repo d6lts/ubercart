@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_paypal\Controller\PayPalController.
- */
-
 namespace Drupal\uc_paypal\Controller;
 
 use Drupal\Component\Utility\Unicode;

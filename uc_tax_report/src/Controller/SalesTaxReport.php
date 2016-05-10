@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax_report\SalesTaxReport.
- */
-
 namespace Drupal\uc_tax_report\Controller;
 
 use Drupal\Core\Url;

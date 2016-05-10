@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Annotation\UbercartFulfillmentMethod.
- */
-
 namespace Drupal\uc_fulfillment\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

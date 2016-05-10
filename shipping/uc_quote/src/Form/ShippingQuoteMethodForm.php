@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Form\ShippingQuoteMethodForm.
- */
-
 namespace Drupal\uc_quote\Form;
 
 use Drupal\Core\Entity\EntityForm;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod\PayPalWebsitePaymentsPro.
- */
-
 namespace Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Component\Utility\SafeMarkup;

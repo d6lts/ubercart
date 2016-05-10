@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Plugin\Ubercart\LineItem\TaxDisplay.
- */
-
 namespace Drupal\uc_tax\Plugin\Ubercart\LineItem;
 
 use Drupal\uc_order\LineItemPluginBase;

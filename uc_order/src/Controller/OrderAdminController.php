@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Controller\OrderAdminController.
- */
-
 namespace Drupal\uc_order\Controller;
 
 use Drupal\Component\Utility\SafeMarkup;

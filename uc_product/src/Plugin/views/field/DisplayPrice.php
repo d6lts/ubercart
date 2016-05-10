@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Plugin\views\field\DisplayPrice.
- */
-
 namespace Drupal\uc_product\Plugin\views\field;
 
 use Drupal\uc_store\Plugin\views\field\Price;

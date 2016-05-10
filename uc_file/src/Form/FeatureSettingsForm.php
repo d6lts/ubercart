@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_file\Form\FeatureSettingsForm.
- */
-
 namespace Drupal\uc_file\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

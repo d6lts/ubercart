@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Entity\OrderRouteProvider.
- */
-
 namespace Drupal\uc_order\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;

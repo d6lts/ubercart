@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_credit\Controller\CreditController.
- */
-
 namespace Drupal\uc_credit\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

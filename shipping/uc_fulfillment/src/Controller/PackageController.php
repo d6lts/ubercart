@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Controller\PackageController.
- */
-
 namespace Drupal\uc_fulfillment\Controller;
 
 

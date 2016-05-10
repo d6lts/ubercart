@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_attribute\Form\AttributeDeleteForm.
- */
-
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;

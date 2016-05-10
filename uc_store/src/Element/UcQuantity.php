@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Element\UcQuantity.
- */
-
 namespace Drupal\uc_store\Element;
 
 use Drupal\Core\Form\FormStateInterface;

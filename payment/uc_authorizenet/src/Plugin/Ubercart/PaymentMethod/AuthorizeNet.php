@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_authorizenet\Plugin\Ubercart\PaymentMethod\AuthorizeNet.
- */
-
 namespace Drupal\uc_authorizenet\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Tests\StoreTest.
- */
-
 namespace Drupal\uc_store\Tests;
 
 /**

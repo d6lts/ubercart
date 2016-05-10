@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax_report\Form\ParametersForm.
- */
-
 namespace Drupal\uc_tax_report\Form;
 
 use Drupal\Core\Datetime\DrupalDateTime;

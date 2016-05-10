@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Plugin\Ubercart\CheckoutPane\BillingAddressPane.
- */
-
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
 /**

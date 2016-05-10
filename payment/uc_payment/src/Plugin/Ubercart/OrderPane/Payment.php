@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Plugin\Ubercart\OrderPane\Payment.
- */
-
 namespace Drupal\uc_payment\Plugin\Ubercart\OrderPane;
 
 use Drupal\Core\Ajax\AjaxResponse;

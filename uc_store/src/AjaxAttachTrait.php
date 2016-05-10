@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\AjaxAttachTrait.
- */
-
 namespace Drupal\uc_store;
 
 use Drupal\Core\Ajax\AjaxResponse;

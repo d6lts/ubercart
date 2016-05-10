@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_catalog\TreeNode.
- */
-
 namespace Drupal\uc_catalog;
 
 /**

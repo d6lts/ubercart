@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\Action\PrintInvoiceAction.
- */
-
 namespace Drupal\uc_order\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

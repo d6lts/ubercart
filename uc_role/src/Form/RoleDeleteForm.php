@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_role\Form\RoleDeleteForm.
- */
-
 namespace Drupal\uc_role\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;

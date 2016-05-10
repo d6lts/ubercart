@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\CheckoutPanePluginInterface.
- */
-
 namespace Drupal\uc_cart;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

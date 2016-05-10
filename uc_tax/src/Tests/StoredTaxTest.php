@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Tests\StoredTaxTest.
- */
-
 namespace Drupal\uc_tax\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

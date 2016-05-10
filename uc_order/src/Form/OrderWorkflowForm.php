@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Form\OrderWorkflowForm.
- */
-
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

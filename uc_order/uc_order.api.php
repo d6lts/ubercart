@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\uc_order\OrderInterface;
-
 /**
  * @file
  * Hooks provided by the Order module.
@@ -11,6 +9,8 @@ use Drupal\uc_order\OrderInterface;
  * @addtogroup hooks
  * @{
  */
+
+use Drupal\uc_order\OrderInterface;
 
 /**
  * Alters the line item plugin definitions.

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_stock\Form\StockSettingsForm.
- */
-
 namespace Drupal\uc_stock\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

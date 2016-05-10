@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Plugin\Ubercart\ShippingQuote\FlatRate.
- */
-
 namespace Drupal\uc_quote\Plugin\Ubercart\ShippingQuote;
 
 use Drupal\Core\Form\FormStateInterface;

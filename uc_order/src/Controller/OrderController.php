@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Controller\OrderController.
- */
-
 namespace Drupal\uc_order\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

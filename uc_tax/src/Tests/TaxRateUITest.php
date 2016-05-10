@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Tests\TaxRateUITest.
- */
-
 namespace Drupal\uc_tax\Tests;
 
 /**

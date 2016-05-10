@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\EditableOrderPanePluginInterface.
- */
-
 namespace Drupal\uc_order;
 
 use Drupal\Core\Form\FormStateInterface;

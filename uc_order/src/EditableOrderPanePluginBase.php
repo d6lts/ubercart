@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\EditableOrderPanePluginBase.
- */
-
 namespace Drupal\uc_order;
 
 /**

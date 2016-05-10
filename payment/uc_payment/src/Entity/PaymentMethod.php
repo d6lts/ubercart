@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Entity\PaymentMethod.
- */
-
 namespace Drupal\uc_payment\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

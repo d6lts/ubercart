@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Plugin\Ubercart\CheckoutPane\QuotePane.
- */
-
 namespace Drupal\uc_quote\Plugin\Ubercart\CheckoutPane;
 
 use Drupal\Core\Form\FormStateInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Tests\AjaxTest.
- */
-
 namespace Drupal\uc_store\Tests;
 
 use Drupal\uc_country\Entity\Country;

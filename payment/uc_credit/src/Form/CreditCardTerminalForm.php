@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_credit\Form\CreditCardTerminalForm.
- */
-
 namespace Drupal\uc_credit\Form;
 
 use Drupal\Core\Form\FormBase;

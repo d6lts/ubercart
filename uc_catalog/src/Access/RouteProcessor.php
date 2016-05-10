@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_catalog\Access\RouteProcessor.
- */
-
 namespace Drupal\uc_catalog\Access;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

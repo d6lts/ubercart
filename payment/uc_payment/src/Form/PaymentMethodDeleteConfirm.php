@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Form\PaymentMethodDeleteConfirm.
- */
-
 namespace Drupal\uc_payment\Form;
 
 use Drupal\Core\Entity\Query\QueryFactory;

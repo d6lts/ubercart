@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Entity\ShippingQuoteMethod.
- */
-
 namespace Drupal\uc_quote\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

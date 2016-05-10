@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Form\FulfillmentMethodDeleteForm.
- */
-
 namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;

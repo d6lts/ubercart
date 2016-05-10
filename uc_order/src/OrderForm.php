@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\OrderFormController.
- */
-
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\ContentEntityForm;

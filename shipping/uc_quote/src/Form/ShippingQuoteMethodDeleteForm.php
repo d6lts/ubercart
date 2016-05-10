@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Form\ShippingQuoteMethodDeleteForm.
- */
-
 namespace Drupal\uc_quote\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;

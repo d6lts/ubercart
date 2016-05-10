@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\lib\uc_ups\UPSUtilities.
- */
-
 namespace Drupal\uc_ups;
 
 /**

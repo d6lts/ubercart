@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Annotation\UbercartTaxRate.
- */
-
 namespace Drupal\uc_tax\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

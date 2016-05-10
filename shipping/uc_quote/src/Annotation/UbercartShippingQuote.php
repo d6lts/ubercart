@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Annotation\UbercartShippingQuote.
- */
-
 namespace Drupal\uc_quote\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

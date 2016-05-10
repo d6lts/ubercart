@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Contains \Drupal\uc_country\CountryListBuilder.
- */
-
 namespace Drupal\uc_country;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

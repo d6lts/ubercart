@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\FulfillmentMethodListBuilder.
- */
-
 namespace Drupal\uc_fulfillment;
 
 use Drupal\Core\Config\Entity\DraggableListBuilder;

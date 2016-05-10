@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Form\AddressForm.
- */
-
 namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Component\Serialization\Json;

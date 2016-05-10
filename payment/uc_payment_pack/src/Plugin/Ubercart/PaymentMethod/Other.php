@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod\Other.
- */
-
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\uc_order\OrderInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Form\SelectCustomerForm.
- */
-
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;

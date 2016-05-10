@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Controller\CheckoutController.
- */
-
 namespace Drupal\uc_cart\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

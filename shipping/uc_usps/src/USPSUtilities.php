@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_usps\USPSUtilities.
- */
-
 namespace Drupal\uc_usps;
 
 /**

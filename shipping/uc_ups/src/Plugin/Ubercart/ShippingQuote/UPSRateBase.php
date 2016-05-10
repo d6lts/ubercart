@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_ups\Plugin\Ubercart\ShippingQuote\UPSRateBase.
- */
-
 namespace Drupal\uc_ups\Plugin\Ubercart\ShippingQuote;
 
 use Drupal\Core\Form\FormStateInterface;

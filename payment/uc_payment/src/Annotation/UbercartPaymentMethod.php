@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Annotation\UbercartPaymentMethod.
- */
-
 namespace Drupal\uc_payment\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

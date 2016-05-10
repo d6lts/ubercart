@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Plugin\Ubercart\TaxRate\PercentageTaxRate.
- */
-
 namespace Drupal\uc_tax\Plugin\Ubercart\TaxRate;
 
 use Drupal\Core\Form\FormStateInterface;

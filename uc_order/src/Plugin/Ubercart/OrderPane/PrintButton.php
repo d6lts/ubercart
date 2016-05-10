@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\Ubercart\OrderPane\PrintButton.
- */
-
 namespace Drupal\uc_order\Plugin\Ubercart\OrderPane;
 
 use Drupal\Core\Url;

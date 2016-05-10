@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\ShippingQuotePluginInterface.
- */
-
 namespace Drupal\uc_quote;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

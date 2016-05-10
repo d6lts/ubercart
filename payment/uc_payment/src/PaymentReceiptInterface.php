@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\PaymentReceiptInterface.
- */
-
 namespace Drupal\uc_payment;
 
 use Drupal\Core\Entity\ContentEntityInterface;

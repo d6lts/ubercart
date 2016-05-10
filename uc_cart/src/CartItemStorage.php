@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\CartItemStorage.
- */
-
 namespace Drupal\uc_cart;
 
 use Drupal\Core\Entity\EntityInterface;

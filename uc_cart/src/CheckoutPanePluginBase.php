@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\CheckoutPanePluginBase.
- */
-
 namespace Drupal\uc_cart;
 
 use Drupal\Core\Form\FormStateInterface;

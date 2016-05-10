@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod\CashOnDelivery.
- */
-
 namespace Drupal\uc_payment_pack\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Component\Utility\Html;

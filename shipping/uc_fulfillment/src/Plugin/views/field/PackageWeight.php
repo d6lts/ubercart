@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Plugin\views\field\PackageWeight.
- */
-
 namespace Drupal\uc_fulfillment\Plugin\views\field;
 
 use Drupal\uc_store\Plugin\views\field\Weight;

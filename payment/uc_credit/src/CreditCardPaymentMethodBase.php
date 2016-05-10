@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_credit\CreditCardPaymentMethodBase.
- */
-
 namespace Drupal\uc_credit;
 
 use Drupal\Core\Form\FormStateInterface;

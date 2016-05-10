@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Plugin\views\filter\Product.
- */
-
 namespace Drupal\uc_product\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\BooleanOperator;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\views\field\MoneyTotal.
- */
-
 namespace Drupal\uc_order\Plugin\views\field;
 
 /**

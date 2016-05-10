@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Form\PackageEditForm.
- */
-
 namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Component\Utility\Unicode;

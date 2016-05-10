@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_file\Controller\FileController.
- */
-
 namespace Drupal\uc_file\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

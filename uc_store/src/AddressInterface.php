@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\AddressInterface.
- */
-
 namespace Drupal\uc_store;
 
 

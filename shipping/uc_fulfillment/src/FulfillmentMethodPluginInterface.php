@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\FulfillmentMethodPluginInterface.
- */
-
 namespace Drupal\uc_fulfillment;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

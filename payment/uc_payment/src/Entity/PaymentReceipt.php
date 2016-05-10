@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Entity\PaymentReceipt.
- */
-
 namespace Drupal\uc_payment\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;

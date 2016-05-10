@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_catalog\CatalogBreadcrumbBuilder.
- */
-
 namespace Drupal\uc_catalog;
 
 use Drupal\Core\Breadcrumb\Breadcrumb;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_paypal\Controller\EcController.
- */
-
 namespace Drupal\uc_paypal\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

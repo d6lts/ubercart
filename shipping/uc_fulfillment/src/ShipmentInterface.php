@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\ShipmentInterface.
- */
-
 namespace Drupal\uc_fulfillment;
 
 use Drupal\uc_store\AddressInterface;

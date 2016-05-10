@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Tests\QuoteTest.
- */
-
 namespace Drupal\uc_quote\Tests;
 
 use Drupal\uc_country\Entity\Country;

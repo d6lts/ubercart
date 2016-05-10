@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Controller\ProductController.
- */
-
 namespace Drupal\uc_product\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

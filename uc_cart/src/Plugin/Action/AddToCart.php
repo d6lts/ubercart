@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Plugin\Action\AddToCart.
- */
-
 namespace Drupal\uc_cart\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

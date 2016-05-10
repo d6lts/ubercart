@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_catalog\Controller\CatalogAdminController.
- */
-
 namespace Drupal\uc_catalog\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\CartManagerInterface.
- */
-
 namespace Drupal\uc_cart;
 
 use Drupal\uc_order\OrderInterface;

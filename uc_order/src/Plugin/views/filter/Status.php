@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\views\filter\Status.
- */
-
 namespace Drupal\uc_order\Plugin\views\filter;
 
 use Drupal\uc_order\Entity\OrderStatus;

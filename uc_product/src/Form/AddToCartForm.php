@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Form\AddToCartForm.
- */
-
 namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\FormStateInterface;

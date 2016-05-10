@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Form\ShipmentEditForm.
- */
-
 namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Core\Datetime\DrupalDateTime;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_authorizenet\Controller\AuthorizeNetController.
- */
-
 namespace Drupal\uc_authorizenet\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

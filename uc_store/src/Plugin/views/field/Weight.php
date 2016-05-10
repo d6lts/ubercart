@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Plugin\views\field\Weight.
- */
-
 namespace Drupal\uc_store\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;

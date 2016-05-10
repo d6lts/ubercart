@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Form\TaxRateAddForm.
- */
-
 namespace Drupal\uc_tax\Form;
 
 use Drupal\Core\Form\FormStateInterface;

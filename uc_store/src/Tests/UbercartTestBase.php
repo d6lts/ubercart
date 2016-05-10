@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Tests\UbercartTestBase.
- */
-
 namespace Drupal\uc_store\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

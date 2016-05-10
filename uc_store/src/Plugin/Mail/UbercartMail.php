@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Plugin\Mail\UbercartMail.
- */
-
 namespace Drupal\uc_store\Plugin\Mail;
 
 use Drupal\Core\Mail\Plugin\Mail\PhpMail;

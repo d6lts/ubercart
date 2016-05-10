@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_credit\EventSubscriber\SessionDataSubscriber.
- */
-
 namespace Drupal\uc_credit\EventSubscriber;
 
 use Drupal\Core\Routing\RouteMatchInterface;

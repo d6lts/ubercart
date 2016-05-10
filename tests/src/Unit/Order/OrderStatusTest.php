@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\ubercart\Unit\Order\OrderStatusTest.
- */
-
 namespace Drupal\Tests\ubercart\Unit\Order;
 
 use Drupal\Tests\UnitTestCase;

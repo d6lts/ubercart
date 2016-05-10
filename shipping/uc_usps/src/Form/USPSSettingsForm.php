@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_usps\Form\USPSSettingsForm.
- */
-
 namespace Drupal\uc_usps\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

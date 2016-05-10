@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\PaymentMethodPluginBase.
- */
-
 namespace Drupal\uc_payment;
 
 use Drupal\Core\Form\FormStateInterface;

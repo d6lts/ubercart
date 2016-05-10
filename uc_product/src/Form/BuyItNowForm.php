@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Form\BuyItNowForm.
- */
-
 namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\BaseFormIdInterface;

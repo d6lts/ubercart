@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Form\TaxRateForm.
- */
-
 namespace Drupal\uc_tax\Form;
 
 use Drupal\Core\Entity\EntityForm;

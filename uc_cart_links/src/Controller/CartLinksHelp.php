@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart_links\Controller\CartLinksHelp.
- */
-
 namespace Drupal\uc_cart_links\Controller;
 
 use Drupal\Core\Url;

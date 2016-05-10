@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Plugin\views\field\ShipmentId.
- */
-
 namespace Drupal\uc_fulfillment\Plugin\views\field;
 
 use Drupal\Component\Utility\SafeMarkup;

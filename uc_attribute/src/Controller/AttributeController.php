@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_attribute\Controller\AttributeController.
- */
-
 namespace Drupal\uc_attribute\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

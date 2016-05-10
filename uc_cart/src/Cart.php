@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Cart.
- */
-
 namespace Drupal\uc_cart;
 
 use Drupal\Component\Utility\UrlHelper;

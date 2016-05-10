@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_catalog\Plugin\Block\CatalogBlock.
- */
-
 namespace Drupal\uc_catalog\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

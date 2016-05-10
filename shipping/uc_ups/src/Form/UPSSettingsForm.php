@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_ups\Form\UPSSettingsForm.
- */
-
 namespace Drupal\uc_ups\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

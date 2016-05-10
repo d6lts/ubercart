@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\views\argument_validator\CurrentUserOrPermission.
- */
-
 namespace Drupal\uc_order\Plugin\views\argument_validator;
 
 use Drupal\Core\Form\FormStateInterface;

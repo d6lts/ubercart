@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Plugin\Ubercart\CheckoutPane\PaymentMethodPane.
- */
-
 namespace Drupal\uc_payment\Plugin\Ubercart\CheckoutPane;
 
 use Drupal\Component\Plugin\Exception\PluginException;

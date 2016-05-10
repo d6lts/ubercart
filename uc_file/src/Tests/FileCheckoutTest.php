@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_file\Tests\FileCheckoutTest.
- */
-
 namespace Drupal\uc_file\Tests;
 
 use Drupal\uc_order\Entity\Order;

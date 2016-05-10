@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_attribute\Form\ProductAdjustmentsForm.
- */
-
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Component\Utility\SafeMarkup;

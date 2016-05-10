@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Controller\PaymentMethodController.
- */
-
 namespace Drupal\uc_payment\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

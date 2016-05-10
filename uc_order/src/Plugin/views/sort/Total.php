@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Plugin\views\sort\Total.
- */
-
 namespace Drupal\uc_order\Plugin\views\sort;
 
 /**

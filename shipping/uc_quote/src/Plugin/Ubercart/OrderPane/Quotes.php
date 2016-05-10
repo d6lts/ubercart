@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Plugin\Ubercart\OrderPane\Quotes.
- */
-
 namespace Drupal\uc_quote\Plugin\Ubercart\OrderPane;
 
 use Drupal\Core\Ajax\AjaxResponse;

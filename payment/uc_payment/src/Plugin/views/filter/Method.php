@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Plugin\views\filter\Method.
- */
-
 namespace Drupal\uc_payment\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\InOperator;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_role\Form\FeatureSettingsForm.
- */
-
 namespace Drupal\uc_role\Form;
 
 use Drupal\Core\Datetime\DrupalDateTime;

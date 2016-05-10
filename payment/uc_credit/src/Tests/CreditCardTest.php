@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_credit\Tests\CreditCardTest.
- */
-
 namespace Drupal\uc_credit\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

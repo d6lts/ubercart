@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Access\ProductTypeAccessCheck.
- */
-
 namespace Drupal\uc_product\Access;
 
 use Drupal\Core\Access\AccessResult;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_report\Form\CustomSalesReport.
- */
-
 namespace Drupal\uc_report\Form;
 
 use Drupal\Core\Form\FormBase;

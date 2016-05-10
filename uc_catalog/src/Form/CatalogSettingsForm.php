@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_catalog\Form\CatalogSettingsForm.
- */
-
 namespace Drupal\uc_catalog\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

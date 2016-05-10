@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\CartItemViewsData.
- */
-
 namespace Drupal\uc_cart;
 
 use Drupal\views\EntityViewsData;

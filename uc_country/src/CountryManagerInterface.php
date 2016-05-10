@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_country\CountryManagerInterface.
- */
-
 namespace Drupal\uc_country;
 
 /**

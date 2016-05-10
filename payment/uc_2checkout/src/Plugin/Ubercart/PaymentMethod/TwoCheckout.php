@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_2checkout\Plugin\Ubercart\PaymentMethod\TwoCheckout.
- */
-
 namespace Drupal\uc_2checkout\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Component\Utility\Unicode;

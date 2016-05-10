@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Plugin\PaymentMethodManager.
- */
-
 namespace Drupal\uc_payment\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;

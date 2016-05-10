@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Controller\ShippingQuoteMethodController.
- */
-
 namespace Drupal\uc_quote\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

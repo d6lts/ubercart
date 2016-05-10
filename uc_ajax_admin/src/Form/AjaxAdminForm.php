@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_ajax_admin\Form\AjaxAdminForm.
- */
-
 namespace Drupal\uc_ajax_admin\Form;
 
 use Drupal\Core\Form\FormBase;

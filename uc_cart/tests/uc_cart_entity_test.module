@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Dummy module for testing uc_cart hooks.
+ */
+
+/**
  * Implements hook_uc_cart_item_insert().
  */
 function uc_cart_entity_test_uc_cart_item_insert($entity) {

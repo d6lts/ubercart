@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Controller\FulfillmentController.
- */
-
 namespace Drupal\uc_fulfillment\Controller;
 
 use Drupal\Core\Access\AccessResult;

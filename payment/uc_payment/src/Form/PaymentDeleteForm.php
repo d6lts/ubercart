@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Form\PaymentDeleteForm.
- */
-
 namespace Drupal\uc_payment\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;

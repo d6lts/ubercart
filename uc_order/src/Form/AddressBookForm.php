@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Form\AddressBookForm.
- */
-
 namespace Drupal\uc_order\Form;
 
 use Drupal\Core\Form\FormBase;

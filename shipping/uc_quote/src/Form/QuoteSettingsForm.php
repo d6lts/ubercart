@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Form\QuoteSettingsForm.
- */
-
 namespace Drupal\uc_quote\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_country\Tests\CountryTest.
- */
-
 namespace Drupal\uc_country\Tests;
 
 use Drupal\Component\Utility\Html;

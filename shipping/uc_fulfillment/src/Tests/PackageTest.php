@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Tests\PackageTest.
- */
-
 namespace Drupal\uc_fulfillment\Tests;
 
 use Drupal\uc_order\Entity\Order;

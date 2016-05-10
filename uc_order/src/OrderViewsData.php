@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\OrderViewsData.
- */
-
 namespace Drupal\uc_order;
 
 use Drupal\views\EntityViewsData;

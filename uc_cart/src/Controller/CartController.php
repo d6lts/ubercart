@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Controller\CartController.
- */
-
 namespace Drupal\uc_cart\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

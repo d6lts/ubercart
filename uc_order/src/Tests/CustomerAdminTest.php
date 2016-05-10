@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Tests\CustomerAdminTest.
- */
-
 namespace Drupal\uc_order\Tests;
 
 use Drupal\uc_country\Entity\Country;

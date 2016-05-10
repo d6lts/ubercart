@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Plugin\Block\CartBlock.
- */
-
 namespace Drupal\uc_cart\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

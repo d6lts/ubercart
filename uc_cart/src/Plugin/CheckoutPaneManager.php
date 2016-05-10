@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Plugin\CheckoutPaneManager.
- */
-
 namespace Drupal\uc_cart\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;

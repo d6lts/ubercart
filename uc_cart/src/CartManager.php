@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\CartManager.
- */
-
 namespace Drupal\uc_cart;
 
 use Drupal\Core\Session\AccountProxyInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_country\UcCountryServiceProvider.
- */
-
 namespace Drupal\uc_country;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

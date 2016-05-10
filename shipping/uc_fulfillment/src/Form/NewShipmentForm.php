@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Form\NewShipmentForm.
- */
-
 namespace Drupal\uc_fulfillment\Form;
 
 use Drupal\Core\Form\FormBase;

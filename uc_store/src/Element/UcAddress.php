@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Element\UcAddress.
- */
-
 namespace Drupal\uc_store\Element;
 
 use Drupal\Component\Utility\Html;

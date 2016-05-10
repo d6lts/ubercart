@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\Ubercart\OrderPane\LineItems.
- */
-
 namespace Drupal\uc_order\Plugin\Ubercart\OrderPane;
 
 use Drupal\Core\Ajax\AjaxResponse;

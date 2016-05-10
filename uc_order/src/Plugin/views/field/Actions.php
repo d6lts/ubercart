@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\views\field\Actions.
- */
-
 namespace Drupal\uc_order\Plugin\views\field;
 
 use Drupal\uc_order\Entity\Order;

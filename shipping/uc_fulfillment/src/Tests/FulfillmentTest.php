@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Tests\FulfillmentTest.
- */
-
 namespace Drupal\uc_fulfillment\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;

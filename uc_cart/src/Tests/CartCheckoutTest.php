@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Tests\CartCheckoutTest.
- */
-
 namespace Drupal\uc_cart\Tests;
 
 use Drupal\uc_cart\CartInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Plugin\Ubercart\OrderPane\Tracking.
- */
-
 namespace Drupal\uc_fulfillment\Plugin\Ubercart\OrderPane;
 
 use Drupal\uc_order\OrderPanePluginBase;

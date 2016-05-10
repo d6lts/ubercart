@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\ParamConverter\ShipmentConverter.
- */
-
 namespace Drupal\uc_fulfillment\ParamConverter;
 
 use Drupal\Core\ParamConverter\ParamConverterInterface;

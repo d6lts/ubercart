@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_paypal\src\Form\EcReviewForm.
- */
-
 namespace Drupal\uc_paypal\Form;
 
 use Drupal\Core\Form\FormBase;

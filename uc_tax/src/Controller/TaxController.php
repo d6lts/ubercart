@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Controller\TaxController.
- */
-
 namespace Drupal\uc_tax\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

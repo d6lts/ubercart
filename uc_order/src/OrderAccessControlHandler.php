@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\OrderAccessControlHandler.
- */
-
 namespace Drupal\uc_order;
 
 use Drupal\Core\Access\AccessResult;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Shipment.
- */
-
 namespace Drupal\uc_fulfillment;
 
 use Drupal\uc_order\Entity\Order;

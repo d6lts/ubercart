@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\Plugin\views\field\Method.
- */
-
 namespace Drupal\uc_payment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;

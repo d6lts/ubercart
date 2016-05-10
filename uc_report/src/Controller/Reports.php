@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_report\Controller\Reports.
- */
-
 namespace Drupal\uc_report\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

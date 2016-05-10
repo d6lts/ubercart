@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Plugin\Field\FieldType\UcDimensionsItem.
- */
-
 namespace Drupal\uc_product\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldDefinitionInterface;

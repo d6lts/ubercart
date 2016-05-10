@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Plugin\FulfillmentMethodPluginManager.
- */
-
 namespace Drupal\uc_fulfillment\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;

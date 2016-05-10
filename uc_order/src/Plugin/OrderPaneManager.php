@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\OrderPaneManager.
- */
-
 namespace Drupal\uc_order\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;

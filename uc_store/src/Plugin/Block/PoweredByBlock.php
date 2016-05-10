@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Plugin\Block\PoweredByBlock.
- */
-
 namespace Drupal\uc_store\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;

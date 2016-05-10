@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\MarstonEncryption.
- */
-
 namespace Drupal\uc_store;
 
 use Drupal\Component\Utility\Unicode;

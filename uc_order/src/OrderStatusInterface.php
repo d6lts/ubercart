@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\OrderStatusInterface.
- */
-
 namespace Drupal\uc_order;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

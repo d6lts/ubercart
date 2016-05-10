@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\OrderProductViewBuilder.
- */
-
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\EntityViewBuilder;

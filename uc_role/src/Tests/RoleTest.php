@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_role\Tests\RoleTest.
- */
-
 namespace Drupal\uc_role\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;

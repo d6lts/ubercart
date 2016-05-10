@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Tests\EncryptionTest.
- */
-
 namespace Drupal\uc_store\Tests;
 
 use Drupal\simpletest\WebTestBase;

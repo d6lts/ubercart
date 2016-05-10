@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Form\CartSettingsForm.
- */
-
 namespace Drupal\uc_cart\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

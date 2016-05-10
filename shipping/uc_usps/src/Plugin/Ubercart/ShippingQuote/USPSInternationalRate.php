@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_usps\Plugin\Ubercart\ShippingQuote\USPSInternationalRate.
- */
-
 namespace Drupal\uc_usps\Plugin\Ubercart\ShippingQuote;
 
 use Drupal\Core\Form\FormStateInterface;

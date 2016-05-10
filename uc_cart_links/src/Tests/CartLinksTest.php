@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart_links\Tests\CartLinksTest.
- */
-
 namespace Drupal\uc_cart_links\Tests;
 
 use Drupal\Core\Url;

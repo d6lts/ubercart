@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Plugin\views\field\BuyItNow.
- */
-
 namespace Drupal\uc_product\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;

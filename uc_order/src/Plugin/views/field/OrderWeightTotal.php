@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\views\field\OrderWeightTotal.
- */
-
 namespace Drupal\uc_order\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;

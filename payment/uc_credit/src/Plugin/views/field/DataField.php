@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_credit\Plugin\views\field\DataField.
- */
-
 namespace Drupal\uc_credit\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;

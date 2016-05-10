@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment_pack\Tests\CashOnDeliveryTest.
- */
-
 namespace Drupal\uc_payment_pack\Tests;
 
 use Drupal\uc_order\Entity\Order;

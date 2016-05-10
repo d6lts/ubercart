@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Annotation\UbercartOrderPane.
- */
-
 namespace Drupal\uc_order\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

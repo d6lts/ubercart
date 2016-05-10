@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\FulfillmentMethodInterface.
- */
-
 namespace Drupal\uc_fulfillment;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

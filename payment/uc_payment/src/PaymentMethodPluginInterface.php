@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment\PaymentMethodPluginInterface.
- */
-
 namespace Drupal\uc_payment;
 
 use Drupal\Component\Plugin\ConfigurablePluginInterface;

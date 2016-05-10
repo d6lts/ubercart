@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_attribute\Form\ProductAttributesForm.
- */
-
 namespace Drupal\uc_attribute\Form;
 
 use Drupal\Core\Form\FormStateInterface;

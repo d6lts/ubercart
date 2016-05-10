@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_2checkout\Controller\TwoCheckoutController.
- */
-
 namespace Drupal\uc_2checkout\Controller;
 
 use Drupal\Component\Utility\SafeMarkup;

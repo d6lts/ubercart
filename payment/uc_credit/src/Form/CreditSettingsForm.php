@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_credit\Form\CreditSettingsForm.
- */
-
 namespace Drupal\uc_credit\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

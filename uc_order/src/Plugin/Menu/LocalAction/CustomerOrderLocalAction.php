@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\Menu\LocalAction\CustomerOrderLocalAction.
- */
-
 namespace Drupal\uc_order\Plugin\Menu\LocalAction;
 
 use Drupal\Core\Menu\LocalActionDefault;

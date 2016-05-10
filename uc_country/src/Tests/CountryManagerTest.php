@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_country\Tests\CountryManagerTest.
- */
-
 namespace Drupal\uc_country\Tests;
 
 use Drupal\simpletest\WebTestBase;

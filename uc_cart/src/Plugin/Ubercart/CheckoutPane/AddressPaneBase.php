@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Plugin\Ubercart\CheckoutPane\AddressPaneBase.
- */
-
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
 use Drupal\Core\Ajax\AjaxResponse;

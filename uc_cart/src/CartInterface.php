@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\CartInterface.
- */
-
 namespace Drupal\uc_cart;
 
 /**

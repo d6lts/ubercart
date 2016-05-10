@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Ajax\CommandWrapper.
- */
-
 namespace Drupal\uc_store\Ajax;
 
 use Drupal\Core\Ajax\CommandInterface;

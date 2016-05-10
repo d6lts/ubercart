@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Tests\CheckoutSettingsTest.
- */
-
 namespace Drupal\uc_cart\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;

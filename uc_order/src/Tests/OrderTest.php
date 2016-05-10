@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Tests\OrderTest.
- */
-
 namespace Drupal\uc_order\Tests;
 
 use Drupal\Component\Utility\SafeMarkup;

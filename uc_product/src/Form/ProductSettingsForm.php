@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Form\ProductSettingsForm.
- */
-
 namespace Drupal\uc_product\Form;
 
 use Drupal\Core\Form\ConfigFormBase;

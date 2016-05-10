@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_country\Entity\Country.
- */
-
 namespace Drupal\uc_country\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

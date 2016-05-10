@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_country\Controller\CountryController.
- */
-
 namespace Drupal\uc_country\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

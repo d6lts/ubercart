@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_catalog\Tests\CatalogBreadcrumbTest.
- */
-
 namespace Drupal\uc_catalog\Tests;
 
 use Drupal\Core\Language\Language;

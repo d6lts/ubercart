@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\FulfillmentMethodPluginBase.
- */
-
 namespace Drupal\uc_fulfillment;
 
 use Drupal\Core\Form\FormStateInterface;

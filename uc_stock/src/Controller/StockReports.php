@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_stock\Controller\StockReports.
- */
-
 namespace Drupal\uc_stock\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

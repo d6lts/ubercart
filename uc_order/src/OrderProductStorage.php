@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\OrderProductStorage.
- */
-
 namespace Drupal\uc_order;
 
 use Drupal\Core\Entity\EntityInterface;

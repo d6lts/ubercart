@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_product\Plugin\Field\FieldWidget\UcDimensionsWidget.
- */
-
 namespace Drupal\uc_product\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;

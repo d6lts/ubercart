@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart_links\Form\CartLinksForm.
- */
-
 namespace Drupal\uc_cart_links\Form;
 
 use Drupal\Component\Utility\Unicode;

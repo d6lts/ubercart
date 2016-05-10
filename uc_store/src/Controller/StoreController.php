@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_store\Controller\StoreController.
- */
-
 namespace Drupal\uc_store\Controller;
 
 use Drupal\system\Controller\SystemController;

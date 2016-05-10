@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Plugin\Ubercart\LineItem\Shipping.
- */
-
 namespace Drupal\uc_quote\Plugin\Ubercart\LineItem;
 
 use Drupal\uc_order\LineItemPluginBase;

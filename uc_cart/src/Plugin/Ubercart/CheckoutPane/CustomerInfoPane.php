@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_cart\Plugin\Ubercart\CheckoutPane\CustomerInfoPane.
- */
-
 namespace Drupal\uc_cart\Plugin\Ubercart\CheckoutPane;
 
 use Drupal\Core\Form\FormStateInterface;

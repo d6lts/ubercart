@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_tax\Tests\TaxTestBase.
- */
-
 namespace Drupal\uc_tax\Tests;
 
 use Drupal\uc_store\Tests\UbercartTestBase;

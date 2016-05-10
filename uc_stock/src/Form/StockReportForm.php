@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_stock\Form\StockReportForm.
- */
-
 namespace Drupal\uc_stock\Form;
 
 use Drupal\Core\Form\FormBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod\PayPalExpressCheckout.
- */
-
 namespace Drupal\uc_paypal\Plugin\Ubercart\PaymentMethod;
 
 use Drupal\Core\Form\FormStateInterface;

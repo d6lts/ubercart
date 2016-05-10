@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_quote\Plugin\ShippingQuotePluginManager.
- */
-
 namespace Drupal\uc_quote\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;

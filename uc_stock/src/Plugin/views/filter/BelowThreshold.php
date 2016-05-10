@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_stock\Plugin\views\filter\BelowThreshold.
- */
-
 namespace Drupal\uc_stock\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\BooleanOperator;

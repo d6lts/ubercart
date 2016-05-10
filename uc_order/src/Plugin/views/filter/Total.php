@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\views\filter\Total.
- */
-
 namespace Drupal\uc_order\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\filter\GroupByNumeric;

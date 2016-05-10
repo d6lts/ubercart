@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_fulfillment\Plugin\Ubercart\FulfillmentMethod\Manual.
- */
-
 namespace Drupal\uc_fulfillment\Plugin\Ubercart\FulfillmentMethod;
 
 use Drupal\Core\Form\FormStateInterface;

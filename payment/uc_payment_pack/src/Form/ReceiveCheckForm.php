@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_payment_pack\Form\ReceiveCheckForm.
- */
-
 namespace Drupal\uc_payment_pack\Form;
 
 use Drupal\Core\Datetime\DrupalDateTime;

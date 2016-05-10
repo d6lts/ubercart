@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\Plugin\Ubercart\LineItem\Subtotal.
- */
-
 namespace Drupal\uc_order\Plugin\Ubercart\LineItem;
 
 use Drupal\uc_order\LineItemPluginBase;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\uc_order\LineItemPluginInterface.
- */
-
 namespace Drupal\uc_order;
 
 /**
