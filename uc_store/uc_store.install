@@ -52,9 +52,9 @@ function uc_store_install() {
   // Set mail handler for all Ubercart modules
   $mail_config = \Drupal::configFactory()->getEditable('system.mail');
   $mail_config
-    ->set('interface.uc_cart',  'ubercart_mail')
+    ->set('interface.uc_cart', 'ubercart_mail')
     ->set('interface.uc_order', 'ubercart_mail')
-    ->set('interface.uc_file',  'ubercart_mail')
+    ->set('interface.uc_file', 'ubercart_mail')
     ->set('interface.uc_role', 'ubercart_mail')
     ->set('interface.uc_stock', 'ubercart_mail')
     ->set('interface.uc_store', 'ubercart_mail')

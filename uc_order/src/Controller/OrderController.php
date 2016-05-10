@@ -81,7 +81,7 @@ class OrderController extends ControllerBase {
     foreach ($result as $change) {
       $rows[] = array(
         \Drupal::service('date.formatter')->format($change->created, 'short'),
-        array('data' => array('#theme' => 'username',  '#account' => User::load($change->uid))),
+        array('data' => array('#theme' => 'username', '#account' => User::load($change->uid))),
         array('data' => array('#markup' => $change->changes)),
       );
     }

@@ -108,7 +108,7 @@ class TaxRateListBuilder extends DraggableListBuilder implements FormInterface {
     $build['#links']['clone'] = array(
       'title' => $this->t('Clone'),
       'url' => Url::fromRoute('entity.uc_tax_rate.clone', ['uc_tax_rate' => $entity->id()]),
-      'weight' => 10,  // 'edit' is 0, 'delete' is 100
+      'weight' => 10, // 'edit' is 0, 'delete' is 100
     );
 
     uasort($build['#links'], 'Drupal\Component\Utility\SortArray::sortByWeightElement');
@@ -192,7 +192,7 @@ class TaxRateListBuilder extends DraggableListBuilder implements FormInterface {
       '#markup' => $this->t("<p>This is a list of the tax rates currently"
         . " defined on your Drupal site.</p><p>You may use the 'Add tax rate'"
         . " button to add a new rate, or use the widget in the 'Operations'"
-	. " column to edit, delete, enable/disable, or clone existing tax rates."
+        . " column to edit, delete, enable/disable, or clone existing tax rates."
         . " Rates that are disabled will not be applied at checkout and will not"
         . " be included in product prices.</p>"
         . "<p>Taxes are sorted by weight and then applied to the order sequentially."

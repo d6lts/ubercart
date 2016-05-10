@@ -51,7 +51,7 @@ class Tracking extends OrderPanePluginBase {
           $build[$title] = array(
             '#theme' => 'item_list',
             '#title' => $title,
-            '#items' => $list,  // @todo #plain_text ?
+            '#items' => $list, // @todo #plain_text ?
           );
         }
         if (empty($tracking)) {

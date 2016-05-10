@@ -54,7 +54,7 @@ class TaxRateListBuilder extends ConfigEntityListBuilder {
     $build['#links']['clone'] = array(
       'title' => $this->t('Clone'),
       'url' => Url::fromRoute('entity.uc_tax_rate.clone', ['uc_tax_rate' => $entity->id()]),
-      'weight' => 10,  // 'edit' is 0, 'delete' is 100
+      'weight' => 10, // 'edit' is 0, 'delete' is 100
     );
 
     uasort($build['#links'], 'Drupal\Component\Utility\SortArray::sortByWeightElement');

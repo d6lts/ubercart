@@ -697,7 +697,7 @@ class CartLinksTest extends UbercartTestBase {
     }
 
     $page = array(
-      'type' => 'page',  // This is default anyway ...
+      'type' => 'page', // This is default anyway ...
       'body' => array(
         0 => array(
           'value' => !empty($links) ? \Drupal::service('renderer')->renderPlain($item_list) : $this->randomMachineName(128),
