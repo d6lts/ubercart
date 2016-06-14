@@ -11,6 +11,12 @@ use Drupal\uc_quote\ShippingQuoteMethodInterface;
  * @ConfigEntityType(
  *   id = "uc_quote_method",
  *   label = @Translation("Shipping quote"),
+ *   label_singular = @Translation("shipping quote"),
+ *   label_plural = @Translation("shipping quotes"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count shipping quote",
+ *     plural = "@count shipping quotes",
+ *   ),
  *   handlers = {
  *     "list_builder" = "Drupal\uc_quote\ShippingQuoteMethodListBuilder",
  *     "form" = {

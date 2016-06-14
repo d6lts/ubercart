@@ -11,6 +11,12 @@ use Drupal\uc_tax\TaxRateInterface;
  * @ConfigEntityType(
  *   id = "uc_tax_rate",
  *   label = @Translation("Tax rate"),
+ *   label_singular = @Translation("tax rate"),
+ *   label_plural = @Translation("tax rates"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count tax rate",
+ *     plural = "@count tax rates",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\Core\Entity\EntityAccessControlHandler",
  *     "list_builder" = "Drupal\uc_tax\TaxRateListBuilder",

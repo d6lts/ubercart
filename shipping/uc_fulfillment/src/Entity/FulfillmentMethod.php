@@ -11,6 +11,12 @@ use Drupal\uc_fulfillment\FulfillmentMethodInterface;
  * @ConfigEntityType(
  *   id = "uc_fulfillment_method",
  *   label = @Translation("Fulfillment method"),
+ *   label_singular = @Translation("fulfillment method"),
+ *   label_plural = @Translation("fulfillment methods"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count fulfillment method",
+ *     plural = "@count fulfillment methods",
+ *   ),
  *   handlers = {
  *     "list_builder" = "Drupal\uc_fulfillment\FulfillmentMethodListBuilder",
  *     "form" = {

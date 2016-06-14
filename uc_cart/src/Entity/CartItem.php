@@ -16,6 +16,12 @@ use Drupal\uc_order\Entity\OrderProduct;
  * @ContentEntityType(
  *   id = "uc_cart_item",
  *   label = @Translation("Cart item"),
+ *   label_singular = @Translation("cart item"),
+ *   label_plural = @Translation("cart items"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count cart item",
+ *     plural = "@count cart items",
+ *   ),
  *   module = "uc_cart",
  *   handlers = {
  *     "storage" = "Drupal\uc_cart\CartItemStorage",

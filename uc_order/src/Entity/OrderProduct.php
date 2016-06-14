@@ -13,6 +13,12 @@ use Drupal\uc_order\OrderProductInterface;
  * @ContentEntityType(
  *   id = "uc_order_product",
  *   label = @Translation("Order product"),
+ *   label_singular = @Translation("order product"),
+ *   label_plural = @Translation("order products"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count order product",
+ *     plural = "@count order products",
+ *   ),
  *   module = "uc_order",
  *   handlers = {
  *     "storage" = "Drupal\uc_order\OrderProductStorage",

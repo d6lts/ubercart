@@ -12,6 +12,12 @@ use Drupal\uc_order\OrderStatusInterface;
  * @ConfigEntityType(
  *   id = "uc_order_status",
  *   label = @Translation("Order status"),
+ *   label_singular = @Translation("order status"),
+ *   label_plural = @Translation("order statuses"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count order status",
+ *     plural = "@count order statuses",
+ *   ),
  *   admin_permission = "administer order workflow",
  *   config_prefix = "status",
  *   entity_keys = {

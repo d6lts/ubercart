@@ -12,6 +12,12 @@ use Drupal\uc_country\CountryInterface;
  * @ConfigEntityType(
  *   id = "uc_country",
  *   label = @Translation("Country"),
+ *   label_singular = @Translation("country"),
+ *   label_plural = @Translation("countries"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count country",
+ *     plural = "@count countries",
+ *   ),
  *   handlers = {
  *     "access" = "Drupal\Core\Entity\EntityAccessControlHandler",
  *     "list_builder" = "Drupal\uc_country\CountryListBuilder",

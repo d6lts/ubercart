@@ -18,6 +18,12 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "uc_order",
  *   label = @Translation("Order"),
+ *   label_singular = @Translation("order"),
+ *   label_plural = @Translation("orders"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count order",
+ *     plural = "@count orders",
+ *   ),
  *   module = "uc_order",
  *   handlers = {
  *     "view_builder" = "Drupal\uc_order\OrderViewBuilder",

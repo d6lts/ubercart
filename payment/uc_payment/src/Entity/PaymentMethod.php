@@ -12,6 +12,12 @@ use Drupal\uc_payment\PaymentMethodInterface;
  * @ConfigEntityType(
  *   id = "uc_payment_method",
  *   label = @Translation("Payment method"),
+ *   label_singular = @Translation("payment method"),
+ *   label_plural = @Translation("payment methods"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count payment method",
+ *     plural = "@count payment methods",
+ *   ),
  *   handlers = {
  *     "list_builder" = "Drupal\uc_payment\PaymentMethodListBuilder",
  *     "form" = {

@@ -13,6 +13,12 @@ use Drupal\uc_payment\PaymentReceiptInterface;
  * @ContentEntityType(
  *   id = "uc_payment_receipt",
  *   label = @Translation("Payment receipt"),
+ *   label_singular = @Translation("payment receipt"),
+ *   label_plural = @Translation("payment receipts"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count payment receipt",
+ *     plural = "@count payment receipts",
+ *   ),
  *   module = "uc_payment",
  *   base_table = "uc_payment_receipts",
  *   entity_keys = {
