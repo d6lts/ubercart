@@ -108,7 +108,7 @@ function uc_attribute_uc_product_settings_form_submit($form, FormStateInterface 
     ->save();
 
   // Clear node entity cache, to force re-rendering of attribute forms.
-  \Drupal::entityManager()->getViewBuilder('node')->resetCache();
+  \Drupal::entityTypeManager()->getViewBuilder('node')->resetCache();
 }
 
 /**

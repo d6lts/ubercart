@@ -367,7 +367,7 @@ function uc_product_form_node_type_form_alter(&$form, FormStateInterface $form_s
   $entity_type = $type->getEntityType();
   if (!empty($entity_type)) {
     $options = array('' => t('None'));
-    $instances = \Drupal::entityManager()->getFieldDefinitions('node', $type->id());
+    $instances = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', $type->id());
     foreach ($instances as $field_name => $instance) {
       if ($instance->getType() == 'image') {
         $options[$field_name] = $instance->label();
@@ -586,7 +586,7 @@ function uc_product_uc_product_types() {
  * @see uc_product_image_defaults()
  */
 function uc_product_uc_store_status() {
-  $instances = \Drupal::entityManager()->getFieldDefinitions('node', 'product');
+  $instances = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'product');
   $field = NodeType::load('product')->getThirdPartySetting('uc_product', 'image_field', 'uc_product_image');
 
   if (isset($instances[$field])) {

@@ -203,7 +203,7 @@ function _uc_catalog_navigation($branch) {
     $node = $request->attributes->get('node');
     if (isset($node->taxonomy_catalog)) {
       $inpath = FALSE;
-      $parents = \Drupal::entityManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->value);
+      $parents = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadAllParents($node->taxonomy_catalog->value);
       foreach ($parents as $parent) {
         if ($parent->id() == $branch->getTid()) {
           $inpath = TRUE;

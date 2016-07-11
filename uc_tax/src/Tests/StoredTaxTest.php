@@ -116,7 +116,7 @@ class StoredTaxTest extends TaxTestBase {
    */
   protected function loadTaxLine($order_id) {
     // Reset uc_order entity cache then load order.
-    \Drupal::entityManager()->getStorage('uc_order')->resetCache([$order_id]);
+    \Drupal::entityTypeManager()->getStorage('uc_order')->resetCache([$order_id]);
     $order = Order::load($order_id);
     foreach ($order->line_items as $line) {
       if ($line['type'] == 'tax') {
