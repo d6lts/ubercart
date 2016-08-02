@@ -2,6 +2,7 @@
 
 namespace Drupal\uc_fulfillment\Plugin\views\field;
 
+use Drupal\views\ResultRow;
 use Drupal\uc_store\Plugin\views\field\Weight;
 
 /**
@@ -34,9 +35,9 @@ class PackageWeight extends Weight {
   }
 
   /**
-   * Overrides uc_product_handler_field_weight::render().
+   * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $package = Package::load($values->{$this->aliases['package_id']});
 
     if ($this->options['format'] == 'numeric') {

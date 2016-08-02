@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
 class DataField extends FieldPluginBase {
 
   /**
-   * Overrides FieldPluginBase::render().
+   * {@inheritdoc}
    */
   public function render(ResultRow $values) {
     // Initialize the encryption key and class.

@@ -15,7 +15,7 @@ use Drupal\views\ResultRow;
 class Method extends FieldPluginBase {
 
   /**
-   * Overrides FieldPluginBase::render().
+   * {@inheritdoc}
    */
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
