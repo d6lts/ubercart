@@ -96,7 +96,9 @@ class UcPrice extends Element\FormElement {
   public static function preRenderPrice($element) {
     $element['#attributes']['type'] = 'number';
     $element['#attributes']['step'] = 'any';
-    $element['#attributes']['min'] = 0;
+    if (empty($element['#allow_negative'])) {
+      $element['#attributes']['min'] = 0;
+    }
     Element::setAttributes($element, array('id', 'name', 'value', 'size', 'maxlength', 'placeholder'));
     static::setAttributes($element, array('form-uc-price'));
 
