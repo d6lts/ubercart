@@ -47,7 +47,7 @@ class UcPrice extends Element\FormElement {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE && !empty($element['#default_value'])) {
-      $exact = rtrim(number_format($element['#default_value'], 6, '.', ''), '0');
+      $exact = rtrim(rtrim(number_format($element['#default_value'], 6, '.', ''), '0'), '.');
       $round = number_format($element['#default_value'], \Drupal::config('uc_store.settings')->get('currency.precision'), '.', '');
       return $exact == rtrim($round, '0') ? $round : $exact;
     }
