@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\ubercart\Unit\Order;
+namespace Drupal\Tests\uc_order\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\uc_order\Entity\OrderStatus;
