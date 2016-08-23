@@ -492,9 +492,6 @@ function uc_role_delete(UserInterface $account, $rid = NULL, $silent = FALSE) {
       )));
     }
   }
-
-  // Flush visible menu items, since our permissions could've changed.
-  _uc_role_flush_menu_cache($account);
 }
 
 /**
@@ -582,9 +579,6 @@ function uc_role_grant(UserInterface &$account, $rid, $timestamp, $save_user = T
       ->execute();
   }
 
-  // Flush visible menu items, since our permissions could've changed.
-  _uc_role_flush_menu_cache($account);
-
   // Display the message if appropriate.
   if (!$silent) {
     $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', [':rid' => $rid])->fetchField();
@@ -667,22 +661,6 @@ function uc_role_renew(UserInterface $account, $rid, $timestamp, $silent = FALSE
 
     drupal_set_message($message);
   }
-}
-
-/**
- * Flushes the menu cache.
- *
- * When roles are gained/lost, menu items might appear/disappear respectively,
- * so we have to ensure the cache is rebuilt with any new values.
- *
- * @param \Drupal\user\UserInterface $account
- *   A Drupal user object.
- *
- * @see uc_role_delete()
- * @see uc_role_grant()
- */
-function _uc_role_flush_menu_cache(UserInterface $account) {
-  cache_clear_all($account->id() . ':', 'cache_menu', TRUE);
 }
 
 /**
