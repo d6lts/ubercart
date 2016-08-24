@@ -209,19 +209,13 @@ function uc_payment_uc_order_presave(OrderInterface $order) {
   if ($order->getPaymentMethodId()) {
     \Drupal::service('plugin.manager.uc_payment.method')->createFromOrder($order)->orderSave($order);
   }
-}
 
-/**
- * Implements hook_uc_order_update().
- */
-function uc_payment_uc_order_update(OrderInterface $order) {
   // Move non-shippable orders from "payment received" to "completed".
   // @todo Remove when Rules is available.
   if ($order->getStatusId() == 'payment_received' && !$order->isShippable()) {
-    $order->setStatusId('completed')->save();
+    $order->setStatusId('completed');
   }
 }
-
 
 /**
  * Implements hook_uc_order_can_delete().
