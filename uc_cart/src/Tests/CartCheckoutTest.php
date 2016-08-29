@@ -199,6 +199,28 @@ class CartCheckoutTest extends UbercartTestBase {
     $this->assertIdentical($this->cart->getContents(), [], 'There are no items in the cart.');
   }
 
+  public function testCheckoutCartPane() {
+    // Add a product to the cart.
+    $this->addToCart($this->product);
+    $this->drupalGet('cart');
+    $this->assertFieldByName('items[0][qty]', 1, 'The product quantity is 1.');
+
+    // Test the checkout pane.
+    $this->drupalPostForm(NULL, [], t('Checkout'));
+    $this->assertText($this->product->label(), 'The product title is displayed.');
+    $this->assertText('1 ×', 'The product quantity is displayed.');
+    $this->assertText(uc_currency_format($this->product->price->value), 'The product price is displayed.');
+
+    // Change the quantity.
+    $qty = mt_rand(3, 100);
+    $this->drupalPostForm('cart', ['items[0][qty]' => $qty], t('Checkout'));
+
+    // Test the checkout pane.
+    $this->assertText($this->product->label(), 'The product title is displayed.');
+    $this->assertText($qty . ' ×', 'The updated product quantity is displayed.');
+    $this->assertText(uc_currency_format($qty * $this->product->price->value), 'The updated product price is displayed.');
+  }
+
   // public function testMaximumQuantityRule() {
   //   // Enable the example maximum quantity rule.
   //   $rule = rules_config_load('uc_cart_maximum_product_qty');

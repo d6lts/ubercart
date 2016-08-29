@@ -220,6 +220,10 @@ class CartForm extends FormBase {
         $module_handler->invoke($item['module'], 'uc_update_cart_item', array($item['nid'], unserialize($item['data']), $item['qty']));
       }
     }
+
+    // Invalidate the cart order.
+    $session = \Drupal::service('session');
+    $session->set('uc_cart_order_rebuild', TRUE);
   }
 
   /**
