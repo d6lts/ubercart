@@ -5,9 +5,3 @@ dependencies[] = uc_order
 package = Ubercart - core (optional)
 core = 6.x
 php = 5.0
-
-; Information added by Drupal 6 LTS vendors on 2019-10-02
-version = "6.x-2.17"
-core = "6.x"
-project = "ubercart"
-datestamp = "1570040888"
