@@ -1638,6 +1638,10 @@ function template_preprocess_uc_order(&$variables) {
       break;
   }
 
+  foreach ($variables['order']->products as $product) {
+    $product->title = check_plain($product->title);
+    $product->model = check_plain($product->model);
+  }
   $variables['products'] = $variables['order']->products;
   if (!is_array($variables['products'])) {
     $variables['products'] = array();
@@ -1663,6 +1667,9 @@ function template_preprocess_uc_order(&$variables) {
   }
   if (!is_array($variables['line_items'])) {
     $variables['line_items'] = array();
+  }
+  foreach ($variables['line_items'] as &$line_item) {
+    $line_item['title'] = check_plain($line_item['title']);
   }
   usort($variables['line_items'], 'uc_weight_sort');
 
