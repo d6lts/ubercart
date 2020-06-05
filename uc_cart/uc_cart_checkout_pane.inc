@@ -532,7 +532,7 @@ function _uc_cart_checkout_next_pane($panes, $pane_id = NULL) {
 function _checkout_pane_list($action = NULL) {
   static $panes;
 
-  if (count($panes) > 0 && $action !== 'rebuild') {
+  if (!empty($panes) && $action !== 'rebuild') {
     return $panes;
   }
 

@@ -1072,7 +1072,7 @@ function op_admin_comments_view_table($comments) {
 function _order_pane_list($view = 'view') {
   static $panes;
 
-  if (count($panes) > 0) {
+  if (!empty($panes)) {
     return $panes;
   }
 

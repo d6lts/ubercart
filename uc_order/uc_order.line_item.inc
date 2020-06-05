@@ -155,7 +155,7 @@ function uc_order_line_item_add($order_id, $type, $title, $amount, $weight = NUL
 function _line_item_list($action = NULL) {
   static $items;
 
-  if (count($items) > 0 && $action !== 'rebuild') {
+  if (!empty($items) && $action !== 'rebuild') {
     return $items;
   }
 
