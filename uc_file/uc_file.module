@@ -441,6 +441,7 @@ function theme_uc_file_hook_user_file_downloads($form) {
     array('data' => t('Downloads' )),
     array('data' => t('Addresses' )),
   );
+  $rows = array();
 
   foreach ($form['file_download'] as $key => $data) {
 
@@ -961,7 +962,7 @@ function uc_file_feature_form_submit($form, &$form_state) {
     $file_product['pfid'] = db_last_insert_id('uc_product_features', 'pfid');
   }
 
-  $key = NULL;
+  $key = array();
   if ($fpid = _uc_file_get_fpid($file_product['pfid'])) {
     $key = 'fpid';
     $file_product['fpid'] = $fpid;

@@ -1672,7 +1672,7 @@ function uc_cart_empty($cart_id, $op = 'remove') {
 function uc_cart_cart_pane_list($items, $action = NULL) {
   static $panes;
 
-  if (count($panes) > 0 && $action !== 'rebuild') {
+  if (!empty($panes) && $action !== 'rebuild') {
     return $panes;
   }
 

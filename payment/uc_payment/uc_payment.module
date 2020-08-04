@@ -769,7 +769,7 @@ function uc_payment_load_payments($order_id, $action = NULL) {
 function _payment_method_list($action = NULL) {
   static $methods;
 
-  if (count($methods) > 0 && $action !== 'rebuild') {
+  if (!empty($methods) && $action !== 'rebuild') {
     return $methods;
   }
 

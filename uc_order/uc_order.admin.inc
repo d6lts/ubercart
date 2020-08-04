@@ -249,6 +249,9 @@ function uc_order_workflow_form_submit($form, &$form_state) {
   }
 
   foreach ($form_state['values']['order_statuses'] as $key => $value) {
+    if (!is_array($value)) {
+      continue;
+    }
     if ($value['locked'] != TRUE && $value['remove'] == TRUE) {
       db_query("DELETE FROM {uc_order_statuses} WHERE order_status_id = '%s'", $key);
       drupal_set_message(t('Order status %status removed.', array('%status' => $key)));
@@ -1394,7 +1397,7 @@ function uc_order_edit_products($order) {
  * @see theme_uc_order_remove_product()
  */
 function uc_order_edit_products_form($form_state, $products) {
-  if (($product_count = count($products)) > 0) {
+  if (is_array($products) && ($product_count = count($products)) > 0) {
     $form['products'] = tapir_get_table('op_products_edit_table');
     for ($i = 0; $i < $product_count; $i++) {
       $form['products'][$i]['remove'] = array(
