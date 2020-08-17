@@ -544,7 +544,7 @@ function uc_attribute_product_class($type, $op) {
     case 'delete':
       db_query("DELETE FROM {uc_class_attributes} WHERE pcid = '%s'", $type);
       db_query("DELETE FROM {uc_class_attribute_options} WHERE pcid = '%s'", $type);
-    break;
+      break;
   }
 }
 
@@ -756,7 +756,7 @@ function uc_attribute_load($aid, $id = NULL, $type = '') {
                   po.{$sql['id']} = {$sql['placeholder']}
         WHERE     aid = %d ORDER BY po.ordering, ao.name", $id, $aid);
 
-    break;
+      break;
 
     default:
 
@@ -767,7 +767,7 @@ function uc_attribute_load($aid, $id = NULL, $type = '') {
       // Don't try to build it further if it failed already.
       if (!$attribute) return FALSE;
 
-    break;
+      break;
   }
 
   // Got an attribute?
@@ -1233,9 +1233,9 @@ function _uc_cart_product_get_options($item) {
         // Only discrete options can affect the price of an item.
         if ($attribute->display && count($attribute->options)) {
           // There may be many selected options, or just one.
-          foreach ((array)$selected as $oid) {
+          foreach ((array) $selected as $oid) {
             if ($oid > 0) {
-              $options[$index] = (array)$attribute->options[$oid];
+              $options[$index] = (array) $attribute->options[$oid];
               $options[$index]['attribute'] = $name;
               $index++;
             }
@@ -1448,7 +1448,7 @@ function theme_uc_attribute_add_to_cart($form) {
  * Returns the attribute name to display.
  *
  * An attribute with a label set returns that label except when set to
- * '<none>'. In this case, a NULL is returned. The $title argument forces the
+ * '<none>' . In this case, a NULL is returned. The $title argument forces the
  * function to return the name property instead of label when label is set to
  * '<none>'.
  *

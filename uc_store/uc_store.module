@@ -19,19 +19,19 @@ require_once(dirname(__FILE__) .'/includes/uc_price.inc');
  * uc_length_conversion().
  */
 define('KG_TO_KG', 1);
-define('KG_TO_G',  1000);
+define('KG_TO_G', 1000);
 define('KG_TO_LB', 2.204622621849);
 define('KG_TO_OZ', 35.27396194958);
 
-define('G_TO_G',   1);
-define('G_TO_KG',  0.001);
-define('G_TO_LB',  0.002204622622);
-define('G_TO_OZ',  0.03527396195);
+define('G_TO_G', 1);
+define('G_TO_KG', 0.001);
+define('G_TO_LB', 0.002204622622);
+define('G_TO_OZ', 0.03527396195);
 
 define('LB_TO_LB', 1);
 define('LB_TO_OZ', 16);
 define('LB_TO_KG', 0.45359237);
-define('LB_TO_G',  453.59237);
+define('LB_TO_G', 453.59237);
 
 define('OZ_TO_OZ', 1);
 define('OZ_TO_LB', 0.0625);
@@ -972,7 +972,7 @@ function uc_weight_format($value, $unit = NULL) {
     'g' => '!valueg',
   );
 
-  $pattern = variable_get('uc_weight_format_'. $unit, $defaults[$unit]);
+  $pattern = variable_get('uc_weight_format_' . $unit, $defaults[$unit]);
   if (strpos($pattern, '!value') === FALSE) {
     $pattern = $defaults[$unit];
   }
@@ -989,7 +989,7 @@ function uc_weight_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
     $to_units = variable_get('uc_weight_unit', 'lb');
   }
-  $constant = strtoupper($from_units) .'_TO_'. strtoupper($to_units);
+  $constant = strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
     return $conversion;
   }
@@ -1015,7 +1015,7 @@ function uc_length_format($value, $unit = NULL) {
     'mm' => '!valuemm',
   );
 
-  $pattern = variable_get('uc_length_format_'. $unit, $defaults[$unit]);
+  $pattern = variable_get('uc_length_format_' . $unit, $defaults[$unit]);
   if (strpos($pattern, '!value') === FALSE) {
     $pattern = $defaults[$unit];
   }
@@ -1032,7 +1032,7 @@ function uc_length_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
     $to_units = variable_get('uc_length_unit', 'in');
   }
-  $constant = strtoupper($from_units) .'_TO_'. strtoupper($to_units);
+  $constant = strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
     return $conversion;
   }
@@ -1045,7 +1045,7 @@ function uc_length_conversion($from_units, $to_units = NULL) {
  * Formats a date value for display.
  */
 function uc_date_format($month, $day, $year, $class = 'default') {
-  $time = strtotime($month .'/'. $day .'/'. $year);
+  $time = strtotime($month . '/' . $day . '/' . $year);
 
   $pattern = variable_get('uc_date_format_'. $class, 'm/d/Y');
   if (strlen($pattern) < 3) {
@@ -1059,7 +1059,7 @@ function uc_date_format($month, $day, $year, $class = 'default') {
  * Saves the address format for a country.
  */
 function uc_set_address_format($country_id, $format) {
-  variable_set('uc_address_format_'. intval($country_id), $format);
+  variable_set('uc_address_format_' . intval($country_id), $format);
 }
 
 /**
@@ -1106,7 +1106,7 @@ function uc_address_format($first_name, $last_name, $company, $street1, $street2
     $variables['!country_code3_if'] = '';
   }
 
-  $format = variable_get('uc_address_format_'. $country, '');
+  $format = variable_get('uc_address_format_' . $country, '');
   if (empty($format)) {
     $format = "!company\r\n!first_name !last_name\r\n!street1\r\n!street2\r\n!city, !zone_code !postal_code\r\n!country_name_if";
   }
@@ -1549,7 +1549,7 @@ function uc_get_initials($uid) {
  * be installed or updated.
  */
 function _country_import_list() {
-  $dir = drupal_get_path('module', 'uc_store') .'/countries/';
+  $dir = drupal_get_path('module', 'uc_store') . '/countries/';
 
   $countries = array();
   if (is_dir($dir)) {
@@ -1781,7 +1781,7 @@ function uc_store_rfc2822_display_name($name) {
   $valid_chars = "[a-zA-Z0-9\!\#\$\%\&\'\*\+\-\/\=\?\^\_\`\{\|\}\~]";
   // Display name is composed of 0 or more atoms separated by white space
   if (!preg_match("/^(${valid_chars}*[ \t]*)*$/", $name)) {
-    return '"'. addcslashes($name, '"') .'"';
+    return '"' . addcslashes($name, '"') . '"';
   }
   return $name;
 }
@@ -2222,12 +2222,12 @@ function uc_store_uc_image_widget() {
  */
 function uc_store_image_widget_colorbox($rel_count) {
   if (!is_null($rel_count)) {
-    $img_index = 'uc_image_'. $rel_count;
+    $img_index = 'uc_image_' . $rel_count;
   }
   else {
     $img_index = 'uc_image';
   }
-  return ' class="colorbox" rel="'. $img_index .'"';
+  return ' class="colorbox" rel="' . $img_index . '"';
 }
 
 /**
@@ -2235,12 +2235,12 @@ function uc_store_image_widget_colorbox($rel_count) {
  */
 function uc_store_image_widget_thickbox($rel_count) {
   if (!is_null($rel_count)) {
-    $img_index = 'uc_image_'. $rel_count;
+    $img_index = 'uc_image_' . $rel_count;
   }
   else {
     $img_index = 'uc_image';
   }
-  return ' class="thickbox" rel="'. $img_index .'"';
+  return ' class="thickbox" rel="' . $img_index . '"';
 }
 
 /**
@@ -2248,12 +2248,12 @@ function uc_store_image_widget_thickbox($rel_count) {
  */
 function uc_store_image_widget_lightbox2($rel_count) {
   if (!is_null($rel_count)) {
-    $img_index = 'lightbox['. $rel_count .']';
+    $img_index = 'lightbox[' . $rel_count . ']';
   }
   else {
     $img_index = 'lightbox';
   }
-  return ' rel="'. $img_index .'"';
+  return ' rel="' . $img_index . '"';
 }
 
 /**

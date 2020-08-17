@@ -325,7 +325,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
     list($desc, $subtotal) = _uc_paypal_product_details($order->products);
 
     if (intval($order->payment_details['cc_exp_month']) < 10) {
-      $expdate = '0'. $order->payment_details['cc_exp_month'] . $order->payment_details['cc_exp_year'];
+      $expdate = '0' . $order->payment_details['cc_exp_month'] . $order->payment_details['cc_exp_year'];
     }
     else {
       $expdate = $order->payment_details['cc_exp_month'] . $order->payment_details['cc_exp_year'];
@@ -377,7 +377,7 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'IPADDRESS' => $ip_address,
       'AMT' => uc_price($amount, $context, $options),
       'CREDITCARDTYPE' => $cc_type,
-      'ACCT' =>  $order->payment_details['cc_number'],
+      'ACCT' => $order->payment_details['cc_number'],
       'EXPDATE' => $expdate,
       'CVV2' => $order->payment_details['cc_cvv'],
       'FIRSTNAME' => substr($order->billing_first_name, 0, 25),
@@ -392,14 +392,14 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
       'DESC' => substr($desc, 0, 127),
       'INVNUM' => $order_id .'-'. time(),
       'BUTTONSOURCE' => 'Ubercart_ShoppingCart_DP_US',
-      'NOTIFYURL' => url('uc_paypal/ipn/'. $order->order_id, array('absolute' => TRUE)),
+      'NOTIFYURL' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
       'EMAIL' => substr($order->primary_email, 0, 127),
       'PHONENUM' => substr($order->billing_phone, 0, 20),
     );
 
     if (uc_order_is_shippable($order) && !empty($order->delivery_first_name)) {
       $shipdata = array(
-        'SHIPTONAME' => substr($order->delivery_first_name .' '. $order->delivery_last_name, 0, 25),
+        'SHIPTONAME' => substr($order->delivery_first_name . ' ' . $order->delivery_last_name, 0, 25),
         'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
         'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
         'SHIPTOCITY' => substr($order->delivery_city, 0, 40),
@@ -426,15 +426,15 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
           '@type' => $types[$data['txn_type']],
         ),
         WATCHDOG_WARNING,
-        l(t('view order'), 'admin/store/orders/'. $order_id)
+        l(t('view order'), 'admin/store/orders/' . $order_id)
       );
       // fall through
     case 'Success':
       $message = t('<b>@type</b><br /><b>Success: </b>@amount @currency', array('@type' => $types[$data['txn_type']], '@amount' => uc_price($nvp_response['AMT'], $context, array('sign' => FALSE)), '@currency' => $nvp_response['CURRENCYCODE']));
       if ($data['txn_type'] != UC_CREDIT_PRIOR_AUTH_CAPTURE) {
-        $message .= '<br />'. t('<b>Address:</b> @avscode', array('@avscode' => _uc_paypal_avscode_message($nvp_response['AVSCODE'])));
+        $message .= '<br />' . t('<b>Address:</b> @avscode', array('@avscode' => _uc_paypal_avscode_message($nvp_response['AVSCODE'])));
         if (variable_get('uc_credit_cvv_enabled', TRUE)) {
-          $message .= '<br />'. t('<b>CVV2:</b> @cvvmatch', array('@cvvmatch' => _uc_paypal_cvvmatch_message($nvp_response['CVV2MATCH'])));
+          $message .= '<br />' . t('<b>CVV2:</b> @cvvmatch', array('@cvvmatch' => _uc_paypal_cvvmatch_message($nvp_response['CVV2MATCH'])));
         }
       }
       $result = array(
@@ -495,8 +495,8 @@ function uc_paypal_wpp_charge($order_id, $amount, $data) {
 function _uc_paypal_build_error_messages($nvp_response) {
   $code = 0;
   $message = '';
-  while (array_key_exists('L_SEVERITYCODE'. $code, $nvp_response)) {
-    $message .= '<br /><b>'. check_plain($nvp_response['L_SEVERITYCODE'. $code]) .':</b> '. check_plain($nvp_response['L_ERRORCODE'. $code]) .': '. check_plain($nvp_response['L_LONGMESSAGE'. $code]);
+  while (array_key_exists('L_SEVERITYCODE' . $code, $nvp_response)) {
+    $message .= '<br /><b>' . check_plain($nvp_response['L_SEVERITYCODE' . $code]) . ':</b> ' . check_plain($nvp_response['L_ERRORCODE' . $code]) . ': ' . check_plain($nvp_response['L_LONGMESSAGE' . $code]);
     $code++;
   }
   return $message;
@@ -694,8 +694,8 @@ function uc_paypal_ec_checkout($form, &$form_state) {
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'ADDROVERRIDE' => 1,
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/'. $order->order_id, array('absolute' => TRUE)),
-    'SHIPTONAME' => substr($order->delivery_first_name .' '. $order->delivery_last_name, 0, 32),
+    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
+    'SHIPTONAME' => substr($order->delivery_first_name . ' ' . $order->delivery_last_name, 0, 32),
     'SHIPTOSTREET' => substr($order->delivery_street1, 0, 100),
     'SHIPTOSTREET2' => substr($order->delivery_street2, 0, 100),
     'SHIPTOCITY' => substr($order->delivery_city, 0, 40),
@@ -724,7 +724,7 @@ function uc_paypal_ec_checkout($form, &$form_state) {
     $sandbox = 'sandbox.';
   }
 
-  header('Location: https://www.'. $sandbox .'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $_SESSION['TOKEN']);
+  header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $_SESSION['TOKEN']);
   exit();
 }
 
@@ -788,7 +788,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
     'INVNUM' => $order->order_id .'-'. time(),
     'REQCONFIRMSHIPPING' => variable_get('uc_paypal_ec_rqconfirmed_addr', 0),
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/'. $order->order_id, array('absolute' => TRUE)),
+    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
     'LANDINGPAGE' => variable_get('uc_paypal_ec_landingpage_style', 'Billing'),
   );
 
@@ -805,7 +805,7 @@ function uc_paypal_ec_form_submit($form, &$form_state) {
     $sandbox = 'sandbox.';
   }
 
-  header('Location: https://www.'. $sandbox .'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='. $_SESSION['TOKEN']);
+  header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $_SESSION['TOKEN']);
   exit();
 }
 
@@ -864,7 +864,7 @@ function uc_paypal_ec_submit_form_submit($form, &$form_state) {
     'DESC' => substr($desc, 0, 127),
     'INVNUM' => $order->order_id .'-'. time(),
     'BUTTONSOURCE' => 'Ubercart_ShoppingCart_EC_US',
-    'NOTIFYURL' => url('uc_paypal/ipn/'. $order->order_id, array('absolute' => TRUE)),
+    'NOTIFYURL' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
     'ITEMAMT' => uc_price($subtotal, $context, $options),
     'SHIPPINGAMT' => uc_price($shipping, $context, $options),
     'TAXAMT' => uc_price($tax, $context, $options),
@@ -899,15 +899,15 @@ function uc_paypal_wps_form($form_state, $order) {
 
   $address = variable_get('uc_paypal_wps_address_selection', 'billing');
 
-  $country = uc_get_country_data(array('country_id' => $order->{$address .'_country'}));
+  $country = uc_get_country_data(array('country_id' => $order->{$address . '_country'}));
   if ($country === FALSE) {
     $country = array(0 => array('country_iso_code_2' => 'US'));
   }
 
   $phone = '';
-  for ($i = 0; $i < strlen($order->{$address .'_phone'}); $i++) {
-    if (is_numeric($order->{$address .'_phone'}[$i])) {
-      $phone .= $order->{$address .'_phone'}[$i];
+  for ($i = 0; $i < strlen($order->{$address . '_phone'}); $i++) {
+    if (is_numeric($order->{$address . '_phone'}[$i])) {
+      $phone .= $order->{$address . '_phone'}[$i];
     }
   }
 
@@ -945,19 +945,19 @@ function uc_paypal_wps_form($form_state, $order) {
     'charset' => 'utf-8',
 
     // IPN control notify URL
-    'notify_url' => url('uc_paypal/ipn/'. $order->order_id, array('absolute' => TRUE)),
+    'notify_url' => url('uc_paypal/ipn/' . $order->order_id, array('absolute' => TRUE)),
 
     // Display information
     'cancel_return' => url('uc_paypal/wps/cancel', array('absolute' => TRUE)),
     'no_note' => 1,
     'no_shipping' => variable_get('uc_paypal_wps_no_shipping', 1),
-    'return' => url('uc_paypal/wps/complete/'. $order->order_id, array('absolute' => TRUE)),
+    'return' => url('uc_paypal/wps/complete/' . $order->order_id, array('absolute' => TRUE)),
     'rm' => 1,
 
     // Transaction information
     'currency_code' => variable_get('uc_paypal_wps_currency', 'USD'),
     'handling_cart' => uc_price($shipping, $context, $options),
-    'invoice' => $order->order_id .'-'. uc_cart_get_id(),
+    'invoice' => $order->order_id . '-' . uc_cart_get_id(),
     'tax_cart' => uc_price($tax, $context, $options),
 
     // Shopping cart specific variables
@@ -967,15 +967,15 @@ function uc_paypal_wps_form($form_state, $order) {
     'lc' => variable_get('uc_paypal_wps_language', 'US'),
 
     // Prepopulating forms/address overriding
-    'address1' => substr($order->{$address .'_street1'}, 0, 100),
-    'address2' => substr($order->{$address .'_street2'}, 0, 100),
-    'city' => substr($order->{$address .'_city'}, 0, 40),
+    'address1' => substr($order->{$address . '_street1'}, 0, 100),
+    'address2' => substr($order->{$address . '_street2'}, 0, 100),
+    'city' => substr($order->{$address . '_city'}, 0, 40),
     'country' => $country[0]['country_iso_code_2'],
     'email' => $order->primary_email,
-    'first_name' => substr($order->{$address .'_first_name'}, 0, 32),
-    'last_name' => substr($order->{$address .'_last_name'}, 0, 64),
-    'state' => uc_get_zone_code($order->{$address .'_zone'}),
-    'zip' => $order->{$address .'_postal_code'},
+    'first_name' => substr($order->{$address . '_first_name'}, 0, 32),
+    'last_name' => substr($order->{$address . '_last_name'}, 0, 64),
+    'state' => uc_get_zone_code($order->{$address . '_zone'}),
+    'zip' => $order->{$address . '_postal_code'},
     'night_phone_a' => $phone_a,
     'night_phone_b' => $phone_b,
     'night_phone_c' => $phone_c,
@@ -1003,16 +1003,16 @@ function uc_paypal_wps_form($form_state, $order) {
       $context['subject']['product'] = $item;
       $context['subject']['node'] = node_load($item->nid);
       $data['amount_'. $i] = uc_price($item->price, $context, $options);
-      $data['item_name_'. $i] = $item->title;
-      $data['item_number_'. $i] = $item->model;
-      $data['quantity_'. $i] = $item->qty;
+      $data['item_name_' . $i] = $item->title;
+      $data['item_number_' . $i] = $item->model;
+      $data['quantity_' . $i] = $item->qty;
 
       // PayPal will only display the first two...
       if (!empty($item->data['attributes']) && count($item->data['attributes']) > 0) {
         $o = 0;
         foreach ($item->data['attributes'] as $name => $setting) {
-          $data['on'. $o .'_'. $i] = $name;
-          $data['os'. $o .'_'. $i] = implode(', ', (array)$setting);
+          $data['on' . $o . '_' . $i] = $name;
+          $data['os' . $o . '_' . $i] = implode(', ', (array) $setting);
           $o++;
         }
       }
@@ -1073,7 +1073,7 @@ function uc_paypal_api_request($request, $server) {
 
   $data = '';
   foreach ($request as $key => $value) {
-    $data .= $key .'='. urlencode(str_replace(',', '', $value)) .'&';
+    $data .= $key . '=' . urlencode(str_replace(',', '', $value)) . '&';
   }
   $data = substr($data, 0, -1);
 
@@ -1107,7 +1107,7 @@ function _uc_paypal_product_details($items) {
       if (!empty($desc)) {
         $desc .= ' / ';
       }
-      $desc .= $item->qty .'x '. $item->title;
+      $desc .= $item->qty . 'x ' . $item->title;
       $subtotal += $item->qty * $item->price;
     }
   }

@@ -188,7 +188,7 @@ function uc_cybersource_hop_include() {
   $hop_paths[0] = 'sites/all/libraries/uc_cybersource/HOP.php';
   $hop_paths[1] = drupal_get_path('module', 'uc_cybersource') . '/HOP.php';
   // Loop through possible paths, include and return TRUE when HOP.php is located.
-  foreach($hop_paths as $key => $path) {
+  foreach ($hop_paths as $key => $path) {
     if (file_exists($path)) {
       require_once($path);
       return TRUE;
@@ -395,7 +395,7 @@ function uc_cybersource_hop_complete($order) {
  * Define values to be posted to CyberSource.
  *
  * @retun
- *  Transaction data arrays are returned as hidden form values.
+ *   Transaction data arrays are returned as hidden form values.
  *
  */
 function uc_cybersource_hop_form($form_state, $order) {
@@ -476,9 +476,9 @@ function uc_cybersource_hop_form($form_state, $order) {
   $data['orderPage_sendMerchantReceiptEmail'] = variable_get('uc_cybersource_hop_merchant_receipt_email', 'true');
   $data['orderPage_sendMerchantURLPost'] = 'true';
   // CyberSource posts payment confirmation to this URL.
-  $data['orderPage_merchantURLPostAddress']= url('cybersource/hop-post', array('absolute' => TRUE));
+  $data['orderPage_merchantURLPostAddress'] = url('cybersource/hop-post', array('absolute' => TRUE));
   $data['orderPage_buyButtonText'] = t('Checkout');
-  $receipt_url = url('cybersource/hop-complete/'. $order->order_id, array('absolute' => TRUE));
+  $receipt_url = url('cybersource/hop-complete/' . $order->order_id, array('absolute' => TRUE));
   $data['orderPage_receiptResponseURL'] = $receipt_url;
   $data['orderPage_buyButtonText'] = variable_get('uc_cybersource_cs_hop_button_text', t('Process payment'));
   $comments = t('Order @order-id at @store-name', array('@order-id' => $order->order_id, '@store-name' => variable_get('uc_store_name', t('Our store'))));
@@ -570,7 +570,7 @@ function uc_cybersource_charge($order_id, $amount, $data) {
     case 'soap':
       // TODO: Refactor to use separate function for each API type.
       // - i.e. _uc_cybersource_charge_request_soap($order, $amount, $data);
-      // require_once(drupal_get_path('module', 'uc_cybersource') .'/SOAP.php');
+      // require_once(drupal_get_path('module', 'uc_cybersource') . '/SOAP.php');
       return _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country);
 
     case 'api':
@@ -587,8 +587,8 @@ function uc_cybersource_charge($order_id, $amount, $data) {
       $request['purchaseTotals_currency'] = 'USD';
       $request['purchaseTotals_grandTotalAmount'] = $amount;
 
-      drupal_set_message('<pre>'. print_r($config, TRUE) .'</pre>');
-      drupal_set_message('<pre>'. print_r($request, TRUE) .'</pre>');
+      drupal_set_message('<pre>' . print_r($config, TRUE) . '</pre>');
+      drupal_set_message('<pre>' . print_r($request, TRUE) . '</pre>');
 
       break;
   }
@@ -641,7 +641,7 @@ function _uc_cybersource_post_charge($order, $amount, $data, $cc_type, $country)
 
   $data = '';
   while (list($key, $value) = each($request)) {
-    $data .= $key .'='. urlencode(str_replace(',', '', $value)) .'&';
+    $data .= $key . '=' . urlencode(str_replace(',', '', $value)) . '&';
   }
   $data = substr($data, 0, -1);
 
@@ -743,10 +743,10 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
     // To see the functions and types that the SOAP extension can automatically
     // generate from the WSDL file, uncomment this section and check the logs.
     // $functions = $soapClient->__getFunctions();
-    // watchdog('uc_cybersource', '<pre>'. print_r($functions, TRUE) .'</pre>');
+    // watchdog('uc_cybersource', '<pre>' . print_r($functions, TRUE) . '</pre>');
 
     // $types = $soapClient->__getTypes();
-    // watchdog('uc_cybersource', '<pre>'. print_r($types, TRUE) .'</pre>');
+    // watchdog('uc_cybersource', '<pre>' . print_r($types, TRUE) . '</pre>');
 
     $login = _uc_cybersource_soap_login_data();
 
@@ -875,7 +875,7 @@ function _uc_cybersource_soap_charge($order, $amount, $data, $cc_type, $country)
           $obj->productName = $line_item['title'];
           $obj->unitPrice = $line_item['amount'];
           $obj->quantity = 1;
-          $obj->productSKU = $line_item['type'] .'_'. $line_item['line_item_id'];
+          $obj->productSKU = $line_item['type'] . '_' . $line_item['line_item_id'];
           $obj->id = $counter;
 
           $counter++;
@@ -1151,12 +1151,12 @@ function uc_cybersource_calculate_tax($order) {
       $counter++;
     }
 
-    // drupal_set_message('<pre>Request: '. print_r($request, TRUE) .'</pre>');
+    // drupal_set_message('<pre>Request: ' . print_r($request, TRUE) . '</pre>');
 
     // Send the request to CyberSource and get the reply.
     $reply = $soapClient->runTransaction($request);
 
-    // drupal_set_message('<pre>Reply: '. print_r($reply, TRUE) .'</pre>');
+    // drupal_set_message('<pre>Reply: ' . print_r($reply, TRUE) . '</pre>');
   }
   catch (SoapFault $exception) {
     // Log and display errors if Ubercart is unable to connect via SOAP.
@@ -1253,8 +1253,8 @@ function uc_cybersource_calculate_tax($order) {
    *   $request['purchaseTotals_currency'] = 'USD';
    *   $request['purchaseTotals_grandTotalAmount'] = $amount;
    *
-   *   drupal_set_message('<pre>'. print_r($config, TRUE) .'</pre>');
-   *   drupal_set_message('<pre>'. print_r($request, TRUE) .'</pre>');
+   *   drupal_set_message('<pre>' . print_r($config, TRUE) . '</pre>');
+   *   drupal_set_message('<pre>' . print_r($request, TRUE) . '</pre>');
    * }
    */
 

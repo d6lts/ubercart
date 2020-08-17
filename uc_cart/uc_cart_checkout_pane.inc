@@ -123,8 +123,8 @@ function uc_checkout_pane_customer($op, &$arg1, $arg2) {
 
       // If new users can specify names or passwords then...
       if ((variable_get('uc_cart_new_account_name', FALSE) ||
-        variable_get('uc_cart_new_account_password', FALSE)) &&
-        $user->uid == 0) {
+          variable_get('uc_cart_new_account_password', FALSE)) &&
+          $user->uid == 0) {
         // Skip if an account already exists for this e-mail address.
         if (variable_get('uc_cart_mail_existing', TRUE) && db_result(db_query("SELECT uid FROM {users} WHERE LOWER(mail) = LOWER('%s')", $arg2['primary_email'])) > 0) {
           drupal_set_message(t('An account already exists for your e-mail address. The new account details you entered will be disregarded.'));

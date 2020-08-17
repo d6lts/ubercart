@@ -15,6 +15,6 @@ class uc_product_kit_handler_filter_product_kit extends views_handler_filter_boo
    */
   function query() {
     $this->query->add_field('node', 'type');
-    $this->query->add_where($this->options['group'], "node.type ". (empty($this->value) ? "NOT " : "") ."IN ('product_kit')");
+    $this->query->add_where($this->options['group'], "node.type " . (empty($this->value) ? "NOT " : "") . "IN ('product_kit')");
   }
 }

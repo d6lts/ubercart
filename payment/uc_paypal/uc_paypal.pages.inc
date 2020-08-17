@@ -113,7 +113,7 @@ function uc_paypal_ipn() {
 
       case 'Completed':
         if (abs($payment_amount - $order->order_total) > 0.01) {
-          watchdog('uc_paypal', 'Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->order_id), WATCHDOG_WARNING, l(t('view'), 'admin/store/orders/'. $order->order_id));
+          watchdog('uc_paypal', 'Payment @txn_id for order @order_id did not equal the order total.', array('@txn_id' => $txn_id, '@order_id' => $order->order_id), WATCHDOG_WARNING, l(t('view'), 'admin/store/orders/' . $order->order_id));
         }
         $comment = t('PayPal transaction ID: @txn_id', array('@txn_id' => $txn_id));
         uc_payment_enter($order_id, 'paypal_wps', $payment_amount, $order->uid, NULL, $comment);
@@ -392,7 +392,7 @@ function uc_paypal_ec_submit() {
     drupal_goto('cart');
   }
 
-  drupal_add_css(drupal_get_path('module', 'uc_cart') .'/uc_cart.css');
+  drupal_add_css(drupal_get_path('module', 'uc_cart') . '/uc_cart.css');
   $output = '<div>'. theme('cart_review_table', FALSE) .'</div>';
   $output .= uc_order_pane_line_items('customer', $order);
   $output .= '<p>'. t("Your order is not complete until you click the 'Submit order' button below. Your PayPal account will be charged for the amount shown above once your order is placed. You will receive confirmation once your payment is complete.") .'</p>';

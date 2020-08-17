@@ -23,7 +23,7 @@ define('UC_REPORTS_MAX_RECORDS', PHP_INT_MAX);
  * Implements hook_help().
  */
 function uc_reports_help($path, $arg) {
-  $output =  '';
+  $output = '';
 
   if (strncmp($path, 'admin/store/reports/', 20) === 0) {
     $include_statuses = $include_offset = FALSE;
@@ -193,7 +193,7 @@ function uc_reports_theme() {
  */
 function uc_reports_init() {
   if (arg(0) == 'admin' && arg(1) == 'store' && arg(2) == 'reports') {
-    drupal_add_css(drupal_get_path('module', 'uc_reports') .'/uc_reports.css');
+    drupal_add_css(drupal_get_path('module', 'uc_reports') . '/uc_reports.css');
   }
 }
 

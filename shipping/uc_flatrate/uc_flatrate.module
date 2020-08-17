@@ -78,7 +78,7 @@ function uc_flatrate_form_alter(&$form, $form_state, $form_id) {
         '#size' => 16,
         '#field_prefix' => $sign_flag ? '' : $currency_sign,
         '#field_suffix' => $sign_flag ? $currency_sign : '',
-        '#weight' => $weight['flatrate_'. $method->mid],
+        '#weight' => $weight['flatrate_' . $method->mid],
       );
     }
   }
@@ -168,8 +168,8 @@ function uc_flatrate_shipping_method() {
   $weight = variable_get('uc_quote_method_weight', array());
   $result = db_query("SELECT mid, title, label FROM {uc_flatrate_methods}");
   while ($method = db_fetch_object($result)) {
-    $methods['flatrate_'. $method->mid] = array(
-      'id' => 'flatrate_'. $method->mid,
+    $methods['flatrate_' . $method->mid] = array(
+      'id' => 'flatrate_' . $method->mid,
       'module' => 'uc_flatrate',
       'title' => $method->title,
       'enabled' => $enabled['flatrate_'. $method->mid],

@@ -114,7 +114,7 @@ function uc_shipping_schema() {
         'default' => '',
       ),
       'd_street1' => array(
-       'description' => 'Destination address: Street line 1.',
+        'description' => 'Destination address: Street line 1.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,

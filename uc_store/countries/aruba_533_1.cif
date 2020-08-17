@@ -11,10 +11,10 @@ function aruba_install() {
 
   uc_set_address_format(
     533,
-    "!company\r\n".
-    "!first_name !last_name\r\n".
+    "!company\r\n" .
+    "!first_name !last_name\r\n" .
     "!street1\r\n!street2\r\n".
-    "!city !postal_code\r\n".
+    "!city !postal_code\r\n" .
     "!country_name_if"
   );
 }

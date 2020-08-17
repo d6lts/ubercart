@@ -636,7 +636,7 @@ function uc_attribute_option_delete_confirm($form_state, $attribute, $option) {
  */
 function uc_attribute_option_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
-    $match = 'i:'. $form_state['values']['aid'] .';s:'. strlen($form_state['values']['oid']) .':"'. $form_state['values']['oid'] .'";';
+    $match = 'i:' . $form_state['values']['aid'] . ';s:' . strlen($form_state['values']['oid']) . ':"' . $form_state['values']['oid'] . '";';
     db_query("DELETE FROM {uc_product_adjustments} WHERE combination LIKE '%%%s%%'", $match);
     db_query("DELETE FROM {uc_class_attribute_options} WHERE EXISTS (SELECT * FROM {uc_attribute_options} AS ao WHERE {uc_class_attribute_options}.oid = ao.oid AND ao.oid = %d)", $form_state['values']['oid']);
     db_query("DELETE FROM {uc_product_options} WHERE EXISTS (SELECT * FROM {uc_attribute_options} AS ao WHERE {uc_product_options}.oid = ao.oid AND ao.oid = %d)", $form_state['values']['oid']);
@@ -659,7 +659,7 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
       $class = $object;
       $id = $class->pcid;
       if (empty($class->name)) {
-        drupal_goto('admin/store/products/classes/'. $id);
+        drupal_goto('admin/store/products/classes/' . $id);
       }
       drupal_set_title(check_plain($class->name));
       $attributes = uc_class_get_attributes($id);
@@ -669,7 +669,7 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
       $product = $object;
       $id = $product->nid;
       if (empty($product->title)) {
-        drupal_goto('node/'. $id);
+        drupal_goto('node/' . $id);
       }
       drupal_set_title(check_plain($product->title));
       $attributes = uc_product_get_attributes($id);
@@ -768,7 +768,7 @@ function uc_object_attributes_form($form_state, $object, $type, $view = 'overvie
     $form['add'] = array(
       '#type' => 'submit',
       '#value' => t('Add attributes'),
-      '#suffix' => l(t('Cancel'), $type == 'product' ? 'node/'. $id .'/edit/attributes' : 'admin/store/products/classes/'. $class->pcid .'/attributes'),
+      '#suffix' => l(t('Cancel'), $type == 'product' ? 'node/' . $id . '/edit/attributes' : 'admin/store/products/classes/' . $class->pcid . '/attributes'),
       '#weight' => 0,
     );
   }
@@ -914,10 +914,10 @@ function uc_object_attributes_form_submit($form, &$form_state) {
   }
 
   if ($form_state['values']['type'] == 'product') {
-    $form_state['redirect'] = 'node/'. $form_state['values']['id'] .'/edit/attributes';
+    $form_state['redirect'] = 'node/' . $form_state['values']['id'] . '/edit/attributes';
   }
   else {
-    $form_state['redirect'] = 'admin/store/products/classes/'. $form_state['values']['id'] .'/attributes';
+    $form_state['redirect'] = 'admin/store/products/classes/' . $form_state['values']['id'] . '/attributes';
   }
 }
 
@@ -1252,7 +1252,7 @@ function uc_object_options_form_submit($form, &$form_state) {
         }
         elseif ($form_state['values']['type'] == 'product') {
           $aid = $attribute['aid'];
-          $match = 'i:'. $aid .';s:'. strlen($oid) .':"'. $oid .'";';
+          $match = 'i:' . $aid . ';s:' . strlen($oid) . ':"' . $oid . '";';
           db_query("DELETE FROM {uc_product_adjustments} WHERE nid = %d AND combination LIKE '%%%s%%'", $form_state['values']['id'], $match);
         }
       }
@@ -1278,7 +1278,7 @@ function uc_product_adjustments_form($form_state, $node) {
   drupal_set_title(check_plain($node->title));
   $nid = $node->nid;
 
-  //Populate table and such.
+  // Populate table and such.
   $model = $node->model;
   $query_select = "SELECT DISTINCT";
   $query_from = " FROM";
@@ -1298,7 +1298,7 @@ function uc_product_adjustments_form($form_state, $node) {
     $query_where .= " ao$i.aid = ". $prod_attr->aid ." AND";
     $query_order .= " po$i.ordering, ao$i.name,";
     ++$i;
-    $attribute_names .= '<th>'. check_plain($prod_attr->name) .'</th>';
+    $attribute_names .= '<th>' . check_plain($prod_attr->name) . '</th>';
     $attribute_ids[] = $prod_attr->aid;
   }
   $num_prod_attr = count($attribute_ids);
@@ -1348,9 +1348,9 @@ function uc_product_adjustments_form($form_state, $node) {
       $row_title = '';
       $comb_array = array();
       for ($j = 1; $j <= $num_prod_attr; ++$j) {
-        $cells .= '<td>'. check_plain($combo->{'name'. $j}) .'</td>';
-        $row_title .= check_plain($combo->{'name'. $j}) .', ';
-        $comb_array[$combo->{'aid'. $j}] = $combo->{'oid'. $j};
+        $cells .= '<td>' . check_plain($combo->{'name' . $j}) . '</td>';
+        $row_title .= check_plain($combo->{'name' . $j}) . ', ';
+        $comb_array[$combo->{'aid' . $j}] = $combo->{'oid' . $j};
       }
       ksort($comb_array);
       $row_title = substr($row_title, 0, strlen($row_title) - 2);
@@ -1363,7 +1363,7 @@ function uc_product_adjustments_form($form_state, $node) {
       }
 
       $form['table']['body'][$i] = array(
-        '#prefix' => '<tr title="'. $row_title .'">',
+        '#prefix' => '<tr title="' . $row_title . '">',
         '#suffix' => '</tr>',
       );
       $form['table']['body'][$i]['combo'] = array(

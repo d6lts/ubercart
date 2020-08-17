@@ -258,7 +258,7 @@ function uc_file_admin_files_form_action($form_state) {
         // Gather a list of user-selected filenames.
         $file = uc_file_get_by_id($file_id);
         $filename = $file->filename;
-        $file_list[] = (substr($filename, -1) == "/") ? $filename .' ('. t('directory') .')' : $filename;
+        $file_list[] = (substr($filename, -1) == "/") ? $filename . ' (' . t('directory') . ')' : $filename;
 
         // Determine if there are any directories in this list.
         $path = uc_file_qualify_file($filename);
@@ -281,7 +281,7 @@ function uc_file_admin_files_form_action($form_state) {
       );
 
       // Don't even show the recursion checkbox unless we have any directories.
-      if ($has_directory && $affected_list[TRUE] !== FALSE ) {
+      if ($has_directory && $affected_list[TRUE] !== FALSE) {
         $form['recurse_directories'] = array(
           '#type' => 'checkbox',
           '#title' => t('Delete selected directories and their sub directories'),
@@ -316,7 +316,7 @@ function uc_file_admin_files_form_action($form_state) {
       $directories = array('' => '/');
       $files = db_query("SELECT * FROM {uc_files}");
       while ($file = db_fetch_object($files)) {
-        if (is_dir(variable_get('uc_file_base_dir', NULL) ."/". $file->filename)) {
+        if (is_dir(variable_get('uc_file_base_dir', NULL) . "/" . $file->filename)) {
           $directories[$file->filename] = $file->filename;
         }
       }
@@ -433,7 +433,7 @@ function uc_file_admin_files_form_action_submit($form, &$form_state) {
 
       // Build the destination location. We start with the base directory, then add any
       // directory which was explicitly selected.
-      $dir = variable_get('uc_file_base_dir', NULL) .'/';
+      $dir = variable_get('uc_file_base_dir', NULL) . '/';
       $dir = (is_null($form_state['values']['upload_dir'])) ? $dir : $dir . $form_state['values']['upload_dir'];
       if (is_dir($dir)) {
 
@@ -509,7 +509,7 @@ function _uc_file_build_js_file_display($file_ids) {
   $recursion_file_ids = _uc_file_sort_names(_uc_file_get_dir_file_ids($file_ids, TRUE));
   foreach ($recursion_file_ids as $file_id) {
     $file = uc_file_get_by_id($file_id);
-    $recursion[] = '<li>'. $file->filename .'</li>';
+    $recursion[] = '<li>' . $file->filename . '</li>';
   }
 
   // Gather the files if recursion ISN'T selected.
@@ -517,7 +517,7 @@ function _uc_file_build_js_file_display($file_ids) {
   $no_recursion_file_ids = $file_ids;
   foreach ($no_recursion_file_ids as $file_id) {
     $file = uc_file_get_by_id($file_id);
-    $no_recursion[] = '<li>'. $file->filename .'</li>';
+    $no_recursion[] = '<li>' . $file->filename . '</li>';
   }
 
   // We'll disable the recursion checkbox if they're equal.

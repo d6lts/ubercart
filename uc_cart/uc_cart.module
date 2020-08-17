@@ -206,21 +206,21 @@ function uc_cart_theme() {
     'uc_cart_block_title' => array(
       'arguments' => array('title' => NULL, 'icon_class' => FALSE, 'collapsible' => FALSE),
     ),
-     'uc_cart_block_title_icon' => array(
+    'uc_cart_block_title_icon' => array(
       'arguments' => array('icon_class' => NULL),
-     ),
-     'uc_cart_block_content_cachable' => array(
-       'arguments' => array(),
-     ),
-     'uc_cart_block_content' => array(
+    ),
+    'uc_cart_block_content_cachable' => array(
+      'arguments' => array(),
+    ),
+    'uc_cart_block_content' => array(
       'arguments' => array('help_text' => NULL, 'items' => NULL, 'item_count' => NULL, 'item_text' => NULL, 'total' => NULL, 'summary_links' => NULL),
-     ),
-     'uc_cart_block_items' => array(
+    ),
+    'uc_cart_block_items' => array(
       'arguments' => array('items' => NULL),
-     ),
-     'uc_cart_block_summary' => array(
+    ),
+    'uc_cart_block_summary' => array(
       'arguments' => array('item_count' => NULL, 'item_text' => NULL, 'total' => NULL, 'summary_links' => NULL),
-     ),
+    ),
     'uc_empty_cart' => array(
       'arguments' => array(),
     ),
@@ -285,14 +285,14 @@ function uc_cart_init() {
  */
 function uc_cart_cron() {
   // Empty anonymous carts.
-  $time = strtotime(variable_get('uc_cart_anon_duration', '4') .' '. variable_get('uc_cart_anon_unit', 'hours') .' ago');
+  $time = strtotime(variable_get('uc_cart_anon_duration', '4') . ' ' . variable_get('uc_cart_anon_unit', 'hours') . ' ago');
   $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= %d AND CHAR_LENGTH(cart_id) >= 22", $time);
   while ($row = db_fetch_object($result)) {
     uc_cart_empty($row->cart_id);
   }
 
   // Empty authenticated carts.
-  $time = strtotime(variable_get('uc_cart_auth_duration', '1') .' '. variable_get('uc_cart_auth_unit', 'years') .' ago');
+  $time = strtotime(variable_get('uc_cart_auth_duration', '1') . ' ' . variable_get('uc_cart_auth_unit', 'years') . ' ago');
   $result = db_query("SELECT DISTINCT cart_id FROM {uc_cart_products} WHERE changed <= %d AND CHAR_LENGTH(cart_id) < 22", $time);
   while ($row = db_fetch_object($result)) {
     uc_cart_empty($row->cart_id);
@@ -1314,7 +1314,7 @@ function uc_cart_complete_sale_account($order) {
 
   $order->uid = $account->uid;
   $order->data['new_user']['name'] = $fields['name'];
-  $order->data['complete_sale'] =  'new_user';
+  $order->data['complete_sale'] = 'new_user';
 }
 
 /**
@@ -1337,7 +1337,7 @@ function theme_uc_cart_complete_sale($message, $order = NULL) {
  *   Toggle auto creation of cart id.
  *
  * @return
- *     Cart id. If $create is FALSE will return FALSE if there is no cart id.
+ *   Cart id. If $create is FALSE will return FALSE if there is no cart id.
  */
 function uc_cart_get_id($create = TRUE) {
   global $user;

@@ -27,10 +27,10 @@ function bahrain_install() {
   // http://www.ubercart.org/ubercart_users_guide/country_settings#address_format_docs
   uc_set_address_format(
     48,
-    "!company\r\n".
-    "!first_name !last_name\r\n".
-    "!street1 !street2\r\n".
-    "!zone_name !postal_code\r\n".
+    "!company\r\n" .
+    "!first_name !last_name\r\n" .
+    "!street1 !street2\r\n" .
+    "!zone_name !postal_code\r\n" .
     "!country_name_if"
   );
 }

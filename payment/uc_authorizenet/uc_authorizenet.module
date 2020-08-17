@@ -311,7 +311,7 @@ function _uc_authorizenet_cim_profile_create_request($order) {
         'payment' => array(
           'creditCard' => array(
             'cardNumber' => $order->payment_details['cc_number'],
-            'expirationDate' => $order->payment_details['cc_exp_year'] .'-'. str_pad($order->payment_details['cc_exp_month'], 2, '0', STR_PAD_LEFT),
+            'expirationDate' => $order->payment_details['cc_exp_year'] . '-' . str_pad($order->payment_details['cc_exp_month'], 2, '0', STR_PAD_LEFT),
           ),
         ),
       ),
@@ -352,7 +352,7 @@ function _uc_authorizenet_cim_profile_charge($order, $amount, $data) {
       $result = array(
         'success' => FALSE,
       );
-      $comment[] = '('. $response['resultCode'] .': '. $response['text'] .')';
+      $comment[] = '(' . $response['resultCode'] . ': ' . $response['text'] . ')';
     }
 
     // Transaction succeeded.
@@ -451,7 +451,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   // Build a description of the order for logging in Auth.Net.
   $description = array();
   foreach ((array) $order->products as $product) {
-    $description[] = $product->qty .'x '. $product->model;
+    $description[] = $product->qty . 'x ' . $product->model;
   }
 
   $billing_address = $order->billing_street1;
@@ -480,7 +480,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
     // 'x_recurring_billing' => 'FALSE',
     'x_amount' => _uc_authorizenet_format_amount($amount),
     'x_card_num' => $order->payment_details['cc_number'],
-    'x_exp_date' => $order->payment_details['cc_exp_month'] .'/'. $order->payment_details['cc_exp_year'],
+    'x_exp_date' => $order->payment_details['cc_exp_month'] . '/' . $order->payment_details['cc_exp_year'],
     'x_card_code' => $order->payment_details['cc_cvv'],
     // 'x_trans_id' => '',
     // 'x_auth_code' => '',
@@ -541,7 +541,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   // Translate the data array into a string we can POST.
   $post_fields = array();
   foreach ($submit_data as $key => $value) {
-    $post_fields[] = $key .'='. urlencode($value);
+    $post_fields[] = $key . '=' . urlencode($value);
   }
 
   // Setup the cURL request.
@@ -566,7 +566,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
   $response = explode('|', $result);
 
   if (variable_get('uc_authnet_response_debug', FALSE)) {
-    watchdog('uc_authorizenet', 'Debug response: !data', array('!data' => '<pre>'. check_plain(print_r($response, TRUE)) .'</pre>'));
+    watchdog('uc_authorizenet', 'Debug response: !data', array('!data' => '<pre>' . check_plain(print_r($response, TRUE)) . '</pre>'));
   }
 
   // Trim off the encapsulating character from the results.
@@ -641,7 +641,7 @@ function _uc_authorizenet_charge($order, $amount, $data) {
 
   // Add the CVV response if enabled.
   if (variable_get('uc_credit_cvv_enabled', TRUE)) {
-    $comment .= '<br />'. t('CVV match: @cvv', array('@cvv' => _uc_authorizenet_cvv($response[38])));
+    $comment .= '<br />' . t('CVV match: @cvv', array('@cvv' => _uc_authorizenet_cvv($response[38])));
   }
 
   // Save the comment to the order.
@@ -884,13 +884,13 @@ function uc_authorizenet_arb_create($order, $fee) {
 
 /**
  * Updates an ARB subscription; for simplicity's sake, payment schedule
- *   information cannot be updated at this time.
+ * information cannot be updated at this time.
  *
  * @param $subscription_id
  *   The ID of the subscription at Authorize.Net.
  * @param $updates
  *   An array of data to update using key/value pairs from the XML API for ARB;
- *     keys should be children of the subscription element in the XML.
+ *   keys should be children of the subscription element in the XML.
  *   See the ARB_guide.pdf from Authorize.Net for ARBCreateSubscriptionRequests.
  * @return
  *   TRUE or FALSE indicating the success of the cancellation.
@@ -990,11 +990,11 @@ function uc_authorizenet_arb_cancel($subscription_id, $order_id = NULL, $fee = a
  *   merchant authentication information.
  */
 function _uc_authorizenet_xml_api_wrapper($request, $xml) {
-  return '<?xml version="1.0" encoding="utf-8"?><'. $request
-        .' xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd"><merchantAuthentication>'
+  return '<?xml version="1.0" encoding="utf-8"?><' . $request
+        . ' xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd"><merchantAuthentication>'
         .'<name>'. variable_get('uc_authnet_api_login_id', '') .'</name>'
         .'<transactionKey>'. variable_get('uc_authnet_api_transaction_key', '')
-        .'</transactionKey></merchantAuthentication>'. $xml .'</'. $request .'>';
+        . '</transactionKey></merchantAuthentication>' . $xml . '</' . $request . '>';
 }
 
 // Converts a hierarchical array of elements into an XML string.
@@ -1005,11 +1005,11 @@ function _uc_authorizenet_array_to_xml($data) {
   foreach ($data as $element => $contents) {
     if (is_array($contents)) {
       // Render the element with its child elements.
-      $xml .= '<'. $element .'>'. _uc_authorizenet_array_to_xml($contents) .'</'. $element .'>';
+      $xml .= '<' . $element . '>' . _uc_authorizenet_array_to_xml($contents) . '</' . $element . '>';
     }
     else {
       // Render the element with its contents.
-      $xml .= '<'. $element .'>'. htmlspecialchars($contents) .'</'. $element .'>';
+      $xml .= '<' . $element . '>' . htmlspecialchars($contents) . '</' . $element . '>';
     }
   }
 
@@ -1018,7 +1018,7 @@ function _uc_authorizenet_array_to_xml($data) {
 
 // Returns the message text for an AVS response code.
 function _uc_authorizenet_avs($code) {
-  $text = $code .' - ';
+  $text = $code . ' - ';
 
   switch ($code) {
     case 'A':
@@ -1067,7 +1067,7 @@ function _uc_authorizenet_avs($code) {
 
 // Returns the message text for a CVV match.
 function _uc_authorizenet_cvv($code) {
-  $text = $code .' - ';
+  $text = $code . ' - ';
 
   switch ($code) {
     case 'M':
@@ -1194,8 +1194,8 @@ function _uc_authorizenet_arb_parse_response($content) {
 
 // Helper function for parsing responses; adapted from sample PHP for ARB.
 function _uc_authorizenet_substr_between($string, $element) {
-  $open = '<'. $element .'>';
-  $close = '</'. $element .'>';
+  $open = '<' . $element . '>';
+  $close = '</' . $element . '>';
 
   // Fail if we can't find the open or close tag for the element.
   if (strpos($string, $open) === FALSE || strpos($string, $close) === FALSE) {

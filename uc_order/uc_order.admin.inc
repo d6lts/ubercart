@@ -245,7 +245,7 @@ function uc_order_workflow_form() {
  */
 function uc_order_workflow_form_submit($form, &$form_state) {
   foreach ($form_state['values']['order_states'] as $key => $value) {
-    variable_set('uc_state_'. $key .'_default', $value['default']);
+    variable_set('uc_state_' . $key . '_default', $value['default']);
   }
 
   foreach ($form_state['values']['order_statuses'] as $key => $value) {
@@ -708,7 +708,7 @@ function uc_order_create_form_submit($form, &$form_state) {
   $order = uc_order_new($form_state['values']['uid'], 'post_checkout');
   uc_order_comment_save($order->order_id, $user->uid, t('Order created by the administration.'), 'admin');
 
-  $form_state['redirect'] = 'admin/store/orders/'. $order->order_id .'/edit';
+  $form_state['redirect'] = 'admin/store/orders/' . $order->order_id . '/edit';
 }
 
 /**
@@ -814,7 +814,7 @@ function uc_order_address_book_form($form_state, $uid = 0, $type = 'billing', $f
   $form['close'] = array(
     '#type' => 'button',
     '#value' => t('Close'),
-    '#attributes' => array('onclick' => "return close_address_select('#". $type ."_address_select');"),
+    '#attributes' => array('onclick' => "return close_address_select('#" . $type . "_address_select');"),
   );
 
   return $form;
@@ -861,7 +861,7 @@ function uc_order_select_customer($email = NULL) {
     while ($user = db_fetch_object($result)) {
       $name = '';
       if (!empty($user->billing_first_name) && !empty($user->billing_last_name)) {
-        $name = $user->billing_last_name .', '. $user->billing_first_name .' ';
+        $name = $user->billing_last_name . ', ' . $user->billing_first_name . ' ';
       }
       // Options formated as "First Last <email@example.com> (username)".
       $options[$user->uid . ':' . $user->mail] = $name . '<' . $user->mail . '>' . ' (' . $user->name . ')';
@@ -937,9 +937,9 @@ function uc_order_select_customer_form($form_state, $options = NULL) {
   if (is_null(arg(4))) {
     $form['desc'] = array(
       '#value' => '<div>'. t('Search for a customer based on these fields.')
-                 .'<br />'. t('Use * as a wildcard to match any character.') .'<br />'
-                 .'(<em>'. t('Leave a field empty to ignore it in the search.')
-                 .'</em>)</div>',
+                 . '<br />' . t('Use * as a wildcard to match any character.') . '<br />'
+                 . '(<em>' . t('Leave a field empty to ignore it in the search.')
+                 . '</em>)</div>',
     );
 
     // Customer first name.
@@ -1075,7 +1075,7 @@ function uc_order_history($user) {
     $link = l($order->order_id, 'user/'. $user->uid .'/order/'. $order->order_id);
 
     if (user_access('view all orders')) {
-      $link .= '<span class="order-admin-icons">'. uc_order_actions($order, TRUE) .'</span>';
+      $link .= '<span class="order-admin-icons">' . uc_order_actions($order, TRUE) . '</span>';
     }
 
     $rows[] = array(
@@ -1284,11 +1284,11 @@ function uc_order_edit_form_submit($form, &$form_state) {
     foreach ($_POST['products'] as $product) {
       if (!isset($product['remove']) && intval($product['qty']) > 0) {
         $product['data'] = unserialize($product['data']);
-        $product = (object)$product;
+        $product = (object) $product;
         $order->products[] = $product;
       }
       else {
-        $log['remove_'. $product['nid']] = $product['title'] .' removed from order.';
+        $log['remove_' . $product['nid']] = $product['title'] . ' removed from order.';
       }
     }
   }
@@ -1539,7 +1539,7 @@ function uc_order_add_line_item_form($form_state, $order, $line_item_id) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Add line item'),
-    '#suffix' => l(t('Cancel'), 'admin/store/orders/'. $order->order_id .'/edit'),
+    '#suffix' => l(t('Cancel'), 'admin/store/orders/' . $order->order_id . '/edit'),
   );
 
   return $form;
@@ -1578,7 +1578,7 @@ function uc_order_add_line_item_form_submit($form, &$form_state) {
     drupal_set_message(t('Line item added to order.'));
   }
 
-  $form_state['redirect'] = 'admin/store/orders/'. $form_state['values']['order_id'] .'/edit';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/edit';
 }
 
 /**

@@ -22,7 +22,7 @@ function jordan_install() {
     array(400, 'JO-MD', 'Mādaba'),
   );
 
- foreach ($zones as $zone) {
+  foreach ($zones as $zone) {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
   }
 

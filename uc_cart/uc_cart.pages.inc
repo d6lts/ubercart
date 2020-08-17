@@ -202,7 +202,7 @@ function uc_cart_checkout_form() {
             '#type' => 'button',
             '#value' => t('Next'),
             '#weight' => variable_get("uc_pane_{$pane_id}_field_button_weight", 20),
-            '#attributes' => array('onclick' => "return uc_cart_next_button_click(this, '". $pane['next'] ."', '". $opt ."');"),
+            '#attributes' => array('onclick' => "return uc_cart_next_button_click(this, '" . $pane['next'] . "', '" . $opt . "');"),
             '#prefix' => '<div class="next-button show-onload">',
             '#suffix' => '</div>',
           );
@@ -361,7 +361,7 @@ function uc_cart_checkout_form_submit($form, &$form_state) {
  * @see uc_cart_checkout_form()
  */
 function uc_cart_checkout_review() {
-  drupal_add_js(drupal_get_path('module', 'uc_cart') .'/uc_cart.js');
+  drupal_add_js(drupal_get_path('module', 'uc_cart') . '/uc_cart.js');
   $form = drupal_get_form('uc_cart_checkout_review_form');
 
   if ($_SESSION['do_review'] !== TRUE && !uc_referer_check(array('cart/checkout'))) {
@@ -417,7 +417,7 @@ function uc_cart_checkout_review() {
  * @ingroup themeable
  */
 function theme_uc_cart_checkout_review($panes, $form) {
-  drupal_add_css(drupal_get_path('module', 'uc_cart') .'/uc_cart.css');
+  drupal_add_css(drupal_get_path('module', 'uc_cart') . '/uc_cart.css');
 
   $output = check_markup(variable_get('uc_checkout_review_instructions', uc_get_message('review_instructions')), variable_get('uc_checkout_review_instructions_format', FILTER_FORMAT_DEFAULT), FALSE)
            .'<table class="order-review-table">';
@@ -430,7 +430,7 @@ function theme_uc_cart_checkout_review($panes, $form) {
       foreach ($data as $row) {
         if (is_array($row)) {
           if (isset($row['border'])) {
-            $border = ' class="row-border-'. $row['border'] . '"';
+            $border = ' class="row-border-' . $row['border'] . '"';
           }
           else {
             $border = '';

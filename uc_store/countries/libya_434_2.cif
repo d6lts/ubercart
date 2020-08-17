@@ -41,10 +41,10 @@ function libya_install() {
   // http://www.ubercart.org/ubercart_users_guide/country_settings#address_format_docs
   uc_set_address_format(
     434,
-    "!company\r\n".
-    "!first_name !last_name\r\n".
-    "!street1\r\n".
-    "!street2\r\n".
+    "!company\r\n" .
+    "!first_name !last_name\r\n" .
+    "!street1\r\n" .
+    "!street2\r\n" .
     "!city, !zone_code !postal_code\r\n".
     "!country_name_if"
   );

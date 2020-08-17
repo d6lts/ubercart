@@ -54,10 +54,10 @@ function theme_uc_file_user_downloads($header, $files) {
 
   $output  = theme('table', $header, $rows);
   $output .= theme('pager', NULL, UC_FILE_PAGER_SIZE, 0);
-  $output .= '<div class="form-item"><p class="description">'.
+  $output .= '<div class="form-item"><p class="description">' .
   t('Once your download is finished, you must refresh the page to download again. (Provided you have permission)') .
-  '<br />'. t('Downloads will not be counted until the file is finished transferring, even though the number may increment when you click.') .
-  '<br /><b>'. t('Do not use any download acceleration feature to download the file, or you may lock yourself out of the download.') .'</b>'.
+  '<br />' . t('Downloads will not be counted until the file is finished transferring, even though the number may increment when you click.') .
+  '<br /><b>' . t('Do not use any download acceleration feature to download the file, or you may lock yourself out of the download.') . '</b>' .
   '</p></div>';
   return $output;
 }
@@ -98,7 +98,7 @@ function uc_file_user_downloads($account) {
     // Set the JS behavior when this link gets clicked.
     $onclick = array(
       'attributes' => array(
-        'onclick' => 'uc_file_update_download('. $row .', '. $file->accessed .', '. ((empty($download_limit)) ? -1 : $download_limit) .');', 'id' => 'link-'. $row
+        'onclick' => 'uc_file_update_download(' . $row . ', ' . $file->accessed . ', ' . ((empty($download_limit)) ? -1 : $download_limit) . ');', 'id' => 'link-' . $row
       ),
     );
 
@@ -155,11 +155,11 @@ function _uc_file_download($fid, $key) {
   // Error messages for various failed download states.
   $admin_message = t('Please contact the site administrator if this message has been received in error.');
   $error_messages = array(
-    UC_FILE_ERROR_NOT_A_FILE              => t('The file you requested does not exist. '),
-    UC_FILE_ERROR_TOO_MANY_BOGUS_REQUESTS => t('You have attempted to download an incorrect file URL too many times. '),
+    UC_FILE_ERROR_NOT_A_FILE              => t('The file you requested does not exist.'),
+    UC_FILE_ERROR_TOO_MANY_BOGUS_REQUESTS => t('You have attempted to download an incorrect file URL too many times.'),
     UC_FILE_ERROR_INVALID_DOWNLOAD        => t("The following URL is not a valid download link. "),
-    UC_FILE_ERROR_TOO_MANY_LOCATIONS      => t('You have downloaded this file from too many different locations. '),
-    UC_FILE_ERROR_TOO_MANY_DOWNLOADS      => t('You have reached the download limit for this file. '),
+    UC_FILE_ERROR_TOO_MANY_LOCATIONS      => t('You have downloaded this file from too many different locations.'),
+    UC_FILE_ERROR_TOO_MANY_DOWNLOADS      => t('You have reached the download limit for this file.'),
     UC_FILE_ERROR_EXPIRED                 => t("This file download has expired. "),
     UC_FILE_ERROR_HOOK_ERROR              => t("A hook denied your access to this file. "),
   );
@@ -198,7 +198,7 @@ function _uc_file_download($fid, $key) {
  */
 function _uc_file_download_validate($file_download, &$user, $ip) {
 
-  $request_cache = cache_get('uc_file_'. $ip);
+  $request_cache = cache_get('uc_file_' . $ip);
   $requests = ($request_cache) ? $request_cache->data + 1 : 1;
 
   $message_user = ($user->uid) ? t('The user %username ', array('%username' => $user->name)) : t('The IP address %ip ', array('%ip' => $ip));
@@ -388,7 +388,7 @@ function _uc_file_download_redirect($uid = NULL) {
   // Redirect users back to their file page.
   else {
     if (!headers_sent()) {
-      drupal_goto('user/'. $uid .'/purchased-files');
+      drupal_goto('user/' . $uid . '/purchased-files');
     }
   }
 }

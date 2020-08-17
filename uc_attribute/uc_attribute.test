@@ -401,16 +401,16 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $total_price = uc_price($price_info, $context);
 
     $raw = array(
-      'none' => $option->name .'</option>',
-      'adjustment' => $option->name .', +'. $adjust_price .'</option>',
-      'total' => $total_price .'</option>',
+      'none' => $option->name . '</option>',
+      'adjustment' => $option->name . ', +' . $adjust_price . '</option>',
+      'total' => $total_price . '</option>',
     );
 
     foreach (array('none', 'adjustment', 'total') as $type) {
       $edit['uc_attribute_option_price_format'] = $type;
       $this->drupalPost('admin/store/settings/attributes', $edit, t('Save configuration'));
 
-      $this->drupalGet('node/'. $product->nid);
+      $this->drupalGet('node/' . $product->nid);
       $this->AssertRaw($raw[$type], t('Attribute option pricing is correct.'), t('Ubercart'));
     }
   }
@@ -615,13 +615,13 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $class = $this->createProductClass();
     $attribute = self::createAttribute();
 
-    $this->drupalGet('admin/store/products/classes/'. $class->pcid .'/attributes');
+    $this->drupalGet('admin/store/products/classes/' . $class->pcid . '/attributes');
 
     $this->assertText(t('You must first add attributes to this class.'), t('Class attribute form working.'), t('Ubercart'));
 
     uc_attribute_subject_save($attribute, 'class', $class->pcid);
 
-    $this->drupalGet('admin/store/products/classes/'. $class->pcid .'/attributes');
+    $this->drupalGet('admin/store/products/classes/' . $class->pcid . '/attributes');
 
     $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'), t('Ubercart'));
 
@@ -631,7 +631,7 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
       $edit["attributes[{$attribute->aid}][$field]"] = $value;
     }
     $this->showVar($edit);
-    $this->drupalPost('admin/store/products/classes/'. $class->pcid .'/attributes', $edit, t('Save changes'));
+    $this->drupalPost('admin/store/products/classes/' . $class->pcid . '/attributes', $edit, t('Save changes'));
 
     $attribute = uc_attribute_load($attribute->aid, $class->pcid, 'class');
 
@@ -649,7 +649,7 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
 
     $edit = array();
     $edit["attributes[{$attribute->aid}][remove]"] = TRUE;
-    $this->drupalPost('admin/store/products/classes/'. $class->pcid .'/attributes', $edit, t('Save changes'));
+    $this->drupalPost('admin/store/products/classes/' . $class->pcid . '/attributes', $edit, t('Save changes'));
 
     $this->assertText(t('You must first add attributes to this class.'), t('Class attribute form working.'), t('Ubercart'));
   }
@@ -661,13 +661,13 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $class = $this->createProductClass();
     $attribute = self::createAttribute();
 
-    $this->drupalGet('admin/store/products/classes/'. $class->pcid .'/attributes/add');
+    $this->drupalGet('admin/store/products/classes/' . $class->pcid . '/attributes/add');
 
     $this->assertRaw(t('@attribute</option>', array('@attribute' => $attribute->name)), t('Class attribute add form working.'), t('Ubercart'));
 
     $edit["add_attributes[]"] = $attribute->aid;
 
-    $this->drupalPost('admin/store/products/classes/'. $class->pcid .'/attributes/add', $edit, t('Add attributes'));
+    $this->drupalPost('admin/store/products/classes/' . $class->pcid . '/attributes/add', $edit, t('Add attributes'));
 
     $this->assertNoText(t('You must first add attributes to this class.'), t('Class attribute form working.'), t('Ubercart'));
   }
@@ -682,7 +682,7 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
 
     uc_attribute_subject_save($attribute, 'class', $class->pcid);
 
-    $this->drupalGet('admin/store/products/classes/'. $class->pcid .'/options');
+    $this->drupalGet('admin/store/products/classes/' . $class->pcid . '/options');
 
     $this->assertRaw(t(' @option</label>', array('@option' => $option->name)), t('Class attribute option form working.'), t('Ubercart'));
 
@@ -695,7 +695,7 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     unset($o['select']);
     $edit["attributes[$attribute->aid][default]"] = $option->oid;
     $this->showVar($edit);
-    $this->drupalPost('admin/store/products/classes/'. $class->pcid .'/options', $edit, t('Submit'));
+    $this->drupalPost('admin/store/products/classes/' . $class->pcid . '/options', $edit, t('Submit'));
     $this->assertText('The product class options have been saved.', t('Class attribute option saved.'), t('Ubercart'));
     $this->showVar($option);
 
@@ -761,7 +761,7 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
     $this->assertText($product->title, t('Product name found.'), t('Ubercart'));
     $this->drupalPost(NULL, array(), t('Flush all'));
 
-    $this->drupalGet('node/'. $product->nid .'/edit/attributes');
+    $this->drupalGet('node/' . $product->nid . '/edit/attributes');
     $this->assertText($attribute->name, t('Product attribute reset successfully.'), t('Ubercart'));
   }
 
@@ -864,6 +864,6 @@ class UbercartAttributeTestCase extends UbercartTestHelper {
    * @param $save
    */
   function showVar($var) {
-    $this->pass('<pre>'. print_r($var, TRUE) .'</pre>');
+    $this->pass('<pre>' . print_r($var, TRUE) . '</pre>');
   }
 }

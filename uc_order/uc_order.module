@@ -366,7 +366,7 @@ function uc_order_init() {
         'adminOrders' => url('admin/store/orders/'),
       ),
     ), 'setting');
-    drupal_add_js(drupal_get_path('module', 'uc_order') .'/uc_order.js');
+    drupal_add_js(drupal_get_path('module', 'uc_order') . '/uc_order.js');
   }
 }
 
@@ -1450,17 +1450,17 @@ function uc_order_log_changes($order_id, $changes) {
  *   Either 'delivery' or 'billing'.
  */
 function uc_order_address($order, $type) {
-  $name = $order->{$type .'_first_name'} .' '. $order->{$type .'_last_name'};
+  $name = $order->{$type . '_first_name'} . ' ' . $order->{$type . '_last_name'};
   $address = uc_address_format(
-    $order->{$type .'_first_name'},
-    $order->{$type .'_last_name'},
-    $order->{$type .'_company'},
-    $order->{$type .'_street1'},
-    $order->{$type .'_street2'},
-    $order->{$type .'_city'},
-    $order->{$type .'_zone'},
-    $order->{$type .'_postal_code'},
-    $order->{$type .'_country'}
+    $order->{$type . '_first_name'},
+    $order->{$type . '_last_name'},
+    $order->{$type . '_company'},
+    $order->{$type . '_street1'},
+    $order->{$type . '_street2'},
+    $order->{$type . '_city'},
+    $order->{$type . '_zone'},
+    $order->{$type . '_postal_code'},
+    $order->{$type . '_country'}
   );
 
   if (variable_get('uc_order_capitalize_addresses', TRUE)) {
@@ -1728,7 +1728,7 @@ function uc_order_template_options($custom = FALSE) {
  *
  * @param $scope
  *   Specify the scope for the order states you want listed - all, general, or
- *   specific.  States with a general scope are used on general lists and pages.
+ *   specific. States with a general scope are used on general lists and pages.
  * @param $sql
  *   Pass this parameter as TRUE to alter the return value for a SQL query.
  * @return
@@ -1794,7 +1794,7 @@ function uc_order_state_default($state_id) {
   }
 
   // Attempt to get the default state from the form.
-  $default[$state_id] = variable_get('uc_state_'. $state_id .'_default', NULL);
+  $default[$state_id] = variable_get('uc_state_' . $state_id . '_default', NULL);
 
   // If it is not found, pick the lightest status for this state.
   if (empty($default[$state_id])) {
@@ -1810,11 +1810,11 @@ function uc_order_state_default($state_id) {
  *
  * @param $scope
  *   Specify the scope for the order statuses you want listed - all, general,
- *   specific, or any order state id.  Defaults to all.
+ *   specific, or any order state id. Defaults to all.
  * @param $sql
  *   Pass this parameter as TRUE to alter the return value for a SQL query.
  * @param $action
- *   Empty by default.  Set to rebuild to load the order statuses from scratch,
+ *   Empty by default. Set to rebuild to load the order statuses from scratch,
  *   disregarding the current cached value for the specified $scope.
  * @return
  *   Either an array of status arrays or a string containing an array of status
@@ -1885,7 +1885,7 @@ function uc_order_status_data($status_id, $key) {
  *
  * @param $icon_html
  *   Specify whether or not to return the result as an HTML string with the
- *     order action icon links.
+ *   order action icon links.
  * @return
  *   Valid actions for an order; returned according to the $icon_html parameter.
  */
@@ -1900,7 +1900,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $alt = t('View order @order_id.', $order_id);
     $actions[] = array(
       'name' => t('View'),
-      'url' => 'admin/store/orders/'. $order->order_id,
+      'url' => 'admin/store/orders/' . $order->order_id,
       'icon' => '<img src="'. base_path() . drupal_get_path('module', 'uc_store') .'/images/order_view.gif" alt="'. $alt .'" />',
       'title' => $alt,
     );
@@ -1908,7 +1908,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $alt = t('Print order @order_id.', $order_id);
     $actions[] = array(
       'name' => t('Print'),
-      'url' => 'admin/store/orders/'. $order->order_id .'/invoice/print',
+      'url' => 'admin/store/orders/' . $order->order_id . '/invoice/print',
       'icon' => '<img src="'. base_path() . drupal_get_path('module', 'uc_store') .'/images/print.gif" alt="'. $alt .'" />',
       'title' => $alt,
     );
@@ -1917,7 +1917,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $alt = t('View order @order_id.', $order_id);
     $actions[] = array(
       'name' => t('View'),
-      'url' => 'user/'. $user->uid .'/orders/'. $order->order_id,
+      'url' => 'user/' . $user->uid . '/orders/' . $order->order_id,
       'icon' => '<img src="'. base_path() . drupal_get_path('module', 'uc_store') .'/images/order_view.gif" alt="'. $alt .'" />',
       'title' => $alt,
     );
@@ -1926,7 +1926,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
       $alt = t('Print order @order_id.', $order_id);
       $actions[] = array(
         'name' => t('Print'),
-        'url' => 'user/'. $user->uid .'/orders/'. $order->order_id .'/print',
+        'url' => 'user/' . $user->uid . '/orders/' . $order->order_id . '/print',
         'icon' => '<img src="'. base_path() . drupal_get_path('module', 'uc_store') .'/images/print.gif" alt="'. $alt .'" />',
         'title' => $alt,
       );
@@ -1937,7 +1937,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $alt = t('Edit order @order_id.', $order_id);
     $actions[] = array(
       'name' => t('Edit'),
-      'url' => 'admin/store/orders/'. $order->order_id .'/edit',
+      'url' => 'admin/store/orders/' . $order->order_id . '/edit',
       'icon' => '<img src="'. base_path() . drupal_get_path('module', 'uc_store') .'/images/order_edit.gif" alt="'. $alt .'" />',
       'title' => $alt,
     );
@@ -1947,7 +1947,7 @@ function uc_order_actions($order, $icon_html = FALSE) {
     $alt = t('Delete order @order_id.', $order_id);
     $actions[] = array(
       'name' => t('Delete'),
-      'url' => 'admin/store/orders/'. $order->order_id .'/delete',
+      'url' => 'admin/store/orders/' . $order->order_id . '/delete',
       'icon' => '<img src="'. base_path() . drupal_get_path('module', 'uc_store') .'/images/order_delete.gif" alt="'. $alt .'" />',
       'title' => $alt,
     );

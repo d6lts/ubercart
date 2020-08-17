@@ -398,7 +398,7 @@ function uc_credit_payment_method() {
     'amex' => t('American Express'),
   );
   foreach ($cc_types as $type => $label) {
-    if (variable_get('uc_credit_'. $type, TRUE)) {
+    if (variable_get('uc_credit_' . $type, TRUE)) {
       $title .= ' ' . theme('image', drupal_get_path('module', 'uc_credit') . '/images/' . $type . '.gif', $label,  '', array('class' => 'uc-credit-cctype uc-credit-cctype-' . $type));
     }
   }
@@ -1304,7 +1304,7 @@ function uc_credit_order_view_form($form_state, $order_id) {
  * Submit handler for order view form.
  */
 function uc_credit_order_view_form_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/store/orders/'. $form_state['values']['order_id'] .'/credit';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/credit';
 }
 
 /*******************************************************************************
@@ -1577,7 +1577,7 @@ function uc_credit_transaction_types() {
  *
  * @return
  *   A string containing the ID of the default gateway or FALSE if none exists
- *     or none have valid credit callbacks.
+ *   or none have valid credit callbacks.
  */
 function uc_credit_default_gateway() {
   // Get an array of enabled payment gateways available for the payment method.
@@ -1666,7 +1666,7 @@ function uc_credit_log_authorization($order_id, $auth_id, $amount) {
  *   The payment service's ID for the authorization that was captured.
  * @return
  *   The entire updated data array for the order or FALSE to indicate the
- *     specified authorization was not found.
+ *   specified authorization was not found.
  */
 function uc_credit_log_prior_auth_capture($order_id, $auth_id) {
   // Load the existing order data array.

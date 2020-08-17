@@ -12,7 +12,7 @@
  *   The string identifying the table you want to display, like a form ID.
  * @param ...
  *   Any additional arguments will be passed on to the table builder function
- *     specified as the $table_id.
+ *   specified as the $table_id.
  * @return
  *   The table form element.
  */
@@ -123,7 +123,7 @@ function theme_tapir_table($element) {
 
     // Merge the row data into a single row array along with the attributes.
     if (isset($data['#attributes'])) {
-      $row = array_merge(array('data' => $row), (array)$data['#attributes']);
+      $row = array_merge(array('data' => $row), (array) $data['#attributes']);
     }
 
     // Add the current row to the table rows array.

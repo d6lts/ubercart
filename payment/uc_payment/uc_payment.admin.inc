@@ -161,8 +161,8 @@ function theme_uc_payment_method_table($form) {
   $rows = array();
   foreach (element_children($form) as $method) {
     $row = array(
-      drupal_render($form[$method]['uc_payment_method_'. $method .'_checkout']),
-      drupal_render($form[$method]['uc_payment_method_'. $method .'_weight']),
+      drupal_render($form[$method]['uc_payment_method_' . $method . '_checkout']),
+      drupal_render($form[$method]['uc_payment_method_' . $method . '_weight']),
       drupal_render($form[$method]['uc_payment_'. $method .'_gateway']),
     );
 
@@ -386,8 +386,8 @@ function uc_payment_by_order_form($form_state, $order) {
         '#value' => ($payment->comment == '') ? '-' : filter_xss_admin($payment->comment),
       );
       if (variable_get('uc_payment_deleting', TRUE) && user_access('delete payments')) {
-        $action_value = l(t('Delete'), 'admin/store/orders/'. $order->order_id .'/payments/'
-                          . $payment->receipt_id .'/delete');
+        $action_value = l(t('Delete'), 'admin/store/orders/' . $order->order_id . '/payments/'
+                          . $payment->receipt_id . '/delete');
       }
       else {
         $action_value = '-';
@@ -510,7 +510,7 @@ function uc_payment_delete_confirm_form($form_state, $order, $payment) {
   // Make sure the payment is for the specified order.
   if ($payment->order_id != $order->order_id) {
     drupal_set_message(t('An error loading the payment information occurred.'));
-    drupal_goto('admin/store/orders/'. $order->order_id .'/payments');
+    drupal_goto('admin/store/orders/' . $order->order_id . '/payments');
   }
 
   $context = array(
@@ -521,7 +521,7 @@ function uc_payment_delete_confirm_form($form_state, $order, $payment) {
     ),
   );
 
-  $desc = '<strong>'. t('Payment information:') .'</strong> '
+  $desc = '<strong>' . t('Payment information:') . '</strong> '
         . t('@method payment of @amount received on @date.', array('@method' => $payment->method, '@amount' => uc_price($payment->amount, $context), '@date' => format_date($payment->received, 'short')));
 
   $form['order_id'] = array(
@@ -533,7 +533,7 @@ function uc_payment_delete_confirm_form($form_state, $order, $payment) {
     '#value' => $payment->receipt_id,
   );
 
-  return confirm_form($form, t('Are you sure you want to delete this payment?'), 'admin/store/orders/'. $order->order_id .'/payments', $desc, t('Delete'));
+  return confirm_form($form, t('Are you sure you want to delete this payment?'), 'admin/store/orders/' . $order->order_id . '/payments', $desc, t('Delete'));
 }
 
 /**
@@ -546,5 +546,5 @@ function uc_payment_delete_confirm_form_submit($form, &$form_state) {
 
   drupal_set_message(t('Payment deleted.'));
 
-  $form_state['redirect'] = 'admin/store/orders/'. $form_state['values']['order_id'] .'/payments';
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'] . '/payments';
 }

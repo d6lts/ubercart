@@ -354,5 +354,5 @@ function uc_credit_terminal_form_submit($form, &$form_state) {
     drupal_set_message(t('There was an error processing the credit card.  See the admin comments for details.'), 'error');
   }
 
-  $form_state['redirect'] = 'admin/store/orders/'. $form_state['values']['order_id'];
+  $form_state['redirect'] = 'admin/store/orders/' . $form_state['values']['order_id'];
 }

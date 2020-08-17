@@ -374,7 +374,7 @@ function uc_roles_user_submit(&$edit, &$account, $category) {
 
   // Check if any temporary role actions were taken.
   if (isset($edit['table'])) {
-    foreach ((array)$edit['table'] as $rid => $value) {
+    foreach ((array) $edit['table'] as $rid => $value) {
       // Remove this expiration.
       if ($value['remove']) {
         uc_roles_delete($account, $rid);
@@ -858,11 +858,11 @@ function uc_roles_feature_form_submit($form, &$form_state) {
 
     // We should be setting NULL, but drupal_write_record() ...
     'end_override' => $form_state['values']['end_override'],
-    'end_time'     => $form_state['values']['expiration'  ] === 'abs' ? $form_state['values']['uc_roles_expire_absolute'] : NULL,
+    'end_time'     => $form_state['values']['expiration'] === 'abs' ? $form_state['values']['uc_roles_expire_absolute'] : NULL,
   );
 
   $description = empty($product_role['model']) ? t('<strong>SKU:</strong> Any<br />') : t('<strong>SKU:</strong> !sku<br />', array('!sku' => $product_role['model']));
-  $description .=  t('<strong>Role:</strong> @role_name<br />', array('@role_name' => _uc_roles_get_name($product_role['rid'])));
+  $description .= t('<strong>Role:</strong> @role_name<br />', array('@role_name' => _uc_roles_get_name($product_role['rid'])));
 
   if ($product_role['end_override']) {
     if ($product_role['end_time']) {
@@ -1331,7 +1331,7 @@ function uc_roles_renew($account, $rid, $timestamp, $silent = FALSE) {
  * @see uc_roles_grant()
  */
 function _uc_roles_flush_menu_cache($account) {
-  cache_clear_all($account->uid .':', 'cache_menu', TRUE);
+  cache_clear_all($account->uid . ':', 'cache_menu', TRUE);
 }
 
 /**
@@ -1400,5 +1400,5 @@ function _uc_roles_get_expiration($duration, $granularity, $start_time = NULL) {
   $start_time = (!is_null($start_time)) ? $start_time : time();
   $operator = ($duration < 0) ? '' : '+';
 
-  return strtotime($operator . $duration .' '. $granularity, $start_time);
+  return strtotime($operator . $duration . ' ' . $granularity, $start_time);
 }

@@ -70,12 +70,12 @@ function uc_order_pane_ship_to($op, $arg1) {
 
     case 'edit-title':
       $output = ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
-                .'/images/address_book.gif" alt="'. t('Select from address book.') .'" '
+                . '/images/address_book.gif" alt="' . t('Select from address book.') . '" '
                 .'title="'. t('Select from address book.') .'" onclick="load_address_select('. $arg1['order_uid']['#value'] .', \'#delivery_address_select\', \'delivery\');" '
                 .'style="position: relative; top: 2px; cursor: pointer;" />';
 
-      $output .= ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
-                 .'/images/copy.gif" alt="'. t('Copy billing information.') .'" title="'
+      $output .= ' <img src="' . base_path() . drupal_get_path('module', 'uc_store')
+                 . '/images/copy.gif" alt="' . t('Copy billing information.') . '" title="'
                  . t('Copy billing information.') .'" onclick="uc_order_copy_billing_to_shipping();" '
                  .'style="position: relative; top: 2px; cursor: pointer;" />';
 
@@ -162,11 +162,11 @@ function uc_order_pane_bill_to($op, $arg1) {
 
     case 'edit-title':
       $output = ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
-                .'/images/address_book.gif" alt="'. t('Select from address book.') .'" '
+                . '/images/address_book.gif" alt="' . t('Select from address book.') . '" '
                 .'title="'. t('Select from address book.') .'" onclick="load_address_select('. $arg1['order_uid']['#value'] .', \'#billing_address_select\', \'billing\');" '
                 .'style="position: relative; top: 2px; cursor: pointer;" />';
-      $output .= ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
-               .'/images/copy.gif" alt="'. t('Copy shipping information.') .'" title="'
+      $output .= ' <img src="' . base_path() . drupal_get_path('module', 'uc_store')
+               . '/images/copy.gif" alt="' . t('Copy shipping information.') . '" title="'
                . t('Copy shipping information.') .'" onclick="uc_order_copy_shipping_to_billing();" '
                .'style="position: relative; top: 2px; cursor: pointer;" />';
       return $output;
@@ -241,11 +241,11 @@ function uc_order_pane_customer($op, $arg1) {
 
     case 'edit-title':
       $output = ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
-                .'/images/order_view.gif" alt="'. t('Search for an existing customer.') .'" '
+                . '/images/order_view.gif" alt="' . t('Search for an existing customer.') . '" '
                 .'title="'. t('Search for an existing customer.') .'" onclick="load_customer_search();" '
                 .'style="position: relative; top: 2px; cursor: pointer;" />';
-      $output .= ' <img src="'. base_path() . drupal_get_path('module', 'uc_store')
-                .'/images/menu_customers_small.gif" alt="'. t('Create a new customer.') .'" '
+      $output .= ' <img src="' . base_path() . drupal_get_path('module', 'uc_store')
+                . '/images/menu_customers_small.gif" alt="' . t('Create a new customer.') . '" '
                 .'title="'. t('Create a new customer.') .'" onclick="load_new_customer_form();" '
                 .'style="position: relative; top: 2px; cursor: pointer;" />';
       return $output;

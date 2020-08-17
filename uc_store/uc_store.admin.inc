@@ -820,11 +820,11 @@ function uc_store_format_settings_form() {
     '#options' => $units,
   );
   foreach ($units as $unit => $name) {
-    $form['weight']['uc_weight_format_'. $unit] = array(
+    $form['weight']['uc_weight_format_' . $unit] = array(
       '#type' => 'textfield',
       '#title' => t('@unit format string', array('@unit' => $name)),
       '#summary callback' => 'summarize_null',
-      '#default_value' => variable_get('uc_weight_format_'. $unit, '!value '. $unit),
+      '#default_value' => variable_get('uc_weight_format_' . $unit, '!value ' . $unit),
     );
   }
 
@@ -851,10 +851,10 @@ function uc_store_format_settings_form() {
     '#options' => $units,
   );
   foreach ($units as $unit => $name) {
-    $form['length']['uc_length_format_'. $unit] = array(
+    $form['length']['uc_length_format_' . $unit] = array(
       '#type' => 'textfield',
       '#title' => t('@unit format string', array('@unit' => $name)),
-      '#default_value' => variable_get('uc_length_format_'. $unit, '!value '. $unit),
+      '#default_value' => variable_get('uc_length_format_' . $unit, '!value ' . $unit),
     );
   }
 

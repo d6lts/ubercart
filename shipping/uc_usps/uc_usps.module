@@ -423,8 +423,8 @@ function uc_usps_quote($products, $details, $method) {
         else {
           if (strpos($method['id'], 'intl')) {
             foreach ($package->Service as $service) {
-              $id = (string)$service['ID'];
-              $services[$id]['label'] = t('U.S.P.S. @service', array('@service' => (string)$service->SvcDescription));
+              $id = (string) $service['ID'];
+              $services[$id]['label'] = t('U.S.P.S. @service', array('@service' => (string) $service->SvcDescription));
               // Markup rate before customer sees it
               if (!isset($services[$id]['rate'])) {
                 $services[$id]['rate'] = 0;
@@ -434,12 +434,12 @@ function uc_usps_quote($products, $details, $method) {
           }
           else {
             foreach ($package->Postage as $postage) {
-              $classid = (string)$postage['CLASSID'];
+              $classid = (string) $postage['CLASSID'];
               if ($classid === '0') {
-                if ((string)$postage->MailService == "First-Class Mail® Parcel") {
+                if ((string) $postage->MailService == "First-Class Mail® Parcel") {
                   $classid = 'zeroParcel';
                 }
-                elseif ((string)$postage->MailService == "First-Class Mail® Letter") {
+                elseif ((string) $postage->MailService == "First-Class Mail® Letter") {
                   $classid = 'zeroFlat';
                 }
                 else {
@@ -449,7 +449,7 @@ function uc_usps_quote($products, $details, $method) {
               if (!isset($services[$classid]['rate'])) {
                 $services[$classid]['rate'] = 0;
               }
-              $services[$classid]['label'] = t('U.S.P.S. @service', array('@service' => (string)$postage->MailService));
+              $services[$classid]['label'] = t('U.S.P.S. @service', array('@service' => (string) $postage->MailService));
               // Markup rate before customer sees it
               // Rates are stored differently if ONLINE $rate_type is requested.
               // First Class doesn't have online rates, so if CommercialRate
@@ -467,8 +467,8 @@ function uc_usps_quote($products, $details, $method) {
     }
   }
 
-  $method_services = 'uc_'. $method['id'] .'_services';
-  $usps_services = array_filter(variable_get($method_services, array_keys(call_user_func('_'. $method_services))));
+  $method_services = 'uc_' . $method['id'] . '_services';
+  $usps_services = array_filter(variable_get($method_services, array_keys(call_user_func('_' . $method_services))));
   foreach ($services as $service => $quote) {
     if ($service != 'data' && !in_array($service, $usps_services)) {
       unset($services[$service]);
@@ -548,7 +548,7 @@ function theme_uc_usps_option_label($service, $packages) {
  *   RateV4Request XML document to send to USPS
  */
 function uc_usps_rate_request($packages, $origin, $destination) {
-  $request  = '<RateV4Request USERID="'. variable_get('uc_usps_user_id', '') .'">';
+  $request  = '<RateV4Request USERID="' . variable_get('uc_usps_user_id', '') . '">';
   $request .= '<Revision>2</Revision>';
 
   $rate_type = variable_get('uc_usps_online_rates', FALSE);
@@ -557,18 +557,18 @@ function uc_usps_rate_request($packages, $origin, $destination) {
   foreach ($packages as $package) {
     $qty = $package->qty;
     for ($i = 0; $i < $qty; $i++) {
-      $request .= '<Package ID="'. $package_id .'">'.
-        '<Service>'. ($rate_type ? 'ONLINE' : 'ALL') .'</Service>'.
-        '<ZipOrigination>'. substr(trim($origin->postal_code), 0, 5) .'</ZipOrigination>'.
-        '<ZipDestination>'. substr(trim($destination->postal_code), 0, 5) .'</ZipDestination>'.
-        '<Pounds>'. intval($package->pounds) .'</Pounds>'.
-        '<Ounces>'. number_format($package->ounces, 1, '.', '') .'</Ounces>'.
-        '<Container>'. $package->container .'</Container>'.
-        '<Size>'. $package->size .'</Size>'.
-        '<Width>'. $package->width .'</Width>'.
-        '<Length>'. $package->length .'</Length>'.
-        '<Height>'. $package->height .'</Height>'.
-        '<Girth>'. $package->girth .'</Girth>'.
+      $request .= '<Package ID="' . $package_id . '">' .
+        '<Service>' . ($rate_type ? 'ONLINE' : 'ALL') . '</Service>' .
+        '<ZipOrigination>' . substr(trim($origin->postal_code), 0, 5) . '</ZipOrigination>' .
+        '<ZipDestination>' . substr(trim($destination->postal_code), 0, 5) . '</ZipDestination>' .
+        '<Pounds>' . intval($package->pounds) . '</Pounds>' .
+        '<Ounces>' . number_format($package->ounces, 1, '.', '') . '</Ounces>' .
+        '<Container>' . $package->container . '</Container>' .
+        '<Size>' . $package->size . '</Size>' .
+        '<Width>' . $package->width . '</Width>' .
+        '<Length>' . $package->length . '</Length>' .
+        '<Height>' . $package->height . '</Height>' .
+        '<Girth>' . $package->girth . '</Girth>' .
         '<Machinable>'. ($package->machinable ? 'True' : 'False') .'</Machinable>'.
         '</Package>';
 
@@ -595,7 +595,7 @@ function uc_usps_rate_request($packages, $origin, $destination) {
  */
 function uc_usps_intl_rate_request($packages, $origin, $destination) {
   module_load_include('inc', 'uc_usps', 'uc_usps.countries');
-  $request  = '<IntlRateV2Request USERID="'. variable_get('uc_usps_user_id', '') .'">';
+  $request  = '<IntlRateV2Request USERID="' . variable_get('uc_usps_user_id', '') . '">';
   $request .= '<Revision>2</Revision>';
 
   // USPS does not use ISO 3166 country name in some cases so we
@@ -606,19 +606,19 @@ function uc_usps_intl_rate_request($packages, $origin, $destination) {
   foreach ($packages as $package) {
     $qty = $package->qty;
     for ($i = 0; $i < $qty; $i++) {
-      $request .= '<Package ID="'. $package_id .'">'.
-        '<Pounds>'. intval($package->pounds) .'</Pounds>'.
-        '<Ounces>'. ceil($package->ounces) .'</Ounces>'.
-        '<MailType>All</MailType>'.
-        '<ValueOfContents>'. $package->price .'</ValueOfContents>'.
-        '<Country>'. $shipto_country .'</Country>'.
-        '<Container>'. 'RECTANGULAR' .'</Container>'.
-        '<Size>'. 'REGULAR' .'</Size>'.
-        '<Width>'. '</Width>'.
-        '<Length>'. '</Length>'.
-        '<Height>'. '</Height>'.
-        '<Girth>'. '</Girth>'.
-        '<OriginZip>'. substr(trim($origin->postal_code), 0, 5) .'</OriginZip>';
+      $request .= '<Package ID="' . $package_id . '">' .
+        '<Pounds>' . intval($package->pounds) . '</Pounds>' .
+        '<Ounces>' . ceil($package->ounces) . '</Ounces>' .
+        '<MailType>All</MailType>' .
+        '<ValueOfContents>' . $package->price . '</ValueOfContents>' .
+        '<Country>' . $shipto_country . '</Country>' .
+        '<Container>' . 'RECTANGULAR' . '</Container>' .
+        '<Size>' . 'REGULAR' . '</Size>' .
+        '<Width>' . '</Width>' .
+        '<Length>' . '</Length>' .
+        '<Height>' . '</Height>' .
+        '<Girth>' . '</Girth>' .
+        '<OriginZip>' . substr(trim($origin->postal_code), 0, 5) . '</OriginZip>';
 
         // Check if we need to add any special services to this package
         if (variable_get('uc_usps_insurance', FALSE)) {
@@ -726,7 +726,7 @@ function _uc_usps_package_products($products, &$addresses) {
       if (!$product->pkg_qty) {
         $product->pkg_qty = 1;
       }
-      $num_of_pkgs = (int)($product->qty / $product->pkg_qty);
+      $num_of_pkgs = (int) ($product->qty / $product->pkg_qty);
       if ($num_of_pkgs) {
         $package = drupal_clone($product);
         $package->description = $product->model;

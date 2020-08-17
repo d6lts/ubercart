@@ -85,7 +85,7 @@ function _uc_quote_assemble_quotes($order) {
   $products = $order->products;
   $shipping_types = array();
   foreach ($products as $product) {
-    $shipping_types[] =  uc_product_get_shipping_type($product);
+    $shipping_types[] = uc_product_get_shipping_type($product);
   }
   $shipping_types = array_unique($shipping_types);
   $all_types = uc_quote_get_shipping_types();

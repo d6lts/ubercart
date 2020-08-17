@@ -275,9 +275,9 @@ function uc_ups_shipping_method() {
  */
 function uc_ups_store_status() {
   $messages = array();
-  $access = variable_get('uc_ups_access_license', '') != '';
-  $account = variable_get('uc_ups_shipper_number', '') != '';
-  $user = variable_get('uc_ups_user_id', '') != '';
+  $access   = variable_get('uc_ups_access_license', '') != '';
+  $account  = variable_get('uc_ups_shipper_number', '') != '';
+  $user     = variable_get('uc_ups_user_id', '') != '';
   $password = variable_get('uc_ups_password', '') != '';
   if ($access && $account && $user && $password) {
     $messages[] = array('status' => 'ok', 'title' => t('UPS Online Tools'),
@@ -440,7 +440,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
     }
   }
 
-  $schema = uc_ups_access_request() ."
+  $schema = uc_ups_access_request() . "
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <RatingServiceSelectionRequest xml:lang=\"en-US\">
   <Request>
@@ -452,16 +452,16 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
     <RequestOption>rate</RequestOption>
   </Request>
   <PickupType>
-    <Code>". variable_get('uc_ups_pickup_type', '01') ."</Code>
+    <Code>" . variable_get('uc_ups_pickup_type', '01') . "</Code>
   </PickupType>
   <CustomerClassification>
-    <Code>". variable_get('uc_ups_classification', '04') ."</Code>
+    <Code>" . variable_get('uc_ups_classification', '04') . "</Code>
   </CustomerClassification>
   <Shipment>
     <Shipper>
-      <ShipperNumber>". variable_get('uc_ups_shipper_number', '') ."</ShipperNumber>
+      <ShipperNumber>" . variable_get('uc_ups_shipper_number', '') . "</ShipperNumber>
       <Address>
-        <City>". $store['city'] ."</City>
+        <City>" . $store['city'] . "</City>
         <StateProvinceCode>$shipper_zone</StateProvinceCode>
         <PostalCode>$shipper_zip</PostalCode>
         <CountryCode>$shipper_country</CountryCode>
@@ -491,7 +491,7 @@ function uc_ups_shipping_quote($packages, $origin, $destination, $ups_service) {
         <Code>$units</Code>
         <Description>$unit_name</Description>
       </UnitOfMeasurement>
-      <Weight>". number_format($shipment_weight, 1, '.', '') ."</Weight>
+      <Weight>" . number_format($shipment_weight, 1, '.', '') . "</Weight>
     </ShipmentWeight>
     <Service>
       <Code>{$service['code']}</Code>
@@ -604,7 +604,7 @@ function uc_ups_quote($products, $details) {
       if (!$product->pkg_qty) {
         $product->pkg_qty = 1;
       }
-      $num_of_pkgs = (int)($product->qty / $product->pkg_qty);
+      $num_of_pkgs = (int) ($product->qty / $product->pkg_qty);
       if ($num_of_pkgs) {
         $package = drupal_clone($product);
         $package->description = $product->model;
@@ -634,7 +634,7 @@ function uc_ups_quote($products, $details) {
     return array();
   }
 
-  $dest = (object)$details;
+  $dest = (object) $details;
 
   foreach ($packages as $key => $ship_packages) {
     $orig = (object)$addresses[$key];
@@ -654,7 +654,7 @@ function uc_ups_quote($products, $details) {
           if (user_access('configure quotes') && variable_get('uc_quote_display_debug', FALSE)) {
             $quotes[$ups_service]['error'][] = (string)$error->ErrorSeverity .' '. (string)$error->ErrorCode .': '. (string)$error->ErrorDescription;
           }
-          if (strpos((string)$error->ErrorSeverity, 'Hard') !== FALSE) {
+          if (strpos((string) $error->ErrorSeverity, 'Hard') !== FALSE) {
             // All or nothing quote. If some products can't be shipped by
             // a certain service, no quote is given for that service. If
             // that means no quotes are given at all, they'd better call in.
@@ -776,9 +776,9 @@ function uc_ups_void_shipment_request($shipment_number, $tracking_numbers = arra
     $schema .= '</TransactionReference>';
   $schema .= '</Request>';
   $schema .= '<ExpandedVoidShipment>';
-    $schema .= '<ShipmentIdentificationNumber>'. $shipment_number .'</ShipmentIdentificationNumber>';
+    $schema .= '<ShipmentIdentificationNumber>' . $shipment_number . '</ShipmentIdentificationNumber>';
     foreach ($tracking_numbers as $number) {
-      $schema .= '<TrackingNumber>'. $number .'</TrackingNumber>';
+      $schema .= '<TrackingNumber>' . $number . '</TrackingNumber>';
     }
   $schema .= '</ExpandedVoidShipment>';
   $schema .= '</VoidShipmentRequest>';
@@ -805,20 +805,20 @@ function uc_ups_void_shipment($shipment_number, $tracking_numbers = array()) {
   $response = new SimpleXMLElement($resp->data);
   if (isset($response->Response)) {
     if (isset($response->Response->ResponseStatusCode)) {
-      $success = (string)$response->Response->ResponseStatusCode;
+      $success = (string) $response->Response->ResponseStatusCode;
     }
     if (isset($response->Response->Error)) {
       foreach ($response->Response->Error as $error) {
-        drupal_set_message((string)$error->ErrorSeverity .' '. (string)$error->ErrorCode .': '. (string)$error->ErrorDescription, 'error');
+        drupal_set_message((string) $error->ErrorSeverity . ' ' . (string) $error->ErrorCode . ': ' . (string) $error->ErrorDescription, 'error');
       }
     }
   }
   if (isset($response->Status)) {
     if (isset($response->Status->StatusType)) {
-      $success = (string)$response->Status->StatusType->Code;
+      $success = (string) $response->Status->StatusType->Code;
     }
   }
-  return (bool)$success;
+  return (bool) $success;
 }
 
 /**

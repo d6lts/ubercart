@@ -77,7 +77,7 @@ function uc_stock_report() {
     $rows[] = array(
       'data' => array(
         array('data' => $stock->sku),
-        array('data' => l($stock->title, 'node/'. $stock->nid)),
+        array('data' => l($stock->title, 'node/' . $stock->nid)),
         array('data' => $stock->stock),
         array('data' => $stock->threshold),
         array('data' => implode(' ', $op)),

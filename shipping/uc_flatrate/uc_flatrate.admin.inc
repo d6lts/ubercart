@@ -127,7 +127,7 @@ function uc_flatrate_admin_method_edit_form_validate($form, &$form_state) {
  * @see uc_flatrate_admin_method_edit_form()
  */
 function uc_flatrate_admin_method_edit_form_delete($form, &$form_state) {
-  drupal_goto('admin/store/settings/quotes/flatrate/'. $form_state['values']['mid'] .'/delete');
+  drupal_goto('admin/store/settings/quotes/flatrate/' . $form_state['values']['mid'] . '/delete');
 }
 
 /**

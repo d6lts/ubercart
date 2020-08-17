@@ -237,7 +237,7 @@ function uc_tax_report_params_form($form_state, $values) {
   $form['params']['status'] = array(
     '#type' => 'select',
     '#title' => t('Order statuses'),
-    '#description' => t('Only orders with selected statuses will be included in the report.') .'<br />'. t('Hold Ctrl + click to select multiple statuses.'),
+    '#description' => t('Only orders with selected statuses will be included in the report.') . '<br />' . t('Hold Ctrl + click to select multiple statuses.'),
     '#options' => $options,
     '#default_value' => $stat,
     '#multiple' => TRUE,
@@ -282,5 +282,5 @@ function uc_tax_report_params_form_submit($form, &$form_state) {
     drupal_urlencode(implode(',', array_keys($form_state['values']['status']))),
   );
 
-  $form_state['redirect'] = 'admin/store/reports/tax/'. implode('/', $args);
+  $form_state['redirect'] = 'admin/store/reports/tax/' . implode('/', $args);
 }

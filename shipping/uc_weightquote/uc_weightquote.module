@@ -80,7 +80,7 @@ function uc_weightquote_form_alter(&$form, $form_state, $form_id) {
         '#size' => 16,
         '#field_prefix' => $sign_flag ? '' : $currency_sign,
         '#field_suffix' => t('@sign/@unit', array('@sign' => $sign_flag ? $currency_sign : '', '@unit' => variable_get('uc_weight_unit', 'lb'))),
-        '#weight' => $weight['weightquote_'. $method->mid],
+        '#weight' => $weight['weightquote_' . $method->mid],
       );
     }
   }
@@ -170,8 +170,8 @@ function uc_weightquote_shipping_method() {
   $weight = variable_get('uc_quote_method_weight', array());
   $result = db_query("SELECT mid, title, label FROM {uc_weightquote_methods}");
   while ($method = db_fetch_object($result)) {
-    $methods['weightquote_'. $method->mid] = array(
-      'id' => 'weightquote_'. $method->mid,
+    $methods['weightquote_' . $method->mid] = array(
+      'id' => 'weightquote_' . $method->mid,
       'module' => 'uc_weightquote',
       'title' => $method->title,
       'enabled' => $enabled['weightquote_'. $method->mid],
@@ -234,7 +234,7 @@ function uc_weightquote_quote($products, $details, $method) {
         // Add the product-specific rate.
         $product_rate = uc_price($price_info, $context);
       }
-      $rate += $product_rate  * $product->weight * uc_weight_conversion($product->weight_units, variable_get('uc_weight_unit', 'lb'));
+      $rate += $product_rate * $product->weight * uc_weight_conversion($product->weight_units, variable_get('uc_weight_unit', 'lb'));
     }
 
     unset($context['subject']['order_product']);

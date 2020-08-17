@@ -206,7 +206,7 @@ function uc_taxes_order($op, $arg1, $arg2) {
       if (count($changes)) {
         uc_order_log_changes($arg1->order_id, $changes);
       }
-    break;
+      break;
   }
 }
 
@@ -564,7 +564,7 @@ function uc_taxes_apply_tax($order, $tax) {
   }
   $amount = $taxable_amount * $tax->rate;
   if ($amount) {
-    $line_item = (object)array(
+    $line_item = (object) array(
       'id' => $tax->id,
       'name' => $tax->name,
       'amount' => $amount,

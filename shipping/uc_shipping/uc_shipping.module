@@ -265,7 +265,7 @@ function uc_shipping_order_actions($order) {
       $title = t('Package order !order_id products.', array('!order_id' => $order->order_id));
       $actions[] = array(
         'name' => t('Package'),
-        'url' => 'admin/store/orders/'. $order->order_id .'/packages',
+        'url' => 'admin/store/orders/' . $order->order_id . '/packages',
         'icon' => '<img src="'. $module_path .'/images/package.gif" alt="'. $title .'" />',
         'title' => $title,
       );
@@ -274,7 +274,7 @@ function uc_shipping_order_actions($order) {
         $title = t('Ship order !order_id packages.', array('!order_id' => $order->order_id));
         $actions[] = array(
           'name' => t('Ship'),
-          'url' => 'admin/store/orders/'. $order->order_id .'/shipments',
+          'url' => 'admin/store/orders/' . $order->order_id . '/shipments',
           'icon' => '<img src="'. $module_path .'/images/ship.gif" alt="'. $title .'" />',
           'title' => $title,
         );
@@ -409,7 +409,7 @@ function uc_shipping_package_load($package_id) {
         if (!in_array($address, $addresses)) {
           $addresses[] = $address;
         }
-        $description .= ', '. $product->qty .' x '. $product->model;
+        $description .= ', ' . $product->qty . ' x ' . $product->model;
         // Normalize all weights to default units.
         $weight += $product->weight * uc_weight_conversion($product->weight_units, $units);
         $product->data = unserialize($product->data);
@@ -434,7 +434,7 @@ function uc_shipping_package_load($package_id) {
  * Save a package.
  */
 function uc_shipping_package_save($package) {
-  $package = (object)$package;
+  $package = (object) $package;
   if (!isset($package->package_id)) {
     db_query("INSERT INTO {uc_packages} (order_id) VALUES (%d)", $package->order_id);
     $package->package_id = db_last_insert_id('uc_packages', 'package_id');
@@ -547,13 +547,13 @@ function uc_shipping_shipment_save($shipment) {
   }
   if (isset($shipment->origin)) {
     foreach ($shipment->origin as $field => $value) {
-      $field = 'o_'. $field;
+      $field = 'o_' . $field;
       $shipment->$field = $value;
     }
   }
   if (isset($shipment->destination)) {
     foreach ($shipment->destination as $field => $value) {
-      $field = 'd_'. $field;
+      $field = 'd_' . $field;
       $shipment->$field = $value;
     }
   }
@@ -608,7 +608,7 @@ function uc_shipping_order_pane_packages($op, $arg1) {
         }
       }
       return theme('item_list', $tracking);
-    break;
+      break;
   }
 }
 
@@ -658,7 +658,7 @@ function uc_shipping_select_address($addresses, $onchange = '', $title = NULL, $
  * @ingroup forms
  */
 function uc_shipping_address_form($form_state, $addresses, $order) {
-  drupal_add_js(drupal_get_path('module', 'uc_shipping') .'/uc_shipping.js');
+  drupal_add_js(drupal_get_path('module', 'uc_shipping') . '/uc_shipping.js');
   $form = array();
   $form['origin'] = array(
     '#type' => 'fieldset',

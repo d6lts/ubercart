@@ -48,11 +48,11 @@ function tanzania_install() {
   }
 
   uc_set_address_format(834,
-    "!company\r\n".
-    "!first_name !last_name\r\n".
+    "!company\r\n" .
+    "!first_name !last_name\r\n" .
     "!street1\r\n!".
     "street2\r\n".
-    "!city !zone_code !postal_code\r\n".
+    "!city !zone_code !postal_code\r\n" .
     "!country_name_if"
   );
 }

@@ -28,7 +28,7 @@ function uc_taxes_admin_settings() {
     // Add the row to the table.
     $rows[] = array(
       check_plain($rate->name),
-      $rate->rate * 100 .'%',
+      $rate->rate * 100 . '%',
       $rate->shippable ? t('Shippable products') : t('Any product'),
       implode(', ', $rate->taxed_product_types),
       implode(', ', $rate->taxed_line_items),

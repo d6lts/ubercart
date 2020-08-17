@@ -1246,7 +1246,7 @@ function uc_quote_get_shipping_types() {
   $hook = 'shipping_type';
   $return = array();
   foreach (module_implements($hook) as $module) {
-    $function = $module .'_'. $hook;
+    $function = $module . '_' . $hook;
     $result = call_user_func_array($function, $args);
     if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);

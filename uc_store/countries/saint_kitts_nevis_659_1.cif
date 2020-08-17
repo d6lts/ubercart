@@ -26,18 +26,18 @@ function saint_kitts_nevis_install() {
     array(659, 'TPP', 'Trinity Palmetto Point'),
   );
 
-foreach ($zones as $zone) {
+  foreach ($zones as $zone) {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
   }
 
   // Set address format
   uc_set_address_format(
     659,
-    "!company\r\n".
-    "!first_name !last_name\r\n".
-    "!street1\r\n".
-    "!street2\r\n".
-    "!city, !zone_name  !postal_code\r\n".
+    "!company\r\n" .
+    "!first_name !last_name\r\n" .
+    "!street1\r\n" .
+    "!street2\r\n" .
+    "!city, !zone_name  !postal_code\r\n" .
     "!country_name_if"
   );
 }

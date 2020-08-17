@@ -13,7 +13,7 @@ function kiribati_install() {
     array(296, 'KI-P', 'Phoenix Islands'),
   );
 
-   foreach ($zones as $zone) {
+  foreach ($zones as $zone) {
     db_query("INSERT INTO {uc_zones} (zone_country_id, zone_code, zone_name) VALUES (%d, '%s', '%s')", $zone);
   }
 
