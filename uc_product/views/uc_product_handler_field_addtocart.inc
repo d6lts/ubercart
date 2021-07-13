@@ -21,7 +21,7 @@ class uc_product_handler_field_addtocart extends views_handler_field {
   /**
    * Overrides views_handler_field::element_type().
    */
-  function function element_type($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
+  function element_type($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE) {
     if (isset($this->definition['element type'])) {
       return $this->definition['element type'];
     }
