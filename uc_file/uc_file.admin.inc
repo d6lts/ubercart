@@ -302,7 +302,7 @@ function uc_file_admin_files_form_action($form_state) {
 
       // Calculate the max size of uploaded files, in bytes.
       $max_bytes = trim(ini_get('post_max_size'));
-      switch (strtolower($max_bytes{strlen($max_bytes)-1})) {
+      switch (strtolower($max_bytes[strlen($max_bytes)-1])) {
         case 'g':
           $max_bytes *= 1024;
         case 'm':
