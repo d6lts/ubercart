@@ -492,7 +492,7 @@ function uc_payment_by_order_form_submit($form, &$form_state) {
   $startofday = mktime(0, 0, 0);
 
   if ($received == $startofday) {
-    $received = mktime();
+    $received = time();
   }
 
   uc_payment_enter($form_state['values']['order_id'], $payment['method'], $payment['amount'], $user->uid, '', $payment['comment'], $received);
